@@ -9,7 +9,9 @@ const nextConfig = {
       "s3.amazonaws.com",
       "s3.us-central-1.wasabisys.com",
       "flyontech-rental-product.s3.us-east-1.wasabisys.com",
+      'flyontech-rental-productt.s3.us-east-1.wasabisys.com'
     ],
+    
   },
 };
 

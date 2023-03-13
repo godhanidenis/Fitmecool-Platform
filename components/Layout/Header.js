@@ -21,7 +21,15 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-
+import PropTypes from "prop-types";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import CloseIcon from "@mui/icons-material/Close";
+import Typography from "@mui/material/Typography";
 import AuthModal from "../core/AuthModal";
 import ProfileIcon from "../../assets/profile.png";
 import { AuthTypeModal } from "../core/Enum";
@@ -31,6 +39,7 @@ import {
   Checkbox,
   ClickAwayListener,
   Divider,
+  Grid,
   Grow,
   MenuItem,
   MenuList,
@@ -47,6 +56,58 @@ import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router from "next/router";
 
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialog-backdrop": {
+    backgroundColor: "#CAA9CD !important",
+  },
+  "& .MuiDialog-paper": {
+    // background:"#95539B",
+    // opacity:".5",
+    top: "0",
+    position: "absolute",
+    maxHeight: "50vh",
+    height: "50vh",
+    width: "100vw",
+    maxWidth: "100%",
+    margin: "0px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
+
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -59,6 +120,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const { areaLists } = useSelector((state) => state.areaLists);
   const { userProfile } = useSelector((state) => state.userProfile);
+  const [openModel, setOpenModel] = React.useState(false);
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
@@ -74,6 +136,15 @@ const Header = () => {
       dispatch(loadUserProfileStart({ id: localStorage.getItem("userId") }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
+
+  const handleClickOpen = () => {
+    setOpenModel(true);
+    console.log(":::::open model");
+  };
+
+  const handleClose = () => {
+    setOpenModel(false);
+  };
 
   return (
     <>
@@ -121,56 +192,12 @@ const Header = () => {
           </div>
 
           <div className="flex items-center gap-5 xl:gap-12">
-            <ul className="flex">
-              <li>
-                <FormControl
-                  sx={{
-                    width: 250,
-                    background: "white",
-                    borderRadius: "5px",
-                  }}
-                  variant="outlined"
-                  size="small"
-                >
-                  <OutlinedInput
-                    placeholder="Search...."
-                    value={searchBarValue}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        dispatch(
-                          changeProductsSearchBarData({
-                            key: "searchBarData",
-                            value: searchBarValue,
-                          })
-                        );
-                      }
-                    }}
-                    onChange={(e) => {
-                      setSearchBarValue(e.currentTarget.value);
-                    }}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={() =>
-                            dispatch(
-                              changeProductsSearchBarData({
-                                key: "searchBarData",
-                                value: searchBarValue,
-                              })
-                            )
-                          }
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-              </li>
-            </ul>
+            <ul className="flex"></ul>
 
             <ul className="flex items-center gap-3">
+              <li className="cursor-pointer">
+                <SearchIcon className="text-white text-4xl" onClick={handleClickOpen} />
+              </li>
               <li>
                 <Link href={`/productLike`} passHref>
                   <IconButton color="inherit">
@@ -215,6 +242,95 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+      {openModel && (
+        <div
+          style={{
+            background: "#95539B",
+            position: "fixed",
+            display: "block",
+            width: "100%",
+            height: "100%",
+            opacity: ".4",
+            zIndex: 2,
+            cursor: "pointer",
+          }}
+        >
+          <BootstrapDialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={openModel}
+          >
+            <BootstrapDialogTitle
+              id="customized-dialog-title"
+              onClose={handleClose}
+            >
+              <div className="flex justify-center cursor-pointer">
+                <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
+                  <span className="text-4xl">W</span>edding
+                  <span className="text-4xl">B</span>ell
+                </h2>
+              </div>
+            </BootstrapDialogTitle>
+
+            <DialogContent dividers className="flex justify-center p-0">
+              <Grid
+                container
+                direction="column"
+                justifyContent="start"
+                alignItems="center"
+              >
+                <Grid item xs={6}>
+                  <FormControl
+                    sx={{
+                      width: 500,
+                      background: "white",
+                      borderRadius: "5px",
+                    }}
+                    variant="outlined"
+                    size="small"
+                  >
+                    <OutlinedInput
+                      placeholder="What are you looking for?"
+                      value={searchBarValue}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          dispatch(
+                            changeProductsSearchBarData({
+                              key: "searchBarData",
+                              value: searchBarValue,
+                            })
+                          );
+                        }
+                      }}
+                      onChange={(e) => {
+                        setSearchBarValue(e.currentTarget.value);
+                      }}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            edge="end"
+                            onClick={() =>
+                              dispatch(
+                                changeProductsSearchBarData({
+                                  key: "searchBarData",
+                                  value: searchBarValue,
+                                })
+                              )
+                            }
+                          >
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </BootstrapDialog>
+        </div>
+      )}
     </>
   );
 };

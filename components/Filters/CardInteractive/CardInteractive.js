@@ -5,6 +5,7 @@ import FilterTitle from "../FilterTitle/FilterTitle";
 const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
   const [cardOpen, setCardOpen] = useState(true);
   const handleOpenClick = () => setCardOpen(!cardOpen);
+  console.log("cardTitle:::", cardTitle);
 
   return (
     <CardWrapper>
@@ -12,7 +13,7 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
         handleOpenClick={handleOpenClick}
         className="flex items-center justify-between"
       >
-        <span>{cardTitle}</span>
+        <span className="text-base">{cardTitle}</span>
         <button
           type="button"
           className={`w-3 h-2 transition-transform duration-300 ${
@@ -34,7 +35,15 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
           </svg>
         </button>
       </FilterTitle>
-      {cardOpen && <div className="px-6 pt-5 pb-8">{bottomComponent}</div>}
+      {cardOpen && (
+        <div
+          className={`px-3 ${
+            cardTitle == "Shops" || cardTitle == "Colors" || cardTitle == "Locations" ? "pt-3" : ""
+          } `}
+        >
+          {bottomComponent}
+        </div>
+      )}
     </CardWrapper>
   );
 };

@@ -13,6 +13,7 @@ import CardInteractive from "../CardInteractive/CardInteractive";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useDispatch, useSelector } from "react-redux";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -90,11 +91,16 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
       cardTitle="Categories"
       bottomComponent={
         <>
-          <Accordion sx={{ boxShadow: "none" }} className="text-colorBlack">
-            <AccordionSummary>
-              <Typography>MEN</Typography>
+          <Accordion
+            sx={{
+              boxShadow: "none",
+            }}
+            className="text-colorBlack"
+          >
+            <AccordionSummary  expandIcon={<ExpandMoreIcon />}>
+              <Typography>Men</Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ padding: "0px 16px 0px" }}>
               <Autocomplete
                 multiple
                 options={menCategoryLabel}
@@ -130,6 +136,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                     {...params}
                     label="Men's Categories"
                     placeholder="Men's Categories"
+                    size="small"
                   />
                 )}
               />
@@ -137,10 +144,10 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
           </Accordion>
 
           <Accordion sx={{ boxShadow: "none" }} className="text-colorBlack">
-            <AccordionSummary>
-              <Typography>WOMEN</Typography>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>Women</Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ padding: "0px 16px 0px" }}>
               <Autocomplete
                 multiple
                 options={womenCategoryLabel}
@@ -176,6 +183,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                     {...params}
                     label="Women's Categories"
                     placeholder="Women's Categories"
+                    size="small"
                   />
                 )}
               />

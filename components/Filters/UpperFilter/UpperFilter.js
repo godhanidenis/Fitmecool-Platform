@@ -58,9 +58,13 @@ const UpperFilter = ({ byShop, setProductPageSkip }) => {
   };
 
   return (
-    <div className="py-3 px-6 bg-[#FFFFFF] mb-11 mt-10 flex justify-between">
+    <div className="bg-[#FFFFFF] mb-5 flex justify-between">
       <div className="flex items-center">
-        <ButtonGroup size="large" aria-label="large button group">
+        <p className="font-bold text-2xl text-colorBlack">Products</p>
+      </div>
+
+      <div className="flex items-center gap-2">
+        {/* <ButtonGroup size="large" aria-label="large button group">
           <Button
             className={`${
               !byShop &&
@@ -86,41 +90,88 @@ const UpperFilter = ({ byShop, setProductPageSkip }) => {
                     })
                   )
             }
-          >
-            <ListOutlinedIcon className="text-black" />
-          </Button>
-          <Button
-            className={`${
-              !byShop &&
-              productsFiltersReducer.productLayout === "grid" &&
-              "bg-colorPrimary"
-            } ${
-              byShop &&
-              shopsFiltersReducer.shopLayout === "grid" &&
-              "bg-colorPrimary"
-            }`}
-            onClick={() =>
-              !byShop
-                ? dispatch(
-                    changeProductsLayout({
-                      key: "productLayout",
-                      value: "grid",
-                    })
-                  )
-                : dispatch(
-                    changeShopsLayout({
-                      key: "shopLayout",
-                      value: "grid",
-                    })
-                  )
-            }
-          >
-            <GridViewOutlinedIcon className="text-black" />
-          </Button>
-        </ButtonGroup>
-      </div>
-
-      <div className="flex items-center gap-5">
+          > */}
+        <ListOutlinedIcon
+          // className="text-black"
+          className={`text-4xl ${
+            !byShop &&
+            productsFiltersReducer.productLayout === "list" &&
+            "text-[#95539B]"
+          } ${
+            byShop &&
+            shopsFiltersReducer.shopLayout === "list" &&
+            "text-[#95539B]"
+          }`}
+          onClick={() =>
+            !byShop
+              ? dispatch(
+                  changeProductsLayout({
+                    key: "productLayout",
+                    value: "list",
+                  })
+                )
+              : dispatch(
+                  changeShopsLayout({
+                    key: "shopLayout",
+                    value: "list",
+                  })
+                )
+          }
+        />
+        {/* </Button> */}
+        {/* <Button
+          className={`${
+            !byShop &&
+            productsFiltersReducer.productLayout === "grid" &&
+            "bg-colorPrimary"
+          } ${
+            byShop &&
+            shopsFiltersReducer.shopLayout === "grid" &&
+            "bg-colorPrimary"
+          }`}
+          onClick={() =>
+            !byShop
+              ? dispatch(
+                  changeProductsLayout({
+                    key: "productLayout",
+                    value: "grid",
+                  })
+                )
+              : dispatch(
+                  changeShopsLayout({
+                    key: "shopLayout",
+                    value: "grid",
+                  })
+                )
+          }
+        ></Button> */}
+        <GridViewOutlinedIcon
+          className={`text-2xl ${
+            !byShop &&
+            productsFiltersReducer.productLayout === "grid" &&
+            "text-[#95539B]"
+          } ${
+            byShop &&
+            shopsFiltersReducer.shopLayout === "grid" &&
+            "text-[#95539B]"
+          }`}
+          onClick={() =>
+            !byShop
+              ? dispatch(
+                  changeProductsLayout({
+                    key: "productLayout",
+                    value: "grid",
+                  })
+                )
+              : dispatch(
+                  changeShopsLayout({
+                    key: "shopLayout",
+                    value: "grid",
+                  })
+                )
+          }
+        />
+        {/* </ButtonGroup> */}
         <Button
           onClick={(event) => {
             setSortByAnchor(event.currentTarget);

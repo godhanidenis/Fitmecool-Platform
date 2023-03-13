@@ -44,8 +44,8 @@ const SubHeader = () => {
   return (
     <div className="w-full left-0 top-[83px] sticky bg-colorWhite z-10 shadow-md">
       <div className="container flex gap-48 items-center">
-        <button type="button" className="w-5 h-5 relative">
-          <Image src={HamburgerIcon} alt="Hamburger Logo" layout="fill" />
+        <button type="button" className=" h-5 relative">
+          {/* <Image src={HamburgerIcon} alt="Hamburger Logo" layout="fill" /> */}
         </button>
         <div onMouseLeave={handleMenuClose.bind(this)}>
           <CustomTab value={value}>

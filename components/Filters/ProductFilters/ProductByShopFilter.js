@@ -82,7 +82,7 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
               </li>
             )}
             renderInput={(params) => (
-              <TextField {...params} label="Shops" placeholder="Shop Name" />
+              <TextField {...params} label="Shops" size="small" placeholder="Shop Name" />
             )}
           />
         </>

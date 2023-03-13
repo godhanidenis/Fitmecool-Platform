@@ -65,7 +65,7 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
               </li>
             )}
             renderInput={(params) => (
-              <TextField {...params} label="Colors" placeholder="color" />
+              <TextField {...params} label="Colors" size="small" placeholder="color" />
             )}
           />
         </>

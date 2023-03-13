@@ -83,6 +83,7 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                 {...params}
                 label="Area Location"
                 placeholder="Location"
+                size="small"
               />
             )}
           />

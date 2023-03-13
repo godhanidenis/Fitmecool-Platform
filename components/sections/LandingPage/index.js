@@ -157,7 +157,6 @@ const LandingPage = () => {
   return (
     <>
       <DirectoryHero bgImg={LandingBg.src} />
-
       <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
         <div className="lg:col-span-2 hidden lg:block ">
           <Filter
@@ -167,7 +166,7 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 lg:col-span-6 bg-[#F5F5F5] rounded-lg">
+        <div className="col-span-8 border-l lg:col-span-6 rounded-lg">
           <div className="container">
             <UpperFilter
               byShop={byShop}
@@ -177,9 +176,7 @@ const LandingPage = () => {
 
             {!byShop ? (
               <>
-                <p className="font-bold text-2xl text-colorBlack">
-                  Special Products
-                </p>
+                {/* <p className="font-bold text-2xl text-colorBlack">Products</p> */}
                 <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={productsData.length}
@@ -191,7 +188,7 @@ const LandingPage = () => {
                     </div>
                   }
                 >
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
                     {productsData &&
                       productsData?.map((product) => (
                         <ProductCard product={product} key={product.id} />
