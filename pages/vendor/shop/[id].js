@@ -567,11 +567,11 @@ const ShopDetailsPage = () => {
 
             <div className="bg-[#F5F5F5] rounded-lg mt-5">
               <div className="container">
-                <UpperFilter setProductPageSkip={setProductPageSkip} />
+                <UpperFilter setProductPageSkip={setProductPageSkip} isbg={true} />
 
-                <p className="font-bold text-2xl text-colorBlack">
+                {/* <p className="font-bold text-2xl text-colorBlack">
                   Special Products
-                </p>
+                </p> */}
                 <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={productsData.length}

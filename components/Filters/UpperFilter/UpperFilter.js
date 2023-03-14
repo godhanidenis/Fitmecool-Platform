@@ -25,7 +25,7 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
-const UpperFilter = ({ byShop, setProductPageSkip }) => {
+const UpperFilter = ({ byShop, setProductPageSkip, isbg }) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
 
@@ -58,9 +58,15 @@ const UpperFilter = ({ byShop, setProductPageSkip }) => {
   };
 
   return (
-    <div className="bg-[#FFFFFF] mb-5 flex justify-between">
+    <div
+      className={` ${
+        isbg ? "bg-[#F5F5F5] pt-3" : "bg-[#FFFFFF] mb-3"
+      }  flex justify-between`}
+    >
       <div className="flex items-center">
-        <p className="font-bold text-2xl text-colorBlack">Products</p>
+        <p className="font-bold text-2xl text-colorBlack">{`${
+          byShop ? "Shops" : "Products"
+        } `}</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -93,14 +99,15 @@ const UpperFilter = ({ byShop, setProductPageSkip }) => {
           > */}
         <ListOutlinedIcon
           // className="text-black"
-          className={`text-4xl ${
-            !byShop &&
-            productsFiltersReducer.productLayout === "list" &&
-            "text-[#95539B]"
+          fontSize="large"
+          className={`${
+            !byShop && productsFiltersReducer.productLayout === "list"
+              ? "text-[#95539B]"
+              : "text-black"
           } ${
-            byShop &&
-            shopsFiltersReducer.shopLayout === "list" &&
-            "text-[#95539B]"
+            byShop && shopsFiltersReducer.shopLayout === "list"
+              ? "text-[#95539B]"
+              : "text-black"
           }`}
           onClick={() =>
             !byShop
@@ -146,14 +153,14 @@ const UpperFilter = ({ byShop, setProductPageSkip }) => {
           }
         ></Button> */}
         <GridViewOutlinedIcon
-          className={`text-2xl ${
-            !byShop &&
-            productsFiltersReducer.productLayout === "grid" &&
-            "text-[#95539B]"
+          className={`${
+            !byShop && productsFiltersReducer.productLayout === "grid"
+              ? "text-[#95539B]"
+              : "text-black"
           } ${
-            byShop &&
-            shopsFiltersReducer.shopLayout === "grid" &&
-            "text-[#95539B]"
+            byShop && shopsFiltersReducer.shopLayout === "grid"
+              ? "text-[#95539B]"
+              : "text-black"
           }`}
           onClick={() =>
             !byShop

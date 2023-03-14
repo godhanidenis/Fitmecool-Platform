@@ -196,7 +196,11 @@ const Header = () => {
 
             <ul className="flex items-center gap-3">
               <li className="cursor-pointer">
-                <SearchIcon className="text-white text-4xl" onClick={handleClickOpen} />
+                <SearchIcon
+                  sx={{ color: "white" }}
+                  fontSize="large"
+                  onClick={handleClickOpen}
+                />
               </li>
               <li>
                 <Link href={`/productLike`} passHref>

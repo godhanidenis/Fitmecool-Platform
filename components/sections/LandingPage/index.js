@@ -116,7 +116,7 @@ const LandingPage = () => {
         },
         area: shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
         sort: shopsFiltersReducer.sortFilters.sortType.selectedValue,
-        stars: "",
+        stars: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
       })
     );
   };
@@ -166,7 +166,7 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 border-l lg:col-span-6 rounded-lg">
+        <div className="col-span-8 border-l lg:col-span-6">
           <div className="container">
             <UpperFilter
               byShop={byShop}
@@ -198,10 +198,6 @@ const LandingPage = () => {
               </>
             ) : (
               <>
-                <p className="font-bold text-2xl text-colorBlack">
-                  Special Shops
-                </p>
-
                 <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={shopsData.length}
@@ -213,7 +209,7 @@ const LandingPage = () => {
                     </div>
                   }
                 >
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                  <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
                     {shopsData &&
                       shopsData.map((shop) => (
                         <ShopCard key={shop.id} shop={shop} />

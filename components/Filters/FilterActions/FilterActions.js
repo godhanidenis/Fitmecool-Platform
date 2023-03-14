@@ -14,10 +14,10 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
 
   return (
     <>
-      <div className="mb-2 flex justify-start gap-1">
+      <div className="mb-2 flex justify-between gap-1">
         <Button
           className="bg-colorPrimary px-6  text-colorWhite"
-          sx={{ textTransform: "none" , height:"38px"}}
+          sx={{ textTransform: "none" , height:"38px", fontWeight:600}}
           variant="contained"
           size="small"
         >
@@ -73,7 +73,7 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
             }
             required
           /> */}
-            <label className="inline-flex h-10 items-center border-2 p-1 cursor-pointer dark:bg-white-300 dark:text-white-800">
+            <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
               <input
                 id="Toggle4"
                 type="checkbox"

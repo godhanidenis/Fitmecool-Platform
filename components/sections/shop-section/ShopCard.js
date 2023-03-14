@@ -69,7 +69,7 @@ const ShopCard = ({ shop }) => {
             </Link>
             <p className="text-[#888888] text-sm font-normal">
               <LocationOnIcon fontSize="small" className="mr-1" />
-              {shop.branch_info.map(
+              {shop?.branch_info?.map(
                 (itm) => itm.branch_type === "main" && itm.branch_address
               )}
             </p>

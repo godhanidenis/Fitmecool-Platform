@@ -79,8 +79,26 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
             {/* <Image src={LoginLogo} alt="CoverImage" /> */}
           </div>
         </div>
+
         <div className="p-4 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
-          <div className="flex">
+          <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
+            <input
+              id="Toggle4"
+              type="checkbox"
+              className="hidden peer"
+              onChange={(e) => {
+                setAsVendor(e.target.checked);
+              }}
+              // onChange={(e) => console.log(e.target.checked)}
+            />
+            <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
+              Customer
+            </span>
+            <span className="px-4 py-1 dark:bg-white-300 peer-checked:bg-colorPrimary peer-checked:text-white ">
+              Business
+            </span>
+          </label>
+          <div className="flex pt-2">
             <h3 className="font-semibold text-xl sm:text-2xl text-colorPrimary ml-8 sm:ml-0">
               {asVendor ? "Sign up As a Vendor!" : "Sign up to WeddingBell!"}
             </h3>
@@ -374,7 +392,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
               </div>
             </div>
 
-            <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4 text-center">
+            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4 text-center">
               <span className="text-black">
                 {asVendor ? "Are you a customer ?" : "Are you a Vendor ?"}
               </span>
@@ -384,7 +402,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
               >
                 {asVendor ? "Customer" : "Business"} Sign Up
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

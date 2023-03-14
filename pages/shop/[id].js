@@ -139,6 +139,8 @@ const ShopDetail = ({ shopDetails }) => {
     );
   }, [shopReviews]);
 
+
+
   useEffect(() => {
     const reviewedShopsByUser = shopReviews.find(
       (itm) => itm.user_id === userProfile.id
@@ -208,11 +210,11 @@ const ShopDetail = ({ shopDetails }) => {
           </div>
           <div className="col-span-8 lg:col-span-6 bg-[#F5F5F5] rounded-lg">
             <div className="container">
-              <UpperFilter setProductPageSkip={setProductPageSkip} />
+              <UpperFilter setProductPageSkip={setProductPageSkip} isbg={true} />
 
-              <p className="font-bold text-2xl text-colorBlack">
+              {/* <p className="font-bold text-2xl text-colorBlack">
                 Special Products
-              </p>
+              </p> */}
               <InfiniteScroll
                 className="!overflow-hidden p-0.5"
                 dataLength={productsData.length}

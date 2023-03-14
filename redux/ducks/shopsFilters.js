@@ -24,6 +24,9 @@ const initialState = {
     locations: {
       selectedValue: [],
     },
+    stars: {
+      selectedValue: "",
+    },
   },
   sortFilters: {
     sortType: { selectedValue: "" },

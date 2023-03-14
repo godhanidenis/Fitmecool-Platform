@@ -13,7 +13,7 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
         handleOpenClick={handleOpenClick}
         className="flex items-center justify-between"
       >
-        <span className="text-base">{cardTitle}</span>
+        <span className="text-lg">{cardTitle}</span>
         <button
           type="button"
           className={`w-3 h-2 transition-transform duration-300 ${
