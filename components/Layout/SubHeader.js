@@ -58,7 +58,6 @@ const SubHeader = () => {
               />
             ))}
           </CustomTab>
-
           <Popper
             open={open}
             anchorEl={anchorEl}

@@ -17,7 +17,7 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
       <div className="mb-2 flex justify-between gap-1">
         <Button
           className="bg-colorPrimary px-6  text-colorWhite"
-          sx={{ textTransform: "none" , height:"38px", fontWeight:600}}
+          sx={{ textTransform: "none" , height:"38px", fontWeight:600, whiteSpace:'nowrap'}}
           variant="contained"
           size="small"
         >

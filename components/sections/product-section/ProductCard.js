@@ -93,7 +93,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
+    <div className="bg-white mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
       <div className="border-b">
         <div className="container my-[5px] cursor-pointer product-parent-div">
           <div className="grid grid-cols-1  place-items-center">

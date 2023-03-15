@@ -10,6 +10,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Image from "next/image";
 import {
   Avatar,
+  Box,
   Button,
   Divider,
   FormControlLabel,
@@ -38,6 +39,15 @@ import {
 } from "../../redux/ducks/userProfile";
 import { productLike } from "../../graphql/mutations/products";
 import Link from "next/link";
+import SubHeader from "../../components/Layout/SubHeader";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import Carousel, {
+  autoplayPlugin,
+  slidesToShowPlugin,
+} from "@brainhubeu/react-carousel";
+import "@brainhubeu/react-carousel/lib/style.css";
 
 const ProductDetail = ({ productDetails }) => {
   console.log("productDetails", productDetails);
@@ -129,8 +139,9 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
+      <SubHeader />
       <div className="bg-colorWhite">
-        <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto">
+        <div className="p-5 w-[85%] mx-auto">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1">
               <div className="grid grid-cols-4">
@@ -150,7 +161,7 @@ const ProductDetail = ({ productDetails }) => {
                     />
                   </div>
                 </div>
-                <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[75vh]">
+                <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
                   <div style={{ width: "60%" }}>
                     {/* <ReactImageMagnify
                       {...{
@@ -172,102 +183,168 @@ const ProductDetail = ({ productDetails }) => {
                     /> */}
                   </div>
                 </div>
+                <div className="col-span-1"></div>
+                <div className="col-span-3 pt-5 flex justify-between items-center bg-colorWhite ">
+                  {/* <div className=""> */}
+                  <Button variant="outlined" sx={{ textTransform: "none" }}>
+                    <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
+                  </Button>
+                  <Button variant="outlined" sx={{ textTransform: "none" }}>
+                    <FileUploadOutlinedIcon /> &nbsp; Share
+                  </Button>
+                  <Button variant="outlined" sx={{ textTransform: "none" }}>
+                    <ReportGmailerrorredOutlinedIcon /> &nbsp;Report
+                  </Button>
+                  {/* </div> */}
+                </div>
               </div>
             </div>
             <div className="col-span-2 lg:col-span-1">
-              <div className="bg-colorWhite p-3 rounded-lg grid grid-cols-2">
-                <div className="col-span-1 flex justify-start items-center">
-                  <div className="flex gap-4 justify-start items-center">
-                    <div className="flex justify-center items-center">
-                      <Image
-                        alt="Shop Logo"
-                        src={
-                          productDetails.data.product.data.branchInfo?.shop_info
-                            .shop_logo
-                        }
-                        width={80}
-                        height={50}
-                        className="rounded-[50%]"
-                      />
+              <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}>
+                <div className="bg-colorWhite p-3 rounded-lg grid grid-cols-3">
+                  <div className="col-span-1 flex justify-start items-center">
+                    <div className="flex justify-start items-center">
+                      <div className="flex justify-center items-center">
+                        <Image
+                          alt="Shop Logo"
+                          src={
+                            productDetails.data.product.data.branchInfo
+                              ?.shop_info.shop_logo
+                          }
+                          width={80}
+                          height={50}
+                          className="rounded-[50%]"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <Link
+                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                        >
+                          <a target="_blank">
+                            <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                              {
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_info.shop_name
+                              }
+                            </p>
+                          </a>
+                        </Link>
+                        <p className="text-[#888888] text-sm font-normal">
+                          25 days ago
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex flex-col justify-center">
-                      <Link
-                        href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                      >
-                        <a target="_blank">
-                          <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                            {
-                              productDetails.data.product.data.branchInfo
-                                ?.shop_info.shop_name
+                  </div>
+                  <div className="flex justify-center flex-col items-center">
+                    <Rating
+                      name="text-feedback"
+                      value={Math.round(
+                        productDetails.data.product.data.branchInfo?.shop_info
+                          .shop_rating
+                      )}
+                      readOnly
+                      // size=""
+                      emptyIcon={<StarIcon fontSize="inherit" />}
+                    />
+                    <p className="text-[#888888] font-normal flex items-center">
+                      <LocationOnIcon fontSize="small" className="mr-1" />
+                      {
+                        productDetails.data.product.data.branchInfo
+                          ?.branch_address
+                      }
+                    </p>
+                  </div>
+                  <div className="col-span-1 flex items-center justify-center">
+                    <Button
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
+                      className={`rounded-md ${
+                        shopFollowByUser
+                          ? "bg-green-500 hover:bg-green-500"
+                          : "bg-colorBlack hover:bg-colorBlack"
+                      }   !flex !items-center !justify-center`}
+                      endIcon={<PersonAddIcon fontSize="large" />}
+                      onClick={() => {
+                        if (isAuthenticate) {
+                          shopFollow({
+                            shopInfo: {
+                              shop_id:
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_id,
+                              user_id: userProfile.id,
+                            },
+                          }).then(
+                            (res) => {
+                              dispatch(
+                                !shopFollowByUser
+                                  ? shopFollowToggle({
+                                      shopInfo: {
+                                        key: "follow",
+                                        value: res.data.shopFollower.data,
+                                      },
+                                    })
+                                  : shopFollowToggle({
+                                      shopInfo: {
+                                        key: "unFollow",
+                                        value:
+                                          productDetails.data.product.data
+                                            .branchInfo.shop_id,
+                                      },
+                                    })
+                              );
+                              toast.success(res.data.shopFollower.message, {
+                                theme: "colored",
+                              });
+                            },
+                            (error) => {
+                              toast.error(error.message, { theme: "colored" });
                             }
-                          </p>
-                        </a>
-                      </Link>
-                      <p className="text-[#888888] text-sm font-normal">
-                        25 days ago
-                      </p>
-                    </div>
+                          );
+                        } else {
+                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        }
+                      }}
+                    >
+                      <Typography color="#FFFFFF">
+                        {shopFollowByUser ? "UnFollow" : "Follow"}
+                      </Typography>
+                    </Button>
                   </div>
                 </div>
-                <div className="col-span-1 flex items-center justify-between">
-                  <div className="">
-                    <div className="flex justify-center flex-col gap-1">
-                      <Rating
-                        name="text-feedback"
-                        value={Math.round(
-                          productDetails.data.product.data.branchInfo?.shop_info
-                            .shop_rating
-                        )}
-                        readOnly
-                        size="large"
-                        emptyIcon={<StarIcon fontSize="inherit" />}
-                      />
-                      <p className="text-[#888888] text-lg font-normal flex items-center">
-                        <LocationOnIcon fontSize="small" className="mr-1" />
-                        {
-                          productDetails.data.product.data.branchInfo
-                            ?.branch_address
-                        }
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="contained"
-                    className={`rounded-2xl ${
-                      shopFollowByUser
-                        ? "bg-green-500 hover:bg-green-500"
-                        : "bg-colorBlack hover:bg-colorBlack"
-                    }  py-4 px-5 !flex !items-center !justify-center`}
-                    endIcon={<PersonAddIcon fontSize="large" />}
+              </Box>
+              <div className="pt-5">
+                <div className="flex justify-between">
+                  <p className="font-semibold text-2xl text-colorBlack">
+                    {productDetails.data.product.data.product_name}
+                  </p>
+                  <button
+                    className={`w-10 h-10 rounded-full transition-colors bg-[#ffffff] duration-300`}
                     onClick={() => {
                       if (isAuthenticate) {
-                        shopFollow({
-                          shopInfo: {
-                            shop_id:
-                              productDetails.data.product.data.branchInfo
-                                ?.shop_id,
+                        productLike({
+                          productInfo: {
+                            product_id: productDetails.data.product.data.id,
                             user_id: userProfile.id,
                           },
                         }).then(
                           (res) => {
                             dispatch(
-                              !shopFollowByUser
-                                ? shopFollowToggle({
-                                    shopInfo: {
-                                      key: "follow",
-                                      value: res.data.shopFollower.data,
+                              !productLikeByUser
+                                ? productLikeToggle({
+                                    productInfo: {
+                                      key: "like",
+                                      value: res.data.productLike.data,
                                     },
                                   })
-                                : shopFollowToggle({
-                                    shopInfo: {
-                                      key: "unFollow",
+                                : productLikeToggle({
+                                    productInfo: {
+                                      key: "disLike",
                                       value:
-                                        productDetails.data.product.data
-                                          .branchInfo.shop_id,
+                                        productDetails.data.product.data.id,
                                     },
                                   })
                             );
-                            toast.success(res.data.shopFollower.message, {
+                            toast.success(res.data.productLike.message, {
                               theme: "colored",
                             });
                           },
@@ -280,67 +357,17 @@ const ProductDetail = ({ productDetails }) => {
                       }
                     }}
                   >
-                    <Typography color="#FFFFFF">
-                      {shopFollowByUser ? "UnFollow" : "Follow"}
-                    </Typography>
-                  </Button>
+                    {!productLikeByUser ? (
+                      <FavoriteBorderIcon fontSize="medium" />
+                    ) : (
+                      "❤️"
+                    )}
+                  </button>
                 </div>
+                <p className="pt-3 font-normal text-lg text-[#888888]">
+                  {productDetails.data.product.data.product_description}
+                </p>
               </div>
-
-              <div className="flex items-center justify-end pt-5">
-                <button
-                  className={`w-10 h-10 rounded-full transition-colors bg-[#ffffff] duration-300`}
-                  onClick={() => {
-                    if (isAuthenticate) {
-                      productLike({
-                        productInfo: {
-                          product_id: productDetails.data.product.data.id,
-                          user_id: userProfile.id,
-                        },
-                      }).then(
-                        (res) => {
-                          dispatch(
-                            !productLikeByUser
-                              ? productLikeToggle({
-                                  productInfo: {
-                                    key: "like",
-                                    value: res.data.productLike.data,
-                                  },
-                                })
-                              : productLikeToggle({
-                                  productInfo: {
-                                    key: "disLike",
-                                    value: productDetails.data.product.data.id,
-                                  },
-                                })
-                          );
-                          toast.success(res.data.productLike.message, {
-                            theme: "colored",
-                          });
-                        },
-                        (error) => {
-                          toast.error(error.message, { theme: "colored" });
-                        }
-                      );
-                    } else {
-                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                    }
-                  }}
-                >
-                  {!productLikeByUser ? (
-                    <FavoriteBorderIcon fontSize="medium" />
-                  ) : (
-                    "❤️"
-                  )}
-                </button>
-              </div>
-
-              <p className="pt-5 font-semibold text-2xl text-colorBlack">
-                {productDetails.data.product.data.product_name}
-              </p>
-              <p className="pt-3 font-normal text-lg text-[#888888]">
-                {productDetails.data.product.data.product_description}
-              </p>
 
               <div className="flex items-center pt-12 font-semibold text-xl text-colorBlack gap-10">
                 Color :
@@ -455,7 +482,7 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                 </div>
               )}
-              <div className="flex justify-center items-center pt-5 gap-10">
+              {/* <div className="flex justify-center items-center pt-5 gap-10">
                 <Typography sx={{ fontWeight: 600, color: "black" }}>
                   Share :
                 </Typography>
@@ -483,22 +510,62 @@ const ProductDetail = ({ productDetails }) => {
                 >
                   <Image src={googleIcon} alt="googleIcon" />
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
 
         <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
-          <p className="text-colorBlack font-semibold text-xl">
+          <p className="text-colorBlack pb-2 font-semibold text-xl">
             Special Products
           </p>
 
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10">
-            {productDetails.data.product.related &&
-              productDetails.data.product.related?.map((product) => (
-                <ProductCard product={product} key={product.id} />
-              ))}
-          </div>
+          {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
+            <Carousel
+              // value={value}
+              // onChange={onChange}
+              plugins={[
+                'infinite',
+                {
+                  resolve: slidesToShowPlugin,
+                  options: {
+                   numberOfSlides: 5
+                  }
+                },
+                {      
+                resolve: autoplayPlugin,
+                  options: {
+                    interval: 2000,
+                  }
+                },
+              ]}
+              breakpoints={{
+                820: {
+                  plugins: [
+                   {
+                     resolve: slidesToShowPlugin,
+                     options: {
+                      numberOfSlides: 2
+                     },
+                     resolve: autoplayPlugin,
+                     options: {
+                       interval: 2000,
+                     }
+                   },
+                 ]
+                }
+              }}
+              animationSpeed={2000}
+              arrows
+              // infinite
+              slidesPerPage={4}
+            >
+              {productDetails.data.product.related &&
+                productDetails.data.product.related?.map((product) => {
+                  return <ProductCard product={product} key={product.id} />;
+                })}
+            </Carousel>
+          {/* </div> */}
         </div>
       </div>
 
