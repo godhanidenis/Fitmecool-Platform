@@ -1,5 +1,5 @@
 import React from "react";
-import withAuth from "../../../components/core/PrivateRouteForVendor";
+import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import VendorShopSubHeader from "../../../components/Layout/VendorShopSubHeader";
 
 const ShopDashboard = () => {
@@ -64,5 +64,4 @@ const ShopDashboard = () => {
   );
 };
 
-// export default withAuth(ShopDashboard);
-export default ShopDashboard;
+export default withAuth(ShopDashboard);

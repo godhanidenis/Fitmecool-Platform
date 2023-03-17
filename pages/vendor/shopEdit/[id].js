@@ -47,6 +47,7 @@ import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
+import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 
 const style = {
   position: "absolute",
@@ -1713,7 +1714,7 @@ const ShopEdit = () => {
   );
 };
 
-export default ShopEdit;
+export default withAuth(ShopEdit);
 
 const HoursModal = ({
   hoursModalOpen,

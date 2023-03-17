@@ -41,6 +41,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Router from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { setShopRegisterId } from "../../../redux/ducks/userProfile";
+import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
 
 const shopRegistrationSteps = ["Details", "Photos", "Branches"];
 const style = {
@@ -56,6 +57,7 @@ const style = {
   borderRadius: "12px",
   height: "auto",
 };
+
 const ShopPage = () => {
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
@@ -264,7 +266,7 @@ const ShopPage = () => {
                               theme: "colored",
                             });
                             setLoading(false);
-                            localStorage.setItem("userHaveAnyShop", true);
+                            localStorage.setItem("userHaveAnyShop", "true");
                             Router.push("/vendor/dashboard");
                           },
                           (error) => {
@@ -349,7 +351,7 @@ const ShopPage = () => {
                             theme: "colored",
                           });
                           setLoading(false);
-                          localStorage.setItem("userHaveAnyShop", true);
+                          localStorage.setItem("userHaveAnyShop", "true");
                           Router.push("/vendor/dashboard");
                         },
                         (error) => {
@@ -1452,7 +1454,7 @@ const ShopPage = () => {
   );
 };
 
-export default ShopPage;
+export default withAuthWithoutShop(ShopPage);
 
 const HoursModal = ({
   hoursModalOpen,

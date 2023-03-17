@@ -14,7 +14,7 @@ import img from "../../../assets/logo_Shop.png";
 import img1 from "../../../assets/shopCoverImage.png";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
 import Filter from "../../../components/Filters";
 import VendorShopSubHeader from "../../../components/Layout/VendorShopSubHeader";
@@ -46,6 +46,7 @@ import { toast } from "react-toastify";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
+import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 
 const style = {
   position: "absolute",
@@ -567,7 +568,10 @@ const ShopDetailsPage = () => {
 
             <div className="bg-[#F5F5F5] rounded-lg mt-5">
               <div className="container">
-                <UpperFilter setProductPageSkip={setProductPageSkip} isbg={true} />
+                <UpperFilter
+                  setProductPageSkip={setProductPageSkip}
+                  isbg={true}
+                />
 
                 {/* <p className="font-bold text-2xl text-colorBlack">
                   Special Products
@@ -1031,4 +1035,4 @@ const ShopDetailsPage = () => {
     </>
   );
 };
-export default ShopDetailsPage;
+export default withAuth(ShopDetailsPage);
