@@ -11,6 +11,7 @@ import Image from "next/image";
 import {
   Avatar,
   Box,
+  Breadcrumbs,
   Button,
   Divider,
   FormControlLabel,
@@ -43,11 +44,26 @@ import SubHeader from "../../components/Layout/SubHeader";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 import Carousel, {
   autoplayPlugin,
   slidesToShowPlugin,
 } from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#ffffff",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    boxShadow: "0 0 10px rgba(0,0,0,.1)",
+    // border: "1px solid #dadde9",
+  },
+}));
 
 const ProductDetail = ({ productDetails }) => {
   console.log("productDetails", productDetails);
@@ -140,14 +156,36 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <SubHeader />
+      <div className="p-2 pt-5 grid grid-cols-6">
+        <div className="col-span-1"></div>
+        <div className="col-span-5">
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link underline="hover" color="inherit" href="#">
+              Product
+            </Link>
+            <Link underline="hover" color="inherit" href="#">
+              {productDetails.data.product.data.categoryInfo?.category_type}
+            </Link>
+            <Link
+              underline="hover"
+              color="text.primary"
+              href="#"
+              aria-current="page"
+            >
+              {productDetails.data.product.data.categoryInfo?.category_name}
+            </Link>
+          </Breadcrumbs>
+        </div>
+      </div>
       <div className="bg-colorWhite">
-        <div className="p-5 w-[85%] mx-auto">
+        <div className="w-[85%] mx-auto">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1">
               <div className="grid grid-cols-4">
                 <div className="col-span-1">
                   <div className="p-2 py-5">
-                    <KeyboardArrowUpIcon
+                    {items}
+                    {/* <KeyboardArrowUpIcon
                       onClick={() => slider?.current?.slickNext()}
                       className="flex cursor-pointer m-auto"
                     />
@@ -158,7 +196,7 @@ const ProductDetail = ({ productDetails }) => {
                     <KeyboardArrowDownIcon
                       onClick={() => slider?.current?.slickPrev()}
                       className="flex cursor-pointer m-auto"
-                    />
+                    /> */}
                   </div>
                 </div>
                 <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
@@ -189,9 +227,40 @@ const ProductDetail = ({ productDetails }) => {
                   <Button variant="outlined" sx={{ textTransform: "none" }}>
                     <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
                   </Button>
-                  <Button variant="outlined" sx={{ textTransform: "none" }}>
-                    <FileUploadOutlinedIcon /> &nbsp; Share
-                  </Button>
+                  <HtmlTooltip
+                    title={
+                      <React.Fragment>
+                        <a
+                          className="p-2 rounded-lg cursor-pointer"
+                          href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.facebook}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={facebookIcon} alt="facebookIcon" />
+                        </a>
+                        <a
+                          className="p-2 rounded-lg cursor-pointer"
+                          href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.instagram}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={instagramIcon} alt="instagramIcon" />
+                        </a>
+                        <a
+                          className="p-2 rounded-lg cursor-pointer"
+                          href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.website}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={googleIcon} alt="googleIcon" />
+                        </a>
+                      </React.Fragment>
+                    }
+                  >
+                    <Button variant="outlined" sx={{ textTransform: "none" }}>
+                      <FileUploadOutlinedIcon /> &nbsp; Share
+                    </Button>
+                  </HtmlTooltip>
                   <Button variant="outlined" sx={{ textTransform: "none" }}>
                     <ReportGmailerrorredOutlinedIcon /> &nbsp;Report
                   </Button>
@@ -235,7 +304,7 @@ const ProductDetail = ({ productDetails }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-center flex-col items-center">
+                  <div className="flex justify-end flex-col items-center">
                     <Rating
                       name="text-feedback"
                       value={Math.round(
@@ -254,58 +323,21 @@ const ProductDetail = ({ productDetails }) => {
                       }
                     </p>
                   </div>
-                  <div className="col-span-1 flex items-center justify-center">
+                  <div className="col-span-1 flex items-center justify-end">
                     <Button
-                      variant="contained"
+                      variant="outlined"
                       sx={{ textTransform: "none" }}
-                      className={`rounded-md ${
-                        shopFollowByUser
-                          ? "bg-green-500 hover:bg-green-500"
-                          : "bg-colorBlack hover:bg-colorBlack"
-                      }   !flex !items-center !justify-center`}
+                      // className={`rounded-md 
+                      // ${
+                      //   shopFollowByUser
+                      //     ? "bg-green-500 hover:bg-green-500"
+                      //     : "bg-colorBlack hover:bg-colorBlack"
+                      // }
+                      //    !flex !items-center !justify-center`}
                       endIcon={<PersonAddIcon fontSize="large" />}
-                      onClick={() => {
-                        if (isAuthenticate) {
-                          shopFollow({
-                            shopInfo: {
-                              shop_id:
-                                productDetails.data.product.data.branchInfo
-                                  ?.shop_id,
-                              user_id: userProfile.id,
-                            },
-                          }).then(
-                            (res) => {
-                              dispatch(
-                                !shopFollowByUser
-                                  ? shopFollowToggle({
-                                      shopInfo: {
-                                        key: "follow",
-                                        value: res.data.shopFollower.data,
-                                      },
-                                    })
-                                  : shopFollowToggle({
-                                      shopInfo: {
-                                        key: "unFollow",
-                                        value:
-                                          productDetails.data.product.data
-                                            .branchInfo.shop_id,
-                                      },
-                                    })
-                              );
-                              toast.success(res.data.shopFollower.message, {
-                                theme: "colored",
-                              });
-                            },
-                            (error) => {
-                              toast.error(error.message, { theme: "colored" });
-                            }
-                          );
-                        } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        }
-                      }}
+                 
                     >
-                      <Typography color="#FFFFFF">
+                      <Typography color="#95539B">
                         {shopFollowByUser ? "UnFollow" : "Follow"}
                       </Typography>
                     </Button>
@@ -516,55 +548,82 @@ const ProductDetail = ({ productDetails }) => {
         </div>
 
         <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
-          <p className="text-colorBlack pb-2 font-semibold text-xl">
+          <p className="text-colorBlack pb-3 font-semibold text-xl">
             Special Products
           </p>
 
           {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
-            <Carousel
-              // value={value}
-              // onChange={onChange}
-              plugins={[
-                'infinite',
-                {
-                  resolve: slidesToShowPlugin,
-                  options: {
-                   numberOfSlides: 5
-                  }
+          <Carousel
+            // value={value}
+            // onChange={onChange}
+            plugins={[
+              // "infinite",
+              "clickToChange",
+              "centered",
+              {
+                resolve: slidesToShowPlugin,
+                options: {
+                  numberOfSlides: 3,
                 },
-                {      
+              },
+              {
                 resolve: autoplayPlugin,
-                  options: {
-                    interval: 2000,
-                  }
+                options: {
+                  interval: 2000,
                 },
-              ]}
-              breakpoints={{
-                820: {
-                  plugins: [
-                   {
-                     resolve: slidesToShowPlugin,
-                     options: {
-                      numberOfSlides: 2
-                     },
-                     resolve: autoplayPlugin,
-                     options: {
-                       interval: 2000,
-                     }
-                   },
-                 ]
-                }
-              }}
-              animationSpeed={2000}
-              arrows
-              // infinite
-              slidesPerPage={4}
-            >
-              {productDetails.data.product.related &&
-                productDetails.data.product.related?.map((product) => {
+              },
+            ]}
+            breakpoints={{
+              820: {
+                plugins: [
+                  {
+                    resolve: slidesToShowPlugin,
+                    options: {
+                      numberOfSlides: 2,
+                    },
+                    resolve: autoplayPlugin,
+                    options: {
+                      interval: 2000,
+                    },
+                  },
+                ],
+              },
+            }}
+            animationSpeed={2000}
+            arrows
+            // infinite
+            slidesPerPage={3}
+          >
+            {productDetails.data.product.related &&
+              productDetails.data.product.related?.map((product, index) => {
+                // if (productDetails.data.product.related.length - 1 === index) {
+                //   return (
+                //     <>
+                //       <ProductCard product={product} key={product.id} />
+
+                //     </>
+                //   );
+                // } else {
+                if (index <= 2) {
                   return <ProductCard product={product} key={product.id} />;
-                })}
-            </Carousel>
+                } else if (index === 3) {
+                  return (
+                    <ProductCard
+                      product={product}
+                      productDetails={productDetails}
+                      viewMore={true}
+                      key={product.id}
+                    />
+                  );
+                }
+                // }
+              })}
+
+            {/* <ProductCard
+              product={productDetails.data.product.related[0]}
+              key={productDetails.data.product.related[0].id}
+            /> */}
+          </Carousel>
           {/* </div> */}
         </div>
       </div>

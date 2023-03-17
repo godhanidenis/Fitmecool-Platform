@@ -37,6 +37,8 @@ const ProductCard = ({
   getAllProducts,
   setProductPageSkip,
   setEditProductId,
+  viewMore,
+  productDetails
 }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
@@ -93,199 +95,213 @@ const ProductCard = ({
   };
 
   return (
-    <div className="bg-white mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
-      <div className="border-b">
-        <div className="container my-[5px] cursor-pointer product-parent-div">
-          <div className="grid grid-cols-1  place-items-center">
-            <div className="w-[60%]">
-              <Slider {...settings}>{items}</Slider>
-            </div>
-          </div>
+    <>
+      {viewMore ? (
+        <div className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
+          <Link
+            href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+          >
+            <Button variant="outlined">View More</Button>
+          </Link>
+        </div>
+      ) : (
+        <div className="bg-white mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
+          <div className="border-b">
+            <div className="container my-[5px] cursor-pointer product-parent-div">
+              <div className="grid grid-cols-1  place-items-center">
+                <div className="w-[60%]">
+                  <Slider {...settings}>{items}</Slider>
+                </div>
+              </div>
 
-          {shopProduct && (
-            <button
-              className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 left-0`}
-              onClick={() => {
-                setEditProductId(product.id);
-              }}
-            >
-              <EditIcon />
-            </button>
-          )}
-          {!shopProduct ? (
-            <button
-              className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
-              onClick={() => {
-                if (isAuthenticate) {
-                  productLike({
-                    productInfo: {
-                      product_id: product.id,
-                      user_id: userProfile.id,
-                    },
-                  }).then(
-                    (res) => {
-                      dispatch(
-                        !productLikeByUser
-                          ? productLikeToggle({
-                              productInfo: {
-                                key: "like",
-                                value: res.data.productLike.data,
-                              },
-                            })
-                          : productLikeToggle({
-                              productInfo: {
-                                key: "disLike",
-                                value: product.id,
-                              },
-                            })
-                      );
-                      toast.success(res.data.productLike.message, {
-                        theme: "colored",
-                      });
-                    },
-                    (error) => {
-                      toast.error(error.message, { theme: "colored" });
-                    }
-                  );
-                } else {
-                  setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                }
-              }}
-            >
-              {!productLikeByUser ? (
-                <FavoriteBorderIcon fontSize="small" />
-              ) : (
-                "❤️"
-              )}
-            </button>
-          ) : (
-            <button
-              className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
-              onClick={() => {
-                setProductDeleteModalOpen(true);
-                setDeleteProductId(product.id);
-              }}
-            >
-              <DeleteIcon className="text-red-600" />
-            </button>
-          )}
-          <div className="product-overlay">
-            <Link href={`/product/${product.id}`}>
-              <a target="_blank">
-                <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton">
-                  See Details
+              {shopProduct && (
+                <button
+                  className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 left-0`}
+                  onClick={() => {
+                    setEditProductId(product.id);
+                  }}
+                >
+                  <EditIcon />
                 </button>
-              </a>
-            </Link>
+              )}
+              {!shopProduct ? (
+                <button
+                  className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
+                  onClick={() => {
+                    if (isAuthenticate) {
+                      productLike({
+                        productInfo: {
+                          product_id: product.id,
+                          user_id: userProfile.id,
+                        },
+                      }).then(
+                        (res) => {
+                          dispatch(
+                            !productLikeByUser
+                              ? productLikeToggle({
+                                  productInfo: {
+                                    key: "like",
+                                    value: res.data.productLike.data,
+                                  },
+                                })
+                              : productLikeToggle({
+                                  productInfo: {
+                                    key: "disLike",
+                                    value: product.id,
+                                  },
+                                })
+                          );
+                          toast.success(res.data.productLike.message, {
+                            theme: "colored",
+                          });
+                        },
+                        (error) => {
+                          toast.error(error.message, { theme: "colored" });
+                        }
+                      );
+                    } else {
+                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                    }
+                  }}
+                >
+                  {!productLikeByUser ? (
+                    <FavoriteBorderIcon fontSize="small" />
+                  ) : (
+                    "❤️"
+                  )}
+                </button>
+              ) : (
+                <button
+                  className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
+                  onClick={() => {
+                    setProductDeleteModalOpen(true);
+                    setDeleteProductId(product.id);
+                  }}
+                >
+                  <DeleteIcon className="text-red-600" />
+                </button>
+              )}
+              <div className="product-overlay">
+                <Link href={`/product/${product.id}`}>
+                  <a target="_blank">
+                    <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton">
+                      See Details
+                    </button>
+                  </a>
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="px-5 py-3">
-        <div className="flex gap-2 justify-start">
-          <div className="flex justify-center items-center">
-            <Image
-              alt="Shop Logo"
-              src={product.branchInfo?.shop_info?.shop_logo}
-              width={80}
-              height={50}
-              className="rounded-[50%]"
-            />
-          </div>
-          <div className="flex flex-col justify-center">
-            <Link href={`/shop/${shopId}`}>
-              <a target="_blank">
-                <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                  {product.branchInfo?.shop_info?.shop_name}
+          <div className="px-5 py-3">
+            <div className="flex gap-2 justify-start">
+              <div className="flex justify-center items-center">
+                <Image
+                  alt="Shop Logo"
+                  src={product.branchInfo?.shop_info?.shop_logo}
+                  width={80}
+                  height={50}
+                  className="rounded-[50%]"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <Link href={`/shop/${shopId}`}>
+                  <a target="_blank">
+                    <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                      {product.branchInfo?.shop_info?.shop_name}
+                    </p>
+                  </a>
+                </Link>
+                <p className="text-[#888888] text-sm font-normal">
+                  25 days ago
                 </p>
-              </a>
-            </Link>
-            <p className="text-[#888888] text-sm font-normal">25 days ago</p>
-          </div>
-        </div>
-        {productsFiltersReducer.productLayout === "list" && (
-          <div>
-            <p className="font-semibold text-colorBlack text-lg mt-2">
-              {product.product_name}
-            </p>
-            <p className="text-[#888888] font-normal text-sm">
-              {product.product_description}
-            </p>
-            <p className="font-semibold text-colorBlack text-lg mt-2">
-              {product.categoryInfo?.category_name}
-            </p>
-
-            <p className="font-semibold text-colorBlack text-lg mt-2">
-              {product.product_color}
-            </p>
-          </div>
-        )}
-      </div>
-      <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      />
-
-      <CustomAuthModal
-        open={productDeleteModalOpen}
-        onClose={() => setProductDeleteModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      >
-        <Box sx={style}>
-          <div className="p-5">
-            <div className="flex items-center">
-              <p className="flex items-center text-colorBlack text-xl font-semibold">
-                Confirmation Modal
-              </p>
+              </div>
             </div>
+            {productsFiltersReducer.productLayout === "list" && (
+              <div>
+                <p className="font-semibold text-colorBlack text-lg mt-2">
+                  {product.product_name}
+                </p>
+                <p className="text-[#888888] font-normal text-sm">
+                  {product.product_description}
+                </p>
+                <p className="font-semibold text-colorBlack text-lg mt-2">
+                  {product.categoryInfo?.category_name}
+                </p>
 
-            <div className="p-5 text-colorBlack text-lg font-normal">
-              Are you sure delete this Product <b>{deleteProductId}</b>.
-            </div>
+                <p className="font-semibold text-colorBlack text-lg mt-2">
+                  {product.product_color}
+                </p>
+              </div>
+            )}
+          </div>
+          <AuthModal
+            open={open}
+            handleClose={() => {
+              setOpen(false);
+            }}
+            authTypeModal={authTypeModal}
+            setAuthTypeModal={setAuthTypeModal}
+          />
 
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
-                onClick={() => setProductDeleteModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-red-600 hover:bg-red-600 py-2 px-5"
-                onClick={() => {
-                  if (isAuthenticate) {
-                    deleteProduct({ id: deleteProductId }).then(
-                      (res) => {
-                        toast.success(res.data.deleteProduct, {
-                          theme: "colored",
-                        });
-                        setProductPageSkip(0);
-                        getAllProducts();
-                      },
-                      (error) => {
-                        toast.error(error.message, { theme: "colored" });
+          <CustomAuthModal
+            open={productDeleteModalOpen}
+            onClose={() => setProductDeleteModalOpen(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            className="animate__animated animate__slideInDown"
+          >
+            <Box sx={style}>
+              <div className="p-5">
+                <div className="flex items-center">
+                  <p className="flex items-center text-colorBlack text-xl font-semibold">
+                    Confirmation Modal
+                  </p>
+                </div>
+
+                <div className="p-5 text-colorBlack text-lg font-normal">
+                  Are you sure delete this Product <b>{deleteProductId}</b>.
+                </div>
+
+                <div className="container mt-5 flex items-center justify-end gap-5">
+                  <Button
+                    variant="outlined"
+                    className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                    onClick={() => setProductDeleteModalOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    className="rounded-xl capitalize text-colorWhite bg-red-600 hover:bg-red-600 py-2 px-5"
+                    onClick={() => {
+                      if (isAuthenticate) {
+                        deleteProduct({ id: deleteProductId }).then(
+                          (res) => {
+                            toast.success(res.data.deleteProduct, {
+                              theme: "colored",
+                            });
+                            setProductPageSkip(0);
+                            getAllProducts();
+                          },
+                          (error) => {
+                            toast.error(error.message, { theme: "colored" });
+                          }
+                        );
+                        setProductDeleteModalOpen(false);
+                      } else {
+                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
                       }
-                    );
-                    setProductDeleteModalOpen(false);
-                  } else {
-                    setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                  }
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
-    </div>
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            </Box>
+          </CustomAuthModal>
+        </div>
+      )}
+    </>
   );
 };
 

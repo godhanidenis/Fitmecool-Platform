@@ -3,6 +3,8 @@ import DirectoryHero from "../../components/DirectoryHero/DirectoryHero";
 import ShopLandingBg from "../../assets/shopCoverImage.png";
 import {
   Avatar,
+  Button,
+  Grid,
   LinearProgress,
   linearProgressClasses,
   Rating,
@@ -139,8 +141,6 @@ const ShopDetail = ({ shopDetails }) => {
     );
   }, [shopReviews]);
 
-
-
   useEffect(() => {
     const reviewedShopsByUser = shopReviews.find(
       (itm) => itm.user_id === userProfile.id
@@ -208,9 +208,12 @@ const ShopDetail = ({ shopDetails }) => {
               setProductPageSkip={setProductPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 bg-[#F5F5F5] rounded-lg">
+          <div className="col-span-8 lg:col-span-6 rounded-lg border-l">
             <div className="container">
-              <UpperFilter setProductPageSkip={setProductPageSkip} isbg={true} />
+              <UpperFilter
+                setProductPageSkip={setProductPageSkip}
+                isbg={true}
+              />
 
               {/* <p className="font-bold text-2xl text-colorBlack">
                 Special Products
@@ -236,34 +239,39 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           </div>
         </div>
-        <div className="bg-[#F5F5F5] p-4 mt-8 container">
-          <div className="mx-2 mt-2">
-            <div className="flex gap-7">
-              <div className="w-1/2 bg-colorPrimary py-7 px-7 rounded-md">
+        <div className="bg-[#FFFFFF] pb-0 mt-8 container shadow-[0_0_4px_rgba(0,0,0,0.25)]">
+          <Grid
+            container
+            sx={{ pb: "12px", borderBottom: "1px solid #d7d7d7" }}
+          >
+            <Grid item xs={12} className="pl-4 pt-3">
+              {/* <Item>xs=8</Item> */}
+              Reviews for Contourz by Taruna Manchanda (44)
+            </Grid>
+          </Grid>
+          <div className="border-b">
+            <div className="flex gap-7 px-4">
+              <div className="w-1/3 py-3 rounded-md">
                 <div className="flex justify-between">
-                  <p className="text-base font-semibold text-white">
-                    Rating + Distribution
-                  </p>
-                  <div className="flex items-center gap-5">
-                    <p className="text-base font-semibold text-white">
-                      {shopReviews.length} Review
-                    </p>
-                    <div className="border rounded-lg p-1 flex items-center gap-1 bg-colorWhite">
+                  <p className="text-base">Rating + Distribution</p>
+                  <div className="flex items-center flex-col">
+                    <div className="rounded-lg p-1 flex items-center gap-1">
                       <StarIcon fontSize="medium" className="text-yellow-400" />
                       <p className="text-colorBlack font-semibold">
                         {avgShopRating}
                       </p>
                     </div>
+                    <p className="text-sm">{shopReviews.length} Review</p>
                   </div>
                 </div>
 
                 {[5, 4, 3, 2, 1].map((star) => (
                   <div
-                    className="grid grid-cols-6 gap-4 items-center mt-5 p-1"
+                    className="grid grid-cols-6 items-center mt-3 p-1"
                     key={star}
                   >
                     <div className="flex items-center gap-1 col-span-1">
-                      <p className="text-colorWhite font-semibold">{star}</p>
+                      <p className="font-semibold">{star}</p>
                       <StarIcon fontSize="medium" className="text-yellow-400" />
                     </div>
 
@@ -278,26 +286,26 @@ const ShopDetail = ({ shopDetails }) => {
                         }
                       />
                     </div>
-                    <p className="text-base font-normal text-white text-right col-span-1">
+                    <p className="text-sm font-normal text-right col-span-1">
                       {shopReviews.filter((itm) => itm.stars === star).length}{" "}
                       Review
                     </p>
                   </div>
                 ))}
 
-                <p className="mt-5 text-colorWhite font-normal text-base">
+                <p className="mt-5 italic font-normal text-base">
                   Last Review Updated on 20 Apr 2022
                 </p>
               </div>
-              <div className="w-1/2 p-5 pt-8">
-                <p className="text-base font-semibold text-black">
+              <div className="w-2/3 p-5 pt-8 border-l">
+                <p className="text-base font-semibold text-colorStone">
                   Review {shopDetails.data.shop.shop_name} Shop
                 </p>
-                <p className="text-base font-semibold text-black mt-1">
+                <p className="text-base py-4 font-semibold text-colorStone mt-1">
                   Rate vendor
                 </p>
                 <div className="flex justify-between mt-1">
-                  <p className="text-base font-semibold text-black">
+                  <p className="text-base font-semibold text-colorStone">
                     Rate our of
                   </p>
                   <Rating
@@ -308,9 +316,9 @@ const ShopDetail = ({ shopDetails }) => {
                 </div>
                 <div className="mt-5">
                   <TextareaAutosize
-                    minRows={3}
-                    placeholder="Tell us about experience"
-                    className="w-full p-2"
+                    minRows={5}
+                    placeholder="Tell us about experience*"
+                    className="w-full p-2 border text-sm"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                   />
@@ -318,7 +326,7 @@ const ShopDetail = ({ shopDetails }) => {
                 <div className="flex justify-end gap-6 mt-5">
                   <button
                     disabled={submitButtonDisable}
-                    className={`bg-colorPrimary text-white p-2 text-base rounded-md flex items-center justify-center ${
+                    className={`bg-colorPrimary text-white p-2 text-base flex items-center justify-center ${
                       submitButtonDisable && "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={() => {
@@ -370,26 +378,22 @@ const ShopDetail = ({ shopDetails }) => {
               </div>
             </div>
           </div>
-        </div>
+          {/* <p className="flex items-center font-bold text-2xl text-colorBlack container mt-10">
+            Comments
+          </p> */}
 
-        <p className="flex items-center font-bold text-2xl text-colorBlack container mt-10">
-          Comments
-        </p>
+          {(
+            (showAllReview && shopReviews) ||
+            (!showAllReview && shopReviews.slice(0, 2))
+          ).map((review) => (
+            <ShopCommentsSection review={review} key={review.id} />
+          ))}
 
-        {(
-          (showAllReview && shopReviews) ||
-          (!showAllReview && shopReviews.slice(0, 2))
-        ).map((review) => (
-          <ShopCommentsSection review={review} key={review.id} />
-        ))}
-
-        <div className="flex items-center mt-10 container">
-          <button
-            className="bg-colorPrimary text-white px-3 py-2 text-base rounded-md"
-            onClick={() => setShowAllReview(!showAllReview)}
-          >
-            {showAllReview ? "Show Less" : "View All"}
-          </button>
+          <div className="flex items-center justify-center p-2 container">
+            <Button variant="outlined" sx={{textTransform:"none"}} onClick={() => setShowAllReview(!showAllReview)}>
+              {showAllReview ? "Show Less" : "View All"}
+            </Button>
+          </div>
         </div>
 
         <AuthModal
@@ -421,25 +425,21 @@ export async function getServerSideProps(context) {
 
 const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 12,
-  backgroundColor: "#ffffff",
+  // backgroundColor: "#ffffff",
 
-  [`& .${linearProgressClasses.bar}`]: {
-    backgroundColor: "#000000",
-  },
+  // [`& .${linearProgressClasses.bar}`]: {
+  //   backgroundColor: "#000000",
+  // },
 }));
 
 const ShopCommentsSection = ({ review }) => {
   return (
-    <div className="flex justify-center container mt-10">
-      <div
-        className="grid grid-cols-12 w-full rounded-xl bg-[#F5F5F5]"
-        style={{
-          boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-        }}
-      >
+    <div className="flex justify-center border-b mt-10">
+      <div className="grid grid-cols-12 px-4 w-full">
         <div className="col-span-12">
           <div className="flex flex-col	sm:flex-row	">
-            <div className="mt-[-16px] ml-[-16px] flex justify-center">
+            {/* <div className="mt-[-16px] ml-[-16px] flex justify-center"> */}
+            <div className="flex justify-center">
               <Avatar sx={{ width: 56, height: 56 }} />
             </div>
             <div className="flex flex-col w-full">
@@ -451,7 +451,7 @@ const ShopCommentsSection = ({ review }) => {
                     </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
                   </div>
-                  <div className="border rounded-lg p-2 flex items-center gap-1 bg-colorWhite">
+                  <div className="p-2 flex items-center gap-1 bg-colorWhite">
                     <StarIcon fontSize="medium" className="text-yellow-400" />
                     <p className="text-colorBlack font-semibold">
                       {review.stars}
@@ -467,7 +467,7 @@ const ShopCommentsSection = ({ review }) => {
             </div>
           </div>
         </div>
-        <div className="col-span-12 items-center flex my-5 p-3 text-[#888888] text-base font-normal">
+        <div className="col-span-12 items-center text-sm flex p-3 font-normal">
           {review.message}
         </div>
       </div>

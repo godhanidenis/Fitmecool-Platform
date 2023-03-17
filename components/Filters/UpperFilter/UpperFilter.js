@@ -60,16 +60,16 @@ const UpperFilter = ({ byShop, setProductPageSkip, isbg }) => {
   return (
     <div
       className={` ${
-        isbg ? "bg-[#F5F5F5] pt-3" : "bg-[#FFFFFF] mb-3"
-      }  flex justify-between`}
+        isbg ? "pt-3" : " mb-3"
+      }  flex justify-between bg-[#FFFFFF]`}
     >
-      <div className="flex items-center">
+      <div className="flex items-center ml-4">
         <p className="font-bold text-2xl text-colorBlack">{`${
           byShop ? "Shops" : "Products"
         } `}</p>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mr-3">
         {/* <ButtonGroup size="large" aria-label="large button group">
           <Button
             className={`${
