@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Slider } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedShopsFilters } from "../../../redux/ducks/shopsFilters";
 
 const ShopRatingsFilter = ({ setShopPageSkip }) => {
@@ -9,6 +9,9 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
   const [abc, setAbc] = useState(false);
 
   const dispatch = useDispatch();
+
+  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
+
   useEffect(() => {
     abc &&
       dispatch(
@@ -21,12 +24,18 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
       );
   }, [abc, dispatch, selectedData]);
 
+  useEffect(() => {
+    shopsFiltersReducer.appliedShopsFilters &&
+      setSelectedData(
+        shopsFiltersReducer.appliedShopsFilters.stars.selectedValue
+      );
+  }, [shopsFiltersReducer.appliedShopsFilters]);
+
   return (
     <CardInteractive
       cardTitle="Ratings"
       bottomComponent={
         <Slider
-          // defaultValue={3}
           value={selectedData}
           onChange={(e, newRating) => {
             setShopPageSkip(0);

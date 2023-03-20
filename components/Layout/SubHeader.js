@@ -13,12 +13,24 @@ const SubHeader = () => {
 
   const [menCategory, setMenCategory] = useState([]);
   const [womenCategory, setWomenCategory] = useState([]);
+  const [isTop, setIsTop] = useState(true);
 
   const { categories } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsTop(window.scrollY === 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   useEffect(() => {
     setMenCategory(categories.filter((itm) => itm.category_type === "Men"));
     setWomenCategory(categories.filter((itm) => itm.category_type === "Women"));
@@ -42,7 +54,13 @@ const SubHeader = () => {
     setAnchorEl(null);
   };
   return (
-    <div className="w-full left-0 top-[83px] sticky bg-colorWhite z-10 shadow-md">
+    <div
+      className={`w-full ${
+        isTop
+          ? "sticky top-0 left-0  transition-all duration-500 transform origin-top"
+          : ""
+      } bg-colorWhite z-10 shadow-md`}
+    >
       <div className="container flex gap-48 items-center">
         <button type="button" className=" h-5 relative"></button>
         <div className="pl-2" onMouseLeave={handleMenuClose.bind(this)}>

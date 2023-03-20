@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 const VendorShopSubHeader = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
+  const [isTop, setIsTop] = useState(true);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsTop(window.scrollY === 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const setActiveLink = (path) => {
     const withoutLastChunk = router.pathname.slice(
@@ -19,7 +31,13 @@ const VendorShopSubHeader = () => {
       : "text-[#544E5D] hover:opacity-50";
   };
   return (
-    <div className="w-full left-0 top-[83px] sticky bg-[#F5F5F5] z-10 shadow-md">
+    <div
+      className={`w-full ${
+        isTop
+          ? "sticky top-0 left-0  transition-all duration-500 transform origin-top"
+          : ""
+      }bg-[#F5F5F5] z-10 shadow-md`}
+    >
       <div className="container flex items-center">
         <ul className="flex items-center gap-10 p-5">
           <li
@@ -39,9 +57,7 @@ const VendorShopSubHeader = () => {
             </Link>
           </li>
           <li
-            className={`${setActiveLink(
-              "/vendor/shop"
-            )} text-base xl:text-lg`}
+            className={`${setActiveLink("/vendor/shop")} text-base xl:text-lg`}
           >
             <Link href={`/vendor/shop/${userProfile.userCreatedShopId}`}>
               Products

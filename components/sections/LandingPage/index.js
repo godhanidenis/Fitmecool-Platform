@@ -102,7 +102,7 @@ const LandingPage = () => {
         },
         area: shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
         sort: shopsFiltersReducer.sortFilters.sortType.selectedValue,
-        stars: "",
+        stars: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
       })
     );
   };

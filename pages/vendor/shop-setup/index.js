@@ -107,6 +107,13 @@ const ShopPage = () => {
 
   const [subBranchEdit, setSubBranchEdit] = useState();
   const dispatch = useDispatch();
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -420,6 +427,11 @@ const ShopPage = () => {
       });
     }
   };
+
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <>
       <div className="bg-[#F5F5F5]">

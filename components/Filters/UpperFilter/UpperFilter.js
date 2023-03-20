@@ -25,7 +25,7 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
-const UpperFilter = ({ byShop, setProductPageSkip, isbg }) => {
+const UpperFilter = ({ byShop, setProductPageSkip, forShopPage }) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
 
@@ -58,15 +58,11 @@ const UpperFilter = ({ byShop, setProductPageSkip, isbg }) => {
   };
 
   return (
-    <div
-      className={` ${
-        isbg ? "pt-3" : " mb-3"
-      }  flex justify-between bg-[#FFFFFF]`}
-    >
+    <div className={` ${forShopPage ? "pt-3" : "mb-3"} flex justify-between`}>
       <div className="flex items-center ml-4">
         <p className="font-bold text-2xl text-colorBlack">{`${
           byShop ? "Shops" : "Products"
-        } `}</p>
+        }`}</p>
       </div>
 
       <div className="flex items-center gap-2 mr-3">

@@ -212,7 +212,7 @@ const ShopDetail = ({ shopDetails }) => {
             <div className="container">
               <UpperFilter
                 setProductPageSkip={setProductPageSkip}
-                isbg={true}
+                forShopPage={true}
               />
 
               {/* <p className="font-bold text-2xl text-colorBlack">

@@ -148,6 +148,12 @@ const ShopEdit = () => {
   const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
   const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
 
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   async function srcToFile(src, fileName, mimeType) {
     const res = await fetch(src);
     const buf = await res.arrayBuffer();
@@ -611,6 +617,9 @@ const ShopEdit = () => {
   const shopLayoutOnError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
+  if (!isHydrated) {
+    return null;
+  }
   return (
     <>
       <VendorShopSubHeader />

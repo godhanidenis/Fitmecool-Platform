@@ -100,6 +100,7 @@ const ShopDetailsPage = () => {
   const [branchList, setBranchList] = useState([]);
 
   const [productPageSkip, setProductPageSkip] = useState(0);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const [editProductId, setEditProductId] = useState();
   console.log("editProductId", editProductId);
@@ -126,6 +127,10 @@ const ShopDetailsPage = () => {
     reset,
     setValue,
   } = useForm();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     if (editProductId !== undefined) {
@@ -527,26 +532,32 @@ const ShopDetailsPage = () => {
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <>
       <VendorShopSubHeader />
       <div className="bg-colorWhite pb-20 md:pb-28">
-        <div className=" flex rounded-xl  bg-[#F5F5F5]  overflow-visible p-10">
-          <Image
-            src={img}
-            alt="shop logo"
-            width={240}
-            height={220}
-            className="rounded-[50%] w-1/3"
-            layout="fixed"
-          />
-          <Image
-            src={img1}
-            alt="shop logo"
-            width={1400}
-            height={280}
-            className="z-0 rounded"
-          />
+        <div className="bg-[#F5F5F5] overflow-visible p-10">
+          <div className="container flex">
+            <Image
+              src={img}
+              alt="shop logo"
+              width={240}
+              height={220}
+              className="rounded-[50%] w-1/3"
+              layout="fixed"
+            />
+            <Image
+              src={img1}
+              alt="shop logo"
+              width={1400}
+              height={280}
+              className="z-0 rounded"
+            />
+          </div>
         </div>
         <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
           <div className="lg:col-span-2 hidden lg:block ">
@@ -570,7 +581,7 @@ const ShopDetailsPage = () => {
               <div className="container">
                 <UpperFilter
                   setProductPageSkip={setProductPageSkip}
-                  isbg={true}
+                  forShopPage={true}
                 />
 
                 {/* <p className="font-bold text-2xl text-colorBlack">
