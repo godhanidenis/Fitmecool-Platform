@@ -21,7 +21,6 @@ const UpdatePassword = () => {
   const router = useRouter();
 
   const { token } = router.query;
-  console.log("tkn", token);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);

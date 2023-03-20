@@ -83,8 +83,6 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
               onChange={(e) => {
                 setAsVendor(e.target.checked);
               }}
-
-              // onChange={(e) => console.log(e.target.checked)}
             />
             <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
               Customer

@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Wedding Bell</title>
+        <title>Rentbless</title>
       </Head>
       <ThemeProvider theme={theme}>
         <ToastContainer />

@@ -139,7 +139,6 @@ const Header = () => {
 
   const handleClickOpen = () => {
     setOpenModel(true);
-    console.log(":::::open model");
   };
 
   const handleClose = () => {
@@ -154,10 +153,10 @@ const Header = () => {
             <Link href="/">
               <div className="cursor-pointer">
                 <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
-                  <span className="text-4xl">W</span>edding
-                  <span className="text-4xl">B</span>ell
+                  <span className="text-4xl">R</span>entbless
+                  {/* <span className="text-4xl">B</span>ell */}
                 </h2>
-                {/* <Image src={HeaderLogo} alt="Wedding Bell Logo" layout="fill" /> */}
+                {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
               </div>
             </Link>
             <Autocomplete
@@ -346,8 +345,6 @@ const UserProfile = ({ setAccessToken }) => {
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
   const { userProfile } = useSelector((state) => state.userProfile);
-
-  console.log("userProfile1 ", userProfile);
 
   const handleProfileToggle = () => {
     setAnchorElUser((prevOpen) => !prevOpen);

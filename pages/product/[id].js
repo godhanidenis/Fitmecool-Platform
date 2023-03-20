@@ -22,7 +22,7 @@ import {
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import Slider from "react-slick";
-// import ReactImageMagnify from "react-image-magnify";
+import ReactImageMagnify from "react-image-magnify";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { getProductDetails } from "../../graphql/queries/productQueries";
@@ -66,8 +66,6 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 }));
 
 const ProductDetail = ({ productDetails }) => {
-  console.log("productDetails", productDetails);
-
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
@@ -147,11 +145,39 @@ const ProductDetail = ({ productDetails }) => {
           alt="Product Images"
           width={250}
           height={300}
-          className="rounded"
+          className="rounded cursor-pointer"
         />
       </div>
     );
   });
+
+  const MyReactImageMagnify = () => {
+    return (
+      <div>
+        <ReactImageMagnify
+          {...{
+            smallImage: {
+              alt: "Wristwatch by Ted Baker London",
+              isFluidWidth: true,
+              src: images,
+            },
+            largeImage: {
+              src: images,
+              width: 1200,
+              height: 1800,
+            },
+            enlargedImageContainerStyle: {
+              zIndex: "1500",
+            },
+            enlargedImageContainerDimensions: {
+              width: "100%",
+              height: "100%",
+            },
+          }}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -183,47 +209,15 @@ const ProductDetail = ({ productDetails }) => {
             <div className="col-span-2 lg:col-span-1">
               <div className="grid grid-cols-4">
                 <div className="col-span-1">
-                  <div className="p-2 py-5">
-                    {items}
-                    {/* <KeyboardArrowUpIcon
-                      onClick={() => slider?.current?.slickNext()}
-                      className="flex cursor-pointer m-auto"
-                    />
-                    <Slider {...productSliderSetting} ref={slider}>
-                      <div className="bg-white cursor-pointer">{items}</div>
-                      <div className="bg-white cursor-pointer">{items}</div>
-                    </Slider>
-                    <KeyboardArrowDownIcon
-                      onClick={() => slider?.current?.slickPrev()}
-                      className="flex cursor-pointer m-auto"
-                    /> */}
-                  </div>
+                  <div className="p-2 py-5">{items}</div>
                 </div>
                 <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
-                  <div style={{ width: "60%" }}>
-                    {/* <ReactImageMagnify
-                      {...{
-                        smallImage: {
-                          alt: "Wristwatch by Ted Baker London",
-                          isFluidWidth: true,
-                          src: images,
-                        },
-                        largeImage: {
-                          src: images,
-                          width: 1200,
-                          height: 800,
-                        },
-                        enlargedImageContainerDimensions: {
-                          width: "100%",
-                          height: "100%",
-                        },
-                      }}
-                    /> */}
+                  <div style={{ width: "70%" }}>
+                    <MyReactImageMagnify />
                   </div>
                 </div>
                 <div className="col-span-1"></div>
                 <div className="col-span-3 pt-5 flex justify-between items-center bg-colorWhite ">
-                  {/* <div className=""> */}
                   <Button variant="outlined" sx={{ textTransform: "none" }}>
                     <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
                   </Button>
@@ -264,7 +258,6 @@ const ProductDetail = ({ productDetails }) => {
                   <Button variant="outlined" sx={{ textTransform: "none" }}>
                     <ReportGmailerrorredOutlinedIcon /> &nbsp;Report
                   </Button>
-                  {/* </div> */}
                 </div>
               </div>
             </div>
@@ -327,15 +320,47 @@ const ProductDetail = ({ productDetails }) => {
                     <Button
                       variant="outlined"
                       sx={{ textTransform: "none" }}
-                      // className={`rounded-md 
-                      // ${
-                      //   shopFollowByUser
-                      //     ? "bg-green-500 hover:bg-green-500"
-                      //     : "bg-colorBlack hover:bg-colorBlack"
-                      // }
-                      //    !flex !items-center !justify-center`}
                       endIcon={<PersonAddIcon fontSize="large" />}
-                 
+                      onClick={() => {
+                        if (isAuthenticate) {
+                          shopFollow({
+                            shopInfo: {
+                              shop_id:
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_id,
+                              user_id: userProfile.id,
+                            },
+                          }).then(
+                            (res) => {
+                              dispatch(
+                                !shopFollowByUser
+                                  ? shopFollowToggle({
+                                      shopInfo: {
+                                        key: "follow",
+                                        value: res.data.shopFollower.data,
+                                      },
+                                    })
+                                  : shopFollowToggle({
+                                      shopInfo: {
+                                        key: "unFollow",
+                                        value:
+                                          productDetails.data.product.data
+                                            .branchInfo?.shop_id,
+                                      },
+                                    })
+                              );
+                              toast.success(res.data.shopFollower.message, {
+                                theme: "colored",
+                              });
+                            },
+                            (error) => {
+                              toast.error(error.message, { theme: "colored" });
+                            }
+                          );
+                        } else {
+                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        }
+                      }}
                     >
                       <Typography color="#95539B">
                         {shopFollowByUser ? "UnFollow" : "Follow"}

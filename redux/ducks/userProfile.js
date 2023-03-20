@@ -82,10 +82,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
 
     case SHOP_FOLLOW_TOGGLE:
-      console.log(
-        "action.payload.shopInfo.value",
-        action.payload.shopInfo.value
-      );
       return {
         ...state,
 
@@ -123,7 +119,6 @@ const userProfileReducer = (state = initialState, action) => {
       };
 
     case REGISTER_SHOP_ID:
-      console.log("action.payload action.payload", action.payload);
       return {
         ...state,
         userProfile: {

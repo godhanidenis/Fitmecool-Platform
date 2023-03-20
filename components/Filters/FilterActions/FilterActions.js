@@ -7,7 +7,6 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
   const [checked, setChecked] = useState(byShop);
 
   const switchHandler = (event) => {
-    console.log("::::", event);
     setChecked(event.target.checked);
     setByShop(event.target.checked);
   };
@@ -17,7 +16,12 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
       <div className="mb-2 flex justify-between gap-1">
         <Button
           className="bg-colorPrimary px-6  text-colorWhite"
-          sx={{ textTransform: "none" , height:"38px", fontWeight:600, whiteSpace:'nowrap'}}
+          sx={{
+            textTransform: "none",
+            height: "38px",
+            fontWeight: 600,
+            whiteSpace: "nowrap",
+          }}
           variant="contained"
           size="small"
         >
@@ -79,7 +83,6 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
                 type="checkbox"
                 className="hidden peer"
                 onChange={switchHandler}
-                // onChange={(e) => console.log(e.target.checked)}
               />
               <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
                 Product

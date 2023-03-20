@@ -59,11 +59,7 @@ export function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: props.padding }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: props.padding }}>{children}</Box>}
     </div>
   );
 }

@@ -27,7 +27,7 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
   useEffect(() => {
     shopsFiltersReducer.appliedShopsFilters &&
       setSelectedData(
-        shopsFiltersReducer.appliedShopsFilters.stars.selectedValue
+        Number(shopsFiltersReducer.appliedShopsFilters.stars.selectedValue)
       );
   }, [shopsFiltersReducer.appliedShopsFilters]);
 

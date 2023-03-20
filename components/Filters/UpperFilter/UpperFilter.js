@@ -4,7 +4,6 @@ import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import {
   Box,
   Button,
-  ButtonGroup,
   Divider,
   FormControl,
   FormControlLabel,
@@ -66,45 +65,17 @@ const UpperFilter = ({ byShop, setProductPageSkip, forShopPage }) => {
       </div>
 
       <div className="flex items-center gap-2 mr-3">
-        {/* <ButtonGroup size="large" aria-label="large button group">
-          <Button
-            className={`${
-              !byShop &&
-              productsFiltersReducer.productLayout === "list" &&
-              "bg-colorPrimary"
-            } ${
-              byShop &&
-              shopsFiltersReducer.shopLayout === "list" &&
-              "bg-colorPrimary"
-            }`}
-            onClick={() =>
-              !byShop
-                ? dispatch(
-                    changeProductsLayout({
-                      key: "productLayout",
-                      value: "list",
-                    })
-                  )
-                : dispatch(
-                    changeShopsLayout({
-                      key: "shopLayout",
-                      value: "list",
-                    })
-                  )
-            }
-          > */}
         <ListOutlinedIcon
-          // className="text-black"
           fontSize="large"
           className={`${
             !byShop && productsFiltersReducer.productLayout === "list"
-              ? "text-[#95539B]"
+              ? "!text-[#95539B]"
               : "text-black"
           } ${
             byShop && shopsFiltersReducer.shopLayout === "list"
-              ? "text-[#95539B]"
+              ? "!text-[#95539B]"
               : "text-black"
-          }`}
+          } cursor-pointer`}
           onClick={() =>
             !byShop
               ? dispatch(
@@ -121,43 +92,17 @@ const UpperFilter = ({ byShop, setProductPageSkip, forShopPage }) => {
                 )
           }
         />
-        {/* </Button> */}
-        {/* <Button
-          className={`${
-            !byShop &&
-            productsFiltersReducer.productLayout === "grid" &&
-            "bg-colorPrimary"
-          } ${
-            byShop &&
-            shopsFiltersReducer.shopLayout === "grid" &&
-            "bg-colorPrimary"
-          }`}
-          onClick={() =>
-            !byShop
-              ? dispatch(
-                  changeProductsLayout({
-                    key: "productLayout",
-                    value: "grid",
-                  })
-                )
-              : dispatch(
-                  changeShopsLayout({
-                    key: "shopLayout",
-                    value: "grid",
-                  })
-                )
-          }
-        ></Button> */}
+
         <GridViewOutlinedIcon
           className={`${
             !byShop && productsFiltersReducer.productLayout === "grid"
-              ? "text-[#95539B]"
+              ? "!text-[#95539B]"
               : "text-black"
           } ${
             byShop && shopsFiltersReducer.shopLayout === "grid"
-              ? "text-[#95539B]"
+              ? "!text-[#95539B]"
               : "text-black"
-          }`}
+          } cursor-pointer`}
           onClick={() =>
             !byShop
               ? dispatch(
@@ -174,7 +119,7 @@ const UpperFilter = ({ byShop, setProductPageSkip, forShopPage }) => {
                 )
           }
         />
-        {/* </ButtonGroup> */}
+
         <Button
           onClick={(event) => {
             setSortByAnchor(event.currentTarget);

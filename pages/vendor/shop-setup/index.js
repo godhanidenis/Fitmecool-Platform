@@ -1633,8 +1633,6 @@ const DaysTimeModal = ({
   const [closed, setClosed] = useState(false);
   const [open24Hours, setOpen24Hours] = useState(false);
 
-  console.log(":::::", startTime, closeTime);
-
   useEffect(() => {
     setStartTime(
       selectedDay?.split(" - ")[1]?.split(" ")[1] === "PM"
@@ -1898,7 +1896,6 @@ const DaysTimeModal = ({
                   type="time"
                   value={startTime}
                   onChange={(e) => {
-                    console.log(e.target.value);
                     setStartTime(e.target.value);
                   }}
                 />
@@ -1908,7 +1905,6 @@ const DaysTimeModal = ({
                   type="time"
                   value={closeTime}
                   onChange={(e) => {
-                    console.log(e.target.value);
                     setCloseTime(e.target.value);
                   }}
                 />

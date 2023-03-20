@@ -161,7 +161,6 @@ const ShopEdit = () => {
   }
 
   const onShopLogoPreviewImage = (e) => {
-    console.log("e.target.files[0]", e.target.files[0]);
     const reader = new FileReader();
 
     if (e.target.files && e.target.files.length > 0) {
@@ -212,7 +211,6 @@ const ShopEdit = () => {
 
   const getAllSubBranchList = () => {
     getBranchLists().then((res) => {
-      console.log("b res", res.data.branchList);
       const subBranches = res.data.branchList
         .filter((branch) => branch.shop_id === id)
         .filter((itm) => itm.branch_type === "sub");
@@ -257,7 +255,6 @@ const ShopEdit = () => {
     if (id) {
       getShopDetails({ id }).then((res) => {
         getShopOwnerDetail({ id: res.data.shop.owner_id }).then((ownerRes) => {
-          console.log("res o", ownerRes.data.shopOwner);
           setShopOwnerId(ownerRes.data.shopOwner.id);
           ownerInfoSetValue(
             "first_name",
@@ -273,8 +270,6 @@ const ShopEdit = () => {
             ownerRes.data.shopOwner.owner_contact
           );
         });
-
-        console.log("res::::", res.data.shop);
 
         srcToFile(res.data.shop.shop_logo, "profile.png", "image/png").then(
           function (file) {
@@ -2208,7 +2203,6 @@ const SubBranchModal = ({
   ownerInfoGetValue,
   mainBranchInfoGetValue,
 }) => {
-  console.log("editSubBranchId", editSubBranchId);
   const [managerValue, setManagerValue] = useState("");
 
   const [subManagerAddress, setSubManagerAddress] = useState("");

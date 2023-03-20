@@ -5,7 +5,6 @@ import FilterTitle from "../FilterTitle/FilterTitle";
 const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
   const [cardOpen, setCardOpen] = useState(true);
   const handleOpenClick = () => setCardOpen(!cardOpen);
-  console.log("cardTitle:::", cardTitle);
 
   return (
     <CardWrapper>
@@ -38,7 +37,11 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
       {cardOpen && (
         <div
           className={`px-3 ${
-            cardTitle == "Shops" || cardTitle == "Colors" || cardTitle == "Locations" ? "pt-3" : ""
+            cardTitle == "Shops" ||
+            cardTitle == "Colors" ||
+            cardTitle == "Locations"
+              ? "pt-3"
+              : ""
           } `}
         >
           {bottomComponent}

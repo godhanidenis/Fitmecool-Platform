@@ -89,7 +89,6 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
               onChange={(e) => {
                 setAsVendor(e.target.checked);
               }}
-              // onChange={(e) => console.log(e.target.checked)}
             />
             <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
               Customer
@@ -100,7 +99,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
           </label>
           <div className="flex pt-2">
             <h3 className="font-semibold text-xl sm:text-2xl text-colorPrimary ml-8 sm:ml-0">
-              {asVendor ? "Sign up As a Vendor!" : "Sign up to WeddingBell!"}
+              {asVendor ? "Sign up As a Vendor!" : "Sign up to Rentbless!"}
             </h3>
             <CloseIcon
               className="text-black ml-auto cursor-pointer"

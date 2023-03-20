@@ -12,7 +12,6 @@ export const withAuth = (WrappedComponent) => {
       if (accessToken) {
         if (userType === "vendor") {
           if (userHaveAnyShop === "true") {
-            console.log("first--------->>>>>>>");
             return <WrappedComponent {...props} />;
           }
           Router.push("/vendor/shop-setup");

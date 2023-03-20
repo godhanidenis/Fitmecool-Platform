@@ -84,9 +84,6 @@ const ShopDetailsPage = () => {
   const [productAllMediaImages, setProductAllMediaImages] = useState([]);
   const [productAllMediaVideo, setProductAllMediaVideo] = useState();
 
-  console.log("productImages", productAllMediaImages);
-  console.log("productImages", productAllMediaVideo);
-
   const [productVideo, setProductVideo] = useState();
   const [uploadProductVideo, setUploadProductVideo] = useState();
 
@@ -103,7 +100,6 @@ const ShopDetailsPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [editProductId, setEditProductId] = useState();
-  console.log("editProductId", editProductId);
 
   const router = useRouter();
   const { id } = router.query;
@@ -135,7 +131,6 @@ const ShopDetailsPage = () => {
   useEffect(() => {
     if (editProductId !== undefined) {
       setProductListingModalOpen(true);
-      console.log("editProductId:::");
 
       getProductDetails({ id: editProductId }).then((res) => {
         console.log("res:::", res.data.product.data);
@@ -328,7 +323,6 @@ const ShopDetailsPage = () => {
     if (isAuthenticate) {
       setLoading(true);
       if (editProductId === undefined) {
-        console.log("nice");
         MultipleImageUploadFile(uploadProductImages).then((res) => {
           uploadProductVideo !== undefined
             ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
@@ -396,8 +390,6 @@ const ShopDetailsPage = () => {
               );
         });
       } else {
-        console.log("nice11111");
-
         productAllMediaImages.map((img) =>
           deleteMedia({
             file: img,
@@ -954,7 +946,6 @@ const ShopDetailsPage = () => {
                             hidden
                             controls
                             onChange={(e) => {
-                              console.log("eee", e.target.files);
                               if (e.target.files && e.target.files.length > 0) {
                                 onProductVideoPreview(e);
                               }

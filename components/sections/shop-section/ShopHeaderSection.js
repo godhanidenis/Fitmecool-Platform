@@ -13,8 +13,8 @@ import AuthModal from "../../core/AuthModal";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import RateReviewIcon from '@mui/icons-material/RateReview';
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fbfbfb",
   ...theme.typography.body2,
@@ -31,7 +31,6 @@ const ShopHeaderSection = ({
   getAllFollowers,
   totalProducts,
 }) => {
-  console.log("------------------------>>>>>>", shopDetails);
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -79,7 +78,9 @@ const ShopHeaderSection = ({
                     <div className="font-semibold text-2xl text-[#000000]">
                       {shopDetails.shop_name}
                     </div>
-                    <div className=" text-[#888888]">Contourz by Taruna Manchanda</div>
+                    <div className=" text-[#888888]">
+                      Contourz by Taruna Manchanda
+                    </div>
                     <p className="text-[#888888] text-sm font-normal">
                       <LocationOnIcon fontSize="small" className="mr-1" />
                       {shopDetails.branch_info.map(
@@ -89,21 +90,9 @@ const ShopHeaderSection = ({
                     </p>
                   </div>
                   <div className="flex mt-4 flex-nowrap items-center gap-5">
-                    {/* <div className="flex items-center gap-2">
-                      <p className="text-colorBlack font-semibold">Share</p>
-                      <div className="bg-colorWhite p-2 rounded-[50%] cursor-pointer">
-                        <ShareIcon className="!text-colorBlack" />
-                      </div>
-                    </div> */}
                     <Button
                       variant="outlined"
-                      // className={`rounded-2xl  ${
-                      //   shopFollowByUser
-                      //     ? "bg-green-500 hover:bg-green-500"
-                      //     : "bg-colorBlack hover:bg-colorBlack"
-                      // } 
-                      // py-2 px-4 !flex !items-center !justify-center`}
-                      endIcon={<PersonAddIcon  />}
+                      endIcon={<PersonAddIcon />}
                       onClick={() => {
                         if (isAuthenticate) {
                           shopFollow({
@@ -142,7 +131,9 @@ const ShopHeaderSection = ({
                         }
                       }}
                     >
-                      <Typography sx={{textTransform:"none"}}>Follow</Typography>
+                      <Typography sx={{ textTransform: "none" }}>
+                        {shopFollowByUser ? "UnFollow" : "Follow"}
+                      </Typography>
                     </Button>
                   </div>
                 </div>
@@ -163,23 +154,31 @@ const ShopHeaderSection = ({
             <div className="col-span-3">REVIEWS</div>
             <div className="col-span-3">SHARE</div>
           </div> */}
-          <Grid container sx={{ backgroundColor: "#fbfbfb",borderBottom:"1px solid gray" }}>
+          <Grid
+            container
+            sx={{ backgroundColor: "#fbfbfb", borderBottom: "1px solid gray" }}
+          >
             <Grid item xs={3}>
-              <Item><ProductionQuantityLimitsIcon /> {totalProducts} Total Product</Item>
+              <Item>
+                <ProductionQuantityLimitsIcon /> {totalProducts} Total Product
+              </Item>
             </Grid>
-              <Divider orientation="vertical" variant="middle" flexItem />
+            <Divider orientation="vertical" variant="middle" flexItem />
             <Grid item xs={3}>
               <Item>{totalFollowers} Followers</Item>
             </Grid>
-              <Divider orientation="vertical" variant="middle" flexItem />
+            <Divider orientation="vertical" variant="middle" flexItem />
             <Grid item xs={3}>
-              <Item><RateReviewIcon /> {totalReview} Reviews</Item>
+              <Item>
+                <RateReviewIcon /> {totalReview} Reviews
+              </Item>
             </Grid>
-              <Divider orientation="vertical" variant="middle" flexItem />
+            <Divider orientation="vertical" variant="middle" flexItem />
             <Grid item xs={2.5}>
-              <Item><ShareIcon /> 25 Share</Item>
+              <Item>
+                <ShareIcon /> 25 Share
+              </Item>
             </Grid>
-            
           </Grid>
         </div>
       </div>
