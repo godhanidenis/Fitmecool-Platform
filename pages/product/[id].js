@@ -269,65 +269,54 @@ const ProductDetail = ({ productDetails }) => {
               </div>
             </div>
             <div className="col-span-2 lg:col-span-1">
-              <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}>
-                <div className="bg-colorWhite p-3 rounded-lg grid grid-cols-3">
+            <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}>
+                <div className="bg-colorWhite p-3 rounded-lg flex justify-between">
                   <div className="col-span-1 flex justify-start items-center">
                     <div className="flex justify-start items-center">
-                      <div className="flex justify-center items-center">
+                      <div className="flex justify-center items-center mr-3">
                         <Image
                           alt="Shop Logo"
-                          src={
-                            productDetails.data.product.data.branchInfo
-                              ?.shop_info.shop_logo
-                          }
-                          width={80}
-                          height={50}
+                          src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
+                          width={60}
+                          height={40}
                           className="rounded-[50%]"
                         />
                       </div>
                       <div className="flex flex-col justify-center">
-                        <Link
-                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                        >
+                        <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
                           <a target="_blank">
                             <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                              {
-                                productDetails.data.product.data.branchInfo
-                                  ?.shop_info.shop_name
-                              }
+                              {productDetails.data.product.data.branchInfo?.shop_info.shop_name?.length <= 13
+                                ? productDetails.data.product.data.branchInfo?.shop_info.shop_name
+                                : productDetails.data.product.data.branchInfo?.shop_info.shop_name?.substring(0, 13) +
+                                  "..."}
                             </p>
                           </a>
                         </Link>
-                        <p className="text-[#888888] text-sm font-normal">
-                          25 days ago
-                        </p>
+                        <p className="text-[#888888] text-sm font-normal">25 days ago</p>
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-end flex-col items-center">
                     <Rating
                       name="text-feedback"
-                      value={Math.round(
-                        productDetails.data.product.data.branchInfo?.shop_info
-                          .shop_rating
-                      )}
+                      value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
                       readOnly
                       // size=""
                       emptyIcon={<StarIcon fontSize="inherit" />}
                     />
                     <p className="text-[#888888] font-normal flex items-center">
                       <LocationOnIcon fontSize="small" className="mr-1" />
-                      {
-                        productDetails.data.product.data.branchInfo
-                          ?.branch_address
-                      }
+                      {productDetails.data.product.data.branchInfo?.branch_address.length <= 17
+                        ? productDetails.data.product.data.branchInfo?.branch_address
+                        : productDetails.data.product.data.branchInfo?.branch_address.substring(0, 17) + "..."}
                     </p>
                   </div>
                   <div className="col-span-1 flex items-center justify-end">
                     <Button
                       variant="outlined"
                       sx={{ textTransform: "none" }}
-                      // className={`rounded-md 
+                      // className={`rounded-md
                       // ${
                       //   shopFollowByUser
                       //     ? "bg-green-500 hover:bg-green-500"
@@ -335,11 +324,8 @@ const ProductDetail = ({ productDetails }) => {
                       // }
                       //    !flex !items-center !justify-center`}
                       endIcon={<PersonAddIcon fontSize="large" />}
-                 
                     >
-                      <Typography color="#95539B">
-                        {shopFollowByUser ? "UnFollow" : "Follow"}
-                      </Typography>
+                      <Typography color="#95539B">{shopFollowByUser ? "UnFollow" : "Follow"}</Typography>
                     </Button>
                   </div>
                 </div>
