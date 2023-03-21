@@ -7,6 +7,7 @@ import {
   Grid,
   LinearProgress,
   linearProgressClasses,
+  Pagination,
   Rating,
   TextareaAutosize,
 } from "@mui/material";
@@ -169,14 +170,15 @@ const ShopDetail = ({ shopDetails }) => {
     productsFiltersReducer.appliedProductsFilters,
     productsFiltersReducer.sortFilters,
     productsFiltersReducer.searchBarData,
+    productPageSkip,
   ]);
 
-  useEffect(() => {
-    if (productPageSkip > 0) {
-      getMoreProductsList();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, productPageSkip]);
+  // useEffect(() => {
+  //   if (productPageSkip > 0) {
+  //     getMoreProductsList();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, productPageSkip]);
 
   useEffect(() => {
     getAllReviews();
@@ -218,7 +220,7 @@ const ShopDetail = ({ shopDetails }) => {
               {/* <p className="font-bold text-2xl text-colorBlack">
                 Special Products
               </p> */}
-              <InfiniteScroll
+              {/* <InfiniteScroll
                 className="!overflow-hidden p-0.5"
                 dataLength={productsData.length}
                 next={() => setProductPageSkip(productPageSkip + 6)}
@@ -228,14 +230,32 @@ const ShopDetail = ({ shopDetails }) => {
                     <CircularProgress />
                   </div>
                 }
-              >
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
-                  {productsData &&
-                    productsData?.map((product) => (
-                      <ProductCard product={product} key={product.id} />
-                    ))}
+              > */}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                {productsData &&
+                  productsData?.map((product) => (
+                    <ProductCard product={product} key={product.id} />
+                  ))}
+              </div>
+
+              {productsCount > 6 && (
+                <div className="flex items-center justify-center py-10">
+                  <Pagination
+                    count={Math.ceil(productsCount / 6)}
+                    color="primary"
+                    variant="outlined"
+                    shape="rounded"
+                    page={
+                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                    }
+                    onChange={(e, p) => {
+                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                    }}
+                  />
                 </div>
-              </InfiniteScroll>
+              )}
+
+              {/* </InfiniteScroll> */}
             </div>
           </div>
         </div>
@@ -390,7 +410,11 @@ const ShopDetail = ({ shopDetails }) => {
           ))}
 
           <div className="flex items-center justify-center p-2 container">
-            <Button variant="outlined" sx={{textTransform:"none"}} onClick={() => setShowAllReview(!showAllReview)}>
+            <Button
+              variant="outlined"
+              sx={{ textTransform: "none" }}
+              onClick={() => setShowAllReview(!showAllReview)}
+            >
               {showAllReview ? "Show Less" : "View All"}
             </Button>
           </div>

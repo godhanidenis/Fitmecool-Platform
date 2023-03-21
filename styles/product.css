@@ -31,3 +31,14 @@
 .slick-next:before {
   color: gray !important;
 }
+
+.slick-initialized .slick-slide > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.BrainhubCarouselItem {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

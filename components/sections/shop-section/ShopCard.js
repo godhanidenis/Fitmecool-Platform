@@ -1,7 +1,7 @@
-import { Avatar, Divider } from "@mui/material";
+import React from "react";
+import { Divider } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import Slider from "react-slick";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
@@ -69,9 +69,11 @@ const ShopCard = ({ shop }) => {
             </Link>
             <p className="text-[#888888] text-sm font-normal">
               <LocationOnIcon fontSize="small" className="mr-1" />
-              {shop?.branch_info?.map(
-                (itm) => itm.branch_type === "main" && itm.branch_address
-              )}
+              {shop?.branch_info?.length > 1
+                ? shop?.branch_info?.map(
+                    (itm) => itm.branch_type === "main" && itm.branch_address
+                  )
+                : shop?.branch_info[0]?.branch_address}
             </p>
           </div>
         </div>

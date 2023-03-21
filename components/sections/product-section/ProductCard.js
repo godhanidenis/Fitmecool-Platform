@@ -38,7 +38,7 @@ const ProductCard = ({
   setProductPageSkip,
   setEditProductId,
   viewMore,
-  productDetails
+  productDetails,
 }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
@@ -108,7 +108,7 @@ const ProductCard = ({
         <div className="bg-white mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
           <div className="border-b">
             <div className="container my-[5px] cursor-pointer product-parent-div">
-              <div className="grid grid-cols-1  place-items-center">
+              <div className="grid grid-cols-1 place-items-center">
                 <div className="w-[60%]">
                   <Slider {...settings}>{items}</Slider>
                 </div>
@@ -218,10 +218,30 @@ const ProductCard = ({
             </div>
             {productsFiltersReducer.productLayout === "list" && (
               <div>
-                <p className="font-semibold text-colorBlack text-lg mt-2">
+                <p
+                  className="font-semibold text-colorBlack text-lg mt-2"
+                  title={product.product_name}
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 1,
+                  }}
+                >
                   {product.product_name}
                 </p>
-                <p className="text-[#888888] font-normal text-sm">
+                <p
+                  className="text-[#888888] font-normal text-sm"
+                  title={product.product_description}
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                  }}
+                >
                   {product.product_description}
                 </p>
                 <p className="font-semibold text-colorBlack text-lg mt-2">

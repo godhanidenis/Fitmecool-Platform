@@ -225,6 +225,7 @@ export const getShopDetails = async (payload) => {
     variables: {
       shopId: payload.id,
     },
+    fetchPolicy: "no-cache",
   });
   return result;
 };

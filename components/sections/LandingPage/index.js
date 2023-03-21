@@ -16,6 +16,7 @@ import ShopCard from "../shop-section/ShopCard";
 import { loadCategoriesStart } from "../../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
 import Filter from "../../Filters";
+import { Pagination } from "@mui/material";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -129,14 +130,15 @@ const LandingPage = () => {
     productsFiltersReducer.appliedProductsFilters,
     productsFiltersReducer.sortFilters,
     productsFiltersReducer.searchBarData,
+    productPageSkip,
   ]);
 
-  useEffect(() => {
-    if (productPageSkip > 0) {
-      getMoreProductsList();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, productPageSkip]);
+  // useEffect(() => {
+  //   if (productPageSkip > 0) {
+  //     getMoreProductsList();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, productPageSkip]);
 
   useEffect(() => {
     getAllShops();
@@ -145,14 +147,15 @@ const LandingPage = () => {
     dispatch,
     shopsFiltersReducer.appliedShopsFilters,
     shopsFiltersReducer.sortFilters,
+    shopPageSkip,
   ]);
 
-  useEffect(() => {
-    if (shopPageSkip > 0) {
-      getMoreShopsList();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, shopPageSkip]);
+  // useEffect(() => {
+  //   if (shopPageSkip > 0) {
+  //     getMoreShopsList();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, shopPageSkip]);
 
   return (
     <>
@@ -177,7 +180,7 @@ const LandingPage = () => {
             {!byShop ? (
               <>
                 {/* <p className="font-bold text-2xl text-colorBlack">Products</p> */}
-                <InfiniteScroll
+                {/* <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={productsData.length}
                   next={() => setProductPageSkip(productPageSkip + 6)}
@@ -187,18 +190,36 @@ const LandingPage = () => {
                       <CircularProgress />
                     </div>
                   }
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
-                    {productsData &&
-                      productsData?.map((product) => (
-                        <ProductCard product={product} key={product.id} />
-                      ))}
+                > */}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                  {productsData &&
+                    productsData?.map((product) => (
+                      <ProductCard product={product} key={product.id} />
+                    ))}
+                </div>
+                {productsCount > 6 && (
+                  <div className="flex items-center justify-center py-10">
+                    <Pagination
+                      count={Math.ceil(productsCount / 6)}
+                      color="primary"
+                      variant="outlined"
+                      shape="rounded"
+                      page={
+                        (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                      }
+                      onChange={(e, p) => {
+                        setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                      }}
+                    />
                   </div>
-                </InfiniteScroll>
+                )}
+
+                {/* </InfiniteScroll> */}
               </>
             ) : (
               <>
-                <InfiniteScroll
+                {/* <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={shopsData.length}
                   next={() => setShopPageSkip(shopPageSkip + 6)}
@@ -208,14 +229,29 @@ const LandingPage = () => {
                       <CircularProgress />
                     </div>
                   }
-                >
-                  <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
-                    {shopsData &&
-                      shopsData.map((shop) => (
-                        <ShopCard key={shop.id} shop={shop} />
-                      ))}
+                > */}
+                <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                  {shopsData &&
+                    shopsData.map((shop) => (
+                      <ShopCard key={shop.id} shop={shop} />
+                    ))}
+                </div>
+
+                {shopsCount > 6 && (
+                  <div className="flex items-center justify-center py-10">
+                    <Pagination
+                      count={Math.ceil(shopsCount / 6)}
+                      color="primary"
+                      variant="outlined"
+                      shape="rounded"
+                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
+                      onChange={(e, p) => {
+                        setShopPageSkip((p === 1 && 0) || (p - 1) * 6);
+                      }}
+                    />
                   </div>
-                </InfiniteScroll>
+                )}
+                {/* </InfiniteScroll> */}
               </>
             )}
           </div>

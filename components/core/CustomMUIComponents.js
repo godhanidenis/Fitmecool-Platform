@@ -70,6 +70,13 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+export function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 export const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 10,
