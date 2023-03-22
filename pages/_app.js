@@ -14,6 +14,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import { ToastContainer } from "react-toastify";
+import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
+import { useRouter } from "next/router";
 
 const theme = createTheme({
   palette: {
@@ -24,6 +26,8 @@ const theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
   return (
     <>
       <Head>
@@ -33,7 +37,13 @@ function MyApp({ Component, pageProps }) {
         <ToastContainer />
         <Provider store={store}>
           <Header />
-          <Component {...pageProps} />
+          {router.pathname.includes("/vendor/") ? (
+            <VendorCommonLayout>
+              <Component {...pageProps} />
+            </VendorCommonLayout>
+          ) : (
+            <Component {...pageProps} />
+          )}
           <Footer />
         </Provider>
       </ThemeProvider>

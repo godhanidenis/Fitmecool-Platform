@@ -533,10 +533,8 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      {/* <VendorShopSubHeader /> */}
-      <VendorCommonLayout>
-        <div className="bg-colorWhite pb-20 md:pb-28">
-          {/* <div className="bg-[#F5F5F5] overflow-visible p-10">
+      <div className="bg-colorWhite pb-20 md:pb-28">
+        {/* <div className="bg-[#F5F5F5] overflow-visible p-10">
             <div className="container flex">
               <Image
                 src={img}
@@ -555,35 +553,35 @@ const ShopDetailsPage = () => {
               />
             </div>
           </div> */}
-          <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
-            <div className="lg:col-span-2 hidden lg:block ">
-              <Filter
-                productByShop={true}
-                setProductPageSkip={setProductPageSkip}
-              />
+        <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
+          <div className="lg:col-span-2 hidden lg:block ">
+            <Filter
+              productByShop={true}
+              setProductPageSkip={setProductPageSkip}
+            />
+          </div>
+
+          <div className="col-span-8 lg:col-span-6 flex flex-col">
+            <div className="flex flex-row-reverse">
+              <button
+                onClick={() => setProductListingModalOpen(true)}
+                className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
+              >
+                Add Products
+              </button>
             </div>
 
-            <div className="col-span-8 lg:col-span-6 flex flex-col">
-              <div className="flex flex-row-reverse">
-                <button
-                  onClick={() => setProductListingModalOpen(true)}
-                  className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
-                >
-                  Add Products
-                </button>
-              </div>
+            <div className="bg-[#F5F5F5] rounded-lg mt-5">
+              <div className="container">
+                <UpperFilter
+                  setProductPageSkip={setProductPageSkip}
+                  forShopPage={true}
+                />
 
-              <div className="bg-[#F5F5F5] rounded-lg mt-5">
-                <div className="container">
-                  <UpperFilter
-                    setProductPageSkip={setProductPageSkip}
-                    forShopPage={true}
-                  />
-
-                  {/* <p className="font-bold text-2xl text-colorBlack">
+                {/* <p className="font-bold text-2xl text-colorBlack">
                   Special Products
                 </p> */}
-                  {/* <InfiniteScroll
+                {/* <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={productsData.length}
                   next={() => setProductPageSkip(productPageSkip + 6)}
@@ -594,122 +592,209 @@ const ShopDetailsPage = () => {
                     </div>
                   }
                 > */}
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-10 place-items-center mb-10">
-                    {productsData &&
-                      productsData?.map((product) => (
-                        <ProductCard
-                          product={product}
-                          key={product.id}
-                          shopProduct={true}
-                          setProductPageSkip={setProductPageSkip}
-                          getAllProducts={getAllProducts}
-                          setEditProductId={setEditProductId}
-                        />
-                      ))}
-                  </div>
-
-                  {productsCount > 6 && (
-                    <div className="flex items-center justify-center py-10">
-                      <Pagination
-                        count={Math.ceil(productsCount / 6)}
-                        color="primary"
-                        variant="outlined"
-                        shape="rounded"
-                        page={
-                          (productPageSkip === 0 && 1) ||
-                          productPageSkip / 6 + 1
-                        }
-                        onChange={(e, p) => {
-                          setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                        }}
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-10 place-items-center mb-10">
+                  {productsData &&
+                    productsData?.map((product) => (
+                      <ProductCard
+                        product={product}
+                        key={product.id}
+                        shopProduct={true}
+                        setProductPageSkip={setProductPageSkip}
+                        getAllProducts={getAllProducts}
+                        setEditProductId={setEditProductId}
                       />
-                    </div>
-                  )}
-                  {/* </InfiniteScroll> */}
+                    ))}
                 </div>
+
+                {productsCount > 6 && (
+                  <div className="flex items-center justify-center py-10">
+                    <Pagination
+                      count={Math.ceil(productsCount / 6)}
+                      color="primary"
+                      variant="outlined"
+                      shape="rounded"
+                      page={
+                        (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                      }
+                      onChange={(e, p) => {
+                        setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                      }}
+                    />
+                  </div>
+                )}
+                {/* </InfiniteScroll> */}
               </div>
             </div>
           </div>
         </div>
-        <CustomAuthModal
-          open={productListingModalOpen}
-          onClose={handleProductListingModalClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          className="animate__animated animate__slideInDown"
-        >
-          <Box sx={style}>
-            <div className="p-5">
-              <div className="flex items-center mb-5">
-                <ArrowBackIcon
-                  className="text-black cursor-pointer"
-                  onClick={handleProductListingModalClose}
-                />
-                <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                  {editProductId === undefined ? "Add" : "Update"}Product
-                </p>
-                <CloseIcon
-                  className="text-black ml-auto cursor-pointer"
-                  onClick={handleProductListingModalClose}
-                />
-              </div>
-              <form className="h-[500px] overflow-auto">
-                <div className="flex flex-col space-y-2">
-                  <div className="flex items-center justify-center container gap-24">
-                    <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
-                      Name:
-                    </p>
-                    <div className="w-full">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextField
-                          id="input-with-sx"
-                          label="Product Name"
-                          variant="standard"
-                          className="w-full"
-                          {...register("product_name", {
-                            required: "Product Name is required",
-                          })}
-                        />
-                      </Box>
-                      <div className="mt-2">
-                        {errors.product_name && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {errors.product_name?.message}
-                          </span>
-                        )}
-                      </div>
+      </div>
+      <CustomAuthModal
+        open={productListingModalOpen}
+        onClose={handleProductListingModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="animate__animated animate__slideInDown"
+      >
+        <Box sx={style}>
+          <div className="p-5">
+            <div className="flex items-center mb-5">
+              <ArrowBackIcon
+                className="text-black cursor-pointer"
+                onClick={handleProductListingModalClose}
+              />
+              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+                {editProductId === undefined ? "Add" : "Update"}Product
+              </p>
+              <CloseIcon
+                className="text-black ml-auto cursor-pointer"
+                onClick={handleProductListingModalClose}
+              />
+            </div>
+            <form className="h-[500px] overflow-auto">
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center justify-center container gap-24">
+                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                    Name:
+                  </p>
+                  <div className="w-full">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextField
+                        id="input-with-sx"
+                        label="Product Name"
+                        variant="standard"
+                        className="w-full"
+                        {...register("product_name", {
+                          required: "Product Name is required",
+                        })}
+                      />
+                    </Box>
+                    <div className="mt-2">
+                      {errors.product_name && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {errors.product_name?.message}
+                        </span>
+                      )}
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-center justify-center container gap-12">
-                    <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
-                      Description:
-                    </p>
-                    <div className="w-full">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextField
-                          id="input-with-sx"
-                          label="Product Description"
-                          variant="standard"
-                          className="w-full"
-                          {...register("product_description", {
-                            required: "Product Description is required",
-                          })}
-                        />
-                      </Box>
-                      <div className="mt-2">
-                        {errors.product_description && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {errors.product_description?.message}
-                          </span>
-                        )}
-                      </div>
+                <div className="flex items-center justify-center container gap-12">
+                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                    Description:
+                  </p>
+                  <div className="w-full">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextField
+                        id="input-with-sx"
+                        label="Product Description"
+                        variant="standard"
+                        className="w-full"
+                        {...register("product_description", {
+                          required: "Product Description is required",
+                        })}
+                      />
+                    </Box>
+                    <div className="mt-2">
+                      {errors.product_description && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {errors.product_description?.message}
+                        </span>
+                      )}
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-center justify-center container gap-24">
+                <div className="flex items-center justify-center container gap-24">
+                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                    Color:
+                  </p>
+                  <div className="w-full">
+                    <Box sx={{ display: "flex" }}>
+                      <FormControl fullWidth>
+                        <InputLabel
+                          variant="standard"
+                          htmlFor="uncontrolled-native"
+                        >
+                          Product Color
+                        </InputLabel>
+                        <NativeSelect
+                          className="w-full"
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          {...register("product_color", {
+                            required: "Product Color is required",
+                          })}
+                        >
+                          <option value="">
+                            <em></em>
+                          </option>
+                          {colorsList.map((color, index) => {
+                            return (
+                              <option value={color} key={index}>
+                                {capitalize(color)}
+                              </option>
+                            );
+                          })}
+                        </NativeSelect>
+                      </FormControl>
+                    </Box>
+                    <div className="mt-2">
+                      {errors.product_color && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {errors.product_color?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center container gap-24">
+                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                    Type:
+                  </p>
+                  <div className="w-full">
+                    <Box sx={{ display: "flex" }}>
+                      <FormControl fullWidth>
+                        <InputLabel
+                          variant="standard"
+                          htmlFor="uncontrolled-native"
+                        >
+                          Product Type
+                        </InputLabel>
+                        <NativeSelect
+                          className="w-full"
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          value={productType}
+                          {...register("product_type", {
+                            required: "product Type is required",
+                            onChange: (e) => {
+                              setProductType(e.target.value);
+                            },
+                          })}
+                        >
+                          <option value="">
+                            <em></em>
+                          </option>
+                          <option value="Men">Men</option>
+                          <option value="Women">Women</option>
+                        </NativeSelect>
+                      </FormControl>
+                    </Box>
+                    <div className="mt-2">
+                      {errors.product_type && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {errors.product_type?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {productType && (
+                  <div className="flex items-center justify-center container gap-16">
                     <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
-                      Color:
+                      Category:
                     </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
@@ -718,348 +803,256 @@ const ShopDetailsPage = () => {
                             variant="standard"
                             htmlFor="uncontrolled-native"
                           >
-                            Product Color
+                            Product Category
                           </InputLabel>
                           <NativeSelect
                             className="w-full"
                             labelId="demo-simple-select-standard-label"
                             id="demo-simple-select-standard"
-                            {...register("product_color", {
-                              required: "Product Color is required",
+                            {...register("product_category", {
+                              required: "product Category is required",
                             })}
                           >
                             <option value="">
                               <em></em>
                             </option>
-                            {colorsList.map((color, index) => {
-                              return (
-                                <option value={color} key={index}>
-                                  {capitalize(color)}
+                            {productType === "Men" &&
+                              menCategoryLabel.map((cat) => (
+                                <option value={cat.id} key={cat.id}>
+                                  {cat.category_name}
                                 </option>
-                              );
-                            })}
+                              ))}
+                            {productType === "Women" &&
+                              womenCategoryLabel.map((cat) => (
+                                <option value={cat.id} key={cat.id}>
+                                  {cat.category_name}
+                                </option>
+                              ))}
                           </NativeSelect>
                         </FormControl>
                       </Box>
                       <div className="mt-2">
-                        {errors.product_color && (
+                        {errors.product_category && (
                           <span style={{ color: "red" }} className="-mb-6">
-                            {errors.product_color?.message}
+                            {errors.product_category?.message}
                           </span>
                         )}
                       </div>
                     </div>
                   </div>
+                )}
 
-                  <div className="flex items-center justify-center container gap-24">
-                    <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
-                      Type:
-                    </p>
-                    <div className="w-full">
-                      <Box sx={{ display: "flex" }}>
-                        <FormControl fullWidth>
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="uncontrolled-native"
-                          >
-                            Product Type
-                          </InputLabel>
-                          <NativeSelect
-                            className="w-full"
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            value={productType}
-                            {...register("product_type", {
-                              required: "product Type is required",
-                              onChange: (e) => {
-                                setProductType(e.target.value);
-                              },
-                            })}
-                          >
-                            <option value="">
-                              <em></em>
+                <div className="flex items-center justify-center container gap-20">
+                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                    Branch:
+                  </p>
+                  <div className="w-full">
+                    <Box sx={{ display: "flex" }}>
+                      <FormControl fullWidth>
+                        <InputLabel
+                          variant="standard"
+                          htmlFor="uncontrolled-native"
+                        >
+                          Product Branch
+                        </InputLabel>
+                        <NativeSelect
+                          className="w-full"
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          {...register("product_branch", {
+                            required: "product Branch is required",
+                          })}
+                        >
+                          <option value="">
+                            <em></em>
+                          </option>
+                          {branchList.map((branch) => (
+                            <option value={branch.id} key={branch.id}>
+                              {branch.branch_address +
+                                " " +
+                                "(" +
+                                branch.branch_type +
+                                ")"}
                             </option>
-                            <option value="Men">Men</option>
-                            <option value="Women">Women</option>
-                          </NativeSelect>
-                        </FormControl>
-                      </Box>
-                      <div className="mt-2">
-                        {errors.product_type && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {errors.product_type?.message}
-                          </span>
-                        )}
+                          ))}
+                        </NativeSelect>
+                      </FormControl>
+                    </Box>
+                    <div className="mt-2">
+                      {errors.product_branch && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {errors.product_branch?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="items-center flex-col w-full container">
+                  <h4 className="font-bold mb-3 flex justify-center items-center">
+                    Product Images
+                  </h4>
+
+                  <div className="flex justify-center flex-col items-center">
+                    <div className="flex justify-center">
+                      <Button
+                        variant="contained"
+                        component="label"
+                        className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                      >
+                        Choose Product Images
+                        <input
+                          type="file"
+                          hidden
+                          multiple
+                          accept="image/*"
+                          {...register("productImages", {
+                            required:
+                              productImages.length === 0
+                                ? "Product Image is required"
+                                : false,
+                            onChange: (e) => {
+                              createProductImagesChange(e);
+                            },
+                          })}
+                        />
+                      </Button>
+                    </div>
+                    <div className="mt-2">
+                      {errors.productImages && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {errors.productImages?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex  justify-center">
+                    <div className="flex flex-col w-full">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
+                        {productImages.map((image, index) => (
+                          <div key={index}>
+                            <Image
+                              src={image}
+                              alt="Product Preview"
+                              height={150}
+                              width={200}
+                            />
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {productType && (
-                    <div className="flex items-center justify-center container gap-16">
-                      <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
-                        Category:
-                      </p>
-                      <div className="w-full">
-                        <Box sx={{ display: "flex" }}>
-                          <FormControl fullWidth>
-                            <InputLabel
-                              variant="standard"
-                              htmlFor="uncontrolled-native"
-                            >
-                              Product Category
-                            </InputLabel>
-                            <NativeSelect
-                              className="w-full"
-                              labelId="demo-simple-select-standard-label"
-                              id="demo-simple-select-standard"
-                              {...register("product_category", {
-                                required: "product Category is required",
-                              })}
-                            >
-                              <option value="">
-                                <em></em>
-                              </option>
-                              {productType === "Men" &&
-                                menCategoryLabel.map((cat) => (
-                                  <option value={cat.id} key={cat.id}>
-                                    {cat.category_name}
-                                  </option>
-                                ))}
-                              {productType === "Women" &&
-                                womenCategoryLabel.map((cat) => (
-                                  <option value={cat.id} key={cat.id}>
-                                    {cat.category_name}
-                                  </option>
-                                ))}
-                            </NativeSelect>
-                          </FormControl>
-                        </Box>
-                        <div className="mt-2">
-                          {errors.product_category && (
-                            <span style={{ color: "red" }} className="-mb-6">
-                              {errors.product_category?.message}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-center container gap-20">
-                    <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
-                      Branch:
-                    </p>
-                    <div className="w-full">
-                      <Box sx={{ display: "flex" }}>
-                        <FormControl fullWidth>
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="uncontrolled-native"
-                          >
-                            Product Branch
-                          </InputLabel>
-                          <NativeSelect
-                            className="w-full"
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            {...register("product_branch", {
-                              required: "product Branch is required",
-                            })}
-                          >
-                            <option value="">
-                              <em></em>
-                            </option>
-                            {branchList.map((branch) => (
-                              <option value={branch.id} key={branch.id}>
-                                {branch.branch_address +
-                                  " " +
-                                  "(" +
-                                  branch.branch_type +
-                                  ")"}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                        </FormControl>
-                      </Box>
-                      <div className="mt-2">
-                        {errors.product_branch && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {errors.product_branch?.message}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="items-center flex-col w-full container">
-                    <h4 className="font-bold mb-3 flex justify-center items-center">
-                      Product Images
-                    </h4>
-
+                <div className="items-center flex-col w-full container">
+                  <h4 className="font-bold mb-3 flex justify-center items-center">
+                    Product Video
+                  </h4>
+                  <div className="flex items-center justify-between">
                     <div className="flex justify-center flex-col items-center">
-                      <div className="flex justify-center">
+                      <div className="flex  justify-center">
                         <Button
                           variant="contained"
                           component="label"
                           className="w-full !capitalize !bg-gray-500 !rounded-3xl"
                         >
-                          Choose Product Images
+                          Choose Product Video
                           <input
                             type="file"
+                            id="productVideo"
+                            name="productVideo"
+                            accept="video/*"
                             hidden
-                            multiple
-                            accept="image/*"
-                            {...register("productImages", {
-                              required:
-                                productImages.length === 0
-                                  ? "Product Image is required"
-                                  : false,
-                              onChange: (e) => {
-                                createProductImagesChange(e);
-                              },
-                            })}
+                            controls
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files.length > 0) {
+                                onProductVideoPreview(e);
+                              }
+                            }}
                           />
                         </Button>
                       </div>
-                      <div className="mt-2">
-                        {errors.productImages && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {errors.productImages?.message}
-                          </span>
-                        )}
-                      </div>
                     </div>
-                    <div className="flex  justify-center">
-                      <div className="flex flex-col w-full">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
-                          {productImages.map((image, index) => (
-                            <div key={index}>
-                              <Image
-                                src={image}
-                                alt="Product Preview"
-                                height={150}
-                                width={200}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="items-center flex-col w-full container">
-                    <h4 className="font-bold mb-3 flex justify-center items-center">
-                      Product Video
-                    </h4>
-                    <div className="flex items-center justify-between">
-                      <div className="flex justify-center flex-col items-center">
-                        <div className="flex  justify-center">
-                          <Button
-                            variant="contained"
-                            component="label"
-                            className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                          >
-                            Choose Product Video
-                            <input
-                              type="file"
-                              id="productVideo"
-                              name="productVideo"
-                              accept="video/*"
-                              hidden
-                              controls
-                              onChange={(e) => {
-                                if (
-                                  e.target.files &&
-                                  e.target.files.length > 0
-                                ) {
-                                  onProductVideoPreview(e);
-                                }
-                              }}
-                            />
-                          </Button>
-                        </div>
-                      </div>
-                      {productVideo !== undefined && (
-                        <div className="flex  justify-center ">
-                          <div className="flex flex-col w-full">
-                            <div className="grid grid-cols-1 place-items-center">
-                              <div>
-                                <video
-                                  autoPlay
-                                  style={{ width: "300px", height: "200px" }}
-                                  controls
-                                  src={productVideo}
-                                ></video>
-                                <div
-                                  className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                                  style={{
-                                    position: "relative",
-                                    right: 10,
-                                    bottom: 20,
-                                    height: 30,
-                                    width: 30,
-                                    color: "#5cb85c",
+                    {productVideo !== undefined && (
+                      <div className="flex  justify-center ">
+                        <div className="flex flex-col w-full">
+                          <div className="grid grid-cols-1 place-items-center">
+                            <div>
+                              <video
+                                autoPlay
+                                style={{ width: "300px", height: "200px" }}
+                                controls
+                                src={productVideo}
+                              ></video>
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                style={{
+                                  position: "relative",
+                                  right: 10,
+                                  bottom: 20,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
+                                }}
+                              >
+                                <CancelIcon
+                                  style={{ color: "black" }}
+                                  onClick={() => {
+                                    setProductVideo();
+                                    setUploadProductVideo();
                                   }}
-                                >
-                                  <CancelIcon
-                                    style={{ color: "black" }}
-                                    onClick={() => {
-                                      setProductVideo();
-                                      setUploadProductVideo();
-                                    }}
-                                  />
-                                </div>
+                                />
                               </div>
                             </div>
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </form>
+              </div>
+            </form>
 
-              <div className="container mt-5">
-                <Divider />
-              </div>
-              <div className="container mt-5 flex items-center justify-end gap-5">
-                <Button
-                  variant="outlined"
-                  className="rounded-xl capitalize text-colorBlack py-2 px-5"
-                  onClick={handleProductListingModalClose}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  onClick={handleSubmit(onSubmit, onError)}
-                  onReset={reset}
-                  variant="contained"
-                  className="rounded-xl capitalize text-colorWhite bg-colorPrimary hover:bg-colorPrimary py-2 px-5"
-                >
-                  {loading && (
-                    <CircularProgress
-                      size={20}
-                      color="primary"
-                      sx={{ color: "white", mr: 1 }}
-                    />
-                  )}
-                  {editProductId === undefined ? "Create" : "Update"}
-                </Button>
-              </div>
+            <div className="container mt-5">
+              <Divider />
             </div>
-          </Box>
-        </CustomAuthModal>
+            <div className="container mt-5 flex items-center justify-end gap-5">
+              <Button
+                variant="outlined"
+                className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                onClick={handleProductListingModalClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                onClick={handleSubmit(onSubmit, onError)}
+                onReset={reset}
+                variant="contained"
+                className="rounded-xl capitalize text-colorWhite bg-colorPrimary hover:bg-colorPrimary py-2 px-5"
+              >
+                {loading && (
+                  <CircularProgress
+                    size={20}
+                    color="primary"
+                    sx={{ color: "white", mr: 1 }}
+                  />
+                )}
+                {editProductId === undefined ? "Create" : "Update"}
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </CustomAuthModal>
 
-        <AuthModal
-          open={open}
-          handleClose={() => {
-            setOpen(false);
-          }}
-          authTypeModal={authTypeModal}
-          setAuthTypeModal={setAuthTypeModal}
-        />
-      </VendorCommonLayout>
+      <AuthModal
+        open={open}
+        handleClose={() => {
+          setOpen(false);
+        }}
+        authTypeModal={authTypeModal}
+        setAuthTypeModal={setAuthTypeModal}
+      />
     </>
   );
 };

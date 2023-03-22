@@ -18,7 +18,7 @@ const VendorSidebar = ({ shopData }) => {
   };
 
   return (
-    <div className="bg-[#F5F5F5] flex flex-col">
+    <div className="bg-[#F5F5F5] flex flex-col h-full">
       <div className="flex flex-col items-center justify-center gap-3 my-10">
         <Avatar
           src={shopData?.shop_logo}
