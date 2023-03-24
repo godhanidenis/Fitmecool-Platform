@@ -21,10 +21,6 @@ import {
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-// import Slider from "react-slick";
-// import ReactImageMagnify from "react-image-magnify";
-// import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-// import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { getProductDetails } from "../../graphql/queries/productQueries";
 import ProfileIcon from "../../assets/profile.png";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -52,6 +48,13 @@ import Carousel, {
 } from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
 
+import dynamic from "next/dynamic";
+import NoSSR from "react-no-ssr";
+
+const DynamicReactImageMagnify = dynamic(() => import("react-image-magnify"), {
+  ssr: false,
+});
+
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -61,7 +64,6 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
     boxShadow: "0 0 10px rgba(0,0,0,.1)",
-    // border: "1px solid #dadde9",
   },
 }));
 
@@ -113,18 +115,6 @@ const ProductDetail = ({ productDetails }) => {
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState(photos[0]);
 
-  // const slider = useRef(null);
-
-  // var productSliderSetting = {
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   autoplay: false,
-  //   autoplaySpeed: 3000,
-  //   vertical: true,
-  //   verticalSwiping: true,
-  //   arrows: false,
-  // };
-
   const contactInfoSwitchHandler = (event) => {
     setOpenContactInfo(event.target.checked);
   };
@@ -153,18 +143,19 @@ const ProductDetail = ({ productDetails }) => {
 
   const MyReactImageMagnify = () => {
     return (
-      <div>
-        {/* <ReactImageMagnify
+      <NoSSR>
+        <DynamicReactImageMagnify
           {...{
             smallImage: {
-              alt: "Wristwatch by Ted Baker London",
               isFluidWidth: true,
               src: images,
+              width: 400,
+              height: 300,
             },
             largeImage: {
               src: images,
               width: 1200,
-              height: 1800,
+              height: 900,
             },
             enlargedImageContainerStyle: {
               zIndex: "1500",
@@ -174,8 +165,8 @@ const ProductDetail = ({ productDetails }) => {
               height: "100%",
             },
           }}
-        /> */}
-      </div>
+        />
+      </NoSSR>
     );
   };
 
@@ -212,8 +203,8 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="p-2 py-5">{items}</div>
                 </div>
                 <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
-                  <div style={{ width: "60%" }}>
-                    {/* <MyReactImageMagnify /> */}
+                  <div style={{ width: "80%" }}>
+                    <MyReactImageMagnify />
                   </div>
                 </div>
                 <div className="col-span-1"></div>
