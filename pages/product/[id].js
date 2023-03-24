@@ -47,13 +47,7 @@ import Carousel, {
   slidesToShowPlugin,
 } from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
-
-import dynamic from "next/dynamic";
-import NoSSR from "react-no-ssr";
-
-const DynamicReactImageMagnify = dynamic(() => import("react-image-magnify"), {
-  ssr: false,
-});
+import ReactImageMagnify from "../../components/Layout/Zoom";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -141,35 +135,6 @@ const ProductDetail = ({ productDetails }) => {
     );
   });
 
-  const MyReactImageMagnify = () => {
-    return (
-      <NoSSR>
-        <DynamicReactImageMagnify
-          {...{
-            smallImage: {
-              isFluidWidth: true,
-              src: images,
-              width: 400,
-              height: 300,
-            },
-            largeImage: {
-              src: images,
-              width: 1200,
-              height: 900,
-            },
-            enlargedImageContainerStyle: {
-              zIndex: "1500",
-            },
-            enlargedImageContainerDimensions: {
-              width: "100%",
-              height: "100%",
-            },
-          }}
-        />
-      </NoSSR>
-    );
-  };
-
   return (
     <>
       <SubHeader />
@@ -203,9 +168,7 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="p-2 py-5">{items}</div>
                 </div>
                 <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
-                  <div style={{ width: "80%" }}>
-                    <MyReactImageMagnify />
-                  </div>
+                  <ReactImageMagnify large={images} preview={images} />
                 </div>
                 <div className="col-span-1"></div>
                 <div className="col-span-3 pt-5 flex justify-between items-center bg-colorWhite ">
