@@ -160,8 +160,8 @@ const LandingPage = () => {
   return (
     <>
       <DirectoryHero bgImg={LandingBg.src} />
-      <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
-        <div className="lg:col-span-2 hidden lg:block ">
+      <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-4 mb-4 ">
+        <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white">
           <Filter
             byShop={byShop}
             setByShop={setByShop}
@@ -169,13 +169,13 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 border-l lg:col-span-6">
-          <div className="container">
-            <UpperFilter
+        <div className="col-span-8 lg:col-span-6 p-6 bg-white">
+          <div className="container !w-[100%]">
+            {/* <UpperFilter
               byShop={byShop}
               setProductPageSkip={setProductPageSkip}
               setShopPageSkip={setShopPageSkip}
-            />
+            /> */}
 
             {!byShop ? (
               <>
@@ -192,7 +192,7 @@ const LandingPage = () => {
                   }
                 > */}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center mb-10">
                   {productsData &&
                     productsData?.map((product) => (
                       <ProductCard product={product} key={product.id} />

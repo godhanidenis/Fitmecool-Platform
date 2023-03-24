@@ -45,3 +45,13 @@ h6 {
   background: #888;
   border-radius: 5px;
 }
+
+.slick-prev {
+  left: 4px !important;
+  z-index: 1 !important;
+}
+
+.slick-next {
+  right: 4px !important;
+  z-index: 1 !important;
+}
