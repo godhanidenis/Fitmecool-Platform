@@ -222,7 +222,7 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="col-span-1 flex justify-start items-center">
                     <div className="flex justify-start items-center">
                       <div className="flex justify-center items-center mr-3">
-                        <Image
+                        <img
                           alt="Shop Logo"
                           src={
                             productDetails.data.product.data.branchInfo
@@ -326,7 +326,7 @@ const ProductDetail = ({ productDetails }) => {
                       }}
                     >
                       <Typography color="#95539B">
-                        {shopFollowByUser ? "UnFollow" : "Follow"}
+                        {shopFollowByUser ? "Unfollow" : "Follow"}
                       </Typography>
                     </Button>
                   </div>
@@ -447,15 +447,15 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="bg-colorWhite rounded-lg flex items-center shadow-lg">
                     <div className="p-5 flex gap-4 justify-start">
                       <div className="flex justify-center items-center">
-                        <Image
+                        <img
                           alt="Shop Logo"
                           src={
                             productDetails.data.product.data.branchInfo
                               ?.shop_info?.shop_logo
                           }
-                          width={80}
-                          height={50}
-                          className="rounded-[50%]"
+                          width={60}
+                          height={40}
+                          className="rounded-[40%]"
                         />
                       </div>
                       <div className="flex flex-col justify-center">
@@ -537,7 +537,7 @@ const ProductDetail = ({ productDetails }) => {
 
         <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
           <p className="text-colorBlack pb-3 font-semibold text-xl">
-            Special Products
+            SIMILAR PRODUCTS
           </p>
 
           {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
