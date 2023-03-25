@@ -81,6 +81,9 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
         </div>
 
         <div className="p-4 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
+          <div className="flex">
+            <CloseIcon className="text-black ml-auto cursor-pointer" onClick={handleClose} />
+          </div>
           <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
             <input
               id="Toggle4"
@@ -101,10 +104,10 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
             <h3 className="font-semibold text-xl sm:text-2xl text-colorPrimary ml-8 sm:ml-0">
               {asVendor ? "Sign up As a Vendor!" : "Sign up to Rentbless!"}
             </h3>
-            <CloseIcon
+            {/* <CloseIcon
               className="text-black ml-auto cursor-pointer"
               onClick={handleClose}
-            />
+            /> */}
           </div>
           <div className="mt-4 sm:mt-4">
             <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
@@ -346,7 +349,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                 </div>
               </div>
             </form>
-            <div className="flex justify-center sm:block">
+            <div className={asVendor ? "flex justify-center sm:block" : "flex justify-center sm:block signUpAsNotVendor-height-margin"}>
               <div className="mt-4 sm:mt-6 gap-6 justify-between items-center flex-row  w-[85%] md:w-5/6 lg:w-3/4 block xl:flex">
                 <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
@@ -380,7 +383,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
               </div>
             </div>
             <div className="flex justify-center sm:justify-between items-center mb-4  w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4  text-center">
-              <div className="ml-0 sm:ml-auto">
+              <div className={asVendor ? "ml-0 sm:ml-auto" : "ml-0 sm:ml-auto signUpAsNotVendor-height"} >
                 <span className="text-black">Already have an account?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"
@@ -390,7 +393,6 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                 </span>
               </div>
             </div>
-
             {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4 text-center">
               <span className="text-black">
                 {asVendor ? "Are you a customer ?" : "Are you a Vendor ?"}
