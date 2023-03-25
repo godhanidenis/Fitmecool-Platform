@@ -40,7 +40,8 @@ const ProductLikePage = () => {
             </Link> */}
           </h1>
           <p>
-            Save your favourite items so you <br /> don't lose sight of them.
+            Save your favourite items so you <br /> don&apos;t lose sight of
+            them.
           </p>
           <button className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap">
             Explore Now

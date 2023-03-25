@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import facebookIcon from "../../assets/facebook.png";
@@ -136,7 +137,9 @@ const ProductDetail = ({ productDetails }) => {
           alt="Product Images"
           width={250}
           height={300}
-          style={images === itm ? {border:"1px solid black"} :  {border:"0"}}
+          style={
+            images === itm ? { border: "1px solid black" } : { border: "0" }
+          }
           className="rounded cursor-pointer"
         />
       </div>
