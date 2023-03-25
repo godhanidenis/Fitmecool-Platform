@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-import Logout from "@mui/icons-material/Logout";
 
 import SearchIcon from "@mui/icons-material/Search";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -17,19 +16,13 @@ import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import PersonIcon from "@mui/icons-material/Person";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import AuthModal from "../core/AuthModal";
 import ProfileIcon from "../../assets/profile.png";
 import { AuthTypeModal } from "../core/Enum";
@@ -55,6 +48,7 @@ import {
 import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router from "next/router";
+import { useScrollDirection } from "../core/useScrollDirection";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -124,6 +118,7 @@ const Header = () => {
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+
   useEffect(() => {
     setSearchBarValue(productsFiltersReducer.searchBarData);
   }, [productsFiltersReducer.searchBarData]);
@@ -145,9 +140,15 @@ const Header = () => {
     setOpenModel(false);
   };
 
+  const scrollDirection = useScrollDirection();
+
   return (
     <>
-      <header className="py-4 w-full left-0 top-0 z-20 bg-colorPrimary sticky shadow-sm">
+      <header
+        className={`py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky ${
+          scrollDirection === "down" ? "-top-32" : "top-0"
+        } transition-all duration-500`}
+      >
         <div className="container flex items-center justify-between">
           <div className="flex items-center justify-start gap-4">
             <Link href="/">
@@ -412,7 +413,7 @@ const UserProfile = ({ setAccessToken }) => {
         placement="bottom-end"
         transition
         disablePortal
-        className="z-20"
+        className="z-40"
       >
         {({ TransitionProps, placement }) => (
           <Grow

@@ -52,7 +52,6 @@ import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFi
 import CancelIcon from "@mui/icons-material/Cancel";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
-import VendorCommonLayout from "../../../components/Layout/VendorCommonLayout";
 
 const style = {
   position: "absolute",

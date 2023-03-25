@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 
-const ReactImageMagnify = (props) => {
+const CustomReactImageMagnify = (props) => {
   const [imageHover, setImageHover] = useState(false);
 
   useEffect(() => {
@@ -94,4 +94,4 @@ const ReactImageMagnify = (props) => {
   );
 };
 
-export default ReactImageMagnify;
+export default CustomReactImageMagnify;

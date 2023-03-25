@@ -143,7 +143,7 @@ const ShopDetailsPage = () => {
           res.data.product.data.product_description
         );
         setValue("product_color", res.data.product.data.product_color);
-        setProductType(res.data.product.data.product_type);
+        setValue("product_type", res.data.product.data.product_type);
         setValue("product_category", res.data.product.data.categoryInfo.id);
         setValue("product_branch", res.data.product.data.branchInfo.id);
 
@@ -765,7 +765,6 @@ const ShopDetailsPage = () => {
                           className="w-full"
                           labelId="demo-simple-select-standard-label"
                           id="demo-simple-select-standard"
-                          value={productType}
                           {...register("product_type", {
                             required: "product Type is required",
                             onChange: (e) => {
@@ -776,8 +775,13 @@ const ShopDetailsPage = () => {
                           <option value="">
                             <em></em>
                           </option>
-                          <option value="Men">Men</option>
-                          <option value="Women">Women</option>
+                          {["Men", "Women"].map((type, index) => {
+                            return (
+                              <option value={type} key={index}>
+                                {capitalize(type)}
+                              </option>
+                            );
+                          })}
                         </NativeSelect>
                       </FormControl>
                     </Box>

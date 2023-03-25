@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Paper, Popper, Tab } from "@mui/material";
-import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import HamburgerIcon from "../../assets/hamburger-icon.svg";
 import { CustomTab, TabPanel } from "../core/CustomMUIComponents";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
+import { useScrollDirection } from "../core/useScrollDirection";
 
 const SubHeader = () => {
   const [value, setValue] = useState(0);
@@ -13,7 +12,6 @@ const SubHeader = () => {
 
   const [menCategory, setMenCategory] = useState([]);
   const [womenCategory, setWomenCategory] = useState([]);
-  const [isTop, setIsTop] = useState(true);
 
   const { categories } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
@@ -21,16 +19,6 @@ const SubHeader = () => {
     (state) => state.productsFiltersReducer
   );
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsTop(window.scrollY === 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
   useEffect(() => {
     setMenCategory(categories.filter((itm) => itm.category_type === "Men"));
     setWomenCategory(categories.filter((itm) => itm.category_type === "Women"));
@@ -53,16 +41,17 @@ const SubHeader = () => {
     setOpen(false);
     setAnchorEl(null);
   };
+
+  const scrollDirection = useScrollDirection();
+
   return (
     <div
-      className={`w-full ${
-        isTop
-          ? "sticky top-0 left-0  transition-all duration-500 transform origin-top"
-          : ""
-      } bg-colorWhite z-10 shadow-md`}
+      className={`w-full bg-colorWhite shadow-md z-20 left-0 sticky ${
+        scrollDirection === "down" ? "-top-32" : "top-[83px]"
+      } transition-all duration-500`}
     >
       <div className="container flex gap-48 items-center">
-        <button type="button" className=" h-5 relative"></button>
+        <button type="button" className="h-5 relative"></button>
         <div className="pl-2" onMouseLeave={handleMenuClose.bind(this)}>
           <CustomTab value={value}>
             {["Men's", "Women's"].map((item, index) => (

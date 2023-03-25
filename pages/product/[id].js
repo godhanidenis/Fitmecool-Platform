@@ -47,7 +47,7 @@ import Carousel, {
   slidesToShowPlugin,
 } from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
-import ReactImageMagnify from "../../components/Layout/Zoom";
+import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -168,7 +168,7 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="p-2 py-5">{items}</div>
                 </div>
                 <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
-                  <ReactImageMagnify large={images} preview={images} />
+                  <CustomReactImageMagnify large={images} preview={images} />
                 </div>
                 <div className="col-span-1"></div>
                 <div className="col-span-3 pt-5 flex justify-between items-center bg-colorWhite ">

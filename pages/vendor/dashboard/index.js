@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
-import VendorCommonLayout from "../../../components/Layout/VendorCommonLayout";
 import { getShopDetails } from "../../../graphql/queries/shopQueries";
 
 const ShopDashboard = () => {
