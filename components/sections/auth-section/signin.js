@@ -99,7 +99,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
             <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
               <div className="flex flex-col">
                 <div className="flex sm:block justify-center">
-                  <div className="flex sm:block flex-col mb-6 w-[90%] md:w-5/6 lg:w-3/4">
+                  <div className="flex sm:block flex-col mb-9 w-[90%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <EmailIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -121,7 +121,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                     </Box>
                     <div className="mt-2 ml-9">
                       {errors.username && (
-                        <span style={{ color: "red" }} className="-mb-6">
+                        <span style={{ color: "red" }} className="-mb-9">
                           {errors.username?.message}
                         </span>
                       )}
@@ -130,7 +130,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 </div>
 
                 <div className="flex sm:block justify-center">
-                  <div className="flex sm:block flex-col mb-1 sm:mb-3 w-[90%] md:w-5/6 lg:w-3/4">
+                  <div className="flex sm:block flex-col mb-3 sm:mb-3 w-[90%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -164,7 +164,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                     </Box>
                     <div className="mt-2 ml-9">
                       {errors.password && (
-                        <span style={{ color: "red" }} className="-mb-6">
+                        <span style={{ color: "red" }} className="-mb-9">
                           {errors.password?.message}
                         </span>
                       )}
@@ -173,7 +173,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 </div>
 
                 <div className="flex justify-center sm:block">
-                  <div className="flex justify-end mb-6 sm:mb-8 w-[90%] md:w-5/6 lg:w-3/4">
+                  <div className="flex justify-end mb-9 sm:mb-9 w-[90%] md:w-5/6 lg:w-3/4">
                     <Link href="/auth/forgot-password">
                       <span className="text-[#544E5D] ml-auto opacity-50 cursor-pointer">
                         Forgot Password?
@@ -234,8 +234,8 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 </button>
               </div>
             </div>
-            <div className="flex justify-center sm:justify-between items-center mb-6 w-full md:w-5/6 lg:w-3/4 mt-6 sm:mt-8 text-center">
-              <div className="ml-0 sm:ml-auto">
+            <div className="flex justify-center sm:justify-between items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-6 sm:mt-8 text-center">
+              <div style={{marginTop:"12px" , marginBottom:"32px"}} className="ml-0 sm:ml-auto">
                 <span className="text-black">{`Don't`} have an account ?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"
@@ -246,7 +246,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
               </div>
             </div>
 
-            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center mb-6 w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-5 text-center">
+            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-5 text-center">
               <span className="text-black">
                 {asVendor ? "Are you a customer ?" : "Are you a vendor ?"}
               </span>

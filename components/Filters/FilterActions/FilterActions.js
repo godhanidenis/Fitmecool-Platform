@@ -13,8 +13,8 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
 
   return (
     <>
-      <div className="mb-2 flex justify-between gap-1">
-        <Button
+      <div className="flex justify-between gap-1 p-2 items-center">
+        {/* <Button
           className="bg-colorPrimary px-6  text-colorWhite"
           sx={{
             textTransform: "none",
@@ -24,9 +24,9 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
           }}
           variant="contained"
           size="small"
-        >
-          Filter By
-        </Button>
+        > */}
+          <span><b className="text-[black] text-[22px]">Filters</b></span>
+        {/* </Button> */}
         {!productByShop && (
           <div className="flex items-center gap-2">
             {/* <Switch

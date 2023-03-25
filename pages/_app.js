@@ -16,11 +16,15 @@ import Footer from "../components/Layout/Footer";
 import { ToastContainer } from "react-toastify";
 import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
+import { CssBaseline } from "@mui/material/";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: "#95539B",
+    },
+    background: {
+      default: "#f1f3f6 !important",
     },
   },
 });
@@ -34,6 +38,7 @@ function MyApp({ Component, pageProps }) {
         <title>Rentbless</title>
       </Head>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <ToastContainer />
         <Provider store={store}>
           <Header />

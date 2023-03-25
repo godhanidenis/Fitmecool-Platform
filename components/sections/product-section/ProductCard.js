@@ -105,11 +105,11 @@ const ProductCard = ({
           </Link>
         </div>
       ) : (
-        <div className="bg-white mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
+        <div className="bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
           <div className="border-b">
             <div className="container my-[5px] cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
-                <div className="w-[60%]">
+                <div className="w-[100%]">
                   <Slider {...settings}>{items}</Slider>
                 </div>
               </div>
@@ -184,7 +184,7 @@ const ProductCard = ({
               <div className="product-overlay">
                 <Link href={`/product/${product.id}`}>
                   <a target="_blank">
-                    <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton">
+                    <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton whitespace-nowrap">
                       See Details
                     </button>
                   </a>
@@ -192,46 +192,23 @@ const ProductCard = ({
               </div>
             </div>
           </div>
-          <div className="px-5 py-3">
-            <div className="flex gap-2 justify-start">
-              <div className="flex justify-center items-center">
-                <Image
-                  alt="Shop Logo"
-                  src={product.branchInfo?.shop_info?.shop_logo}
-                  width={80}
-                  height={50}
-                  className="rounded-[50%]"
-                />
-              </div>
-              <div className="flex flex-col justify-center">
-                <Link href={`/shop/${shopId}`}>
-                  <a target="_blank">
-                    <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                      {product.branchInfo?.shop_info?.shop_name}
-                    </p>
-                  </a>
-                </Link>
-                <p className="text-[#888888] text-sm font-normal">
-                  25 days ago
-                </p>
-              </div>
-            </div>
+          <div className="pl-3">
             {productsFiltersReducer.productLayout === "list" && (
               <div>
                 <p
-                  className="font-semibold text-colorBlack text-lg mt-2"
+                  className="font-semibold text-[#565f66] text-base mt-2"
                   title={product.product_name}
                   style={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: 1,
+                    WebkitLineClamp: 2,
                   }}
                 >
                   {product.product_name}
                 </p>
-                <p
+                {/* <p
                   className="text-[#888888] font-normal text-sm"
                   title={product.product_description}
                   style={{
@@ -243,16 +220,39 @@ const ProductCard = ({
                   }}
                 >
                   {product.product_description}
-                </p>
-                <p className="font-semibold text-colorBlack text-lg mt-2">
+                </p> */}
+                {/* <p className="font-semibold text-colorBlack text-lg mt-2">
                   {product.categoryInfo?.category_name}
                 </p>
 
                 <p className="font-semibold text-colorBlack text-lg mt-2">
                   {product.product_color}
-                </p>
+                </p> */}
               </div>
             )}
+            <div className="flex gap-2 justify-start items-center mt-10 mb-2">
+              <div className="flex justify-center items-center">
+                <Image
+                  alt="Shop Logo"
+                  src={product.branchInfo?.shop_info?.shop_logo}
+                  width={16}
+                  height={16}
+                  className="rounded-[50%]"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <Link href={`/shop/${shopId}`}>
+                  <a target="_blank">
+                    <span className="text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-[10px]">
+                      {product.branchInfo?.shop_info?.shop_name}
+                    </span>
+                  </a>
+                </Link>
+                {/* <p className="text-[#888888] text-sm font-normal">
+                  25 days ago
+                </p> */}
+              </div>
+            </div>
           </div>
           <AuthModal
             open={open}
