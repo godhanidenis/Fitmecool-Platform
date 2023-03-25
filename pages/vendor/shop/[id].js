@@ -11,18 +11,15 @@ import {
   Pagination,
 } from "@mui/material";
 import Image from "next/image";
-import img from "../../../assets/logo_Shop.png";
-import img1 from "../../../assets/shopCoverImage.png";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
 import Filter from "../../../components/Filters";
-import VendorShopSubHeader from "../../../components/Layout/VendorShopSubHeader";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
 import { loadCategoriesStart } from "../../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
-import InfiniteScroll from "react-infinite-scroll-component";
+// import InfiniteScroll from "react-infinite-scroll-component";
 import ProductCard from "../../../components/sections/product-section/ProductCard";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
@@ -48,7 +45,6 @@ import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
-import VendorCommonLayout from "../../../components/Layout/VendorCommonLayout";
 
 const style = {
   position: "absolute",
@@ -287,18 +283,25 @@ const ShopDetailsPage = () => {
     );
   };
   useEffect(() => {
-    dispatch(
-      changeAppliedProductsFilters({
-        key: "shopId",
-        value: {
-          selectedValue: [id],
-        },
-      })
-    );
+    if (id) {
+      dispatch(
+        changeAppliedProductsFilters({
+          key: "shopId",
+          value: {
+            selectedValue: [id],
+          },
+        })
+      );
+    }
   }, [dispatch, id]);
 
   useEffect(() => {
-    getAllProducts();
+    if (
+      productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
+        .length > 0
+    ) {
+      getAllProducts();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
@@ -534,25 +537,6 @@ const ShopDetailsPage = () => {
   return (
     <>
       <div className="bg-colorWhite pb-20 md:pb-28">
-        {/* <div className="bg-[#F5F5F5] overflow-visible p-10">
-            <div className="container flex">
-              <Image
-                src={img}
-                alt="shop logo"
-                width={240}
-                height={220}
-                className="rounded-[50%] w-1/3"
-                layout="fixed"
-              />
-              <Image
-                src={img1}
-                alt="shop logo"
-                width={1400}
-                height={280}
-                className="z-0 rounded"
-              />
-            </div>
-          </div> */}
         <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
           <div className="lg:col-span-2 hidden lg:block ">
             <Filter
@@ -561,7 +545,7 @@ const ShopDetailsPage = () => {
             />
           </div>
 
-          <div className="col-span-8 lg:col-span-6 flex flex-col">
+          <div className="col-span-8 lg:col-span-6 flex flex-col mt-2">
             <div className="flex flex-row-reverse">
               <button
                 onClick={() => setProductListingModalOpen(true)}

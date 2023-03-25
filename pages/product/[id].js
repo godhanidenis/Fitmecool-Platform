@@ -48,6 +48,7 @@ import Carousel, {
 } from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
+import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -67,6 +68,12 @@ const ProductDetail = ({ productDetails }) => {
 
   const [open, setOpen] = useState(false);
   const [authTypeModal, setAuthTypeModal] = useState();
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
   const dispatch = useDispatch();
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
@@ -134,7 +141,9 @@ const ProductDetail = ({ productDetails }) => {
       </div>
     );
   });
-
+  if (!isHydrated) {
+    return null;
+  }
   return (
     <>
       <SubHeader />
@@ -627,7 +636,7 @@ const ProductDetail = ({ productDetails }) => {
   );
 };
 
-export default ProductDetail;
+export default withoutAuth(ProductDetail);
 
 export async function getServerSideProps(context) {
   try {

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import LoginLogo from "../../../assets/LoginLogo.svg";
 import googleIcon from "../../../assets/googleIcon.svg";
@@ -14,12 +13,12 @@ import { CustomTextField } from "../../core/CustomMUIComponents";
 import { useForm } from "react-hook-form";
 import CloseIcon from "@mui/icons-material/Close";
 import { AuthTypeModal } from "../../core/Enum";
-import { useMutation } from "@apollo/client";
 import CircularProgress from "@mui/material/CircularProgress";
 import PersonIcon from "@mui/icons-material/Person";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { toast } from "react-toastify";
 import { signUp } from "../../../graphql/mutations/authMutations";
+import Router from "next/router";
 
 export default function SignUp({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
@@ -61,6 +60,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
         toast.success(res.data.signUp.message, { theme: "colored" });
         localStorage.setItem("token", res.data.signUp.token);
         localStorage.setItem("userId", res.data.signUp.user);
+        asVendor && Router.push("/vendor/dashboard");
         handleClose();
       },
       (error) => {
@@ -82,7 +82,10 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
 
         <div className="p-4 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
           <div className="flex">
-            <CloseIcon className="text-black ml-auto cursor-pointer" onClick={handleClose} />
+            <CloseIcon
+              className="text-black ml-auto cursor-pointer"
+              onClick={handleClose}
+            />
           </div>
           <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
             <input
@@ -349,7 +352,13 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                 </div>
               </div>
             </form>
-            <div className={asVendor ? "flex justify-center sm:block" : "flex justify-center sm:block signUpAsNotVendor-height-margin"}>
+            <div
+              className={
+                asVendor
+                  ? "flex justify-center sm:block"
+                  : "flex justify-center sm:block signUpAsNotVendor-height-margin"
+              }
+            >
               <div className="mt-4 sm:mt-6 gap-6 justify-between items-center flex-row  w-[85%] md:w-5/6 lg:w-3/4 block xl:flex">
                 <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
@@ -383,7 +392,13 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
               </div>
             </div>
             <div className="flex justify-center sm:justify-between items-center mb-4  w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4  text-center">
-              <div className={asVendor ? "ml-0 sm:ml-auto" : "ml-0 sm:ml-auto signUpAsNotVendor-height"} >
+              <div
+                className={
+                  asVendor
+                    ? "ml-0 sm:ml-auto"
+                    : "ml-0 sm:ml-auto signUpAsNotVendor-height"
+                }
+              >
                 <span className="text-black">Already have an account?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"

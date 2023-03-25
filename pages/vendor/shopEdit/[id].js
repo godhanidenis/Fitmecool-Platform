@@ -21,17 +21,13 @@ import {
   CustomTextField,
   TabPanel,
 } from "../../../components/core/CustomMUIComponents";
-import VendorShopSubHeader from "../../../components/Layout/VendorShopSubHeader";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm } from "react-hook-form";
-import {
-  getShopDetails,
-  getShopOwnerDetail,
-} from "../../../graphql/queries/shopQueries";
-import { useRouter } from "next/router";
+import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
+
 import { AuthTypeModal } from "../../../components/core/Enum";
 import AuthModal from "../../../components/core/AuthModal";
 import { useSelector } from "react-redux";
@@ -81,7 +77,12 @@ const ShopEdit = () => {
     { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
   ]);
 
-  const { isAuthenticate } = useSelector((state) => state.userProfile);
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
+
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+
   const {
     register: ownerInfoRegister,
     handleSubmit: ownerInfoHandleSubmit,
@@ -111,8 +112,6 @@ const ShopEdit = () => {
     formState: { errors: shopLayoutErrors },
   } = useForm();
 
-  const router = useRouter();
-  const { id } = router.query;
   const [open, setOpen] = useState(false);
   const [authTypeModal, setAuthTypeModal] = useState();
   const [shopOwnerId, setShopOwnerId] = useState("");
@@ -152,6 +151,8 @@ const ShopEdit = () => {
   const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
   const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
 
+  console.log("images--->>>", shopLayoutAllMediaImages);
+  console.log("images--->>>=====", shopImages);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [value, setValue] = React.useState(0);
@@ -163,7 +164,7 @@ const ShopEdit = () => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
+  console.log("ookkkkkk");
   async function srcToFile(src, fileName, mimeType) {
     const res = await fetch(src);
     const buf = await res.arrayBuffer();
@@ -222,7 +223,7 @@ const ShopEdit = () => {
   const getAllSubBranchList = () => {
     getBranchLists().then((res) => {
       const subBranches = res.data.branchList
-        .filter((branch) => branch.shop_id === id)
+        .filter((branch) => branch.shop_id === userProfile?.userCreatedShopId)
         .filter((itm) => itm.branch_type === "sub");
       setSubBranchList(subBranches);
     });
@@ -255,150 +256,160 @@ const ShopEdit = () => {
   }, [sameAsOwner, mainBranchInfoSetValue, ownerInfoGetValue]);
 
   useEffect(() => {
-    if (id) {
+    if (userProfile?.userCreatedShopId) {
       getAllSubBranchList();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [userProfile?.userCreatedShopId]);
 
   useEffect(() => {
-    if (id) {
-      getShopDetails({ id }).then((res) => {
-        getShopOwnerDetail({ id: res.data.shop.owner_id }).then((ownerRes) => {
-          setShopOwnerId(ownerRes.data.shopOwner.id);
+    if (userProfile?.userCreatedShopId) {
+      console.log("uploadShopImages00000000-------------------------- ");
+      getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
+        (ownerRes) => {
+          setShopOwnerId(ownerRes?.data?.shopOwner?.id);
           ownerInfoSetValue(
             "first_name",
-            ownerRes.data.shopOwner.owner_firstName
+            ownerRes?.data?.shopOwner?.owner_firstName
           );
           ownerInfoSetValue(
             "last_name",
-            ownerRes.data.shopOwner.owner_lastName
+            ownerRes?.data?.shopOwner?.owner_lastName
           );
-          ownerInfoSetValue("user_email", ownerRes.data.shopOwner.owner_email);
+          ownerInfoSetValue(
+            "user_email",
+            ownerRes?.data?.shopOwner?.owner_email
+          );
           ownerInfoSetValue(
             "user_contact",
-            ownerRes.data.shopOwner.owner_contact
+            ownerRes?.data?.shopOwner?.owner_contact
           );
-        });
+        }
+      );
 
-        srcToFile(res.data.shop.shop_logo, "profile.png", "image/png").then(
+      srcToFile(vendorShopDetails?.shop_logo, "profile.png", "image/png").then(
+        function (file) {
+          setUploadShopLogo(file);
+        }
+      );
+      setShopLogo(vendorShopDetails?.shop_logo);
+
+      srcToFile(
+        vendorShopDetails?.shop_cover_image,
+        "profile.png",
+        "image/png"
+      ).then(function (file) {
+        setUploadShopBackground(file);
+      });
+      setShopBackground(vendorShopDetails?.shop_cover_image);
+
+      console.log(
+        "uploadShopImages---------------",
+        vendorShopDetails?.shop_images
+      );
+
+      vendorShopDetails?.shop_images?.map((img) =>
+        srcToFile(img.links, "profile.png", "image/png").then(function (file) {
+          console.log("uploadShopImages00000000", file);
+          setUploadShopImages((old) => [...old, file]);
+        })
+      );
+      setShopImages(vendorShopDetails?.shop_images);
+
+      vendorShopDetails?.shop_video &&
+        srcToFile(vendorShopDetails?.shop_video, "profile.mp4", "video").then(
           function (file) {
-            setUploadShopLogo(file);
+            setUploadShopVideo(file);
           }
         );
-        setShopLogo(res.data.shop.shop_logo);
 
-        srcToFile(
-          res.data.shop.shop_cover_image,
-          "profile.png",
-          "image/png"
-        ).then(function (file) {
-          setUploadShopBackground(file);
-        });
-        setShopBackground(res.data.shop.shop_cover_image);
+      vendorShopDetails?.shop_video &&
+        setShopVideo(vendorShopDetails?.shop_video);
 
-        res.data.shop.shop_images?.map((img) =>
-          srcToFile(img.links, "profile.png", "image/png").then(function (
-            file
-          ) {
-            setUploadShopImages((old) => [...old, file]);
-          })
-        );
-        res.data.shop.shop_images?.map((img) =>
-          setShopImages((old) => [...old, img.links])
-        );
+      setShopLayoutAllMediaImages([
+        vendorShopDetails?.shop_logo,
+        vendorShopDetails?.shop_cover_image,
+        ...(vendorShopDetails?.shop_images?.length > 0
+          ? vendorShopDetails?.shop_images?.map((itm) => itm.links)
+          : []),
+      ]);
 
-        res.data.shop.shop_video &&
-          srcToFile(res.data.shop.shop_video, "profile.mp4", "video").then(
-            function (file) {
-              setUploadShopVideo(file);
+      vendorShopDetails?.shop_video &&
+        setShopLayoutAllMediaVideos(vendorShopDetails?.shop_video);
+
+      vendorShopDetails?.shop_time?.map((time) => {
+        hours.map((itm) => {
+          if (time.is_24Hours_open) {
+            if (itm.key === time.week) {
+              itm.value = ["Open 24 hours"];
             }
-          );
-
-        res.data.shop.shop_video && setShopVideo(res.data.shop.shop_video);
-
-        setShopLayoutAllMediaImages((old) => [
-          ...old,
-          res.data.shop.shop_logo,
-          res.data.shop.shop_cover_image,
-          ...(res.data.shop.shop_images.length > 0
-            ? res.data.shop.shop_images.map((itm) => itm.links)
-            : []),
-        ]);
-
-        res.data.shop.shop_video &&
-          setShopLayoutAllMediaVideos(res.data.shop.shop_video);
-
-        res.data.shop.shop_time.map((time) => {
-          hours.map((itm) => {
-            if (time.is_24Hours_open) {
-              if (itm.key === time.week) {
-                itm.value = ["Open 24 hours"];
-              }
-            } else if (time.is_close) {
-              if (itm.key === time.week) {
-                itm.value = ["Closed"];
-              }
-            } else {
-              if (itm.key === time.week) {
-                itm.value = [`${time.open_time} - ${time.close_time}`];
-              }
+          } else if (time.is_close) {
+            if (itm.key === time.week) {
+              itm.value = ["Closed"];
             }
+          } else {
+            if (itm.key === time.week) {
+              itm.value = [`${time.open_time} - ${time.close_time}`];
+            }
+          }
 
-            return itm;
-          });
-          setHours(hours);
+          return itm;
         });
-
-        if (res.data.shop.shop_type === "shop") {
-          setIndividual(false);
-        } else {
-          setIndividual(true);
-        }
-        shopInfoSetValue("shop_name", res.data.shop.shop_name);
-        shopInfoSetValue("shop_email", res.data.shop.shop_email);
-        shopInfoSetValue(
-          "facebook_link",
-          res.data.shop.shop_social_link.facebook
-        );
-        shopInfoSetValue(
-          "instagram_link",
-          res.data.shop.shop_social_link.instagram
-        );
-        shopInfoSetValue(
-          "personal_website",
-          res.data.shop.shop_social_link.website
-        );
-
-        const mainBranches = res.data.shop.branch_info.find(
-          (itm) => itm.branch_type === "main"
-        );
-        setMainBranch(mainBranches);
-
-        mainBranchInfoSetValue("address", mainBranches.branch_address);
-        mainBranchInfoSetValue("pin_code", mainBranches.branch_pinCode);
-
-        mainBranchInfoSetValue(
-          "manager_first_name",
-          mainBranches.manager_name.split(" ")[0]
-        );
-        mainBranchInfoSetValue(
-          "manager_last_name",
-          mainBranches.manager_name.split(" ")[1]
-        );
-        mainBranchInfoSetValue(
-          "manager_user_contact",
-          mainBranches.manager_contact
-        );
-        mainBranchInfoSetValue("city", mainBranches.branch_city);
-        mainBranchInfoSetValue(
-          "manager_user_email",
-          mainBranches.manager_email
-        );
+        setHours(hours);
       });
-    }
-  }, [hours, id, mainBranchInfoSetValue, ownerInfoSetValue, shopInfoSetValue]);
 
+      if (vendorShopDetails?.shop_type === "shop") {
+        setIndividual(false);
+      } else {
+        setIndividual(true);
+      }
+      shopInfoSetValue("shop_name", vendorShopDetails?.shop_name);
+      shopInfoSetValue("shop_email", vendorShopDetails?.shop_email);
+      shopInfoSetValue(
+        "facebook_link",
+        vendorShopDetails?.shop_social_link?.facebook
+      );
+      shopInfoSetValue(
+        "instagram_link",
+        vendorShopDetails?.shop_social_link?.instagram
+      );
+      shopInfoSetValue(
+        "personal_website",
+        vendorShopDetails?.shop_social_link?.website
+      );
+
+      const mainBranches = vendorShopDetails?.branch_info?.find(
+        (itm) => itm.branch_type === "main"
+      );
+      setMainBranch(mainBranches);
+
+      mainBranchInfoSetValue("address", mainBranches?.branch_address);
+      mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
+
+      mainBranchInfoSetValue(
+        "manager_first_name",
+        mainBranches?.manager_name.split(" ")[0]
+      );
+      mainBranchInfoSetValue(
+        "manager_last_name",
+        mainBranches?.manager_name.split(" ")[1]
+      );
+      mainBranchInfoSetValue(
+        "manager_user_contact",
+        mainBranches?.manager_contact
+      );
+      mainBranchInfoSetValue("city", mainBranches?.branch_city);
+      mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
+    }
+  }, [
+    hours,
+    userProfile?.userCreatedShopId,
+    mainBranchInfoSetValue,
+    ownerInfoSetValue,
+    shopInfoSetValue,
+    vendorShopDetails,
+  ]);
+  console.log("uploadShopImages", uploadShopImages);
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
     if (isAuthenticate) {
@@ -437,7 +448,7 @@ const ShopEdit = () => {
       setShopLoading(true);
       shopUpdate({
         shopInfo: {
-          id,
+          id: userProfile?.userCreatedShopId,
           form_steps: "3",
           shop_social_link: {
             facebook: individual ? "" : data.facebook_link,
@@ -559,7 +570,7 @@ const ShopEdit = () => {
                 ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
                     shopUpdate({
                       shopLayout: {
-                        id,
+                        id: userProfile?.userCreatedShopId,
                         shop_logo: logoResponse.data.data.singleUpload,
                         shop_cover_image:
                           backgroundResponse.data.data.singleUpload,
@@ -587,7 +598,7 @@ const ShopEdit = () => {
                   })
                 : shopUpdate({
                     shopLayout: {
-                      id,
+                      id: userProfile?.userCreatedShopId,
                       shop_logo: logoResponse.data.data.singleUpload,
                       shop_cover_image:
                         backgroundResponse.data.data.singleUpload,
@@ -1539,7 +1550,7 @@ const ShopEdit = () => {
                         accept="image/*"
                         {...shopLayoutRegister("shopImages", {
                           required:
-                            shopImages.length === 0
+                            shopImages?.length === 0
                               ? "Shop Image is required"
                               : false,
                           onChange: (e) => {
@@ -1560,10 +1571,10 @@ const ShopEdit = () => {
                 <div className="flex  justify-center mt-10">
                   <div className="flex flex-col w-full">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
-                      {shopImages.map((image, index) => (
+                      {shopImages?.map((image, index) => (
                         <div key={index}>
                           <Image
-                            src={image}
+                            src={image?.links}
                             alt="Product Preview"
                             height={200}
                             width={250}
@@ -1700,7 +1711,7 @@ const ShopEdit = () => {
         subBranchModalOpen={subBranchModalOpen}
         setSubBranchModalOpen={setSubBranchModalOpen}
         getAllSubBranchList={getAllSubBranchList}
-        ShopId={id}
+        ShopId={userProfile?.userCreatedShopId}
         editSubBranchId={editSubBranchId}
         setEditSubBranchId={setEditSubBranchId}
         mainBranchInfoGetValue={mainBranchInfoGetValue}

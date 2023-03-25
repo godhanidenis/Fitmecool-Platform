@@ -53,3 +53,21 @@ export const withAuthWithoutShop = (WrappedComponent) => {
     return null;
   };
 };
+
+export const withoutAuth = (WrappedComponent) => {
+  // eslint-disable-next-line react/display-name
+  return (props) => {
+    if (typeof window !== "undefined") {
+      const Router = useRouter();
+
+      const userType = localStorage.getItem("user_type");
+
+      if (userType !== "vendor") {
+        return <WrappedComponent {...props} />;
+      }
+      Router.push("/vendor/dashboard");
+      return null;
+    }
+    return null;
+  };
+};

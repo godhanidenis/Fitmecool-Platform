@@ -39,6 +39,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
 import SubHeader from "../../components/Layout/SubHeader";
+import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 
 const ShopDetail = ({ shopDetails }) => {
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
@@ -56,7 +57,11 @@ const ShopDetail = ({ shopDetails }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [avgShopRating, setAvgShopRating] = useState(0);
   const [totalFollowers, setTotalFollowers] = useState(0);
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -188,6 +193,9 @@ const ShopDetail = ({ shopDetails }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
+  if (!isHydrated) {
+    return null;
+  }
   return (
     <>
       <SubHeader />
@@ -432,7 +440,7 @@ const ShopDetail = ({ shopDetails }) => {
     </>
   );
 };
-export default ShopDetail;
+export default withoutAuth(ShopDetail);
 
 export async function getServerSideProps(context) {
   try {

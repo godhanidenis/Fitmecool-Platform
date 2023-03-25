@@ -141,7 +141,6 @@ const Header = () => {
   };
 
   const scrollDirection = useScrollDirection();
-
   return (
     <>
       <header
@@ -151,7 +150,11 @@ const Header = () => {
       >
         <div className="container flex items-center justify-between">
           <div className="flex items-center justify-start gap-4">
-            <Link href="/">
+            <Link
+              href={`${
+                userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
+              }`}
+            >
               <div className="cursor-pointer">
                 <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
                   <span className="text-4xl">R</span>entbless
@@ -195,28 +198,32 @@ const Header = () => {
             <ul className="flex"></ul>
 
             <ul className="flex items-center gap-3">
-              <li className="cursor-pointer">
-                <SearchIcon
-                  sx={{ color: "white" }}
-                  fontSize="large"
-                  onClick={handleClickOpen}
-                />
-              </li>
-              <li>
-                <Link href={`/productLike`} passHref>
-                  <IconButton color="inherit">
-                    <Badge
-                      badgeContent={userProfile?.product_like_list?.length}
-                      color="error"
-                    >
-                      <FavoriteBorderOutlinedIcon
-                        sx={{ color: "white" }}
-                        fontSize="large"
-                      />
-                    </Badge>
-                  </IconButton>
-                </Link>
-              </li>
+              {userProfile.user_type !== "vendor" && (
+                <>
+                  <li className="cursor-pointer">
+                    <SearchIcon
+                      sx={{ color: "white" }}
+                      fontSize="large"
+                      onClick={handleClickOpen}
+                    />
+                  </li>
+                  <li>
+                    <Link href={`/productLike`} passHref>
+                      <IconButton color="inherit">
+                        <Badge
+                          badgeContent={userProfile?.product_like_list?.length}
+                          color="error"
+                        >
+                          <FavoriteBorderOutlinedIcon
+                            sx={{ color: "white" }}
+                            fontSize="large"
+                          />
+                        </Badge>
+                      </IconButton>
+                    </Link>
+                  </li>
+                </>
+              )}
               <li>
                 {!accessToken && (
                   <div
@@ -384,6 +391,7 @@ const UserProfile = ({ setAccessToken }) => {
     dispatch(userLogout());
     setAccessToken("");
     handleProfileClose();
+    Router.push("/");
 
     toast.success("Logout Successfully", {
       theme: "colored",

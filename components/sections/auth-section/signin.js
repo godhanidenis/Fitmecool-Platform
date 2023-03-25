@@ -16,25 +16,22 @@ import { Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { AuthTypeModal } from "../../core/Enum";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { signIn } from "../../../graphql/mutations/authMutations";
 import { loginUserId } from "../../../redux/ducks/userProfile";
 import { useDispatch } from "react-redux";
-import store from "../../../redux/store";
+import Router from "next/router";
 
 export default function SignIn({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
-    watch,
-    getValues,
   } = useForm();
   const dispatch = useDispatch();
   const onSubmit = (data) => {
@@ -49,6 +46,8 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
         localStorage.setItem("token", res.data.signIn.token);
         localStorage.setItem("userId", res.data.signIn.user);
         toast.success(res.data.signIn.message, { theme: "colored" });
+        localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
+        asVendor && Router.push("/vendor/dashboard");
         handleClose();
       },
       (error) => {
@@ -235,7 +234,10 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
               </div>
             </div>
             <div className="flex justify-center sm:justify-between items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-6 sm:mt-8 text-center">
-              <div style={{marginTop:"12px" , marginBottom:"32px"}} className="ml-0 sm:ml-auto">
+              <div
+                style={{ marginTop: "12px", marginBottom: "32px" }}
+                className="ml-0 sm:ml-auto"
+              >
                 <span className="text-black">{`Don't`} have an account ?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"

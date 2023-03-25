@@ -84,6 +84,7 @@ export const getShops = async (payload) => {
       pageData: payload.pageData,
       stars: payload.stars,
     },
+    fetchPolicy: "no-cache",
   });
 
   return results;

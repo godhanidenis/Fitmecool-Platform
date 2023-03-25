@@ -203,7 +203,7 @@ const ProductCard = ({
                     textOverflow: "ellipsis",
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: 2,
+                    WebkitLineClamp: 1,
                   }}
                 >
                   {product.product_name}

@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "../../components/sections/product-section/ProductCard";
 import EmptyCart from "../../assets/images/empty-cart.png";
+import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 
 const ProductLikePage = () => {
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null;
+  }
   return (
     <>
       {userProfile.product_like_list?.length === 0 || !isAuthenticate ? (
@@ -49,4 +60,4 @@ const ProductLikePage = () => {
   );
 };
 
-export default ProductLikePage;
+export default withoutAuth(ProductLikePage);

@@ -5,7 +5,7 @@ import Inventory2Icon from "@mui/icons-material/Inventory2";
 import { useRouter } from "next/router";
 import { Avatar, Divider } from "@mui/material";
 
-const VendorSidebar = ({ shopData }) => {
+const VendorSidebar = ({ vendorShopDetails }) => {
   const router = useRouter();
   const setActiveLink = (path) => {
     const withoutLastChunk = router.pathname.slice(
@@ -21,13 +21,13 @@ const VendorSidebar = ({ shopData }) => {
     <div className="bg-[#F5F5F5] flex flex-col h-full">
       <div className="flex flex-col items-center justify-center gap-3 my-10">
         <Avatar
-          src={shopData?.shop_logo}
+          src={vendorShopDetails?.shop_logo}
           alt="Shop Logo"
           sx={{ width: 100, height: 100 }}
         />
 
         <p className="text-colorBlack font-semibold text-lg">
-          {shopData?.shop_name}
+          {vendorShopDetails?.shop_name}
         </p>
       </div>
       <Divider className="w-[75%] mx-auto" />
@@ -48,7 +48,9 @@ const VendorSidebar = ({ shopData }) => {
           className={`${setActiveLink(
             "/vendor/shopEdit"
           )} text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => router.push(`/vendor/shopEdit/${shopData?.id}`)}
+          onClick={() =>
+            router.push(`/vendor/shopEdit/${vendorShopDetails?.id}`)
+          }
         >
           <p className="flex items-center cursor-pointer">
             <Inventory2Icon className="mr-3" />
@@ -60,7 +62,7 @@ const VendorSidebar = ({ shopData }) => {
           className={`${setActiveLink(
             "/vendor/shop"
           )}  text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => router.push(`/vendor/shop/${shopData?.id}`)}
+          onClick={() => router.push(`/vendor/shop/${vendorShopDetails?.id}`)}
         >
           <p className="flex items-center cursor-pointer">
             <ListAltIcon className="mr-3" />

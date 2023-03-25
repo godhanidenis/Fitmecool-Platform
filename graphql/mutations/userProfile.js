@@ -100,6 +100,7 @@ export const getUserProfile = async () => {
         }
       }
     `,
+    fetchPolicy: "no-cache",
   });
   return result;
 };
