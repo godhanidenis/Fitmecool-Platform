@@ -5,6 +5,7 @@ import Link from "next/link";
 import ProductCard from "../../components/sections/product-section/ProductCard";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import EmptyCart from "../../assets/images/empty_page_img.svg";
+import Router from "next/router";
 
 const ProductLikePage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -43,7 +44,10 @@ const ProductLikePage = () => {
             Save your favourite items so you <br /> don&apos;t lose sight of
             them.
           </p>
-          <button className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap">
+          <button
+            className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap"
+            onClick={() => Router.push("/")}
+          >
             Explore Now
           </button>
         </div>
