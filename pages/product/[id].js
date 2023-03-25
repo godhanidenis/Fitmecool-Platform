@@ -126,16 +126,17 @@ const ProductDetail = ({ productDetails }) => {
   const items = photos.map((itm, i) => {
     return (
       <div
-        className="w-[70%] mx-auto my-2"
+        className="w-[70%] mx-auto mb-2"
         onMouseEnter={() => selectImage(itm, i)}
         key={i}
         onClick={() => selectImage(itm, i)}
       >
-        <Image
+        <img
           src={itm}
           alt="Product Images"
           width={250}
           height={300}
+          style={images === itm ? {border:"1px solid black"} :  {border:"0"}}
           className="rounded cursor-pointer"
         />
       </div>
@@ -147,7 +148,7 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="p-2 pt-5 grid grid-cols-6">
+      <div className="p-2 pt-5 grid grid-cols-10">
         <div className="col-span-1"></div>
         <div className="col-span-5">
           <Breadcrumbs aria-label="breadcrumb">
@@ -174,9 +175,9 @@ const ProductDetail = ({ productDetails }) => {
             <div className="col-span-2 lg:col-span-1">
               <div className="grid grid-cols-4">
                 <div className="col-span-1">
-                  <div className="p-2 py-5">{items}</div>
+                  <div className="p-2 pt-0">{items}</div>
                 </div>
-                <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite h-[70vh]">
+                <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite">
                   <CustomReactImageMagnify large={images} preview={images} />
                 </div>
                 <div className="col-span-1"></div>
@@ -230,7 +231,7 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="col-span-1 flex justify-start items-center">
                     <div className="flex justify-start items-center">
                       <div className="flex justify-center items-center mr-3">
-                        <Image
+                        <img
                           alt="Shop Logo"
                           src={
                             productDetails.data.product.data.branchInfo
@@ -334,7 +335,7 @@ const ProductDetail = ({ productDetails }) => {
                       }}
                     >
                       <Typography color="#95539B">
-                        {shopFollowByUser ? "UnFollow" : "Follow"}
+                        {shopFollowByUser ? "Unfollow" : "Follow"}
                       </Typography>
                     </Button>
                   </div>
@@ -455,15 +456,15 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="bg-colorWhite rounded-lg flex items-center shadow-lg">
                     <div className="p-5 flex gap-4 justify-start">
                       <div className="flex justify-center items-center">
-                        <Image
+                        <img
                           alt="Shop Logo"
                           src={
                             productDetails.data.product.data.branchInfo
                               ?.shop_info?.shop_logo
                           }
-                          width={80}
-                          height={50}
-                          className="rounded-[50%]"
+                          width={60}
+                          height={40}
+                          className="rounded-[40%]"
                         />
                       </div>
                       <div className="flex flex-col justify-center">
@@ -545,7 +546,7 @@ const ProductDetail = ({ productDetails }) => {
 
         <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
           <p className="text-colorBlack pb-3 font-semibold text-xl">
-            Special Products
+            SIMILAR PRODUCTS
           </p>
 
           {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}

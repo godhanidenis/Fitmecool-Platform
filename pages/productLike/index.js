@@ -3,15 +3,15 @@ import { useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "../../components/sections/product-section/ProductCard";
-import EmptyCart from "../../assets/images/empty-cart.png";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
+import EmptyCart from "../../assets/images/empty_page_img.svg";
 
 const ProductLikePage = () => {
+  const [isHydrated, setIsHydrated] = useState(false);
+
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
-
-  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -31,14 +31,20 @@ const ProductLikePage = () => {
             alt="EmptyCart"
             className="animate__animated animate__slideInDown"
           />
-          <h1 className=" font-bold animate__animated animate__slideInUp">
-            You have not like any product!!
-            <Link href="/" passHref>
+          <h1 className="font-bold animate__animated animate__slideInUp text-3xl">
+            Your wishlist is empty!!
+            {/* <Link href="/" passHref>
               <strong className="text-colorPrimary !font-extrabold underline ml-2 cursor-pointer">
                 View Products
               </strong>
-            </Link>
+            </Link> */}
           </h1>
+          <p>
+            Save your favourite items so you <br /> don't lose sight of them.
+          </p>
+          <button className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap">
+            Explore Now
+          </button>
         </div>
       ) : (
         <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
