@@ -140,6 +140,7 @@ const ShopDetailsPage = () => {
         );
         setValue("product_color", res.data.product.data.product_color);
         setValue("product_type", res.data.product.data.product_type);
+        setProductType(res.data.product.data.product_type);
         setValue("product_category", res.data.product.data.categoryInfo.id);
         setValue("product_branch", res.data.product.data.branchInfo.id);
 
@@ -537,35 +538,37 @@ const ShopDetailsPage = () => {
   return (
     <>
       <div className="bg-colorWhite pb-20 md:pb-28">
-        <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
-          <div className="lg:col-span-2 hidden lg:block ">
-            <Filter
+        {/* <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8"> */}
+        {/* <div className="lg:col-span-2 hidden lg:block "> */}
+        {/* <Filter
               productByShop={true}
               setProductPageSkip={setProductPageSkip}
-            />
+            /> */}
+
+        {/* </div> */}
+
+        <div className="flex flex-col mt-2">
+          <div className="flex w-[95%] mx-auto flex-row-reverse">
+            <button
+              onClick={() => setProductListingModalOpen(true)}
+              className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
+            >
+              Add Products
+            </button>
           </div>
 
-          <div className="col-span-8 lg:col-span-6 flex flex-col mt-2">
-            <div className="flex flex-row-reverse">
-              <button
-                onClick={() => setProductListingModalOpen(true)}
-                className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
-              >
-                Add Products
-              </button>
-            </div>
+          <div className="bg-[#F5F5F5] rounded-lg mt-5">
+            <div className="w-[95%] mx-auto">
+              <UpperFilter
+                setProductPageSkip={setProductPageSkip}
+                forShopPage={true}
+                showDrawerFilter={true}
+              />
 
-            <div className="bg-[#F5F5F5] rounded-lg mt-5">
-              <div className="container">
-                <UpperFilter
-                  setProductPageSkip={setProductPageSkip}
-                  forShopPage={true}
-                />
-
-                {/* <p className="font-bold text-2xl text-colorBlack">
+              {/* <p className="font-bold text-2xl text-colorBlack">
                   Special Products
                 </p> */}
-                {/* <InfiniteScroll
+              {/* <InfiniteScroll
                   className="!overflow-hidden p-0.5"
                   dataLength={productsData.length}
                   next={() => setProductPageSkip(productPageSkip + 6)}
@@ -576,41 +579,41 @@ const ShopDetailsPage = () => {
                     </div>
                   }
                 > */}
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-10 place-items-center mb-10">
-                  {productsData &&
-                    productsData?.map((product) => (
-                      <ProductCard
-                        product={product}
-                        key={product.id}
-                        shopProduct={true}
-                        setProductPageSkip={setProductPageSkip}
-                        getAllProducts={getAllProducts}
-                        setEditProductId={setEditProductId}
-                      />
-                    ))}
-                </div>
-
-                {productsCount > 6 && (
-                  <div className="flex items-center justify-center py-10">
-                    <Pagination
-                      count={Math.ceil(productsCount / 6)}
-                      color="primary"
-                      variant="outlined"
-                      shape="rounded"
-                      page={
-                        (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
-                      }
-                      onChange={(e, p) => {
-                        setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                      }}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10">
+                {productsData &&
+                  productsData?.map((product) => (
+                    <ProductCard
+                      product={product}
+                      key={product.id}
+                      shopProduct={true}
+                      setProductPageSkip={setProductPageSkip}
+                      getAllProducts={getAllProducts}
+                      setEditProductId={setEditProductId}
                     />
-                  </div>
-                )}
-                {/* </InfiniteScroll> */}
+                  ))}
               </div>
+
+              {productsCount > 6 && (
+                <div className="flex items-center justify-center py-10">
+                  <Pagination
+                    count={Math.ceil(productsCount / 6)}
+                    color="primary"
+                    variant="outlined"
+                    shape="rounded"
+                    page={
+                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                    }
+                    onChange={(e, p) => {
+                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                    }}
+                  />
+                </div>
+              )}
+              {/* </InfiniteScroll> */}
             </div>
           </div>
         </div>
+        {/* </div> */}
       </div>
       <CustomAuthModal
         open={productListingModalOpen}

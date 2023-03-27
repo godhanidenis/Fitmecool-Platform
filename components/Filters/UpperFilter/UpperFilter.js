@@ -23,8 +23,14 @@ import {
 } from "../../../redux/ducks/shopsFilters";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import DrawerFilters from "../DrawerFilters";
 
-const UpperFilter = ({ byShop, setProductPageSkip, forShopPage }) => {
+const UpperFilter = ({
+  byShop,
+  setProductPageSkip,
+  forShopPage,
+  showDrawerFilter,
+}) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
 
@@ -65,6 +71,10 @@ const UpperFilter = ({ byShop, setProductPageSkip, forShopPage }) => {
       </div>
 
       <div className="flex items-center gap-2 mr-3">
+        {showDrawerFilter && (
+          <DrawerFilters setProductPageSkip={setProductPageSkip} />
+        )}
+
         <ListOutlinedIcon
           fontSize="large"
           className={`${
