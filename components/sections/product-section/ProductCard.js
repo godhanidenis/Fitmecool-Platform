@@ -97,7 +97,7 @@ const ProductCard = ({
   return (
     <>
       {viewMore ? (
-        <div className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
+        <div style={{position:"absolute" , top:"190px"}} className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
           <Link
             href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
           >
@@ -109,7 +109,7 @@ const ProductCard = ({
           <div className="border-b">
             <div className="container my-[5px] cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
-                <div className="w-[100%]">
+                <div className="w-[90%]">
                   <Slider {...settings}>{items}</Slider>
                 </div>
               </div>
