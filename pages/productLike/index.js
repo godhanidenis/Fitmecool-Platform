@@ -24,7 +24,7 @@ const ProductLikePage = () => {
   return (
     <>
       {userProfile.product_like_list?.length === 0 || !isAuthenticate ? (
-        <div className="flex flex-col justify-center bg-[#F5F5F5] my-10 w-[95%] mx-auto gap-5 h-[calc(100vh-573px)] items-center">
+        <div className="flex flex-col justify-center bg-[#F5F5F5] my-10 w-[95%] mx-auto gap-5 h-[calc(100vh-150px)] items-center">
           <Image
             src={EmptyCart}
             width={200}
