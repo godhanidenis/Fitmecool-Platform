@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useState } from "react";
 import LoginLogo from "../../../assets/LoginLogo.svg";
@@ -20,12 +21,38 @@ import { toast } from "react-toastify";
 import { signUp } from "../../../graphql/mutations/authMutations";
 import Router from "next/router";
 
-export default function SignUp({ changeAuthModalType, handleClose }) {
+export default function SignUp({
+  changeAuthModalType,
+  handleClose,
+  forMobile,
+}) {
   const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [isScreenWide, setIsScreenWide] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        // 640 is the sm breakpoint in Tailwind
+        setIsScreenWide(true);
+      } else {
+        setIsScreenWide(false);
+      }
+    };
+
+    handleResize(); // Check on component mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isScreenWide) {
+      Router.push("/");
+    }
+  }, [isScreenWide]);
 
   const {
     register,
@@ -81,12 +108,14 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
         </div>
 
         <div className="p-4 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
-          <div className="flex">
-            <CloseIcon
-              className="text-black ml-auto cursor-pointer"
-              onClick={handleClose}
-            />
-          </div>
+          {!forMobile && (
+            <div className="flex">
+              <CloseIcon
+                className="text-black ml-auto cursor-pointer"
+                onClick={handleClose}
+              />
+            </div>
+          )}
           <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
             <input
               id="Toggle4"
@@ -402,7 +431,10 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                 <span className="text-black">Already have an account?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"
-                  onClick={() => changeAuthModalType(AuthTypeModal.Signin)}
+                  onClick={() => {
+                    !forMobile && changeAuthModalType(AuthTypeModal.Signin);
+                    forMobile && Router.push("/auth/login");
+                  }}
                 >
                   Login
                 </span>

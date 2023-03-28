@@ -47,11 +47,10 @@ const SubHeader = () => {
   return (
     <div
       className={`w-full bg-colorWhite shadow-md z-20 left-0 sticky ${
-        scrollDirection === "down" ? "-top-32" : "top-[83px]"
-      } transition-all duration-500`}
+        scrollDirection === "down" ? "-top-32" : "top-[72px] sm:top-[83px]"
+      } transition-all duration-500 hidden sm:flex`}
     >
       <div className="container flex gap-48 items-center">
-        <button type="button" className="h-5 relative"></button>
         <div className="pl-2" onMouseLeave={handleMenuClose.bind(this)}>
           <CustomTab value={value}>
             {["Men's", "Women's"].map((item, index) => (

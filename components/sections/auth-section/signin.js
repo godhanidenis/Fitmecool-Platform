@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import LoginLogo from "../../../assets/LoginLogo.svg";
 import googleIcon from "../../../assets/googleIcon.svg";
 import fbIcon from "../../../assets/fbIcon.svg";
@@ -22,10 +22,36 @@ import { loginUserId } from "../../../redux/ducks/userProfile";
 import { useDispatch } from "react-redux";
 import Router from "next/router";
 
-export default function SignIn({ changeAuthModalType, handleClose }) {
+export default function SignIn({
+  changeAuthModalType,
+  handleClose,
+  forMobile,
+}) {
   const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isScreenWide, setIsScreenWide] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        // 640 is the sm breakpoint in Tailwind
+        setIsScreenWide(true);
+      } else {
+        setIsScreenWide(false);
+      }
+    };
+
+    handleResize(); // Check on component mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isScreenWide) {
+      Router.push("/");
+    }
+  }, [isScreenWide]);
 
   const {
     register,
@@ -47,8 +73,8 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
         localStorage.setItem("userId", res.data.signIn.user);
         toast.success(res.data.signIn.message, { theme: "colored" });
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
+        forMobile ? Router.push("/vendor/dashboard") : handleClose();
         asVendor && Router.push("/vendor/dashboard");
-        handleClose();
       },
       (error) => {
         setLoading(false);
@@ -68,12 +94,14 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
           </div>
         </div>
         <div className="p-4 mt-3 sm:mt-0 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
-          <div className="flex">
-            <CloseIcon
-              className="text-black ml-auto cursor-pointer"
-              onClick={handleClose}
-            />
-          </div>
+          {!forMobile && (
+            <div className="flex">
+              <CloseIcon
+                className="text-black ml-auto cursor-pointer"
+                onClick={handleClose}
+              />
+            </div>
+          )}
           <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
             <input
               id="Toggle4"
@@ -174,7 +202,10 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 <div className="flex justify-center sm:block">
                   <div className="flex justify-end mb-9 sm:mb-9 w-[90%] md:w-5/6 lg:w-3/4">
                     <Link href="/auth/forgot-password">
-                      <span className="text-[#544E5D] ml-auto opacity-50 cursor-pointer">
+                      <span
+                        onClick={() => handleClose()}
+                        className="text-[#544E5D] ml-auto opacity-50 cursor-pointer"
+                      >
                         Forgot Password?
                       </span>
                     </Link>
@@ -241,7 +272,10 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 <span className="text-black">{`Don't`} have an account ?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"
-                  onClick={() => changeAuthModalType(AuthTypeModal.Signup)}
+                  onClick={() => {
+                    !forMobile && changeAuthModalType(AuthTypeModal.Signup);
+                    forMobile && Router.push("/auth/signup");
+                  }}
                 >
                   Sign up
                 </span>

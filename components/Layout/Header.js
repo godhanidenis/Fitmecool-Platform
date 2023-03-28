@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PropTypes from "prop-types";
@@ -26,7 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AuthModal from "../core/AuthModal";
 import ProfileIcon from "../../assets/profile.png";
 import { AuthTypeModal } from "../core/Enum";
-
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
   Checkbox,
@@ -38,6 +38,7 @@ import {
   MenuList,
   Paper,
   Popper,
+  Select,
 } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
@@ -47,8 +48,9 @@ import {
 } from "../../redux/ducks/userProfile";
 import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
+import Sidebar from "./MobileMenu/Sidebar";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -111,7 +113,15 @@ const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const handleMobileSidebarClick = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+  const [selectedLocation, setSelectedLocation] = useState("");
+
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const { areaLists } = useSelector((state) => state.areaLists);
   const { userProfile } = useSelector((state) => state.userProfile);
   const [openModel, setOpenModel] = React.useState(false);
@@ -141,15 +151,33 @@ const Header = () => {
   };
 
   const scrollDirection = useScrollDirection();
+  const mobileSidebarStyle = sidebarOpen ? "" : "-translate-x-full";
+
   return (
     <>
+      <Sidebar
+        className={`${mobileSidebarStyle}`}
+        handleMobileSidebarClick={handleMobileSidebarClick}
+        sidebarOpen={sidebarOpen}
+        accessToken={accessToken}
+        setAccessToken={setAccessToken}
+      />
       <header
         className={`py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
       >
-        <div className="container flex items-center justify-between">
-          <div className="flex items-center justify-start gap-4">
+        <div className="container flex items-center justify-between gap-2">
+          <div className="flex items-center justify-start gap-3">
+            {router.pathname !== "/auth/login" &&
+              router.pathname !== "/auth/signup" && (
+                <MenuIcon
+                  sx={{ color: "white" }}
+                  fontSize="large"
+                  className="sm:hidden"
+                  onClick={handleMobileSidebarClick}
+                />
+              )}
             <Link
               href={`${
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
@@ -164,6 +192,7 @@ const Header = () => {
               </div>
             </Link>
             <Autocomplete
+              className="hidden sm:flex"
               size="small"
               options={areaLists}
               disableCloseOnSelect
@@ -194,20 +223,52 @@ const Header = () => {
             />
           </div>
 
-          <div className="flex items-center gap-5 xl:gap-12">
-            <ul className="flex"></ul>
-
-            <ul className="flex items-center gap-3">
+          <div className="flex items-center">
+            <ul className="flex items-center gap-2">
+              {router.pathname !== "/auth/login" &&
+                router.pathname !== "/auth/signup" && (
+                  <li className="flex sm:hidden">
+                    <Select
+                      value={selectedLocation}
+                      displayEmpty
+                      onChange={(e) => setSelectedLocation(e.target.value)}
+                      sx={{
+                        boxShadow: "none",
+                        color: "white",
+                        ".MuiSvgIcon-root ": {
+                          fill: "white !important",
+                        },
+                        ".MuiOutlinedInput-input": { padding: 0 },
+                        ".MuiOutlinedInput-notchedOutline": { border: 0 },
+                        "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                          {
+                            border: 0,
+                          },
+                        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                          {
+                            border: 0,
+                          },
+                      }}
+                    >
+                      <MenuItem value="">City</MenuItem>
+                      {areaLists?.map((location, index) => (
+                        <MenuItem value={location?.pin} key={index}>
+                          {location?.area}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </li>
+                )}
               {userProfile.user_type !== "vendor" && (
                 <>
-                  <li className="cursor-pointer">
+                  <li className="cursor-pointer hidden sm:block">
                     <SearchIcon
                       sx={{ color: "white" }}
                       fontSize="large"
                       onClick={handleClickOpen}
                     />
                   </li>
-                  <li>
+                  <li className="hidden sm:block">
                     <Link href={`/productLike`} passHref>
                       <IconButton color="inherit">
                         <Badge
@@ -226,13 +287,22 @@ const Header = () => {
               )}
               <li>
                 {!accessToken && (
-                  <div
-                    className="flex text-colorWhite cursor-pointer"
-                    onClick={() => {
-                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                    }}
-                  >
-                    <p className="underline hover:scale-105">SingIn / SignUp</p>
+                  <div className="flex text-colorWhite cursor-pointer">
+                    <p
+                      onClick={() => {
+                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                      }}
+                      className="underline hover:scale-105 hidden sm:block"
+                    >
+                      SingIn / SignUp
+                    </p>
+
+                    <PersonAddAltIcon
+                      sx={{ color: "white" }}
+                      fontSize="large"
+                      className="sm:hidden"
+                      onClick={() => Router.push("/auth/login")}
+                    />
                   </div>
                 )}
                 {accessToken && (
@@ -278,8 +348,8 @@ const Header = () => {
             >
               <div className="flex justify-center cursor-pointer">
                 <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
-                  <span className="text-4xl">W</span>edding
-                  <span className="text-4xl">B</span>ell
+                  <span className="text-4xl">R</span>entbless
+                  {/* <span className="text-4xl">B</span>ell */}
                 </h2>
               </div>
             </BootstrapDialogTitle>
@@ -348,7 +418,11 @@ const Header = () => {
 
 export default Header;
 
-const UserProfile = ({ setAccessToken }) => {
+export const UserProfile = ({
+  setAccessToken,
+  forSidebar,
+  handleMobileSidebarClick,
+}) => {
   const [anchorElUser, setAnchorElUser] = useState(false);
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
@@ -363,12 +437,6 @@ const UserProfile = ({ setAccessToken }) => {
   };
 
   const options = [
-    {
-      icon: <FavoriteBorderOutlinedIcon />,
-      name: `wishList (${userProfile?.product_like_list?.length})`,
-
-      func: wishList,
-    },
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
   if (userProfile.user_type === "vendor") {
@@ -378,6 +446,14 @@ const UserProfile = ({ setAccessToken }) => {
       func: dashboard,
     });
   }
+  if (userProfile.user_type !== "vendor") {
+    options.unshift({
+      icon: <FavoriteBorderOutlinedIcon />,
+      name: `wishList (${userProfile?.product_like_list?.length})`,
+
+      func: wishList,
+    });
+  }
 
   function dashboard() {
     Router.push("/vendor/dashboard");
@@ -385,6 +461,7 @@ const UserProfile = ({ setAccessToken }) => {
 
   function wishList() {
     Router.push("/productLike");
+    forSidebar && handleMobileSidebarClick();
   }
   function logoutUser() {
     localStorage.clear();
@@ -392,6 +469,7 @@ const UserProfile = ({ setAccessToken }) => {
     setAccessToken("");
     handleProfileClose();
     Router.push("/");
+    forSidebar && handleMobileSidebarClick();
 
     toast.success("Logout Successfully", {
       theme: "colored",
@@ -408,11 +486,19 @@ const UserProfile = ({ setAccessToken }) => {
         <Avatar>
           <Image src={ProfileIcon} alt="ProfileIcon" layout="fill" />
         </Avatar>
-        <span className="font-semibold hidden sm:flex text-colorWhite">
+        <span
+          className={`font-semibold ${
+            forSidebar ? "flex text-[#4a4a4a]" : "hidden text-colorWhite"
+          } sm:flex`}
+        >
           {userProfile?.first_name + " " + userProfile?.last_name}
         </span>
 
-        <KeyboardArrowDownIcon className="hidden sm:flex text-colorWhite" />
+        <KeyboardArrowDownIcon
+          className={`${
+            forSidebar ? "flex !text-[#4a4a4a]" : "hidden text-colorWhite"
+          }  sm:flex text-colorWhite`}
+        />
       </div>
       <Popper
         open={anchorElUser}
