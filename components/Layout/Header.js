@@ -496,8 +496,8 @@ export const UserProfile = ({
 
         <KeyboardArrowDownIcon
           className={`${
-            forSidebar ? "flex !text-[#4a4a4a]" : "hidden text-colorWhite"
-          }  sm:flex text-colorWhite`}
+            forSidebar ? "!flex !text-[#4a4a4a]" : "!hidden !text-colorWhite"
+          }  sm:!flex`}
         />
       </div>
       <Popper

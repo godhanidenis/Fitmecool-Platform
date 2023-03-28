@@ -42,6 +42,10 @@ const SubHeader = () => {
     setAnchorEl(null);
   };
 
+  const equalsCheck = (a, b) => {
+    return JSON.stringify(a) === JSON.stringify(b);
+  };
+
   const scrollDirection = useScrollDirection();
 
   return (
@@ -92,7 +96,14 @@ const SubHeader = () => {
                                     changeAppliedProductsFilters({
                                       key: "categoryId",
                                       value: {
-                                        selectedValue: [itm.id],
+                                        selectedValue: equalsCheck(
+                                          productsFiltersReducer
+                                            .appliedProductsFilters.categoryId
+                                            .selectedValue,
+                                          [itm.id]
+                                        )
+                                          ? []
+                                          : [itm.id],
                                       },
                                     })
                                   );
@@ -125,7 +136,14 @@ const SubHeader = () => {
                                     changeAppliedProductsFilters({
                                       key: "categoryId",
                                       value: {
-                                        selectedValue: [itm.id],
+                                        selectedValue: equalsCheck(
+                                          productsFiltersReducer
+                                            .appliedProductsFilters.categoryId
+                                            .selectedValue,
+                                          [itm.id]
+                                        )
+                                          ? []
+                                          : [itm.id],
                                       },
                                     })
                                   );
@@ -165,7 +183,14 @@ const SubHeader = () => {
                                     changeAppliedProductsFilters({
                                       key: "categoryId",
                                       value: {
-                                        selectedValue: [itm.id],
+                                        selectedValue: equalsCheck(
+                                          productsFiltersReducer
+                                            .appliedProductsFilters.categoryId
+                                            .selectedValue,
+                                          [itm.id]
+                                        )
+                                          ? []
+                                          : [itm.id],
                                       },
                                     })
                                   );
@@ -198,7 +223,14 @@ const SubHeader = () => {
                                     changeAppliedProductsFilters({
                                       key: "categoryId",
                                       value: {
-                                        selectedValue: [itm.id],
+                                        selectedValue: equalsCheck(
+                                          productsFiltersReducer
+                                            .appliedProductsFilters.categoryId
+                                            .selectedValue,
+                                          [itm.id]
+                                        )
+                                          ? []
+                                          : [itm.id],
                                       },
                                     })
                                   );
