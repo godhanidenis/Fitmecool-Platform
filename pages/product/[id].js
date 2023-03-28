@@ -31,7 +31,7 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 // import Carousel, { autoplayPlugin, slidesToShowPlugin } from "@brainhubeu/react-carousel";
-import "@brainhubeu/react-carousel/lib/style.css";
+// import "@brainhubeu/react-carousel/lib/style.css";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import Slider from "react-slick";
@@ -126,33 +126,47 @@ const ProductDetail = ({ productDetails }) => {
   }
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block", color:"white"}}
-        onClick={onClick}
-      />
-    );
+    return <div className={className} style={{ ...style, display: "block", color: "white" }} onClick={onClick} />;
   }
-  
+
   function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
-    return (
-      <div
-        className={className}
-        style={{ ...style, display: "block"}}
-        onClick={onClick}
-      />
-    );
+    return <div className={className} style={{ ...style, display: "block" }} onClick={onClick} />;
   }
 
   const settings = {
     infinite: false,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 5,
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1441,
+        settings: {
+          slidesToShow: 4,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
   };
   return (
     <>
@@ -486,7 +500,7 @@ const ProductDetail = ({ productDetails }) => {
           </div>
         </div>
 
-        <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
+        <div className="bg-[#F5F5F5] p-5 w-[80%] mx-auto my-10">
           <p className="text-colorBlack pb-3 font-semibold text-xl">SIMILAR PRODUCTS</p>
 
           {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
@@ -494,7 +508,11 @@ const ProductDetail = ({ productDetails }) => {
             {productDetails.data.product.related &&
               productDetails.data.product.related?.map((product, index) => {
                 if (index <= 4) {
-                  return <ProductCard product={product} key={product.id} />;
+                  return (
+                    <div className="m-4" key={product.id}>
+                      <ProductCard product={product} />
+                    </div>
+                  );
                 } else if (index === 5) {
                   return (
                     <ProductCard product={product} productDetails={productDetails} viewMore={true} key={product.id} />
