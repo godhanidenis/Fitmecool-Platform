@@ -173,10 +173,11 @@ const LandingPage = () => {
           <div className="container !w-[100%]">
             <UpperFilter
               byShop={byShop}
+              setByShop={setByShop}
               setProductPageSkip={setProductPageSkip}
               setShopPageSkip={setShopPageSkip}
+              showDrawerFilter={true}
             />
-
             {!byShop ? (
               <>
                 {/* <p className="font-bold text-2xl text-colorBlack">Products</p> */}

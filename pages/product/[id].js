@@ -9,7 +9,17 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import Image from "next/image";
-import { Avatar, Box, Breadcrumbs, Button, Divider, FormControlLabel, FormGroup, Rating, Switch } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Breadcrumbs,
+  Button,
+  Divider,
+  FormControlLabel,
+  FormGroup,
+  Rating,
+  Switch,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { getProductDetails } from "../../graphql/queries/productQueries";
@@ -36,18 +46,6 @@ import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMag
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import Slider from "react-slick";
 
-const HtmlTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)(
-  ({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#ffffff",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)",
-    },
-  })
-);
-
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
@@ -56,6 +54,23 @@ const ProductDetail = ({ productDetails }) => {
   const [authTypeModal, setAuthTypeModal] = useState();
 
   const [isHydrated, setIsHydrated] = useState(false);
+
+  const [OpenToolTip, setOpenToolTip] = useState(false);
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#ffffff",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      boxShadow: "0 0 10px rgba(0,0,0,.1)",
+    },
+  }));
+
+  const handleTooltipOpen = () => {
+    setOpenToolTip(!OpenToolTip);
+  };
 
   useEffect(() => {
     setIsHydrated(true);
@@ -171,7 +186,7 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="p-2 pt-5 grid grid-cols-10">
+      <div className="p-2 pt-5 grid md:grid-cols-10 grid-cols-7 ">
         <div className="col-span-1"></div>
         <div className="col-span-5">
           <Breadcrumbs aria-label="breadcrumb">
@@ -199,45 +214,53 @@ const ProductDetail = ({ productDetails }) => {
                   <CustomReactImageMagnify large={images} preview={images} />
                 </div>
                 <div className="col-span-1"></div>
-                <div className="col-span-3 pt-5 flex justify-between items-center bg-colorWhite ">
-                  <Button variant="outlined" sx={{ textTransform: "none" }}>
-                    <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
-                  </Button>
-                  <HtmlTooltip
-                    title={
-                      <React.Fragment>
-                        <a
-                          className="p-2 rounded-lg cursor-pointer"
-                          href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.facebook}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image src={facebookIcon} alt="facebookIcon" />
-                        </a>
-                        <a
-                          className="p-2 rounded-lg cursor-pointer"
-                          href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.instagram}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image src={instagramIcon} alt="instagramIcon" />
-                        </a>
-                        <a
-                          className="p-2 rounded-lg cursor-pointer"
-                          href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.website}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image src={googleIcon} alt="googleIcon" />
-                        </a>
-                      </React.Fragment>
-                    }
-                  >
-                    <Button variant="outlined" sx={{ textTransform: "none" }}>
-                      <FileUploadOutlinedIcon /> &nbsp; Share
+                <div className="md:col-span-3 pt-5 md:flex justify-between items-center bg-colorWhite ">
+                  <div className="min-[320px]:mb-2 md:mb-0">
+                    <Button variant="outlined" sx={{ textTransform: "none", width: "max-content" }}>
+                      <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
                     </Button>
-                  </HtmlTooltip>
-                  <Button variant="outlined" sx={{ textTransform: "none" }}>
+                  </div>
+                  <div className="min-[320px]:mb-2 md:mb-0" onMouseLeave={() => setOpenToolTip(false)}>
+                    <HtmlTooltip
+                      title={
+                        <React.Fragment>
+                          <a
+                            className="p-2 rounded-lg cursor-pointer"
+                            href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.facebook}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Image src={facebookIcon} alt="facebookIcon" />
+                          </a>
+                          <a
+                            className="p-2 rounded-lg cursor-pointer"
+                            href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.instagram}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Image src={instagramIcon} alt="instagramIcon" />
+                          </a>
+                          <a
+                            className="p-2 rounded-lg cursor-pointer"
+                            href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.website}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Image src={googleIcon} alt="googleIcon" />
+                          </a>
+                        </React.Fragment>
+                      }
+                    >
+                      <Button
+                        onClick={handleTooltipOpen}
+                        variant="outlined"
+                        sx={{ textTransform: "none", width: "max-content" }}
+                      >
+                        <FileUploadOutlinedIcon /> &nbsp; Share
+                      </Button>
+                    </HtmlTooltip>
+                  </div>
+                  <Button variant="outlined" sx={{ textTransform: "none", width: "max-content" }}>
                     <ReportGmailerrorredOutlinedIcon /> &nbsp;Report
                   </Button>
                 </div>
@@ -245,8 +268,8 @@ const ProductDetail = ({ productDetails }) => {
             </div>
             <div className="col-span-2 lg:col-span-1">
               <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}>
-                <div className="bg-colorWhite p-3 rounded-lg flex justify-between">
-                  <div className="col-span-1 flex justify-start items-center">
+                <div className="flex flex-col lg:flex-row items-start justify-between gap-20 bg-colorWhite p-3 rounded-lg">
+                  <div className="flex md:flex flex-wrap justify-between w-full gap-4">
                     <div className="flex justify-start items-center">
                       <div className="flex justify-center items-center mr-3">
                         <img
@@ -271,66 +294,67 @@ const ProductDetail = ({ productDetails }) => {
                         <p className="text-[#888888] text-sm font-normal">25 days ago</p>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex justify-end flex-col items-center">
-                    <Rating
-                      name="text-feedback"
-                      value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
-                      readOnly
-                      // size=""
-                      emptyIcon={<StarIcon fontSize="inherit" />}
-                    />
-                    <p className="text-[#888888] font-normal flex items-center">
-                      <LocationOnIcon fontSize="small" className="mr-1" />
-                      {productDetails.data.product.data.branchInfo?.branch_address.length <= 17
-                        ? productDetails.data.product.data.branchInfo?.branch_address
-                        : productDetails.data.product.data.branchInfo?.branch_address.substring(0, 17) + "..."}
-                    </p>
-                  </div>
-                  <div className="col-span-1 flex items-center justify-end">
-                    <Button
-                      variant="outlined"
-                      sx={{ textTransform: "none" }}
-                      endIcon={<PersonAddIcon fontSize="large" />}
-                      onClick={() => {
-                        if (isAuthenticate) {
-                          shopFollow({
-                            shopInfo: {
-                              shop_id: productDetails.data.product.data.branchInfo?.shop_id,
-                              user_id: userProfile.id,
-                            },
-                          }).then(
-                            (res) => {
-                              dispatch(
-                                !shopFollowByUser
-                                  ? shopFollowToggle({
-                                      shopInfo: {
-                                        key: "follow",
-                                        value: res.data.shopFollower.data,
-                                      },
-                                    })
-                                  : shopFollowToggle({
-                                      shopInfo: {
-                                        key: "unFollow",
-                                        value: productDetails.data.product.data.branchInfo?.shop_id,
-                                      },
-                                    })
-                              );
-                              toast.success(res.data.shopFollower.message, {
-                                theme: "colored",
-                              });
-                            },
-                            (error) => {
-                              toast.error(error.message, { theme: "colored" });
-                            }
-                          );
-                        } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        }
-                      }}
-                    >
-                      <Typography color="#95539B">{shopFollowByUser ? "Unfollow" : "Follow"}</Typography>
-                    </Button>
+                    <div className="flex justify-end flex-col md:items-center mb-3 md:mb-0 ">
+                      <Rating
+                        name="text-feedback"
+                        value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
+                        readOnly
+                        // size=""
+                        emptyIcon={<StarIcon fontSize="inherit" />}
+                      />
+                      <p className="text-[#888888] font-normal flex items-center">
+                        <LocationOnIcon fontSize="small" className="mr-1" />
+                        {productDetails.data.product.data.branchInfo?.branch_address.length <= 17
+                          ? productDetails.data.product.data.branchInfo?.branch_address
+                          : productDetails.data.product.data.branchInfo?.branch_address.substring(0, 17) + "..."}
+                      </p>
+                    </div>
+
+                    <div className="col-span-1 flex items-center md:justify-end">
+                      <Button
+                        variant="outlined"
+                        sx={{ textTransform: "none" }}
+                        endIcon={<PersonAddIcon fontSize="large" />}
+                        onClick={() => {
+                          if (isAuthenticate) {
+                            shopFollow({
+                              shopInfo: {
+                                shop_id: productDetails.data.product.data.branchInfo?.shop_id,
+                                user_id: userProfile.id,
+                              },
+                            }).then(
+                              (res) => {
+                                dispatch(
+                                  !shopFollowByUser
+                                    ? shopFollowToggle({
+                                        shopInfo: {
+                                          key: "follow",
+                                          value: res.data.shopFollower.data,
+                                        },
+                                      })
+                                    : shopFollowToggle({
+                                        shopInfo: {
+                                          key: "unFollow",
+                                          value: productDetails.data.product.data.branchInfo?.shop_id,
+                                        },
+                                      })
+                                );
+                                toast.success(res.data.shopFollower.message, {
+                                  theme: "colored",
+                                });
+                              },
+                              (error) => {
+                                toast.error(error.message, { theme: "colored" });
+                              }
+                            );
+                          } else {
+                            setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          }
+                        }}
+                      >
+                        <Typography color="#95539B">{shopFollowByUser ? "Unfollow" : "Follow"}</Typography>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Box>

@@ -27,9 +27,11 @@ import DrawerFilters from "../DrawerFilters";
 
 const UpperFilter = ({
   byShop,
+  setByShop,
   setProductPageSkip,
   forShopPage,
   showDrawerFilter,
+  setShopPageSkip
 }) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
@@ -64,17 +66,16 @@ const UpperFilter = ({
 
   return (
     <div className={` ${forShopPage ? "pt-3" : "mb-3"} flex justify-between`}>
-      <div className="flex items-center ml-4">
+      <div className="flex items-center">
         <p className="font-bold text-2xl text-colorBlack">{`${
           byShop ? "Shops" : "Products"
         }`}</p>
       </div>
 
-      <div className="flex items-center gap-2 mr-3">
+      <div className="flex items-center gap-2">
         {showDrawerFilter && (
-          <DrawerFilters setProductPageSkip={setProductPageSkip} />
+          <DrawerFilters byShop={byShop} setByShop={setByShop} setShopPageSkip={setShopPageSkip} setProductPageSkip={setProductPageSkip} />
         )}
-
         <ListOutlinedIcon
           fontSize="large"
           className={`${
