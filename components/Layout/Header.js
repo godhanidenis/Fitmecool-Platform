@@ -174,7 +174,7 @@ const Header = () => {
                 <MenuIcon
                   sx={{ color: "white" }}
                   fontSize="large"
-                  className="sm:hidden"
+                  className="sm:!hidden"
                   onClick={handleMobileSidebarClick}
                 />
               )}
@@ -300,7 +300,7 @@ const Header = () => {
                     <PersonAddAltIcon
                       sx={{ color: "white" }}
                       fontSize="large"
-                      className="sm:hidden"
+                      className="sm:!hidden"
                       onClick={() => Router.push("/auth/login")}
                     />
                   </div>
