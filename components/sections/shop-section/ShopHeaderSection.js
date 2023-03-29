@@ -163,20 +163,26 @@ const ShopHeaderSection = ({
                 <ProductionQuantityLimitsIcon /> {totalProducts} Total Product
               </Item>
             </Grid>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Grid item xs={3}>
+            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
+            <Grid item xs={1}>
               <Item>{totalFollowers} Followers</Item>
             </Grid>
-            <Divider orientation="vertical" variant="middle" flexItem />
+            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
             <Grid item xs={3}>
               <Item>
-                <RateReviewIcon /> {totalReview} Reviews
+                <RateReviewIcon /> Write a Review ({totalReview})
               </Item>
             </Grid>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Grid item xs={2.5}>
+            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
+            <Grid item xs={3}>
               <Item>
-                <ShareIcon /> 25 Share
+                <ShareIcon /> See Branches
+              </Item>
+            </Grid>
+            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
+            <Grid item xs={1}>
+              <Item>
+                <ShareIcon /> Share
               </Item>
             </Grid>
           </Grid>
