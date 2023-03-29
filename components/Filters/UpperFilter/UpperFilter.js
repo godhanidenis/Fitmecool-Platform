@@ -31,7 +31,8 @@ const UpperFilter = ({
   setProductPageSkip,
   forShopPage,
   showDrawerFilter,
-  setShopPageSkip
+  setShopPageSkip,
+  showOnlyShopDetailPage
 }) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
@@ -74,7 +75,7 @@ const UpperFilter = ({
 
       <div className="flex items-center gap-2">
         {showDrawerFilter && (
-          <DrawerFilters byShop={byShop} setByShop={setByShop} setShopPageSkip={setShopPageSkip} setProductPageSkip={setProductPageSkip} />
+          <DrawerFilters byShop={byShop} setByShop={setByShop} setShopPageSkip={setShopPageSkip} setProductPageSkip={setProductPageSkip} showOnlyShopDetailPage={showOnlyShopDetailPage} />
         )}
         <ListOutlinedIcon
           fontSize="large"

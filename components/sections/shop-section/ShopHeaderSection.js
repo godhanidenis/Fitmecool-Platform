@@ -140,7 +140,7 @@ const ShopHeaderSection = ({
               </div>
             </div>
           </div>
-          <div className="col-span-12 items-center justify-end flex my-5 pl-[4%] pr-[4%]">
+          <div className="col-span-12 items-center sm:justify-end flex my-5 pl-[4%] pr-[4%]">
             <Button
               variant="contained"
               className={`rounded-xl bg-colorPrimary hover:bg-colorPrimary !flex !items-center !justify-center capitalize`}
@@ -156,25 +156,25 @@ const ShopHeaderSection = ({
           </div> */}
           <Grid
             container
-            sx={{ backgroundColor: "#fbfbfb", borderBottom: "1px solid gray" }}
+            sx={{ backgroundColor: "#fbfbfb", borderBottom: "1px solid gray" , justifyContent:"space-between" }}
           >
-            <Grid item xs={3}>
+            <Grid item sm={6} md={3}>
               <Item>
                 <ProductionQuantityLimitsIcon /> {totalProducts} Total Product
               </Item>
             </Grid>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Grid item xs={3}>
+            <Divider className="md:!block hidden " orientation="vertical" variant="middle" flexItem />
+            <Grid item sm={6} md={3}>
               <Item>{totalFollowers} Followers</Item>
             </Grid>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Grid item xs={3}>
+            <Divider className="md:!block hidden " orientation="vertical" variant="middle" flexItem />
+            <Grid item sm={6} md={3}>
               <Item>
                 <RateReviewIcon /> {totalReview} Reviews
               </Item>
             </Grid>
-            <Divider orientation="vertical" variant="middle" flexItem />
-            <Grid item xs={2.5}>
+            <Divider className="md:!block hidden " orientation="vertical" variant="middle" flexItem />
+            <Grid item sm={6} md={2.5}>
               <Item>
                 <ShareIcon /> 25 Share
               </Item>
