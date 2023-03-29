@@ -169,7 +169,7 @@ const ShopDetail = ({ shopDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="bg-colorWhite pb-20 md:pb-28">
+      <div className="pb-20 md:pb-28">
         <DirectoryHero bgImg={shopDetails?.data?.shop?.shop_cover_image} />
         <div className="container">
           <ShopHeaderSection

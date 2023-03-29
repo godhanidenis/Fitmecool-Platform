@@ -171,7 +171,7 @@ const ShopHeaderSection = ({
               </Item>
             </Grid>
             <Divider
-              className="md:!block hidden "
+              className="lg:!block hidden "
               orientation="vertical"
               variant="middle"
               flexItem
@@ -180,7 +180,7 @@ const ShopHeaderSection = ({
               <Item>{totalFollowers} Followers</Item>
             </Grid>
             <Divider
-              className="md:!block hidden "
+              className="lg:!block hidden "
               orientation="vertical"
               variant="middle"
               flexItem
@@ -191,7 +191,7 @@ const ShopHeaderSection = ({
               </Item>
             </Grid>
             <Divider
-              className="md:!block hidden "
+              className="lg:!block hidden "
               orientation="vertical"
               variant="middle"
               flexItem
