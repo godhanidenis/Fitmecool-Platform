@@ -29,9 +29,9 @@ const UpperFilter = ({
   byShop,
   setByShop,
   setProductPageSkip,
-  forShopPage,
   showDrawerFilter,
   setShopPageSkip,
+  showOnlyShopDetailPage,
 }) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
@@ -79,6 +79,7 @@ const UpperFilter = ({
             setByShop={setByShop}
             setShopPageSkip={setShopPageSkip}
             setProductPageSkip={setProductPageSkip}
+            showOnlyShopDetailPage={showOnlyShopDetailPage}
           />
         )}
         <ListOutlinedIcon

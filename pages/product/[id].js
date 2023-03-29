@@ -215,9 +215,8 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="p-2 pt-5 grid md:grid-cols-10 grid-cols-7 ">
-        <div className="col-span-1"></div>
-        <div className="col-span-5">
+      <div className="bg-colorWhite">
+        <div className="w-[80%] md:w-[75%] mx-auto pt-4 pb-2">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               Product
@@ -237,7 +236,7 @@ const ProductDetail = ({ productDetails }) => {
         </div>
       </div>
       <div className="bg-colorWhite">
-        <div className="w-[85%] mx-auto">
+        <div className="w-[70%] mx-auto">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1">
               <div className="grid grid-cols-4">
@@ -321,9 +320,7 @@ const ProductDetail = ({ productDetails }) => {
                             productDetails.data.product.data.branchInfo
                               ?.shop_info.shop_logo
                           }
-                          width={60}
-                          height={40}
-                          className="rounded-[50%]"
+                          className="rounded-[50%] w-[50px] h-[50px]"
                         />
                       </div>
                       <div className="flex flex-col justify-center">
@@ -639,37 +636,39 @@ const ProductDetail = ({ productDetails }) => {
             </div>
           </div>
         </div>
+        <div className="bg-[#f1f3f6] w-[100%] mt-10">
+          <div className="container mb-8">
+            <p className="text-colorBlack pt-4 font-semibold text-xl">
+              SIMILAR PRODUCTS
+            </p>
 
-        <div className="bg-[#F5F5F5] p-5 w-[80%] mx-auto my-10">
-          <p className="text-colorBlack pb-3 font-semibold text-xl">
-            SIMILAR PRODUCTS
-          </p>
-
-          {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
-          <Slider {...settings}>
-            {productDetails.data.product.related &&
-              productDetails.data.product.related?.map((product, index) => {
-                if (index <= 4) {
-                  return (
-                    <div className="m-4" key={product.id}>
-                      <ProductCard product={product} />
-                    </div>
-                  );
-                } else if (index === 5) {
-                  return (
-                    <ProductCard
-                      product={product}
-                      productDetails={productDetails}
-                      viewMore={true}
-                      key={product.id}
-                    />
-                  );
-                }
-                // }
-              })}
-          </Slider>
-
-          {/* </div> */}
+            {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
+            <div className="-mt-[10px] -ml-[16px]">
+              <Slider {...settings}>
+                {productDetails.data.product.related &&
+                  productDetails.data.product.related?.map((product, index) => {
+                    if (index <= 4) {
+                      return (
+                        <div className="m-4" key={product.id}>
+                          <ProductCard product={product} />
+                        </div>
+                      );
+                    } else if (index === 5) {
+                      return (
+                        <ProductCard
+                          product={product}
+                          productDetails={productDetails}
+                          viewMore={true}
+                          key={product.id}
+                        />
+                      );
+                    }
+                    // }
+                  })}
+              </Slider>
+            </div>
+            {/* </div> */}
+          </div>
         </div>
       </div>
 
