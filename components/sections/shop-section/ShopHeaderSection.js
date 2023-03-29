@@ -187,7 +187,7 @@ const ShopHeaderSection = ({
             />
             <Grid item sm={6} md={3}>
               <Item>
-                <RateReviewIcon /> {totalReview} Reviews
+                <RateReviewIcon /> Write a Review ({totalReview})
               </Item>
             </Grid>
             <Divider
@@ -198,7 +198,13 @@ const ShopHeaderSection = ({
             />
             <Grid item sm={6} md={2.5}>
               <Item>
-                <ShareIcon /> 25 Share
+                <ShareIcon /> See Branches
+              </Item>
+            </Grid>
+            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
+            <Grid item xs={1}>
+              <Item>
+                <ShareIcon /> Share
               </Item>
             </Grid>
           </Grid>

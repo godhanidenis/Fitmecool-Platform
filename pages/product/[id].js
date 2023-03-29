@@ -430,11 +430,11 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                 </div>
               </Box>
-              <div className="pt-5">
+              <div className="mt-5">
                 <div className="flex justify-between">
-                  <p className="font-semibold text-2xl text-colorBlack">
+                  <span className="font-semibold text-2xl text-colorBlack">
                     {productDetails.data.product.data.product_name}
-                  </p>
+                  </span>
                   <button
                     className={`w-10 h-10 rounded-full transition-colors bg-[#ffffff] duration-300`}
                     onClick={() => {
@@ -480,73 +480,73 @@ const ProductDetail = ({ productDetails }) => {
                     }}
                   >
                     {!productLikeByUser ? (
-                      <FavoriteBorderIcon fontSize="medium" />
+                      <FavoriteBorderIcon fontSize="large" />
                     ) : (
                       "❤️"
                     )}
                   </button>
                 </div>
-                <p className="pt-3 font-normal text-lg text-[#888888]">
-                  {productDetails.data.product.data.product_description}
-                </p>
               </div>
 
-              <div className="flex items-center pt-12 font-semibold text-xl text-colorBlack gap-10">
-                Color :
-                <div
-                  className={`rounded-[50%] w-5 h-5`}
-                  style={{
-                    backgroundColor:
-                      productDetails.data.product.data.product_color,
-                  }}
-                />
+              <div className="mt-3">
+                <div>
+                  <span className="pt-3 font-normal text-lg text-[#888888]">
+                    {productDetails.data.product.data.product_description}
+                  </span>
+                </div>
+                {/* <div className="flex items-center pt-12 font-semibold text-xl text-colorBlack gap-2">
+                  Color :
+                  <div
+                    className={`rounded-[50%] w-5 h-5`}
+                    style={{
+                      backgroundColor:
+                        productDetails.data.product.data.product_color,
+                    }}
+                  />
+                </div> */}
               </div>
 
-              <div className="flex justify-center items-center pt-10">
-                <a
-                  href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
-                  target="_blank"
-                  className="w-full"
-                  rel="noreferrer"
-                >
-                  <button
-                    className="bg-colorWhite hover:bg-colorWhite text-colorBlack p-5 w-full rounded-xl tracking-wide
+              <div className="flex mt-10 items-center justify-evenly">
+                <div className="">
+                  <a
+                    href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
+                    target="_blank"
+                    className="w-full"
+                    rel="noreferrer"
+                  >
+                    <button
+                      className="bg-green-600 text-white p-3 w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
+                    >
+                      <WhatsAppIcon className="text-white" />
+                      Send Message
+                    </button>
+                  </a>
+                </div>
+                <div>
+                  <span className="text-lg text-colorStone">OR</span>
+                </div>
+                <div className="flex">
+                  <button
+                    className="bg-[#E72E77] text-white p-3 w-full rounded-xl tracking-wide
+                  font-semibold font-display focus:outline-none focus:shadow-outline 
+                  shadow-lg flex items-center justify-center gap-3"
+                    onClick={() => setOpenContactInfo(!openContactInfo)}
                   >
-                    <WhatsAppIcon className="text-green-600" />
-                    Contact to Whatsapp
+                    <PersonOutlineIcon className="text-white" />
+                    {openContactInfo ? "Hide Contact" : "Show Contact"}
                   </button>
-                </a>
-              </div>
-              <p className="flex items-center justify-center py-3 text-lg text-colorStone">
-                or
-              </p>
-              <div className="flex justify-center items-center">
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <PersonOutlineIcon
-                        fontSize="large"
-                        className="text-colorBlack"
-                      />
-                    }
-                    label={
-                      <Typography sx={{ fontWeight: 600, color: "black" }}>
-                        Show contact info
-                      </Typography>
-                    }
-                  />
-                </FormGroup>
-                <Switch
+                  {/* <Switch
                   checked={openContactInfo}
                   onChange={contactInfoSwitchHandler}
-                />
+                /> */}
+                </div>
               </div>
 
               {openContactInfo && (
                 <div className="flex justify-center items-center mt-3">
-                  <div className="bg-colorWhite rounded-lg flex items-center shadow-lg">
+                  <div className="bg-colorWhite rounded-lg flex items-center shadow-lg w-[100%]">
                     <div className="p-5 flex gap-4 justify-start">
                       <div className="flex justify-center items-center">
                         <img
@@ -604,6 +604,27 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                 </div>
               )}
+
+              <div className="mt-10">
+                <span className="font-semibold text-base text-colorBlack">
+                  ITEM DETAILS
+                </span>
+                <Divider />
+                <div className="flex mt-3 items-center">
+                  <span className="text-sm font-semibold mr-1 text-colorBlack">CATEGORY:</span>
+                  <span className="text-sm">{productDetails.data.product.data.categoryInfo?.category_name}</span>
+                </div>
+                <div className="flex mt-1 items-center">
+                  <span className="text-sm font-semibold mr-1 text-colorBlack">COLOR:</span>
+                  <span
+                    className={`rounded-[50%] w-3 h-3`}
+                    style={{
+                      backgroundColor:
+                        productDetails.data.product.data.product_color,
+                    }}
+                  />
+                </div>
+              </div>
               {/* <div className="flex justify-center items-center pt-5 gap-10">
                 <Typography sx={{ fontWeight: 600, color: "black" }}>
                   Share :
