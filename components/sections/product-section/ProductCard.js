@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box, Button } from "@mui/material";
+import Router from "next/router";
 
 const style = {
   position: "absolute",
@@ -52,9 +53,12 @@ const ProductCard = ({
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+
+  const { themeLayout } = useSelector((state) => state.themeLayout);
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
+
   useEffect(() => {
     if (!isAuthenticate) {
       setProductLikeByUser(false);
@@ -97,7 +101,10 @@ const ProductCard = ({
   return (
     <>
       {viewMore ? (
-        <div style={{position:"absolute" , top:"190px"}} className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
+        <div
+          style={{ position: "absolute", top: "190px" }}
+          className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg "
+        >
           <Link
             href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
           >
@@ -160,7 +167,11 @@ const ProductCard = ({
                         }
                       );
                     } else {
-                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                      if (themeLayout === "mobileScreen") {
+                        Router.push("/auth/signin");
+                      } else {
+                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                      }
                     }
                   }}
                 >
@@ -270,7 +281,7 @@ const ProductCard = ({
             aria-describedby="modal-modal-description"
             className="animate__animated animate__slideInDown"
           >
-            <Box sx={style}>
+            <Box sx={style} className="!w-[90%] lg:!w-1/2">
               <div className="p-5">
                 <div className="flex items-center">
                   <p className="flex items-center text-colorBlack text-xl font-semibold">
@@ -309,7 +320,11 @@ const ProductCard = ({
                         );
                         setProductDeleteModalOpen(false);
                       } else {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        if (themeLayout === "mobileScreen") {
+                          Router.push("/auth/signin");
+                        } else {
+                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        }
                       }
                     }}
                   >

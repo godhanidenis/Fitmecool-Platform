@@ -51,6 +51,7 @@ import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
 import Sidebar from "./MobileMenu/Sidebar";
+import { changeThemeLayout } from "../../redux/ducks/theme";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -107,20 +108,47 @@ BootstrapDialogTitle.propTypes = {
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-const Header = () => {
+const Header = ({ modalType }) => {
   const [open, setOpen] = useState(false);
   const [authTypeModal, setAuthTypeModal] = useState();
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [isScreenWide, setIsScreenWide] = useState(false);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1023) {
+        // 1023 is the lg breakpoint in Tailwind
+        setIsScreenWide(true);
+      } else {
+        setIsScreenWide(false);
+      }
+    };
+
+    handleResize(); // Check on component mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isScreenWide) {
+      localStorage.setItem("mobileScreen", isScreenWide);
+      dispatch(changeThemeLayout("mobileScreen"));
+    } else {
+      localStorage.setItem("mobileScreen", isScreenWide);
+      dispatch(changeThemeLayout("webScreen"));
+    }
+  }, [dispatch, isScreenWide]);
+
   const handleMobileSidebarClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
   const [selectedLocation, setSelectedLocation] = useState("");
-
-  const dispatch = useDispatch();
-  const router = useRouter();
 
   const { areaLists } = useSelector((state) => state.areaLists);
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -128,6 +156,12 @@ const Header = () => {
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+
+  useEffect(() => {
+    {
+      modalType === "signin" && setOpen(true), setAuthTypeModal("signin");
+    }
+  }, [modalType]);
 
   useEffect(() => {
     setSearchBarValue(productsFiltersReducer.searchBarData);
@@ -174,7 +208,7 @@ const Header = () => {
                 <MenuIcon
                   sx={{ color: "white" }}
                   fontSize="large"
-                  className="sm:!hidden"
+                  className="lg:!hidden"
                   onClick={handleMobileSidebarClick}
                 />
               )}
@@ -191,43 +225,46 @@ const Header = () => {
                 {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
               </div>
             </Link>
-            <Autocomplete
-              className="hidden sm:flex"
-              size="small"
-              options={areaLists}
-              disableCloseOnSelect
-              getOptionLabel={(option) => option.area}
-              sx={{
-                width: 175,
-                background: "white",
-                borderRadius: "5px",
-              }}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Checkbox
-                    icon={icon}
-                    checkedIcon={checkedIcon}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
+            {userProfile.user_type !== "vendor" && (
+              <Autocomplete
+                className="hidden lg:flex"
+                size="small"
+                options={areaLists}
+                disableCloseOnSelect
+                getOptionLabel={(option) => option.area}
+                sx={{
+                  width: 175,
+                  background: "white",
+                  borderRadius: "5px",
+                }}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.area}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    placeholder="Location"
                   />
-                  {option.area}
-                </li>
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  placeholder="Location"
-                />
-              )}
-            />
+                )}
+              />
+            )}
           </div>
 
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
-              {router.pathname !== "/auth/login" &&
+              {userProfile.user_type !== "vendor" &&
+                router.pathname !== "/auth/login" &&
                 router.pathname !== "/auth/signup" && (
-                  <li className="flex sm:hidden">
+                  <li className="flex lg:hidden">
                     <Select
                       value={selectedLocation}
                       displayEmpty
@@ -261,14 +298,14 @@ const Header = () => {
                 )}
               {userProfile.user_type !== "vendor" && (
                 <>
-                  <li className="cursor-pointer hidden sm:block">
+                  <li className="cursor-pointer hidden lg:block">
                     <SearchIcon
                       sx={{ color: "white" }}
                       fontSize="large"
                       onClick={handleClickOpen}
                     />
                   </li>
-                  <li className="hidden sm:block">
+                  <li className="hidden lg:block">
                     <Link href={`/productLike`} passHref>
                       <IconButton color="inherit">
                         <Badge
@@ -292,7 +329,7 @@ const Header = () => {
                       onClick={() => {
                         setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
                       }}
-                      className="underline hover:scale-105 hidden sm:block"
+                      className="underline hover:scale-105 hidden lg:block"
                     >
                       SingIn / SignUp
                     </p>
@@ -300,8 +337,8 @@ const Header = () => {
                     <PersonAddAltIcon
                       sx={{ color: "white" }}
                       fontSize="large"
-                      className="sm:!hidden"
-                      onClick={() => Router.push("/auth/login")}
+                      className="lg:!hidden"
+                      onClick={() => Router.push("/auth/signin")}
                     />
                   </div>
                 )}
@@ -418,11 +455,7 @@ const Header = () => {
 
 export default Header;
 
-export const UserProfile = ({
-  setAccessToken,
-  forSidebar,
-  handleMobileSidebarClick,
-}) => {
+export const UserProfile = ({ setAccessToken }) => {
   const [anchorElUser, setAnchorElUser] = useState(false);
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
@@ -461,7 +494,6 @@ export const UserProfile = ({
 
   function wishList() {
     Router.push("/productLike");
-    forSidebar && handleMobileSidebarClick();
   }
   function logoutUser() {
     localStorage.clear();
@@ -469,7 +501,6 @@ export const UserProfile = ({
     setAccessToken("");
     handleProfileClose();
     Router.push("/");
-    forSidebar && handleMobileSidebarClick();
 
     toast.success("Logout Successfully", {
       theme: "colored",
@@ -486,19 +517,11 @@ export const UserProfile = ({
         <Avatar>
           <Image src={ProfileIcon} alt="ProfileIcon" layout="fill" />
         </Avatar>
-        <span
-          className={`font-semibold ${
-            forSidebar ? "flex text-[#4a4a4a]" : "hidden text-colorWhite"
-          } sm:flex`}
-        >
+        <span className="font-semibold hidden text-colorWhite sm:flex">
           {userProfile?.first_name + " " + userProfile?.last_name}
         </span>
 
-        <KeyboardArrowDownIcon
-          className={`${
-            forSidebar ? "!flex !text-[#4a4a4a]" : "!hidden !text-colorWhite"
-          }  sm:!flex`}
-        />
+        <KeyboardArrowDownIcon className="!hidden !text-colorWhite sm:!flex" />
       </div>
       <Popper
         open={anchorElUser}

@@ -160,6 +160,15 @@ const LandingPage = () => {
   return (
     <>
       <DirectoryHero bgImg={LandingBg.src} />
+      <div className="container py-2">
+        <UpperFilter
+          byShop={byShop}
+          setByShop={setByShop}
+          setProductPageSkip={setProductPageSkip}
+          setShopPageSkip={setShopPageSkip}
+          showDrawerFilter={true}
+        />
+      </div>
       <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-4 mb-4 ">
         <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white">
           <Filter
@@ -171,13 +180,13 @@ const LandingPage = () => {
         </div>
         <div className="col-span-8 lg:col-span-6 p-6 bg-white">
           <div className="container !w-[100%]">
-            <UpperFilter
+            {/* <UpperFilter
               byShop={byShop}
               setByShop={setByShop}
               setProductPageSkip={setProductPageSkip}
               setShopPageSkip={setShopPageSkip}
               showDrawerFilter={true}
-            />
+            /> */}
             {!byShop ? (
               <>
                 {/* <p className="font-bold text-2xl text-colorBlack">Products</p> */}

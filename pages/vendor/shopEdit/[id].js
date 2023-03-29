@@ -112,8 +112,6 @@ const ShopEdit = () => {
     formState: { errors: shopLayoutErrors },
   } = useForm();
 
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
   const [shopOwnerId, setShopOwnerId] = useState("");
 
   const [ownerLoading, setOwnerLoading] = useState(false);
@@ -412,134 +410,124 @@ const ShopEdit = () => {
   console.log("uploadShopImages", uploadShopImages);
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
-    if (isAuthenticate) {
-      setOwnerLoading(true);
-      shopUpdate({
-        ownerInfo: {
-          id: shopOwnerId,
-          owner_firstName: data.first_name,
-          owner_lastName: data.last_name,
-          owner_email: data.user_email,
-          owner_contact: data.user_contact,
-        },
-      }).then(
-        (res) => {
-          console.log("owner res:::", res);
-          toast.success(res.data.updateShop.message, {
-            theme: "colored",
-          });
-          setOwnerLoading(false);
-        },
-        (error) => {
-          setOwnerLoading(false);
-          toast.error(error.message, { theme: "colored" });
-        }
-      );
-    } else {
-      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-    }
+
+    setOwnerLoading(true);
+    shopUpdate({
+      ownerInfo: {
+        id: shopOwnerId,
+        owner_firstName: data.first_name,
+        owner_lastName: data.last_name,
+        owner_email: data.user_email,
+        owner_contact: data.user_contact,
+      },
+    }).then(
+      (res) => {
+        console.log("owner res:::", res);
+        toast.success(res.data.updateShop.message, {
+          theme: "colored",
+        });
+        setOwnerLoading(false);
+      },
+      (error) => {
+        setOwnerLoading(false);
+        toast.error(error.message, { theme: "colored" });
+      }
+    );
   };
   const ownerInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
   const shopInfoOnSubmit = (data) => {
     console.log("data", data);
-    if (isAuthenticate) {
-      setShopLoading(true);
-      shopUpdate({
-        shopInfo: {
-          id: userProfile?.userCreatedShopId,
-          form_steps: "3",
-          shop_social_link: {
-            facebook: individual ? "" : data.facebook_link,
-            instagram: individual ? "" : data.instagram_link,
-            website: individual ? "" : data.personal_website,
-          },
-          shop_name: data.shop_name,
-          shop_email: data.shop_email,
-          shop_type: individual ? "individual" : "shop",
-          shop_time: hours.map((day) => {
-            return {
-              week: day["key"],
-              open_time: individual
-                ? "-"
-                : day["value"][0] === "Closed" ||
-                  day["value"][0] === "Open 24 hours"
-                ? "-"
-                : day["value"][0].split(" - ")[0],
-              close_time: individual
-                ? "-"
-                : day["value"][0] === "Closed" ||
-                  day["value"][0] === "Open 24 hours"
-                ? "-"
-                : day["value"][0].split(" - ")[1],
-              is_close: individual
-                ? false
-                : day["value"][0] === "Closed"
-                ? true
-                : false,
-              is_24Hours_open: individual
-                ? true
-                : day["value"][0] === "Open 24 hours"
-                ? true
-                : false,
-            };
-          }),
+
+    setShopLoading(true);
+    shopUpdate({
+      shopInfo: {
+        id: userProfile?.userCreatedShopId,
+        form_steps: "3",
+        shop_social_link: {
+          facebook: individual ? "" : data.facebook_link,
+          instagram: individual ? "" : data.instagram_link,
+          website: individual ? "" : data.personal_website,
         },
-      }).then(
-        (res) => {
-          console.log("owner res:::", res);
-          toast.success(res.data.updateShop.message, {
-            theme: "colored",
-          });
-          setShopLoading(false);
-        },
-        (error) => {
-          setShopLoading(false);
-          toast.error(error.message, { theme: "colored" });
-        }
-      );
-    } else {
-      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-    }
+        shop_name: data.shop_name,
+        shop_email: data.shop_email,
+        shop_type: individual ? "individual" : "shop",
+        shop_time: hours.map((day) => {
+          return {
+            week: day["key"],
+            open_time: individual
+              ? "-"
+              : day["value"][0] === "Closed" ||
+                day["value"][0] === "Open 24 hours"
+              ? "-"
+              : day["value"][0].split(" - ")[0],
+            close_time: individual
+              ? "-"
+              : day["value"][0] === "Closed" ||
+                day["value"][0] === "Open 24 hours"
+              ? "-"
+              : day["value"][0].split(" - ")[1],
+            is_close: individual
+              ? false
+              : day["value"][0] === "Closed"
+              ? true
+              : false,
+            is_24Hours_open: individual
+              ? true
+              : day["value"][0] === "Open 24 hours"
+              ? true
+              : false,
+          };
+        }),
+      },
+    }).then(
+      (res) => {
+        console.log("owner res:::", res);
+        toast.success(res.data.updateShop.message, {
+          theme: "colored",
+        });
+        setShopLoading(false);
+      },
+      (error) => {
+        setShopLoading(false);
+        toast.error(error.message, { theme: "colored" });
+      }
+    );
   };
   const shopInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
   const mainBranchInfoOnSubmit = (data) => {
     console.log("data", data);
-    if (isAuthenticate) {
-      setMainBranchLoading(true);
-      shopUpdate({
-        branchInfo: [
-          {
-            id: mainBranch.id,
-            branch_address: data.address,
-            branch_pinCode: data.pin_code,
-            branch_city: data.city,
-            manager_name:
-              data.manager_first_name + " " + data.manager_last_name,
-            manager_contact: data.manager_user_contact,
-            manager_email: data.manager_user_email,
-            branch_type: mainBranch.branch_type,
-          },
-        ],
-      }).then(
-        (res) => {
-          console.log("main res:::", res);
-          toast.success(res.data.updateShop.message, {
-            theme: "colored",
-          });
-          setMainBranchLoading(false);
+
+    setMainBranchLoading(true);
+    shopUpdate({
+      branchInfo: [
+        {
+          id: mainBranch.id,
+          branch_address: data.address,
+          branch_pinCode: data.pin_code,
+          branch_city: data.city,
+          manager_name: data.manager_first_name + " " + data.manager_last_name,
+          manager_contact: data.manager_user_contact,
+          manager_email: data.manager_user_email,
+          branch_type: mainBranch.branch_type,
         },
-        (error) => {
-          setMainBranchLoading(false);
-          toast.error(error.message, { theme: "colored" });
-        }
-      );
-    } else {
-      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-    }
+      ],
+    }).then(
+      (res) => {
+        console.log("main res:::", res);
+        toast.success(res.data.updateShop.message, {
+          theme: "colored",
+        });
+        setMainBranchLoading(false);
+      },
+      (error) => {
+        setMainBranchLoading(false);
+        toast.error(error.message, { theme: "colored" });
+      }
+    );
   };
   const mainBranchInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
@@ -547,88 +535,79 @@ const ShopEdit = () => {
   const shopLayoutOnSubmit = (data) => {
     console.log("data,,", data);
 
-    if (isAuthenticate) {
-      setShopLayoutLoading(true);
-      shopLayoutAllMediaImages.map((img) =>
-        deleteMedia({
-          file: img,
-          fileType: "image",
-        }).then((res) => setShopLayoutAllMediaImages([]))
-      );
+    setShopLayoutLoading(true);
+    shopLayoutAllMediaImages.map((img) =>
+      deleteMedia({
+        file: img,
+        fileType: "image",
+      }).then((res) => setShopLayoutAllMediaImages([]))
+    );
 
-      shopLayoutAllMediaVideos !== undefined &&
-        deleteMedia({
-          file: shopLayoutAllMediaVideos,
-          fileType: "video",
-        }).then((res) => setShopLayoutAllMediaVideos());
+    shopLayoutAllMediaVideos !== undefined &&
+      deleteMedia({
+        file: shopLayoutAllMediaVideos,
+        fileType: "video",
+      }).then((res) => setShopLayoutAllMediaVideos());
 
-      SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
-        SingleImageUploadFile(uploadShopBackground).then(
-          (backgroundResponse) => {
-            MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
-              uploadShopVideo !== ""
-                ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
-                    shopUpdate({
-                      shopLayout: {
-                        id: userProfile?.userCreatedShopId,
-                        shop_logo: logoResponse.data.data.singleUpload,
-                        shop_cover_image:
-                          backgroundResponse.data.data.singleUpload,
-                        shop_images:
-                          imagesResponse.data.data.multipleUpload?.map(
-                            (itm) => {
-                              return { links: itm };
-                            }
-                          ),
-                        shop_video: videoResponse.data.data.singleUpload,
-                      },
-                    }).then(
-                      (res) => {
-                        console.log("owner res:::", res);
-                        toast.success(res.data.updateShop.message, {
-                          theme: "colored",
-                        });
-                        setShopLayoutLoading(false);
-                      },
-                      (error) => {
-                        setShopLayoutLoading(false);
-                        toast.error(error.message, { theme: "colored" });
+    SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
+      SingleImageUploadFile(uploadShopBackground).then((backgroundResponse) => {
+        MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
+          uploadShopVideo !== ""
+            ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
+                shopUpdate({
+                  shopLayout: {
+                    id: userProfile?.userCreatedShopId,
+                    shop_logo: logoResponse.data.data.singleUpload,
+                    shop_cover_image: backgroundResponse.data.data.singleUpload,
+                    shop_images: imagesResponse.data.data.multipleUpload?.map(
+                      (itm) => {
+                        return { links: itm };
                       }
-                    );
-                  })
-                : shopUpdate({
-                    shopLayout: {
-                      id: userProfile?.userCreatedShopId,
-                      shop_logo: logoResponse.data.data.singleUpload,
-                      shop_cover_image:
-                        backgroundResponse.data.data.singleUpload,
-                      shop_images: imagesResponse.data.data.multipleUpload?.map(
-                        (itm) => {
-                          return { links: itm };
-                        }
-                      ),
-                      shop_video: null,
-                    },
-                  }).then(
-                    (res) => {
-                      console.log("owner res:::", res);
-                      toast.success(res.data.updateShop.message, {
-                        theme: "colored",
-                      });
-                      setShopLayoutLoading(false);
-                    },
-                    (error) => {
-                      setShopLayoutLoading(false);
-                      toast.error(error.message, { theme: "colored" });
+                    ),
+                    shop_video: videoResponse.data.data.singleUpload,
+                  },
+                }).then(
+                  (res) => {
+                    console.log("owner res:::", res);
+                    toast.success(res.data.updateShop.message, {
+                      theme: "colored",
+                    });
+                    setShopLayoutLoading(false);
+                  },
+                  (error) => {
+                    setShopLayoutLoading(false);
+                    toast.error(error.message, { theme: "colored" });
+                  }
+                );
+              })
+            : shopUpdate({
+                shopLayout: {
+                  id: userProfile?.userCreatedShopId,
+                  shop_logo: logoResponse.data.data.singleUpload,
+                  shop_cover_image: backgroundResponse.data.data.singleUpload,
+                  shop_images: imagesResponse.data.data.multipleUpload?.map(
+                    (itm) => {
+                      return { links: itm };
                     }
-                  );
-            });
-          }
-        );
+                  ),
+                  shop_video: null,
+                },
+              }).then(
+                (res) => {
+                  console.log("owner res:::", res);
+                  toast.success(res.data.updateShop.message, {
+                    theme: "colored",
+                  });
+                  setShopLayoutLoading(false);
+                },
+                (error) => {
+                  setShopLayoutLoading(false);
+                  toast.error(error.message, { theme: "colored" });
+                }
+              );
+        });
       });
-    } else {
-      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-    }
+    });
   };
   const shopLayoutOnError = (errors) =>
     console.log("Errors Occurred !! :", errors);
@@ -672,7 +651,7 @@ const ShopEdit = () => {
             </h3>
             <form>
               <div className="flex flex-col space-y-3">
-                <div className="container flex gap-20 w-full justify-between items-center">
+                <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
                   <p className="mt-2 flex items-center text-colorBlack text-lg">
                     Name:
                   </p>
@@ -718,7 +697,7 @@ const ShopEdit = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container gap-10 sm:gap-20">
                   <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
                     Email:
                   </p>
@@ -750,7 +729,7 @@ const ShopEdit = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container gap-10 sm:gap-20">
                   <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
                     Phone:
                   </p>
@@ -831,7 +810,7 @@ const ShopEdit = () => {
             </div>
             <form>
               <div className="flex flex-col space-y-3">
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container">
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -856,7 +835,7 @@ const ShopEdit = () => {
 
                 {!individual && (
                   <>
-                    <div className="flex items-center justify-center container gap-20">
+                    <div className="flex items-center justify-center container">
                       <div className="w-full">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -885,7 +864,7 @@ const ShopEdit = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-center container gap-20">
+                    <div className="flex items-center justify-center container">
                       <div className="w-full">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -908,7 +887,7 @@ const ShopEdit = () => {
                       </div>
                     </div>
 
-                    <div className="container flex gap-20 w-full justify-between items-center">
+                    <div className="container flex w-full justify-between items-center gap-10 sm:gap-20">
                       <div className="w-full">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -1041,7 +1020,7 @@ const ShopEdit = () => {
                 <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Main Branch
                 </h3>
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container">
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -1064,7 +1043,7 @@ const ShopEdit = () => {
                   </div>
                 </div>
 
-                <div className="container flex gap-20 w-full justify-between items-center">
+                <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -1117,7 +1096,7 @@ const ShopEdit = () => {
                       row
                       aria-labelledby="demo-form-control-label-placement"
                       name="position"
-                      className="ml-12 sm:ml-0"
+                      className="ml-20 sm:ml-0"
                       value={sameAsOwner}
                       onChange={(e) => {
                         if (e.target.value === "True") {
@@ -1141,7 +1120,7 @@ const ShopEdit = () => {
                   </div>
                 </div>
 
-                <div className="container flex gap-20 w-full justify-between items-center">
+                <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
                   <p className="mt-2 flex items-center text-colorBlack text-lg">
                     Name:
                   </p>
@@ -1189,7 +1168,7 @@ const ShopEdit = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container gap-10 sm:gap-20">
                   <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
                     Email:
                   </p>
@@ -1222,7 +1201,7 @@ const ShopEdit = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container gap-10 sm:gap-20">
                   <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
                     Phone:
                   </p>
@@ -1375,7 +1354,7 @@ const ShopEdit = () => {
               <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                 Shop Layout
               </h3>
-              <div className="flex gap-20 items-center container mt-10">
+              <div className="flex-col sm:flex-row gap-20 items-center container mt-10">
                 <div>
                   <label className="flex justify-center items-center font-bold mb-3">
                     Logo
@@ -1698,15 +1677,6 @@ const ShopEdit = () => {
         </TabPanel>
       </div>
 
-      <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      />
-
       <SubBranchModal
         subBranchModalOpen={subBranchModalOpen}
         setSubBranchModalOpen={setSubBranchModalOpen}
@@ -1725,7 +1695,7 @@ const ShopEdit = () => {
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style}>
+        <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
               <p className="flex items-center text-colorBlack text-xl font-semibold">
@@ -1796,7 +1766,7 @@ const HoursModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style}>
+        <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
               <ArrowBackIcon
@@ -1840,7 +1810,7 @@ const HoursModal = ({
               ))}
             </div>
 
-            <div className="mt-10 container flex items-center gap-10">
+            <div className="mt-10 container flex items-center gap-5 sm:gap-10">
               <Button
                 variant="outlined"
                 size="medium"
@@ -2133,13 +2103,13 @@ const DaysTimeModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[40%]">
+        <Box sx={style} className="!w-[80%] lg:!w-[40%]">
           <div className="p-5">
             <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
               Select days & time
             </p>
 
-            <div className="container mt-10 flex items-center justify-between">
+            <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
               {[
                 "Sunday",
                 "Monday",
@@ -2465,7 +2435,7 @@ const SubBranchModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style}>
+        <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
               <ArrowBackIcon
@@ -2482,7 +2452,7 @@ const SubBranchModal = ({
             </div>
 
             <>
-              <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5">
+              <div className="bg-colorWhite rounded-lg my-10 p-5 space-y-5">
                 <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Branches
                 </h3>
@@ -2491,7 +2461,7 @@ const SubBranchModal = ({
                     <p className="mt-2 container flex items-center text-colorBlack text-lg">
                       Sub Branch
                     </p>
-                    <div className="flex items-center justify-center container gap-20">
+                    <div className="flex items-center justify-center container">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -2512,7 +2482,7 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="container flex gap-20 w-full justify-between items-center">
+                    <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -2553,7 +2523,7 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex justify-center items-center">
-                      <div className="flex justify-between items-center container gap-10">
+                      <div className="flex justify-between items-center container gap-5 sm:gap-10">
                         <span className="font-semibold text-lg text-[#11142D] mt-5">
                           Manager:
                         </span>
@@ -2578,7 +2548,7 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="container flex gap-20 w-full justify-between items-center">
+                    <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
                       <p className="mt-2 flex items-center text-colorBlack text-lg">
                         Name:
                       </p>
@@ -2628,7 +2598,7 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-center container gap-20">
+                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
                       <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
                         Email:
                       </p>
@@ -2657,7 +2627,7 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-center container gap-20">
+                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
                       <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
                         Phone:
                       </p>

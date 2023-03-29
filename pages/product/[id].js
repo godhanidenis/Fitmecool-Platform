@@ -31,7 +31,10 @@ import { AuthTypeModal } from "../../components/core/Enum";
 import { useDispatch, useSelector } from "react-redux";
 import { shopFollow } from "../../graphql/mutations/shops";
 import { toast } from "react-toastify";
-import { productLikeToggle, shopFollowToggle } from "../../redux/ducks/userProfile";
+import {
+  productLikeToggle,
+  shopFollowToggle,
+} from "../../redux/ducks/userProfile";
 import { productLike } from "../../graphql/mutations/products";
 import Link from "next/link";
 import SubHeader from "../../components/Layout/SubHeader";
@@ -45,6 +48,7 @@ import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import Slider from "react-slick";
+import Router from "next/router";
 
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
@@ -56,6 +60,14 @@ const ProductDetail = ({ productDetails }) => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
+
+  const dispatch = useDispatch();
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
+
+  const { themeLayout } = useSelector((state) => state.themeLayout);
+
   const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -75,8 +87,6 @@ const ProductDetail = ({ productDetails }) => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-  const dispatch = useDispatch();
-  const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
 
   useEffect(() => {
     if (!isAuthenticate) {
@@ -85,16 +95,21 @@ const ProductDetail = ({ productDetails }) => {
     }
 
     const followedShopsByUser = userProfile.shop_follower_list?.find(
-      (itm) => itm.shop_id === productDetails.data.product.data.branchInfo?.shop_id
+      (itm) =>
+        itm.shop_id === productDetails.data.product.data.branchInfo?.shop_id
     );
 
-    followedShopsByUser ? setShopFollowByUser(true) : setShopFollowByUser(false);
+    followedShopsByUser
+      ? setShopFollowByUser(true)
+      : setShopFollowByUser(false);
 
     const likedProductByUser = userProfile.product_like_list?.find(
       (itm) => itm.id === productDetails.data.product.data.id
     );
 
-    likedProductByUser ? setProductLikeByUser(true) : setProductLikeByUser(false);
+    likedProductByUser
+      ? setProductLikeByUser(true)
+      : setProductLikeByUser(false);
   }, [
     isAuthenticate,
     productDetails.data.product.data.branchInfo?.shop_id,
@@ -130,7 +145,9 @@ const ProductDetail = ({ productDetails }) => {
           alt="Product Images"
           width={250}
           height={300}
-          style={images === itm ? { border: "1px solid black" } : { border: "0" }}
+          style={
+            images === itm ? { border: "1px solid black" } : { border: "0" }
+          }
           className="rounded cursor-pointer"
         />
       </div>
@@ -141,12 +158,24 @@ const ProductDetail = ({ productDetails }) => {
   }
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
-    return <div className={className} style={{ ...style, display: "block", color: "white" }} onClick={onClick} />;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block", color: "white" }}
+        onClick={onClick}
+      />
+    );
   }
 
   function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
-    return <div className={className} style={{ ...style, display: "block" }} onClick={onClick} />;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block" }}
+        onClick={onClick}
+      />
+    );
   }
 
   const settings = {
@@ -196,7 +225,12 @@ const ProductDetail = ({ productDetails }) => {
             <Link underline="hover" color="inherit" href="#">
               {productDetails.data.product.data.categoryInfo?.category_type}
             </Link>
-            <Link underline="hover" color="text.primary" href="#" aria-current="page">
+            <Link
+              underline="hover"
+              color="text.primary"
+              href="#"
+              aria-current="page"
+            >
               {productDetails.data.product.data.categoryInfo?.category_name}
             </Link>
           </Breadcrumbs>
@@ -216,11 +250,17 @@ const ProductDetail = ({ productDetails }) => {
                 <div className="col-span-1"></div>
                 <div className="md:col-span-3 pt-5 md:flex justify-between items-center bg-colorWhite ">
                   <div className="min-[320px]:mb-2 md:mb-0">
-                    <Button variant="outlined" sx={{ textTransform: "none", width: "max-content" }}>
+                    <Button
+                      variant="outlined"
+                      sx={{ textTransform: "none", width: "max-content" }}
+                    >
                       <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
                     </Button>
                   </div>
-                  <div className="min-[320px]:mb-2 md:mb-0" onMouseLeave={() => setOpenToolTip(false)}>
+                  <div
+                    className="min-[320px]:mb-2 md:mb-0"
+                    onMouseLeave={() => setOpenToolTip(false)}
+                  >
                     <HtmlTooltip
                       title={
                         <React.Fragment>
@@ -260,7 +300,10 @@ const ProductDetail = ({ productDetails }) => {
                       </Button>
                     </HtmlTooltip>
                   </div>
-                  <Button variant="outlined" sx={{ textTransform: "none", width: "max-content" }}>
+                  <Button
+                    variant="outlined"
+                    sx={{ textTransform: "none", width: "max-content" }}
+                  >
                     <ReportGmailerrorredOutlinedIcon /> &nbsp;Report
                   </Button>
                 </div>
@@ -274,39 +317,58 @@ const ProductDetail = ({ productDetails }) => {
                       <div className="flex justify-center items-center mr-3">
                         <img
                           alt="Shop Logo"
-                          src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
+                          src={
+                            productDetails.data.product.data.branchInfo
+                              ?.shop_info.shop_logo
+                          }
                           width={60}
                           height={40}
                           className="rounded-[50%]"
                         />
                       </div>
                       <div className="flex flex-col justify-center">
-                        <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
+                        <Link
+                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                        >
                           <a target="_blank">
                             <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                              {productDetails.data.product.data.branchInfo?.shop_info.shop_name?.length <= 13
-                                ? productDetails.data.product.data.branchInfo?.shop_info.shop_name
-                                : productDetails.data.product.data.branchInfo?.shop_info.shop_name?.substring(0, 13) +
-                                  "..."}
+                              {productDetails.data.product.data.branchInfo
+                                ?.shop_info.shop_name?.length <= 13
+                                ? productDetails.data.product.data.branchInfo
+                                    ?.shop_info.shop_name
+                                : productDetails.data.product.data.branchInfo?.shop_info.shop_name?.substring(
+                                    0,
+                                    13
+                                  ) + "..."}
                             </p>
                           </a>
                         </Link>
-                        <p className="text-[#888888] text-sm font-normal">25 days ago</p>
+                        <p className="text-[#888888] text-sm font-normal">
+                          25 days ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex justify-end flex-col md:items-center mb-3 md:mb-0 ">
                       <Rating
                         name="text-feedback"
-                        value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
+                        value={Math.round(
+                          productDetails.data.product.data.branchInfo?.shop_info
+                            .shop_rating
+                        )}
                         readOnly
                         // size=""
                         emptyIcon={<StarIcon fontSize="inherit" />}
                       />
                       <p className="text-[#888888] font-normal flex items-center">
                         <LocationOnIcon fontSize="small" className="mr-1" />
-                        {productDetails.data.product.data.branchInfo?.branch_address.length <= 17
-                          ? productDetails.data.product.data.branchInfo?.branch_address
-                          : productDetails.data.product.data.branchInfo?.branch_address.substring(0, 17) + "..."}
+                        {productDetails.data.product.data.branchInfo
+                          ?.branch_address.length <= 17
+                          ? productDetails.data.product.data.branchInfo
+                              ?.branch_address
+                          : productDetails.data.product.data.branchInfo?.branch_address.substring(
+                              0,
+                              17
+                            ) + "..."}
                       </p>
                     </div>
 
@@ -319,7 +381,9 @@ const ProductDetail = ({ productDetails }) => {
                           if (isAuthenticate) {
                             shopFollow({
                               shopInfo: {
-                                shop_id: productDetails.data.product.data.branchInfo?.shop_id,
+                                shop_id:
+                                  productDetails.data.product.data.branchInfo
+                                    ?.shop_id,
                                 user_id: userProfile.id,
                               },
                             }).then(
@@ -335,7 +399,9 @@ const ProductDetail = ({ productDetails }) => {
                                     : shopFollowToggle({
                                         shopInfo: {
                                           key: "unFollow",
-                                          value: productDetails.data.product.data.branchInfo?.shop_id,
+                                          value:
+                                            productDetails.data.product.data
+                                              .branchInfo?.shop_id,
                                         },
                                       })
                                 );
@@ -344,15 +410,24 @@ const ProductDetail = ({ productDetails }) => {
                                 });
                               },
                               (error) => {
-                                toast.error(error.message, { theme: "colored" });
+                                toast.error(error.message, {
+                                  theme: "colored",
+                                });
                               }
                             );
                           } else {
-                            setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                            if (themeLayout === "mobileScreen") {
+                              Router.push("/auth/signin");
+                            } else {
+                              setOpen(true),
+                                setAuthTypeModal(AuthTypeModal.Signin);
+                            }
                           }
                         }}
                       >
-                        <Typography color="#95539B">{shopFollowByUser ? "Unfollow" : "Follow"}</Typography>
+                        <Typography color="#95539B">
+                          {shopFollowByUser ? "Unfollow" : "Follow"}
+                        </Typography>
                       </Button>
                     </div>
                   </div>
@@ -385,7 +460,8 @@ const ProductDetail = ({ productDetails }) => {
                                 : productLikeToggle({
                                     productInfo: {
                                       key: "disLike",
-                                      value: productDetails.data.product.data.id,
+                                      value:
+                                        productDetails.data.product.data.id,
                                     },
                                   })
                             );
@@ -398,11 +474,19 @@ const ProductDetail = ({ productDetails }) => {
                           }
                         );
                       } else {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        if (themeLayout === "mobileScreen") {
+                          Router.push("/auth/signin");
+                        } else {
+                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        }
                       }
                     }}
                   >
-                    {!productLikeByUser ? <FavoriteBorderIcon fontSize="medium" /> : "❤️"}
+                    {!productLikeByUser ? (
+                      <FavoriteBorderIcon fontSize="medium" />
+                    ) : (
+                      "❤️"
+                    )}
                   </button>
                 </div>
                 <p className="pt-3 font-normal text-lg text-[#888888]">
@@ -415,7 +499,8 @@ const ProductDetail = ({ productDetails }) => {
                 <div
                   className={`rounded-[50%] w-5 h-5`}
                   style={{
-                    backgroundColor: productDetails.data.product.data.product_color,
+                    backgroundColor:
+                      productDetails.data.product.data.product_color,
                   }}
                 />
               </div>
@@ -437,15 +522,29 @@ const ProductDetail = ({ productDetails }) => {
                   </button>
                 </a>
               </div>
-              <p className="flex items-center justify-center py-3 text-lg text-colorStone">or</p>
+              <p className="flex items-center justify-center py-3 text-lg text-colorStone">
+                or
+              </p>
               <div className="flex justify-center items-center">
                 <FormGroup>
                   <FormControlLabel
-                    control={<PersonOutlineIcon fontSize="large" className="text-colorBlack" />}
-                    label={<Typography sx={{ fontWeight: 600, color: "black" }}>Show contact info</Typography>}
+                    control={
+                      <PersonOutlineIcon
+                        fontSize="large"
+                        className="text-colorBlack"
+                      />
+                    }
+                    label={
+                      <Typography sx={{ fontWeight: 600, color: "black" }}>
+                        Show contact info
+                      </Typography>
+                    }
                   />
                 </FormGroup>
-                <Switch checked={openContactInfo} onChange={contactInfoSwitchHandler} />
+                <Switch
+                  checked={openContactInfo}
+                  onChange={contactInfoSwitchHandler}
+                />
               </div>
 
               {openContactInfo && (
@@ -455,7 +554,10 @@ const ProductDetail = ({ productDetails }) => {
                       <div className="flex justify-center items-center">
                         <img
                           alt="Shop Logo"
-                          src={productDetails.data.product.data.branchInfo?.shop_info?.shop_logo}
+                          src={
+                            productDetails.data.product.data.branchInfo
+                              ?.shop_info?.shop_logo
+                          }
                           width={60}
                           height={40}
                           className="rounded-[40%]"
@@ -463,10 +565,16 @@ const ProductDetail = ({ productDetails }) => {
                       </div>
                       <div className="flex flex-col justify-center">
                         <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                          {productDetails.data.product.data.branchInfo?.shop_info?.shop_name}
+                          {
+                            productDetails.data.product.data.branchInfo
+                              ?.shop_info?.shop_name
+                          }
                         </p>
                         <p className="text-[#888888] text-sm font-normal">
-                          {productDetails.data.product.data.branchInfo?.branch_address}
+                          {
+                            productDetails.data.product.data.branchInfo
+                              ?.branch_address
+                          }
                         </p>
                       </div>
                     </div>
@@ -479,12 +587,20 @@ const ProductDetail = ({ productDetails }) => {
                       </div>
                       <div className="flex flex-col justify-center">
                         <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                          {productDetails.data.product.data.branchInfo?.manager_name}
+                          {
+                            productDetails.data.product.data.branchInfo
+                              ?.manager_name
+                          }
                         </p>
-                        <p className="text-colorBlack text-sm font-normal flex justify-end">- Manager</p>
+                        <p className="text-colorBlack text-sm font-normal flex justify-end">
+                          - Manager
+                        </p>
 
                         <p className="flex justify-center mt-1 text-[#000000] text-base font-semibold cursor-pointer">
-                          {productDetails.data.product.data.branchInfo?.manager_contact}
+                          {
+                            productDetails.data.product.data.branchInfo
+                              ?.manager_contact
+                          }
                         </p>
                       </div>
                     </div>
@@ -525,7 +641,9 @@ const ProductDetail = ({ productDetails }) => {
         </div>
 
         <div className="bg-[#F5F5F5] p-5 w-[80%] mx-auto my-10">
-          <p className="text-colorBlack pb-3 font-semibold text-xl">SIMILAR PRODUCTS</p>
+          <p className="text-colorBlack pb-3 font-semibold text-xl">
+            SIMILAR PRODUCTS
+          </p>
 
           {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
           <Slider {...settings}>
@@ -539,7 +657,12 @@ const ProductDetail = ({ productDetails }) => {
                   );
                 } else if (index === 5) {
                   return (
-                    <ProductCard product={product} productDetails={productDetails} viewMore={true} key={product.id} />
+                    <ProductCard
+                      product={product}
+                      productDetails={productDetails}
+                      viewMore={true}
+                      key={product.id}
+                    />
                   );
                 }
                 // }

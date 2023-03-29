@@ -10,7 +10,7 @@ import { shopFollow } from "../../../graphql/mutations/shops";
 import { useDispatch, useSelector } from "react-redux";
 import { AuthTypeModal } from "../../core/Enum";
 import AuthModal from "../../core/AuthModal";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
@@ -41,6 +41,7 @@ const ShopHeaderSection = ({
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
+  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   useEffect(() => {
     if (!isAuthenticate) {
@@ -127,7 +128,12 @@ const ShopHeaderSection = ({
                             }
                           );
                         } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          if (themeLayout === "mobileScreen") {
+                            Router.push("/auth/signin");
+                          } else {
+                            setOpen(true),
+                              setAuthTypeModal(AuthTypeModal.Signin);
+                          }
                         }
                       }}
                     >
@@ -154,10 +160,7 @@ const ShopHeaderSection = ({
             <div className="col-span-3">REVIEWS</div>
             <div className="col-span-3">SHARE</div>
           </div> */}
-          <Grid
-            container
-            sx={{ backgroundColor: "#fbfbfb", borderBottom: "1px solid gray" }}
-          >
+          <Grid container sx={{ backgroundColor: "#fbfbfb" }}>
             <Grid item xs={3}>
               <Item>
                 <ProductionQuantityLimitsIcon /> {totalProducts} Total Product

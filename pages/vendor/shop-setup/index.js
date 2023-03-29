@@ -35,8 +35,6 @@ import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { shopRegistration } from "../../../graphql/mutations/shops";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import AuthModal from "../../../components/core/AuthModal";
-import { AuthTypeModal } from "../../../components/core/Enum";
 import CircularProgress from "@mui/material/CircularProgress";
 import Router from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -59,9 +57,7 @@ const style = {
 };
 
 const ShopPage = () => {
-  const { userProfile, isAuthenticate } = useSelector(
-    (state) => state.userProfile
-  );
+  const { userProfile } = useSelector((state) => state.userProfile);
 
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState([]);
@@ -97,9 +93,6 @@ const ShopPage = () => {
   const [individual, setIndividual] = useState(false);
 
   const [sameAsOwner, setSameAsOwner] = useState("False");
-
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
 
   const [loading, setLoading] = useState(false);
 
@@ -186,194 +179,183 @@ const ShopPage = () => {
       handleNext();
     } else {
       console.log("Data To be Submitted !!", data);
-      if (isAuthenticate) {
-        setLoading(true);
-        SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
-          SingleImageUploadFile(uploadShopBackground).then(
-            (backgroundResponse) => {
-              MultipleImageUploadFile(uploadShopImages).then(
-                (imagesResponse) => {
-                  uploadShopVideo !== ""
-                    ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
-                        shopRegistration({
-                          userId: userProfile.id,
-                          ownerInfo: {
-                            owner_firstName: data.first_name,
-                            owner_lastName: data.last_name,
-                            owner_email: data.user_email,
-                            owner_contact: data.user_contact,
-                          },
-                          shopInfo: {
-                            shop_logo: logoResponse.data.data.singleUpload,
-                            shop_cover_image:
-                              backgroundResponse.data.data.singleUpload,
-                            shop_images:
-                              imagesResponse.data.data.multipleUpload.map(
-                                (itm) => {
-                                  return { links: itm };
-                                }
-                              ),
-                            shop_video: videoResponse.data.data.singleUpload,
 
-                            form_steps: "3",
-                            shop_social_link: {
-                              facebook: individual ? "" : data.facebook_link,
-                              instagram: individual ? "" : data.instagram_link,
-                              website: individual ? "" : data.personal_website,
-                            },
-                            shop_name: data.shop_name,
-                            shop_email: data.shop_email,
-                            shop_type: individual ? "individual" : "shop",
-                            shop_time: hours.map((day) => {
-                              return {
-                                week: day["key"],
-                                open_time:
-                                  day["value"][0] === "Closed" ||
-                                  day["value"][0] === "Open 24 hours"
-                                    ? "-"
-                                    : day["value"][0].split(" - ")[0],
-                                close_time:
-                                  day["value"][0] === "Closed" ||
-                                  day["value"][0] === "Open 24 hours"
-                                    ? "-"
-                                    : day["value"][0].split(" - ")[1],
-                                is_close:
-                                  day["value"][0] === "Closed" ? true : false,
-                                is_24Hours_open:
-                                  day["value"][0] === "Open 24 hours"
-                                    ? true
-                                    : false,
-                              };
-                            }),
-                          },
-                          branchInfo: [
-                            {
-                              branch_address: data.address,
-                              branch_city: data.city,
-                              branch_pinCode: data.pin_code,
-                              manager_name:
-                                data.manager_first_name +
-                                " " +
-                                data.manager_last_name,
-                              manager_contact: data.manager_user_contact,
-                              manager_email: data.manager_user_email,
-                              branch_type: "main",
-                            },
-                            ...(subBranch.length > 0
-                              ? subBranch.map(returnSubBranchData)
-                              : []),
-                          ],
-                        }).then(
-                          (res) => {
-                            console.log("res:::", res);
-                            dispatch(
-                              setShopRegisterId(res.data.createShop.shopInfo.id)
-                            );
-                            toast.success(res.data.createShop.message, {
-                              theme: "colored",
-                            });
-                            setLoading(false);
-                            localStorage.setItem("userHaveAnyShop", "true");
-                            Router.push("/vendor/dashboard");
-                          },
-                          (error) => {
-                            setLoading(false);
-                            toast.error(error.message, { theme: "colored" });
-                          }
-                        );
-                      })
-                    : shopRegistration({
-                        userId: userProfile.id,
-                        ownerInfo: {
-                          owner_firstName: data.first_name,
-                          owner_lastName: data.last_name,
-                          owner_email: data.user_email,
-                          owner_contact: data.user_contact,
-                        },
-                        shopInfo: {
-                          shop_logo: logoResponse.data.data.singleUpload,
-                          shop_cover_image:
-                            backgroundResponse.data.data.singleUpload,
-                          shop_images:
-                            imagesResponse.data.data.multipleUpload.map(
-                              (itm) => {
-                                return { links: itm };
-                              }
-                            ),
-                          form_steps: "3",
-                          shop_social_link: {
-                            facebook: individual ? "" : data.facebook_link,
-                            instagram: individual ? "" : data.instagram_link,
-                            website: individual ? "" : data.personal_website,
-                          },
-                          shop_name: data.shop_name,
-                          shop_email: data.shop_email,
-                          shop_type: individual ? "individual" : "shop",
-                          shop_time: hours.map((day) => {
-                            return {
-                              week: day["key"],
-                              open_time:
-                                day["value"][0] === "Closed" ||
-                                day["value"][0] === "Open 24 hours"
-                                  ? "-"
-                                  : day["value"][0].split(" - ")[0],
-                              close_time:
-                                day["value"][0] === "Closed" ||
-                                day["value"][0] === "Open 24 hours"
-                                  ? "-"
-                                  : day["value"][0].split(" - ")[1],
-                              is_close:
-                                day["value"][0] === "Closed" ? true : false,
-                              is_24Hours_open:
-                                day["value"][0] === "Open 24 hours"
-                                  ? true
-                                  : false,
-                            };
+      setLoading(true);
+      SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
+        SingleImageUploadFile(uploadShopBackground).then(
+          (backgroundResponse) => {
+            MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
+              uploadShopVideo !== ""
+                ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
+                    shopRegistration({
+                      userId: userProfile.id,
+                      ownerInfo: {
+                        owner_firstName: data.first_name,
+                        owner_lastName: data.last_name,
+                        owner_email: data.user_email,
+                        owner_contact: data.user_contact,
+                      },
+                      shopInfo: {
+                        shop_logo: logoResponse.data.data.singleUpload,
+                        shop_cover_image:
+                          backgroundResponse.data.data.singleUpload,
+                        shop_images:
+                          imagesResponse.data.data.multipleUpload.map((itm) => {
+                            return { links: itm };
                           }),
+                        shop_video: videoResponse.data.data.singleUpload,
+
+                        form_steps: "3",
+                        shop_social_link: {
+                          facebook: individual ? "" : data.facebook_link,
+                          instagram: individual ? "" : data.instagram_link,
+                          website: individual ? "" : data.personal_website,
                         },
-                        branchInfo: [
-                          {
-                            branch_address: data.address,
-                            branch_pinCode: data.pin_code,
-                            branch_city: data.city,
-                            manager_name:
-                              data.manager_first_name +
-                              " " +
-                              data.manager_last_name,
-                            manager_contact: data.manager_user_contact,
-                            manager_email: data.manager_user_email,
-                            branch_type: "main",
-                          },
-                          ...(subBranch.length > 0
-                            ? subBranch.map(returnSubBranchData)
-                            : []),
-                        ],
-                      }).then(
-                        (res) => {
-                          console.log("res:::", res);
-                          dispatch(
-                            setShopRegisterId(res.data.createShop.shopInfo.id)
-                          );
-                          toast.success(res.data.createShop.message, {
-                            theme: "colored",
-                          });
-                          setLoading(false);
-                          localStorage.setItem("userHaveAnyShop", "true");
-                          Router.push("/vendor/dashboard");
+                        shop_name: data.shop_name,
+                        shop_email: data.shop_email,
+                        shop_type: individual ? "individual" : "shop",
+                        shop_time: hours.map((day) => {
+                          return {
+                            week: day["key"],
+                            open_time:
+                              day["value"][0] === "Closed" ||
+                              day["value"][0] === "Open 24 hours"
+                                ? "-"
+                                : day["value"][0].split(" - ")[0],
+                            close_time:
+                              day["value"][0] === "Closed" ||
+                              day["value"][0] === "Open 24 hours"
+                                ? "-"
+                                : day["value"][0].split(" - ")[1],
+                            is_close:
+                              day["value"][0] === "Closed" ? true : false,
+                            is_24Hours_open:
+                              day["value"][0] === "Open 24 hours"
+                                ? true
+                                : false,
+                          };
+                        }),
+                      },
+                      branchInfo: [
+                        {
+                          branch_address: data.address,
+                          branch_city: data.city,
+                          branch_pinCode: data.pin_code,
+                          manager_name:
+                            data.manager_first_name +
+                            " " +
+                            data.manager_last_name,
+                          manager_contact: data.manager_user_contact,
+                          manager_email: data.manager_user_email,
+                          branch_type: "main",
                         },
-                        (error) => {
-                          setLoading(false);
-                          toast.error(error.message, { theme: "colored" });
+                        ...(subBranch.length > 0
+                          ? subBranch.map(returnSubBranchData)
+                          : []),
+                      ],
+                    }).then(
+                      (res) => {
+                        console.log("res:::", res);
+                        dispatch(
+                          setShopRegisterId(res.data.createShop.shopInfo.id)
+                        );
+                        toast.success(res.data.createShop.message, {
+                          theme: "colored",
+                        });
+                        setLoading(false);
+                        localStorage.setItem("userHaveAnyShop", "true");
+                        Router.push("/vendor/dashboard");
+                      },
+                      (error) => {
+                        setLoading(false);
+                        toast.error(error.message, { theme: "colored" });
+                      }
+                    );
+                  })
+                : shopRegistration({
+                    userId: userProfile.id,
+                    ownerInfo: {
+                      owner_firstName: data.first_name,
+                      owner_lastName: data.last_name,
+                      owner_email: data.user_email,
+                      owner_contact: data.user_contact,
+                    },
+                    shopInfo: {
+                      shop_logo: logoResponse.data.data.singleUpload,
+                      shop_cover_image:
+                        backgroundResponse.data.data.singleUpload,
+                      shop_images: imagesResponse.data.data.multipleUpload.map(
+                        (itm) => {
+                          return { links: itm };
                         }
+                      ),
+                      form_steps: "3",
+                      shop_social_link: {
+                        facebook: individual ? "" : data.facebook_link,
+                        instagram: individual ? "" : data.instagram_link,
+                        website: individual ? "" : data.personal_website,
+                      },
+                      shop_name: data.shop_name,
+                      shop_email: data.shop_email,
+                      shop_type: individual ? "individual" : "shop",
+                      shop_time: hours.map((day) => {
+                        return {
+                          week: day["key"],
+                          open_time:
+                            day["value"][0] === "Closed" ||
+                            day["value"][0] === "Open 24 hours"
+                              ? "-"
+                              : day["value"][0].split(" - ")[0],
+                          close_time:
+                            day["value"][0] === "Closed" ||
+                            day["value"][0] === "Open 24 hours"
+                              ? "-"
+                              : day["value"][0].split(" - ")[1],
+                          is_close: day["value"][0] === "Closed" ? true : false,
+                          is_24Hours_open:
+                            day["value"][0] === "Open 24 hours" ? true : false,
+                        };
+                      }),
+                    },
+                    branchInfo: [
+                      {
+                        branch_address: data.address,
+                        branch_pinCode: data.pin_code,
+                        branch_city: data.city,
+                        manager_name:
+                          data.manager_first_name +
+                          " " +
+                          data.manager_last_name,
+                        manager_contact: data.manager_user_contact,
+                        manager_email: data.manager_user_email,
+                        branch_type: "main",
+                      },
+                      ...(subBranch.length > 0
+                        ? subBranch.map(returnSubBranchData)
+                        : []),
+                    ],
+                  }).then(
+                    (res) => {
+                      console.log("res:::", res);
+                      dispatch(
+                        setShopRegisterId(res.data.createShop.shopInfo.id)
                       );
-                }
-              );
-            }
-          );
-        });
-      } else {
-        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-      }
+                      toast.success(res.data.createShop.message, {
+                        theme: "colored",
+                      });
+                      setLoading(false);
+                      localStorage.setItem("userHaveAnyShop", "true");
+                      Router.push("/vendor/dashboard");
+                    },
+                    (error) => {
+                      setLoading(false);
+                      toast.error(error.message, { theme: "colored" });
+                    }
+                  );
+            });
+          }
+        );
+      });
     }
   };
 
@@ -1453,14 +1435,6 @@ const ShopPage = () => {
         getValues={getValues}
         subBranchEdit={subBranchEdit}
         setSubBranchEdit={setSubBranchEdit}
-      />
-      <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
       />
     </>
   );

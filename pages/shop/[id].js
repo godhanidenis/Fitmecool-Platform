@@ -37,7 +37,7 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import SubHeader from "../../components/Layout/SubHeader";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 
@@ -59,9 +59,6 @@ const ShopDetail = ({ shopDetails }) => {
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -81,6 +78,11 @@ const ShopDetail = ({ shopDetails }) => {
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+  const { themeLayout } = useSelector((state) => state.themeLayout);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const getMoreProductsList = () => {
     dispatch(
@@ -199,7 +201,7 @@ const ShopDetail = ({ shopDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="bg-colorWhite pb-20 md:pb-28">
+      <div className="pb-20 md:pb-28">
         <DirectoryHero bgImg={ShopLandingBg.src} />
         <div className="container">
           <ShopHeaderSection
@@ -210,20 +212,26 @@ const ShopDetail = ({ shopDetails }) => {
             totalProducts={productsCount}
           />
         </div>
+        <div className="container py-2">
+          <UpperFilter
+            setProductPageSkip={setProductPageSkip}
+            forShopPage={true}
+          />
+        </div>
 
-        <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8">
-          <div className="lg:col-span-2 hidden lg:block ">
+        <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-4">
+          <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white">
             <Filter
               productByShop={true}
               setProductPageSkip={setProductPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 rounded-lg border-l">
-            <div className="container">
-              <UpperFilter
+          <div className="col-span-8 lg:col-span-6 rounded-lg p-6 bg-white">
+            <div className="w-[100%]">
+              {/* <UpperFilter
                 setProductPageSkip={setProductPageSkip}
                 forShopPage={true}
-              />
+              /> */}
 
               {/* <p className="font-bold text-2xl text-colorBlack">
                 Special Products
@@ -239,7 +247,7 @@ const ShopDetail = ({ shopDetails }) => {
                   </div>
                 }
               > */}
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
                 {productsData &&
                   productsData?.map((product) => (
                     <ProductCard product={product} key={product.id} />
@@ -389,7 +397,11 @@ const ShopDetail = ({ shopDetails }) => {
                           });
                         }
                       } else {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        if (themeLayout === "mobileScreen") {
+                          Router.push("/auth/signin");
+                        } else {
+                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        }
                       }
                     }}
                   >

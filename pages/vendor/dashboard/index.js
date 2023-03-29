@@ -26,15 +26,15 @@ const ShopDashboard = () => {
   return (
     <div className="bg-[#f5f5f5] p-10">
       <div className="flex gap-8 flex-wrap">
-        <div className="cursor-pointer text-center w-40 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
+        <div className="cursor-pointer text-center w-36 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
           <p>Total Products</p>
           <p>{totalProducts}</p>
         </div>
-        <div className="cursor-pointer text-center w-40 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
+        <div className="cursor-pointer text-center w-36 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
           <p>Followers</p>
           <p>{vendorShopDetails?.shopFollowerCount}</p>
         </div>
-        <div className="cursor-pointer text-center w-40 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
+        <div className="cursor-pointer text-center w-36 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
           <p>Reviews</p>
           <p>{vendorShopDetails?.shopReviewCount}</p>
         </div>

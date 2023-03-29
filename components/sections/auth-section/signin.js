@@ -12,30 +12,26 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import InputAdornment from "@mui/material/InputAdornment";
 import { CustomTextField } from "../../core/CustomMUIComponents";
 import { useForm } from "react-hook-form";
-import { Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { AuthTypeModal } from "../../core/Enum";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import { signIn } from "../../../graphql/mutations/authMutations";
 import { loginUserId } from "../../../redux/ducks/userProfile";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
 
-export default function SignIn({
-  changeAuthModalType,
-  handleClose,
-  forMobile,
-}) {
+export default function SignIn({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isScreenWide, setIsScreenWide] = useState(false);
+  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 640) {
-        // 640 is the sm breakpoint in Tailwind
+      if (window.innerWidth >= 1023) {
+        // 1023 is the lg breakpoint in Tailwind
         setIsScreenWide(true);
       } else {
         setIsScreenWide(false);
@@ -48,10 +44,10 @@ export default function SignIn({
   }, []);
 
   useEffect(() => {
-    if (isScreenWide) {
-      Router.push("/");
+    if (themeLayout === "webScreen" && isScreenWide) {
+      window.history.pushState(AuthTypeModal.Signin, "", "/"), Router.push("/");
     }
-  }, [isScreenWide]);
+  }, [isScreenWide, themeLayout]);
 
   const {
     register,
@@ -73,7 +69,9 @@ export default function SignIn({
         localStorage.setItem("userId", res.data.signIn.user);
         toast.success(res.data.signIn.message, { theme: "colored" });
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        forMobile ? Router.push("/vendor/dashboard") : handleClose();
+        themeLayout === "mobileScreen"
+          ? Router.push("/vendor/dashboard")
+          : handleClose();
         asVendor && Router.push("/vendor/dashboard");
       },
       (error) => {
@@ -87,14 +85,14 @@ export default function SignIn({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 h-full">
-        <div className="p-4 hidden sm:block h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+        <div className="p-4 hidden lg:block h-full">
           <div className="auth-cover !bg-cover w-full h-full text-center">
             {/* <Image src={LoginLogo} alt="CoverImage" /> */}
           </div>
         </div>
-        <div className="p-4 mt-3 sm:mt-0 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
-          {!forMobile && (
+        <div className="p-4 mt-3 lg:mt-0 ml-0 lg:ml-4 md:ml-4 lg:ml-12 ">
+          {themeLayout === "webScreen" && (
             <div className="flex">
               <CloseIcon
                 className="text-black ml-auto cursor-pointer"
@@ -118,15 +116,15 @@ export default function SignIn({
               Business
             </span>
           </label>
-          <h3 className="pb-2 mt-3 sm:mt-4 font-semibold text-xl sm:text-2xl text-colorPrimary flex justify-center sm:block">
+          <h3 className="pb-2 mt-3 lg:mt-4 font-semibold text-xl lg:text-2xl text-colorPrimary flex justify-center lg:block">
             {asVendor ? "Login As a Vendor!" : "Login to your account!"}
           </h3>
 
-          <div className="mt-4 sm:mt-5">
+          <div className="mt-4 lg:mt-5">
             <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
               <div className="flex flex-col">
-                <div className="flex sm:block justify-center">
-                  <div className="flex sm:block flex-col mb-9 w-[90%] md:w-5/6 lg:w-3/4">
+                <div className="flex lg:block justify-center">
+                  <div className="flex lg:block flex-col mb-9 w-[90%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <EmailIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -156,8 +154,8 @@ export default function SignIn({
                   </div>
                 </div>
 
-                <div className="flex sm:block justify-center">
-                  <div className="flex sm:block flex-col mb-3 sm:mb-3 w-[90%] md:w-5/6 lg:w-3/4">
+                <div className="flex lg:block justify-center">
+                  <div className="flex lg:block flex-col mb-3 lg:mb-3 w-[90%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -199,12 +197,14 @@ export default function SignIn({
                   </div>
                 </div>
 
-                <div className="flex justify-center sm:block">
-                  <div className="flex justify-end mb-9 sm:mb-9 w-[90%] md:w-5/6 lg:w-3/4">
+                <div className="flex justify-center lg:block">
+                  <div className="flex justify-end mb-9 lg:mb-9 w-[90%] md:w-5/6 lg:w-3/4">
                     <Link href="/auth/forgot-password">
                       <span
-                        onClick={() => handleClose()}
                         className="text-[#544E5D] ml-auto opacity-50 cursor-pointer"
+                        onClick={() =>
+                          themeLayout === "webScreen" && handleClose()
+                        }
                       >
                         Forgot Password?
                       </span>
@@ -212,7 +212,7 @@ export default function SignIn({
                   </div>
                 </div>
 
-                <div className="flex justify-center sm:block">
+                <div className="flex justify-center lg:block">
                   <button
                     type="submit"
                     className="bg-colorPrimary hover:bg-colorPrimary text-gray-100 p-4 w-[90%] md:w-5/6 lg:w-3/4 rounded-xl tracking-wide
@@ -231,9 +231,9 @@ export default function SignIn({
                 </div>
               </div>
             </form>
-            <div className="flex justify-center sm:block">
-              <div className="mt-6 sm:mt-12 gap-6 justify-between items-center flex-row  w-[90%] md:w-5/6 lg:w-3/4 block xl:flex">
-                <button className="pt-3 pb-3 social-icon pr-2 pl-2  w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border">
+            <div className="flex justify-center lg:block">
+              <div className="mt-6 lg:mt-12 gap-6 justify-between items-center flex-row  w-[90%] md:w-5/6 lg:w-3/4 block xl:flex">
+                <button className="pt-3 pb-3 social-icon pr-2 pl-2  w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={googleIcon}
@@ -248,7 +248,7 @@ export default function SignIn({
                   </span>
                 </button>
 
-                <button className="pt-3 pb-3 pr-2 pl-2  social-icon w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
+                <button className="pt-3 pb-3 pr-2 pl-2  social-icon w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={fbIcon}
@@ -264,17 +264,19 @@ export default function SignIn({
                 </button>
               </div>
             </div>
-            <div className="flex justify-center sm:justify-between items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-6 sm:mt-8 text-center">
+            <div className="flex justify-center lg:justify-between items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-6 lg:mt-8 text-center">
               <div
                 style={{ marginTop: "12px", marginBottom: "32px" }}
-                className="ml-0 sm:ml-auto"
+                className="ml-0 lg:ml-auto"
               >
                 <span className="text-black">{`Don't`} have an account ?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"
                   onClick={() => {
-                    !forMobile && changeAuthModalType(AuthTypeModal.Signup);
-                    forMobile && Router.push("/auth/signup");
+                    themeLayout === "webScreen" &&
+                      changeAuthModalType(AuthTypeModal.Signup);
+                    themeLayout === "mobileScreen" &&
+                      Router.push("/auth/signup");
                   }}
                 >
                   Sign up
@@ -282,7 +284,7 @@ export default function SignIn({
               </div>
             </div>
 
-            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-5 text-center">
+            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-4 lg:mt-5 text-center">
               <span className="text-black">
                 {asVendor ? "Are you a customer ?" : "Are you a vendor ?"}
               </span>

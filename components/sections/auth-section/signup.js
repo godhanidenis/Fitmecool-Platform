@@ -20,23 +20,21 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import { toast } from "react-toastify";
 import { signUp } from "../../../graphql/mutations/authMutations";
 import Router from "next/router";
+import { useSelector } from "react-redux";
 
-export default function SignUp({
-  changeAuthModalType,
-  handleClose,
-  forMobile,
-}) {
+export default function SignUp({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [isScreenWide, setIsScreenWide] = useState(false);
+  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 640) {
-        // 640 is the sm breakpoint in Tailwind
+      if (window.innerWidth >= 1023) {
+        // 1023 is the lg breakpoint in Tailwind
         setIsScreenWide(true);
       } else {
         setIsScreenWide(false);
@@ -49,10 +47,10 @@ export default function SignUp({
   }, []);
 
   useEffect(() => {
-    if (isScreenWide) {
-      Router.push("/");
+    if (themeLayout === "webScreen" && isScreenWide) {
+      window.history.pushState(AuthTypeModal.Signin, "", "/"), Router.push("/");
     }
-  }, [isScreenWide]);
+  }, [isScreenWide, themeLayout]);
 
   const {
     register,
@@ -100,15 +98,15 @@ export default function SignUp({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 h-full">
-        <div className="p-4 hidden sm:block h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+        <div className="p-4 hidden lg:block h-full">
           <div className="auth-cover !bg-cover w-full h-full text-center">
             {/* <Image src={LoginLogo} alt="CoverImage" /> */}
           </div>
         </div>
 
-        <div className="p-4 ml-0 sm:ml-4 md:ml-4 lg:ml-12 ">
-          {!forMobile && (
+        <div className="p-4 ml-0 lg:ml-4 md:ml-4 lg:ml-12 ">
+          {themeLayout === "webScreen" && (
             <div className="flex">
               <CloseIcon
                 className="text-black ml-auto cursor-pointer"
@@ -133,7 +131,7 @@ export default function SignUp({
             </span>
           </label>
           <div className="flex pt-2">
-            <h3 className="font-semibold text-xl sm:text-2xl text-colorPrimary ml-8 sm:ml-0">
+            <h3 className="font-semibold text-xl lg:text-2xl text-colorPrimary ml-8 lg:ml-0">
               {asVendor ? "Sign up As a Vendor!" : "Sign up to Rentbless!"}
             </h3>
             {/* <CloseIcon
@@ -141,10 +139,10 @@ export default function SignUp({
               onClick={handleClose}
             /> */}
           </div>
-          <div className="mt-4 sm:mt-4">
+          <div className="mt-4 lg:mt-4">
             <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
               <div className="flex flex-col">
-                <div className="flex sm:block justify-center">
+                <div className="flex lg:block justify-center">
                   <div className="flex gap-5 mb-2 w-[85%] md:w-5/6 lg:w-3/4 justify-between">
                     <div>
                       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
@@ -197,8 +195,8 @@ export default function SignUp({
                   </div>
                 </div>
 
-                <div className="flex sm:block justify-center">
-                  <div className="flex  sm:block flex-col mb-4 w-[85%] md:w-5/6 lg:w-3/4">
+                <div className="flex lg:block justify-center">
+                  <div className="flex  lg:block flex-col mb-4 w-[85%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <PhoneIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -234,8 +232,8 @@ export default function SignUp({
                 </div>
 
                 {asVendor && (
-                  <div className="flex sm:block justify-center">
-                    <div className="flex  sm:block flex-col mb-4 w-[85%] md:w-5/6 lg:w-3/4">
+                  <div className="flex lg:block justify-center">
+                    <div className="flex  lg:block flex-col mb-4 w-[85%] md:w-5/6 lg:w-3/4">
                       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                         <EmailIcon
                           sx={{ mr: 2, my: 0.5 }}
@@ -268,8 +266,8 @@ export default function SignUp({
                   </div>
                 )}
 
-                <div className="flex sm:block justify-center">
-                  <div className="flex  sm:block flex-col mb-4 w-[85%] md:w-5/6 lg:w-3/4">
+                <div className="flex lg:block justify-center">
+                  <div className="flex  lg:block flex-col mb-4 w-[85%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -311,8 +309,8 @@ export default function SignUp({
                   </div>
                 </div>
 
-                <div className="flex sm:block justify-center">
-                  <div className="flex  sm:block flex-col mb-6 w-[85%] md:w-5/6 lg:w-3/4">
+                <div className="flex lg:block justify-center">
+                  <div className="flex  lg:block flex-col mb-6 w-[85%] md:w-5/6 lg:w-3/4">
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
@@ -362,7 +360,7 @@ export default function SignUp({
                   </div>
                 </div>
 
-                <div className="flex justify-center sm:block">
+                <div className="flex justify-center lg:block">
                   <button
                     type="submit"
                     className="bg-colorPrimary hover:bg-colorPrimary text-gray-100 p-4 w-[85%] md:w-5/6 lg:w-3/4 rounded-xl tracking-wide
@@ -384,12 +382,12 @@ export default function SignUp({
             <div
               className={
                 asVendor
-                  ? "flex justify-center sm:block"
-                  : "flex justify-center sm:block signUpAsNotVendor-height-margin"
+                  ? "flex justify-center lg:block"
+                  : "flex justify-center lg:block signUpAsNotVendor-height-margin"
               }
             >
-              <div className="mt-4 sm:mt-6 gap-6 justify-between items-center flex-row  w-[85%] md:w-5/6 lg:w-3/4 block xl:flex">
-                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border">
+              <div className="mt-4 lg:mt-6 gap-6 justify-between items-center flex-row  w-[85%] md:w-5/6 lg:w-3/4 block xl:flex">
+                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={googleIcon}
@@ -404,7 +402,7 @@ export default function SignUp({
                   </span>
                 </button>
 
-                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
+                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={fbIcon}
@@ -420,27 +418,29 @@ export default function SignUp({
                 </button>
               </div>
             </div>
-            <div className="flex justify-center sm:justify-between items-center mb-4  w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4  text-center">
+            <div className="flex justify-center lg:justify-between items-center mb-4  w-full md:w-5/6 lg:w-3/4 mt-4 lg:mt-4  text-center">
               <div
                 className={
                   asVendor
-                    ? "ml-0 sm:ml-auto"
-                    : "ml-0 sm:ml-auto signUpAsNotVendor-height"
+                    ? "ml-0 lg:ml-auto"
+                    : "ml-0 lg:ml-auto signUpAsNotVendor-height"
                 }
               >
                 <span className="text-black">Already have an account?</span>
                 <span
                   className="cursor-pointer text-colorPrimary ml-1 font-bold"
                   onClick={() => {
-                    !forMobile && changeAuthModalType(AuthTypeModal.Signin);
-                    forMobile && Router.push("/auth/login");
+                    themeLayout === "webScreen" &&
+                      changeAuthModalType(AuthTypeModal.Signin);
+                    themeLayout === "mobileScreen" &&
+                      Router.push("/auth/signin");
                   }}
                 >
                   Login
                 </span>
               </div>
             </div>
-            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center w-full md:w-5/6 lg:w-3/4 mt-4 sm:mt-4 text-center">
+            {/* <div className="border-2 border-dashed rounded py-2 px-1 flex justify-center items-center w-full md:w-5/6 lg:w-3/4 mt-4 lg:mt-4 text-center">
               <span className="text-black">
                 {asVendor ? "Are you a customer ?" : "Are you a Vendor ?"}
               </span>

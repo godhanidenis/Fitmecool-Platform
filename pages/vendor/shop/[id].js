@@ -15,7 +15,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import Filter from "../../../components/Filters";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
 import { loadCategoriesStart } from "../../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
@@ -34,8 +33,6 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { getBranchLists } from "../../../graphql/queries/branchListsQueries";
-import AuthModal from "../../../components/core/AuthModal";
-import { AuthTypeModal } from "../../../components/core/Enum";
 import {
   createProduct,
   updateProduct,
@@ -86,8 +83,6 @@ const ShopDetailsPage = () => {
   const [uploadProductVideo, setUploadProductVideo] = useState();
 
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
 
   const [menCategoryLabel, setMenCategoryLabel] = useState([]);
   const [womenCategoryLabel, setWomenCategoryLabel] = useState([]);
@@ -110,10 +105,10 @@ const ShopDetailsPage = () => {
     (state) => state.products
   );
 
-  const { isAuthenticate } = useSelector((state) => state.userProfile);
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+
   const {
     register,
     handleSubmit,
@@ -327,45 +322,13 @@ const ShopDetailsPage = () => {
 
   const onSubmit = (data) => {
     console.log("data", data);
-    if (isAuthenticate) {
-      setLoading(true);
-      if (editProductId === undefined) {
-        MultipleImageUploadFile(uploadProductImages).then((res) => {
-          uploadProductVideo !== undefined
-            ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-                createProduct({
-                  productInfo: {
-                    branch_id: data.product_branch,
-                    category_id: data.product_category,
-                    product_color: data.product_color,
-                    product_description: data.product_description,
-                    product_name: data.product_name,
-                    product_type: data.product_type,
-                    product_image: {
-                      front: res.data.data.multipleUpload[0],
-                      back: res.data.data.multipleUpload[1],
-                      side: res.data.data.multipleUpload[2],
-                    },
-                    product_video: videoResponse.data.data.singleUpload,
-                  },
-                }).then(
-                  (res) => {
-                    console.log("res:::", res);
-                    toast.success(res.data.createProduct.message, {
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    handleProductListingModalClose();
-                    setProductPageSkip(0);
-                    getAllProducts();
-                  },
-                  (error) => {
-                    setLoading(false);
-                    toast.error(error.message, { theme: "colored" });
-                  }
-                );
-              })
-            : createProduct({
+
+    setLoading(true);
+    if (editProductId === undefined) {
+      MultipleImageUploadFile(uploadProductImages).then((res) => {
+        uploadProductVideo !== undefined
+          ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
+              createProduct({
                 productInfo: {
                   branch_id: data.product_branch,
                   category_id: data.product_category,
@@ -378,6 +341,7 @@ const ShopDetailsPage = () => {
                     back: res.data.data.multipleUpload[1],
                     side: res.data.data.multipleUpload[2],
                   },
+                  product_video: videoResponse.data.data.singleUpload,
                 },
               }).then(
                 (res) => {
@@ -395,58 +359,56 @@ const ShopDetailsPage = () => {
                   toast.error(error.message, { theme: "colored" });
                 }
               );
-        });
-      } else {
-        productAllMediaImages.map((img) =>
-          deleteMedia({
-            file: img,
-            fileType: "image",
-          }).then((res) => setProductAllMediaImages([]))
-        );
+            })
+          : createProduct({
+              productInfo: {
+                branch_id: data.product_branch,
+                category_id: data.product_category,
+                product_color: data.product_color,
+                product_description: data.product_description,
+                product_name: data.product_name,
+                product_type: data.product_type,
+                product_image: {
+                  front: res.data.data.multipleUpload[0],
+                  back: res.data.data.multipleUpload[1],
+                  side: res.data.data.multipleUpload[2],
+                },
+              },
+            }).then(
+              (res) => {
+                console.log("res:::", res);
+                toast.success(res.data.createProduct.message, {
+                  theme: "colored",
+                });
+                setLoading(false);
+                handleProductListingModalClose();
+                setProductPageSkip(0);
+                getAllProducts();
+              },
+              (error) => {
+                setLoading(false);
+                toast.error(error.message, { theme: "colored" });
+              }
+            );
+      });
+    } else {
+      productAllMediaImages.map((img) =>
+        deleteMedia({
+          file: img,
+          fileType: "image",
+        }).then((res) => setProductAllMediaImages([]))
+      );
 
-        productAllMediaVideo !== undefined &&
-          deleteMedia({
-            file: productAllMediaVideo,
-            fileType: "video",
-          }).then((res) => setProductAllMediaVideo());
+      productAllMediaVideo !== undefined &&
+        deleteMedia({
+          file: productAllMediaVideo,
+          fileType: "video",
+        }).then((res) => setProductAllMediaVideo());
 
-        MultipleImageUploadFile(uploadProductImages).then((res) => {
-          uploadProductVideo !== undefined
-            ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-                updateProduct({
-                  id: editProductId,
-                  productInfo: {
-                    branch_id: data.product_branch,
-                    category_id: data.product_category,
-                    product_color: data.product_color,
-                    product_description: data.product_description,
-                    product_name: data.product_name,
-                    product_type: data.product_type,
-                    product_image: {
-                      front: res.data.data.multipleUpload[0],
-                      back: res.data.data.multipleUpload[1],
-                      side: res.data.data.multipleUpload[2],
-                    },
-                    product_video: videoResponse.data.data.singleUpload,
-                  },
-                }).then(
-                  (res) => {
-                    console.log("res:::", res);
-                    toast.success(res.data.updateProduct.message, {
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    handleProductListingModalClose();
-                    setProductPageSkip(0);
-                    getAllProducts();
-                  },
-                  (error) => {
-                    setLoading(false);
-                    toast.error(error.message, { theme: "colored" });
-                  }
-                );
-              })
-            : updateProduct({
+      MultipleImageUploadFile(uploadProductImages).then((res) => {
+        uploadProductVideo !== undefined
+          ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
+              updateProduct({
                 id: editProductId,
                 productInfo: {
                   branch_id: data.product_branch,
@@ -460,6 +422,7 @@ const ShopDetailsPage = () => {
                     back: res.data.data.multipleUpload[1],
                     side: res.data.data.multipleUpload[2],
                   },
+                  product_video: videoResponse.data.data.singleUpload,
                 },
               }).then(
                 (res) => {
@@ -477,10 +440,39 @@ const ShopDetailsPage = () => {
                   toast.error(error.message, { theme: "colored" });
                 }
               );
-        });
-      }
-    } else {
-      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+            })
+          : updateProduct({
+              id: editProductId,
+              productInfo: {
+                branch_id: data.product_branch,
+                category_id: data.product_category,
+                product_color: data.product_color,
+                product_description: data.product_description,
+                product_name: data.product_name,
+                product_type: data.product_type,
+                product_image: {
+                  front: res.data.data.multipleUpload[0],
+                  back: res.data.data.multipleUpload[1],
+                  side: res.data.data.multipleUpload[2],
+                },
+              },
+            }).then(
+              (res) => {
+                console.log("res:::", res);
+                toast.success(res.data.updateProduct.message, {
+                  theme: "colored",
+                });
+                setLoading(false);
+                handleProductListingModalClose();
+                setProductPageSkip(0);
+                getAllProducts();
+              },
+              (error) => {
+                setLoading(false);
+                toast.error(error.message, { theme: "colored" });
+              }
+            );
+      });
     }
   };
 
@@ -538,17 +530,8 @@ const ShopDetailsPage = () => {
   return (
     <>
       <div className="bg-colorWhite pb-20 md:pb-28">
-        {/* <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-8"> */}
-        {/* <div className="lg:col-span-2 hidden lg:block "> */}
-        {/* <Filter
-              productByShop={true}
-              setProductPageSkip={setProductPageSkip}
-            /> */}
-
-        {/* </div> */}
-
         <div className="flex flex-col mt-2">
-          <div className="flex w-[95%] mx-auto flex-row-reverse">
+          <div className="flex w-[95%] mx-auto flex-row-reverse bg-colorWhite py-2">
             <button
               onClick={() => setProductListingModalOpen(true)}
               className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
@@ -557,7 +540,7 @@ const ShopDetailsPage = () => {
             </button>
           </div>
 
-          <div className="bg-[#F5F5F5] rounded-lg mt-5">
+          <div className="bg-[#F5F5F5] rounded-lg pt-4">
             <div className="w-[95%] mx-auto">
               <UpperFilter
                 setProductPageSkip={setProductPageSkip}
@@ -579,7 +562,7 @@ const ShopDetailsPage = () => {
                     </div>
                   }
                 > */}
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10">
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10">
                 {productsData &&
                   productsData?.map((product) => (
                     <ProductCard
@@ -622,7 +605,7 @@ const ShopDetailsPage = () => {
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style}>
+        <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center mb-5">
               <ArrowBackIcon
@@ -639,7 +622,7 @@ const ShopDetailsPage = () => {
             </div>
             <form className="h-[500px] overflow-auto">
               <div className="flex flex-col space-y-2">
-                <div className="flex items-center justify-center container gap-24">
+                <div className="flex items-center justify-center container gap-7 sm:gap-24">
                   <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
                     Name:
                   </p>
@@ -665,7 +648,7 @@ const ShopDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-12">
+                <div className="flex items-center justify-center container gap-2 sm:gap-12">
                   <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
                     Description:
                   </p>
@@ -691,7 +674,7 @@ const ShopDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-24">
+                <div className="flex items-center justify-center container gap-7 sm:gap-24">
                   <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
                     Color:
                   </p>
@@ -735,7 +718,7 @@ const ShopDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-center container gap-24">
+                <div className="flex items-center justify-center container gap-7 sm:gap-24">
                   <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
                     Type:
                   </p>
@@ -783,7 +766,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 {productType && (
-                  <div className="flex items-center justify-center container gap-16">
+                  <div className="flex items-center justify-center container gap-4 sm:gap-16">
                     <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
                       Category:
                     </p>
@@ -833,7 +816,7 @@ const ShopDetailsPage = () => {
                   </div>
                 )}
 
-                <div className="flex items-center justify-center container gap-20">
+                <div className="flex items-center justify-center container gap-5 sm:gap-20">
                   <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
                     Branch:
                   </p>
@@ -1035,15 +1018,6 @@ const ShopDetailsPage = () => {
           </div>
         </Box>
       </CustomAuthModal>
-
-      <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      />
     </>
   );
 };

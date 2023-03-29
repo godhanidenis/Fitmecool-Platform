@@ -51,11 +51,11 @@ const SubHeader = () => {
   return (
     <div
       className={`w-full bg-colorWhite shadow-md z-20 left-0 sticky ${
-        scrollDirection === "down" ? "-top-32" : "top-[72px] sm:top-[83px]"
-      } transition-all duration-500 hidden sm:flex`}
+        scrollDirection === "down" ? "-top-32" : "top-[72px] lg:top-[83px]"
+      } transition-all duration-500 hidden lg:flex`}
     >
-      <div className="container flex gap-48 items-center">
-        <div className="pl-2" onMouseLeave={handleMenuClose.bind(this)}>
+      <div className="container flex items-center">
+        <div className="pl-2 ml-48" onMouseLeave={handleMenuClose.bind(this)}>
           <CustomTab value={value}>
             {["Men's", "Women's"].map((item, index) => (
               <Tab

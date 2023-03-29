@@ -18,10 +18,10 @@ const VendorCommonLayout = ({ children }) => {
 
   return (
     <div className="grid grid-cols-12">
-      <div className="col-span-2">
+      <div className="hidden lg:block lg:col-span-2">
         <VendorSidebar vendorShopDetails={vendorShopDetails} />
       </div>
-      <div className="col-span-10">
+      <div className="col-span-12 lg:col-span-10">
         <div className="w-full">
           <img
             src={vendorShopDetails?.shop_cover_image}

@@ -2,7 +2,7 @@ import React from "react";
 import SignUp from "../../components/sections/auth-section/signup";
 
 const Signup = () => {
-  return <SignUp forMobile={true} />;
+  return <SignUp />;
 };
 
 export default Signup;
