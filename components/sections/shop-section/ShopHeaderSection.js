@@ -198,12 +198,6 @@ const ShopHeaderSection = ({
             />
             <Grid item sm={6} md={2.5}>
               <Item>
-                <ShareIcon /> See Branches
-              </Item>
-            </Grid>
-            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
-            <Grid item xs={1}>
-              <Item>
                 <ShareIcon /> Share
               </Item>
             </Grid>
