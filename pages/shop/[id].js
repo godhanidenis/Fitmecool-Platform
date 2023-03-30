@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import DirectoryHero from "../../components/DirectoryHero/DirectoryHero";
-import ShopLandingBg from "../../assets/shopCoverImage.png";
 import {
   Avatar,
   Button,
   Grid,
   LinearProgress,
-  linearProgressClasses,
   Pagination,
   Rating,
   TextareaAutosize,
@@ -14,7 +12,11 @@ import {
 import Filter from "../../components/Filters/index";
 import UpperFilter from "../../components/Filters/UpperFilter/UpperFilter";
 
-import { getShopDetails, getShopFollowers, getShopReviews } from "../../graphql/queries/shopQueries";
+import {
+  getShopDetails,
+  getShopFollowers,
+  getShopReviews,
+} from "../../graphql/queries/shopQueries";
 import ShopHeaderSection from "../../components/sections/shop-section/ShopHeaderSection";
 import ProductCard from "../../components/sections/product-section/ProductCard";
 import StarIcon from "@mui/icons-material/Star";
@@ -26,7 +28,10 @@ import { shopReview } from "../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
-import { loadMoreProductsStart, loadProductsStart } from "../../redux/ducks/product";
+import {
+  loadMoreProductsStart,
+  loadProductsStart,
+} from "../../redux/ducks/product";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
@@ -56,9 +61,14 @@ const ShopDetail = ({ shopDetails }) => {
 
   const dispatch = useDispatch();
 
-  const { productsLimit, productsCount, numOfPages, productsData, loading, error } = useSelector(
-    (state) => state.products
-  );
+  const {
+    productsLimit,
+    productsCount,
+    numOfPages,
+    productsData,
+    loading,
+    error,
+  } = useSelector((state) => state.products);
 
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
@@ -80,10 +90,15 @@ const ShopDetail = ({ shopDetails }) => {
           limit: 6,
         },
         filter: {
-          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
-          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
+          category_id:
+            productsFiltersReducer.appliedProductsFilters.categoryId
+              .selectedValue,
+          product_color:
+            productsFiltersReducer.appliedProductsFilters.productColor
+              .selectedValue,
         },
-        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId:
+          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -98,10 +113,15 @@ const ShopDetail = ({ shopDetails }) => {
           limit: 6,
         },
         filter: {
-          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
-          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
+          category_id:
+            productsFiltersReducer.appliedProductsFilters.categoryId
+              .selectedValue,
+          product_color:
+            productsFiltersReducer.appliedProductsFilters.productColor
+              .selectedValue,
         },
-        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId:
+          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -109,21 +129,31 @@ const ShopDetail = ({ shopDetails }) => {
   };
 
   const getAllReviews = () => {
-    getShopReviews({ id: router.query.id }).then((res) => setShopReviews(res.data.shopReview));
+    getShopReviews({ id: router.query.id }).then((res) =>
+      setShopReviews(res.data.shopReview)
+    );
   };
 
   const getAllFollowers = () => {
-    getShopFollowers({ id: router.query.id }).then((res) => setTotalFollowers(res.data.shopFollower?.length));
+    getShopFollowers({ id: router.query.id }).then((res) =>
+      setTotalFollowers(res.data.shopFollower?.length)
+    );
   };
 
   useEffect(() => {
     var rating = 0;
-    shopReviews.map((itm) => setAvgShopRating(Math.round((rating += itm.stars) / shopReviews.length)));
+    shopReviews.map((itm) =>
+      setAvgShopRating(Math.round((rating += itm.stars) / shopReviews.length))
+    );
   }, [shopReviews]);
 
   useEffect(() => {
-    const reviewedShopsByUser = shopReviews.find((itm) => itm.user_id === userProfile.id);
-    reviewedShopsByUser ? setSubmitButtonDisable(true) : setSubmitButtonDisable(false);
+    const reviewedShopsByUser = shopReviews.find(
+      (itm) => itm.user_id === userProfile.id
+    );
+    reviewedShopsByUser
+      ? setSubmitButtonDisable(true)
+      : setSubmitButtonDisable(false);
   }, [router.query.id, userProfile.id, shopReviews]);
 
   useEffect(() => {
@@ -183,7 +213,8 @@ const ShopDetail = ({ shopDetails }) => {
         <div className="container py-2">
           <UpperFilter
             setProductPageSkip={setProductPageSkip}
-            forShopPage={true}  showDrawerFilter={true}
+            forShopPage={true}
+            showDrawerFilter={true}
             showOnlyShopDetailPage={true}
           />
         </div>
@@ -216,7 +247,7 @@ const ShopDetail = ({ shopDetails }) => {
                   </div>
                 }
               > */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10">
                 {productsData &&
                   productsData?.map((product) => (
                     <ProductCard product={product} key={product.id} />
@@ -230,7 +261,9 @@ const ShopDetail = ({ shopDetails }) => {
                     color="primary"
                     variant="outlined"
                     shape="rounded"
-                    page={(productPageSkip === 0 && 1) || productPageSkip / 6 + 1}
+                    page={
+                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                    }
                     onChange={(e, p) => {
                       setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
                     }}
@@ -243,28 +276,35 @@ const ShopDetail = ({ shopDetails }) => {
           </div>
         </div>
         <div className="bg-[#FFFFFF] pb-0 mt-8 container shadow-[0_0_4px_rgba(0,0,0,0.25)]">
-          <Grid container sx={{ pb: "12px", borderBottom: "1px solid #d7d7d7" }}>
+          <Grid
+            container
+            sx={{ pb: "12px", borderBottom: "1px solid #d7d7d7" }}
+          >
             <Grid item xs={12} className="pl-4 pt-3">
-              {/* <Item>xs=8</Item> */}
               Reviews for Contourz by Taruna Manchanda (44)
             </Grid>
           </Grid>
           <div className="border-b">
             <div className="md:flex gap-7 px-4">
-              <div className="md:w-1/3 py-3 rounded-md">
+              <div className="md:w-[40%] py-3 rounded-md">
                 <div className="flex justify-between">
                   <p className="text-base">Rating + Distribution</p>
                   <div className="flex items-center flex-col">
                     <div className="rounded-lg p-1 flex items-center gap-1">
                       <StarIcon fontSize="medium" className="text-yellow-400" />
-                      <p className="text-colorBlack font-semibold">{avgShopRating}</p>
+                      <p className="text-colorBlack font-semibold">
+                        {avgShopRating}
+                      </p>
                     </div>
-                    <p className="text-sm">{shopReviews.length} Review</p>
+                    <p className="text-sm">({shopReviews.length} Review)</p>
                   </div>
                 </div>
 
                 {[5, 4, 3, 2, 1].map((star) => (
-                  <div className="xl:grid grid-cols-6 items-center mt-3 p-1" key={star}>
+                  <div
+                    className="grid grid-cols-6 items-center mt-3 p-1 gap-2.5"
+                    key={star}
+                  >
                     <div className="flex items-center gap-1 col-span-1">
                       <p className="font-semibold">{star}</p>
                       <StarIcon fontSize="medium" className="text-yellow-400" />
@@ -273,23 +313,41 @@ const ShopDetail = ({ shopDetails }) => {
                     <div className="self-center col-span-4">
                       <CustomBorderLinearProgress
                         variant="determinate"
-                        value={(shopReviews.filter((itm) => itm.stars === star).length * 100) / shopReviews.length}
+                        value={
+                          (shopReviews.filter((itm) => itm.stars === star)
+                            .length *
+                            100) /
+                          shopReviews.length
+                        }
                       />
                     </div>
-                    <p className="text-sm font-normal text-right col-span-1">
-                      {shopReviews.filter((itm) => itm.stars === star).length} Review
+                    <p className="text-sm font-normal text-center col-span-1">
+                      {shopReviews.filter((itm) => itm.stars === star).length}{" "}
+                      Review
                     </p>
                   </div>
                 ))}
 
-                <p className="mt-5 italic font-normal text-base">Last Review Updated on 20 Apr 2022</p>
+                <p className="mt-5 italic font-normal text-base">
+                  Last Review Updated on 20 Apr 2022
+                </p>
               </div>
-              <div className="md:w-2/3 p-5 pt-8 border-l">
-                <p className="text-base font-semibold text-colorStone">Review {shopDetails.data.shop.shop_name} Shop</p>
-                <p className="text-base py-4 font-semibold text-colorStone mt-1">Rate vendor</p>
+              <div className="md:w-[60%] p-5 pt-8 border-t sm:border-t-0 sm:border-l">
+                <p className="text-base font-semibold text-colorStone">
+                  Review {shopDetails.data.shop.shop_name} Shop
+                </p>
+                <p className="text-base py-4 font-semibold text-colorStone mt-1">
+                  Rate vendor
+                </p>
                 <div className="flex justify-between mt-1">
-                  <p className="text-base font-semibold text-colorStone">Rate our of</p>
-                  <Rating size="large" value={stars} onChange={(e) => setStars(Number(e.target.value))} />
+                  <p className="text-base font-semibold text-colorStone">
+                    Rate our of
+                  </p>
+                  <Rating
+                    size="large"
+                    value={stars}
+                    onChange={(e) => setStars(Number(e.target.value))}
+                  />
                 </div>
                 <div className="mt-5">
                   <TextareaAutosize
@@ -347,7 +405,11 @@ const ShopDetail = ({ shopDetails }) => {
                     }}
                   >
                     {loadingSubmitReview && (
-                      <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />
+                      <CircularProgress
+                        size={20}
+                        color="primary"
+                        sx={{ color: "white", mr: 1 }}
+                      />
                     )}
                     Submit Review
                   </button>
@@ -355,19 +417,25 @@ const ShopDetail = ({ shopDetails }) => {
               </div>
             </div>
           </div>
-          {/* <p className="flex items-center font-bold text-2xl text-colorBlack container mt-10">
-            Comments
-          </p> */}
 
-          {((showAllReview && shopReviews) || (!showAllReview && shopReviews.slice(0, 2))).map((review) => (
+          {(
+            (showAllReview && shopReviews) ||
+            (!showAllReview && shopReviews.slice(0, 2))
+          ).map((review) => (
             <ShopCommentsSection review={review} key={review.id} />
           ))}
 
-          <div className="flex items-center justify-center p-2 container">
-            <Button variant="outlined" sx={{ textTransform: "none" }} onClick={() => setShowAllReview(!showAllReview)}>
-              {showAllReview ? "Show Less" : "View All"}
-            </Button>
-          </div>
+          {shopReviews?.length > 2 && (
+            <div className="flex items-center justify-center p-2 container">
+              <Button
+                variant="outlined"
+                sx={{ textTransform: "none" }}
+                onClick={() => setShowAllReview(!showAllReview)}
+              >
+                {showAllReview ? "Show Less" : "View All"}
+              </Button>
+            </div>
+          )}
         </div>
 
         <AuthModal
@@ -399,11 +467,6 @@ export async function getServerSideProps(context) {
 
 const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 12,
-  // backgroundColor: "#ffffff",
-
-  // [`& .${linearProgressClasses.bar}`]: {
-  //   backgroundColor: "#000000",
-  // },
 }));
 
 const ShopCommentsSection = ({ review }) => {
@@ -411,24 +474,27 @@ const ShopCommentsSection = ({ review }) => {
     <div className="flex justify-center border-b mt-10">
       <div className="grid grid-cols-12 px-4 w-full">
         <div className="col-span-12">
-          <div className="flex flex-col	sm:flex-row	">
-            {/* <div className="mt-[-16px] ml-[-16px] flex justify-center"> */}
-            <div className="flex justify-center">
+          <div className="flex items-center">
+            <div className="flex justify-center items-center">
               <Avatar sx={{ width: 56, height: 56 }} />
             </div>
             <div className="flex flex-col w-full">
-              <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%] mt-2">
-                <div className="flex items-center gap-10">
+              <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">
+                <div className="flex items-center gap-10 justify-between w-full sm:justify-start">
                   <div className="flex flex-col">
-                    <div className="font-semibold text-xl text-[#000000]">{review.user_name}</div>
+                    <div className="font-semibold text-xl text-[#000000]">
+                      {review.user_name}
+                    </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
                   </div>
                   <div className="p-2 flex items-center gap-1 bg-colorWhite">
                     <StarIcon fontSize="medium" className="text-yellow-400" />
-                    <p className="text-colorBlack font-semibold">{review.stars}</p>
+                    <p className="text-colorBlack font-semibold">
+                      {review.stars}
+                    </p>
                   </div>
                 </div>
-                <div className="flex mt-4 mr-5 flex-nowrap items-center">
+                <div className="sm:flex mt-4 mr-5 flex-nowrap items-center hidden">
                   <div className="flex items-center">
                     <p className="text-colorPrimary font-semibold">Reply</p>
                   </div>
@@ -437,7 +503,15 @@ const ShopCommentsSection = ({ review }) => {
             </div>
           </div>
         </div>
-        <div className="col-span-12 items-center text-sm flex p-3 font-normal">{review.message}</div>
+        <div className="col-span-12 items-center text-sm flex p-3 font-normal gap-2.5">
+          {review.message}
+
+          <div className="sm:hidden flex items-center ml-auto">
+            <div className="flex items-center">
+              <p className="text-colorPrimary font-semibold">Reply</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

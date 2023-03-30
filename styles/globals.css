@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: "Poppins", sans-serif; 
+  font-family: "Poppins", sans-serif;
   @apply bg-colorWhite text-colorStone;
 }
 
@@ -28,6 +28,7 @@ h6 {
 .MuiNativeSelect-select {
   font-weight: 600 !important;
 }
+
 ::-webkit-scrollbar {
   width: 2px;
   height: 2px;
@@ -46,24 +47,10 @@ h6 {
   border-radius: 5px;
 }
 
-.slick-prev {
-  left: 4px !important;
-  z-index: 1 !important;
-}
-
-.slick-next {
-  right: 4px !important;
-  z-index: 1 !important;
-}
-/* .css-8m4j0u{
-  height: 71% !important;
-} */
-
-.signUpAsNotVendor-height{
-  margin-top: 26px;
-  margin-bottom: 27px;
-}
-
-.signUpAsNotVendor-height-margin{
-  margin-top: 35px;
+.oneLineAfterThreeDots {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 1 !important;
 }

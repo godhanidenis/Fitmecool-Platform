@@ -15,6 +15,8 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fbfbfb",
   ...theme.typography.body2,
@@ -60,10 +62,10 @@ const ShopHeaderSection = ({
   return (
     <>
       <div className="flex justify-center container">
-        <div className="grid-cols-12 mt-[-50px] rounded-xl w-[85%] bg-[#FFFFFF] ">
+        <div className="grid-cols-12 mt-[-50px] rounded-xl sm:w-[85%] bg-[#FFFFFF]">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row	">
-              <div className="mt-[-40px] sm:mt-[-50px] flex justify-center">
+              <div className="mt-[-45px] flex justify-center">
                 <Image
                   src={shopDetails.shop_logo}
                   alt="shop logo"
@@ -73,16 +75,16 @@ const ShopHeaderSection = ({
                   className="rounded-[50%]"
                 />
               </div>
-              <div className="flex flex-col w-full ml-[4%]">
-                <div className="flex justify-between flex-wrap md:flex-nowrap">
-                  <div className="flex flex-col mt-5">
-                    <div className="font-semibold text-2xl text-[#000000]">
+              <div className="flex flex-col w-full sm:ml-[4%]">
+                <div className="flex justify-between flex-nowrap">
+                  <div className="flex flex-col sm:mt-5">
+                    <div className="oneLineAfterThreeDots font-semibold text-2xl text-[#000000]">
                       {shopDetails.shop_name}
                     </div>
-                    <div className=" text-[#888888]">
+                    <div className="text-[#888888] oneLineAfterThreeDots">
                       Contourz by Taruna Manchanda
                     </div>
-                    <p className="text-[#888888] text-sm font-normal">
+                    <p className="text-[#888888] text-sm font-normal oneLineAfterThreeDots">
                       <LocationOnIcon fontSize="small" className="mr-1" />
                       {shopDetails.branch_info.map(
                         (itm) =>
@@ -90,7 +92,7 @@ const ShopHeaderSection = ({
                       )}
                     </p>
                   </div>
-                  <div className="flex mt-4 flex-nowrap items-center gap-5">
+                  <div className="flex sm:mt-4 items-center">
                     <Button
                       variant="outlined"
                       endIcon={<PersonAddIcon />}
@@ -154,82 +156,49 @@ const ShopHeaderSection = ({
               <Typography color="#FFFFFF">See Branches</Typography>
             </Button>
           </div>
-          {/* <div className="flex justify-between col-span-12 w-full bg-[#fbfbfb]">
-            <div className="col-span-3">TOTAL PRODUCTS</div>
-            <div className="col-span-3"> FOLLOWERS</div>
-            <div className="col-span-3">REVIEWS</div>
-            <div className="col-span-3">SHARE</div>
-          </div> */}
 
-          <Grid
-            container
-            sx={{ backgroundColor: "#fbfbfb", justifyContent: "space-between" }}
-          >
-            <Grid item sm={6} md={3}>
-              <Item>
-                <ProductionQuantityLimitsIcon /> {totalProducts} Total Product
+          <Grid container sx={{ backgroundColor: "#fbfbfb" }}>
+            <Grid item sm={3}>
+              <Item className="flex items-center justify-center flex-col sm:flex-row p-3">
+                <ProductionQuantityLimitsIcon /> {totalProducts} Product
               </Item>
             </Grid>
             <Divider
-              className="lg:!block hidden "
+              className="block"
               orientation="vertical"
               variant="middle"
               flexItem
             />
-            <Grid item sm={6} md={3}>
-              <Item>{totalFollowers} Followers</Item>
-            </Grid>
-            <Divider
-              className="lg:!block hidden "
-              orientation="vertical"
-              variant="middle"
-              flexItem
-            />
-            <Grid item sm={6} md={3}>
-              <Item>
-                <RateReviewIcon /> Write a Review ({totalReview})
+            <Grid item sm={3}>
+              <Item className="flex items-center justify-center flex-col sm:flex-row p-3">
+                <PeopleAltIcon /> {totalFollowers} Followers
               </Item>
             </Grid>
             <Divider
-              className="lg:!block hidden "
+              className="block"
               orientation="vertical"
               variant="middle"
               flexItem
             />
-            <Grid item sm={6} md={2.5}>
-              <Item>
+            <Grid item sm={3}>
+              <Item className="flex items-center justify-center flex-col sm:flex-row p-3">
+                <RateReviewIcon /> {totalReview} Review
+              </Item>
+            </Grid>
+            <Divider
+              className="block"
+              orientation="vertical"
+              variant="middle"
+              flexItem
+            />
+            <Grid item sm={2.5}>
+              <Item className="flex items-center justify-center flex-col sm:flex-row p-3">
                 <ShareIcon /> Share
               </Item>
             </Grid>
           </Grid>
         </div>
       </div>
-
-      {/* <div className="grid grid-cols-4 gap-4 mt-6 container">
-        <div className="bg-[#F5F5F5] rounded-xl p-4 text-center">
-          <p className="text-colorPrimary font-bold">TOTAL PRODUCTS</p>
-          <p className=" text-colorBlack font-bold text-center mt-2">
-            {totalProducts}
-          </p>
-        </div>
-
-        <div className="bg-[#F5F5F5] rounded-xl p-4 text-center">
-          <p className="text-colorPrimary font-bold">FOLLOWERS</p>
-          <p className=" text-colorBlack font-bold text-center mt-2">
-            {totalFollowers}
-          </p>
-        </div>
-        <div className="bg-[#F5F5F5] rounded-xl p-4 text-center">
-          <p className="text-colorPrimary font-bold">REVIEWS</p>
-          <p className=" text-colorBlack font-bold text-center mt-2">
-            {totalReview}
-          </p>
-        </div>
-        <div className="bg-[#F5F5F5] rounded-xl p-4 text-center">
-          <p className="text-colorPrimary font-bold">SHARE</p>
-          <p className=" text-colorBlack font-bold text-center mt-2">25</p>
-        </div>
-      </div> */}
 
       <AuthModal
         open={open}

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import facebookIcon from "../../assets/facebook.png";
 import instagramIcon from "../../assets/instagram.png";
@@ -15,10 +15,7 @@ import {
   Breadcrumbs,
   Button,
   Divider,
-  FormControlLabel,
-  FormGroup,
   Rating,
-  Switch,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -43,12 +40,12 @@ import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerro
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-// import Carousel, { autoplayPlugin, slidesToShowPlugin } from "@brainhubeu/react-carousel";
-// import "@brainhubeu/react-carousel/lib/style.css";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import Slider from "react-slick";
 import Router from "next/router";
+import { loadCategoriesStart } from "../../redux/ducks/categories";
+import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
@@ -117,6 +114,11 @@ const ProductDetail = ({ productDetails }) => {
     userProfile,
   ]);
 
+  useEffect(() => {
+    dispatch(loadCategoriesStart());
+    dispatch(loadAreaListsStart());
+  }, [dispatch]);
+
   const photos = [
     productDetails.data.product.data.product_image?.front,
     productDetails.data.product.data.product_image?.back,
@@ -125,9 +127,6 @@ const ProductDetail = ({ productDetails }) => {
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState(photos[0]);
 
-  const contactInfoSwitchHandler = (event) => {
-    setOpenContactInfo(event.target.checked);
-  };
   const selectImage = (img, i) => {
     setImages(img);
   };
@@ -153,9 +152,7 @@ const ProductDetail = ({ productDetails }) => {
       </div>
     );
   });
-  if (!isHydrated) {
-    return null;
-  }
+
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
     return (
@@ -212,11 +209,16 @@ const ProductDetail = ({ productDetails }) => {
       },
     ],
   };
+
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <>
       <SubHeader />
       <div className="bg-colorWhite">
-        <div className="w-[80%] md:w-[75%] mx-auto pt-4 pb-2">
+        <div className="container pt-4 pb-2">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               Product
@@ -235,10 +237,130 @@ const ProductDetail = ({ productDetails }) => {
           </Breadcrumbs>
         </div>
       </div>
+      <Box
+        sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}
+        className="lg:!hidden"
+      >
+        <div className="bg-colorWhite p-3 sm:rounded-lg">
+          <div className="flex items-center justify-between w-full gap-4">
+            <div className="flex justify-start items-center gap-1 sm:gap-4">
+              <div className="flex justify-center items-center">
+                <img
+                  alt="Shop Logo"
+                  src={
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      .shop_logo
+                  }
+                  className="rounded-[50%] w-[50px] h-[50px]"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <Link
+                  href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                >
+                  <a target="_blank">
+                    <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                      {
+                        productDetails.data.product.data.branchInfo?.shop_info
+                          .shop_name
+                      }
+                    </p>
+                  </a>
+                </Link>
+                <p className="text-[#888888] text-xs sm:text-sm font-normal">
+                  25 days ago
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <Rating
+                name="text-feedback"
+                value={Math.round(
+                  productDetails.data.product.data.branchInfo?.shop_info
+                    .shop_rating
+                )}
+                readOnly
+                size="small"
+                emptyIcon={<StarIcon fontSize="inherit" />}
+              />
+              <p className="oneLineAfterThreeDots text-[#888888] font-normal flex items-center">
+                <LocationOnIcon fontSize="small" className="mr-1" />
+                {productDetails.data.product.data.branchInfo?.branch_address}
+              </p>
+            </div>
+
+            <div className="flex items-center md:justify-end">
+              <Button
+                variant="outlined"
+                sx={{ textTransform: "none" }}
+                endIcon={<PersonAddIcon fontSize="large" />}
+                onClick={() => {
+                  if (isAuthenticate) {
+                    shopFollow({
+                      shopInfo: {
+                        shop_id:
+                          productDetails.data.product.data.branchInfo?.shop_id,
+                        user_id: userProfile.id,
+                      },
+                    }).then(
+                      (res) => {
+                        dispatch(
+                          !shopFollowByUser
+                            ? shopFollowToggle({
+                                shopInfo: {
+                                  key: "follow",
+                                  value: res.data.shopFollower.data,
+                                },
+                              })
+                            : shopFollowToggle({
+                                shopInfo: {
+                                  key: "unFollow",
+                                  value:
+                                    productDetails.data.product.data.branchInfo
+                                      ?.shop_id,
+                                },
+                              })
+                        );
+                        toast.success(res.data.shopFollower.message, {
+                          theme: "colored",
+                        });
+                      },
+                      (error) => {
+                        toast.error(error.message, {
+                          theme: "colored",
+                        });
+                      }
+                    );
+                  } else {
+                    if (themeLayout === "mobileScreen") {
+                      Router.push("/auth/signin");
+                    } else {
+                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                    }
+                  }
+                }}
+              >
+                <Typography color="#95539B">
+                  {shopFollowByUser ? "Unfollow" : "Follow"}
+                </Typography>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Box>
+      <div className="sm:hidden">
+        {productDetails && (
+          <ProductCard
+            product={productDetails?.data?.product?.data}
+            onlyCarousal={true}
+          />
+        )}
+      </div>
+
       <div className="bg-colorWhite">
-        <div className="w-[70%] mx-auto">
+        <div className="container">
           <div className="grid grid-cols-2 p-2 gap-8">
-            <div className="col-span-2 lg:col-span-1">
+            <div className="col-span-2 lg:col-span-1 hidden sm:flex">
               <div className="grid grid-cols-4">
                 <div className="col-span-1">
                   <div className="p-2 pt-0">{items}</div>
@@ -309,11 +431,14 @@ const ProductDetail = ({ productDetails }) => {
               </div>
             </div>
             <div className="col-span-2 lg:col-span-1">
-              <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}>
-                <div className="flex flex-col lg:flex-row items-start justify-between gap-20 bg-colorWhite p-3 rounded-lg">
-                  <div className="flex md:flex flex-wrap justify-between w-full gap-4">
-                    <div className="flex justify-start items-center">
-                      <div className="flex justify-center items-center mr-3">
+              <Box
+                sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}
+                className="!hidden lg:!block"
+              >
+                <div className="bg-colorWhite p-3 rounded-lg">
+                  <div className="flex items-center justify-between w-full gap-4">
+                    <div className="flex justify-start items-center gap-1 sm:gap-4">
+                      <div className="flex justify-center items-center">
                         <img
                           alt="Shop Logo"
                           src={
@@ -328,24 +453,20 @@ const ProductDetail = ({ productDetails }) => {
                           href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                         >
                           <a target="_blank">
-                            <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                              {productDetails.data.product.data.branchInfo
-                                ?.shop_info.shop_name?.length <= 13
-                                ? productDetails.data.product.data.branchInfo
-                                    ?.shop_info.shop_name
-                                : productDetails.data.product.data.branchInfo?.shop_info.shop_name?.substring(
-                                    0,
-                                    13
-                                  ) + "..."}
+                            <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                              {
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_info.shop_name
+                              }
                             </p>
                           </a>
                         </Link>
-                        <p className="text-[#888888] text-sm font-normal">
+                        <p className="text-[#888888] text-xs sm:text-sm font-normal">
                           25 days ago
                         </p>
                       </div>
                     </div>
-                    <div className="flex justify-end flex-col md:items-center mb-3 md:mb-0 ">
+                    <div className="flex flex-col">
                       <Rating
                         name="text-feedback"
                         value={Math.round(
@@ -353,23 +474,19 @@ const ProductDetail = ({ productDetails }) => {
                             .shop_rating
                         )}
                         readOnly
-                        // size=""
+                        size="small"
                         emptyIcon={<StarIcon fontSize="inherit" />}
                       />
-                      <p className="text-[#888888] font-normal flex items-center">
+                      <p className="oneLineAfterThreeDots text-[#888888] font-normal flex items-center">
                         <LocationOnIcon fontSize="small" className="mr-1" />
-                        {productDetails.data.product.data.branchInfo
-                          ?.branch_address.length <= 17
-                          ? productDetails.data.product.data.branchInfo
-                              ?.branch_address
-                          : productDetails.data.product.data.branchInfo?.branch_address.substring(
-                              0,
-                              17
-                            ) + "..."}
+                        {
+                          productDetails.data.product.data.branchInfo
+                            ?.branch_address
+                        }
                       </p>
                     </div>
 
-                    <div className="col-span-1 flex items-center md:justify-end">
+                    <div className="flex items-center md:justify-end">
                       <Button
                         variant="outlined"
                         sx={{ textTransform: "none" }}
@@ -494,19 +611,9 @@ const ProductDetail = ({ productDetails }) => {
                     {productDetails.data.product.data.product_description}
                   </span>
                 </div>
-                {/* <div className="flex items-center pt-12 font-semibold text-xl text-colorBlack gap-2">
-                  Color :
-                  <div
-                    className={`rounded-[50%] w-5 h-5`}
-                    style={{
-                      backgroundColor:
-                        productDetails.data.product.data.product_color,
-                    }}
-                  />
-                </div> */}
               </div>
 
-              <div className="flex mt-10 items-center justify-evenly">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 mt-10 items-center justify-evenly">
                 <div className="">
                   <a
                     href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
@@ -524,7 +631,7 @@ const ProductDetail = ({ productDetails }) => {
                     </button>
                   </a>
                 </div>
-                <div>
+                <div className="w-full sm:w-auto text-center ">
                   <span className="text-lg text-colorStone">OR</span>
                 </div>
                 <div className="flex">
@@ -537,17 +644,13 @@ const ProductDetail = ({ productDetails }) => {
                     <PersonOutlineIcon className="text-white" />
                     {openContactInfo ? "Hide Contact" : "Show Contact"}
                   </button>
-                  {/* <Switch
-                  checked={openContactInfo}
-                  onChange={contactInfoSwitchHandler}
-                /> */}
                 </div>
               </div>
 
               {openContactInfo && (
                 <div className="flex justify-center items-center mt-3">
-                  <div className="bg-colorWhite rounded-lg flex items-center shadow-lg w-[100%]">
-                    <div className="p-5 flex gap-4 justify-start">
+                  <div className="bg-colorWhite rounded-lg flex items-center shadow-lg justify-between w-full sm:w-[80%] lg:w-auto mx-auto">
+                    <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
                       <div className="flex justify-center items-center">
                         <img
                           alt="Shop Logo"
@@ -576,7 +679,7 @@ const ProductDetail = ({ productDetails }) => {
                       </div>
                     </div>
                     <Divider orientation="vertical" flexItem />
-                    <div className="p-5 flex gap-4 justify-start">
+                    <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
                       <div className="flex justify-center items-center">
                         <Avatar className=" !w-14 !h-14">
                           <Image src={ProfileIcon} alt="ProfileIcon" />
@@ -611,11 +714,20 @@ const ProductDetail = ({ productDetails }) => {
                 </span>
                 <Divider />
                 <div className="flex mt-3 items-center">
-                  <span className="text-sm font-semibold mr-1 text-colorBlack">CATEGORY:</span>
-                  <span className="text-sm">{productDetails.data.product.data.categoryInfo?.category_name}</span>
+                  <span className="text-sm font-semibold mr-2 text-colorBlack">
+                    CATEGORY:
+                  </span>
+                  <span className="text-sm">
+                    {
+                      productDetails.data.product.data.categoryInfo
+                        ?.category_name
+                    }
+                  </span>
                 </div>
                 <div className="flex mt-1 items-center">
-                  <span className="text-sm font-semibold mr-1 text-colorBlack">COLOR:</span>
+                  <span className="text-sm font-semibold mr-2 text-colorBlack">
+                    COLOR:
+                  </span>
                   <span
                     className={`rounded-[50%] w-3 h-3`}
                     style={{
@@ -625,35 +737,6 @@ const ProductDetail = ({ productDetails }) => {
                   />
                 </div>
               </div>
-              {/* <div className="flex justify-center items-center pt-5 gap-10">
-                <Typography sx={{ fontWeight: 600, color: "black" }}>
-                  Share :
-                </Typography>
-                <a
-                  className="p-2 rounded-lg bg-colorWhite cursor-pointer"
-                  href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.facebook}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image src={facebookIcon} alt="facebookIcon" />
-                </a>
-                <a
-                  className="p-2 rounded-lg bg-colorWhite cursor-pointer"
-                  href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.instagram}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image src={instagramIcon} alt="instagramIcon" />
-                </a>
-                <a
-                  className="p-2 rounded-lg bg-colorWhite cursor-pointer"
-                  href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.website}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image src={googleIcon} alt="googleIcon" />
-                </a>
-              </div> */}
             </div>
           </div>
         </div>
@@ -663,8 +746,7 @@ const ProductDetail = ({ productDetails }) => {
               SIMILAR PRODUCTS
             </p>
 
-            {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10"> */}
-            <div className="-mt-[10px] -ml-[16px]">
+            <div>
               <Slider {...settings}>
                 {productDetails.data.product.related &&
                   productDetails.data.product.related?.map((product, index) => {
@@ -684,11 +766,9 @@ const ProductDetail = ({ productDetails }) => {
                         />
                       );
                     }
-                    // }
                   })}
               </Slider>
             </div>
-            {/* </div> */}
           </div>
         </div>
       </div>

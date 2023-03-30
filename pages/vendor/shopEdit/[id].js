@@ -652,7 +652,7 @@ const ShopEdit = () => {
             <form>
               <div className="flex flex-col space-y-3">
                 <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                     Name:
                   </p>
                   <div className="w-full">
@@ -698,7 +698,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                     Email:
                   </p>
                   <div className="w-full">
@@ -730,7 +730,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                     Phone:
                   </p>
                   <div className="w-full">
@@ -887,7 +887,7 @@ const ShopEdit = () => {
                       </div>
                     </div>
 
-                    <div className="container flex w-full justify-between items-center gap-10 sm:gap-20">
+                    <div className="container flex flex-col sm:flex-row w-full justify-between items-center space-y-3 sm:space-y-0 sm:gap-20">
                       <div className="w-full">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -935,7 +935,7 @@ const ShopEdit = () => {
                         Hours
                       </p>
                       <div
-                        className="w-full border border-colorBlack p-3 rounded-lg flex items-center justify-between cursor-pointer text-colorBlack text-base font-semibold"
+                        className="w-full border border-colorBlack p-3 rounded-lg flex items-center justify-between cursor-pointer text-colorBlack text-sm sm:text-base font-semibold"
                         onClick={() => {
                           setHoursModalOpen(true);
                         }}
@@ -1121,7 +1121,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                     Name:
                   </p>
                   <div className="w-full">
@@ -1169,7 +1169,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                     Email:
                   </p>
                   <div className="w-full">
@@ -1202,7 +1202,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                     Phone:
                   </p>
                   <div className="w-full">
@@ -1289,28 +1289,38 @@ const ShopEdit = () => {
                     className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
                     key={index}
                   >
-                    <p className="text-lg text-colorBlack">
-                      <b className="mr-2 text-lg">Branch Address : </b>
+                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Address :{" "}
+                      </b>
                       {sub.branch_address}
                     </p>
-                    <p className="text-lg text-colorBlack">
-                      <b className="mr-2 text-lg">Branch City : </b>
+                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch City :{" "}
+                      </b>
                       {sub.branch_city}
                     </p>
-                    <p className="text-lg text-colorBlack">
-                      <b className="mr-2 text-lg">Branch PinCode : </b>
+                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch PinCode :{" "}
+                      </b>
                       {sub.branch_pinCode}
                     </p>
-                    <p className="text-lg text-colorBlack">
-                      <b className="mr-2 text-lg">Branch Manager Name :</b>
+                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Manager Name :
+                      </b>
                       {sub.manager_name}
                     </p>
-                    <p className="text-lg text-colorBlack">
-                      <b className="mr-2 text-lg">Branch Manager Email :</b>
+                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Manager Email :
+                      </b>
                       {sub.manager_email}
                     </p>
-                    <p className="text-lg text-colorBlack">
-                      <b className="mr-2 text-lg">
+                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
                         Branch Manager Phone Number :
                       </b>
                       {sub.manager_contact}
@@ -1354,7 +1364,7 @@ const ShopEdit = () => {
               <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                 Shop Layout
               </h3>
-              <div className="flex-col sm:flex-row gap-20 items-center container mt-10">
+              <div className="flex flex-col sm:flex-row gap-20 items-center container mt-10">
                 <div>
                   <label className="flex justify-center items-center font-bold mb-3">
                     Logo
@@ -1781,91 +1791,92 @@ const HoursModal = ({
                 onClick={() => setHoursModalOpen(false)}
               />
             </div>
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
+              <div className="flex flex-col gap-2 mt-10 container">
+                {hours.map((day, index) => (
+                  <div
+                    className="flex items-center justify-between text-colorBlack text-sm sm:text-base"
+                    key={index}
+                  >
+                    <p>{day["key"]}</p>
 
-            <div className="flex flex-col gap-2 mt-10 container">
-              {hours.map((day, index) => (
-                <div
-                  className="flex items-center justify-between text-colorBlack"
-                  key={index}
-                >
-                  <p>{day["key"]}</p>
-
-                  <div className="flex flex-col">
-                    {day["value"].map((time, index) => (
-                      <div className="flex items-center gap-5" key={index}>
-                        <p>{time}</p>
-                        <div
-                          className="p-2 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
-                          onClick={() => {
-                            setDaysTimeModalOpen(true);
-                            setSelectedDay(day["key"] + " - " + time);
-                          }}
-                        >
-                          <EditIcon />
+                    <div className="flex flex-col">
+                      {day["value"].map((time, index) => (
+                        <div className="flex items-center gap-5" key={index}>
+                          <p>{time}</p>
+                          <div
+                            className="p-2 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
+                            onClick={() => {
+                              setDaysTimeModalOpen(true);
+                              setSelectedDay(day["key"] + " - " + time);
+                            }}
+                          >
+                            <EditIcon />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="mt-10 container flex items-center gap-5 sm:gap-10">
-              <Button
-                variant="outlined"
-                size="medium"
-                className="rounded-xl capitalize text-colorBlack"
-                onClick={() => {
-                  setDaysTimeModalOpen(true);
+              <div className="mt-10 container flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-10">
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  className="rounded-xl capitalize text-colorBlack"
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
 
-                  setSelectedAllHours([
-                    "Sunday",
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                  ]);
-                }}
-              >
-                Edit All Hours
-              </Button>
-              <Button
-                variant="outlined"
-                size="medium"
-                className="rounded-xl capitalize text-colorBlack"
-                onClick={() => {
-                  setDaysTimeModalOpen(true);
+                    setSelectedAllHours([
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
+                  }}
+                >
+                  Edit All Hours
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  className="rounded-xl capitalize text-colorBlack"
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
 
-                  setSelectedWeek([
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                  ]);
-                }}
-              >
-                Edit Mon - Sat
-              </Button>
-              <Button
-                variant="outlined"
-                size="medium"
-                className="rounded-xl capitalize text-colorBlack"
-                onClick={() => {
-                  setDaysTimeModalOpen(true);
-                  setSelectedDay(
-                    "Sunday" +
-                      " - " +
-                      hours[hours.findIndex((item) => item.key === "Sunday")]
-                        .value
-                  );
-                }}
-              >
-                Edit Sunday
-              </Button>
+                    setSelectedWeek([
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
+                  }}
+                >
+                  Edit Mon - Sat
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  className="rounded-xl capitalize text-colorBlack"
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+                    setSelectedDay(
+                      "Sunday" +
+                        " - " +
+                        hours[hours.findIndex((item) => item.key === "Sunday")]
+                          .value
+                    );
+                  }}
+                >
+                  Edit Sunday
+                </Button>
+              </div>
             </div>
             <div className="container mt-5">
               <Divider />
@@ -2108,85 +2119,87 @@ const DaysTimeModal = ({
             <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
               Select days & time
             </p>
+            <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
+              <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
+                {[
+                  "Sunday",
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                ].map((itm) => (
+                  <div
+                    className={`p-5 border rounded-[50%] ${
+                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
+                    } ${
+                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
+                    } ${
+                      selectedAllHours?.find((day) => day === itm) &&
+                      "bg-[#bdbbbb]"
+                    }  hover:bg-[#bdbbbb] cursor-pointer`}
+                    key={itm}
+                  >
+                    {itm.charAt(0)}
+                  </div>
+                ))}
+              </div>
 
-            <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
-              {[
-                "Sunday",
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-              ].map((itm) => (
-                <div
-                  className={`p-5 border rounded-[50%] ${
-                    selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
-                  } ${
-                    selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
-                  } ${
-                    selectedAllHours?.find((day) => day === itm) &&
-                    "bg-[#bdbbbb]"
-                  }  hover:bg-[#bdbbbb] cursor-pointer`}
-                  key={itm}
-                >
-                  {itm.charAt(0)}
-                </div>
-              ))}
-            </div>
-
-            <div className="container mt-5">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={open24Hours}
-                    onChange={(e) => {
-                      setOpen24Hours(e.target.checked);
-                      if (closed) {
-                        setClosed(!e.target.checked);
-                      }
-                    }}
-                  />
-                }
-                label="Open 24 Hours"
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={closed}
-                    onChange={(e) => {
-                      setClosed(e.target.checked);
-                      if (open24Hours) {
-                        setOpen24Hours(!e.target.checked);
-                      }
-                    }}
-                  />
-                }
-                label="Closed"
-              />
-            </div>
-            {!(closed || open24Hours) && (
-              <div className="container mt-5 flex items-center gap-10">
-                <TextField
-                  label="Open Time"
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => {
-                    setStartTime(e.target.value);
-                  }}
+              <div className="container mt-5">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={open24Hours}
+                      onChange={(e) => {
+                        setOpen24Hours(e.target.checked);
+                        if (closed) {
+                          setClosed(!e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label="Open 24 Hours"
                 />
 
-                <TextField
-                  label="Close Time"
-                  type="time"
-                  value={closeTime}
-                  onChange={(e) => {
-                    setCloseTime(e.target.value);
-                  }}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={closed}
+                      onChange={(e) => {
+                        setClosed(e.target.checked);
+                        if (open24Hours) {
+                          setOpen24Hours(!e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label="Closed"
                 />
               </div>
-            )}
+              {!(closed || open24Hours) && (
+                <div className="container mt-5 flex items-center gap-10">
+                  <TextField
+                    label="Open Time"
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => {
+                      setStartTime(e.target.value);
+                    }}
+                  />
+
+                  <TextField
+                    label="Close Time"
+                    type="time"
+                    value={closeTime}
+                    onChange={(e) => {
+                      setCloseTime(e.target.value);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
             <div className="container mt-5">
               <Divider />
             </div>
@@ -2451,8 +2464,8 @@ const SubBranchModal = ({
               />
             </div>
 
-            <>
-              <div className="bg-colorWhite rounded-lg my-10 p-5 space-y-5">
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
+              <div className="bg-colorWhite rounded-lg p-5 space-y-5">
                 <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Branches
                 </h3>
@@ -2482,7 +2495,7 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
+                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -2524,7 +2537,7 @@ const SubBranchModal = ({
 
                     <div className="flex justify-center items-center">
                       <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        <span className="font-semibold text-lg text-[#11142D] mt-5">
+                        <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
                           Manager:
                         </span>
 
@@ -2548,8 +2561,8 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                      <p className="mt-2 flex items-center text-colorBlack text-lg">
+                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
+                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                         Name:
                       </p>
                       <div className="w-full flex flex-col gap-2">
@@ -2599,7 +2612,7 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
+                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                         Email:
                       </p>
                       <div className="w-full flex flex-col gap-2">
@@ -2628,7 +2641,7 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 flex items-center justify-between  text-colorBlack text-lg">
+                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                         Phone:
                       </p>
                       <div className="w-full flex flex-col gap-2">
@@ -2663,7 +2676,7 @@ const SubBranchModal = ({
                   </div>
                 </form>
               </div>
-            </>
+            </div>
 
             <div className="container mt-5">
               <Divider />

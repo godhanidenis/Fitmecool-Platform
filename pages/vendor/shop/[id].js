@@ -562,7 +562,7 @@ const ShopDetailsPage = () => {
                     </div>
                   }
                 > */}
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 place-items-center mb-10">
+              <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10">
                 {productsData &&
                   productsData?.map((product) => (
                     <ProductCard
@@ -620,10 +620,10 @@ const ShopDetailsPage = () => {
                 onClick={handleProductListingModalClose}
               />
             </div>
-            <form className="h-[500px] overflow-auto">
+            <form className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
                     Name:
                   </p>
                   <div className="w-full">
@@ -649,7 +649,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-2 sm:gap-12">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
                     Description:
                   </p>
                   <div className="w-full">
@@ -675,7 +675,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
                     Color:
                   </p>
                   <div className="w-full">
@@ -719,7 +719,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
                     Type:
                   </p>
                   <div className="w-full">
@@ -767,7 +767,7 @@ const ShopDetailsPage = () => {
 
                 {productType && (
                   <div className="flex items-center justify-center container gap-4 sm:gap-16">
-                    <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
                       Category:
                     </p>
                     <div className="w-full">
@@ -817,7 +817,7 @@ const ShopDetailsPage = () => {
                 )}
 
                 <div className="flex items-center justify-center container gap-5 sm:gap-20">
-                  <p className="mt-2 flex items-center text-colorBlack text-lg font-bold">
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
                     Branch:
                   </p>
                   <div className="w-full">
@@ -922,9 +922,9 @@ const ShopDetailsPage = () => {
                   <h4 className="font-bold mb-3 flex justify-center items-center">
                     Product Video
                   </h4>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-center flex-col">
                     <div className="flex justify-center flex-col items-center">
-                      <div className="flex  justify-center">
+                      <div className="flex justify-center">
                         <Button
                           variant="contained"
                           component="label"

@@ -38,6 +38,16 @@
   justify-content: center;
 }
 
+.slick-prev {
+  left: 4px !important;
+  z-index: 1 !important;
+}
+
+.slick-next {
+  right: 4px !important;
+  z-index: 1 !important;
+}
+
 .BrainhubCarouselItem {
   margin-top: 5px;
   margin-bottom: 5px;

@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box, Button } from "@mui/material";
 import Router from "next/router";
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 
 const style = {
   position: "absolute",
@@ -40,6 +41,7 @@ const ProductCard = ({
   setEditProductId,
   viewMore,
   productDetails,
+  onlyCarousal,
 }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
@@ -113,7 +115,7 @@ const ProductCard = ({
         </div>
       ) : (
         <div className="bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg ">
-          <div className="border-b">
+          <div className={`${!onlyCarousal && "border-b"}`}>
             <div className="container my-[5px] cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
                 <div className="w-[90%]">
@@ -132,55 +134,64 @@ const ProductCard = ({
                 </button>
               )}
               {!shopProduct ? (
-                <button
-                  className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
-                  onClick={() => {
-                    if (isAuthenticate) {
-                      productLike({
-                        productInfo: {
-                          product_id: product.id,
-                          user_id: userProfile.id,
-                        },
-                      }).then(
-                        (res) => {
-                          dispatch(
-                            !productLikeByUser
-                              ? productLikeToggle({
-                                  productInfo: {
-                                    key: "like",
-                                    value: res.data.productLike.data,
-                                  },
-                                })
-                              : productLikeToggle({
-                                  productInfo: {
-                                    key: "disLike",
-                                    value: product.id,
-                                  },
-                                })
-                          );
-                          toast.success(res.data.productLike.message, {
-                            theme: "colored",
-                          });
-                        },
-                        (error) => {
-                          toast.error(error.message, { theme: "colored" });
-                        }
-                      );
-                    } else {
-                      if (themeLayout === "mobileScreen") {
-                        Router.push("/auth/signin");
+                <>
+                  <button
+                    className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
+                    onClick={() => {
+                      if (isAuthenticate) {
+                        productLike({
+                          productInfo: {
+                            product_id: product.id,
+                            user_id: userProfile.id,
+                          },
+                        }).then(
+                          (res) => {
+                            dispatch(
+                              !productLikeByUser
+                                ? productLikeToggle({
+                                    productInfo: {
+                                      key: "like",
+                                      value: res.data.productLike.data,
+                                    },
+                                  })
+                                : productLikeToggle({
+                                    productInfo: {
+                                      key: "disLike",
+                                      value: product.id,
+                                    },
+                                  })
+                            );
+                            toast.success(res.data.productLike.message, {
+                              theme: "colored",
+                            });
+                          },
+                          (error) => {
+                            toast.error(error.message, { theme: "colored" });
+                          }
+                        );
                       } else {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        if (themeLayout === "mobileScreen") {
+                          Router.push("/auth/signin");
+                        } else {
+                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        }
                       }
-                    }
-                  }}
-                >
-                  {!productLikeByUser ? (
-                    <FavoriteBorderIcon fontSize="small" />
-                  ) : (
-                    "❤️"
+                    }}
+                  >
+                    {!productLikeByUser ? (
+                      <FavoriteBorderIcon fontSize="small" />
+                    ) : (
+                      "❤️"
+                    )}
+                  </button>
+                  {onlyCarousal && (
+                    <button
+                      className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-12 right-0`}
+                    >
+                      <FileUploadOutlinedIcon fontSize="small" />
+                    </button>
                   )}
-                </button>
+                </>
               ) : (
                 <button
                   className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
@@ -192,34 +203,30 @@ const ProductCard = ({
                   <DeleteIcon className="text-red-600" />
                 </button>
               )}
-              <div className="product-overlay">
-                <Link href={`/product/${product.id}`}>
-                  <a target="_blank">
-                    <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton whitespace-nowrap">
-                      See Details
-                    </button>
-                  </a>
-                </Link>
-              </div>
+              {!onlyCarousal && (
+                <div className="product-overlay">
+                  <Link href={`/product/${product.id}`}>
+                    <a target="_blank">
+                      <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton whitespace-nowrap">
+                        See Details
+                      </button>
+                    </a>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-          <div className="pl-3">
-            {productsFiltersReducer.productLayout === "list" && (
-              <div>
-                <p
-                  className="font-semibold text-[#565f66] text-base mt-2"
-                  title={product.product_name}
-                  style={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitBoxOrient: "vertical",
-                    WebkitLineClamp: 1,
-                  }}
-                >
-                  {product.product_name}
-                </p>
-                {/* <p
+          {!onlyCarousal && (
+            <div className="pl-3">
+              {productsFiltersReducer.productLayout === "list" && (
+                <div>
+                  <p
+                    className="oneLineAfterThreeDots font-semibold text-[#565f66] text-base mt-2"
+                    title={product.product_name}
+                  >
+                    {product.product_name}
+                  </p>
+                  {/* <p
                   className="text-[#888888] font-normal text-sm"
                   title={product.product_description}
                   style={{
@@ -232,39 +239,40 @@ const ProductCard = ({
                 >
                   {product.product_description}
                 </p> */}
-                {/* <p className="font-semibold text-colorBlack text-lg mt-2">
+                  {/* <p className="font-semibold text-colorBlack text-lg mt-2">
                   {product.categoryInfo?.category_name}
                 </p>
 
                 <p className="font-semibold text-colorBlack text-lg mt-2">
                   {product.product_color}
                 </p> */}
-              </div>
-            )}
-            <div className="flex gap-2 justify-start items-center mt-10 mb-2">
-              <div className="flex justify-center items-center">
-                <Image
-                  alt="Shop Logo"
-                  src={product.branchInfo?.shop_info?.shop_logo}
-                  width={16}
-                  height={16}
-                  className="rounded-[50%]"
-                />
-              </div>
-              <div className="flex flex-col justify-center">
-                <Link href={`/shop/${shopId}`}>
-                  <a target="_blank">
-                    <span className="text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-[10px]">
-                      {product.branchInfo?.shop_info?.shop_name}
-                    </span>
-                  </a>
-                </Link>
-                {/* <p className="text-[#888888] text-sm font-normal">
+                </div>
+              )}
+              <div className="flex gap-2 justify-start items-center mt-10 mb-2">
+                <div className="flex justify-center items-center">
+                  <Image
+                    alt="Shop Logo"
+                    src={product.branchInfo?.shop_info?.shop_logo}
+                    width={16}
+                    height={16}
+                    className="rounded-[50%]"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <Link href={`/shop/${shopId}`}>
+                    <a target="_blank">
+                      <span className="text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-[10px]">
+                        {product.branchInfo?.shop_info?.shop_name}
+                      </span>
+                    </a>
+                  </Link>
+                  {/* <p className="text-[#888888] text-sm font-normal">
                   25 days ago
                 </p> */}
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <AuthModal
             open={open}
             handleClose={() => {
