@@ -52,6 +52,7 @@ import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
 import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
+import { useResizeScreenLayout } from "../core/useScreenResize";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -116,31 +117,15 @@ const Header = ({ modalType }) => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [isScreenWide, setIsScreenWide] = useState(false);
-
   const dispatch = useDispatch();
   const router = useRouter();
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 1023) {
-        // 1023 is the lg breakpoint in Tailwind
-        setIsScreenWide(true);
-      } else {
-        setIsScreenWide(false);
-      }
-    };
 
-    handleResize(); // Check on component mount
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isScreenWide = useResizeScreenLayout();
 
   useEffect(() => {
-    if (isScreenWide) {
-      localStorage.setItem("mobileScreen", isScreenWide);
+    if (!isScreenWide) {
       dispatch(changeThemeLayout("mobileScreen"));
     } else {
-      localStorage.setItem("mobileScreen", isScreenWide);
       dispatch(changeThemeLayout("webScreen"));
     }
   }, [dispatch, isScreenWide]);

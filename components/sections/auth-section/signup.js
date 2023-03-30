@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { signUp } from "../../../graphql/mutations/authMutations";
 import Router from "next/router";
 import { useSelector } from "react-redux";
+import { useResizeScreenLayout } from "../../core/useScreenResize";
 
 export default function SignUp({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
@@ -28,26 +29,16 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [isScreenWide, setIsScreenWide] = useState(false);
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1023) {
-        // 1023 is the lg breakpoint in Tailwind
-        setIsScreenWide(true);
-      } else {
-        setIsScreenWide(false);
-      }
-    };
-
-    handleResize(); // Check on component mount
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isScreenWide = useResizeScreenLayout();
 
   useEffect(() => {
-    if (themeLayout === "webScreen" && isScreenWide) {
+    if (
+      themeLayout === "webScreen" &&
+      isScreenWide &&
+      Router.pathname === "/auth/signup"
+    ) {
       window.history.pushState(AuthTypeModal.Signin, "", "/"), Router.push("/");
     }
   }, [isScreenWide, themeLayout]);
@@ -105,7 +96,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
           </div>
         </div>
 
-        <div className="p-4 ml-0 lg:ml-4 md:ml-4 lg:ml-12 ">
+        <div className="p-4 ml-0 lg:ml-4 md:ml-4">
           {themeLayout === "webScreen" && (
             <div className="flex">
               <CloseIcon

@@ -20,31 +20,22 @@ import { signIn } from "../../../graphql/mutations/authMutations";
 import { loginUserId } from "../../../redux/ducks/userProfile";
 import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
+import { useResizeScreenLayout } from "../../core/useScreenResize";
 
 export default function SignIn({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isScreenWide, setIsScreenWide] = useState(false);
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1023) {
-        // 1023 is the lg breakpoint in Tailwind
-        setIsScreenWide(true);
-      } else {
-        setIsScreenWide(false);
-      }
-    };
-
-    handleResize(); // Check on component mount
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isScreenWide = useResizeScreenLayout();
 
   useEffect(() => {
-    if (themeLayout === "webScreen" && isScreenWide) {
+    if (
+      themeLayout === "webScreen" &&
+      isScreenWide &&
+      Router.pathname === "/auth/signin"
+    ) {
       window.history.pushState(AuthTypeModal.Signin, "", "/"), Router.push("/");
     }
   }, [isScreenWide, themeLayout]);
@@ -91,7 +82,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
             {/* <Image src={LoginLogo} alt="CoverImage" /> */}
           </div>
         </div>
-        <div className="p-4 mt-3 lg:mt-0 ml-0 lg:ml-4 md:ml-4 lg:ml-12 ">
+        <div className="p-4 mt-3 lg:mt-0 ml-0 lg:ml-4 md:ml-4">
           {themeLayout === "webScreen" && (
             <div className="flex">
               <CloseIcon
