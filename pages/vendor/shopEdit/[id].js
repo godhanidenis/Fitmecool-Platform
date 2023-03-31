@@ -15,12 +15,7 @@ import {
   Tabs,
   TextField,
 } from "@mui/material";
-import {
-  a11yProps,
-  CustomAuthModal,
-  CustomTextField,
-  TabPanel,
-} from "../../../components/core/CustomMUIComponents";
+import { a11yProps, CustomAuthModal, CustomTextField, TabPanel } from "../../../components/core/CustomMUIComponents";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -33,10 +28,7 @@ import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  getBranchLists,
-  getSingleBranchDetails,
-} from "../../../graphql/queries/branchListsQueries";
+import { getBranchLists, getSingleBranchDetails } from "../../../graphql/queries/branchListsQueries";
 import { deleteBranch, updateBranch } from "../../../graphql/mutations/branch";
 import { createBranch } from "../../../graphql/mutations/branch";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
@@ -223,22 +215,10 @@ const ShopEdit = () => {
 
   useEffect(() => {
     if (sameAsOwner === "True") {
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        ownerInfoGetValue("first_name")
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        ownerInfoGetValue("last_name")
-      );
-      mainBranchInfoSetValue(
-        "manager_user_email",
-        ownerInfoGetValue("user_email")
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        ownerInfoGetValue("user_contact")
-      );
+      mainBranchInfoSetValue("manager_first_name", ownerInfoGetValue("first_name"));
+      mainBranchInfoSetValue("manager_last_name", ownerInfoGetValue("last_name"));
+      mainBranchInfoSetValue("manager_user_email", ownerInfoGetValue("user_email"));
+      mainBranchInfoSetValue("manager_user_contact", ownerInfoGetValue("user_contact"));
     } else {
       mainBranchInfoSetValue("manager_first_name", "");
       mainBranchInfoSetValue("manager_last_name", "");
@@ -256,48 +236,25 @@ const ShopEdit = () => {
 
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
-      getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
-        (ownerRes) => {
-          setShopOwnerId(ownerRes?.data?.shopOwner?.id);
-          ownerInfoSetValue(
-            "first_name",
-            ownerRes?.data?.shopOwner?.owner_firstName
-          );
-          ownerInfoSetValue(
-            "last_name",
-            ownerRes?.data?.shopOwner?.owner_lastName
-          );
-          ownerInfoSetValue(
-            "user_email",
-            ownerRes?.data?.shopOwner?.owner_email
-          );
-          ownerInfoSetValue(
-            "user_contact",
-            ownerRes?.data?.shopOwner?.owner_contact
-          );
-        }
-      );
+      getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then((ownerRes) => {
+        setShopOwnerId(ownerRes?.data?.shopOwner?.id);
+        ownerInfoSetValue("first_name", ownerRes?.data?.shopOwner?.owner_firstName);
+        ownerInfoSetValue("last_name", ownerRes?.data?.shopOwner?.owner_lastName);
+        ownerInfoSetValue("user_email", ownerRes?.data?.shopOwner?.owner_email);
+        ownerInfoSetValue("user_contact", ownerRes?.data?.shopOwner?.owner_contact);
+      });
 
-      srcToFile(vendorShopDetails?.shop_logo, "profile.png", "image/png").then(
-        function (file) {
-          setUploadShopLogo(file);
-        }
-      );
+      srcToFile(vendorShopDetails?.shop_logo, "profile.png", "image/png").then(function (file) {
+        setUploadShopLogo(file);
+      });
       setShopLogo(vendorShopDetails?.shop_logo);
 
-      srcToFile(
-        vendorShopDetails?.shop_cover_image,
-        "profile.png",
-        "image/png"
-      ).then(function (file) {
+      srcToFile(vendorShopDetails?.shop_cover_image, "profile.png", "image/png").then(function (file) {
         setUploadShopBackground(file);
       });
       setShopBackground(vendorShopDetails?.shop_cover_image);
 
-      console.log(
-        "uploadShopImages---------------",
-        vendorShopDetails?.shop_images
-      );
+      console.log("uploadShopImages---------------", vendorShopDetails?.shop_images);
 
       vendorShopDetails?.shop_images?.map((img) =>
         srcToFile(img.links, "profile.png", "image/png").then(function (file) {
@@ -308,25 +265,19 @@ const ShopEdit = () => {
       setShopImages(vendorShopDetails?.shop_images);
 
       vendorShopDetails?.shop_video &&
-        srcToFile(vendorShopDetails?.shop_video, "profile.mp4", "video").then(
-          function (file) {
-            setUploadShopVideo(file);
-          }
-        );
+        srcToFile(vendorShopDetails?.shop_video, "profile.mp4", "video").then(function (file) {
+          setUploadShopVideo(file);
+        });
 
-      vendorShopDetails?.shop_video &&
-        setShopVideo(vendorShopDetails?.shop_video);
+      vendorShopDetails?.shop_video && setShopVideo(vendorShopDetails?.shop_video);
 
       setShopLayoutAllMediaImages([
         vendorShopDetails?.shop_logo,
         vendorShopDetails?.shop_cover_image,
-        ...(vendorShopDetails?.shop_images?.length > 0
-          ? vendorShopDetails?.shop_images?.map((itm) => itm.links)
-          : []),
+        ...(vendorShopDetails?.shop_images?.length > 0 ? vendorShopDetails?.shop_images?.map((itm) => itm.links) : []),
       ]);
 
-      vendorShopDetails?.shop_video &&
-        setShopLayoutAllMediaVideos(vendorShopDetails?.shop_video);
+      vendorShopDetails?.shop_video && setShopLayoutAllMediaVideos(vendorShopDetails?.shop_video);
 
       vendorShopDetails?.shop_time?.map((time) => {
         hours.map((itm) => {
@@ -356,39 +307,19 @@ const ShopEdit = () => {
       }
       shopInfoSetValue("shop_name", vendorShopDetails?.shop_name);
       shopInfoSetValue("shop_email", vendorShopDetails?.shop_email);
-      shopInfoSetValue(
-        "facebook_link",
-        vendorShopDetails?.shop_social_link?.facebook
-      );
-      shopInfoSetValue(
-        "instagram_link",
-        vendorShopDetails?.shop_social_link?.instagram
-      );
-      shopInfoSetValue(
-        "personal_website",
-        vendorShopDetails?.shop_social_link?.website
-      );
+      shopInfoSetValue("facebook_link", vendorShopDetails?.shop_social_link?.facebook);
+      shopInfoSetValue("instagram_link", vendorShopDetails?.shop_social_link?.instagram);
+      shopInfoSetValue("personal_website", vendorShopDetails?.shop_social_link?.website);
 
-      const mainBranches = vendorShopDetails?.branch_info?.find(
-        (itm) => itm.branch_type === "main"
-      );
+      const mainBranches = vendorShopDetails?.branch_info?.find((itm) => itm.branch_type === "main");
       setMainBranch(mainBranches);
 
       mainBranchInfoSetValue("address", mainBranches?.branch_address);
       mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
 
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        mainBranches?.manager_name.split(" ")[0]
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        mainBranches?.manager_name.split(" ")[1]
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        mainBranches?.manager_contact
-      );
+      mainBranchInfoSetValue("manager_first_name", mainBranches?.manager_name.split(" ")[0]);
+      mainBranchInfoSetValue("manager_last_name", mainBranches?.manager_name.split(" ")[1]);
+      mainBranchInfoSetValue("manager_user_contact", mainBranches?.manager_contact);
       mainBranchInfoSetValue("city", mainBranches?.branch_city);
       mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
     }
@@ -427,8 +358,7 @@ const ShopEdit = () => {
       }
     );
   };
-  const ownerInfoOError = (errors) =>
-    console.log("Errors Occurred !! :", errors);
+  const ownerInfoOError = (errors) => console.log("Errors Occurred !! :", errors);
 
   const shopInfoOnSubmit = (data) => {
     console.log("data", data);
@@ -451,26 +381,16 @@ const ShopEdit = () => {
             week: day["key"],
             open_time: individual
               ? "-"
-              : day["value"][0] === "Closed" ||
-                day["value"][0] === "Open 24 hours"
+              : day["value"][0] === "Closed" || day["value"][0] === "Open 24 hours"
               ? "-"
               : day["value"][0].split(" - ")[0],
             close_time: individual
               ? "-"
-              : day["value"][0] === "Closed" ||
-                day["value"][0] === "Open 24 hours"
+              : day["value"][0] === "Closed" || day["value"][0] === "Open 24 hours"
               ? "-"
               : day["value"][0].split(" - ")[1],
-            is_close: individual
-              ? false
-              : day["value"][0] === "Closed"
-              ? true
-              : false,
-            is_24Hours_open: individual
-              ? true
-              : day["value"][0] === "Open 24 hours"
-              ? true
-              : false,
+            is_close: individual ? false : day["value"][0] === "Closed" ? true : false,
+            is_24Hours_open: individual ? true : day["value"][0] === "Open 24 hours" ? true : false,
           };
         }),
       },
@@ -488,8 +408,7 @@ const ShopEdit = () => {
       }
     );
   };
-  const shopInfoOError = (errors) =>
-    console.log("Errors Occurred !! :", errors);
+  const shopInfoOError = (errors) => console.log("Errors Occurred !! :", errors);
 
   const mainBranchInfoOnSubmit = (data) => {
     console.log("data", data);
@@ -522,8 +441,7 @@ const ShopEdit = () => {
       }
     );
   };
-  const mainBranchInfoOError = (errors) =>
-    console.log("Errors Occurred !! :", errors);
+  const mainBranchInfoOError = (errors) => console.log("Errors Occurred !! :", errors);
 
   const shopLayoutOnSubmit = (data) => {
     console.log("data,,", data);
@@ -552,11 +470,9 @@ const ShopEdit = () => {
                     id: userProfile?.userCreatedShopId,
                     shop_logo: logoResponse.data.data.singleUpload,
                     shop_cover_image: backgroundResponse.data.data.singleUpload,
-                    shop_images: imagesResponse.data.data.multipleUpload?.map(
-                      (itm) => {
-                        return { links: itm };
-                      }
-                    ),
+                    shop_images: imagesResponse.data.data.multipleUpload?.map((itm) => {
+                      return { links: itm };
+                    }),
                     shop_video: videoResponse.data.data.singleUpload,
                   },
                 }).then(
@@ -578,11 +494,9 @@ const ShopEdit = () => {
                   id: userProfile?.userCreatedShopId,
                   shop_logo: logoResponse.data.data.singleUpload,
                   shop_cover_image: backgroundResponse.data.data.singleUpload,
-                  shop_images: imagesResponse.data.data.multipleUpload?.map(
-                    (itm) => {
-                      return { links: itm };
-                    }
-                  ),
+                  shop_images: imagesResponse.data.data.multipleUpload?.map((itm) => {
+                    return { links: itm };
+                  }),
                   shop_video: null,
                 },
               }).then(
@@ -602,8 +516,7 @@ const ShopEdit = () => {
       });
     });
   };
-  const shopLayoutOnError = (errors) =>
-    console.log("Errors Occurred !! :", errors);
+  const shopLayoutOnError = (errors) => console.log("Errors Occurred !! :", errors);
 
   if (!isHydrated) {
     return null;
@@ -620,34 +533,19 @@ const ShopEdit = () => {
               variant="scrollable"
               scrollButtons="auto"
             >
-              {[
-                "Owner Details",
-                "Shop Info",
-                "Main Branch",
-                "Sub Branch",
-                "Shop Layout",
-              ].map((item, index) => (
-                <Tab
-                  key={index}
-                  label={item}
-                  {...a11yProps(index)}
-                  className="capitalize text-base"
-                />
+              {["Owner Details", "Shop Info", "Main Branch", "Sub Branch", "Shop Layout"].map((item, index) => (
+                <Tab key={index} label={item} {...a11yProps(index)} className="capitalize text-base" />
               ))}
             </Tabs>
           </Box>
         </div>
         <TabPanel value={value} index={0}>
           <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5">
-            <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-              Owner Details
-            </h3>
+            <h3 className="text-colorPrimary text-lg font-semibold leading-8">Owner Details</h3>
             <form>
               <div className="flex flex-col space-y-3">
                 <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                    Name:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -691,9 +589,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                    Email:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">Email:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -723,9 +619,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                    Phone:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">Phone:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -761,20 +655,11 @@ const ShopEdit = () => {
                   <Box className="flex pt-2 mt-4 w-full container justify-end">
                     <button
                       type="submit"
-                      onClick={ownerInfoHandleSubmit(
-                        ownerInfoOnSubmit,
-                        ownerInfoOError
-                      )}
+                      onClick={ownerInfoHandleSubmit(ownerInfoOnSubmit, ownerInfoOError)}
                       className="bg-colorPrimary hover:bg-colorPrimary mr-1 text-white px-9 py-3 rounded-xl font-semibold focus:outline-none focus:shadow-outline 
                                      shadow-lg flex items-center justify-center"
                     >
-                      {ownerLoading && (
-                        <CircularProgress
-                          size={20}
-                          color="primary"
-                          sx={{ color: "white", mr: 1 }}
-                        />
-                      )}
+                      {ownerLoading && <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />}
                       Update Owner Details
                     </button>
                   </Box>
@@ -787,18 +672,24 @@ const ShopEdit = () => {
         <TabPanel value={value} index={1}>
           <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5">
             <div className="flex w-full  items-center justify-between">
-              <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                Shop Info
-              </h3>
+              <h3 className="text-colorPrimary text-lg font-semibold leading-8">Shop Info</h3>
 
               <div className="flex items-center gap-2">
-                <p className="text-lg font-semibold">Shop</p>
-                <Switch
-                  checked={individual}
-                  onChange={(e) => setIndividual(e.target.checked)}
-                  disabled
-                />
-                <p className="text-lg font-semibold">Individual</p>
+                <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
+                  <input
+                    id="Toggle4"
+                    type="checkbox"
+                    className="hidden peer"
+                    onChange={(e) => setIndividual(e.target.checked)}
+                    disabled
+                  />
+                  <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
+                    Shop
+                  </span>
+                  <span className="px-4 py-1 dark:bg-white-300 peer-checked:bg-colorPrimary peer-checked:text-white ">
+                    Individual
+                  </span>
+                </label>
               </div>
             </div>
             <form>
@@ -924,9 +815,7 @@ const ShopEdit = () => {
                     </div>
 
                     <div className="container flex gap-2 w-full flex-col">
-                      <p className="flex items-center text-colorBlack text-lg">
-                        Hours
-                      </p>
+                      <p className="flex items-center text-colorBlack text-lg">Hours</p>
                       <div
                         className="w-full border border-colorBlack p-3 rounded-lg flex items-center justify-between cursor-pointer text-colorBlack text-sm sm:text-base font-semibold"
                         onClick={() => {
@@ -935,10 +824,7 @@ const ShopEdit = () => {
                       >
                         <div>
                           {hours.map((day, index) => (
-                            <div
-                              className="flex items-center gap-2"
-                              key={index}
-                            >
+                            <div className="flex items-center gap-2" key={index}>
                               {day["key"]} :
                               <div className="flex items-center gap-5">
                                 {day["value"]?.map((time, index) => (
@@ -958,20 +844,11 @@ const ShopEdit = () => {
                   <Box className="flex pt-2 mt-4 w-full container justify-end">
                     <button
                       type="submit"
-                      onClick={shopInfoHandleSubmit(
-                        shopInfoOnSubmit,
-                        shopInfoOError
-                      )}
+                      onClick={shopInfoHandleSubmit(shopInfoOnSubmit, shopInfoOError)}
                       className="bg-colorPrimary hover:bg-colorPrimary mr-1 text-white px-9 py-3 rounded-xl font-semibold focus:outline-none focus:shadow-outline 
                                      shadow-lg flex items-center justify-center"
                     >
-                      {shopLoading && (
-                        <CircularProgress
-                          size={20}
-                          color="primary"
-                          sx={{ color: "white", mr: 1 }}
-                        />
-                      )}
+                      {shopLoading && <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />}
                       Update Shop Details
                     </button>
                   </Box>
@@ -1010,9 +887,7 @@ const ShopEdit = () => {
           <div className="container bg-colorWhite rounded-lg my-5 p-5 space-y-5">
             <form>
               <div className="flex flex-col space-y-3">
-                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                  Main Branch
-                </h3>
+                <h3 className="text-colorPrimary text-lg font-semibold leading-8">Main Branch</h3>
                 <div className="flex items-center justify-center container">
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
@@ -1081,9 +956,7 @@ const ShopEdit = () => {
                 </div>
                 <div className="flex sm:justify-center">
                   <div className="mb-4 mt-2 flex flex-col sm:flex-row sm:justify-between sm:items-center container">
-                    <span className="font-semibold text-lg text-[#11142D]">
-                      Manager : Save as owner
-                    </span>
+                    <span className="font-semibold text-lg text-[#11142D]">Manager : Save as owner</span>
 
                     <RadioGroup
                       row
@@ -1099,24 +972,14 @@ const ShopEdit = () => {
                         }
                       }}
                     >
-                      <FormControlLabel
-                        value="True"
-                        label="Yes"
-                        control={<Radio />}
-                      />
-                      <FormControlLabel
-                        value="False"
-                        control={<Radio />}
-                        label="No"
-                      />
+                      <FormControlLabel value="True" label="Yes" control={<Radio />} />
+                      <FormControlLabel value="False" control={<Radio />} label="No" />
                     </RadioGroup>
                   </div>
                 </div>
 
                 <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                    Name:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -1162,9 +1025,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                    Email:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">Email:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -1195,9 +1056,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                    Phone:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">Phone:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -1211,13 +1070,11 @@ const ShopEdit = () => {
                           required: "Manager Contact Number is required",
                           minLength: {
                             value: 10,
-                            message:
-                              "Manager Contact Number must be 10 numbers",
+                            message: "Manager Contact Number must be 10 numbers",
                           },
                           maxLength: {
                             value: 10,
-                            message:
-                              "Manager Contact Number must be 10 numbers",
+                            message: "Manager Contact Number must be 10 numbers",
                           },
                         })}
                       />
@@ -1236,19 +1093,12 @@ const ShopEdit = () => {
                   <Box className="flex pt-2 mt-4 w-full container justify-end">
                     <button
                       type="submit"
-                      onClick={mainBranchInfoHandleSubmit(
-                        mainBranchInfoOnSubmit,
-                        mainBranchInfoOError
-                      )}
+                      onClick={mainBranchInfoHandleSubmit(mainBranchInfoOnSubmit, mainBranchInfoOError)}
                       className="bg-colorPrimary hover:bg-colorPrimary mr-1 text-white px-9 py-3 rounded-xl font-semibold focus:outline-none focus:shadow-outline 
                                      shadow-lg flex items-center justify-center"
                     >
                       {mainBranchLoading && (
-                        <CircularProgress
-                          size={20}
-                          color="primary"
-                          sx={{ color: "white", mr: 1 }}
-                        />
+                        <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />
                       )}
                       Update Main Branch Details
                     </button>
@@ -1263,59 +1113,38 @@ const ShopEdit = () => {
           {subBranchList.length > 0 && (
             <div className="my-10">
               <div className="flex items-center justify-between container">
-                <h3 className="text-colorPrimary text-xl font-semibold leading-8">
-                  Sub Branches
-                </h3>
+                <h3 className="text-colorPrimary text-xl font-semibold leading-8">Sub Branches</h3>
 
-                <Button
-                  variant="text"
-                  startIcon={<AddIcon />}
-                  onClick={() => setSubBranchModalOpen(true)}
-                >
+                <Button variant="text" startIcon={<AddIcon />} onClick={() => setSubBranchModalOpen(true)}>
                   Sub Branch
                 </Button>
               </div>
 
               <div className="container grid grid-cols-1 sm:grid-cols-2 gap-10 my-5">
                 {subBranchList.map((sub, index) => (
-                  <div
-                    className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
-                    key={index}
-                  >
+                  <div className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1" key={index}>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Address :{" "}
-                      </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Address : </b>
                       {sub.branch_address}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch City :{" "}
-                      </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch City : </b>
                       {sub.branch_city}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch PinCode :{" "}
-                      </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch PinCode : </b>
                       {sub.branch_pinCode}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Manager Name :
-                      </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Name :</b>
                       {sub.manager_name}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Manager Email :
-                      </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Email :</b>
                       {sub.manager_email}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Manager Phone Number :
-                      </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Phone Number :</b>
                       {sub.manager_contact}
                     </p>
 
@@ -1354,22 +1183,17 @@ const ShopEdit = () => {
         <TabPanel value={value} index={4}>
           <div className="container bg-colorWhite rounded-lg my-5 p-5 space-y-5">
             <div className="flex flex-col space-y-3">
-              <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                Shop Layout
-              </h3>
+              <h3 className="text-colorPrimary text-lg font-semibold leading-8">Shop Layout</h3>
               <div className="flex flex-col sm:flex-row sm:gap-20 items-center container mt-10">
                 <div>
-                  <label className="flex justify-center items-center font-bold mb-3">
-                    Logo
-                  </label>
+                  <label className="flex justify-center items-center font-bold mb-3">Logo</label>
                   <input
                     type="file"
                     id="shopLogo"
                     name="shopLogo"
                     hidden
                     {...shopLayoutRegister("shopLogo", {
-                      required:
-                        shopLogo === "" ? "shopLogo is required" : false,
+                      required: shopLogo === "" ? "shopLogo is required" : false,
                       onChange: (e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           onShopLogoPreviewImage(e);
@@ -1379,13 +1203,7 @@ const ShopEdit = () => {
                   />
                   {shopLogo !== "" ? (
                     <div>
-                      <Image
-                        src={shopLogo}
-                        height="150px"
-                        alt="logoimg"
-                        width="150px"
-                        style={{ borderRadius: 100 }}
-                      />
+                      <Image src={shopLogo} height="150px" alt="logoimg" width="150px" style={{ borderRadius: 100 }} />
                       <div
                         className="bg-gray-300 rounded-full flex justify-center items-center"
                         style={{
@@ -1435,9 +1253,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div>
-                  <label className="flex justify-center items-center font-bold  mb-3">
-                    Background
-                  </label>
+                  <label className="flex justify-center items-center font-bold  mb-3">Background</label>
 
                   <input
                     type="file"
@@ -1445,10 +1261,7 @@ const ShopEdit = () => {
                     name="shopBackground"
                     hidden
                     {...shopLayoutRegister("shopBackground", {
-                      required:
-                        shopBackground === ""
-                          ? "shopBackground is required"
-                          : false,
+                      required: shopBackground === "" ? "shopBackground is required" : false,
                       onChange: (e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           onShopBackgroundPreviewImage(e);
@@ -1459,12 +1272,7 @@ const ShopEdit = () => {
 
                   {shopBackground !== "" ? (
                     <div>
-                      <Image
-                        src={shopBackground}
-                        height="150px"
-                        alt="logoimg"
-                        width="200px"
-                      />
+                      <Image src={shopBackground} height="150px" alt="logoimg" width="200px" />
                       <div
                         className="bg-gray-300 rounded-full flex justify-center items-center"
                         style={{
@@ -1478,9 +1286,7 @@ const ShopEdit = () => {
                       >
                         <EditIcon
                           style={{ color: "black", cursor: "pointer" }}
-                          onClick={() =>
-                            document.getElementById("shopBackground").click()
-                          }
+                          onClick={() => document.getElementById("shopBackground").click()}
                         />
                       </div>
                     </div>
@@ -1513,9 +1319,7 @@ const ShopEdit = () => {
               </div>
 
               <div className="mt-5 items-center flex-col w-full container">
-                <h4 className="font-bold mb-3 flex justify-center items-center">
-                  Shop Images
-                </h4>
+                <h4 className="font-bold mb-3 flex justify-center items-center">Shop Images</h4>
 
                 <div className="flex justify-center flex-col items-center">
                   <div className="flex  justify-center">
@@ -1531,10 +1335,7 @@ const ShopEdit = () => {
                         multiple
                         accept="image/*"
                         {...shopLayoutRegister("shopImages", {
-                          required:
-                            shopImages?.length === 0
-                              ? "Shop Image is required"
-                              : false,
+                          required: shopImages?.length === 0 ? "Shop Image is required" : false,
                           onChange: (e) => {
                             updateShopImagesChange(e);
                           },
@@ -1555,12 +1356,7 @@ const ShopEdit = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                       {shopImages?.map((image, index) => (
                         <div key={index}>
-                          <Image
-                            src={image?.links}
-                            alt="Product Preview"
-                            height={200}
-                            width={250}
-                          />
+                          <Image src={image?.links} alt="Product Preview" height={200} width={250} />
                         </div>
                       ))}
                     </div>
@@ -1569,9 +1365,7 @@ const ShopEdit = () => {
               </div>
 
               <div className="my-5 items-center flex-col w-full container">
-                <h4 className="font-bold mb-3 flex justify-center items-center">
-                  Shop Video
-                </h4>
+                <h4 className="font-bold mb-3 flex justify-center items-center">Shop Video</h4>
 
                 <div className="flex justify-center flex-col items-center">
                   <div className="flex  justify-center">
@@ -1603,12 +1397,7 @@ const ShopEdit = () => {
                     <div className="flex flex-col w-full">
                       <div className="grid grid-cols-1 place-items-center">
                         <div>
-                          <video
-                            autoPlay
-                            style={{ width: "350px", height: "250px" }}
-                            controls
-                            src={shopVideo}
-                          ></video>
+                          <video autoPlay style={{ width: "350px", height: "250px" }} controls src={shopVideo}></video>
                           <div
                             className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
                             style={{
@@ -1657,20 +1446,11 @@ const ShopEdit = () => {
                 <Box className="flex pt-2 mt-4 w-full container justify-end">
                   <button
                     type="submit"
-                    onClick={shopLayoutHandleSubmit(
-                      shopLayoutOnSubmit,
-                      shopLayoutOnError
-                    )}
+                    onClick={shopLayoutHandleSubmit(shopLayoutOnSubmit, shopLayoutOnError)}
                     className="bg-colorPrimary hover:bg-colorPrimary mr-1 text-white px-9 py-3 rounded-xl font-semibold focus:outline-none focus:shadow-outline 
                                      shadow-lg flex items-center justify-center"
                   >
-                    {shopLayoutLoading && (
-                      <CircularProgress
-                        size={20}
-                        color="primary"
-                        sx={{ color: "white", mr: 1 }}
-                      />
-                    )}
+                    {shopLayoutLoading && <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />}
                     Update Shop Layout
                   </button>
                 </Box>
@@ -1701,9 +1481,7 @@ const ShopEdit = () => {
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <p className="flex items-center text-colorBlack text-xl font-semibold">
-                Confirmation Modal
-              </p>
+              <p className="flex items-center text-colorBlack text-xl font-semibold">Confirmation Modal</p>
             </div>
 
             <div className="p-5 text-colorBlack text-lg font-normal">
@@ -1772,33 +1550,31 @@ const HoursModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon
-                className="text-black cursor-pointer"
-                onClick={() => setHoursModalOpen(false)}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                Hours
-              </p>
-              <CloseIcon
-                className="text-black ml-auto cursor-pointer"
-                onClick={() => setHoursModalOpen(false)}
-              />
+              <ArrowBackIcon className="text-black cursor-pointer" onClick={() => setHoursModalOpen(false)} />
+              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">Hours</p>
+              <CloseIcon className="text-black ml-auto cursor-pointer" onClick={() => setHoursModalOpen(false)} />
             </div>
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="flex flex-col gap-2 mt-10 container">
                 {hours.map((day, index) => (
-                  <div
-                    className="flex items-center justify-between text-colorBlack text-sm sm:text-base"
-                    key={index}
-                  >
-                    <p>{day["key"]}</p>
+                  <div className="flex items-center justify-between text-colorBlack text-sm sm:text-base" key={index}>
+                    <p>
+                      <b>{day["key"]}</b>
+                    </p>
 
                     <div className="flex flex-col">
                       {day["value"].map((time, index) => (
                         <div className="flex items-center gap-5" key={index}>
-                          <p>{time}</p>
+                          {console.log("timneeee", time)}
+                          <p
+                            className={
+                              time === "Closed" ? "text-red-600" : time === "Open 24 hours" ? "text-green-600" : ""
+                            }
+                          >
+                            {time}
+                          </p>
                           <div
-                            className="p-2 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
+                            className="p-1 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
                             onClick={() => {
                               setDaysTimeModalOpen(true);
                               setSelectedDay(day["key"] + " - " + time);
@@ -1821,15 +1597,7 @@ const HoursModal = ({
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
-                    setSelectedAllHours([
-                      "Sunday",
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ]);
+                    setSelectedAllHours(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
                   }}
                 >
                   Edit All Hours
@@ -1841,14 +1609,7 @@ const HoursModal = ({
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
-                    setSelectedWeek([
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ]);
+                    setSelectedWeek(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
                   }}
                 >
                   Edit Mon - Sat
@@ -1859,12 +1620,7 @@ const HoursModal = ({
                   className="rounded-xl capitalize text-colorBlack"
                   onClick={() => {
                     setDaysTimeModalOpen(true);
-                    setSelectedDay(
-                      "Sunday" +
-                        " - " +
-                        hours[hours.findIndex((item) => item.key === "Sunday")]
-                          .value
-                    );
+                    setSelectedDay("Sunday" + " - " + hours[hours.findIndex((item) => item.key === "Sunday")].value);
                   }}
                 >
                   Edit Sunday
@@ -1917,10 +1673,7 @@ const DaysTimeModal = ({
   useEffect(() => {
     setStartTime(
       selectedDay?.split(" - ")[1]?.split(" ")[1] === "PM"
-        ? String(
-            Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) +
-              12
-          ) +
+        ? String(Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) + 12) +
             ":" +
             selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[1]
         : selectedDay?.split(" - ")[1]?.split(" ")[0]
@@ -1928,10 +1681,7 @@ const DaysTimeModal = ({
 
     setCloseTime(
       selectedDay?.split(" - ")[2]?.split(" ")[1] === "PM"
-        ? String(
-            Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) +
-              12
-          ) +
+        ? String(Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) + 12) +
             ":" +
             selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[1]
         : selectedDay?.split(" - ")[2]?.split(" ")[0]
@@ -1954,9 +1704,7 @@ const DaysTimeModal = ({
 
   const saveDaysTimeData = () => {
     if ((closed || open24Hours) && selectedDay) {
-      const index = hours.findIndex(
-        (item) => item.key === selectedDay?.split(" - ")[0]
-      );
+      const index = hours.findIndex((item) => item.key === selectedDay?.split(" - ")[0]);
       if (hours[index]?.value) {
         hours[index].value = open24Hours ? ["Open 24 hours"] : ["Closed"];
         setHours(hours);
@@ -1995,19 +1743,11 @@ const DaysTimeModal = ({
             return (itm.value = [
               `${
                 startTime?.split(":")[0] > 12
-                  ? startTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    startTime?.split(":")[1] +
-                    " PM"
+                  ? startTime?.split(":")[0] - 12 + ":" + startTime?.split(":")[1] + " PM"
                   : startTime + " AM"
               }  - ${
                 closeTime?.split(":")[0] > 12
-                  ? closeTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    closeTime?.split(":")[1] +
-                    " PM"
+                  ? closeTime?.split(":")[0] - 12 + ":" + closeTime?.split(":")[1] + " PM"
                   : closeTime + " AM"
               } `,
             ]);
@@ -2026,19 +1766,11 @@ const DaysTimeModal = ({
             return (itm.value = [
               `${
                 startTime?.split(":")[0] > 12
-                  ? startTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    startTime?.split(":")[1] +
-                    " PM"
+                  ? startTime?.split(":")[0] - 12 + ":" + startTime?.split(":")[1] + " PM"
                   : startTime + " AM"
               }  - ${
                 closeTime?.split(":")[0] > 12
-                  ? closeTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    closeTime?.split(":")[1] +
-                    " PM"
+                  ? closeTime?.split(":")[0] - 12 + ":" + closeTime?.split(":")[1] + " PM"
                   : closeTime + " AM"
               } `,
             ]);
@@ -2050,33 +1782,17 @@ const DaysTimeModal = ({
       handleCloseDaysTimeModal();
     }
 
-    if (
-      hours &&
-      !closed &&
-      !open24Hours &&
-      selectedWeek === undefined &&
-      selectedAllHours === undefined
-    ) {
-      const index = hours.findIndex(
-        (item) => item.key === selectedDay?.split(" - ")[0]
-      );
+    if (hours && !closed && !open24Hours && selectedWeek === undefined && selectedAllHours === undefined) {
+      const index = hours.findIndex((item) => item.key === selectedDay?.split(" - ")[0]);
       if (hours[index]?.value && startTime && closeTime) {
         hours[index].value = [
           `${
             startTime.split(":")[0] > 12
-              ? startTime.split(":")[0] -
-                12 +
-                ":" +
-                startTime.split(":")[1] +
-                " PM"
+              ? startTime.split(":")[0] - 12 + ":" + startTime.split(":")[1] + " PM"
               : startTime + " AM"
           }  - ${
             closeTime.split(":")[0] > 12
-              ? closeTime.split(":")[0] -
-                12 +
-                ":" +
-                closeTime.split(":")[1] +
-                " PM"
+              ? closeTime.split(":")[0] - 12 + ":" + closeTime.split(":")[1] + " PM"
               : closeTime + " AM"
           } `,
         ];
@@ -2109,28 +1825,16 @@ const DaysTimeModal = ({
       >
         <Box sx={style} className="!w-[80%] lg:!w-[40%]">
           <div className="p-5">
-            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
-              Select days & time
-            </p>
+            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">Select Days & Time</p>
             <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
               <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
-                {[
-                  "Sunday",
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                ].map((itm) => (
+                {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((itm) => (
                   <div
-                    className={`p-5 border rounded-[50%] ${
-                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
-                    } ${
+                    style={{ padding: "2% 3% 2% 3%" }}
+                    className={`border rounded-[50%] ${selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"} ${
                       selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
                     } ${
-                      selectedAllHours?.find((day) => day === itm) &&
-                      "bg-[#bdbbbb]"
+                      selectedAllHours?.find((day) => day === itm) && "bg-[#bdbbbb]"
                     }  hover:bg-[#bdbbbb] cursor-pointer`}
                     key={itm}
                   >
@@ -2208,11 +1912,7 @@ const DaysTimeModal = ({
                 variant="contained"
                 className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
                 onClick={saveDaysTimeData}
-                disabled={
-                  (startTime && closeTime) === undefined &&
-                  !open24Hours &&
-                  !closed
-                }
+                disabled={(startTime && closeTime) === undefined && !open24Hours && !closed}
               >
                 Save
               </Button>
@@ -2327,9 +2027,7 @@ const SubBranchModal = ({
     }
     if (!subManagerEmail) {
       allError.subManagerEmailError = "SubManagerEmail is require";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(subManagerEmail)
-    ) {
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(subManagerEmail)) {
       allError.subManagerEmailError = "Invalid SubManagerEmail address";
     } else {
       allError.subManagerEmailError = "";
@@ -2337,8 +2035,7 @@ const SubBranchModal = ({
     if (!subManagerPhone) {
       allError.subManagerPhoneError = "SubManagerPhone is require";
     } else if (subManagerPhone.length != 10) {
-      allError.subManagerPhoneError =
-        "SubManagerPhone Number must be 10 numbers";
+      allError.subManagerPhoneError = "SubManagerPhone Number must be 10 numbers";
     } else {
       allError.subManagerPhoneError = "";
     }
@@ -2444,29 +2141,19 @@ const SubBranchModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon
-                className="text-black cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
+              <ArrowBackIcon className="text-black cursor-pointer" onClick={handleSubBranchModalClose} />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
               </p>
-              <CloseIcon
-                className="text-black ml-auto cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
+              <CloseIcon className="text-black ml-auto cursor-pointer" onClick={handleSubBranchModalClose} />
             </div>
 
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
               <div className="bg-colorWhite rounded-lg p-5 space-y-5">
-                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                  Branches
-                </h3>
+                <h3 className="text-colorPrimary text-lg font-semibold leading-8">Branches</h3>
                 <form>
                   <div className="flex flex-col space-y-3">
-                    <p className="mt-2 container flex items-center text-colorBlack text-lg">
-                      Sub Branch
-                    </p>
+                    <p className="mt-2 container flex items-center text-colorBlack text-lg">Sub Branch</p>
                     <div className="flex items-center justify-center container">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
@@ -2482,9 +2169,7 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerAddressError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerAddressError || ""}</span>
                       </div>
                     </div>
 
@@ -2503,9 +2188,7 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerCityError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerCityError || ""}</span>
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
@@ -2522,17 +2205,13 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPinCodeError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerPinCodeError || ""}</span>
                       </div>
                     </div>
 
                     <div className="flex justify-center items-center">
                       <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
-                          Manager:
-                        </span>
+                        <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">Manager:</span>
 
                         <CustomTextField
                           label="Manager"
@@ -2543,21 +2222,17 @@ const SubBranchModal = ({
                           onChange={(e) => setManagerValue(e.target.value)}
                         >
                           <MenuItem value="">None</MenuItem>
-                          {["Same as owner", "same as main branch manager"].map(
-                            (man) => (
-                              <MenuItem value={man} key={man}>
-                                {man}
-                              </MenuItem>
-                            )
-                          )}
+                          {["Same as owner", "same as main branch manager"].map((man) => (
+                            <MenuItem value={man} key={man}>
+                              {man}
+                            </MenuItem>
+                          ))}
                         </CustomTextField>
                       </div>
                     </div>
 
                     <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                        Name:
-                      </p>
+                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -2566,8 +2241,7 @@ const SubBranchModal = ({
                             variant="standard"
                             className="w-full"
                             disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
                             }
                             value={subManagerFirstName}
                             onChange={(e) => {
@@ -2576,9 +2250,7 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerFirstNameError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerFirstNameError || ""}</span>
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
@@ -2588,8 +2260,7 @@ const SubBranchModal = ({
                             variant="standard"
                             className="w-full"
                             disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
                             }
                             value={subManagerLastName}
                             onChange={(e) => {
@@ -2598,9 +2269,7 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerLastNameError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerLastNameError || ""}</span>
                       </div>
                     </div>
 
@@ -2617,8 +2286,7 @@ const SubBranchModal = ({
                             className="w-full"
                             type="email"
                             disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
                             }
                             value={subManagerEmail}
                             onChange={(e) => {
@@ -2627,9 +2295,7 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerEmailError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerEmailError || ""}</span>
                       </div>
                     </div>
 
@@ -2646,24 +2312,20 @@ const SubBranchModal = ({
                             className="w-full"
                             type="number"
                             disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
                             }
                             value={subManagerPhone}
                             onChange={(e) => {
                               setSubManagerPhone(e.target.value);
                               if (e.target.value.length != 10) {
-                                error.subManagerPhoneError =
-                                  "SubManagerPhone Number must be 10 numbers";
+                                error.subManagerPhoneError = "SubManagerPhone Number must be 10 numbers";
                               } else {
                                 error.subManagerPhoneError = "";
                               }
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPhoneError || ""}
-                        </span>
+                        <span style={{ color: "red" }}>{error.subManagerPhoneError || ""}</span>
                       </div>
                     </div>
                   </div>
