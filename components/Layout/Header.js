@@ -457,7 +457,7 @@ export const UserProfile = ({ setAccessToken }) => {
   const options = [
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
-  if (userProfile.user_type === "vendor") {
+  if (userProfile.user_type === "vendor" && userProfile.userHaveAnyShop) {
     options.unshift({
       icon: <DashboardIcon />,
       name: "Dashboard",

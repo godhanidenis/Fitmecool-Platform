@@ -89,7 +89,7 @@ const Sidebar = ({
               <div className="flex flex-col justify-center">
                 <b>{userProfile?.first_name + " " + userProfile?.last_name}</b>
                 <span className="font-medium text-base">
-                  {userProfile?.user_email}
+                  {userProfile?.user_email?.substring(0, 17) + "..."}
                 </span>
               </div>
             </div>
@@ -238,12 +238,13 @@ const Sidebar = ({
           </ul>
         )}
 
-        {userProfile.user_type === "vendor" && (
-          <VendorSidebar
-            vendorShopDetails={vendorShopDetails}
-            handleMobileSidebarClick={handleMobileSidebarClick}
-          />
-        )}
+        {userProfile.user_type === "vendor" &&
+          Router.pathname !== "/vendor/shop-setup" && (
+            <VendorSidebar
+              vendorShopDetails={vendorShopDetails}
+              handleMobileSidebarClick={handleMobileSidebarClick}
+            />
+          )}
 
         {accessToken && (
           <div className="fixed bottom-0 w-10/12 left-0 border-t py-4 px-8 bg-colorWhite">

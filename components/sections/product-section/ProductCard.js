@@ -200,7 +200,7 @@ const ProductCard = ({
                     setDeleteProductId(product.id);
                   }}
                 >
-                  <DeleteIcon className="text-red-600" />
+                  <DeleteIcon className="!text-red-600" />
                 </button>
               )}
               {!onlyCarousal && (

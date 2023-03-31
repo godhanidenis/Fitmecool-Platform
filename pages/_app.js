@@ -53,7 +53,8 @@ function MyApp({ Component, pageProps }) {
         <ToastContainer />
         <Provider store={store}>
           <Header modalType={modalType} />
-          {router.pathname.includes("/vendor/") ? (
+          {router.pathname.includes("/vendor/") &&
+          router.pathname !== "/vendor/shop-setup" ? (
             <VendorCommonLayout>
               <Component {...pageProps} />
             </VendorCommonLayout>

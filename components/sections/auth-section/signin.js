@@ -60,9 +60,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
         localStorage.setItem("userId", res.data.signIn.user);
         toast.success(res.data.signIn.message, { theme: "colored" });
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        themeLayout === "mobileScreen"
-          ? Router.push("/vendor/dashboard")
-          : handleClose();
+        themeLayout === "webScreen" && handleClose();
         asVendor && Router.push("/vendor/dashboard");
       },
       (error) => {

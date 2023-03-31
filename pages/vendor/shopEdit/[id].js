@@ -28,8 +28,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm } from "react-hook-form";
 import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
 
-import { AuthTypeModal } from "../../../components/core/Enum";
-import AuthModal from "../../../components/core/AuthModal";
 import { useSelector } from "react-redux";
 import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
@@ -77,9 +75,7 @@ const ShopEdit = () => {
     { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
   ]);
 
-  const { userProfile, isAuthenticate } = useSelector(
-    (state) => state.userProfile
-  );
+  const { userProfile } = useSelector((state) => state.userProfile);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
@@ -149,8 +145,6 @@ const ShopEdit = () => {
   const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
   const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
 
-  console.log("images--->>>", shopLayoutAllMediaImages);
-  console.log("images--->>>=====", shopImages);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [value, setValue] = React.useState(0);
@@ -162,7 +156,7 @@ const ShopEdit = () => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-  console.log("ookkkkkk");
+
   async function srcToFile(src, fileName, mimeType) {
     const res = await fetch(src);
     const buf = await res.arrayBuffer();
@@ -262,7 +256,6 @@ const ShopEdit = () => {
 
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
-      console.log("uploadShopImages00000000-------------------------- ");
       getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
         (ownerRes) => {
           setShopOwnerId(ownerRes?.data?.shopOwner?.id);
@@ -407,7 +400,7 @@ const ShopEdit = () => {
     shopInfoSetValue,
     vendorShopDetails,
   ]);
-  console.log("uploadShopImages", uploadShopImages);
+
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
 
@@ -1332,23 +1325,23 @@ const ShopEdit = () => {
                     <div className="container mt-5 flex items-center justify-end gap-5">
                       <IconButton
                         aria-label="delete"
-                        className="rounded-xl capitalize text-colorBlack p-2 bg-red-600 hover:bg-red-600"
+                        className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-red-600 hover:!bg-red-600"
                         onClick={() => {
                           setBranchDeleteModalOpen(true);
                           setDeleteBranchId(sub.id);
                         }}
                       >
-                        <DeleteIcon className="text-colorWhite" />
+                        <DeleteIcon className="!text-colorWhite" />
                       </IconButton>
                       <IconButton
                         aria-label="delete"
-                        className="rounded-xl capitalize text-colorBlack p-2 bg-colorStone hover:bg-colorStone"
+                        className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-colorStone hover:!bg-colorStone"
                         onClick={() => {
                           setSubBranchModalOpen(true);
                           setEditSubBranchId(sub.id);
                         }}
                       >
-                        <EditIcon className="text-colorWhite" />
+                        <EditIcon className="!text-colorWhite" />
                       </IconButton>
                     </div>
                   </div>
@@ -1364,7 +1357,7 @@ const ShopEdit = () => {
               <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                 Shop Layout
               </h3>
-              <div className="flex flex-col sm:flex-row gap-20 items-center container mt-10">
+              <div className="flex flex-col sm:flex-row sm:gap-20 items-center container mt-10">
                 <div>
                   <label className="flex justify-center items-center font-bold mb-3">
                     Logo

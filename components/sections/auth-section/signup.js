@@ -20,8 +20,9 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import { toast } from "react-toastify";
 import { signUp } from "../../../graphql/mutations/authMutations";
 import Router from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useResizeScreenLayout } from "../../core/useScreenResize";
+import { loginUserId } from "../../../redux/ducks/userProfile";
 
 export default function SignUp({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
@@ -42,6 +43,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
       window.history.pushState(AuthTypeModal.Signin, "", "/"), Router.push("/");
     }
   }, [isScreenWide, themeLayout]);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -73,11 +75,13 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
           }
     ).then(
       (res) => {
-        toast.success(res.data.signUp.message, { theme: "colored" });
+        dispatch(loginUserId(res.data.signUp.user));
         localStorage.setItem("token", res.data.signUp.token);
         localStorage.setItem("userId", res.data.signUp.user);
+        toast.success(res.data.signUp.message, { theme: "colored" });
+        localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
         asVendor && Router.push("/vendor/dashboard");
-        handleClose();
+        themeLayout === "webScreen" && handleClose();
       },
       (error) => {
         setLoading(false);
