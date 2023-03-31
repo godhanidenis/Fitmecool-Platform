@@ -1,6 +1,9 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 import appConfig from "../config";
+import Router from "next/router";
+import { toast } from "react-toastify";
 
 const httpLink = createHttpLink({
   uri: `${appConfig.appUrl}`,
@@ -18,8 +21,24 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message }) => {
+      if (message === "Invalid/Expired token") {
+        localStorage.clear();
+        Router.push("/");
+        toast.success("User Logout Successfully!!", { theme: "colored" });
+      }
+    });
+  }
+
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: errorLink.concat(authLink).concat(httpLink),
   cache: new InMemoryCache(),
 });
 
