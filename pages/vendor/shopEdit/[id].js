@@ -1830,8 +1830,7 @@ const DaysTimeModal = ({
               <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
                 {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((itm) => (
                   <div
-                    style={{ padding: "2% 3% 2% 3%" }}
-                    className={`border rounded-[50%] ${selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"} ${
+                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%] border rounded-[50%] ${selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"} ${
                       selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
                     } ${
                       selectedAllHours?.find((day) => day === itm) && "bg-[#bdbbbb]"
