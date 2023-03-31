@@ -55,7 +55,7 @@ const SubHeader = () => {
       } transition-all duration-500 hidden lg:flex`}
     >
       <div className="container flex items-center">
-        <div className="pl-2 ml-48" onMouseLeave={handleMenuClose.bind(this)}>
+        <div className="pl-2 ml-40" onMouseLeave={handleMenuClose.bind(this)}>
           <CustomTab value={value}>
             {["Men's", "Women's"].map((item, index) => (
               <Tab

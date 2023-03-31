@@ -24,7 +24,7 @@ const ShopDashboard = () => {
   }
 
   return (
-    <div className="bg-[#f5f5f5] p-10">
+    <div className="bg-[#f5f5f5] p-10 min-h-[calc(100vh-400px)]">
       <div className="flex gap-8 flex-wrap">
         <div className="cursor-pointer text-center w-36 py-5 font-semibold text-black rounded-xl flex flex-col items-center justify-center bg-white shadow-xl">
           <p>Total Products</p>

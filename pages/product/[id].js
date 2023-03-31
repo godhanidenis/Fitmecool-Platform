@@ -119,13 +119,18 @@ const ProductDetail = ({ productDetails }) => {
     dispatch(loadAreaListsStart());
   }, [dispatch]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const photos = [
     productDetails.data.product.data.product_image?.front,
     productDetails.data.product.data.product_image?.back,
     productDetails.data.product.data.product_image?.side,
   ];
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState(photos[0]);
+  const [images, setImages] = useState();
+
+  useEffect(() => {
+    setImages(photos[0]);
+  }, [photos]);
 
   const selectImage = (img, i) => {
     setImages(img);
@@ -258,7 +263,11 @@ const ProductDetail = ({ productDetails }) => {
                 <Link
                   href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                 >
-                  <a target="_blank">
+                  <a
+                    target={`${
+                      themeLayout === "webScreen" ? "_blank" : "_self"
+                    }`}
+                  >
                     <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
                       {
                         productDetails.data.product.data.branchInfo?.shop_info
@@ -267,6 +276,7 @@ const ProductDetail = ({ productDetails }) => {
                     </p>
                   </a>
                 </Link>
+
                 <p className="text-[#888888] text-xs sm:text-sm font-normal">
                   25 days ago
                 </p>
@@ -452,7 +462,11 @@ const ProductDetail = ({ productDetails }) => {
                         <Link
                           href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                         >
-                          <a target="_blank">
+                          <a
+                            target={`${
+                              themeLayout === "webScreen" ? "_blank" : "_self"
+                            }`}
+                          >
                             <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
                               {
                                 productDetails.data.product.data.branchInfo

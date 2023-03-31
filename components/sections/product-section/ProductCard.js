@@ -110,7 +110,9 @@ const ProductCard = ({
           <Link
             href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
           >
-            <Button variant="outlined">View More</Button>
+            <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+              <Button variant="outlined">View More</Button>
+            </a>
           </Link>
         </div>
       ) : (
@@ -206,7 +208,11 @@ const ProductCard = ({
               {!onlyCarousal && (
                 <div className="product-overlay">
                   <Link href={`/product/${product.id}`}>
-                    <a target="_blank">
+                    <a
+                      target={`${
+                        themeLayout === "webScreen" ? "_blank" : "_self"
+                      }`}
+                    >
                       <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton whitespace-nowrap">
                         See Details
                       </button>
@@ -260,7 +266,11 @@ const ProductCard = ({
                 </div>
                 <div className="flex flex-col justify-center">
                   <Link href={`/shop/${shopId}`}>
-                    <a target="_blank">
+                    <a
+                      target={`${
+                        themeLayout === "webScreen" ? "_blank" : "_self"
+                      }`}
+                    >
                       <span className="text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-[10px]">
                         {product.branchInfo?.shop_info?.shop_name}
                       </span>

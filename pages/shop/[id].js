@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DirectoryHero from "../../components/DirectoryHero/DirectoryHero";
 import {
   Avatar,
@@ -60,6 +60,7 @@ const ShopDetail = ({ shopDetails }) => {
   const router = useRouter();
 
   const dispatch = useDispatch();
+  const myDivRef = useRef(null);
 
   const {
     productsLimit,
@@ -208,6 +209,7 @@ const ShopDetail = ({ shopDetails }) => {
             totalFollowers={totalFollowers}
             getAllFollowers={getAllFollowers}
             totalProducts={productsCount}
+            scrollRef={myDivRef}
           />
         </div>
         <div className="container py-2">
@@ -275,7 +277,10 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           </div>
         </div>
-        <div className="bg-[#FFFFFF] pb-0 mt-8 container shadow-[0_0_4px_rgba(0,0,0,0.25)]">
+        <div
+          ref={myDivRef}
+          className="bg-[#FFFFFF] pb-0 mt-8 container shadow-[0_0_4px_rgba(0,0,0,0.25)]"
+        >
           <Grid
             container
             sx={{ pb: "12px", borderBottom: "1px solid #d7d7d7" }}

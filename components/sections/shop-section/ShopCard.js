@@ -9,6 +9,9 @@ import { useSelector } from "react-redux";
 
 const ShopCard = ({ shop }) => {
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
+
+  const { themeLayout } = useSelector((state) => state.themeLayout);
+
   const items = shop.shop_images.map((itm) => {
     return (
       <Image
@@ -39,7 +42,7 @@ const ShopCard = ({ shop }) => {
 
           <div className="product-overlay">
             <Link href={`/shop/${shop.id}`}>
-              <a target="_blank">
+              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
                 <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton">
                   Visit Shop
                 </button>
@@ -61,7 +64,7 @@ const ShopCard = ({ shop }) => {
           </div>
           <div className="flex flex-col justify-center">
             <Link href={`/shop/${shop.id}`}>
-              <a target="_blank">
+              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
                 <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
                   {shop.shop_name}
                 </p>
