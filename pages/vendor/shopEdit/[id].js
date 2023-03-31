@@ -822,11 +822,11 @@ const ShopEdit = () => {
                           setHoursModalOpen(true);
                         }}
                       >
-                        <div>
+                        <div className="">
                           {hours.map((day, index) => (
-                            <div className="flex items-center gap-2" key={index}>
-                              {day["key"]} :
-                              <div className="flex items-center gap-5">
+                            <div className="flex justify-between pb-2" key={index}>
+                              <div className="pr-2">{day["key"]} :</div>
+                              <div className="">
                                 {day["value"]?.map((time, index) => (
                                   <p key={index}>{time}</p>
                                 ))}
@@ -1830,9 +1830,9 @@ const DaysTimeModal = ({
               <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
                 {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((itm) => (
                   <div
-                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%] border rounded-[50%] ${selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"} ${
-                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
-                    } ${
+                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%] border rounded-[50%] ${
+                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
+                    } ${selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"} ${
                       selectedAllHours?.find((day) => day === itm) && "bg-[#bdbbbb]"
                     }  hover:bg-[#bdbbbb] cursor-pointer`}
                     key={itm}
