@@ -140,7 +140,7 @@ const ShopHeaderSection = ({
                       Contourz by Taruna Manchanda
                     </div>
                     <p className="text-[#888888] text-sm font-normal oneLineAfterThreeDots">
-                      <LocationOnIcon fontSize="small" className="mr-1" />
+                      <LocationOnIcon fontSize="small" className="!mr-1" />
                       {shopDetails.branch_info.map(
                         (itm) =>
                           itm.branch_type === "main" && itm.branch_address
@@ -327,14 +327,14 @@ const AllBranchModal = ({
           <div className="p-5">
             <div className="flex items-center">
               <ArrowBackIcon
-                className="text-black cursor-pointer"
+                className="!text-black !cursor-pointer"
                 onClick={() => setAllBranchModalOpen(false)}
               />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 All Branches
               </p>
               <CloseIcon
-                className="text-black ml-auto cursor-pointer"
+                className="!text-black !ml-auto !cursor-pointer"
                 onClick={() => setAllBranchModalOpen(false)}
               />
             </div>

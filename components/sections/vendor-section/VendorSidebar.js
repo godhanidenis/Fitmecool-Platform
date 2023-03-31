@@ -47,7 +47,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
           }}
         >
           <p className="flex items-center cursor-pointer">
-            <DashboardIcon className="mr-3" /> Dashboard
+            <DashboardIcon className="!mr-3" /> Dashboard
           </p>
         </div>
 
@@ -61,7 +61,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
           }}
         >
           <p className="flex items-center cursor-pointer">
-            <Inventory2Icon className="mr-3" />
+            <Inventory2Icon className="!mr-3" />
             Shop
           </p>
         </div>
@@ -76,7 +76,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
           }}
         >
           <p className="flex items-center cursor-pointer">
-            <ListAltIcon className="mr-3" />
+            <ListAltIcon className="!mr-3" />
             Products
           </p>
         </div>

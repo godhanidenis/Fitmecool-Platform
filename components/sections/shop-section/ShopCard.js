@@ -71,7 +71,7 @@ const ShopCard = ({ shop }) => {
               </a>
             </Link>
             <p className="text-[#888888] text-sm font-normal">
-              <LocationOnIcon fontSize="small" className="mr-1" />
+              <LocationOnIcon fontSize="small" className="!mr-1" />
               {shop?.branch_info?.length > 1
                 ? shop?.branch_info?.map(
                     (itm) => itm.branch_type === "main" && itm.branch_address
@@ -97,7 +97,7 @@ const ShopCard = ({ shop }) => {
             <p className="font-semibold text-colorBlack text-center">Reviews</p>
             <div className="flex items-center mt-2 justify-center flex-wrap gap-2">
               <div className="border rounded-lg p-1 flex items-center gap-1">
-                <StarIcon fontSize="medium" className="text-yellow-400" />
+                <StarIcon fontSize="medium" className="!text-yellow-400" />
                 <p className="text-colorBlack font-semibold">
                   {shop.shop_rating}
                 </p>

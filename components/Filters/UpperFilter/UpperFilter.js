@@ -87,11 +87,11 @@ const UpperFilter = ({
           className={`${
             !byShop && productsFiltersReducer.productLayout === "list"
               ? "!text-[#95539B]"
-              : "text-black"
+              : "!text-black"
           } ${
             byShop && shopsFiltersReducer.shopLayout === "list"
               ? "!text-[#95539B]"
-              : "text-black"
+              : "!text-black"
           } cursor-pointer`}
           onClick={() =>
             !byShop
@@ -114,11 +114,11 @@ const UpperFilter = ({
           className={`${
             !byShop && productsFiltersReducer.productLayout === "grid"
               ? "!text-[#95539B]"
-              : "text-black"
+              : "!text-black"
           } ${
             byShop && shopsFiltersReducer.shopLayout === "grid"
               ? "!text-[#95539B]"
-              : "text-black"
+              : "!text-black"
           } cursor-pointer`}
           onClick={() =>
             !byShop
@@ -145,9 +145,9 @@ const UpperFilter = ({
           disableRipple
           endIcon={
             !openSortByAnchor ? (
-              <ArrowDropDownIcon className="text-black" />
+              <ArrowDropDownIcon className="!text-black" />
             ) : (
-              <ArrowDropUpIcon className="text-black" />
+              <ArrowDropUpIcon className="!text-black" />
             )
           }
           className="capitalize"

@@ -296,7 +296,10 @@ const ShopDetail = ({ shopDetails }) => {
                   <p className="text-base">Rating + Distribution</p>
                   <div className="flex items-center flex-col">
                     <div className="rounded-lg p-1 flex items-center gap-1">
-                      <StarIcon fontSize="medium" className="text-yellow-400" />
+                      <StarIcon
+                        fontSize="medium"
+                        className="!text-yellow-400"
+                      />
                       <p className="text-colorBlack font-semibold">
                         {avgShopRating}
                       </p>
@@ -312,7 +315,10 @@ const ShopDetail = ({ shopDetails }) => {
                   >
                     <div className="flex items-center gap-1 col-span-1">
                       <p className="font-semibold">{star}</p>
-                      <StarIcon fontSize="medium" className="text-yellow-400" />
+                      <StarIcon
+                        fontSize="medium"
+                        className="!text-yellow-400"
+                      />
                     </div>
 
                     <div className="self-center col-span-4">
@@ -493,7 +499,7 @@ const ShopCommentsSection = ({ review }) => {
                     <div className=" text-[#888888]">{review.user_type}</div>
                   </div>
                   <div className="p-2 flex items-center gap-1 bg-colorWhite">
-                    <StarIcon fontSize="medium" className="text-yellow-400" />
+                    <StarIcon fontSize="medium" className="!text-yellow-400" />
                     <p className="text-colorBlack font-semibold">
                       {review.stars}
                     </p>

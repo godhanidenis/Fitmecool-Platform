@@ -98,7 +98,7 @@ const UpdatePassword = () => {
             )}
             <div className="flex  sm:block flex-col mb-6 ">
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                <LockIcon sx={{ mr: 2, my: 0.5 }} className="text-black" />
+                <LockIcon sx={{ mr: 2, my: 0.5 }} className="!text-black" />
                 <CustomTextField
                   type={showPassword ? "text" : "password"}
                   id="input-with-sx"
@@ -138,7 +138,7 @@ const UpdatePassword = () => {
             </div>
             <div className="flex  sm:block flex-col mb-6 ">
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                <LockIcon sx={{ mr: 2, my: 0.5 }} className="text-black" />
+                <LockIcon sx={{ mr: 2, my: 0.5 }} className="!text-black" />
                 <CustomTextField
                   type={showConfirmPassword ? "text" : "password"}
                   id="input-with-sx"

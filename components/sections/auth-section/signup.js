@@ -104,7 +104,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
           {themeLayout === "webScreen" && (
             <div className="flex">
               <CloseIcon
-                className="text-black ml-auto cursor-pointer"
+                className="!text-black !ml-auto !cursor-pointer"
                 onClick={handleClose}
               />
             </div>
@@ -143,7 +143,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                         <PersonIcon
                           sx={{ mr: 2, my: 0.5 }}
-                          className="text-black"
+                          className="!text-black"
                         />
                         <CustomTextField
                           id="input-with-sx"
@@ -167,7 +167,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                         <PersonIcon
                           sx={{ mr: 2, my: 0.5 }}
-                          className="text-black"
+                          className="!text-black"
                         />
                         <CustomTextField
                           id="input-with-sx"
@@ -195,7 +195,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <PhoneIcon
                         sx={{ mr: 2, my: 0.5 }}
-                        className="text-black"
+                        className="!text-black"
                       />
                       <CustomTextField
                         id="input-with-sx"
@@ -232,7 +232,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                         <EmailIcon
                           sx={{ mr: 2, my: 0.5 }}
-                          className="text-black"
+                          className="!text-black"
                         />
                         <CustomTextField
                           id="input-with-sx"
@@ -266,7 +266,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
-                        className="text-black"
+                        className="!text-black"
                       />
                       <CustomTextField
                         type={showPassword ? "text" : "password"}
@@ -309,7 +309,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
-                        className="text-black"
+                        className="!text-black"
                       />
                       <CustomTextField
                         type={showConfirmPassword ? "text" : "password"}

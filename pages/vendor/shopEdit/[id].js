@@ -1550,9 +1550,9 @@ const HoursModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon className="text-black cursor-pointer" onClick={() => setHoursModalOpen(false)} />
+              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={() => setHoursModalOpen(false)} />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">Hours</p>
-              <CloseIcon className="text-black ml-auto cursor-pointer" onClick={() => setHoursModalOpen(false)} />
+              <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={() => setHoursModalOpen(false)} />
             </div>
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="flex flex-col gap-2 mt-10 container">
@@ -2141,11 +2141,11 @@ const SubBranchModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon className="text-black cursor-pointer" onClick={handleSubBranchModalClose} />
+              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleSubBranchModalClose} />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
               </p>
-              <CloseIcon className="text-black ml-auto cursor-pointer" onClick={handleSubBranchModalClose} />
+              <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={handleSubBranchModalClose} />
             </div>
 
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">

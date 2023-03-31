@@ -294,7 +294,7 @@ const ProductDetail = ({ productDetails }) => {
                 emptyIcon={<StarIcon fontSize="inherit" />}
               />
               <p className="oneLineAfterThreeDots text-[#888888] font-normal flex items-center">
-                <LocationOnIcon fontSize="small" className="mr-1" />
+                <LocationOnIcon fontSize="small" className="!mr-1" />
                 {productDetails.data.product.data.branchInfo?.branch_address}
               </p>
             </div>
@@ -492,7 +492,7 @@ const ProductDetail = ({ productDetails }) => {
                         emptyIcon={<StarIcon fontSize="inherit" />}
                       />
                       <p className="oneLineAfterThreeDots text-[#888888] font-normal flex items-center">
-                        <LocationOnIcon fontSize="small" className="mr-1" />
+                        <LocationOnIcon fontSize="small" className="!mr-1" />
                         {
                           productDetails.data.product.data.branchInfo
                             ?.branch_address
@@ -640,7 +640,7 @@ const ProductDetail = ({ productDetails }) => {
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                     >
-                      <WhatsAppIcon className="text-white" />
+                      <WhatsAppIcon className="!text-white" />
                       Send Message
                     </button>
                   </a>
@@ -655,7 +655,7 @@ const ProductDetail = ({ productDetails }) => {
                   shadow-lg flex items-center justify-center gap-3"
                     onClick={() => setOpenContactInfo(!openContactInfo)}
                   >
-                    <PersonOutlineIcon className="text-white" />
+                    <PersonOutlineIcon className="!text-white" />
                     {openContactInfo ? "Hide Contact" : "Show Contact"}
                   </button>
                 </div>

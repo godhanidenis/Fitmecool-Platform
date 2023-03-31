@@ -30,7 +30,7 @@ const DrawerFilters = ({ setProductPageSkip, setByShop, byShop, setShopPageSkip 
       >
         <div className="mb-10 flex justify-end">
           <button onClick={toggleFilterMenu}>
-            <CloseIcon className="text-black" />
+            <CloseIcon className="!text-black" />
           </button>
         </div>
         <div className="h-[90%] pb-10 overflow-y-scroll">

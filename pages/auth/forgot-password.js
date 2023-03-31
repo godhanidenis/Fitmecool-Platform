@@ -81,7 +81,7 @@ const ForgotPassword = () => {
           <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
             <div className="flex  sm:block flex-col mb-6 ">
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                <EmailIcon sx={{ mr: 2, my: 0.5 }} className="text-black" />
+                <EmailIcon sx={{ mr: 2, my: 0.5 }} className="!text-black" />
                 <CustomTextField
                   id="input-with-sx"
                   label="Email Address"

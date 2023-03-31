@@ -84,7 +84,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
           {themeLayout === "webScreen" && (
             <div className="flex">
               <CloseIcon
-                className="text-black ml-auto cursor-pointer"
+                className="!text-black !ml-auto !cursor-pointer"
                 onClick={handleClose}
               />
             </div>
@@ -117,7 +117,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <EmailIcon
                         sx={{ mr: 2, my: 0.5 }}
-                        className="text-black"
+                        className="!text-black"
                       />
                       <CustomTextField
                         id="input-with-sx"
@@ -148,7 +148,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                       <LockIcon
                         sx={{ mr: 2, my: 0.5 }}
-                        className="text-black"
+                        className="!text-black"
                       />
                       <CustomTextField
                         type={showPassword ? "text" : "password"}

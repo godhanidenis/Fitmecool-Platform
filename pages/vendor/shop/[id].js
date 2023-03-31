@@ -609,14 +609,14 @@ const ShopDetailsPage = () => {
           <div className="p-5">
             <div className="flex items-center mb-5">
               <ArrowBackIcon
-                className="text-black cursor-pointer"
+                className="!text-black !cursor-pointer"
                 onClick={handleProductListingModalClose}
               />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 {editProductId === undefined ? "Add" : "Update"}Product
               </p>
               <CloseIcon
-                className="text-black ml-auto cursor-pointer"
+                className="!text-black !ml-auto !cursor-pointer"
                 onClick={handleProductListingModalClose}
               />
             </div>
