@@ -108,7 +108,7 @@ const ProductCard = ({
         >
           <div
             className={`${
-              !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[auto] border-r-2" : "border-b"
+              !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[auto] md:border-r-2 border-b" : "border-b"
             }`}
           >
             <div className="container my-[5px] cursor-pointer product-parent-div">
