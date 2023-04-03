@@ -22,21 +22,12 @@ import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
 import ProductCard from "../../../components/sections/product-section/ProductCard";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
-import {
-  loadMoreProductsStart,
-  loadProductsStart,
-} from "../../../redux/ducks/product";
-import {
-  CustomAuthModal,
-  CustomTextField,
-} from "../../../components/core/CustomMUIComponents";
+import { loadMoreProductsStart, loadProductsStart } from "../../../redux/ducks/product";
+import { CustomAuthModal, CustomTextField } from "../../../components/core/CustomMUIComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { getBranchLists } from "../../../graphql/queries/branchListsQueries";
-import {
-  createProduct,
-  updateProduct,
-} from "../../../graphql/mutations/products";
+import { createProduct, updateProduct } from "../../../graphql/mutations/products";
 import { toast } from "react-toastify";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
@@ -57,18 +48,7 @@ const style = {
   height: "auto",
 };
 
-const colorsList = [
-  "red",
-  "pink",
-  "yellow",
-  "wine",
-  "purple",
-  "blue",
-  "orange",
-  "green",
-  "white",
-  "black",
-];
+const colorsList = ["red", "pink", "yellow", "wine", "purple", "blue", "orange", "green", "white", "black"];
 
 const ShopDetailsPage = () => {
   const [productListingModalOpen, setProductListingModalOpen] = useState(false);
@@ -101,13 +81,9 @@ const ShopDetailsPage = () => {
   const [productType, setProductType] = useState();
 
   const dispatch = useDispatch();
-  const { productsCount, productsData } = useSelector(
-    (state) => state.products
-  );
+  const { productsCount, productsData } = useSelector((state) => state.products);
 
-  const productsFiltersReducer = useSelector(
-    (state) => state.productsFiltersReducer
-  );
+  const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
 
   const {
     register,
@@ -129,10 +105,7 @@ const ShopDetailsPage = () => {
         console.log("res:::", res.data.product.data);
 
         setValue("product_name", res.data.product.data.product_name);
-        setValue(
-          "product_description",
-          res.data.product.data.product_description
-        );
+        setValue("product_description", res.data.product.data.product_description);
         setValue("product_color", res.data.product.data.product_color);
         setValue("product_type", res.data.product.data.product_type);
         setProductType(res.data.product.data.product_type);
@@ -140,94 +113,52 @@ const ShopDetailsPage = () => {
         setValue("product_branch", res.data.product.data.branchInfo.id);
 
         res.data.product.data.product_image.front &&
-          srcToFile(
-            res.data.product.data.product_image.front,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
+          srcToFile(res.data.product.data.product_image.front, "profile.png", "image/png").then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
         res.data.product.data.product_image.back &&
-          srcToFile(
-            res.data.product.data.product_image.back,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
+          srcToFile(res.data.product.data.product_image.back, "profile.png", "image/png").then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
         res.data.product.data.product_image.side &&
-          srcToFile(
-            res.data.product.data.product_image.side,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
+          srcToFile(res.data.product.data.product_image.side, "profile.png", "image/png").then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
 
         res.data.product.data.product_image.front &&
-          setProductImages((old) => [
-            ...old,
-            res.data.product.data.product_image.front,
-          ]);
+          setProductImages((old) => [...old, res.data.product.data.product_image.front]);
         res.data.product.data.product_image.back &&
-          setProductImages((old) => [
-            ...old,
-            res.data.product.data.product_image.back,
-          ]);
+          setProductImages((old) => [...old, res.data.product.data.product_image.back]);
         res.data.product.data.product_image.side &&
-          setProductImages((old) => [
-            ...old,
-            res.data.product.data.product_image.side,
-          ]);
+          setProductImages((old) => [...old, res.data.product.data.product_image.side]);
 
         res.data.product.data.product_image.front &&
-          setProductAllMediaImages((old) => [
-            ...old,
-            res.data.product.data.product_image.front,
-          ]);
+          setProductAllMediaImages((old) => [...old, res.data.product.data.product_image.front]);
         res.data.product.data.product_image.back &&
-          setProductAllMediaImages((old) => [
-            ...old,
-            res.data.product.data.product_image.back,
-          ]);
+          setProductAllMediaImages((old) => [...old, res.data.product.data.product_image.back]);
         res.data.product.data.product_image.side &&
-          setProductAllMediaImages((old) => [
-            ...old,
-            res.data.product.data.product_image.side,
-          ]);
+          setProductAllMediaImages((old) => [...old, res.data.product.data.product_image.side]);
 
         res.data.product.data.product_video &&
-          srcToFile(
-            res.data.product.data.product_video,
-            "profile.mp4",
-            "video"
-          ).then(function (file) {
+          srcToFile(res.data.product.data.product_video, "profile.mp4", "video").then(function (file) {
             setUploadProductVideo(file);
           });
 
-        res.data.product.data.product_video &&
-          setProductVideo(res.data.product.data.product_video);
+        res.data.product.data.product_video && setProductVideo(res.data.product.data.product_video);
 
-        res.data.product.data.product_video &&
-          setProductAllMediaVideo(res.data.product.data.product_video);
+        res.data.product.data.product_video && setProductAllMediaVideo(res.data.product.data.product_video);
       });
     }
   }, [editProductId, setValue]);
 
   useEffect(() => {
-    setMenCategoryLabel(
-      categories.filter((itm) => itm.category_type === "Men").map((i) => i)
-    );
-    setWomenCategoryLabel(
-      categories.filter((itm) => itm.category_type === "Women").map((i) => i)
-    );
+    setMenCategoryLabel(categories.filter((itm) => itm.category_type === "Men").map((i) => i));
+    setWomenCategoryLabel(categories.filter((itm) => itm.category_type === "Women").map((i) => i));
   }, [categories]);
 
   useEffect(() => {
     getBranchLists().then((res) => {
-      const branches = res.data.branchList.filter(
-        (branch) => branch.shop_id === id
-      );
+      const branches = res.data.branchList.filter((branch) => branch.shop_id === id);
 
       setBranchList(branches);
     });
@@ -241,15 +172,10 @@ const ShopDetailsPage = () => {
           limit: 6,
         },
         filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
+          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
+          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
         },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -264,15 +190,10 @@ const ShopDetailsPage = () => {
           limit: 6,
         },
         filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
+          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
+          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
         },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -292,10 +213,7 @@ const ShopDetailsPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (
-      productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
-        .length > 0
-    ) {
+    if (productsFiltersReducer.appliedProductsFilters.shopId.selectedValue.length > 0) {
       getAllProducts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -542,11 +460,7 @@ const ShopDetailsPage = () => {
 
           <div className="bg-[#F5F5F5] rounded-lg pt-4">
             <div className="w-[95%] mx-auto">
-              <UpperFilter
-                setProductPageSkip={setProductPageSkip}
-                forShopPage={true}
-                showDrawerFilter={true}
-              />
+              <UpperFilter setProductPageSkip={setProductPageSkip} forShopPage={true} showDrawerFilter={true} />
 
               {/* <p className="font-bold text-2xl text-colorBlack">
                   Special Products
@@ -562,7 +476,13 @@ const ShopDetailsPage = () => {
                     </div>
                   }
                 > */}
-              <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10">
+              <div
+                className={`${
+                  productsFiltersReducer?.productLayout === "list"
+                    ? ""
+                    : "mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10"
+                }`}
+              >
                 {productsData &&
                   productsData?.map((product) => (
                     <ProductCard
@@ -583,9 +503,7 @@ const ShopDetailsPage = () => {
                     color="primary"
                     variant="outlined"
                     shape="rounded"
-                    page={
-                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
-                    }
+                    page={(productPageSkip === 0 && 1) || productPageSkip / 6 + 1}
                     onChange={(e, p) => {
                       setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
                     }}
@@ -608,24 +526,16 @@ const ShopDetailsPage = () => {
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center mb-5">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={handleProductListingModalClose}
-              />
+              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleProductListingModalClose} />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 {editProductId === undefined ? "Add" : "Update"}Product
               </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={handleProductListingModalClose}
-              />
+              <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={handleProductListingModalClose} />
             </div>
             <form className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
-                    Name:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Name:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -649,9 +559,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-2 sm:gap-12">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
-                    Description:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Description:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -675,16 +583,11 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
-                    Color:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Color:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <FormControl fullWidth>
-                        <InputLabel
-                          variant="standard"
-                          htmlFor="uncontrolled-native"
-                        >
+                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
                           Product Color
                         </InputLabel>
                         <NativeSelect
@@ -719,16 +622,11 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
-                    Type:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Type:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <FormControl fullWidth>
-                        <InputLabel
-                          variant="standard"
-                          htmlFor="uncontrolled-native"
-                        >
+                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
                           Product Type
                         </InputLabel>
                         <NativeSelect
@@ -767,16 +665,11 @@ const ShopDetailsPage = () => {
 
                 {productType && (
                   <div className="flex items-center justify-center container gap-4 sm:gap-16">
-                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
-                      Category:
-                    </p>
+                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Category:</p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <FormControl fullWidth>
-                          <InputLabel
-                            variant="standard"
-                            htmlFor="uncontrolled-native"
-                          >
+                          <InputLabel variant="standard" htmlFor="uncontrolled-native">
                             Product Category
                           </InputLabel>
                           <NativeSelect
@@ -817,16 +710,11 @@ const ShopDetailsPage = () => {
                 )}
 
                 <div className="flex items-center justify-center container gap-5 sm:gap-20">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
-                    Branch:
-                  </p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Branch:</p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <FormControl fullWidth>
-                        <InputLabel
-                          variant="standard"
-                          htmlFor="uncontrolled-native"
-                        >
+                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
                           Product Branch
                         </InputLabel>
                         <NativeSelect
@@ -842,11 +730,7 @@ const ShopDetailsPage = () => {
                           </option>
                           {branchList.map((branch) => (
                             <option value={branch.id} key={branch.id}>
-                              {branch.branch_address +
-                                " " +
-                                "(" +
-                                branch.branch_type +
-                                ")"}
+                              {branch.branch_address + " " + "(" + branch.branch_type + ")"}
                             </option>
                           ))}
                         </NativeSelect>
@@ -863,9 +747,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">
-                    Product Images
-                  </h4>
+                  <h4 className="font-bold mb-3 flex justify-center items-center">Product Images</h4>
 
                   <div className="flex justify-center flex-col items-center">
                     <div className="flex justify-center">
@@ -881,10 +763,7 @@ const ShopDetailsPage = () => {
                           multiple
                           accept="image/*"
                           {...register("productImages", {
-                            required:
-                              productImages.length === 0
-                                ? "Product Image is required"
-                                : false,
+                            required: productImages.length === 0 ? "Product Image is required" : false,
                             onChange: (e) => {
                               createProductImagesChange(e);
                             },
@@ -905,12 +784,7 @@ const ShopDetailsPage = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                         {productImages.map((image, index) => (
                           <div key={index}>
-                            <Image
-                              src={image}
-                              alt="Product Preview"
-                              height={150}
-                              width={200}
-                            />
+                            <Image src={image} alt="Product Preview" height={150} width={200} />
                           </div>
                         ))}
                       </div>
@@ -919,9 +793,7 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">
-                    Product Video
-                  </h4>
+                  <h4 className="font-bold mb-3 flex justify-center items-center">Product Video</h4>
                   <div className="flex items-center justify-center flex-col">
                     <div className="flex justify-center flex-col items-center">
                       <div className="flex justify-center">
@@ -1005,13 +877,7 @@ const ShopDetailsPage = () => {
                 variant="contained"
                 className="rounded-xl capitalize text-colorWhite bg-colorPrimary hover:bg-colorPrimary py-2 px-5"
               >
-                {loading && (
-                  <CircularProgress
-                    size={20}
-                    color="primary"
-                    sx={{ color: "white", mr: 1 }}
-                  />
-                )}
+                {loading && <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />}
                 {editProductId === undefined ? "Create" : "Update"}
               </Button>
             </div>

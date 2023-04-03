@@ -13,14 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeProductsLayout,
-  changeSortProductsFilters,
-} from "../../../redux/ducks/productsFilters";
-import {
-  changeShopsLayout,
-  changeSortShopsFilters,
-} from "../../../redux/ducks/shopsFilters";
+import { changeProductsLayout, changeSortProductsFilters } from "../../../redux/ducks/productsFilters";
+import { changeShopsLayout, changeSortShopsFilters } from "../../../redux/ducks/shopsFilters";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import DrawerFilters from "../DrawerFilters";
@@ -37,11 +31,8 @@ const UpperFilter = ({
   const openSortByAnchor = Boolean(sortByAnchor);
 
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector(
-    (state) => state.productsFiltersReducer
-  );
+  const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
-
   const handleChangeSortType = (event, newValue) => {
     setProductPageSkip(0);
     setSortByAnchor(null);
@@ -67,9 +58,7 @@ const UpperFilter = ({
   return (
     <div className={`flex justify-between`}>
       <div className="flex items-center">
-        <p className="font-bold text-2xl text-colorBlack">{`${
-          byShop ? "Shops" : "Products"
-        }`}</p>
+        <p className="font-bold text-2xl text-colorBlack">{`${byShop ? "Shops" : "Products"}`}</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -82,56 +71,45 @@ const UpperFilter = ({
             showOnlyShopDetailPage={showOnlyShopDetailPage}
           />
         )}
-        <ListOutlinedIcon
-          fontSize="large"
+        <GridViewOutlinedIcon
+         
           className={`${
-            !byShop && productsFiltersReducer.productLayout === "list"
-              ? "!text-[#95539B]"
-              : "text-black"
-          } ${
-            byShop && shopsFiltersReducer.shopLayout === "list"
-              ? "!text-[#95539B]"
-              : "text-black"
-          } cursor-pointer`}
+            !byShop && productsFiltersReducer.productLayout === "grid" ? "!text-[#95539B]" : "text-black"
+          } ${byShop && shopsFiltersReducer.shopLayout === "grid" ? "!text-[#95539B]" : "text-black"} cursor-pointer`}
           onClick={() =>
             !byShop
               ? dispatch(
                   changeProductsLayout({
                     key: "productLayout",
-                    value: "list",
+                    value: "grid",
                   })
                 )
               : dispatch(
                   changeShopsLayout({
                     key: "shopLayout",
-                    value: "list",
+                    value: "grid",
                   })
                 )
           }
         />
 
-        <GridViewOutlinedIcon
+        <ListOutlinedIcon
+          fontSize="large"
           className={`${
-            !byShop && productsFiltersReducer.productLayout === "grid"
-              ? "!text-[#95539B]"
-              : "text-black"
-          } ${
-            byShop && shopsFiltersReducer.shopLayout === "grid"
-              ? "!text-[#95539B]"
-              : "text-black"
-          } cursor-pointer`}
+            !byShop && productsFiltersReducer.productLayout === "list" ? "!text-[#95539B]" : "text-black"
+          } ${byShop && shopsFiltersReducer.shopLayout === "list" ? "!text-[#95539B]" : "text-black"} cursor-pointer`}
           onClick={() =>
             !byShop
               ? dispatch(
                   changeProductsLayout({
                     key: "productLayout",
-                    value: "grid",
+                    value: "list",
                   })
                 )
               : dispatch(
                   changeShopsLayout({
                     key: "shopLayout",
-                    value: "grid",
+                    value: "list",
                   })
                 )
           }
@@ -185,29 +163,17 @@ const UpperFilter = ({
                 <FormControlLabel
                   value=""
                   control={<Radio className="text-colorPrimary" />}
-                  label={
-                    <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                      Default
-                    </Typography>
-                  }
+                  label={<Typography sx={{ fontWeight: 500, fontSize: "16px" }}>Default</Typography>}
                 />
                 <FormControlLabel
                   value="new"
                   control={<Radio className="text-colorPrimary" />}
-                  label={
-                    <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                      Latest
-                    </Typography>
-                  }
+                  label={<Typography sx={{ fontWeight: 500, fontSize: "16px" }}>Latest</Typography>}
                 />
                 <FormControlLabel
                   value="old"
                   control={<Radio className="text-colorPrimary" />}
-                  label={
-                    <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                      Oldest
-                    </Typography>
-                  }
+                  label={<Typography sx={{ fontWeight: 500, fontSize: "16px" }}>Oldest</Typography>}
                 />
               </RadioGroup>
             </FormControl>

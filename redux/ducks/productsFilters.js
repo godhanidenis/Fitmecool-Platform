@@ -42,7 +42,7 @@ const initialState = {
   sortFilters: {
     sortType: { selectedValue: "" },
   },
-  productLayout: "list",
+  productLayout: "grid",
   searchBarData: "",
 };
 

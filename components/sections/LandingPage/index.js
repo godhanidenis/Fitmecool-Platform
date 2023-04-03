@@ -202,7 +202,7 @@ const LandingPage = () => {
                   }
                 > */}
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10">
+                <div className={`${productsFiltersReducer.productLayout === "list" ? " " : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"}`}>
                   {productsData &&
                     productsData?.map((product) => (
                       <ProductCard product={product} key={product.id} />
