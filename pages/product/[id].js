@@ -130,13 +130,13 @@ const ProductDetail = ({ productDetails }) => {
 
   useEffect(() => {
     setImages(photos[0]);
-  }, [photos]);
+  }, []);
 
   const selectImage = (img, i) => {
     setImages(img);
   };
 
-  const items = photos.map((itm, i) => {
+  const items = photos?.map((itm, i) => {
     return (
       <div
         className="w-[70%] mx-auto mb-2"
