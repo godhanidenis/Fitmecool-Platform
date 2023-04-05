@@ -26,7 +26,7 @@ const VendorCommonLayout = ({ children }) => {
           <img
             src={vendorShopDetails?.shop_cover_image}
             alt="shop cover image"
-            className="h-[280px] w-full"
+            className="h-[222px] w-full"
           />
         </div>
         {children}

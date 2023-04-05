@@ -59,7 +59,7 @@ const style = {
 const ShopPage = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [completed, setCompleted] = useState([]);
   const [hoursModalOpen, setHoursModalOpen] = useState(false);
   const [daysTimeModalOpen, setDaysTimeModalOpen] = useState(false);
@@ -386,20 +386,22 @@ const ShopPage = () => {
 
   return (
     <>
-      <div className="bg-[#F5F5F5]">
+      <div className="">
         <div className="container py-10">
-          <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />} className="w-full">
+          <div className="flex justify-center"> 
+          <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />} className="w-[30%]">
             {shopRegistrationSteps.map((label) => (
               <Step key={label}>
                 <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
               </Step>
             ))}
           </Stepper>
+          </div>
 
           <>
             {activeStep === 0 && (
               <>
-                <div className="container p-5 mt-5">
+                <div className="container p-5 !w-[70%] flex justify-end px-0">
                   <div className="flex items-center gap-2">
                     <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
                       <input
@@ -409,29 +411,29 @@ const ShopPage = () => {
                         onChange={(e) => setIndividual(e.target.checked)}
                       />
                       <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
-                        Shop
+                        SHOP
                       </span>
                       <span className="px-4 py-1 dark:bg-white-300 peer-checked:bg-colorPrimary peer-checked:text-white ">
-                        Individual
+                        INDIVIDUAL
                       </span>
                     </label>
                   </div>
                 </div>
-                <div className="container bg-colorWhite rounded-lg my-5 lg:my-10 p-5 space-y-5">
-                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">Owner Details</h3>
+                <div className="container bg-colorWhite rounded-lg p-5 !w-[70%]">
+                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">OWNER DETAILS</h3>
                   <form>
                     <div className="flex flex-col space-y-3">
-                      <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-20 w-full justify-between items-center">
-                        <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p>
+                      <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-5 w-full justify-between items-center">
+                        {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p> */}
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
                               id="input-with-sx"
-                              label="First Name"
+                              label="First Name*"
                               variant="standard"
                               className="w-full"
                               {...register("first_name", {
-                                required: "FirstName is required",
+                                required: "First name is required",
                               })}
                             />
                           </Box>
@@ -447,11 +449,11 @@ const ShopPage = () => {
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
                               id="input-with-sx"
-                              label="Last Name"
+                              label="Last Name*"
                               variant="standard"
                               className="w-full"
                               {...register("last_name", {
-                                required: "LastName is required",
+                                required: "Last name is required",
                               })}
                             />
                           </Box>
@@ -466,14 +468,14 @@ const ShopPage = () => {
                       </div>
 
                       <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                        <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                           Email:
-                        </p>
+                        </p> */}
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
                               id="input-with-sx"
-                              label="Email Address"
+                              label="Email Address*"
                               variant="standard"
                               className="w-full"
                               {...register("user_email", {
@@ -498,19 +500,19 @@ const ShopPage = () => {
                       </div>
 
                       <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                        <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                           Phone:
-                        </p>
+                        </p> */}
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
                               id="input-with-sx"
-                              label="Phone Number"
+                              label="Phone Number*"
                               variant="standard"
                               className="w-full"
                               type="number"
                               {...register("user_contact", {
-                                required: "Contact Number is required",
+                                required: "Contact number is required",
                                 minLength: {
                                   value: 10,
                                   message: "Contact Number must be 10 numbers",
@@ -534,8 +536,8 @@ const ShopPage = () => {
                     </div>
                   </form>
                 </div>
-                <div className="container bg-colorWhite rounded-lg my-5 lg:my-10 p-5 space-y-5">
-                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">Shop Info</h3>
+                <div className="container bg-colorWhite rounded-lg my-5 lg:my-5 p-5 !w-[70%]">
+                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">SHOP INFO</h3>
                   <form>
                     <div className="flex flex-col space-y-3">
                       <div className="flex items-center justify-center container gap-20">
@@ -543,11 +545,11 @@ const ShopPage = () => {
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
                               id="input-with-sx"
-                              label="Shop Name"
+                              label="Shop Name*"
                               variant="standard"
                               className="w-full"
                               {...register("shop_name", {
-                                required: "Shop Name is required",
+                                required: "Shop name is required",
                               })}
                             />
                           </Box>
@@ -572,7 +574,7 @@ const ShopPage = () => {
                                   variant="standard"
                                   className="w-full"
                                   {...register("shop_email", {
-                                    required: "Shop Email is required",
+                                    // required: "Shop email is required",
 
                                     pattern: {
                                       value:
@@ -597,11 +599,11 @@ const ShopPage = () => {
                               <Box sx={{ display: "flex" }}>
                                 <CustomTextField
                                   id="input-with-sx"
-                                  label="Personal Website"
+                                  label="Personal Website Link"
                                   variant="standard"
                                   className="w-full"
                                   {...register("personal_website", {
-                                    required: "Personal Website is required",
+                                    // required: "Personal Website is required",
                                   })}
                                 />
                               </Box>
@@ -615,7 +617,7 @@ const ShopPage = () => {
                             </div>
                           </div>
 
-                          <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-20 w-full justify-between items-center">
+                          <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-5 w-full justify-between items-center">
                             <div className="w-full">
                               <Box sx={{ display: "flex" }}>
                                 <CustomTextField
@@ -624,7 +626,7 @@ const ShopPage = () => {
                                   variant="standard"
                                   className="w-full"
                                   {...register("facebook_link", {
-                                    required: "Facebook Link is required",
+                                    // required: "Facebook Link is required",
                                   })}
                                 />
                               </Box>
@@ -644,7 +646,7 @@ const ShopPage = () => {
                                   variant="standard"
                                   className="w-full"
                                   {...register("instagram_link", {
-                                    required: "Instagram Link is required",
+                                    // required: "Instagram Link is required",
                                   })}
                                 />
                               </Box>
@@ -964,11 +966,11 @@ const ShopPage = () => {
             )}
             {activeStep === 2 && (
               <>
-                <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5">
-                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">Branches</h3>
+                <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5 !w-[70%]">
+                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">BRANCHES</h3>
                   <form>
                     <div className="flex flex-col space-y-3">
-                      <p className="mt-2 container flex items-center text-colorBlack text-lg">Main Branches</p>
+                      <p className="mt-2 container flex items-center text-colorBlack text-sm font-semibold">MAIN BRANCH</p>
                       <div className="flex items-center justify-center container gap-20">
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
@@ -992,7 +994,7 @@ const ShopPage = () => {
                         </div>
                       </div>
 
-                      <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
+                      <div className="container flex gap-10 sm:gap-5 w-full justify-between items-center">
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
@@ -1256,7 +1258,7 @@ const ShopPage = () => {
             )}
 
             <div className="flex justify-center">
-              <Box className="flex pt-2 mt-4 w-full container justify-between">
+              <Box className="flex pt-2 !w-[70%] container justify-between">
                 <button
                   type="submit"
                   disabled={activeStep === 0}

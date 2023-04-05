@@ -22,7 +22,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
   };
 
   return (
-    <div className="lg:bg-[#F5F5F5] flex flex-col lg:h-full">
+    <div className="lg:bg-white flex flex-col lg:h-full">
       <div className="flex flex-col items-center justify-center gap-3 my-10">
         <Avatar
           src={vendorShopDetails?.shop_logo}
