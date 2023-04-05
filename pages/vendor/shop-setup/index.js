@@ -40,6 +40,7 @@ import Router from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { setShopRegisterId } from "../../../redux/ducks/userProfile";
 import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
 const shopRegistrationSteps = ["Details", "Photos", "Branches"];
 const style = {
@@ -84,8 +85,23 @@ const ShopPage = () => {
   const [shopBackground, setShopBackground] = useState("");
   const [uploadShopBackground, setUploadShopBackground] = useState("");
 
-  const [shopImages, setShopImages] = useState([]);
-  const [uploadShopImages, setUploadShopImages] = useState("");
+  // const [shopImages, setShopImages] = useState([]);
+  // const [uploadShopImages, setUploadShopImages] = useState("");
+
+  const [shopImagesOne, setShopImagesOne] = useState([]);
+  const [uploadShopImagesOne, setUploadShopImagesOne] = useState([]);
+
+  const [shopImagesSecond, setShopImagesSecond] = useState([]);
+  const [uploadShopImagesSecond, setUploadShopImagesSecond] = useState([]);
+
+  const [shopImagesThird, setShopImagesThird] = useState([]);
+  const [uploadShopImagesThird, setUploadShopImagesThird] = useState([]);
+
+  const AllUploadShopImages = [...uploadShopImagesOne, ...uploadShopImagesSecond, ...uploadShopImagesThird];
+
+  const [ShopImageFirst, setShopImageFirst] = useState(false);
+  const [ShopImageSecond, setShopImageSecond] = useState(false);
+  const [ShopImageThird, setShopImageThird] = useState(false);
 
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
@@ -183,7 +199,7 @@ const ShopPage = () => {
       setLoading(true);
       SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
         SingleImageUploadFile(uploadShopBackground).then((backgroundResponse) => {
-          MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
+          MultipleImageUploadFile(AllUploadShopImages).then((imagesResponse) => {
             uploadShopVideo !== ""
               ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
                   shopRegistration({
@@ -355,18 +371,61 @@ const ShopPage = () => {
     }
   };
 
-  const createShopImagesChange = (e) => {
+  // const createShopImagesChange = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   setShopImages([]);
+  //   setUploadShopImages([]);
+  //   files.forEach((file) => {
+  //     setUploadShopImages((old) => [...old, file]);
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onloadend = () => {
+  //       setShopImages((old) => [...old, reader.result]);
+  //     };
+  //   });
+  // };
+
+  const createShopImagesChangeOne = (e) => {
     const files = Array.from(e.target.files);
-    setShopImages([]);
-    setUploadShopImages([]);
+    setShopImagesOne([]);
+    setUploadShopImagesOne([]);
     files.forEach((file) => {
-      setUploadShopImages((old) => [...old, file]);
+      setUploadShopImagesOne([file]);
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setShopImages((old) => [...old, reader.result]);
+        setShopImagesOne([reader.result]);
       };
     });
+    setShopImageFirst(true);
+  };
+  const createShopImagesChangeTwo = (e) => {
+    const files = Array.from(e.target.files);
+    setShopImagesSecond([]);
+    setUploadShopImagesSecond([]);
+    files.forEach((file) => {
+      setUploadShopImagesSecond([file]);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setShopImagesSecond([reader.result]);
+      };
+    });
+    setShopImageSecond(true);
+  };
+  const createShopImagesChangeThird = (e) => {
+    const files = Array.from(e.target.files);
+    setShopImagesThird([]);
+    setUploadShopImagesThird([]);
+    files.forEach((file) => {
+      setUploadShopImagesThird([file]);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setShopImagesThird([reader.result]);
+      };
+    });
+    setShopImageThird(true);
   };
 
   const onShopVideoPreview = (e) => {
@@ -388,14 +447,14 @@ const ShopPage = () => {
     <>
       <div className="">
         <div className="container py-10">
-          <div className="flex justify-center"> 
-          <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />} className="w-[30%]">
-            {shopRegistrationSteps.map((label) => (
-              <Step key={label}>
-                <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
+          <div className="flex justify-center">
+            <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />} className="md:w-[30%]">
+              {shopRegistrationSteps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
           </div>
 
           <>
@@ -692,9 +751,9 @@ const ShopPage = () => {
             )}
             {activeStep === 1 && (
               <>
-                <div className="flex flex-col sm:flex-row sm:gap-20 items-center container mt-10">
+                <div className="flex flex-col sm:flex-row sm:gap-20 justify-center items-center container mt-10">
                   <div>
-                    <label className="flex justify-center items-center font-bold mb-3">Logo</label>
+                    {/* <label className="flex justify-center items-center font-bold mb-3">Logo</label> */}
                     <input
                       type="file"
                       id="shopLogo"
@@ -741,20 +800,40 @@ const ShopPage = () => {
                       </div>
                     ) : (
                       <div
-                        className="h-24 w-24  border-dashed border-colorSecondary flex justify-center items-center"
-                        style={{
-                          borderStyle: "dashed",
-                          border: "1px dashed #000000",
-                        }}
+                        className="border rounded-full border-[cadetblue]"
+                        // style={{
+                        //   borderStyle: "dashed",
+                        //   border: "1px dashed #000000",
+                        // }}
                       >
-                        <button
+                        {/* <button
                           className="h-24 w-24  border-dashed border-colorSecondary flex justify-center items-center"
                           onClick={() => {
                             document.getElementById("shopLogo").click();
                           }}
                         >
-                          <AddIcon />
-                        </button>
+                          Upload
+                        </button> */}
+                        <div className="m-10">
+                          <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                            <AddAPhotoIcon />
+                          </div>
+                          <div className="mb-3 px-[12px] text-sm font-emoji">
+                            <p>Upload Logo</p>
+                          </div>
+                          <div className="mb-2">
+                            <Button
+                              variant="contained"
+                              component="label"
+                              className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                              onClick={() => {
+                                document.getElementById("shopLogo").click();
+                              }}
+                            >
+                              Upload
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     )}
                     <div className="mt-2">
@@ -767,7 +846,7 @@ const ShopPage = () => {
                   </div>
 
                   <div>
-                    <label className="flex justify-center items-center font-bold  mb-3">Background</label>
+                    {/* <label className="flex justify-center items-center font-bold  mb-3">Background</label> */}
 
                     <input
                       type="file"
@@ -806,20 +885,40 @@ const ShopPage = () => {
                       </div>
                     ) : (
                       <div
-                        className="h-24 w-36  border-dashed border-colorSecondary flex justify-center items-center"
-                        style={{
-                          borderStyle: "dashed",
-                          border: "1px dashed #000000",
-                        }}
+                        className="border border-[cadetblue] flex justify-center items-center"
+                        // style={{
+                        //   borderStyle: "dashed",
+                        //   border: "1px dashed #000000",
+                        // }}
                       >
-                        <button
+                        {/* <button
                           className="h-24 w-36  border-dashed border-colorSecondary flex justify-center items-center"
                           onClick={() => {
                             document.getElementById("shopBackground").click();
                           }}
                         >
                           <AddIcon />
-                        </button>
+                        </button> */}
+                        <div className="m-8">
+                          <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                            <AddAPhotoIcon />
+                          </div>
+                          <div className="mb-3 px-[32px] text-sm font-emoji">
+                            <p>Upload Cover Image</p>
+                          </div>
+                          <div className="mb-2">
+                            <Button
+                              variant="contained"
+                              component="label"
+                              className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                              onClick={() => {
+                                document.getElementById("shopBackground").click();
+                              }}
+                            >
+                              Upload
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     )}
                     <div className="mt-2">
@@ -835,7 +934,7 @@ const ShopPage = () => {
                 <div className="mt-5 items-center flex-col w-full container">
                   <h4 className="font-bold mb-3 flex justify-center items-center">Shop Images</h4>
 
-                  <div className="flex justify-center flex-col items-center">
+                  {/* <div className="flex justify-center flex-col items-center">
                     <div className="flex justify-center">
                       <Button
                         variant="contained"
@@ -864,15 +963,216 @@ const ShopPage = () => {
                         </span>
                       )}
                     </div>
-                  </div>
-                  <div className="flex  justify-center mt-10">
-                    <div className="flex flex-col w-full">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
-                        {shopImages.map((image, index) => (
+                  </div> */}
+                  <div className="flex justify-center mt-10">
+                    <div className="flex items-center flex-col w-full">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-10 place-items-center">
+                        <div className="h-[100%]">
+                          <input
+                            type="file"
+                            id="shopImageOne"
+                            name="shopImagesOne"
+                            hidden
+                            accept="image/*"
+                            {...register("shopImagesOne", {
+                              required: shopImagesOne.length === 0 ? "Shop Front Image is required" : false,
+                              onChange: (e) => {
+                                createShopImagesChangeOne(e);
+                              },
+                            })}
+                          />
+
+                          {ShopImageFirst ? (
+                            <div>
+                              <Image src={shopImagesOne[0]} height="210px" alt="logoimg" width="200px" />
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center"
+                                style={{
+                                  position: "relative",
+                                  left: 180,
+                                  bottom: 30,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
+                                }}
+                              >
+                                <EditIcon
+                                  style={{ color: "black", cursor: "pointer" }}
+                                  onClick={() => document.getElementById("shopImageOne").click()}
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
+                              <div style={{marginTop:"35%" , marginBottom:"35%"}} className="mx-8">
+                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                  <AddAPhotoIcon />
+                                </div>
+                                <div className="mb-3 text-sm font-emoji">
+                                  <p>Upload Front Image</p>
+                                </div>
+                                <div className="mb-2">
+                                  <Button
+                                    variant="contained"
+                                    component="label"
+                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                    onClick={() => {
+                                      document.getElementById("shopImageOne").click();
+                                    }}
+                                  >
+                                    Upload
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          <div className="mt-2">
+                            {errors.shopImagesOne && (
+                              <span style={{ color: "red" }} className="-mb-6">
+                                {errors.shopImagesOne?.message}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="h-[100%]">
+                          <input
+                            type="file"
+                            id="shopImageTwo"
+                            name="shopImagesSecond"
+                            hidden
+                            accept="image/*"
+                            {...register("shopImagesSecond", {
+                              required: shopImagesSecond.length === 0 ? "Shop Back Image is required" : false,
+                              onChange: (e) => {
+                                createShopImagesChangeTwo(e);
+                              },
+                            })}
+                          />
+
+                          {ShopImageSecond ? (
+                            <div>
+                              <Image src={shopImagesSecond[0]} height="210px" alt="logoimg" width="200px" />
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center"
+                                style={{
+                                  position: "relative",
+                                  left: 180,
+                                  bottom: 30,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
+                                }}
+                              >
+                                <EditIcon
+                                  style={{ color: "black", cursor: "pointer" }}
+                                  onClick={() => document.getElementById("shopImageTwo").click()}
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
+                              <div style={{marginTop:"35%" , marginBottom:"35%"}} className="mx-8">
+                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                  <AddAPhotoIcon />
+                                </div>
+                                <div className="mb-3 text-sm font-emoji">
+                                  <p>Upload Back Image</p>
+                                </div>
+                                <div className="mb-2">
+                                  <Button
+                                    variant="contained"
+                                    component="label"
+                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                    onClick={() => {
+                                      document.getElementById("shopImageTwo").click();
+                                    }}
+                                  >
+                                    Upload
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          <div className="mt-2">
+                            {errors.shopImagesSecond && (
+                              <span style={{ color: "red" }} className="-mb-6">
+                                {errors.shopImagesSecond?.message}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="h-[100%]">
+                          <input
+                            type="file"
+                            id="shopImageThree"
+                            name="shopImagesThird"
+                            hidden
+                            accept="image/*"
+                            {...register("shopImagesThird", {
+                              required: shopImagesThird.length === 0 ? "Shop Side Image is required" : false,
+                              onChange: (e) => {
+                                createShopImagesChangeThird(e);
+                              },
+                            })}
+                          />
+
+                          {ShopImageThird ? (
+                            <div>
+                              <Image src={shopImagesThird[0]} height="210px" alt="logoimg" width="200px" />
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center"
+                                style={{
+                                  position: "relative",
+                                  left: 180,
+                                  bottom: 30,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
+                                }}
+                              >
+                                <EditIcon
+                                  style={{ color: "black", cursor: "pointer" }}
+                                  onClick={() => document.getElementById("shopImageThree").click()}
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
+                              <div style={{marginTop:"35%" , marginBottom:"35%"}} className="mx-8">
+                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                  <AddAPhotoIcon />
+                                </div>
+                                <div className="mb-3 text-sm font-emoji">
+                                  <p>Upload Side Image</p>
+                                </div>
+                                <div className="mb-2">
+                                  <Button
+                                    variant="contained"
+                                    component="label"
+                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                    onClick={() => {
+                                      document.getElementById("shopImageThree").click();
+                                    }}
+                                  >
+                                    Upload
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          <div className="mt-2">
+                            {errors.shopImagesThird && (
+                              <span style={{ color: "red" }} className="-mb-6">
+                                {errors.shopImagesThird?.message}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {/* {shopImages.map((image, index) => (
                           <div key={index}>
                             <Image src={image} alt="Product Preview" height={200} width={250} />
                           </div>
-                        ))}
+                        ))} */}
                       </div>
                     </div>
                   </div>
@@ -966,11 +1266,13 @@ const ShopPage = () => {
             )}
             {activeStep === 2 && (
               <>
-                <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5 !w-[70%]">
+                <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5 md:!w-[70%]">
                   <h3 className="text-colorPrimary text-lg font-semibold leading-8">BRANCHES</h3>
                   <form>
                     <div className="flex flex-col space-y-3">
-                      <p className="mt-2 container flex items-center text-colorBlack text-sm font-semibold">MAIN BRANCH</p>
+                      <p className="mt-2 container flex items-center text-colorBlack text-sm font-semibold">
+                        MAIN BRANCH
+                      </p>
                       <div className="flex items-center justify-center container gap-20">
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
@@ -1141,7 +1443,7 @@ const ShopPage = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-center container gap-10 sm:gap-20">
+                      <div className="flex items-center justify-center container gap-10 sm:gap-[4.5rem]">
                         <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                           Phone:
                         </p>
