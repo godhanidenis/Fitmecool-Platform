@@ -33,6 +33,8 @@ import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import EditIcon from "@mui/icons-material/Edit";
 
 const style = {
   position: "absolute",
@@ -528,7 +530,7 @@ const ShopDetailsPage = () => {
             <div className="flex items-center mb-5">
               <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleProductListingModalClose} />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                {editProductId === undefined ? "Add" : "Update"}Product
+                {editProductId === undefined ? "Add" : "Update"} Product
               </p>
               <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={handleProductListingModalClose} />
             </div>
@@ -784,7 +786,7 @@ const ShopDetailsPage = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                         {productImages.map((image, index) => (
                           <div key={index}>
-                            <Image src={image ?? "" } alt="Product Preview" height={150} width={200} />
+                            <Image src={image ?? ""} alt="Product Preview" height={150} width={200} />
                           </div>
                         ))}
                       </div>
@@ -795,7 +797,7 @@ const ShopDetailsPage = () => {
                 <div className="items-center flex-col w-full container">
                   <h4 className="font-bold mb-3 flex justify-center items-center">Product Video</h4>
                   <div className="flex items-center justify-center flex-col">
-                    <div className="flex justify-center flex-col items-center">
+                    {/* <div className="flex justify-center flex-col items-center">
                       <div className="flex justify-center">
                         <Button
                           variant="contained"
@@ -818,12 +820,102 @@ const ShopDetailsPage = () => {
                           />
                         </Button>
                       </div>
-                    </div>
-                    {productVideo !== undefined && (
-                      <div className="flex  justify-center ">
-                        <div className="flex flex-col w-full">
-                          <div className="grid grid-cols-1 place-items-center">
-                            <div>
+                    </div> */}
+                    {/* {productVideo !== undefined && ( */}
+                    <div className="flex  justify-center ">
+                      <div className="flex flex-col w-full">
+                        <div className="grid grid-cols-1 place-items-center">
+                          <div>
+                            <input
+                              type="file"
+                              id="productVideoId"
+                              name="productVideo"
+                              accept="video/*"
+                              hidden
+                              controls
+                              onClick={(e) => (e.target.value = null)}
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                  onProductVideoPreview(e);
+                                }
+                              }}
+                            />
+
+                            {productVideo !== undefined ? (
+                              <div>
+                                <video
+                                  autoPlay
+                                  style={{ width: "350px", height: "250px" }}
+                                  controls
+                                  src={productVideo}
+                                ></video>
+                                <div
+                                  className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                  style={{
+                                    position: "relative",
+                                    right: 10,
+                                    bottom: 20,
+                                    height: 30,
+                                    width: 30,
+                                    color: "#5cb85c",
+                                  }}
+                                >
+                                  <CancelIcon
+                                    style={{ color: "black" }}
+                                    onClick={() => {
+                                      setProductVideo();
+                                      setUploadProductVideo();
+                                    }}
+                                  />
+                                </div>
+                                <div
+                                  className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                  style={{
+                                    position: "relative",
+                                    left: 335,
+                                    bottom: 50,
+                                    height: 30,
+                                    width: 30,
+                                    color: "#5cb85c",
+                                  }}
+                                >
+                                  <button onClick={() => {}}>
+                                    <EditIcon
+                                      style={{ color: "black" }}
+                                      onClick={() => {
+                                        document.getElementById("productVideoId").click();
+                                      }}
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="w-[300px] h-[150px] border border-[cadetblue] flex justify-center items-center">
+                                <div className="m-8">
+                                  <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                    <AddAPhotoIcon />
+                                  </div>
+                                  <div className="mb-3 px-[32px] text-sm font-emoji">
+                                    <p>Upload Product Video</p>
+                                  </div>
+                                  <div className="mb-2">
+                                    <Button
+                                      variant="contained"
+                                      component="label"
+                                      className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                      onClick={() => {
+                                        document.getElementById("productVideoId").click();
+                                      }}
+                                    >
+                                      Upload
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* <div>
                               <video
                                 autoPlay
                                 style={{ width: "300px", height: "200px" }}
@@ -849,11 +941,11 @@ const ShopDetailsPage = () => {
                                   }}
                                 />
                               </div>
-                            </div>
-                          </div>
+                            </div> */}
                         </div>
                       </div>
-                    )}
+                    </div>
+                    {/* )} */}
                   </div>
                 </div>
               </div>
