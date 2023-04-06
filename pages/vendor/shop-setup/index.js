@@ -99,10 +99,6 @@ const ShopPage = () => {
 
   const AllUploadShopImages = [...uploadShopImagesOne, ...uploadShopImagesSecond, ...uploadShopImagesThird];
 
-  const [ShopImageFirst, setShopImageFirst] = useState(false);
-  const [ShopImageSecond, setShopImageSecond] = useState(false);
-  const [ShopImageThird, setShopImageThird] = useState(false);
-
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
@@ -397,7 +393,6 @@ const ShopPage = () => {
         setShopImagesOne([reader.result]);
       };
     });
-    setShopImageFirst(true);
   };
   const createShopImagesChangeTwo = (e) => {
     const files = Array.from(e.target.files);
@@ -411,7 +406,6 @@ const ShopPage = () => {
         setShopImagesSecond([reader.result]);
       };
     });
-    setShopImageSecond(true);
   };
   const createShopImagesChangeThird = (e) => {
     const files = Array.from(e.target.files);
@@ -425,7 +419,6 @@ const ShopPage = () => {
         setShopImagesThird([reader.result]);
       };
     });
-    setShopImageThird(true);
   };
 
   const onShopVideoPreview = (e) => {
@@ -478,7 +471,7 @@ const ShopPage = () => {
                     </label>
                   </div>
                 </div>
-                <div className="container bg-colorWhite rounded-lg p-5 !w-[70%]">
+                <div className="container bg-colorWhite rounded-lg p-5 md:!w-[70%]">
                   <h3 className="container text-colorPrimary text-lg font-semibold leading-8">OWNER DETAILS</h3>
                   <form>
                     <div className="flex flex-col space-y-3">
@@ -595,7 +588,7 @@ const ShopPage = () => {
                     </div>
                   </form>
                 </div>
-                <div className="container bg-colorWhite rounded-lg my-5 lg:my-5 p-5 !w-[70%]">
+                <div className="container bg-colorWhite rounded-lg my-5 lg:my-5 p-5 md:!w-[70%]">
                   <h3 className="container text-colorPrimary text-lg font-semibold leading-8">SHOP INFO</h3>
                   <form>
                     <div className="flex flex-col space-y-3">
@@ -729,11 +722,22 @@ const ShopPage = () => {
                             >
                               <div>
                                 {hours.map((day, index) => (
-                                  <div className="flex items-center gap-2" key={index}>
-                                    {day["key"]} :
-                                    <div className="flex items-center gap-5">
+                                  <div className="flex justify-between pb-2" key={index}>
+                                    <div className="pr-2">{day["key"]} :</div>
+                                    <div className="">
                                       {day["value"]?.map((time, index) => (
-                                        <p key={index}>{time}</p>
+                                        <p
+                                          key={index}
+                                          className={
+                                            time === "Closed"
+                                              ? "text-red-600"
+                                              : time === "Open 24 hours"
+                                              ? "text-green-600"
+                                              : ""
+                                          }
+                                        >
+                                          {time}
+                                        </p>
                                       ))}
                                     </div>
                                   </div>
@@ -975,16 +979,16 @@ const ShopPage = () => {
                             hidden
                             accept="image/*"
                             {...register("shopImagesOne", {
-                              required: shopImagesOne.length === 0 ? "Shop Front Image is required" : false,
+                              required: shopImagesOne?.length === 0 ? "Shop Front Image is required" : false,
                               onChange: (e) => {
                                 createShopImagesChangeOne(e);
                               },
                             })}
                           />
 
-                          {ShopImageFirst ? (
+                          {shopImagesOne?.length !== 0 ? (
                             <div>
-                              <Image src={shopImagesOne[0]} height="210px" alt="logoimg" width="200px" />
+                              <Image src={shopImagesOne[0]} height="210px" alt="frontImg" width="200px" />
                               <div
                                 className="bg-gray-300 rounded-full flex justify-center items-center"
                                 style={{
@@ -1004,7 +1008,7 @@ const ShopPage = () => {
                             </div>
                           ) : (
                             <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                              <div style={{marginTop:"35%" , marginBottom:"35%"}} className="mx-8">
+                              <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
                                 <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
                                   <AddAPhotoIcon />
                                 </div>
@@ -1042,16 +1046,16 @@ const ShopPage = () => {
                             hidden
                             accept="image/*"
                             {...register("shopImagesSecond", {
-                              required: shopImagesSecond.length === 0 ? "Shop Back Image is required" : false,
+                              required: shopImagesSecond?.length === 0 ? "Shop Back Image is required" : false,
                               onChange: (e) => {
                                 createShopImagesChangeTwo(e);
                               },
                             })}
                           />
 
-                          {ShopImageSecond ? (
+                          {shopImagesSecond?.length !== 0 ? (
                             <div>
-                              <Image src={shopImagesSecond[0]} height="210px" alt="logoimg" width="200px" />
+                              <Image src={shopImagesSecond[0]} height="210px" alt="backImg" width="200px" />
                               <div
                                 className="bg-gray-300 rounded-full flex justify-center items-center"
                                 style={{
@@ -1071,7 +1075,7 @@ const ShopPage = () => {
                             </div>
                           ) : (
                             <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                              <div style={{marginTop:"35%" , marginBottom:"35%"}} className="mx-8">
+                              <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
                                 <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
                                   <AddAPhotoIcon />
                                 </div>
@@ -1109,16 +1113,16 @@ const ShopPage = () => {
                             hidden
                             accept="image/*"
                             {...register("shopImagesThird", {
-                              required: shopImagesThird.length === 0 ? "Shop Side Image is required" : false,
+                              required: shopImagesThird?.length === 0 ? "Shop Side Image is required" : false,
                               onChange: (e) => {
                                 createShopImagesChangeThird(e);
                               },
                             })}
                           />
 
-                          {ShopImageThird ? (
+                          {shopImagesThird?.length !== 0 ? (
                             <div>
-                              <Image src={shopImagesThird[0]} height="210px" alt="logoimg" width="200px" />
+                              <Image src={shopImagesThird[0]} height="210px" alt="sideImg" width="200px" />
                               <div
                                 className="bg-gray-300 rounded-full flex justify-center items-center"
                                 style={{
@@ -1138,7 +1142,7 @@ const ShopPage = () => {
                             </div>
                           ) : (
                             <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                              <div style={{marginTop:"35%" , marginBottom:"35%"}} className="mx-8">
+                              <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
                                 <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
                                   <AddAPhotoIcon />
                                 </div>
@@ -1181,7 +1185,7 @@ const ShopPage = () => {
                 <div className="my-5 items-center flex-col w-full container">
                   <h4 className="font-bold mb-3 flex justify-center items-center">Shop Video</h4>
 
-                  <div className="flex justify-center flex-col items-center">
+                  {/* <div className="flex justify-center flex-col items-center">
                     <div className="flex  justify-center">
                       <Button
                         variant="contained"
@@ -1205,12 +1209,102 @@ const ShopPage = () => {
                         />
                       </Button>
                     </div>
-                  </div>
-                  {shopVideo !== "" && (
-                    <div className="flex  justify-center mt-10">
-                      <div className="flex flex-col w-full">
-                        <div className="grid grid-cols-1 place-items-center">
-                          <div>
+                  </div> */}
+
+                  {/* {shopVideo !== "" && ( */}
+                  <div className="flex  justify-center mt-10">
+                    <div className="flex flex-col w-full">
+                      <div className="grid grid-cols-1 place-items-center">
+                        <div>
+                          <input
+                            type="file"
+                            id="shopVideoId"
+                            name="shopVideo"
+                            accept="video/*"
+                            hidden
+                            controls
+                            onClick={(e) => (e.target.value = null)}
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files.length > 0) {
+                                onShopVideoPreview(e);
+                              }
+                            }}
+                          />
+
+                          {shopVideo !== "" ? (
+                            <div>
+                              <video
+                                autoPlay
+                                style={{ width: "350px", height: "250px" }}
+                                controls
+                                src={shopVideo}
+                              ></video>
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                style={{
+                                  position: "relative",
+                                  right: 10,
+                                  bottom: 20,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
+                                }}
+                              >
+                                <CancelIcon
+                                  style={{ color: "black" }}
+                                  onClick={() => {
+                                    setShopVideo("");
+                                    setUploadShopVideo("");
+                                  }}
+                                />
+                              </div>
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                style={{
+                                  position: "relative",
+                                  left: 335,
+                                  bottom: 50,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
+                                }}
+                              >
+                                <button onClick={() => {}}>
+                                  <EditIcon
+                                    style={{ color: "black" }}
+                                    onClick={() => {
+                                      document.getElementById("shopVideoId").click();
+                                    }}
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="w-[350px] h-[200px] border border-[cadetblue] flex justify-center items-center">
+                              <div className="m-8">
+                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                  <AddAPhotoIcon />
+                                </div>
+                                <div className="mb-3 px-[32px] text-sm font-emoji">
+                                  <p>Upload Shop Video</p>
+                                </div>
+                                <div className="mb-2">
+                                  <Button
+                                    variant="contained"
+                                    component="label"
+                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                    onClick={() => {
+                                      document.getElementById("shopVideoId").click();
+                                    }}
+                                  >
+                                    Upload
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        {/* <div>
                             <video
                               autoPlay
                               style={{ width: "350px", height: "250px" }}
@@ -1256,11 +1350,11 @@ const ShopPage = () => {
                                 />
                               </button>
                             </div>
-                          </div>
-                        </div>
+                          </div> */}
                       </div>
                     </div>
-                  )}
+                  </div>
+                  {/* )} */}
                 </div>
               </>
             )}
@@ -1665,7 +1759,13 @@ const HoursModal = ({
                     <div className="flex flex-col">
                       {day["value"].map((time, index) => (
                         <div className="flex items-center gap-5" key={index}>
-                          <p>{time}</p>
+                          <p
+                            className={
+                              time === "Closed" ? "text-red-600" : time === "Open 24 hours" ? "text-green-600" : ""
+                            }
+                          >
+                            {time}
+                          </p>
                           <div
                             className="p-2 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
                             onClick={() => {
@@ -1923,9 +2023,9 @@ const DaysTimeModal = ({
               <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
                 {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((itm) => (
                   <div
-                    className={`p-5 border rounded-[50%] ${selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"} ${
-                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
-                    } ${
+                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] ${
+                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
+                    } ${selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"} ${
                       selectedAllHours?.find((day) => day === itm) && "bg-[#bdbbbb]"
                     }  hover:bg-[#bdbbbb] cursor-pointer`}
                     key={itm}

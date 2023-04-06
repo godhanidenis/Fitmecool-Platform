@@ -199,7 +199,7 @@ const ProductCard = ({
                   <div className="product-overlay">
                     <Link href={`/product/${product.id}`}>
                       <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                        <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-md detailButton whitespace-nowrap">
+                        <button className="text-colorWhite text-base px-4 py-2 w-full md:w-[60%] lg:w-full xl:w-[60%] bg-colorPrimary rounded-md detailButton whitespace-nowrap">
                           See Details
                         </button>
                       </a>
