@@ -55,7 +55,7 @@ const UpdatePassword = () => {
           <div className="text-start">
             <Link href="/">
               <button className="text-white  focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
-                <Image src={backIcon} alt="back" />
+                <Image src={backIcon ?? "" } alt="back" />
               </button>
             </Link>
           </div>

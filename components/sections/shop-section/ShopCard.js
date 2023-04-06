@@ -15,7 +15,7 @@ const ShopCard = ({ shop }) => {
   const items = shop.shop_images.map((itm) => {
     return (
       <Image
-        src={itm.links}
+        src={itm?.links ?? "" }
         alt={shop.name}
         width={250}
         height={shopsFiltersReducer.shopLayout === "list" ? 300 : 400}
@@ -56,7 +56,7 @@ const ShopCard = ({ shop }) => {
           <div className="flex justify-center items-center">
             <Image
               alt="Shop Logo"
-              src={shop.shop_logo}
+              src={shop?.shop_logo ?? "" }
               width={80}
               height={50}
               className="rounded-[50%]"

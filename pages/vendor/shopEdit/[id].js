@@ -1248,7 +1248,7 @@ const ShopEdit = () => {
                     {shopLogo !== "" ? (
                       <div>
                         <Image
-                          src={shopLogo}
+                          src={shopLogo ?? "" }
                           height="150px"
                           alt="logoimg"
                           width="150px"
@@ -1322,7 +1322,7 @@ const ShopEdit = () => {
 
                     {shopBackground !== "" ? (
                       <div>
-                        <Image src={shopBackground} height="150px" alt="logoimg" width="200px" />
+                        <Image src={shopBackground ?? "" } height="150px" alt="logoimg" width="200px" />
                         <div
                           className="bg-gray-300 rounded-full flex justify-center items-center"
                           style={{
@@ -1406,7 +1406,7 @@ const ShopEdit = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                         {shopImages?.map((image, index) => (
                           <div key={index}>
-                            <Image src={image?.links} alt="Product Preview" height={200} width={250} />
+                            <Image src={image?.links ?? "" } alt="Product Preview" height={200} width={250} />
                           </div>
                         ))}
                       </div>

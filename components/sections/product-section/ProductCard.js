@@ -67,7 +67,7 @@ const ProductCard = ({
   const items = [product.product_image.front, product.product_image.back, product.product_image.side].map((itm) => {
     return (
       <Image
-        src={itm === null ? "" : itm}
+        src={itm ?? ""}
         alt={product.name}
         width={250}
         height={productsFiltersReducer.productLayout === "list" ? 300 : 400}
@@ -245,7 +245,7 @@ const ProductCard = ({
                 <div className="flex justify-center items-center">
                   <Image
                     alt="Shop Logo"
-                    src={product.branchInfo?.shop_info?.shop_logo}
+                    src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
                     width={productsFiltersReducer.productLayout === "list" ? 45 : 16}
                     height={productsFiltersReducer.productLayout === "list" ? 45 : 16}
                     className="rounded-[50%]"

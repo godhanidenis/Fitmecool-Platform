@@ -401,7 +401,7 @@ const ProductDetail = ({ productDetails }) => {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Image src={facebookIcon} alt="facebookIcon" />
+                            <Image src={facebookIcon ?? "" } alt="facebookIcon" />
                           </a>
                           <a
                             className="p-2 rounded-lg cursor-pointer"
@@ -409,7 +409,7 @@ const ProductDetail = ({ productDetails }) => {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Image src={instagramIcon} alt="instagramIcon" />
+                            <Image src={instagramIcon ?? "" } alt="instagramIcon" />
                           </a>
                           <a
                             className="p-2 rounded-lg cursor-pointer"
@@ -417,7 +417,7 @@ const ProductDetail = ({ productDetails }) => {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Image src={googleIcon} alt="googleIcon" />
+                            <Image src={googleIcon ?? "" } alt="googleIcon" />
                           </a>
                         </React.Fragment>
                       }
@@ -696,7 +696,7 @@ const ProductDetail = ({ productDetails }) => {
                     <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
                       <div className="flex justify-center items-center">
                         <Avatar className=" !w-14 !h-14">
-                          <Image src={ProfileIcon} alt="ProfileIcon" />
+                          <Image src={ProfileIcon ?? "" } alt="ProfileIcon" />
                         </Avatar>
                       </div>
                       <div className="flex flex-col justify-center">

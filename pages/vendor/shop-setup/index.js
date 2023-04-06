@@ -775,7 +775,7 @@ const ShopPage = () => {
                     {shopLogo !== "" ? (
                       <div>
                         <Image
-                          src={shopLogo}
+                          src={shopLogo ?? "" }
                           height="150px"
                           alt="logoimg"
                           width="150px"
@@ -869,7 +869,7 @@ const ShopPage = () => {
 
                     {shopBackground !== "" ? (
                       <div>
-                        <Image src={shopBackground} height="150px" alt="logoimg" width="200px" />
+                        <Image src={shopBackground ?? "" } height="150px" alt="logoimg" width="200px" />
                         <div
                           className="bg-gray-300 rounded-full flex justify-center items-center"
                           style={{
@@ -988,7 +988,7 @@ const ShopPage = () => {
 
                           {shopImagesOne?.length !== 0 ? (
                             <div>
-                              <Image src={shopImagesOne[0]} height="210px" alt="frontImg" width="200px" />
+                              <Image src={shopImagesOne[0] ?? "" } height="210px" alt="frontImg" width="200px" />
                               <div
                                 className="bg-gray-300 rounded-full flex justify-center items-center"
                                 style={{
@@ -1055,7 +1055,7 @@ const ShopPage = () => {
 
                           {shopImagesSecond?.length !== 0 ? (
                             <div>
-                              <Image src={shopImagesSecond[0]} height="210px" alt="backImg" width="200px" />
+                              <Image src={shopImagesSecond[0] ?? "" } height="210px" alt="backImg" width="200px" />
                               <div
                                 className="bg-gray-300 rounded-full flex justify-center items-center"
                                 style={{
@@ -1122,7 +1122,7 @@ const ShopPage = () => {
 
                           {shopImagesThird?.length !== 0 ? (
                             <div>
-                              <Image src={shopImagesThird[0]} height="210px" alt="sideImg" width="200px" />
+                              <Image src={shopImagesThird[0] ?? "" } height="210px" alt="sideImg" width="200px" />
                               <div
                                 className="bg-gray-300 rounded-full flex justify-center items-center"
                                 style={{

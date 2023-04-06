@@ -14,7 +14,7 @@ const ShopProducts = ({ product }) => {
   ].map((itm) => {
     return (
       <Image
-        src={itm}
+        src={itm ?? "" }
         alt="aoa"
         width={250}
         height={400}

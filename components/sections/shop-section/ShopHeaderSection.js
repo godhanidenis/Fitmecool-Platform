@@ -122,7 +122,7 @@ const ShopHeaderSection = ({
             <div className="flex flex-col	sm:flex-row	">
               <div className="mt-[-45px] flex justify-center">
                 <Image
-                  src={shopDetails.shop_logo}
+                  src={shopDetails?.shop_logo ?? "" }
                   alt="shop logo"
                   layout="fixed"
                   width={150}
@@ -257,7 +257,7 @@ const ShopHeaderSection = ({
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <Image src={facebookIcon} alt="facebookIcon" />
+                      <Image src={facebookIcon ?? "" } alt="facebookIcon" />
                     </a>
                     <a
                       className="p-2 rounded-lg cursor-pointer"
@@ -265,7 +265,7 @@ const ShopHeaderSection = ({
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <Image src={instagramIcon} alt="instagramIcon" />
+                      <Image src={instagramIcon ?? "" } alt="instagramIcon" />
                     </a>
                     <a
                       className="p-2 rounded-lg cursor-pointer"
@@ -273,7 +273,7 @@ const ShopHeaderSection = ({
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <Image src={googleIcon} alt="googleIcon" />
+                      <Image src={googleIcon ?? "" } alt="googleIcon" />
                     </a>
                   </React.Fragment>
                 }

@@ -784,7 +784,7 @@ const ShopDetailsPage = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                         {productImages.map((image, index) => (
                           <div key={index}>
-                            <Image src={image} alt="Product Preview" height={150} width={200} />
+                            <Image src={image ?? "" } alt="Product Preview" height={150} width={200} />
                           </div>
                         ))}
                       </div>

@@ -225,7 +225,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 <button className="pt-3 pb-3 social-icon pr-2 pl-2  w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
                     <Image
-                      src={googleIcon}
+                      src={googleIcon ?? "" }
                       alt="back"
                       width={20}
                       height={20}
@@ -240,7 +240,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 <button className="pt-3 pb-3 pr-2 pl-2  social-icon w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
                   <div className="flex justify-center items-center mr-3">
                     <Image
-                      src={fbIcon}
+                      src={fbIcon ?? "" }
                       alt="back"
                       width={20}
                       height={20}
