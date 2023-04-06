@@ -23,6 +23,7 @@ import Router from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { useResizeScreenLayout } from "../../core/useScreenResize";
 import { loginUserId } from "../../../redux/ducks/userProfile";
+import { Divider } from "@mui/material";
 
 export default function SignUp({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
@@ -125,16 +126,16 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
               Business
             </span>
           </label>
-          <div className="flex pt-2">
+          <div className={asVendor ? "flex pt-2 mt-3 lg:mt-6" : "flex pt-2 mt-3 lg:mt-6"}>
             <h3 className="font-semibold text-xl lg:text-2xl text-colorPrimary ml-8 lg:ml-0">
-              {asVendor ? "Sign up As a Vendor!" : "Sign up to Rentbless!"}
+              {asVendor ? "Sign up As a Business!" : "Sign up As a Customer!"}
             </h3>
             {/* <CloseIcon
               className="text-black ml-auto cursor-pointer"
               onClick={handleClose}
             /> */}
           </div>
-          <div className="mt-4 lg:mt-4">
+          <div className="">
             <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
               <div className="flex flex-col">
                 <div className="flex lg:block justify-center">
@@ -374,15 +375,16 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                 </div>
               </div>
             </form>
+            <Divider className="w-[90%] md:w-5/6 lg:w-3/4 mt-4">OR</Divider>
             <div
               className={
                 asVendor
                   ? "flex justify-center lg:block"
-                  : "flex justify-center lg:block signUpAsNotVendor-height-margin"
+                  : "flex justify-center lg:block"
               }
             >
-              <div className="mt-4 lg:mt-6 gap-6 justify-between items-center flex-row  w-[85%] md:w-5/6 lg:w-3/4 block xl:flex">
-                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border">
+              <div className="mt-4 gap-6 justify-between items-center flex-row  w-[85%] md:w-5/6 lg:w-3/4 block xl:flex">
+                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={googleIcon ?? "" }
@@ -397,7 +399,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                   </span>
                 </button>
 
-                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
+                <button className="pt-3 pb-3 pr-2 pl-2 w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={fbIcon ?? "" }
@@ -413,8 +415,9 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                 </button>
               </div>
             </div>
-            <div className="flex justify-center lg:justify-between items-center mb-4  w-full md:w-5/6 lg:w-3/4 mt-4 lg:mt-4  text-center">
+            <div className="flex justify-center lg:justify-between items-center w-full md:w-5/6 lg:w-3/4 mt-4  text-center" >
               <div
+              style={{  marginTop: asVendor ? "0px" : "12px", marginBottom: asVendor ? "0px": "52px"}}
                 className={
                   asVendor
                     ? "ml-0 lg:ml-auto"

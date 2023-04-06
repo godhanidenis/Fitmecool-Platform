@@ -71,7 +71,7 @@ const ProductCard = ({
         alt={product.name}
         width={250}
         height={productsFiltersReducer.productLayout === "list" ? 300 : 400}
-        className="rounded"
+        className="rounded object-cover"
         key={itm}
       />
     );
@@ -113,7 +113,7 @@ const ProductCard = ({
           >
             <div className="container my-[5px] cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
-                <div className="w-[70%]">
+                <div className="w-[100%]">
                   <Slider {...settings}>{items}</Slider>
                 </div>
               </div>
@@ -131,7 +131,7 @@ const ProductCard = ({
               {!shopProduct ? (
                 <>
                   <button
-                    className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
+                    className={`w-8 h-8 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
                     onClick={() => {
                       if (isAuthenticate) {
                         productLike({

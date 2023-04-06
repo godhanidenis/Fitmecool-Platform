@@ -160,17 +160,22 @@ const LandingPage = () => {
   return (
     <>
       <DirectoryHero bgImg={LandingBg.src} />
-      <div className="container py-2">
-        <UpperFilter
-          byShop={byShop}
-          setByShop={setByShop}
-          setProductPageSkip={setProductPageSkip}
-          setShopPageSkip={setShopPageSkip}
-          showDrawerFilter={true}
-        />
-      </div>
-      <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-4 mb-4 ">
-        <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white">
+      <div className="container py-2 bg-white mb-[1px] mt-3">
+          <div className="grid grid-cols-8 container">
+            <div className="lg:col-span-2 hidden lg:block"></div>
+            <div className="col-span-8 lg:col-span-6">
+            <UpperFilter
+                byShop={byShop}
+                setByShop={setByShop}
+                setProductPageSkip={setProductPageSkip}
+                setShopPageSkip={setShopPageSkip}
+                showDrawerFilter={true}
+              />
+            </div>
+          </div>
+        </div>
+      <div className="grid grid-cols-8 container mb-4 ">
+        <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
           <Filter
             byShop={byShop}
             setByShop={setByShop}
@@ -202,7 +207,13 @@ const LandingPage = () => {
                   }
                 > */}
 
-                <div className={`${productsFiltersReducer.productLayout === "list" ? " " : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"}`}>
+                <div
+                  className={`${
+                    productsFiltersReducer.productLayout === "list"
+                      ? " "
+                      : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
+                  }`}
+                >
                   {productsData &&
                     productsData?.map((product) => (
                       <ProductCard product={product} key={product.id} />
@@ -213,7 +224,7 @@ const LandingPage = () => {
                     <Pagination
                       count={Math.ceil(productsCount / 6)}
                       color="primary"
-                      variant="outlined"
+                      // variant="outlined"
                       shape="rounded"
                       page={
                         (productPageSkip === 0 && 1) || productPageSkip / 6 + 1

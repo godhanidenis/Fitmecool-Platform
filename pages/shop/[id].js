@@ -212,23 +212,27 @@ const ShopDetail = ({ shopDetails }) => {
             scrollRef={myDivRef}
           />
         </div>
-        <div className="container py-2">
-          <UpperFilter
-            setProductPageSkip={setProductPageSkip}
-            forShopPage={true}
-            showDrawerFilter={true}
-            showOnlyShopDetailPage={true}
-          />
+        <div className="container py-2 bg-white mb-[1px] mt-3">
+          <div className="grid grid-cols-8 container">
+            <div className="lg:col-span-2 hidden lg:block"></div>
+            <div className="col-span-8 lg:col-span-6">
+              <UpperFilter
+                setProductPageSkip={setProductPageSkip}
+                forShopPage={true}
+                showDrawerFilter={true}
+                showOnlyShopDetailPage={true}
+              />
+            </div>
+          </div>
         </div>
-
-        <div className="grid grid-cols-8 gap-2 sm:gap-4 container mt-4">
-          <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white">
+        <div className="grid grid-cols-8 container">
+          <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
             <Filter
               productByShop={true}
               setProductPageSkip={setProductPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 rounded-lg p-6 bg-white">
+          <div className="col-span-8 lg:col-span-6 p-6 bg-white">
             <div className="w-[100%]">
               {/* <UpperFilter
                 setProductPageSkip={setProductPageSkip}

@@ -21,6 +21,7 @@ import { loginUserId } from "../../../redux/ducks/userProfile";
 import { useDispatch, useSelector } from "react-redux";
 import Router from "next/router";
 import { useResizeScreenLayout } from "../../core/useScreenResize";
+import { Divider } from "@mui/material";
 
 export default function SignIn({ changeAuthModalType, handleClose }) {
   const [asVendor, setAsVendor] = useState(false);
@@ -105,11 +106,11 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
               Business
             </span>
           </label>
-          <h3 className="pb-2 mt-3 lg:mt-4 font-semibold text-xl lg:text-2xl text-colorPrimary flex justify-center lg:block">
-            {asVendor ? "Login As a Vendor!" : "Login to your account!"}
+          <h3 className="pb-4 mt-3 lg:mt-16 font-semibold text-xl lg:text-2xl text-colorPrimary flex justify-center lg:block">
+            {asVendor ? "Login As a Business!" : "Login As a Customer!"}
           </h3>
 
-          <div className="mt-4 lg:mt-5">
+          <div className="">
             <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
               <div className="flex flex-col">
                 <div className="flex lg:block justify-center">
@@ -187,7 +188,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 </div>
 
                 <div className="flex justify-center lg:block">
-                  <div className="flex justify-end mb-9 lg:mb-9 w-[90%] md:w-5/6 lg:w-3/4">
+                  <div className="flex justify-end mb-4 w-[90%] md:w-5/6 lg:w-3/4">
                     <Link href="/auth/forgot-password">
                       <span
                         className="text-[#544E5D] ml-auto opacity-50 cursor-pointer"
@@ -220,9 +221,10 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 </div>
               </div>
             </form>
-            <div className="flex justify-center lg:block">
-              <div className="mt-6 lg:mt-12 gap-6 justify-between items-center flex-row  w-[90%] md:w-5/6 lg:w-3/4 block xl:flex">
-                <button className="pt-3 pb-3 social-icon pr-2 pl-2  w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border">
+            <Divider className="w-[90%] md:w-5/6 lg:w-3/4 mt-4">OR</Divider>
+            <div className="flex justify-center lg:block ">
+              <div className="mt-4 gap-6 justify-between items-center flex-row  w-[90%] md:w-5/6 lg:w-3/4 block xl:flex">
+                <button className="pt-3 pb-3 social-icon pr-2 pl-2  w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={googleIcon ?? "" }
@@ -237,7 +239,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                   </span>
                 </button>
 
-                <button className="pt-3 pb-3 pr-2 pl-2  social-icon w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-lg text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
+                <button className="pt-3 pb-3 pr-2 pl-2  social-icon w-full focus:ring-0 focus:outline-none font-medium rounded-xl text-sm text-center inline-flex items-center justify-center border mt-4 xl:mt-0">
                   <div className="flex justify-center items-center mr-3">
                     <Image
                       src={fbIcon ?? "" }
@@ -253,9 +255,9 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                 </button>
               </div>
             </div>
-            <div className="flex justify-center lg:justify-between items-center mb-9 w-full md:w-5/6 lg:w-3/4 mt-6 lg:mt-8 text-center">
+            <div className="flex justify-center lg:justify-between items-center mb-6 w-full md:w-5/6 lg:w-3/4 mt-4 text-center">
               <div
-                style={{ marginTop: "12px", marginBottom: "32px" }}
+                style={{ marginTop: "12px"}}
                 className="ml-0 lg:ml-auto"
               >
                 <span className="text-black">{`Don't`} have an account ?</span>
@@ -268,7 +270,7 @@ export default function SignIn({ changeAuthModalType, handleClose }) {
                       Router.push("/auth/signup");
                   }}
                 >
-                  Sign up
+                  Sign Up
                 </span>
               </div>
             </div>
