@@ -38,6 +38,7 @@ import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFi
 import CancelIcon from "@mui/icons-material/Cancel";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
 const style = {
   position: "absolute",
@@ -131,6 +132,7 @@ const ShopEdit = () => {
   const [shopImages, setShopImages] = useState([]);
   const [uploadShopImages, setUploadShopImages] = useState("");
 
+  const [ShopEditImg, setShopEditImg] = useState("");
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
@@ -182,14 +184,20 @@ const ShopEdit = () => {
 
   const updateShopImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    setShopImages([]);
-    setUploadShopImages([]);
+    let resImgIndex = shopImages?.findIndex((obj) => obj?.links === ShopEditImg);
+
+    let uploadShopImagesData = uploadShopImages;
+    let shopImagesData = shopImages;
+
+    uploadShopImagesData[resImgIndex] = files[0];
+    setUploadShopImages(() => [...uploadShopImagesData]);
+
     files.forEach((file) => {
-      setUploadShopImages((old) => [...old, file]);
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setShopImages((old) => [...old, reader.result]);
+        shopImagesData[resImgIndex] = { links: reader.result };
+        setShopImages(() => [...shopImagesData]);
       };
     });
   };
@@ -1228,7 +1236,7 @@ const ShopEdit = () => {
             <div className="container bg-colorWhite rounded-lg my-5 p-5 ">
               <div className="flex flex-col space-y-3">
                 <h3 className="text-colorPrimary text-lg font-semibold leading-8">Shop Layout</h3>
-                <div className="flex flex-col sm:flex-row sm:gap-20 items-center container mt-10">
+                <div className="flex flex-col sm:flex-row sm:gap-20 items-center justify-center container mt-10">
                   <div>
                     <label className="flex justify-center items-center font-bold mb-3">Logo</label>
                     <input
@@ -1248,7 +1256,7 @@ const ShopEdit = () => {
                     {shopLogo !== "" ? (
                       <div>
                         <Image
-                          src={shopLogo ?? "" }
+                          src={shopLogo ?? ""}
                           height="150px"
                           alt="logoimg"
                           width="150px"
@@ -1303,7 +1311,7 @@ const ShopEdit = () => {
                   </div>
 
                   <div>
-                    <label className="flex justify-center items-center font-bold  mb-3">Background</label>
+                    <label className="flex justify-center items-center font-bold  mb-3">Cover Image</label>
 
                     <input
                       type="file"
@@ -1322,7 +1330,7 @@ const ShopEdit = () => {
 
                     {shopBackground !== "" ? (
                       <div>
-                        <Image src={shopBackground ?? "" } height="150px" alt="logoimg" width="200px" />
+                        <Image src={shopBackground ?? ""} height="150px" alt="logoimg" width="200px" />
                         <div
                           className="bg-gray-300 rounded-full flex justify-center items-center"
                           style={{
@@ -1373,14 +1381,9 @@ const ShopEdit = () => {
 
                   <div className="flex justify-center flex-col items-center">
                     <div className="flex  justify-center">
-                      <Button
-                        variant="contained"
-                        component="label"
-                        className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                      >
-                        Choose Shop Images
                         <input
                           type="file"
+                          id="shopEditId"
                           hidden
                           multiple
                           accept="image/*"
@@ -1391,7 +1394,6 @@ const ShopEdit = () => {
                             },
                           })}
                         />
-                      </Button>
                     </div>
                     <div className="mt-2">
                       {shopLayoutErrors.shopImages && (
@@ -1406,7 +1408,26 @@ const ShopEdit = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                         {shopImages?.map((image, index) => (
                           <div key={index}>
-                            <Image src={image?.links ?? "" } alt="Product Preview" height={200} width={250} />
+                            <Image src={image?.links ?? ""} alt="Product Preview" height={200} width={250} />
+                            <div
+                              className="bg-gray-300 rounded-full flex justify-center items-center"
+                              style={{
+                                position: "relative",
+                                left: 255,
+                                bottom: 30,
+                                height: 30,
+                                width: 30,
+                                color: "#5cb85c",
+                              }}
+                            >
+                              <EditIcon
+                                style={{ color: "black", cursor: "pointer" }}
+                                // onClick={() => handleEdit(image?.links)}
+                                onClick={() => (
+                                  setShopEditImg(image?.links), document.getElementById("shopEditId").click()
+                                )}
+                              />
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1417,7 +1438,7 @@ const ShopEdit = () => {
                 <div className="my-5 items-center flex-col w-full container">
                   <h4 className="font-bold mb-3 flex justify-center items-center">Shop Video</h4>
 
-                  <div className="flex justify-center flex-col items-center">
+                  {/* <div className="flex justify-center flex-col items-center">
                     <div className="flex  justify-center">
                       <Button
                         variant="contained"
@@ -1441,60 +1462,105 @@ const ShopEdit = () => {
                         />
                       </Button>
                     </div>
-                  </div>
-                  {shopVideo !== "" && (
-                    <div className="flex  justify-center mt-10">
-                      <div className="flex flex-col w-full">
-                        <div className="grid grid-cols-1 place-items-center">
-                          <div>
-                            <video
-                              autoPlay
-                              style={{ width: "350px", height: "250px" }}
-                              controls
-                              src={shopVideo}
-                            ></video>
-                            <div
-                              className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                              style={{
-                                position: "relative",
-                                right: 10,
-                                bottom: 20,
-                                height: 30,
-                                width: 30,
-                                color: "#5cb85c",
-                              }}
-                            >
-                              <CancelIcon
-                                style={{ color: "black" }}
-                                onClick={() => {
-                                  setShopVideo("");
-                                  setUploadShopVideo("");
+                  </div> */}
+
+                  {/* {shopVideo !== "" && ( */}
+                  <div className="flex  justify-center mt-10">
+                    <div className="flex flex-col w-full">
+                      <div className="grid grid-cols-1 place-items-center">
+                        <div>
+                          <input
+                            type="file"
+                            id="shopVideoId"
+                            name="shopVideo"
+                            accept="video/*"
+                            hidden
+                            controls
+                            onClick={(e) => (e.target.value = null)}
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files.length > 0) {
+                                onShopVideoPreview(e);
+                              }
+                            }}
+                          />
+
+                          {shopVideo !== "" ? (
+                            <div>
+                              <video
+                                autoPlay
+                                style={{ width: "350px", height: "250px" }}
+                                controls
+                                src={shopVideo}
+                              ></video>
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                style={{
+                                  position: "relative",
+                                  right: 10,
+                                  bottom: 20,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
                                 }}
-                              />
-                            </div>
-                            <div
-                              className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                              style={{
-                                position: "relative",
-                                left: 335,
-                                bottom: 50,
-                                height: 30,
-                                width: 30,
-                                color: "#5cb85c",
-                              }}
-                            >
-                              <EditIcon
-                                style={{ color: "black" }}
-                                onClick={() => {
-                                  document.getElementById("shopVideo").click();
+                              >
+                                <CancelIcon
+                                  style={{ color: "black" }}
+                                  onClick={() => {
+                                    setShopVideo("");
+                                    setUploadShopVideo("");
+                                  }}
+                                />
+                              </div>
+                              <div
+                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
+                                style={{
+                                  position: "relative",
+                                  left: 335,
+                                  bottom: 50,
+                                  height: 30,
+                                  width: 30,
+                                  color: "#5cb85c",
                                 }}
-                              />
+                              >
+                                <button onClick={() => {}}>
+                                  <EditIcon
+                                    style={{ color: "black" }}
+                                    onClick={() => {
+                                      document.getElementById("shopVideoId").click();
+                                    }}
+                                  />
+                                </button>
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            <div className="w-[350px] h-[200px] border border-[cadetblue] flex justify-center items-center">
+                              <div className="m-8">
+                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                  <AddAPhotoIcon />
+                                </div>
+                                <div className="mb-3 px-[32px] text-sm font-emoji">
+                                  <p>Upload Shop Video</p>
+                                </div>
+                                <div className="mb-2">
+                                  <Button
+                                    variant="contained"
+                                    component="label"
+                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                    onClick={() => {
+                                      document.getElementById("shopVideoId").click();
+                                    }}
+                                  >
+                                    Upload
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
+                  {/* )} */}
                 </div>
 
                 <div className="flex items-center justify-center">
