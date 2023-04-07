@@ -223,7 +223,7 @@ const ProductDetail = ({ productDetails }) => {
     <>
       <SubHeader />
       <div className="bg-colorWhite">
-        <div className="container pt-4 pb-2">
+        <div className="container pt-4 pb-2 !w-[75%] pl-3">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               Product
@@ -368,7 +368,7 @@ const ProductDetail = ({ productDetails }) => {
       </div>
 
       <div className="bg-colorWhite">
-        <div className="container">
+        <div className="container !w-[75%]">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1 hidden sm:flex">
               <div className="grid grid-cols-4">

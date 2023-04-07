@@ -18,6 +18,7 @@ import { changeShopsLayout, changeSortShopsFilters } from "../../../redux/ducks/
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import DrawerFilters from "../DrawerFilters";
+import SegmentOutlinedIcon from '@mui/icons-material/SegmentOutlined';
 
 const UpperFilter = ({
   byShop,
@@ -58,7 +59,7 @@ const UpperFilter = ({
   return (
     <div className={`flex justify-between`}>
       <div className="flex items-center">
-        <p className="font-bold text-2xl text-colorBlack">{`${byShop ? "Shops" : "Products"}`}</p>
+        <p className="text-[#565f66] text-base font-bold pl-1">{`${byShop ? "Shops (10 items)" : "Products (30 items)"}`}</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -72,7 +73,7 @@ const UpperFilter = ({
           />
         )}
         <GridViewOutlinedIcon
-         
+          fontSize="medium"
           className={`${
             !byShop && productsFiltersReducer.productLayout === "grid" ? "!text-[#95539B]" : "text-black"
           } ${byShop && shopsFiltersReducer.shopLayout === "grid" ? "!text-[#95539B]" : "text-black"} cursor-pointer`}
@@ -93,8 +94,8 @@ const UpperFilter = ({
           }
         />
 
-        <ListOutlinedIcon
-          fontSize="large"
+        <SegmentOutlinedIcon
+          fontSize="medium"
           className={`${
             !byShop && productsFiltersReducer.productLayout === "list" ? "!text-[#95539B]" : "text-black"
           } ${byShop && shopsFiltersReducer.shopLayout === "list" ? "!text-[#95539B]" : "text-black"} cursor-pointer`}
@@ -121,6 +122,8 @@ const UpperFilter = ({
           }}
           disableElevation
           disableRipple
+          // variant="contained" 
+          sx={{backgroundColor:'rgba(149, 83, 155, 0.04) !important'}}
           endIcon={
             !openSortByAnchor ? (
               <ArrowDropDownIcon className="text-black" />
@@ -128,9 +131,9 @@ const UpperFilter = ({
               <ArrowDropUpIcon className="text-black" />
             )
           }
-          className="capitalize"
+          // className="capitalize"
         >
-          <p className="text-black font-semibold text-base">Sort By:</p>
+          <span className="text-black font-semibold text-sm">Sort by</span>
         </Button>
         <Popover
           anchorEl={sortByAnchor}

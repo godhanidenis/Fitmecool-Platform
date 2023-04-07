@@ -54,3 +54,7 @@ h6 {
   -webkit-box-orient: vertical !important;
   -webkit-line-clamp: 1 !important;
 }
+
+.slick-list{
+  height: 275px !important;
+}
