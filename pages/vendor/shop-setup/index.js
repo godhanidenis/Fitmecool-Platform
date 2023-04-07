@@ -992,7 +992,7 @@ const ShopPage = () => {
                                         <AddAPhotoIcon />
                                       </div>
                                       <div className="mb-3 text-sm font-emoji">
-                                        <p>Upload Front Image</p>
+                                        <p>Upload {item === "One" ? "Front" : item === "Two" ? "Back" : "Side"} Image</p>
                                       </div>
                                       <div className="mb-2">
                                         <Button
