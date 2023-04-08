@@ -549,7 +549,7 @@ const ShopDetailsPage = () => {
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="md:!w-[65%] !w-[90%]">
+        <Box sx={style} className="md:!w-[70%] !w-[90%]">
           <div className="p-5">
             <div className="flex items-center mb-5">
               <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleProductListingModalClose} />
@@ -849,7 +849,7 @@ const ShopDetailsPage = () => {
                                       className="bg-gray-300 rounded-full flex justify-center items-center"
                                       style={{
                                         position: "relative",
-                                        left: 0,
+                                        left: 170,
                                         bottom: 30,
                                         height: 30,
                                         width: 30,
@@ -874,7 +874,7 @@ const ShopDetailsPage = () => {
                                       >
                                         <AddAPhotoIcon />
                                       </div>
-                                      <div className="mb-3 text-sm font-emoji">
+                                      <div className="w-max mb-3 text-sm font-emoji">
                                         <p>
                                           Upload {item === "One" ? "Front" : item === "Two" ? "Back" : "Side"} Image
                                         </p>
@@ -1007,7 +1007,7 @@ const ShopDetailsPage = () => {
                                 </div>
                               </div>
                             ) : (
-                              <div className="w-[300px] h-[150px] border border-[cadetblue] flex justify-center items-center">
+                              <div className="w-[275px] md:w-[300px] h-[150px] border border-[cadetblue] flex justify-center items-center">
                                 <div className="m-8">
                                   <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
                                     <AddAPhotoIcon />

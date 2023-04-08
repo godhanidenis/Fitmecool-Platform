@@ -27,6 +27,7 @@ h6 {
 }
 .MuiNativeSelect-select {
   font-weight: 600 !important;
+  padding-left: 5px !important;
 }
 
 ::-webkit-scrollbar {
