@@ -56,7 +56,8 @@ const ShopDetailsPage = () => {
   const [productListingModalOpen, setProductListingModalOpen] = useState(false);
 
   const [productImages, setProductImages] = useState([]);
-  const [uploadProductImages, setUploadProductImages] = useState("");
+  const [uploadProductImages, setUploadProductImages] = useState([]);
+  const ProductImgError = productImages?.filter((item) => item !== undefined);
 
   const [productAllMediaImages, setProductAllMediaImages] = useState([]);
   const [productAllMediaVideo, setProductAllMediaVideo] = useState();
@@ -396,20 +397,41 @@ const ShopDetailsPage = () => {
     }
   };
 
+  // const createProductImagesChange = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files && files.length > 3) {
+  //     alert("You can only upload a maximum of 3 files");
+  //     return false;
+  //   }
+  //   setProductImages([]);
+  //   setUploadProductImages([]);
+  //   files.forEach((file) => {
+  //     setUploadProductImages((old) => [...old, file]);
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onloadend = () => {
+  //       setProductImages((old) => [...old, reader.result]);
+  //     };
+  //   });
+  // };
+
+  const [SelectImgIndex, setSelectImgIndex] = useState();
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files && files.length > 3) {
-      alert("You can only upload a maximum of 3 files");
-      return false;
-    }
-    setProductImages([]);
-    setUploadProductImages([]);
+    let resImgIndex = SelectImgIndex;
+
+    let uploadProductImagesData = uploadProductImages;
+    let ProductImagesData = productImages;
+
+    uploadProductImagesData[resImgIndex] = files[0];
+    setUploadProductImages(() => [...uploadProductImagesData]);
+
     files.forEach((file) => {
-      setUploadProductImages((old) => [...old, file]);
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setProductImages((old) => [...old, reader.result]);
+        ProductImagesData[resImgIndex] = reader.result;
+        setProductImages(() => [...ProductImagesData]);
       };
     });
   };
@@ -426,7 +448,9 @@ const ShopDetailsPage = () => {
   };
 
   async function srcToFile(src, fileName, mimeType) {
-    const res = await fetch(src);
+    const res = await fetch(src , {
+      mode: 'no-cors'
+    });
     const buf = await res.arrayBuffer();
     return new File([buf], fileName, { type: mimeType });
   }
@@ -525,7 +549,7 @@ const ShopDetailsPage = () => {
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2">
+        <Box sx={style} className="md:!w-[70%] !w-[90%]">
           <div className="p-5">
             <div className="flex items-center mb-5">
               <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleProductListingModalClose} />
@@ -751,7 +775,7 @@ const ShopDetailsPage = () => {
                 <div className="items-center flex-col w-full container">
                   <h4 className="font-bold mb-3 flex justify-center items-center">Product Images</h4>
 
-                  <div className="flex justify-center flex-col items-center">
+                  {/* <div className="flex justify-center flex-col items-center">
                     <div className="flex justify-center">
                       <Button
                         variant="contained"
@@ -780,8 +804,8 @@ const ShopDetailsPage = () => {
                         </span>
                       )}
                     </div>
-                  </div>
-                  <div className="flex  justify-center">
+                  </div> */}
+                  {/* <div className="flex  justify-center">
                     <div className="flex flex-col w-full">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
                         {productImages.map((image, index) => (
@@ -789,6 +813,99 @@ const ShopDetailsPage = () => {
                             <Image src={image ?? ""} alt="Product Preview" height={150} width={200} />
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  </div> */}
+                  <div className="flex justify-center mt-10">
+                    <div className="flex items-center flex-col w-full">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-10 place-items-center">
+                        {["One", "Two", "Three"]?.map((item, index) => {
+                          return (
+                            <>
+                              <div className="h-[100%]">
+                                <input
+                                  type="file"
+                                  id={`productImage${item}`}
+                                  name="productImages"
+                                  hidden
+                                  accept="image/*"
+                                  {...register("productImages", {
+                                    required: !ProductImgError[index] ? "Product All Image is required" : false,
+                                    onChange: (e) => {
+                                      createProductImagesChange(e);
+                                    },
+                                  })}
+                                />
+
+                                {productImages[index] ? (
+                                  <div>
+                                    <Image
+                                      src={productImages[index] ?? ""}
+                                      height="210px"
+                                      alt="frontImg"
+                                      width="200px"
+                                    />
+                                    <div
+                                      className="bg-gray-300 rounded-full flex justify-center items-center"
+                                      style={{
+                                        position: "relative",
+                                        left: 170,
+                                        bottom: 30,
+                                        height: 30,
+                                        width: 30,
+                                        color: "#5cb85c",
+                                      }}
+                                    >
+                                      <EditIcon
+                                        style={{ color: "black", cursor: "pointer" }}
+                                        onClick={() => {
+                                          setSelectImgIndex(index),
+                                            document.getElementById(`productImage${item}`).click();
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
+                                    <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
+                                      <div
+                                        style={{ width: "inherit" }}
+                                        className="mb-2 flex justify-center items-center"
+                                      >
+                                        <AddAPhotoIcon />
+                                      </div>
+                                      <div className="w-max mb-3 text-sm font-emoji">
+                                        <p>
+                                          Upload {item === "One" ? "Front" : item === "Two" ? "Back" : "Side"} Image
+                                        </p>
+                                      </div>
+                                      <div className="mb-2">
+                                        <Button
+                                          variant="contained"
+                                          component="label"
+                                          className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                          onClick={() => {
+                                            setSelectImgIndex(index),
+                                              document.getElementById(`productImage${item}`).click();
+                                          }}
+                                        >
+                                          Upload
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          );
+                        })}
+                      </div>
+                      <div className="relative bottom-[25px]">
+                        {errors.productImages && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {errors.productImages?.message}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -890,7 +1007,7 @@ const ShopDetailsPage = () => {
                                 </div>
                               </div>
                             ) : (
-                              <div className="w-[300px] h-[150px] border border-[cadetblue] flex justify-center items-center">
+                              <div className="w-[275px] md:w-[300px] h-[150px] border border-[cadetblue] flex justify-center items-center">
                                 <div className="m-8">
                                   <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
                                     <AddAPhotoIcon />

@@ -153,7 +153,9 @@ const ShopEdit = () => {
 
   const srcToFile = async (src, fileName, mimeType) => {
     console.log("src, fileName, mimeType :", src, fileName, mimeType);
-    const res = await fetch(src);
+    const res = await fetch(src, {
+      mode: 'no-cors'
+    });
     const buf = await res.arrayBuffer();
     return new File([buf], fileName, { type: mimeType });
   };
@@ -1381,19 +1383,19 @@ const ShopEdit = () => {
 
                   <div className="flex justify-center flex-col items-center">
                     <div className="flex  justify-center">
-                        <input
-                          type="file"
-                          id="shopEditId"
-                          hidden
-                          multiple
-                          accept="image/*"
-                          {...shopLayoutRegister("shopImages", {
-                            required: shopImages?.length === 0 ? "Shop Image is required" : false,
-                            onChange: (e) => {
-                              updateShopImagesChange(e);
-                            },
-                          })}
-                        />
+                      <input
+                        type="file"
+                        id="shopEditId"
+                        hidden
+                        multiple
+                        accept="image/*"
+                        {...shopLayoutRegister("shopImages", {
+                          required: shopImages?.length === 0 ? "Shop Image is required" : false,
+                          onChange: (e) => {
+                            updateShopImagesChange(e);
+                          },
+                        })}
+                      />
                     </div>
                     <div className="mt-2">
                       {shopLayoutErrors.shopImages && (
@@ -1405,7 +1407,7 @@ const ShopEdit = () => {
                   </div>
                   <div className="flex  justify-center mt-10">
                     <div className="flex flex-col w-full">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-10 place-items-center">
                         {shopImages?.map((image, index) => (
                           <div key={index}>
                             <Image src={image?.links ?? ""} alt="Product Preview" height={200} width={250} />

@@ -70,7 +70,7 @@ const ProductCard = ({
         src={itm ?? ""}
         alt={product.name}
         width={250}
-        height={productsFiltersReducer.productLayout === "list" ? 300 : 400}
+        height={productsFiltersReducer.productLayout === "list" ? 300 : 300}
         className="rounded object-cover"
         key={itm}
       />
@@ -89,7 +89,7 @@ const ProductCard = ({
     <>
       {viewMore ? (
         <div
-          style={{ position: "absolute", top: "190px" }}
+          style={{ position: "absolute", top: "200px" }}
           className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg "
         >
           <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>

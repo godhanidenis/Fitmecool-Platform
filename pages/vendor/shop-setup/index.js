@@ -85,19 +85,9 @@ const ShopPage = () => {
   const [shopBackground, setShopBackground] = useState("");
   const [uploadShopBackground, setUploadShopBackground] = useState("");
 
-  // const [shopImages, setShopImages] = useState([]);
-  // const [uploadShopImages, setUploadShopImages] = useState("");
-
-  const [shopImagesOne, setShopImagesOne] = useState([]);
-  const [uploadShopImagesOne, setUploadShopImagesOne] = useState([]);
-
-  const [shopImagesSecond, setShopImagesSecond] = useState([]);
-  const [uploadShopImagesSecond, setUploadShopImagesSecond] = useState([]);
-
-  const [shopImagesThird, setShopImagesThird] = useState([]);
-  const [uploadShopImagesThird, setUploadShopImagesThird] = useState([]);
-
-  const AllUploadShopImages = [...uploadShopImagesOne, ...uploadShopImagesSecond, ...uploadShopImagesThird];
+  const [shopImages, setShopImages] = useState([]);
+  const [uploadShopImages, setUploadShopImages] = useState([]);
+  const ShopImgError = shopImages?.filter((item) => item !== undefined);
 
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
@@ -195,7 +185,7 @@ const ShopPage = () => {
       setLoading(true);
       SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
         SingleImageUploadFile(uploadShopBackground).then((backgroundResponse) => {
-          MultipleImageUploadFile(AllUploadShopImages).then((imagesResponse) => {
+          MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
             uploadShopVideo !== ""
               ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
                   shopRegistration({
@@ -380,43 +370,24 @@ const ShopPage = () => {
   //     };
   //   });
   // };
+  const [SelectImgIndex, setSelectImgIndex] = useState();
 
-  const createShopImagesChangeOne = (e) => {
+  const createShopImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    setShopImagesOne([]);
-    setUploadShopImagesOne([]);
+    let resImgIndex = SelectImgIndex;
+
+    let uploadShopImagesData = uploadShopImages;
+    let shopImagesData = shopImages;
+
+    uploadShopImagesData[resImgIndex] = files[0];
+    setUploadShopImages(() => [...uploadShopImagesData]);
+
     files.forEach((file) => {
-      setUploadShopImagesOne([file]);
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        setShopImagesOne([reader.result]);
-      };
-    });
-  };
-  const createShopImagesChangeTwo = (e) => {
-    const files = Array.from(e.target.files);
-    setShopImagesSecond([]);
-    setUploadShopImagesSecond([]);
-    files.forEach((file) => {
-      setUploadShopImagesSecond([file]);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setShopImagesSecond([reader.result]);
-      };
-    });
-  };
-  const createShopImagesChangeThird = (e) => {
-    const files = Array.from(e.target.files);
-    setShopImagesThird([]);
-    setUploadShopImagesThird([]);
-    files.forEach((file) => {
-      setUploadShopImagesThird([file]);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setShopImagesThird([reader.result]);
+        shopImagesData[resImgIndex] = reader.result;
+        setShopImages(() => [...shopImagesData]);
       };
     });
   };
@@ -775,7 +746,7 @@ const ShopPage = () => {
                     {shopLogo !== "" ? (
                       <div>
                         <Image
-                          src={shopLogo ?? "" }
+                          src={shopLogo ?? ""}
                           height="150px"
                           alt="logoimg"
                           width="150px"
@@ -869,7 +840,7 @@ const ShopPage = () => {
 
                     {shopBackground !== "" ? (
                       <div>
-                        <Image src={shopBackground ?? "" } height="150px" alt="logoimg" width="200px" />
+                        <Image src={shopBackground ?? ""} height="150px" alt="logoimg" width="200px" />
                         <div
                           className="bg-gray-300 rounded-full flex justify-center items-center"
                           style={{
@@ -971,213 +942,88 @@ const ShopPage = () => {
                   <div className="flex justify-center mt-10">
                     <div className="flex items-center flex-col w-full">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-10 place-items-center">
-                        <div className="h-[100%]">
-                          <input
-                            type="file"
-                            id="shopImageOne"
-                            name="shopImagesOne"
-                            hidden
-                            accept="image/*"
-                            {...register("shopImagesOne", {
-                              required: shopImagesOne?.length === 0 ? "Shop Front Image is required" : false,
-                              onChange: (e) => {
-                                createShopImagesChangeOne(e);
-                              },
-                            })}
-                          />
-
-                          {shopImagesOne?.length !== 0 ? (
-                            <div>
-                              <Image src={shopImagesOne[0] ?? "" } height="210px" alt="frontImg" width="200px" />
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center"
-                                style={{
-                                  position: "relative",
-                                  left: 180,
-                                  bottom: 30,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <EditIcon
-                                  style={{ color: "black", cursor: "pointer" }}
-                                  onClick={() => document.getElementById("shopImageOne").click()}
+                        {["One", "Two", "Three"]?.map((item, index) => {
+                          return (
+                            <>
+                              <div className="h-[100%]">
+                                <input
+                                  type="file"
+                                  id={`shopImage${item}`}
+                                  name="shopImages"
+                                  hidden
+                                  accept="image/*"
+                                  {...register("shopImages", {
+                                    required: !ShopImgError[index]  ? "Shop All Image is required" : false,
+                                    onChange: (e) => {
+                                      createShopImagesChange(e);
+                                    },
+                                  })}
                                 />
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                              <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
-                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
-                                  <AddAPhotoIcon />
-                                </div>
-                                <div className="mb-3 text-sm font-emoji">
-                                  <p>Upload Front Image</p>
-                                </div>
-                                <div className="mb-2">
-                                  <Button
-                                    variant="contained"
-                                    component="label"
-                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                                    onClick={() => {
-                                      document.getElementById("shopImageOne").click();
-                                    }}
-                                  >
-                                    Upload
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          <div className="mt-2">
-                            {errors.shopImagesOne && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.shopImagesOne?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="h-[100%]">
-                          <input
-                            type="file"
-                            id="shopImageTwo"
-                            name="shopImagesSecond"
-                            hidden
-                            accept="image/*"
-                            {...register("shopImagesSecond", {
-                              required: shopImagesSecond?.length === 0 ? "Shop Back Image is required" : false,
-                              onChange: (e) => {
-                                createShopImagesChangeTwo(e);
-                              },
-                            })}
-                          />
 
-                          {shopImagesSecond?.length !== 0 ? (
-                            <div>
-                              <Image src={shopImagesSecond[0] ?? "" } height="210px" alt="backImg" width="200px" />
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center"
-                                style={{
-                                  position: "relative",
-                                  left: 180,
-                                  bottom: 30,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <EditIcon
-                                  style={{ color: "black", cursor: "pointer" }}
-                                  onClick={() => document.getElementById("shopImageTwo").click()}
-                                />
+                                {shopImages[index] ? (
+                                  <div>
+                                    <Image src={shopImages[index] ?? ""} height="210px" alt="frontImg" width="200px" />
+                                    <div
+                                      className="bg-gray-300 rounded-full flex justify-center items-center"
+                                      style={{
+                                        position: "relative",
+                                        left: 180,
+                                        bottom: 30,
+                                        height: 30,
+                                        width: 30,
+                                        color: "#5cb85c",
+                                      }}
+                                    >
+                                      <EditIcon
+                                        style={{ color: "black", cursor: "pointer" }}
+                                        onClick={() => {
+                                          setSelectImgIndex(index), document.getElementById(`shopImage${item}`).click();
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
+                                    <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
+                                      <div
+                                        style={{ width: "inherit" }}
+                                        className="mb-2 flex justify-center items-center"
+                                      >
+                                        <AddAPhotoIcon />
+                                      </div>
+                                      <div className="mb-3 text-sm font-emoji">
+                                        <p>Upload {item === "One" ? "Front" : item === "Two" ? "Back" : "Side"} Image</p>
+                                      </div>
+                                      <div className="mb-2">
+                                        <Button
+                                          variant="contained"
+                                          component="label"
+                                          className="w-full !capitalize !bg-gray-500 !rounded-3xl"
+                                          onClick={() => {
+                                            setSelectImgIndex(index),
+                                              document.getElementById(`shopImage${item}`).click();
+                                          }}
+                                        >
+                                          Upload
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
-                            </div>
-                          ) : (
-                            <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                              <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
-                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
-                                  <AddAPhotoIcon />
-                                </div>
-                                <div className="mb-3 text-sm font-emoji">
-                                  <p>Upload Back Image</p>
-                                </div>
-                                <div className="mb-2">
-                                  <Button
-                                    variant="contained"
-                                    component="label"
-                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                                    onClick={() => {
-                                      document.getElementById("shopImageTwo").click();
-                                    }}
-                                  >
-                                    Upload
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          <div className="mt-2">
-                            {errors.shopImagesSecond && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.shopImagesSecond?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="h-[100%]">
-                          <input
-                            type="file"
-                            id="shopImageThree"
-                            name="shopImagesThird"
-                            hidden
-                            accept="image/*"
-                            {...register("shopImagesThird", {
-                              required: shopImagesThird?.length === 0 ? "Shop Side Image is required" : false,
-                              onChange: (e) => {
-                                createShopImagesChangeThird(e);
-                              },
-                            })}
-                          />
+                            </>
+                          );
+                        })}
 
-                          {shopImagesThird?.length !== 0 ? (
-                            <div>
-                              <Image src={shopImagesThird[0] ?? "" } height="210px" alt="sideImg" width="200px" />
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center"
-                                style={{
-                                  position: "relative",
-                                  left: 180,
-                                  bottom: 30,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <EditIcon
-                                  style={{ color: "black", cursor: "pointer" }}
-                                  onClick={() => document.getElementById("shopImageThree").click()}
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                              <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
-                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
-                                  <AddAPhotoIcon />
-                                </div>
-                                <div className="mb-3 text-sm font-emoji">
-                                  <p>Upload Side Image</p>
-                                </div>
-                                <div className="mb-2">
-                                  <Button
-                                    variant="contained"
-                                    component="label"
-                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                                    onClick={() => {
-                                      document.getElementById("shopImageThree").click();
-                                    }}
-                                  >
-                                    Upload
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          <div className="mt-2">
-                            {errors.shopImagesThird && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.shopImagesThird?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        {/* {shopImages.map((image, index) => (
-                          <div key={index}>
-                            <Image src={image} alt="Product Preview" height={200} width={250} />
-                          </div>
-                        ))} */}
+
                       </div>
+                      <div className="">
+                          {errors.shopImages && (
+                            <span style={{ color: "red" }} className="-mb-6">
+                              {errors.shopImages?.message}
+                            </span>
+                          )}
+                        </div>
                     </div>
                   </div>
                 </div>
