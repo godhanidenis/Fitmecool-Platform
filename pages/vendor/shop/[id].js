@@ -549,7 +549,7 @@ const ShopDetailsPage = () => {
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="md:!w-[65%] w-[90%]">
+        <Box sx={style} className="md:!w-[65%] !w-[90%]">
           <div className="p-5">
             <div className="flex items-center mb-5">
               <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleProductListingModalClose} />
