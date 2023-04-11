@@ -60,7 +60,7 @@ const style = {
 const ShopPage = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState([]);
   const [hoursModalOpen, setHoursModalOpen] = useState(false);
   const [daysTimeModalOpen, setDaysTimeModalOpen] = useState(false);
