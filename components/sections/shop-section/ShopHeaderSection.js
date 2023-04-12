@@ -63,6 +63,9 @@ const ShopHeaderSection = ({
   scrollRef,
 }) => {
   console.log("shopDetails", shopDetails);
+  
+  const pageShareURL = window.location.href;
+
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -253,7 +256,7 @@ const ShopHeaderSection = ({
                   <React.Fragment>
                     <a
                       className="p-2 rounded-lg cursor-pointer"
-                      href={`${shopDetails?.shop_social_link.facebook}`}
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${pageShareURL}`}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -269,8 +272,7 @@ const ShopHeaderSection = ({
                     </a>
                     <a
                       className="p-2 rounded-lg cursor-pointer"
-                      href={`${shopDetails?.shop_social_link.website}`}
-                      target="_blank"
+                      href={`mailto:info@example.com?&subject=Shop Detail !&cc=&bcc=&body=${pageShareURL}`}
                       rel="noreferrer"
                     >
                       <Image src={googleIcon ?? "" } alt="googleIcon" />

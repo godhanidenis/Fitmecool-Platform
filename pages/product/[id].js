@@ -58,6 +58,8 @@ const ProductDetail = ({ productDetails }) => {
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
 
+  const pageShareURL = window.location.href;
+
   const dispatch = useDispatch();
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
@@ -397,7 +399,7 @@ const ProductDetail = ({ productDetails }) => {
                         <React.Fragment>
                           <a
                             className="p-2 rounded-lg cursor-pointer"
-                            href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.facebook}`}
+                            href={`https://www.facebook.com/sharer/sharer.php?u=${pageShareURL}`}
                             target="_blank"
                             rel="noreferrer"
                           >
@@ -413,8 +415,7 @@ const ProductDetail = ({ productDetails }) => {
                           </a>
                           <a
                             className="p-2 rounded-lg cursor-pointer"
-                            href={`${productDetails.data.product.data.branchInfo.shop_info.shop_social_link.website}`}
-                            target="_blank"
+                            href={`mailto:info@example.com?&subject=Product Detail Page !&cc=&bcc=&body=${pageShareURL}`}
                             rel="noreferrer"
                           >
                             <Image src={googleIcon ?? "" } alt="googleIcon" />
