@@ -12,9 +12,14 @@ import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Tooltip, tooltipClasses } from "@mui/material";
 import Router from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import { styled } from "@mui/material/styles";
+import facebookIcon from "../../../assets/facebook.png";
+import instagramIcon from "../../../assets/instagram.png";
+import googleIcon from "../../../assets/googleIcon.svg";
 
 const style = {
   position: "absolute",
@@ -85,6 +90,25 @@ const ProductCard = ({
     slidesToScroll: 1,
   };
 
+  const [OpenToolTip, setOpenToolTip] = useState(false);
+  const pageShareURL = window.location.href;
+
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#ffffff",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      boxShadow: "0 0 10px rgba(0,0,0,.1)",
+    },
+  }));
+
+  const handleTooltipOpen = () => {
+    setOpenToolTip(!OpenToolTip);
+  };
+
   return (
     <>
       {viewMore ? (
@@ -108,7 +132,9 @@ const ProductCard = ({
         >
           <div
             className={`${
-              !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[auto] md:border-r-2 border-b" : "border-b"
+              !onlyCarousal && productsFiltersReducer.productLayout === "list"
+                ? "w-[auto] md:border-r-2 border-b"
+                : "border-b"
             }`}
           >
             <div className="container my-[5px] cursor-pointer product-parent-div">
@@ -176,11 +202,44 @@ const ProductCard = ({
                     {!productLikeByUser ? <FavoriteBorderIcon fontSize="small" /> : "❤️"}
                   </button>
                   {onlyCarousal && (
-                    <button
-                      className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-12 right-0`}
-                    >
-                      <FileUploadOutlinedIcon fontSize="small" />
-                    </button>
+                    <>
+                      <HtmlTooltip
+                        title={
+                          <React.Fragment>
+                            <div className="">
+                              <div className="p-2 rounded-lg cursor-pointer">
+                                <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                  <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                </FacebookShareButton>
+                              </div>
+                              <div className="p-2 rounded-lg cursor-pointer">
+                                <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                  {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                                  <WhatsappIcon size={25} round={true} />
+                                </WhatsappShareButton>
+                              </div>
+                              <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                <EmailShareButton
+                                  subject="Product Detail Page"
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
+                                  <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                </EmailShareButton>
+                              </div>
+                            </div>
+                          </React.Fragment>
+                        }
+                      >
+                        <button
+                          onClick={handleTooltipOpen}
+                          className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-12 right-0`}
+                        >
+                          <FileUploadOutlinedIcon fontSize="small" />
+                        </button>
+                      </HtmlTooltip>
+                    </>
                   )}
                 </>
               ) : (
@@ -275,10 +334,7 @@ const ProductCard = ({
                     >
                       {product.product_name}
                     </p>
-                    <p
-                      className="text-[#565f66] text-base mt-2"
-                      title={product.product_description}
-                    >
+                    <p className="text-[#565f66] text-base mt-2" title={product.product_description}>
                       {product.product_description}
                     </p>
                     <Link href={`/product/${product.id}`}>
