@@ -26,7 +26,7 @@ const ProductLikePage = () => {
       {userProfile.product_like_list?.length === 0 || !isAuthenticate ? (
         <div className="flex flex-col justify-center bg-[#F5F5F5] my-10 w-[95%] mx-auto gap-5 h-[calc(100vh-150px)] items-center">
           <Image
-            src={EmptyCart ?? "" }
+            src={EmptyCart ?? ""}
             width={200}
             height={200}
             alt="EmptyCart"
@@ -60,8 +60,12 @@ const ProductLikePage = () => {
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 sm:gap-10 place-items-center mb-10">
             {userProfile.product_like_list &&
               userProfile.product_like_list?.map((product) => (
-                <Link href={`/product/${product.id}`} passHref key={product.id}>
-                  <ProductCard product={product} key={product.id} />
+                <Link
+                  href={`/product/${product?.id}`}
+                  passHref
+                  key={product?.id}
+                >
+                  <ProductCard product={product} />
                 </Link>
               ))}
           </div>

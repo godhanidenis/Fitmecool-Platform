@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
 import { useState } from "react";
 import { useEffect } from "react";
+import Script from "next/script";
 
 const theme = createTheme({
   palette: {
@@ -48,6 +49,9 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Rentbless</title>
       </Head>
+
+      <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
+
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <ToastContainer />

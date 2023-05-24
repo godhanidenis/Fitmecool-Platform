@@ -64,10 +64,10 @@ const ProductCard = ({
       setProductLikeByUser(false);
     }
 
-    const likedProductByUser = userProfile?.product_like_list?.find((itm) => itm.id === product.id);
+    const likedProductByUser = userProfile?.product_like_list?.find((itm) => itm?.id === product?.id);
 
     likedProductByUser ? setProductLikeByUser(true) : setProductLikeByUser(false);
-  }, [isAuthenticate, product.id, userProfile]);
+  }, [isAuthenticate, product?.id, userProfile]);
 
   const items = [product.product_image.front, product.product_image.back, product.product_image.side].map((itm) => {
     return (

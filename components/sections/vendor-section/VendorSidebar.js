@@ -80,6 +80,21 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
             Products
           </p>
         </div>
+
+        <div
+          className={`${setActiveLink(
+            "/vendor/shop-subscription"
+          )}  text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
+          onClick={() => {
+            router.push(`/vendor/shop-subscription/`);
+            themeLayout === "mobileScreen" && handleMobileSidebarClick();
+          }}
+        >
+          <p className="flex items-center cursor-pointer">
+            <ListAltIcon className="!mr-3" />
+            Subscription
+          </p>
+        </div>
       </div>
     </div>
   );
