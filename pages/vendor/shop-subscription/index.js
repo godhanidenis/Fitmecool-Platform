@@ -11,6 +11,7 @@ import {
   paymentVerification,
 } from "../../../graphql/mutations/subscription";
 import { loadUserProfileStart } from "../../../redux/ducks/userProfile";
+import { toast } from "react-toastify";
 
 const ShopSubscription = () => {
   const [checked, setChecked] = useState(false);
@@ -37,7 +38,9 @@ const ShopSubscription = () => {
   useEffect(() => {
     if (userProfile?.subscriptionId) {
       getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
-        (res) => setCurrentPlan(res?.data?.singleSubscription)
+        (res) =>
+          res?.data?.singleSubscription?.status === "active" &&
+          setCurrentPlan(res?.data?.singleSubscription)
       );
     }
   }, [userProfile?.subscriptionId]);
@@ -71,10 +74,20 @@ const ShopSubscription = () => {
               razorpay_plan_id: plan?.id,
               userId: userProfile?.id,
               shopId: userProfile?.userCreatedShopId,
-            }).then((response) => {
-              dispatch(loadUserProfileStart({ id: userProfile?.id }));
-              router.push(response?.data?.paymentVerification);
-            });
+            }).then(
+              (response) => {
+                dispatch(loadUserProfileStart({ id: userProfile?.id }));
+                response?.data?.paymentVerification?.status === "success"
+                  ? toast.success(
+                      `Your Subscription Successfully!! Reference No. ${response?.data?.paymentVerification?.razorpay_payment_id}`
+                    )
+                  : toast.success(
+                      `Your Subscription Failed!! Reference No. ${response?.data?.paymentVerification?.razorpay_payment_id}`
+                    );
+                // router.push(response?.data?.paymentVerification);
+              },
+              (err) => console.log("error: ", err)
+            );
           },
           notes: {
             address: "FlyOnTech Solutions",
@@ -127,7 +140,8 @@ const ShopSubscription = () => {
                   {(plan?.period === "weekly" && "week") ||
                     (plan?.period === "monthly" && "month")}
                 </p>
-                {currentPlan?.plan_id === plan?.id ? (
+                {userProfile?.subscriptionStatus &&
+                currentPlan?.plan_id === plan?.id ? (
                   <div className="mt-4">
                     <b>Current Plan</b>
                     <p>
@@ -155,12 +169,18 @@ const ShopSubscription = () => {
                     } py-2 px-3 mt-4 rounded-md`}
                     onClick={() => checkoutHandler(plan)}
                   >
-                    {currentPlan?.subscriptionPlan?.item?.amount / 100 >
-                      plan?.item?.amount / 100 && "Downgrade"}
-                    {currentPlan?.subscriptionPlan?.item?.amount / 100 <
-                      plan?.item?.amount / 100 && "Upgrade"}
+                    {userProfile?.subscriptionStatus &&
+                      currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                        plan?.item?.amount / 100 &&
+                      "Downgrade"}
+                    {userProfile?.subscriptionStatus &&
+                      currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                        plan?.item?.amount / 100 &&
+                      "Upgrade"}
 
-                    {!currentPlan && "Choose"}
+                    {!userProfile?.subscriptionStatus &&
+                      !currentPlan &&
+                      "Choose"}
                   </button>
                 )}
                 <p className="mt-4">

@@ -200,7 +200,7 @@ const Header = ({ modalType }) => {
               )}
             <Link
               href={`${
-                userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
+                userProfile?.user_type === "vendor" ? "/vendor/dashboard" : "/"
               }`}
             >
               <div className="cursor-pointer">
@@ -211,7 +211,7 @@ const Header = ({ modalType }) => {
                 {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
               </div>
             </Link>
-            {userProfile.user_type !== "vendor" && (
+            {userProfile?.user_type !== "vendor" && (
               <Autocomplete
                 className="hidden lg:flex"
                 size="small"
@@ -459,7 +459,7 @@ export const UserProfile = ({ setAccessToken }) => {
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
 
-  if (userProfile.user_type === "vendor" && userProfile.subscriptionId) {
+  if (userProfile.user_type === "vendor" && userProfile.subscriptionStatus) {
     options.unshift({
       icon: <SubscriptionsIcon />,
       name: "User Subscription",

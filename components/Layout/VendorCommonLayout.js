@@ -4,6 +4,8 @@ import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
+import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
+import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -17,6 +19,21 @@ const VendorCommonLayout = ({ children }) => {
       dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
+
+  useEffect(() => {
+    if (userProfile?.subscriptionId) {
+      getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
+        (res) =>
+          dispatch(
+            setSubscriptionStatus(
+              res?.data?.singleSubscription?.status === "active" ? true : false
+            )
+          )
+      );
+    } else {
+      dispatch(setSubscriptionStatus(false));
+    }
+  }, [dispatch, userProfile?.subscriptionId]);
 
   return (
     <div className="grid grid-cols-12">

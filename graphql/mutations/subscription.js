@@ -60,7 +60,10 @@ export const paymentVerification = async (payload) => {
           razorpay_plan_id: $razorpayPlanId
           userId: $userId
           shopId: $shopId
-        )
+        ) {
+          status
+          razorpay_payment_id
+        }
       }
     `,
 

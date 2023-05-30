@@ -180,15 +180,98 @@ const ShopPage = () => {
     if (activeStep !== 2) {
       handleNext();
     } else {
-      console.log("Data To be Submitted !!", data);
-
       setLoading(true);
       SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
-        SingleImageUploadFile(uploadShopBackground).then((backgroundResponse) => {
-          MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
-            uploadShopVideo !== ""
-              ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
-                  shopRegistration({
+        SingleImageUploadFile(uploadShopBackground).then(
+          (backgroundResponse) => {
+            MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
+              uploadShopVideo !== ""
+                ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
+                    shopRegistration({
+                      userId: userProfile.id,
+                      ownerInfo: {
+                        owner_firstName: data.first_name,
+                        owner_lastName: data.last_name,
+                        owner_email: data.user_email,
+                        owner_contact: data.user_contact,
+                      },
+                      shopInfo: {
+                        shop_logo: logoResponse.data.data.singleUpload,
+                        shop_cover_image:
+                          backgroundResponse.data.data.singleUpload,
+                        shop_images:
+                          imagesResponse.data.data.multipleUpload.map((itm) => {
+                            return { links: itm };
+                          }),
+                        shop_video: videoResponse.data.data.singleUpload,
+
+                        form_steps: "3",
+                        shop_social_link: {
+                          facebook: individual ? "" : data.facebook_link,
+                          instagram: individual ? "" : data.instagram_link,
+                          website: individual ? "" : data.personal_website,
+                        },
+                        shop_name: data.shop_name,
+                        shop_email: data.shop_email,
+                        shop_type: individual ? "individual" : "shop",
+                        shop_time: hours.map((day) => {
+                          return {
+                            week: day["key"],
+                            open_time:
+                              day["value"][0] === "Closed" ||
+                              day["value"][0] === "Open 24 hours"
+                                ? "-"
+                                : day["value"][0].split(" - ")[0],
+                            close_time:
+                              day["value"][0] === "Closed" ||
+                              day["value"][0] === "Open 24 hours"
+                                ? "-"
+                                : day["value"][0].split(" - ")[1],
+                            is_close:
+                              day["value"][0] === "Closed" ? true : false,
+                            is_24Hours_open:
+                              day["value"][0] === "Open 24 hours"
+                                ? true
+                                : false,
+                          };
+                        }),
+                      },
+                      branchInfo: [
+                        {
+                          branch_address: data.address,
+                          branch_city: data.city,
+                          branch_pinCode: data.pin_code,
+                          manager_name:
+                            data.manager_first_name +
+                            " " +
+                            data.manager_last_name,
+                          manager_contact: data.manager_user_contact,
+                          manager_email: data.manager_user_email,
+                          branch_type: "main",
+                        },
+                        ...(subBranch.length > 0
+                          ? subBranch.map(returnSubBranchData)
+                          : []),
+                      ],
+                    }).then(
+                      (res) => {
+                        dispatch(
+                          setShopRegisterId(res.data.createShop.shopInfo.id)
+                        );
+                        toast.success(res.data.createShop.message, {
+                          theme: "colored",
+                        });
+                        setLoading(false);
+                        localStorage.setItem("userHaveAnyShop", "true");
+                        Router.push("/vendor/dashboard");
+                      },
+                      (error) => {
+                        setLoading(false);
+                        toast.error(error.message, { theme: "colored" });
+                      }
+                    );
+                  })
+                : shopRegistration({
                     userId: userProfile.id,
                     ownerInfo: {
                       owner_firstName: data.first_name,
@@ -198,12 +281,13 @@ const ShopPage = () => {
                     },
                     shopInfo: {
                       shop_logo: logoResponse.data.data.singleUpload,
-                      shop_cover_image: backgroundResponse.data.data.singleUpload,
-                      shop_images: imagesResponse.data.data.multipleUpload.map((itm) => {
-                        return { links: itm };
-                      }),
-                      shop_video: videoResponse.data.data.singleUpload,
-
+                      shop_cover_image:
+                        backgroundResponse.data.data.singleUpload,
+                      shop_images: imagesResponse.data.data.multipleUpload.map(
+                        (itm) => {
+                          return { links: itm };
+                        }
+                      ),
                       form_steps: "3",
                       shop_social_link: {
                         facebook: individual ? "" : data.facebook_link,
@@ -217,34 +301,43 @@ const ShopPage = () => {
                         return {
                           week: day["key"],
                           open_time:
-                            day["value"][0] === "Closed" || day["value"][0] === "Open 24 hours"
+                            day["value"][0] === "Closed" ||
+                            day["value"][0] === "Open 24 hours"
                               ? "-"
                               : day["value"][0].split(" - ")[0],
                           close_time:
-                            day["value"][0] === "Closed" || day["value"][0] === "Open 24 hours"
+                            day["value"][0] === "Closed" ||
+                            day["value"][0] === "Open 24 hours"
                               ? "-"
                               : day["value"][0].split(" - ")[1],
                           is_close: day["value"][0] === "Closed" ? true : false,
-                          is_24Hours_open: day["value"][0] === "Open 24 hours" ? true : false,
+                          is_24Hours_open:
+                            day["value"][0] === "Open 24 hours" ? true : false,
                         };
                       }),
                     },
                     branchInfo: [
                       {
                         branch_address: data.address,
-                        branch_city: data.city,
                         branch_pinCode: data.pin_code,
-                        manager_name: data.manager_first_name + " " + data.manager_last_name,
+                        branch_city: data.city,
+                        manager_name:
+                          data.manager_first_name +
+                          " " +
+                          data.manager_last_name,
                         manager_contact: data.manager_user_contact,
                         manager_email: data.manager_user_email,
                         branch_type: "main",
                       },
-                      ...(subBranch.length > 0 ? subBranch.map(returnSubBranchData) : []),
+                      ...(subBranch.length > 0
+                        ? subBranch.map(returnSubBranchData)
+                        : []),
                     ],
                   }).then(
                     (res) => {
-                      console.log("res:::", res);
-                      dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
+                      dispatch(
+                        setShopRegisterId(res.data.createShop.shopInfo.id)
+                      );
                       toast.success(res.data.createShop.message, {
                         theme: "colored",
                       });
@@ -257,76 +350,9 @@ const ShopPage = () => {
                       toast.error(error.message, { theme: "colored" });
                     }
                   );
-                })
-              : shopRegistration({
-                  userId: userProfile.id,
-                  ownerInfo: {
-                    owner_firstName: data.first_name,
-                    owner_lastName: data.last_name,
-                    owner_email: data.user_email,
-                    owner_contact: data.user_contact,
-                  },
-                  shopInfo: {
-                    shop_logo: logoResponse.data.data.singleUpload,
-                    shop_cover_image: backgroundResponse.data.data.singleUpload,
-                    shop_images: imagesResponse.data.data.multipleUpload.map((itm) => {
-                      return { links: itm };
-                    }),
-                    form_steps: "3",
-                    shop_social_link: {
-                      facebook: individual ? "" : data.facebook_link,
-                      instagram: individual ? "" : data.instagram_link,
-                      website: individual ? "" : data.personal_website,
-                    },
-                    shop_name: data.shop_name,
-                    shop_email: data.shop_email,
-                    shop_type: individual ? "individual" : "shop",
-                    shop_time: hours.map((day) => {
-                      return {
-                        week: day["key"],
-                        open_time:
-                          day["value"][0] === "Closed" || day["value"][0] === "Open 24 hours"
-                            ? "-"
-                            : day["value"][0].split(" - ")[0],
-                        close_time:
-                          day["value"][0] === "Closed" || day["value"][0] === "Open 24 hours"
-                            ? "-"
-                            : day["value"][0].split(" - ")[1],
-                        is_close: day["value"][0] === "Closed" ? true : false,
-                        is_24Hours_open: day["value"][0] === "Open 24 hours" ? true : false,
-                      };
-                    }),
-                  },
-                  branchInfo: [
-                    {
-                      branch_address: data.address,
-                      branch_pinCode: data.pin_code,
-                      branch_city: data.city,
-                      manager_name: data.manager_first_name + " " + data.manager_last_name,
-                      manager_contact: data.manager_user_contact,
-                      manager_email: data.manager_user_email,
-                      branch_type: "main",
-                    },
-                    ...(subBranch.length > 0 ? subBranch.map(returnSubBranchData) : []),
-                  ],
-                }).then(
-                  (res) => {
-                    console.log("res:::", res);
-                    dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
-                    toast.success(res.data.createShop.message, {
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    localStorage.setItem("userHaveAnyShop", "true");
-                    Router.push("/vendor/dashboard");
-                  },
-                  (error) => {
-                    setLoading(false);
-                    toast.error(error.message, { theme: "colored" });
-                  }
-                );
-          });
-        });
+            });
+          }
+        );
       });
     }
   };
@@ -412,10 +438,17 @@ const ShopPage = () => {
       <div className="">
         <div className="container py-10">
           <div className="flex justify-center">
-            <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />} className="md:w-[30%]">
+            <Stepper
+              alternativeLabel
+              activeStep={activeStep}
+              connector={<QontoConnector />}
+              className="md:w-[30%]"
+            >
               {shopRegistrationSteps.map((label) => (
                 <Step key={label}>
-                  <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+                  <StepLabel StepIconComponent={QontoStepIcon}>
+                    {label}
+                  </StepLabel>
                 </Step>
               ))}
             </Stepper>
@@ -443,7 +476,9 @@ const ShopPage = () => {
                   </div>
                 </div>
                 <div className="container bg-colorWhite rounded-lg p-5 md:!w-[70%]">
-                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">OWNER DETAILS</h3>
+                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">
+                    OWNER DETAILS
+                  </h3>
                   <form>
                     <div className="flex flex-col space-y-3">
                       <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-5 w-full justify-between items-center">
@@ -560,7 +595,9 @@ const ShopPage = () => {
                   </form>
                 </div>
                 <div className="container bg-colorWhite rounded-lg my-5 lg:my-5 p-5 md:!w-[70%]">
-                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">SHOP INFO</h3>
+                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">
+                    SHOP INFO
+                  </h3>
                   <form>
                     <div className="flex flex-col space-y-3">
                       <div className="flex items-center justify-center container gap-20">
@@ -609,7 +646,10 @@ const ShopPage = () => {
                               </Box>
                               <div className="mt-2">
                                 {errors.shop_email && (
-                                  <span style={{ color: "red" }} className="-mb-6">
+                                  <span
+                                    style={{ color: "red" }}
+                                    className="-mb-6"
+                                  >
                                     {errors.shop_email?.message}
                                   </span>
                                 )}
@@ -632,7 +672,10 @@ const ShopPage = () => {
                               </Box>
                               <div className="mt-2">
                                 {errors.personal_website && (
-                                  <span style={{ color: "red" }} className="-mb-6">
+                                  <span
+                                    style={{ color: "red" }}
+                                    className="-mb-6"
+                                  >
                                     {errors.personal_website?.message}
                                   </span>
                                 )}
@@ -655,7 +698,10 @@ const ShopPage = () => {
                               </Box>
                               <div className="mt-2">
                                 {errors.facebook_link && (
-                                  <span style={{ color: "red" }} className="-mb-6">
+                                  <span
+                                    style={{ color: "red" }}
+                                    className="-mb-6"
+                                  >
                                     {errors.facebook_link?.message}
                                   </span>
                                 )}
@@ -675,7 +721,10 @@ const ShopPage = () => {
                               </Box>
                               <div className="mt-2">
                                 {errors.instagram_link && (
-                                  <span style={{ color: "red" }} className="-mb-6">
+                                  <span
+                                    style={{ color: "red" }}
+                                    className="-mb-6"
+                                  >
                                     {errors.instagram_link?.message}
                                   </span>
                                 )}
@@ -684,7 +733,9 @@ const ShopPage = () => {
                           </div>
 
                           <div className="container flex gap-2 w-full flex-col">
-                            <p className="flex items-center text-colorBlack text-lg">Hours</p>
+                            <p className="flex items-center text-colorBlack text-lg">
+                              Hours
+                            </p>
                             <div
                               className="w-full border border-colorBlack p-3 rounded-lg flex items-center justify-between cursor-pointer text-colorBlack text-sm sm:text-base font-semibold"
                               onClick={() => {
@@ -693,7 +744,10 @@ const ShopPage = () => {
                             >
                               <div>
                                 {hours.map((day, index) => (
-                                  <div className="flex justify-between pb-2" key={index}>
+                                  <div
+                                    className="flex justify-between pb-2"
+                                    key={index}
+                                  >
                                     <div className="pr-2">{day["key"]} :</div>
                                     <div className="">
                                       {day["value"]?.map((time, index) => (
@@ -735,7 +789,8 @@ const ShopPage = () => {
                       name="shopLogo"
                       hidden
                       {...register("shopLogo", {
-                        required: shopLogo === "" ? "shopLogo is required" : false,
+                        required:
+                          shopLogo === "" ? "shopLogo is required" : false,
                         onChange: (e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             onShopLogoPreviewImage(e);
@@ -790,7 +845,10 @@ const ShopPage = () => {
                           Upload
                         </button> */}
                         <div className="m-10">
-                          <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                          <div
+                            style={{ width: "inherit" }}
+                            className="mb-2 flex justify-center items-center"
+                          >
                             <AddAPhotoIcon />
                           </div>
                           <div className="mb-3 px-[12px] text-sm font-emoji">
@@ -829,7 +887,10 @@ const ShopPage = () => {
                       name="shopBackground"
                       hidden
                       {...register("shopBackground", {
-                        required: shopBackground === "" ? "shopBackground is required" : false,
+                        required:
+                          shopBackground === ""
+                            ? "shopBackground is required"
+                            : false,
                         onChange: (e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             onShopBackgroundPreviewImage(e);
@@ -840,7 +901,12 @@ const ShopPage = () => {
 
                     {shopBackground !== "" ? (
                       <div>
-                        <Image src={shopBackground ?? ""} height="150px" alt="logoimg" width="200px" />
+                        <Image
+                          src={shopBackground ?? ""}
+                          height="150px"
+                          alt="logoimg"
+                          width="200px"
+                        />
                         <div
                           className="bg-gray-300 rounded-full flex justify-center items-center"
                           style={{
@@ -854,7 +920,9 @@ const ShopPage = () => {
                         >
                           <EditIcon
                             style={{ color: "black", cursor: "pointer" }}
-                            onClick={() => document.getElementById("shopBackground").click()}
+                            onClick={() =>
+                              document.getElementById("shopBackground").click()
+                            }
                           />
                         </div>
                       </div>
@@ -875,7 +943,10 @@ const ShopPage = () => {
                           <AddIcon />
                         </button> */}
                         <div className="m-8">
-                          <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                          <div
+                            style={{ width: "inherit" }}
+                            className="mb-2 flex justify-center items-center"
+                          >
                             <AddAPhotoIcon />
                           </div>
                           <div className="mb-3 px-[32px] text-sm font-emoji">
@@ -887,7 +958,9 @@ const ShopPage = () => {
                               component="label"
                               className="w-full !capitalize !bg-gray-500 !rounded-3xl"
                               onClick={() => {
-                                document.getElementById("shopBackground").click();
+                                document
+                                  .getElementById("shopBackground")
+                                  .click();
                               }}
                             >
                               Upload
@@ -907,7 +980,9 @@ const ShopPage = () => {
                 </div>
 
                 <div className="mt-5 items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">Shop Images</h4>
+                  <h4 className="font-bold mb-3 flex justify-center items-center">
+                    Shop Images
+                  </h4>
 
                   {/* <div className="flex justify-center flex-col items-center">
                     <div className="flex justify-center">
@@ -953,7 +1028,9 @@ const ShopPage = () => {
                                   hidden
                                   accept="image/*"
                                   {...register("shopImages", {
-                                    required: !ShopImgError[index]  ? "Shop All Image is required" : false,
+                                    required: !ShopImgError[index]
+                                      ? "Shop All Image is required"
+                                      : false,
                                     onChange: (e) => {
                                       createShopImagesChange(e);
                                     },
@@ -962,7 +1039,12 @@ const ShopPage = () => {
 
                                 {shopImages[index] ? (
                                   <div>
-                                    <Image src={shopImages[index] ?? ""} height="210px" alt="frontImg" width="200px" />
+                                    <Image
+                                      src={shopImages[index] ?? ""}
+                                      height="210px"
+                                      alt="frontImg"
+                                      width="200px"
+                                    />
                                     <div
                                       className="bg-gray-300 rounded-full flex justify-center items-center"
                                       style={{
@@ -975,16 +1057,30 @@ const ShopPage = () => {
                                       }}
                                     >
                                       <EditIcon
-                                        style={{ color: "black", cursor: "pointer" }}
+                                        style={{
+                                          color: "black",
+                                          cursor: "pointer",
+                                        }}
                                         onClick={() => {
-                                          setSelectImgIndex(index), document.getElementById(`shopImage${item}`).click();
+                                          setSelectImgIndex(index),
+                                            document
+                                              .getElementById(
+                                                `shopImage${item}`
+                                              )
+                                              .click();
                                         }}
                                       />
                                     </div>
                                   </div>
                                 ) : (
                                   <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                                    <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
+                                    <div
+                                      style={{
+                                        marginTop: "35%",
+                                        marginBottom: "35%",
+                                      }}
+                                      className="mx-8"
+                                    >
                                       <div
                                         style={{ width: "inherit" }}
                                         className="mb-2 flex justify-center items-center"
@@ -992,7 +1088,15 @@ const ShopPage = () => {
                                         <AddAPhotoIcon />
                                       </div>
                                       <div className="mb-3 text-sm font-emoji">
-                                        <p>Upload {item === "One" ? "Front" : item === "Two" ? "Back" : "Side"} Image</p>
+                                        <p>
+                                          Upload{" "}
+                                          {item === "One"
+                                            ? "Front"
+                                            : item === "Two"
+                                            ? "Back"
+                                            : "Side"}{" "}
+                                          Image
+                                        </p>
                                       </div>
                                       <div className="mb-2">
                                         <Button
@@ -1001,7 +1105,11 @@ const ShopPage = () => {
                                           className="w-full !capitalize !bg-gray-500 !rounded-3xl"
                                           onClick={() => {
                                             setSelectImgIndex(index),
-                                              document.getElementById(`shopImage${item}`).click();
+                                              document
+                                                .getElementById(
+                                                  `shopImage${item}`
+                                                )
+                                                .click();
                                           }}
                                         >
                                           Upload
@@ -1014,22 +1122,22 @@ const ShopPage = () => {
                             </>
                           );
                         })}
-
-
                       </div>
                       <div className="">
-                          {errors.shopImages && (
-                            <span style={{ color: "red" }} className="-mb-6">
-                              {errors.shopImages?.message}
-                            </span>
-                          )}
-                        </div>
+                        {errors.shopImages && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {errors.shopImages?.message}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="my-5 items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">Shop Video</h4>
+                  <h4 className="font-bold mb-3 flex justify-center items-center">
+                    Shop Video
+                  </h4>
 
                   {/* <div className="flex justify-center flex-col items-center">
                     <div className="flex  justify-center">
@@ -1119,7 +1227,9 @@ const ShopPage = () => {
                                   <EditIcon
                                     style={{ color: "black" }}
                                     onClick={() => {
-                                      document.getElementById("shopVideoId").click();
+                                      document
+                                        .getElementById("shopVideoId")
+                                        .click();
                                     }}
                                   />
                                 </button>
@@ -1128,7 +1238,10 @@ const ShopPage = () => {
                           ) : (
                             <div className="w-[350px] h-[200px] border border-[cadetblue] flex justify-center items-center">
                               <div className="m-8">
-                                <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                <div
+                                  style={{ width: "inherit" }}
+                                  className="mb-2 flex justify-center items-center"
+                                >
                                   <AddAPhotoIcon />
                                 </div>
                                 <div className="mb-3 px-[32px] text-sm font-emoji">
@@ -1140,7 +1253,9 @@ const ShopPage = () => {
                                     component="label"
                                     className="w-full !capitalize !bg-gray-500 !rounded-3xl"
                                     onClick={() => {
-                                      document.getElementById("shopVideoId").click();
+                                      document
+                                        .getElementById("shopVideoId")
+                                        .click();
                                     }}
                                   >
                                     Upload
@@ -1207,7 +1322,9 @@ const ShopPage = () => {
             {activeStep === 2 && (
               <>
                 <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5 md:!w-[70%]">
-                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">BRANCHES</h3>
+                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+                    BRANCHES
+                  </h3>
                   <form>
                     <div className="flex flex-col space-y-3">
                       <p className="mt-2 container flex items-center text-colorBlack text-sm font-semibold">
@@ -1282,7 +1399,9 @@ const ShopPage = () => {
 
                       <div className="flex sm:justify-center">
                         <div className="mb-4 mt-2 flex flex-col sm:flex-row sm:justify-between sm:items-center container">
-                          <span className="font-semibold text-lg text-[#11142D]">Manager : Save as owner</span>
+                          <span className="font-semibold text-lg text-[#11142D]">
+                            Manager : Save as owner
+                          </span>
 
                           <RadioGroup
                             row
@@ -1298,14 +1417,24 @@ const ShopPage = () => {
                               }
                             }}
                           >
-                            <FormControlLabel value="True" label="Yes" control={<Radio />} />
-                            <FormControlLabel value="False" control={<Radio />} label="No" />
+                            <FormControlLabel
+                              value="True"
+                              label="Yes"
+                              control={<Radio />}
+                            />
+                            <FormControlLabel
+                              value="False"
+                              control={<Radio />}
+                              label="No"
+                            />
                           </RadioGroup>
                         </div>
                       </div>
 
                       <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                        <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p>
+                        <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                          Name:
+                        </p>
                         <div className="w-full">
                           <Box sx={{ display: "flex" }}>
                             <CustomTextField
@@ -1400,11 +1529,13 @@ const ShopPage = () => {
                                 required: "Manager Contact Number is required",
                                 minLength: {
                                   value: 10,
-                                  message: "Manager Contact Number must be 10 numbers",
+                                  message:
+                                    "Manager Contact Number must be 10 numbers",
                                 },
                                 maxLength: {
                                   value: 10,
-                                  message: "Manager Contact Number must be 10 numbers",
+                                  message:
+                                    "Manager Contact Number must be 10 numbers",
                                 },
                               })}
                             />
@@ -1437,33 +1568,52 @@ const ShopPage = () => {
                 </div>
                 {subBranch.length > 0 && (
                   <div className="mb-10">
-                    <h3 className="text-colorPrimary text-lg font-semibold leading-8 container my-5">Sub Branches</h3>
+                    <h3 className="text-colorPrimary text-lg font-semibold leading-8 container my-5">
+                      Sub Branches
+                    </h3>
 
                     <div className="container grid grid-cols-1 sm:grid-cols-2 gap-10">
                       {subBranch.map((sub, index) => (
-                        <div className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1" key={index}>
+                        <div
+                          className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
+                          key={index}
+                        >
                           <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Address : </b>
+                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                              Branch Address :{" "}
+                            </b>
                             {sub.subManagerAddress}
                           </p>
                           <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch City : </b>
+                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                              Branch City :{" "}
+                            </b>
                             {sub.subManagerCity}
                           </p>
                           <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch PinCode : </b>
+                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                              Branch PinCode :{" "}
+                            </b>
                             {sub.subManagerPinCode}
                           </p>
                           <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Name :</b>
-                            {sub.subManagerFirstName + " " + sub.subManagerLastName}
+                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                              Branch Manager Name :
+                            </b>
+                            {sub.subManagerFirstName +
+                              " " +
+                              sub.subManagerLastName}
                           </p>
                           <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Email :</b>
+                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                              Branch Manager Email :
+                            </b>
                             {sub.subManagerEmail}
                           </p>
                           <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Phone Number :</b>
+                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                              Branch Manager Phone Number :
+                            </b>
                             {sub.subManagerPhone}
                           </p>
 
@@ -1475,7 +1625,9 @@ const ShopPage = () => {
                               aria-label="delete"
                               className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-red-600 hover:!bg-red-600"
                               onClick={() => {
-                                setSubBranch(subBranch.filter((itm) => itm.id !== sub.id));
+                                setSubBranch(
+                                  subBranch.filter((itm) => itm.id !== sub.id)
+                                );
                               }}
                             >
                               <DeleteIcon className="!text-colorWhite" />
@@ -1519,7 +1671,13 @@ const ShopPage = () => {
                   className="bg-colorPrimary hover:bg-colorPrimary mr-1 text-white px-9 py-3 rounded-xl font-semibold focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center"
                 >
-                  {loading && <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />}
+                  {loading && (
+                    <CircularProgress
+                      size={20}
+                      color="primary"
+                      sx={{ color: "white", mr: 1 }}
+                    />
+                  )}
                   {activeStep === 2 ? "Submit" : "Next"}
                 </button>
               </Box>
@@ -1592,14 +1750,25 @@ const HoursModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={() => setHoursModalOpen(false)} />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">Hours</p>
-              <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={() => setHoursModalOpen(false)} />
+              <ArrowBackIcon
+                className="!text-black !cursor-pointer"
+                onClick={() => setHoursModalOpen(false)}
+              />
+              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+                Hours
+              </p>
+              <CloseIcon
+                className="!text-black !ml-auto !cursor-pointer"
+                onClick={() => setHoursModalOpen(false)}
+              />
             </div>
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="flex flex-col gap-2 mt-10 container">
                 {hours.map((day, index) => (
-                  <div className="flex items-center justify-between text-colorBlack text-sm sm:text-base" key={index}>
+                  <div
+                    className="flex items-center justify-between text-colorBlack text-sm sm:text-base"
+                    key={index}
+                  >
                     <p>{day["key"]}</p>
 
                     <div className="flex flex-col">
@@ -1607,7 +1776,11 @@ const HoursModal = ({
                         <div className="flex items-center gap-5" key={index}>
                           <p
                             className={
-                              time === "Closed" ? "text-red-600" : time === "Open 24 hours" ? "text-green-600" : ""
+                              time === "Closed"
+                                ? "text-red-600"
+                                : time === "Open 24 hours"
+                                ? "text-green-600"
+                                : ""
                             }
                           >
                             {time}
@@ -1635,7 +1808,15 @@ const HoursModal = ({
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
-                    setSelectedAllHours(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
+                    setSelectedAllHours([
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
                   }}
                 >
                   Edit All Hours
@@ -1647,7 +1828,14 @@ const HoursModal = ({
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
-                    setSelectedWeek(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
+                    setSelectedWeek([
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
                   }}
                 >
                   Edit Mon - Sat
@@ -1658,7 +1846,12 @@ const HoursModal = ({
                   className="rounded-xl capitalize text-colorBlack"
                   onClick={() => {
                     setDaysTimeModalOpen(true);
-                    setSelectedDay("Sunday" + " - " + hours[hours.findIndex((item) => item.key === "Sunday")].value);
+                    setSelectedDay(
+                      "Sunday" +
+                        " - " +
+                        hours[hours.findIndex((item) => item.key === "Sunday")]
+                          .value
+                    );
                   }}
                 >
                   Edit Sunday
@@ -1711,7 +1904,10 @@ const DaysTimeModal = ({
   useEffect(() => {
     setStartTime(
       selectedDay?.split(" - ")[1]?.split(" ")[1] === "PM"
-        ? String(Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) + 12) +
+        ? String(
+            Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) +
+              12
+          ) +
             ":" +
             selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[1]
         : selectedDay?.split(" - ")[1]?.split(" ")[0]
@@ -1719,7 +1915,10 @@ const DaysTimeModal = ({
 
     setCloseTime(
       selectedDay?.split(" - ")[2]?.split(" ")[1] === "PM"
-        ? String(Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) + 12) +
+        ? String(
+            Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) +
+              12
+          ) +
             ":" +
             selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[1]
         : selectedDay?.split(" - ")[2]?.split(" ")[0]
@@ -1742,7 +1941,9 @@ const DaysTimeModal = ({
 
   const saveDaysTimeData = () => {
     if ((closed || open24Hours) && selectedDay) {
-      const index = hours.findIndex((item) => item.key === selectedDay?.split(" - ")[0]);
+      const index = hours.findIndex(
+        (item) => item.key === selectedDay?.split(" - ")[0]
+      );
       if (hours[index]?.value) {
         hours[index].value = open24Hours ? ["Open 24 hours"] : ["Closed"];
         setHours(hours);
@@ -1781,11 +1982,19 @@ const DaysTimeModal = ({
             return (itm.value = [
               `${
                 startTime?.split(":")[0] > 12
-                  ? startTime?.split(":")[0] - 12 + ":" + startTime?.split(":")[1] + " PM"
+                  ? startTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    startTime?.split(":")[1] +
+                    " PM"
                   : startTime + " AM"
               }  - ${
                 closeTime?.split(":")[0] > 12
-                  ? closeTime?.split(":")[0] - 12 + ":" + closeTime?.split(":")[1] + " PM"
+                  ? closeTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    closeTime?.split(":")[1] +
+                    " PM"
                   : closeTime + " AM"
               } `,
             ]);
@@ -1804,11 +2013,19 @@ const DaysTimeModal = ({
             return (itm.value = [
               `${
                 startTime?.split(":")[0] > 12
-                  ? startTime?.split(":")[0] - 12 + ":" + startTime?.split(":")[1] + " PM"
+                  ? startTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    startTime?.split(":")[1] +
+                    " PM"
                   : startTime + " AM"
               }  - ${
                 closeTime?.split(":")[0] > 12
-                  ? closeTime?.split(":")[0] - 12 + ":" + closeTime?.split(":")[1] + " PM"
+                  ? closeTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    closeTime?.split(":")[1] +
+                    " PM"
                   : closeTime + " AM"
               } `,
             ]);
@@ -1820,17 +2037,33 @@ const DaysTimeModal = ({
       handleCloseDaysTimeModal();
     }
 
-    if (hours && !closed && !open24Hours && selectedWeek === undefined && selectedAllHours === undefined) {
-      const index = hours.findIndex((item) => item.key === selectedDay?.split(" - ")[0]);
+    if (
+      hours &&
+      !closed &&
+      !open24Hours &&
+      selectedWeek === undefined &&
+      selectedAllHours === undefined
+    ) {
+      const index = hours.findIndex(
+        (item) => item.key === selectedDay?.split(" - ")[0]
+      );
       if (hours[index]?.value && startTime && closeTime) {
         hours[index].value = [
           `${
             startTime.split(":")[0] > 12
-              ? startTime.split(":")[0] - 12 + ":" + startTime.split(":")[1] + " PM"
+              ? startTime.split(":")[0] -
+                12 +
+                ":" +
+                startTime.split(":")[1] +
+                " PM"
               : startTime + " AM"
           }  - ${
             closeTime.split(":")[0] > 12
-              ? closeTime.split(":")[0] - 12 + ":" + closeTime.split(":")[1] + " PM"
+              ? closeTime.split(":")[0] -
+                12 +
+                ":" +
+                closeTime.split(":")[1] +
+                " PM"
               : closeTime + " AM"
           } `,
         ];
@@ -1863,16 +2096,29 @@ const DaysTimeModal = ({
       >
         <Box sx={style} className="!w-[80%] lg:!w-[40%]">
           <div className="p-5">
-            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">Select days & time</p>
+            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
+              Select days & time
+            </p>
 
             <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
               <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
-                {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((itm) => (
+                {[
+                  "Sunday",
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                ].map((itm) => (
                   <div
                     className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] ${
                       selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
-                    } ${selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"} ${
-                      selectedAllHours?.find((day) => day === itm) && "bg-[#bdbbbb]"
+                    } ${
+                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
+                    } ${
+                      selectedAllHours?.find((day) => day === itm) &&
+                      "bg-[#bdbbbb]"
                     }  hover:bg-[#bdbbbb] cursor-pointer`}
                     key={itm}
                   >
@@ -1949,7 +2195,11 @@ const DaysTimeModal = ({
                 variant="contained"
                 className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
                 onClick={saveDaysTimeData}
-                disabled={(startTime && closeTime) === undefined && !open24Hours && !closed}
+                disabled={
+                  (startTime && closeTime) === undefined &&
+                  !open24Hours &&
+                  !closed
+                }
               >
                 Save
               </Button>
@@ -2062,7 +2312,9 @@ const SubBranchModal = ({
     }
     if (!subManagerEmail) {
       allError.subManagerEmailError = "SubManagerEmail is require";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(subManagerEmail)) {
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(subManagerEmail)
+    ) {
       allError.subManagerEmailError = "Invalid SubManagerEmail address";
     } else {
       allError.subManagerEmailError = "";
@@ -2070,7 +2322,8 @@ const SubBranchModal = ({
     if (!subManagerPhone) {
       allError.subManagerPhoneError = "SubManagerPhone is require";
     } else if (subManagerPhone.length != 10) {
-      allError.subManagerPhoneError = "SubManagerPhone Number must be 10 numbers";
+      allError.subManagerPhoneError =
+        "SubManagerPhone Number must be 10 numbers";
     } else {
       allError.subManagerPhoneError = "";
     }
@@ -2102,7 +2355,9 @@ const SubBranchModal = ({
         ]);
         handleSubBranchModalClose();
       } else {
-        const editSelectedSubBranchIndex = subBranch.findIndex((sub) => sub.id === subBranchEdit.id);
+        const editSelectedSubBranchIndex = subBranch.findIndex(
+          (sub) => sub.id === subBranchEdit.id
+        );
 
         const editSelectedSubBranch = [...subBranch];
 
@@ -2157,19 +2412,29 @@ const SubBranchModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-1/2">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleSubBranchModalClose} />
+              <ArrowBackIcon
+                className="!text-black !cursor-pointer"
+                onClick={handleSubBranchModalClose}
+              />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
               </p>
-              <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={handleSubBranchModalClose} />
+              <CloseIcon
+                className="!text-black !ml-auto !cursor-pointer"
+                onClick={handleSubBranchModalClose}
+              />
             </div>
 
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
               <div className="container bg-colorWhite rounded-lg my-5 sm:my-10 p-5 space-y-5">
-                <h3 className="text-colorPrimary text-lg font-semibold leading-8">Branches</h3>
+                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+                  Branches
+                </h3>
                 <form>
                   <div className="flex flex-col space-y-3">
-                    <p className="mt-2 container flex items-center text-colorBlack text-lg">Sub Branch</p>
+                    <p className="mt-2 container flex items-center text-colorBlack text-lg">
+                      Sub Branch
+                    </p>
                     <div className="flex items-center justify-center container gap-20">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
@@ -2185,7 +2450,9 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerAddressError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerAddressError || ""}
+                        </span>
                       </div>
                     </div>
 
@@ -2204,7 +2471,9 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerCityError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerCityError || ""}
+                        </span>
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
@@ -2221,13 +2490,17 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerPinCodeError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerPinCodeError || ""}
+                        </span>
                       </div>
                     </div>
 
                     <div className="flex justify-center items-center">
                       <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        <span className="font-semibold text-lg text-[#11142D] mt-5">Manager:</span>
+                        <span className="font-semibold text-lg text-[#11142D] mt-5">
+                          Manager:
+                        </span>
 
                         <CustomTextField
                           label="Manager"
@@ -2238,17 +2511,21 @@ const SubBranchModal = ({
                           onChange={(e) => setManagerValue(e.target.value)}
                         >
                           <MenuItem value="">None</MenuItem>
-                          {["Same as owner", "same as main branch manager"].map((man) => (
-                            <MenuItem value={man} key={man}>
-                              {man}
-                            </MenuItem>
-                          ))}
+                          {["Same as owner", "same as main branch manager"].map(
+                            (man) => (
+                              <MenuItem value={man} key={man}>
+                                {man}
+                              </MenuItem>
+                            )
+                          )}
                         </CustomTextField>
                       </div>
                     </div>
 
                     <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p>
+                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                        Name:
+                      </p>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextField
@@ -2257,7 +2534,8 @@ const SubBranchModal = ({
                             variant="standard"
                             className="w-full"
                             disabled={
-                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
                             }
                             value={subManagerFirstName}
                             onChange={(e) => {
@@ -2266,7 +2544,9 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerFirstNameError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerFirstNameError || ""}
+                        </span>
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
@@ -2276,7 +2556,8 @@ const SubBranchModal = ({
                             variant="standard"
                             className="w-full"
                             disabled={
-                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
                             }
                             value={subManagerLastName}
                             onChange={(e) => {
@@ -2285,7 +2566,9 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerLastNameError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerLastNameError || ""}
+                        </span>
                       </div>
                     </div>
 
@@ -2302,7 +2585,8 @@ const SubBranchModal = ({
                             className="w-full"
                             type="email"
                             disabled={
-                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
                             }
                             value={subManagerEmail}
                             onChange={(e) => {
@@ -2311,7 +2595,9 @@ const SubBranchModal = ({
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerEmailError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerEmailError || ""}
+                        </span>
                       </div>
                     </div>
 
@@ -2328,20 +2614,24 @@ const SubBranchModal = ({
                             className="w-full"
                             type="number"
                             disabled={
-                              managerValue === "Same as owner" || managerValue === "same as main branch manager"
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
                             }
                             value={subManagerPhone}
                             onChange={(e) => {
                               setSubManagerPhone(e.target.value);
                               if (e.target.value.length != 10) {
-                                error.subManagerPhoneError = "SubManagerPhone Number must be 10 numbers";
+                                error.subManagerPhoneError =
+                                  "SubManagerPhone Number must be 10 numbers";
                               } else {
                                 error.subManagerPhoneError = "";
                               }
                             }}
                           />
                         </Box>
-                        <span style={{ color: "red" }}>{error.subManagerPhoneError || ""}</span>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerPhoneError || ""}
+                        </span>
                       </div>
                     </div>
                   </div>
