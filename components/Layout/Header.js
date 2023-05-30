@@ -16,6 +16,7 @@ import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
@@ -457,6 +458,15 @@ export const UserProfile = ({ setAccessToken }) => {
   const options = [
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
+
+  if (userProfile.user_type === "vendor" && userProfile.subscriptionId) {
+    options.unshift({
+      icon: <SubscriptionsIcon />,
+      name: "User Subscription",
+      func: subscription,
+    });
+  }
+
   if (userProfile.user_type === "vendor" && userProfile.userHaveAnyShop) {
     options.unshift({
       icon: <DashboardIcon />,
@@ -464,6 +474,7 @@ export const UserProfile = ({ setAccessToken }) => {
       func: dashboard,
     });
   }
+
   if (userProfile.user_type !== "vendor") {
     options.unshift({
       icon: <FavoriteBorderOutlinedIcon />,
@@ -475,6 +486,10 @@ export const UserProfile = ({ setAccessToken }) => {
 
   function dashboard() {
     Router.push("/vendor/dashboard");
+  }
+
+  function subscription() {
+    Router.push("/vendor/shop-subscription");
   }
 
   function wishList() {

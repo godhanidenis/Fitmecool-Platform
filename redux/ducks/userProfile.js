@@ -12,8 +12,6 @@ export const LOGIN_USER_ID = "LOGIN_USER_ID";
 
 export const REGISTER_SHOP_ID = "REGISTER_SHOP_ID";
 
-export const SUBSCRIPTION_DATA = "SUBSCRIPTION_DATA";
-
 export const loginUserId = (userId) => ({
   type: LOGIN_USER_ID,
   payload: userId,
@@ -50,11 +48,6 @@ export const productLikeToggle = (productInfo) => ({
 export const setShopRegisterId = (id) => ({
   type: REGISTER_SHOP_ID,
   payload: id,
-});
-
-export const setSubscriptionData = (data) => ({
-  type: SUBSCRIPTION_DATA,
-  payload: data,
 });
 
 const initialState = {
@@ -134,14 +127,6 @@ const userProfileReducer = (state = initialState, action) => {
         },
       };
 
-    case SUBSCRIPTION_DATA:
-      return {
-        ...state,
-        userProfile: {
-          ...state.userProfile,
-          ["userSubscriptionData"]: action.payload,
-        },
-      };
     case USER_LOGOUT:
       return {
         ...state,

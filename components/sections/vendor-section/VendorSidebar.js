@@ -1,6 +1,7 @@
 import React from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import { useRouter } from "next/router";
 import { Avatar, Divider } from "@mui/material";
@@ -91,7 +92,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
           }}
         >
           <p className="flex items-center cursor-pointer">
-            <ListAltIcon className="!mr-3" />
+            <SubscriptionsIcon className="!mr-3" />
             Subscription
           </p>
         </div>

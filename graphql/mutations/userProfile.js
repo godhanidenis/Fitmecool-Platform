@@ -97,6 +97,7 @@ export const getUserProfile = async () => {
             flag
             productLikes
           }
+          subscriptionId
         }
       }
     `,

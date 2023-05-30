@@ -4,8 +4,6 @@ import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
-import { getSubscriptionLists } from "../../graphql/queries/subscriptions";
-import { setSubscriptionData } from "../../redux/ducks/userProfile";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -18,21 +16,6 @@ const VendorCommonLayout = ({ children }) => {
     if (userProfile?.userCreatedShopId) {
       dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
     }
-    async function dataList() {
-      await getSubscriptionLists().then((res) => {
-        console.log("res: ", res?.data?.getAllSubscriptionLists);
-
-        dispatch(
-          setSubscriptionData(
-            res?.data?.getAllSubscriptionLists?.filter(
-              (itm) => itm?.userId === userProfile?.id
-            )
-          )
-        );
-      });
-    }
-
-    dataList();
   }, [dispatch, userProfile?.userCreatedShopId]);
 
   return (

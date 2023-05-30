@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAllSubscriptionPlans,
   getRazorPayApiKey,
+  getSingleSubscriptionDetails,
 } from "../../../graphql/queries/subscriptions";
 import {
   buySubscription,
   paymentVerification,
 } from "../../../graphql/mutations/subscription";
+import { loadUserProfileStart } from "../../../redux/ducks/userProfile";
 
 const ShopSubscription = () => {
   const [checked, setChecked] = useState(false);
 
   const [subscriptionAllPlans, setSubscriptionAllPlans] = useState({});
 
+  const [currentPlan, setCurrentPlan] = useState();
+
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const { userProfile } = useSelector((state) => state.userProfile);
 
@@ -28,6 +33,25 @@ const ShopSubscription = () => {
       setSubscriptionAllPlans(res?.data?.getAllSubscriptionPlans);
     });
   }, []);
+
+  useEffect(() => {
+    if (userProfile?.subscriptionId) {
+      getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
+        (res) => setCurrentPlan(res?.data?.singleSubscription)
+      );
+    }
+  }, [userProfile?.subscriptionId]);
+
+  useEffect(() => {
+    if (subscriptionAllPlans?.items && currentPlan?.id) {
+      setCurrentPlan((prevPlan) => ({
+        ...prevPlan,
+        subscriptionPlan: subscriptionAllPlans?.items?.find(
+          (itm) => itm?.id === currentPlan?.plan_id
+        ),
+      }));
+    }
+  }, [currentPlan?.id, currentPlan?.plan_id, subscriptionAllPlans?.items]);
 
   const checkoutHandler = async (plan) => {
     await getRazorPayApiKey().then(async (keyRes) => {
@@ -47,9 +71,10 @@ const ShopSubscription = () => {
               razorpay_plan_id: plan?.id,
               userId: userProfile?.id,
               shopId: userProfile?.userCreatedShopId,
-            }).then((response) =>
-              router.push(response?.data?.paymentVerification)
-            );
+            }).then((response) => {
+              dispatch(loadUserProfileStart({ id: userProfile?.id }));
+              router.push(response?.data?.paymentVerification);
+            });
           },
           notes: {
             address: "FlyOnTech Solutions",
@@ -102,12 +127,42 @@ const ShopSubscription = () => {
                   {(plan?.period === "weekly" && "week") ||
                     (plan?.period === "monthly" && "month")}
                 </p>
-                <button
-                  className="text-white bg-colorPrimary py-2 px-3 mt-4 rounded-md"
-                  onClick={() => checkoutHandler(plan)}
-                >
-                  Choose
-                </button>
+                {currentPlan?.plan_id === plan?.id ? (
+                  <div className="mt-4">
+                    <b>Current Plan</b>
+                    <p>
+                      Renews{" "}
+                      {new Date(
+                        currentPlan?.current_end * 1000
+                      ).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    className={`${
+                      currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                        plan?.item?.amount / 100 &&
+                      "border border-colorPrimary text-colorPrimary"
+                    } ${
+                      (currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                        plan?.item?.amount / 100 ||
+                        !currentPlan) &&
+                      "bg-colorPrimary text-white"
+                    } py-2 px-3 mt-4 rounded-md`}
+                    onClick={() => checkoutHandler(plan)}
+                  >
+                    {currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                      plan?.item?.amount / 100 && "Downgrade"}
+                    {currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                      plan?.item?.amount / 100 && "Upgrade"}
+
+                    {!currentPlan && "Choose"}
+                  </button>
+                )}
                 <p className="mt-4">
                   <b>10</b> products
                 </p>
