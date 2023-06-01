@@ -45,8 +45,7 @@ const Footer = () => {
               {/* <Image src={HeaderLogo} alt="Composite logo" layout="fill" /> */}
 
               <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
-                <span className="text-4xl">W</span>edding
-                <span className="text-4xl">B</span>ell
+                <span className="text-4xl">R</span>entbless
               </h2>
             </div>
             <nav>

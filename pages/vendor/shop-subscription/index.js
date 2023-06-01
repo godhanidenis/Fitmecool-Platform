@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllSubscriptionPlans,
@@ -20,7 +20,7 @@ const ShopSubscription = () => {
 
   const [currentPlan, setCurrentPlan] = useState();
 
-  const router = useRouter();
+  // const router = useRouter();
   const dispatch = useDispatch();
 
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -81,7 +81,7 @@ const ShopSubscription = () => {
                   ? toast.success(
                       `Your Subscription Successfully!! Reference No. ${response?.data?.paymentVerification?.razorpay_payment_id}`
                     )
-                  : toast.success(
+                  : toast.error(
                       `Your Subscription Failed!! Reference No. ${response?.data?.paymentVerification?.razorpay_payment_id}`
                     );
                 // router.push(response?.data?.paymentVerification);
@@ -127,7 +127,7 @@ const ShopSubscription = () => {
             )?.map((plan, index) => (
               <div
                 key={index}
-                className="border rounded py-8 px-10 text-center hover:shadow-2xl"
+                className="border rounded py-8 px-10 text-center cursor-pointer hover:scale-110"
               >
                 <p className="text-xl font-medium text-colorBlack">
                   {plan?.item?.name}
