@@ -27,7 +27,8 @@ import Link from "next/link";
 import SubHeader from "../../components/Layout/SubHeader";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
-import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import FileUploadOutlinedIcon from "../../assets/shareIcon.svg";
+
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
@@ -37,6 +38,7 @@ import Router from "next/router";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
@@ -48,6 +50,8 @@ const ProductDetail = ({ productDetails }) => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
+  const [OpenToolTipMobile, setOpenToolTipMobile] = useState(false);
+  const [OpenToolTipMobileView, setOpenToolTipMobileView] = useState(false);
 
   const pageShareURL = window.location.href;
 
@@ -67,9 +71,23 @@ const ProductDetail = ({ productDetails }) => {
       boxShadow: "0 0 10px rgba(0,0,0,.1)",
     },
   }));
+  const HtmlTooltipMobile = styled(({ className, ...props }) => (
+    <Tooltip open={OpenToolTipMobile} {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#ffffff",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      boxShadow: "0 0 10px rgba(0,0,0,.1)"
+    },
+  }));
 
   const handleTooltipOpen = () => {
     setOpenToolTip(!OpenToolTip);
+  };
+  const handleMobileTooltipOpen = () => {
+    setOpenToolTipMobile(!OpenToolTipMobile);
   };
 
   useEffect(() => {
@@ -198,28 +216,30 @@ const ProductDetail = ({ productDetails }) => {
         <div className="container pt-4 pb-2 !w-[75%] pl-3">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
-              Product
+              <div className="text-[#29977E] font-semibold">Product</div>
             </Link>
             <Link underline="hover" color="inherit" href="#">
-              {productDetails.data.product.data.categoryInfo?.category_type}
+              <div className="text-[#29977E] font-semibold">
+                {productDetails.data.product.data.categoryInfo?.category_type}
+              </div>
             </Link>
             <Link underline="hover" color="text.primary" href="#" aria-current="page">
-              {productDetails.data.product.data.categoryInfo?.category_name}
+              <div className="font-semibold">{productDetails.data.product.data.categoryInfo?.category_name}</div>
             </Link>
           </Breadcrumbs>
         </div>
       </div>
       <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="lg:!hidden">
-        <div className="bg-colorWhite p-3 sm:rounded-lg">
+        <div className="flex items-center bg-colorWhite p-3 sm:rounded-lg">
           <div className="flex items-center justify-between w-full gap-4">
-            <div className="flex justify-start items-center gap-1 sm:gap-4">
-              <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center gap-1 sm:gap-4 pl-[60px]">
+              {/* <div className="flex justify-center items-center">
                 <img
                   alt="Shop Logo"
                   src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
                   className="rounded-[50%] w-[50px] h-[50px]"
                 />
-              </div>
+              </div> */}
               <div className="flex flex-col justify-center">
                 <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
                   <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
@@ -232,7 +252,7 @@ const ProductDetail = ({ productDetails }) => {
                 <p className="text-[#888888] text-xs sm:text-sm font-normal">25 days ago</p>
               </div>
             </div>
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <Rating
                 name="text-feedback"
                 value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
@@ -244,13 +264,18 @@ const ProductDetail = ({ productDetails }) => {
                 <LocationOnIcon fontSize="small" className="!mr-1" />
                 {productDetails.data.product.data.branchInfo?.branch_address}
               </p>
-            </div>
+            </div> */}
 
             <div className="flex items-center md:justify-end">
               <Button
                 variant="outlined"
-                sx={{ textTransform: "none" }}
-                endIcon={<PersonAddIcon fontSize="large" />}
+                sx={{
+                  textTransform: "none",
+                  color: "rgba(49, 51, 62, 0.4)",
+                  border: "1px solid rgba(49, 51, 62, 0.4)",
+                  paddingLeft: "14px",
+                  width: "120px",
+                }}
                 onClick={() => {
                   if (isAuthenticate) {
                     shopFollow({
@@ -294,11 +319,61 @@ const ProductDetail = ({ productDetails }) => {
                   }
                 }}
               >
-                <Typography color="#95539B">{shopFollowByUser ? "Unfollow" : "Follow"}</Typography>
+                {shopFollowByUser ? "Unfollow" : "+ Follow"}
               </Button>
             </div>
           </div>
+          <div className="ml-[16px]" onClick={() => setOpenToolTipMobileView(!OpenToolTipMobileView)}>
+            <MoreHorizIcon />
+          </div>
         </div>
+        {OpenToolTipMobileView && (
+          <>
+            <div className="absolute right-[12px] top-[190px] z-10">
+              <div className="mb-[10px]">
+                <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />{" "}
+              </div>
+              <div className="mb-[10px]" onMouseLeave={() => setOpenToolTipMobile(false)}>
+                <HtmlTooltipMobile
+                  title={
+                    <React.Fragment>
+                      <div className="">
+                        <div className="p-2 rounded-lg cursor-pointer">
+                          <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                            <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                          </FacebookShareButton>
+                        </div>
+                        <div className="p-2 rounded-lg cursor-pointer">
+                          <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                            {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                            <WhatsappIcon size={25} round={true} />
+                          </WhatsappShareButton>
+                        </div>
+                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                          <EmailShareButton
+                            subject="Product Detail Page"
+                            windowWidth={900}
+                            windowHeight={900}
+                            url={pageShareURL}
+                          >
+                            <Image src={googleIcon ?? ""} alt="googleIcon" />
+                          </EmailShareButton>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  }
+                >
+                  <div onClick={handleMobileTooltipOpen}>
+                    <Image src={FileUploadOutlinedIcon ?? FileUploadOutlinedIcon} alt="" />
+                  </div>
+                </HtmlTooltipMobile>
+              </div>
+              <div className="">
+                <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />
+              </div>
+            </div>
+          </>
+        )}
       </Box>
       <div className="sm:hidden">
         {productDetails && <ProductCard product={productDetails?.data?.product?.data} onlyCarousal={true} />}
@@ -316,13 +391,26 @@ const ProductDetail = ({ productDetails }) => {
                   <CustomReactImageMagnify large={images} preview={images} />
                 </div>
                 <div className="col-span-1"></div>
-                <div className="md:col-span-3 pt-5 md:flex justify-between items-center bg-colorWhite ">
-                  <div className="min-[320px]:mb-2 md:mb-0">
-                    <Button variant="outlined" sx={{ textTransform: "none", width: "max-content" }}>
-                      <FavoriteBorderOutlinedIcon /> &nbsp; Like & Save
+                <div className="md:col-span-3 pt-5 md:flex justify-between  bg-colorWhite ">
+                  <div className="min-[320px]:mb-2 md:mb-0 mr-[10px]">
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        textTransform: "none",
+                        width: "max-content",
+                        color: "rgba(21, 24, 39, 0.4)",
+                        border: "1px solid rgba(21, 24, 39, 0.4)",
+                        borderRadius: "10px",
+                        paddingTop: "14px",
+                        paddingBottom: "14px",
+                        paddingLeft: "30px",
+                        paddingRight: "30px",
+                      }}
+                    >
+                      <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp; Like & Save
                     </Button>
                   </div>
-                  <div className="min-[320px]:mb-2 md:mb-0" onMouseLeave={() => setOpenToolTip(false)}>
+                  <div className="min-[320px]:mb-2 md:mb-0 mr-[10px]" onMouseLeave={() => setOpenToolTip(false)}>
                     <HtmlTooltip
                       title={
                         <React.Fragment>
@@ -355,15 +443,40 @@ const ProductDetail = ({ productDetails }) => {
                       <Button
                         onClick={handleTooltipOpen}
                         variant="outlined"
-                        sx={{ textTransform: "none", width: "max-content" }}
+                        sx={{
+                          textTransform: "none",
+                          width: "max-content",
+                          color: "rgba(21, 24, 39, 0.4)",
+                          border: "1px solid rgba(21, 24, 39, 0.4)",
+                          borderRadius: "10px",
+                          paddingTop: "14px",
+                          paddingBottom: "14px",
+                          paddingLeft: "30px",
+                          paddingRight: "30px",
+                        }}
                       >
-                        <FileUploadOutlinedIcon /> &nbsp; Share
+                        <Image src={FileUploadOutlinedIcon ?? FileUploadOutlinedIcon} alt="" /> &nbsp; Share
                       </Button>
                     </HtmlTooltip>
                   </div>
-                  <Button variant="outlined" sx={{ textTransform: "none", width: "max-content" }}>
-                    <ReportGmailerrorredOutlinedIcon /> &nbsp;Report
-                  </Button>
+                  <div className="min-[320px]:mb-2 md:mb-0 mr-[10px]">
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        textTransform: "none",
+                        width: "max-content",
+                        color: "rgba(21, 24, 39, 0.4)",
+                        border: "1px solid rgba(21, 24, 39, 0.4)",
+                        borderRadius: "10px",
+                        paddingTop: "14px",
+                        paddingBottom: "14px",
+                        paddingLeft: "30px",
+                        paddingRight: "30px",
+                      }}
+                    >
+                      <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp;Report
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -371,14 +484,14 @@ const ProductDetail = ({ productDetails }) => {
               <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="!hidden lg:!block">
                 <div className="bg-colorWhite p-3 rounded-lg">
                   <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex justify-start items-center gap-1 sm:gap-4">
-                      <div className="flex justify-center items-center">
+                    <div className="flex justify-start items-center gap-1 sm:gap-4 pl-[60px]">
+                      {/* <div className="flex justify-center items-center">
                         <img
                           alt="Shop Logo"
                           src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
                           className="rounded-[50%] w-[50px] h-[50px]"
                         />
-                      </div>
+                      </div> */}
                       <div className="flex flex-col justify-center">
                         <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
                           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
@@ -390,7 +503,7 @@ const ProductDetail = ({ productDetails }) => {
                         <p className="text-[#888888] text-xs sm:text-sm font-normal">25 days ago</p>
                       </div>
                     </div>
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col">
                       <Rating
                         name="text-feedback"
                         value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
@@ -402,13 +515,18 @@ const ProductDetail = ({ productDetails }) => {
                         <LocationOnIcon fontSize="small" className="!mr-1" />
                         {productDetails.data.product.data.branchInfo?.branch_address}
                       </p>
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center md:justify-end">
                       <Button
                         variant="outlined"
-                        sx={{ textTransform: "none" }}
-                        endIcon={<PersonAddIcon fontSize="large" />}
+                        sx={{
+                          textTransform: "none",
+                          color: "rgba(49, 51, 62, 0.4)",
+                          border: "1px solid rgba(49, 51, 62, 0.4)",
+                          paddingLeft: "14px",
+                          width: "120px",
+                        }}
                         onClick={() => {
                           if (isAuthenticate) {
                             shopFollow({
@@ -452,7 +570,8 @@ const ProductDetail = ({ productDetails }) => {
                           }
                         }}
                       >
-                        <Typography color="#95539B">{shopFollowByUser ? "Unfollow" : "Follow"}</Typography>
+                        {shopFollowByUser ? "Unfollow" : "+ Follow"}
+                        {/* <Typography color="#31333E"></Typography> */}
                       </Button>
                     </div>
                   </div>
@@ -460,7 +579,7 @@ const ProductDetail = ({ productDetails }) => {
               </Box>
               <div className="mt-5">
                 <div className="flex justify-between">
-                  <span className="font-semibold text-2xl text-colorBlack">
+                  <span className="font-semibold text-2xl text-[#29977E]">
                     {productDetails.data.product.data.product_name}
                   </span>
                   <button
@@ -506,21 +625,53 @@ const ProductDetail = ({ productDetails }) => {
                       }
                     }}
                   >
-                    {!productLikeByUser ? <FavoriteBorderIcon fontSize="large" /> : "❤️"}
+                    {!productLikeByUser ? <FavoriteBorderIcon fontSize="medium" /> : "❤️"}
                   </button>
+                </div>
+                <div className="flex pt-[10px] ">
+                  <Rating
+                    name="text-feedback"
+                    value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
+                    readOnly
+                    size="small"
+                    emptyIcon={<StarIcon fontSize="inherit" />}
+                  />
+                  <p className="text-[#151827] font-semibold ml-[8px]">
+                    {Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
+                  </p>
                 </div>
               </div>
 
               <div className="mt-3">
+                <div className="text-[#151827] font-semibold text-[20px]">About</div>
                 <div>
                   <span className="pt-3 font-normal text-lg text-[#888888]">
                     {productDetails.data.product.data.product_description}
                   </span>
                 </div>
+                <div className="mt-6">
+                  <span className="font-semibold text-base text-colorBlack">Item Details</span>
+                  {/* <Divider /> */}
+                  <div className="flex mt-3 items-center">
+                    <span className="text-sm">Category :</span>
+                    <span className="text-sm font-semibold mr-2 text-colorBlack">
+                      {productDetails.data.product.data.categoryInfo?.category_name}
+                    </span>
+                  </div>
+                  <div className="flex mt-1 items-center">
+                    <span className="text-sm">Color :</span>
+                    <span
+                      className={`rounded-[50%] w-3 h-3`}
+                      style={{
+                        backgroundColor: productDetails.data.product.data.product_color,
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 mt-10 items-center justify-evenly">
-                <div className="">
+              <div className="sm:flex-row gap-2 sm:gap-0 mt-10 items-center justify-evenly">
+                <div className="mb-[16px]">
                   <a
                     href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
                     target="_blank"
@@ -528,26 +679,26 @@ const ProductDetail = ({ productDetails }) => {
                     rel="noreferrer"
                   >
                     <button
-                      className="bg-green-600 text-white p-3 w-full rounded-xl tracking-wide
+                      className="bg-[#29977E] text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                     >
-                      <WhatsAppIcon className="!text-white" />
+                      <WhatsAppIcon className="!text-white w-[48px] h-[48px]" />
                       Send Message
                     </button>
                   </a>
                 </div>
-                <div className="w-full sm:w-auto text-center ">
+                {/* <div className="w-full sm:w-auto text-center ">
                   <span className="text-lg text-colorStone">OR</span>
-                </div>
+                </div> */}
                 <div className="flex">
                   <button
-                    className="bg-[#E72E77] text-white p-3 w-full rounded-xl tracking-wide
+                    className="bg-[#E8EBEA] text-[#31333E] text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                     onClick={() => setOpenContactInfo(!openContactInfo)}
                   >
-                    <PersonOutlineIcon className="!text-white" />
+                    <PersonOutlineIcon className="!text-black w-[48px] h-[48px]" />
                     {openContactInfo ? "Hide Contact" : "Show Contact"}
                   </button>
                 </div>
@@ -597,7 +748,7 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
               )}
 
-              <div className="mt-10">
+              {/* <div className="mt-10">
                 <span className="font-semibold text-base text-colorBlack">ITEM DETAILS</span>
                 <Divider />
                 <div className="flex mt-3 items-center">
@@ -613,7 +764,7 @@ const ProductDetail = ({ productDetails }) => {
                     }}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
