@@ -5,7 +5,10 @@ import Slider from "react-slick";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useDispatch, useSelector } from "react-redux";
 import { productLikeToggle } from "../../../redux/ducks/userProfile";
-import { deleteProduct, productLike } from "../../../graphql/mutations/products";
+import {
+  deleteProduct,
+  productLike,
+} from "../../../graphql/mutations/products";
 import AuthModal from "../../core/AuthModal";
 import { AuthTypeModal } from "../../core/Enum";
 import { toast } from "react-toastify";
@@ -15,11 +18,18 @@ import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box, Button, Tooltip, tooltipClasses } from "@mui/material";
 import Router from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
 import { styled } from "@mui/material/styles";
 import facebookIcon from "../../../assets/facebook.png";
 import instagramIcon from "../../../assets/instagram.png";
 import googleIcon from "../../../assets/googleIcon.svg";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const style = {
   position: "absolute",
@@ -33,6 +43,101 @@ const style = {
   boxShadow: 24,
   borderRadius: "12px",
   height: "auto",
+};
+
+const TrendingCustomLeftArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        left: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "38px",
+        height: "38px",
+        borderRadius: "50%",
+        marginLeft: "16px",
+        marginBottom: "25%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(135deg)",
+          cursor: "pointer",
+          position: "relative",
+          right: "-1px",
+        }}
+      />
+    </div>
+  );
+};
+
+const TrendingCustomRightArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        right: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "38px",
+        height: "38px",
+        borderRadius: "50%",
+        marginRight: "16px",
+        marginBottom: "25%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(-45deg)",
+          cursor: "pointer",
+          position: "relative",
+          left: "-1px",
+        }}
+      />
+    </div>
+  );
+};
+
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 1,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
 };
 
 const ProductCard = ({
@@ -54,41 +159,53 @@ const ProductCard = ({
   const [deleteProductId, setDeleteProductId] = useState();
 
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
+  const productsFiltersReducer = useSelector(
+    (state) => state.productsFiltersReducer
+  );
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
-  const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
 
   useEffect(() => {
     if (!isAuthenticate) {
       setProductLikeByUser(false);
     }
 
-    const likedProductByUser = userProfile?.product_like_list?.find((itm) => itm.id === product.id);
+    const likedProductByUser = userProfile?.product_like_list?.find(
+      (itm) => itm.id === product.id
+    );
 
-    likedProductByUser ? setProductLikeByUser(true) : setProductLikeByUser(false);
+    likedProductByUser
+      ? setProductLikeByUser(true)
+      : setProductLikeByUser(false);
   }, [isAuthenticate, product.id, userProfile]);
 
-  const items = [product.product_image.front, product.product_image.back, product.product_image.side].map((itm) => {
+  const items = [
+    product.product_image.front,
+    product.product_image.back,
+    product.product_image.side,
+  ].map((itm) => {
     return (
       <Image
         src={itm ?? ""}
         alt={product.name}
         width={250}
         height={productsFiltersReducer.productLayout === "list" ? 300 : 300}
-        className="rounded object-cover"
+        className="rounded-t-xl object-cover"
         key={itm}
       />
     );
   });
   const shopId = product.branchInfo?.shop_id;
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
+  // const settings = {
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  // };
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
   const pageShareURL = window.location.href;
@@ -116,7 +233,9 @@ const ProductCard = ({
           style={{ position: "absolute", top: "200px" }}
           className="bg-[#FFFFFF] mx-4 shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg "
         >
-          <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
+          <Link
+            href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+          >
             <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
               <Button variant="outlined">View More</Button>
             </a>
@@ -125,22 +244,37 @@ const ProductCard = ({
       ) : (
         <div
           className={`${
-            productsFiltersReducer.productLayout === "list"
-              ? "md:flex mb-3 bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg"
-              : "bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg"
+            productsFiltersReducer.productLayout === "list" ? "md:flex " : ""
           }`}
         >
           <div
             className={`${
               !onlyCarousal && productsFiltersReducer.productLayout === "list"
-                ? "w-[auto] md:border-r-2 border-b"
-                : "border-b"
+                ? "w-[auto] md:border-r-2"
+                : ""
             }`}
           >
             <div className="container my-[5px] cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
                 <div className="w-[100%]">
-                  <Slider {...settings}>{items}</Slider>
+                  <Carousel
+                    infinite
+                    responsive={responsive}
+                    customLeftArrow={
+                      <TrendingCustomLeftArrow
+                        onClick={TrendingCustomLeftArrow}
+                      />
+                    }
+                    customRightArrow={
+                      <TrendingCustomRightArrow
+                        onClick={TrendingCustomRightArrow}
+                      />
+                    }
+                    dotListClass={"Landing_customDots"}
+                  >
+                    {items}
+                  </Carousel>
+                  {/* <Slider {...settings}>{items}</Slider> */}
                 </div>
               </div>
 
@@ -165,23 +299,34 @@ const ProductCard = ({
                   <DeleteIcon className="!text-red-600" />
                 </button>
               )}
-              {!onlyCarousal && productsFiltersReducer.productLayout === "grid" && (
-                <>
-                  <div className="product-overlay">
-                    <Link href={`/product/${product.id}`}>
-                      <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                        <button className="text-colorWhite text-base px-4 py-2 w-full md:w-[60%] lg:w-full xl:w-[60%] bg-colorPrimary rounded-md detailButton whitespace-nowrap">
-                          See Details
-                        </button>
-                      </a>
-                    </Link>
-                  </div>
-                </>
-              )}
+              {!onlyCarousal &&
+                productsFiltersReducer.productLayout === "grid" && (
+                  <>
+                    <div className="product-overlay">
+                      <Link href={`/product/${product.id}`}>
+                        <a
+                          target={`${
+                            themeLayout === "webScreen" ? "_blank" : "_self"
+                          }`}
+                        >
+                          <button className="text-colorWhite text-base px-4 py-2 w-full md:w-[70%] lg:w-full xl:w-[70%] bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
+                            See Details
+                          </button>
+                        </a>
+                      </Link>
+                    </div>
+                  </>
+                )}
             </div>
           </div>
           {!onlyCarousal && (
-            <div className={`${productsFiltersReducer.productLayout === "list" ? "pl-3 md:w-[200%]" : "pl-3"}`}>
+            <div
+              className={`${
+                productsFiltersReducer.productLayout === "list"
+                  ? "pl-3 md:w-[200%]"
+                  : "pl-3"
+              }`}
+            >
               {productsFiltersReducer.productLayout === "grid" && (
                 <div>
                   <p
@@ -217,17 +362,27 @@ const ProductCard = ({
                   <Image
                     alt="Shop Logo"
                     src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
-                    width={productsFiltersReducer.productLayout === "list" ? 45 : 16}
-                    height={productsFiltersReducer.productLayout === "list" ? 45 : 16}
+                    width={
+                      productsFiltersReducer.productLayout === "list" ? 45 : 16
+                    }
+                    height={
+                      productsFiltersReducer.productLayout === "list" ? 45 : 16
+                    }
                     className="rounded-[50%]"
                   />
                 </div>
                 <div className="flex flex-col justify-center">
                   <Link href={`/shop/${shopId}`}>
-                    <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+                    <a
+                      target={`${
+                        themeLayout === "webScreen" ? "_blank" : "_self"
+                      }`}
+                    >
                       <span
                         style={
-                          productsFiltersReducer.productLayout === "list" ? { fontSize: "20px" } : { fontSize: "10px" }
+                          productsFiltersReducer.productLayout === "list"
+                            ? { fontSize: "20px" }
+                            : { fontSize: "10px" }
                         }
                         className={`text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-[10px] `}
                       >
@@ -246,11 +401,18 @@ const ProductCard = ({
                     >
                       {product.product_name}
                     </p>
-                    <p className="text-[#565f66] text-base mt-2" title={product.product_description}>
+                    <p
+                      className="text-[#565f66] text-base mt-2"
+                      title={product.product_description}
+                    >
                       {product.product_description}
                     </p>
                     <Link href={`/product/${product.id}`}>
-                      <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+                      <a
+                        target={`${
+                          themeLayout === "webScreen" ? "_blank" : "_self"
+                        }`}
+                      >
                         <button className="text-colorWhite text-base px-4 py-2 my-2 md:mt-6 mr-2 md:w-1/2 w-[50%] xl:w-1/2 bg-colorPrimary rounded-md whitespace-nowrap">
                           See Details
                         </button>
@@ -280,7 +442,9 @@ const ProductCard = ({
             <Box sx={style} className="!w-[90%] lg:!w-1/2">
               <div className="p-5">
                 <div className="flex items-center">
-                  <p className="flex items-center text-colorBlack text-xl font-semibold">Confirmation Modal</p>
+                  <p className="flex items-center text-colorBlack text-xl font-semibold">
+                    Confirmation Modal
+                  </p>
                 </div>
 
                 <div className="p-5 text-colorBlack text-lg font-normal">
