@@ -157,7 +157,7 @@ const ProductDetail = ({ productDetails }) => {
   const items = photos?.map((itm, i) => {
     return (
       <div
-        className="w-[70%] mx-auto mb-2"
+        className="mx-auto mb-[24px]"
         onMouseEnter={() => selectImage(itm, i)}
         key={i}
         onClick={() => selectImage(itm, i)}
@@ -168,7 +168,7 @@ const ProductDetail = ({ productDetails }) => {
           width={250}
           height={300}
           style={images === itm ? { border: "1px solid black" } : { border: "0" }}
-          className="rounded cursor-pointer"
+          className="rounded-2xl object-cover cursor-pointer w-[129px] h-[146px]"
         />
       </div>
     );
@@ -289,6 +289,8 @@ const ProductDetail = ({ productDetails }) => {
                   border: "1px solid rgba(49, 51, 62, 0.4)",
                   paddingLeft: "14px",
                   width: "120px",
+                  fontSize: "20px",
+                  fontWeight: "400",
                 }}
                 onClick={() => {
                   if (isAuthenticate) {
@@ -405,57 +407,10 @@ const ProductDetail = ({ productDetails }) => {
                   <CustomReactImageMagnify large={images} preview={images} />
                 </div>
                 <div className="col-span-1"></div>
-                <div className="md:col-span-3 pt-5 md:flex justify-between  bg-colorWhite ">
-                  <div className="min-[320px]:mb-2 md:mb-0 mr-[10px]">
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        textTransform: "none",
-                        width: "max-content",
-                        color: "rgba(21, 24, 39, 0.4)",
-                        border: "1px solid rgba(21, 24, 39, 0.4)",
-                        borderRadius: "10px",
-                        paddingTop: "14px",
-                        paddingBottom: "14px",
-                        paddingLeft: "30px",
-                        paddingRight: "30px",
-                      }}
-                    >
-                      <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp; Like & Save
-                    </Button>
-                  </div>
-                  <div className="min-[320px]:mb-2 md:mb-0 mr-[10px]" onMouseLeave={() => setOpenToolTip(false)}>
-                    <HtmlTooltip
-                      title={
-                        <React.Fragment>
-                          <div className="flex">
-                            <div className="p-2 rounded-lg cursor-pointer">
-                              <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                              </FacebookShareButton>
-                            </div>
-                            <div className="p-2 rounded-lg cursor-pointer">
-                              <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
-                                <WhatsappIcon size={25} round={true} />
-                              </WhatsappShareButton>
-                            </div>
-                            <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                              <EmailShareButton
-                                subject="Product Detail Page"
-                                windowWidth={900}
-                                windowHeight={900}
-                                url={pageShareURL}
-                              >
-                                <Image src={googleIcon ?? ""} alt="googleIcon" />
-                              </EmailShareButton>
-                            </div>
-                          </div>
-                        </React.Fragment>
-                      }
-                    >
+                <div className="md:col-span-3 pt-5 justify-between  bg-colorWhite ">
+                  <div className="ResponsiveGrid">
+                    <div className="!mb-[10px] lg:mb-[0px]">
                       <Button
-                        onClick={handleTooltipOpen}
                         variant="outlined"
                         sx={{
                           textTransform: "none",
@@ -467,29 +422,87 @@ const ProductDetail = ({ productDetails }) => {
                           paddingBottom: "14px",
                           paddingLeft: "30px",
                           paddingRight: "30px",
+                          fontWeight: 600,
+                          fontSize: "14px",
                         }}
                       >
-                        <Image src={FileUploadOutlinedIcon ?? FileUploadOutlinedIcon} alt="" /> &nbsp; Share
+                        <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp; Like & Save
                       </Button>
-                    </HtmlTooltip>
-                  </div>
-                  <div className="min-[320px]:mb-2 md:mb-0 mr-[10px]">
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        textTransform: "none",
-                        width: "max-content",
-                        color: "rgba(21, 24, 39, 0.4)",
-                        border: "1px solid rgba(21, 24, 39, 0.4)",
-                        borderRadius: "10px",
-                        paddingTop: "14px",
-                        paddingBottom: "14px",
-                        paddingLeft: "30px",
-                        paddingRight: "30px",
-                      }}
+                    </div>
+                    <div
+                      className="!mb-[10px] lg:mb-[0px] ml-[20px] mr-[20px]"
+                      onMouseLeave={() => setOpenToolTip(false)}
                     >
-                      <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp;Report
-                    </Button>
+                      <HtmlTooltip
+                        title={
+                          <React.Fragment>
+                            <div className="flex">
+                              <div className="p-2 rounded-lg cursor-pointer">
+                                <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                  <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                </FacebookShareButton>
+                              </div>
+                              <div className="p-2 rounded-lg cursor-pointer">
+                                <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                  {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                                  <WhatsappIcon size={25} round={true} />
+                                </WhatsappShareButton>
+                              </div>
+                              <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                <EmailShareButton
+                                  subject="Product Detail Page"
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
+                                  <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                </EmailShareButton>
+                              </div>
+                            </div>
+                          </React.Fragment>
+                        }
+                      >
+                        <Button
+                          onClick={handleTooltipOpen}
+                          variant="outlined"
+                          sx={{
+                            textTransform: "none",
+                            width: "max-content",
+                            color: "rgba(21, 24, 39, 0.4)",
+                            border: "1px solid rgba(21, 24, 39, 0.4)",
+                            borderRadius: "10px",
+                            paddingTop: "14px",
+                            paddingBottom: "14px",
+                            paddingLeft: "30px",
+                            paddingRight: "30px",
+                            fontWeight: 600,
+                            fontSize: "14px",
+                          }}
+                        >
+                          <Image src={FileUploadOutlinedIcon ?? FileUploadOutlinedIcon} alt="" /> &nbsp; Share
+                        </Button>
+                      </HtmlTooltip>
+                    </div>
+                    <div className="min-[320px]:mb-2 md:mb-0 ">
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          textTransform: "none",
+                          width: "max-content",
+                          color: "rgba(21, 24, 39, 0.4)",
+                          border: "1px solid rgba(21, 24, 39, 0.4)",
+                          borderRadius: "10px",
+                          paddingTop: "14px",
+                          paddingBottom: "14px",
+                          paddingLeft: "30px",
+                          paddingRight: "30px",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                        }}
+                      >
+                        <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp;Report
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -738,11 +751,11 @@ const ProductDetail = ({ productDetails }) => {
             </div>
           </div>
         </div>
-        <div className="bg-[#f1f3f6] w-[100%] mt-10">
+        <div className="w-[100%] mt-10">
           <div className="container mb-8">
             <p className="text-colorBlack pt-4 font-semibold text-xl">SIMILAR PRODUCTS</p>
 
-            <div>
+            <div className={productDetails.data.product.related?.length === 1 ? "oneItemStart" : ""}>
               <Slider {...settings}>
                 {productDetails.data.product.related &&
                   productDetails.data.product.related?.map((product, index) => {

@@ -56,3 +56,20 @@ h6 {
   -webkit-line-clamp: 1 !important;
 }
 
+.ResponsiveGrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media only screen and (max-width: 1629px)  {
+  .ResponsiveGrid{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media only screen and (max-width: 1116px)  {
+  .ResponsiveGrid{
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+  }
+}

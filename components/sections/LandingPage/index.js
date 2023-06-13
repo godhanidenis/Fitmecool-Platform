@@ -176,7 +176,7 @@ const LandingPage = () => {
               </>
             ) : (
               <>
-                <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 place-items-center mb-10">
                   {shopsData &&
                     shopsData.map((shop) => (
                       <ShopCard key={shop.id} shop={shop} />

@@ -52,3 +52,10 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.oneItemStart {
+  .slick-slider .slick-track,
+  .slick-slider .slick-list {
+    display: initial;
+  }
+}
