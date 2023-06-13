@@ -40,6 +40,7 @@ import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Modal from "@mui/material/Modal";
+import AddIcon from "@mui/icons-material/Add";
 
 const ContactStyle = {
   position: "absolute",
@@ -168,7 +169,7 @@ const ProductDetail = ({ productDetails }) => {
           width={250}
           height={300}
           style={images === itm ? { border: "1px solid black" } : { border: "0" }}
-          className="rounded-2xl object-cover cursor-pointer w-[129px] h-[146px]"
+          className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
         />
       </div>
     );
@@ -227,7 +228,7 @@ const ProductDetail = ({ productDetails }) => {
     <>
       <SubHeader />
       <div className="bg-colorWhite">
-        <div className="container pt-4 pb-2 !w-[75%] pl-3">
+        <div className="pt-4 pb-2 !w-[100%] pl-[96px]">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               <div className="text-[#29977E] font-semibold">Product</div>
@@ -288,9 +289,11 @@ const ProductDetail = ({ productDetails }) => {
                   color: "rgba(49, 51, 62, 0.4)",
                   border: "1px solid rgba(49, 51, 62, 0.4)",
                   paddingLeft: "14px",
-                  width: "120px",
-                  fontSize: "20px",
+                  width: "96px",
+                  height:"36px",
+                  fontSize: "18px",
                   fontWeight: "400",
+                  borderRadius:"8px"
                 }}
                 onClick={() => {
                   if (isAuthenticate) {
@@ -335,7 +338,16 @@ const ProductDetail = ({ productDetails }) => {
                   }
                 }}
               >
-                {shopFollowByUser ? "Unfollow" : "+ Follow"}
+                {shopFollowByUser ? (
+                  "Unfollow"
+                ) : (
+                  <>
+                    <div className="flex items-center">
+                      <AddIcon className="w-[25px] h-[25px]" />
+                      <div className="pt-[2px]">Follow</div>
+                    </div>
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -396,7 +408,7 @@ const ProductDetail = ({ productDetails }) => {
       </div>
 
       <div className="bg-colorWhite">
-        <div className="container !w-[75%]">
+        <div className="!w-[100%] px-[80px]">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1 hidden sm:flex">
               <div className="grid grid-cols-4">
@@ -552,7 +564,11 @@ const ProductDetail = ({ productDetails }) => {
                           color: "rgba(49, 51, 62, 0.4)",
                           border: "1px solid rgba(49, 51, 62, 0.4)",
                           paddingLeft: "14px",
-                          width: "120px",
+                          width: "96px",
+                          height:"36px",
+                          fontSize:"18px",
+                          fontWeight:400,
+                          borderRadius:"8px"
                         }}
                         onClick={() => {
                           if (isAuthenticate) {
@@ -597,7 +613,16 @@ const ProductDetail = ({ productDetails }) => {
                           }
                         }}
                       >
-                        {shopFollowByUser ? "Unfollow" : "+ Follow"}
+                        {shopFollowByUser ? (
+                          "Unfollow"
+                        ) : (
+                          <>
+                            <div className="flex items-center">
+                              <AddIcon className="w-[25px] h-[25px]" />
+                              <div className="pt-[2px]">Follow</div>
+                            </div>
+                          </>
+                        )}
                         {/* <Typography color="#31333E"></Typography> */}
                       </Button>
                     </div>
@@ -750,8 +775,43 @@ const ProductDetail = ({ productDetails }) => {
               </div> */}
             </div>
           </div>
+          <div className="mb-8">
+            <p className="text-colorBlack pt-4 font-semibold text-xl">SIMILAR PRODUCTS</p>
+            <div
+              style={{ marginLeft: "0px", marginRight: "0px" }}
+              className="container cursor-pointer product-parent-div"
+            >
+              <div className="grid grid-cols-1 place-items-center">
+                <div
+                  className={productDetails.data.product.related?.length === 1 ? "oneItemStart w-[100%]" : "w-[100%]"}
+                >
+                  <Slider {...settings}>
+                    {productDetails.data.product.related &&
+                      productDetails.data.product.related?.map((product, index) => {
+                        if (index <= 4) {
+                          return (
+                            <div className="m-4" key={product.id}>
+                              <ProductCard product={product} />
+                            </div>
+                          );
+                        } else if (index === 5) {
+                          return (
+                            <ProductCard
+                              product={product}
+                              productDetails={productDetails}
+                              viewMore={true}
+                              key={product.id}
+                            />
+                          );
+                        }
+                      })}
+                  </Slider>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="w-[100%] mt-10">
+        {/* <div className="w-[100%] mt-10">
           <div className="container mb-8">
             <p className="text-colorBlack pt-4 font-semibold text-xl">SIMILAR PRODUCTS</p>
 
@@ -779,7 +839,7 @@ const ProductDetail = ({ productDetails }) => {
               </Slider>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <AuthModal
