@@ -404,7 +404,7 @@ const ProductDetail = ({ productDetails }) => {
         )}
       </Box>
       <div className="sm:hidden">
-        {productDetails && <ProductCard product={productDetails?.data?.product?.data} onlyCarousal={true} />}
+        {productDetails && <ProductCard HideLikeProductDetail={true} product={productDetails?.data?.product?.data} onlyCarousal={true} />}
       </div>
 
       <div className="bg-colorWhite">
@@ -420,20 +420,20 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
                 <div className="col-span-1"></div>
                 <div className="md:col-span-3 pt-5 justify-between  bg-colorWhite ">
-                  <div className="ResponsiveGrid">
-                    <div className="!mb-[10px] lg:mb-[0px]">
+                  <div className="flex flex-wrap items-center gap-5">
+                    <div className="">
                       <Button
                         variant="outlined"
                         sx={{
                           textTransform: "none",
-                          width: "max-content",
+                          width: "100%",
                           color: "rgba(21, 24, 39, 0.4)",
                           border: "1px solid rgba(21, 24, 39, 0.4)",
                           borderRadius: "10px",
-                          paddingTop: "14px",
-                          paddingBottom: "14px",
-                          paddingLeft: "30px",
-                          paddingRight: "30px",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          // paddingLeft: "30px",
+                          // paddingRight: "30px",
                           fontWeight: 600,
                           fontSize: "14px",
                         }}
@@ -442,7 +442,7 @@ const ProductDetail = ({ productDetails }) => {
                       </Button>
                     </div>
                     <div
-                      className="!mb-[10px] lg:mb-[0px] ml-[20px] mr-[20px]"
+                      className=""
                       onMouseLeave={() => setOpenToolTip(false)}
                     >
                       <HtmlTooltip
@@ -479,14 +479,14 @@ const ProductDetail = ({ productDetails }) => {
                           variant="outlined"
                           sx={{
                             textTransform: "none",
-                            width: "max-content",
+                            width: "100%",
                             color: "rgba(21, 24, 39, 0.4)",
                             border: "1px solid rgba(21, 24, 39, 0.4)",
                             borderRadius: "10px",
-                            paddingTop: "14px",
-                            paddingBottom: "14px",
-                            paddingLeft: "30px",
-                            paddingRight: "30px",
+                            paddingTop: "12px",
+                            paddingBottom: "12px",
+                            // paddingLeft: "30px",
+                            // paddingRight: "30px",
                             fontWeight: 600,
                             fontSize: "14px",
                           }}
@@ -495,19 +495,19 @@ const ProductDetail = ({ productDetails }) => {
                         </Button>
                       </HtmlTooltip>
                     </div>
-                    <div className="min-[320px]:mb-2 md:mb-0 ">
+                    <div className=" ">
                       <Button
                         variant="outlined"
                         sx={{
                           textTransform: "none",
-                          width: "max-content",
+                          width: "100%",
                           color: "rgba(21, 24, 39, 0.4)",
                           border: "1px solid rgba(21, 24, 39, 0.4)",
                           borderRadius: "10px",
-                          paddingTop: "14px",
-                          paddingBottom: "14px",
-                          paddingLeft: "30px",
-                          paddingRight: "30px",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          // paddingLeft: "30px",
+                          // paddingRight: "30px",
                           fontWeight: 600,
                           fontSize: "14px",
                         }}
@@ -695,16 +695,16 @@ const ProductDetail = ({ productDetails }) => {
               </div>
 
               <div className="mt-3">
-                <div className="text-[#151827] font-semibold text-[20px]">About</div>
+                <div className="text-[#151827] font-semibold text-[20px] mb-[12px]">About</div>
                 <div>
-                  <span className="pt-3 font-normal text-lg text-[#888888]">
+                  <div className="font-normal text-lg text-[#888888]">
                     {productDetails.data.product.data.product_description}
-                  </span>
+                  </div>
                 </div>
                 <div className="mt-6">
-                  <span className="font-semibold text-base text-colorBlack">Item Details</span>
+                  <p className="font-semibold text-base text-colorBlack mb-[12px]">Item Details</p>
                   {/* <Divider /> */}
-                  <div className="flex mt-3 items-center">
+                  <div className="flex items-center">
                     <span className="text-sm">Category :</span>
                     <span className="text-sm font-semibold mr-2 text-colorBlack">
                       {productDetails.data.product.data.categoryInfo?.category_name}

@@ -56,7 +56,7 @@ h6 {
   -webkit-line-clamp: 1 !important;
 }
 
-.ResponsiveGrid{
+/* .ResponsiveGrid{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
@@ -72,4 +72,4 @@ h6 {
     flex-direction: column;
     align-items: baseline;
   }
-}
+} */
