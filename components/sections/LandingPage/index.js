@@ -10,11 +10,7 @@ import {
 import UpperFilter from "../../Filters/UpperFilter/UpperFilter";
 import ProductCard from "../product-section/ProductCard";
 import { loadMoreShopsStart, loadShopsStart } from "../../../redux/ducks/shop";
-import InfiniteScroll from "react-infinite-scroll-component";
-import CircularProgress from "@mui/material/CircularProgress";
 import ShopCard from "../shop-section/ShopCard";
-import { loadCategoriesStart } from "../../../redux/ducks/categories";
-import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
 import Filter from "../../Filters";
 import { Pagination } from "@mui/material";
 
@@ -48,29 +44,14 @@ const LandingPage = () => {
   const [productPageSkip, setProductPageSkip] = useState(0);
   const [shopPageSkip, setShopPageSkip] = useState(0);
 
-  const getMoreProductsList = () => {
-    dispatch(
-      loadMoreProductsStart({
-        pageData: {
-          skip: productPageSkip,
-          limit: 6,
-        },
-        filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
-        },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
-      })
-    );
-  };
-
+  console.log(
+    "productsLimit,productsCount, numOfPages",
+    productsLimit,
+    productsCount,
+    numOfPages,
+    "productPageSkip",
+    productPageSkip
+  );
   const getAllProducts = () => {
     dispatch(
       loadProductsStart({
@@ -90,20 +71,6 @@ const LandingPage = () => {
           productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
-      })
-    );
-  };
-
-  const getMoreShopsList = () => {
-    dispatch(
-      loadMoreShopsStart({
-        pageData: {
-          skip: shopPageSkip,
-          limit: 6,
-        },
-        area: shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
-        sort: shopsFiltersReducer.sortFilters.sortType.selectedValue,
-        stars: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
       })
     );
   };
@@ -133,13 +100,6 @@ const LandingPage = () => {
     productPageSkip,
   ]);
 
-  // useEffect(() => {
-  //   if (productPageSkip > 0) {
-  //     getMoreProductsList();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, productPageSkip]);
-
   useEffect(() => {
     getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,30 +110,23 @@ const LandingPage = () => {
     shopPageSkip,
   ]);
 
-  // useEffect(() => {
-  //   if (shopPageSkip > 0) {
-  //     getMoreShopsList();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, shopPageSkip]);
-
   return (
     <>
       <DirectoryHero bgImg={LandingBg.src} />
       <div className="container py-2 bg-white mb-[1px] mt-3">
-          <div className="grid grid-cols-8 container">
-            <div className="lg:col-span-2 hidden lg:block"></div>
-            <div className="col-span-8 lg:col-span-6">
+        <div className="grid grid-cols-8 container">
+          <div className="lg:col-span-2 hidden lg:block"></div>
+          <div className="col-span-8 lg:col-span-6">
             <UpperFilter
-                byShop={byShop}
-                setByShop={setByShop}
-                setProductPageSkip={setProductPageSkip}
-                setShopPageSkip={setShopPageSkip}
-                showDrawerFilter={true}
-              />
-            </div>
+              byShop={byShop}
+              setByShop={setByShop}
+              setProductPageSkip={setProductPageSkip}
+              setShopPageSkip={setShopPageSkip}
+              showDrawerFilter={true}
+            />
           </div>
         </div>
+      </div>
       <div className="grid grid-cols-8 container mb-4 ">
         <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
           <Filter
@@ -185,28 +138,8 @@ const LandingPage = () => {
         </div>
         <div className="col-span-8 lg:col-span-6 p-6 bg-white">
           <div className="container !w-[100%]">
-            {/* <UpperFilter
-              byShop={byShop}
-              setByShop={setByShop}
-              setProductPageSkip={setProductPageSkip}
-              setShopPageSkip={setShopPageSkip}
-              showDrawerFilter={true}
-            /> */}
             {!byShop ? (
               <>
-                {/* <p className="font-bold text-2xl text-colorBlack">Products</p> */}
-                {/* <InfiniteScroll
-                  className="!overflow-hidden p-0.5"
-                  dataLength={productsData.length}
-                  next={() => setProductPageSkip(productPageSkip + 6)}
-                  hasMore={productsData.length < productsCount}
-                  loader={
-                    <div className="text-center">
-                      <CircularProgress />
-                    </div>
-                  }
-                > */}
-
                 <div
                   className={`${
                     productsFiltersReducer.productLayout === "list"
@@ -220,12 +153,17 @@ const LandingPage = () => {
                     ))}
                 </div>
                 {productsCount > 6 && (
-                  <div className="flex items-center justify-center py-10">
+                  <div className="flex items-center justify-between py-10">
+                    <p className="text-sm leading-[150%] text-[#15182766]">
+                      Showing {productPageSkip + 1} -{" "}
+                      {productsCount < (productPageSkip + 1) * productsLimit
+                        ? productsCount
+                        : (productPageSkip + 1) * productsLimit}{" "}
+                      of {productsCount}
+                      results
+                    </p>
                     <Pagination
                       count={Math.ceil(productsCount / 6)}
-                      color="primary"
-                      // variant="outlined"
-                      shape="rounded"
                       page={
                         (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
                       }
@@ -235,22 +173,9 @@ const LandingPage = () => {
                     />
                   </div>
                 )}
-
-                {/* </InfiniteScroll> */}
               </>
             ) : (
               <>
-                {/* <InfiniteScroll
-                  className="!overflow-hidden p-0.5"
-                  dataLength={shopsData.length}
-                  next={() => setShopPageSkip(shopPageSkip + 6)}
-                  hasMore={shopsData.length < shopsCount}
-                  loader={
-                    <div className="text-center">
-                      <CircularProgress />
-                    </div>
-                  }
-                > */}
                 <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center mb-10">
                   {shopsData &&
                     shopsData.map((shop) => (
@@ -272,7 +197,6 @@ const LandingPage = () => {
                     />
                   </div>
                 )}
-                {/* </InfiniteScroll> */}
               </>
             )}
           </div>
