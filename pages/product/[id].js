@@ -39,6 +39,18 @@ import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Modal from "@mui/material/Modal";
+
+const ContactStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
@@ -79,7 +91,7 @@ const ProductDetail = ({ productDetails }) => {
       color: "rgba(0, 0, 0, 0.87)",
       maxWidth: 220,
       fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)"
+      boxShadow: "0 0 10px rgba(0,0,0,.1)",
     },
   }));
 
@@ -131,6 +143,8 @@ const ProductDetail = ({ productDetails }) => {
   ];
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState();
+
+  const handleCloseContactInfo = () => setOpenContactInfo(false);
 
   useEffect(() => {
     setImages(photos[0]);
@@ -704,50 +718,6 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
               </div>
 
-              {openContactInfo && (
-                <div className="flex justify-center items-center mt-3">
-                  <div className="bg-colorWhite rounded-lg flex items-center shadow-lg justify-between w-full sm:w-[80%] lg:w-auto mx-auto">
-                    <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
-                      <div className="flex justify-center items-center">
-                        <img
-                          alt="Shop Logo"
-                          src={productDetails.data.product.data.branchInfo?.shop_info?.shop_logo}
-                          width={60}
-                          height={40}
-                          className="rounded-[40%]"
-                        />
-                      </div>
-                      <div className="flex flex-col justify-center">
-                        <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                          {productDetails.data.product.data.branchInfo?.shop_info?.shop_name}
-                        </p>
-                        <p className="text-[#888888] text-sm font-normal">
-                          {productDetails.data.product.data.branchInfo?.branch_address}
-                        </p>
-                      </div>
-                    </div>
-                    <Divider orientation="vertical" flexItem />
-                    <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
-                      <div className="flex justify-center items-center">
-                        <Avatar className=" !w-14 !h-14">
-                          <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
-                        </Avatar>
-                      </div>
-                      <div className="flex flex-col justify-center">
-                        <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                          {productDetails.data.product.data.branchInfo?.manager_name}
-                        </p>
-                        <p className="text-colorBlack text-sm font-normal flex justify-end">- Manager</p>
-
-                        <p className="flex justify-center mt-1 text-[#000000] text-base font-semibold cursor-pointer">
-                          {productDetails.data.product.data.branchInfo?.manager_contact}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* <div className="mt-10">
                 <span className="font-semibold text-base text-colorBlack">ITEM DETAILS</span>
                 <Divider />
@@ -807,6 +777,56 @@ const ProductDetail = ({ productDetails }) => {
         authTypeModal={authTypeModal}
         setAuthTypeModal={setAuthTypeModal}
       />
+      <Modal
+        open={openContactInfo}
+        onClose={handleCloseContactInfo}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={ContactStyle}>
+          <div className="flex justify-center items-center mt-3">
+            <div className="bg-colorWhite rounded-lg shadow-lg w-full sm:w-[80%] lg:w-auto mx-auto">
+              <div className="p-5 flex flex-col sm:flex-row gap-6 justify-start">
+                <div className="flex justify-center items-center">
+                  <img
+                    alt="Shop Logo"
+                    src={productDetails.data.product.data.branchInfo?.shop_info?.shop_logo}
+                    width={60}
+                    height={40}
+                    className="rounded-[40%]"
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <p className="text-[#000000] text-base font-semibold cursor-pointer">
+                    {productDetails.data.product.data.branchInfo?.shop_info?.shop_name}
+                  </p>
+                  <p className="text-[#888888] text-sm font-normal">
+                    {productDetails.data.product.data.branchInfo?.branch_address}
+                  </p>
+                </div>
+              </div>
+              <Divider orientation="vertical" flexItem />
+              <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
+                <div className="flex justify-center items-center">
+                  <Avatar className=" !w-14 !h-14">
+                    <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
+                  </Avatar>
+                </div>
+                <div className="flex flex-col justify-center">
+                  <p className="text-[#000000] text-base font-semibold cursor-pointer">
+                    {productDetails.data.product.data.branchInfo?.manager_name}
+                  </p>
+                  <p className="text-colorBlack text-sm font-normal flex justify-end">- Manager</p>
+
+                  <p className="flex justify-center mt-1 text-[#000000] text-base font-semibold cursor-pointer">
+                    {productDetails.data.product.data.branchInfo?.manager_contact}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </>
   );
 };
