@@ -158,12 +158,12 @@ const ShopCard = ({ shop }) => {
         </div>
       </div>
       <div className="px-5 py-3">
-        <div className="flex gap-2 justify-between">
+        <div style={{ alignItems: "flex-start" }} className="flex gap-2 justify-between">
           <div className="flex gap-2 justify-start">
             <div className="flex justify-center items-center">
               <Image alt="Shop Logo" src={shop?.shop_logo ?? ""} width={50} height={50} className="rounded-[50%]" />
             </div>
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col align-baseline">
               <Link href={`/shop/${shop.id}`}>
                 <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
                   <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
@@ -178,19 +178,19 @@ const ShopCard = ({ shop }) => {
                   : shop?.branch_info[0]?.branch_address}
               </p>
               {shopsFiltersReducer.shopLayout === "list" && (
-                <span className="text-[14px] font-normal flex items-center mt-2 justify-center text-colorBlack">
+                <span className="text-[14px] font-normal flex items-center mt-2 text-colorBlack">
                   {`${shop?.shopFollowerCount} Followers`}
                 </span>
               )}
             </div>
           </div>
           {shopsFiltersReducer.shopLayout === "list" && (
-            <div className="flex items-center mt-2 justify-center flex-wrap gap-2">
-              <div className="border rounded-lg p-1 flex items-center gap-1">
-                <StarIcon fontSize="medium" className="!text-yellow-400" />
-                <p className="text-colorBlack font-semibold">{shop.shop_rating}</p>
+            <div className="flex items-center mt-2 flex-wrap gap-2">
+              <div className="p-1 flex items-center gap-1">
+                <StarIcon fontSize="small" className="!text-yellow-400" />
+                <p className="text-colorBlack text-[14px] font-normal">{shop.shop_rating}</p>
               </div>
-              <span className="font-medium text-base lg:text-lg text-colorBlack">({shop.shopReviewCount})</span>
+              <span className="text-[14px] font-normal text-[gray]">({shop.shopReviewCount})</span>
             </div>
           )}
         </div>
