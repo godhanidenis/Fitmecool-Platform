@@ -17,6 +17,9 @@ module.exports = {
         colorTransparent: "transparent",
       },
     },
+    fontFamily:{
+      'Nova': 'Proxima Nova'
+    },
   },
   plugins: [],
 };
