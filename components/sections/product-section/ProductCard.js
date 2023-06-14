@@ -22,6 +22,7 @@ import instagramIcon from "../../../assets/instagram.png";
 import googleIcon from "../../../assets/googleIcon.svg";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 
 const style = {
   position: "absolute",
@@ -140,8 +141,7 @@ const ProductCard = ({
   setEditProductId,
   viewMore,
   productDetails,
-  onlyCarousal,
-  HideLikeProductDetail,
+  onlyCarousal
 }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
@@ -253,98 +253,109 @@ const ProductCard = ({
                   <EditIcon />
                 </button>
               )}
-              {HideLikeProductDetail ? (
-                ""
-              ) : !shopProduct ? (
+              {!shopProduct ? (
                 <>
-                  <button
-                    className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 absolute top-[5%] right-[5%]`}
-                    style={{
-                      backdropFilter: "blur(20px)",
-                    }}
-                    onClick={() => {
-                      if (isAuthenticate) {
-                        productLike({
-                          productInfo: {
-                            product_id: product.id,
-                            user_id: userProfile.id,
-                          },
-                        }).then(
-                          (res) => {
-                            dispatch(
-                              !productLikeByUser
-                                ? productLikeToggle({
-                                    productInfo: {
-                                      key: "like",
-                                      value: res.data.productLike.data,
-                                    },
-                                  })
-                                : productLikeToggle({
-                                    productInfo: {
-                                      key: "disLike",
-                                      value: product.id,
-                                    },
-                                  })
-                            );
-                            toast.success(res.data.productLike.message, {
-                              theme: "colored",
-                            });
-                          },
-                          (error) => {
-                            toast.error(error.message, { theme: "colored" });
-                          }
-                        );
-                      } else {
-                        if (themeLayout === "mobileScreen") {
-                          Router.push("/auth/signin");
+                  <div className="flex flex-col absolute top-0 right-[16px]">
+                    <button
+                      className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
+                      style={{
+                        backdropFilter: "blur(20px)",
+                      }}
+                      onClick={() => {
+                        if (isAuthenticate) {
+                          productLike({
+                            productInfo: {
+                              product_id: product.id,
+                              user_id: userProfile.id,
+                            },
+                          }).then(
+                            (res) => {
+                              dispatch(
+                                !productLikeByUser
+                                  ? productLikeToggle({
+                                      productInfo: {
+                                        key: "like",
+                                        value: res.data.productLike.data,
+                                      },
+                                    })
+                                  : productLikeToggle({
+                                      productInfo: {
+                                        key: "disLike",
+                                        value: product.id,
+                                      },
+                                    })
+                              );
+                              toast.success(res.data.productLike.message, {
+                                theme: "colored",
+                              });
+                            },
+                            (error) => {
+                              toast.error(error.message, { theme: "colored" });
+                            }
+                          );
                         } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          if (themeLayout === "mobileScreen") {
+                            Router.push("/auth/signin");
+                          } else {
+                            setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          }
                         }
-                      }
-                    }}
-                  >
-                    {!productLikeByUser ? <FavoriteBorderIcon fontSize="small" className="!text-white" /> : "❤️"}
-                  </button>
-                  {onlyCarousal && (
-                    <>
-                      <HtmlTooltip
-                        title={
-                          <React.Fragment>
-                            <div className="">
-                              <div className="p-2 rounded-lg cursor-pointer">
-                                <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                  <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                                </FacebookShareButton>
+                      }}
+                    >
+                      {!productLikeByUser ? <FavoriteBorderIcon fontSize="small" className="!text-white" /> : "❤️"}
+                    </button>
+                    {onlyCarousal && (
+                      <>
+                        <HtmlTooltip
+                          title={
+                            <React.Fragment>
+                              <div className="">
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                    <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                  </FacebookShareButton>
+                                </div>
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                    {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                                    <WhatsappIcon size={25} round={true} />
+                                  </WhatsappShareButton>
+                                </div>
+                                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                  <EmailShareButton
+                                    subject="Product Detail Page"
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                  </EmailShareButton>
+                                </div>
                               </div>
-                              <div className="p-2 rounded-lg cursor-pointer">
-                                <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                  {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
-                                  <WhatsappIcon size={25} round={true} />
-                                </WhatsappShareButton>
-                              </div>
-                              <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                                <EmailShareButton
-                                  subject="Product Detail Page"
-                                  windowWidth={900}
-                                  windowHeight={900}
-                                  url={pageShareURL}
-                                >
-                                  <Image src={googleIcon ?? ""} alt="googleIcon" />
-                                </EmailShareButton>
-                              </div>
-                            </div>
-                          </React.Fragment>
-                        }
-                      >
-                        <button
-                          onClick={handleTooltipOpen}
-                          className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-12 right-0`}
+                            </React.Fragment>
+                          }
                         >
-                          <FileUploadOutlinedIcon fontSize="small" />
+                          <button
+                            onClick={handleTooltipOpen}
+                            className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
+                            style={{
+                              backdropFilter: "blur(20px)",
+                            }}
+                          >
+                            <FileUploadOutlinedIcon fontSize="small" />
+                          </button>
+                        </HtmlTooltip>
+                        <button
+                          className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300`}
+                          style={{
+                            backdropFilter: "blur(20px)",
+                          }}
+                        >
+                          <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />
                         </button>
-                      </HtmlTooltip>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </>
               ) : (
                 <button

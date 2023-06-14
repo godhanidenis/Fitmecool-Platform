@@ -227,7 +227,7 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="bg-colorWhite">
+      <div className="bg-colorWhite font-Nova">
         <div className="pt-4 pb-2 !w-[100%] pl-[96px]">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
@@ -244,17 +244,17 @@ const ProductDetail = ({ productDetails }) => {
           </Breadcrumbs>
         </div>
       </div>
-      <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="lg:!hidden">
+      <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="lg:!hidden font-Nova">
         <div className="flex items-center bg-colorWhite p-3 sm:rounded-lg">
           <div className="flex items-center justify-between w-full gap-4">
-            <div className="flex justify-start items-center gap-1 sm:gap-4 pl-[60px]">
-              {/* <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center gap-1 sm:gap-4">
+              <div className="flex justify-center items-center">
                 <img
                   alt="Shop Logo"
                   src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
                   className="rounded-[50%] w-[50px] h-[50px]"
                 />
-              </div> */}
+              </div>
               <div className="flex flex-col justify-center">
                 <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
                   <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
@@ -267,7 +267,7 @@ const ProductDetail = ({ productDetails }) => {
                 <p className="text-[#888888] text-xs sm:text-sm font-normal">25 days ago</p>
               </div>
             </div>
-            {/* <div className="flex flex-col">
+            <div className="flex flex-col">
               <Rating
                 name="text-feedback"
                 value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
@@ -275,11 +275,11 @@ const ProductDetail = ({ productDetails }) => {
                 size="small"
                 emptyIcon={<StarIcon fontSize="inherit" />}
               />
-              <p className="oneLineAfterThreeDots text-[#888888] font-normal flex items-center">
+              <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
                 <LocationOnIcon fontSize="small" className="!mr-1" />
                 {productDetails.data.product.data.branchInfo?.branch_address}
               </p>
-            </div> */}
+            </div>
 
             <div className="flex items-center md:justify-end">
               <Button
@@ -351,11 +351,11 @@ const ProductDetail = ({ productDetails }) => {
               </Button>
             </div>
           </div>
-          <div className="ml-[16px]" onClick={() => setOpenToolTipMobileView(!OpenToolTipMobileView)}>
+          {/* <div className="ml-[16px]" onClick={() => setOpenToolTipMobileView(!OpenToolTipMobileView)}>
             <MoreHorizIcon />
-          </div>
+          </div> */}
         </div>
-        {OpenToolTipMobileView && (
+        {/* {OpenToolTipMobileView && (
           <>
             <div className="absolute right-[12px] top-[190px] z-10">
               <div className="mb-[10px]">
@@ -373,7 +373,7 @@ const ProductDetail = ({ productDetails }) => {
                         </div>
                         <div className="p-2 rounded-lg cursor-pointer">
                           <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                           
                             <WhatsappIcon size={25} round={true} />
                           </WhatsappShareButton>
                         </div>
@@ -401,13 +401,13 @@ const ProductDetail = ({ productDetails }) => {
               </div>
             </div>
           </>
-        )}
+        )} */}
       </Box>
-      <div className="sm:hidden">
-        {productDetails && <ProductCard HideLikeProductDetail={true} product={productDetails?.data?.product?.data} onlyCarousal={true} />}
+      <div className="sm:hidden font-Nova">
+        {productDetails && <ProductCard product={productDetails?.data?.product?.data} onlyCarousal={true} />}
       </div>
 
-      <div className="bg-colorWhite">
+      <div className="bg-colorWhite font-Nova">
         <div className="!w-[100%] px-[80px]">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1 hidden sm:flex">
@@ -521,16 +521,16 @@ const ProductDetail = ({ productDetails }) => {
             </div>
             <div className="col-span-2 lg:col-span-1">
               <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="!hidden lg:!block">
-                <div className="bg-colorWhite p-3 rounded-lg">
+                <div className="bg-colorWhite p-3 rounded-[16px] border border-['rgba(0, 0, 0, 0.1)']">
                   <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex justify-start items-center gap-1 sm:gap-4 pl-[60px]">
-                      {/* <div className="flex justify-center items-center">
+                    <div className="flex justify-start items-center gap-1 sm:gap-4">
+                      <div className="flex justify-center items-center">
                         <img
                           alt="Shop Logo"
                           src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
                           className="rounded-[50%] w-[50px] h-[50px]"
                         />
-                      </div> */}
+                      </div>
                       <div className="flex flex-col justify-center">
                         <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
                           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
@@ -542,7 +542,7 @@ const ProductDetail = ({ productDetails }) => {
                         <p className="text-[#888888] text-xs sm:text-sm font-normal">25 days ago</p>
                       </div>
                     </div>
-                    {/* <div className="flex flex-col">
+                    <div className="flex flex-col">
                       <Rating
                         name="text-feedback"
                         value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
@@ -550,11 +550,11 @@ const ProductDetail = ({ productDetails }) => {
                         size="small"
                         emptyIcon={<StarIcon fontSize="inherit" />}
                       />
-                      <p className="oneLineAfterThreeDots text-[#888888] font-normal flex items-center">
+                      <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
                         <LocationOnIcon fontSize="small" className="!mr-1" />
                         {productDetails.data.product.data.branchInfo?.branch_address}
                       </p>
-                    </div> */}
+                    </div>
 
                     <div className="flex items-center md:justify-end">
                       <Button
@@ -630,8 +630,8 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
               </Box>
               <div className="mt-5">
-                <div className="flex justify-between">
-                  <span className="font-semibold text-2xl text-[#29977E]">
+                <div className="flex justify-between border-b border-[#8F8F8F] pb-[24px]">
+                  <span className="font-semibold text-[30px] text-[#29977E]">
                     {productDetails.data.product.data.product_name}
                   </span>
                   <button
@@ -680,29 +680,17 @@ const ProductDetail = ({ productDetails }) => {
                     {!productLikeByUser ? <FavoriteBorderIcon fontSize="medium" /> : "❤️"}
                   </button>
                 </div>
-                <div className="flex pt-[10px] ">
-                  <Rating
-                    name="text-feedback"
-                    value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
-                    readOnly
-                    size="small"
-                    emptyIcon={<StarIcon fontSize="inherit" />}
-                  />
-                  <p className="text-[#151827] font-semibold ml-[8px]">
-                    {Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
-                  </p>
-                </div>
               </div>
 
               <div className="mt-3">
-                <div className="text-[#151827] font-semibold text-[20px] mb-[12px]">About</div>
-                <div>
+                <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">About</div>
+                <div className="border-b border-[#8F8F8F] pb-[24px]">
                   <div className="font-normal text-lg text-[#888888]">
                     {productDetails.data.product.data.product_description}
                   </div>
                 </div>
                 <div className="mt-6">
-                  <p className="font-semibold text-base text-colorBlack mb-[12px]">Item Details</p>
+                  <p className="font-semibold text-[22px] text-colorBlack ">Item Details</p>
                   {/* <Divider /> */}
                   <div className="flex items-center">
                     <span className="text-sm">Category :</span>

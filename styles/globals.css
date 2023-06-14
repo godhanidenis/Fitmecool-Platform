@@ -7,6 +7,11 @@ body {
   @apply bg-colorWhite text-colorStone;
 }
 
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("../public/Proxima\ Nova\ Font.otf")
+}
+
 h1,
 h2,
 h3,

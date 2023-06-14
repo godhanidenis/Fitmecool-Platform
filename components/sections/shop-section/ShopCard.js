@@ -20,7 +20,7 @@ const ShopCard = ({ shop }) => {
         alt={shop.name}
         width={350}
         height={shopsFiltersReducer.shopLayout === "list" ? 356 : 400}
-        className="rounded object-cover"
+        className="rounded-[8px] object-cover"
         key={itm}
       />
     );
