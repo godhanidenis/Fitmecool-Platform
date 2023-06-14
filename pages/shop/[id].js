@@ -200,9 +200,9 @@ const ShopDetail = ({ shopDetails }) => {
   return (
     <>
       <SubHeader />
-      <div className="pb-20 md:pb-28">
+      <div className="pb-20 md:pb-28 font-Nova">
         <DirectoryHero bgImg={shopDetails?.data?.shop?.shop_cover_image} />
-        <div className="container">
+        <div className="">
           <ShopHeaderSection
             shopDetails={shopDetails.data.shop}
             totalReview={shopReviews.length}
@@ -376,7 +376,7 @@ const ShopDetail = ({ shopDetails }) => {
                 <div className="flex justify-end gap-6 mt-5">
                   <button
                     disabled={submitButtonDisable}
-                    className={`bg-colorPrimary text-white p-2 text-base flex items-center justify-center ${
+                    className={`bg-[#29977E] rounded-[8px] text-white p-2 text-[16px] font-semibold px-[40px] py-[16px] flex items-center justify-center ${
                       submitButtonDisable && "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={() => {

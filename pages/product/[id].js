@@ -84,17 +84,17 @@ const ProductDetail = ({ productDetails }) => {
       boxShadow: "0 0 10px rgba(0,0,0,.1)",
     },
   }));
-  const HtmlTooltipMobile = styled(({ className, ...props }) => (
-    <Tooltip open={OpenToolTipMobile} {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#ffffff",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)",
-    },
-  }));
+  // const HtmlTooltipMobile = styled(({ className, ...props }) => (
+  //   <Tooltip open={OpenToolTipMobile} {...props} classes={{ popper: className }} />
+  // ))(({ theme }) => ({
+  //   [`& .${tooltipClasses.tooltip}`]: {
+  //     backgroundColor: "#ffffff",
+  //     color: "rgba(0, 0, 0, 0.87)",
+  //     maxWidth: 220,
+  //     fontSize: theme.typography.pxToRem(12),
+  //     boxShadow: "0 0 10px rgba(0,0,0,.1)",
+  //   },
+  // }));
 
   const handleTooltipOpen = () => {
     setOpenToolTip(!OpenToolTip);
@@ -290,10 +290,10 @@ const ProductDetail = ({ productDetails }) => {
                   border: "1px solid rgba(49, 51, 62, 0.4)",
                   paddingLeft: "14px",
                   width: "96px",
-                  height:"36px",
+                  height: "36px",
                   fontSize: "18px",
                   fontWeight: "400",
-                  borderRadius:"8px"
+                  borderRadius: "8px",
                 }}
                 onClick={() => {
                   if (isAuthenticate) {
@@ -408,7 +408,7 @@ const ProductDetail = ({ productDetails }) => {
       </div>
 
       <div className="bg-colorWhite font-Nova">
-        <div className="!w-[100%] px-[80px]">
+        <div className="!w-[100%] sm:px-[80px] px-[10px]">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1 hidden sm:flex">
               <div className="grid grid-cols-4">
@@ -420,7 +420,7 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
                 <div className="col-span-1"></div>
                 <div className="md:col-span-3 pt-5 justify-between  bg-colorWhite ">
-                  <div className="flex flex-wrap items-center gap-5">
+                  <div className="flex flex-wrap items-center gap-5 justify-between">
                     <div className="">
                       <Button
                         variant="outlined"
@@ -437,14 +437,51 @@ const ProductDetail = ({ productDetails }) => {
                           fontWeight: 600,
                           fontSize: "14px",
                         }}
+                        onClick={() => {
+                          if (isAuthenticate) {
+                            productLike({
+                              productInfo: {
+                                product_id: productDetails.data.product.data.id,
+                                user_id: userProfile.id,
+                              },
+                            }).then(
+                              (res) => {
+                                dispatch(
+                                  !productLikeByUser
+                                    ? productLikeToggle({
+                                        productInfo: {
+                                          key: "like",
+                                          value: res.data.productLike.data,
+                                        },
+                                      })
+                                    : productLikeToggle({
+                                        productInfo: {
+                                          key: "disLike",
+                                          value: productDetails.data.product.data.id,
+                                        },
+                                      })
+                                );
+                                toast.success(res.data.productLike.message, {
+                                  theme: "colored",
+                                });
+                              },
+                              (error) => {
+                                toast.error(error.message, { theme: "colored" });
+                              }
+                            );
+                          } else {
+                            if (themeLayout === "mobileScreen") {
+                              Router.push("/auth/signin");
+                            } else {
+                              setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                            }
+                          }
+                        }}
                       >
                         <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp; Like & Save
                       </Button>
                     </div>
-                    <div
-                      className=""
-                      onMouseLeave={() => setOpenToolTip(false)}
-                    >
+                    <div className="" onMouseLeave={() => setOpenToolTip(false)}>
                       <HtmlTooltip
                         title={
                           <React.Fragment>
@@ -520,7 +557,7 @@ const ProductDetail = ({ productDetails }) => {
               </div>
             </div>
             <div className="col-span-2 lg:col-span-1">
-              <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="!hidden lg:!block">
+              <Box  className="!hidden lg:!block">
                 <div className="bg-colorWhite p-3 rounded-[16px] border border-['rgba(0, 0, 0, 0.1)']">
                   <div className="flex items-center justify-between w-full gap-4">
                     <div className="flex justify-start items-center gap-1 sm:gap-4">
@@ -565,10 +602,10 @@ const ProductDetail = ({ productDetails }) => {
                           border: "1px solid rgba(49, 51, 62, 0.4)",
                           paddingLeft: "14px",
                           width: "96px",
-                          height:"36px",
-                          fontSize:"18px",
-                          fontWeight:400,
-                          borderRadius:"8px"
+                          height: "36px",
+                          fontSize: "18px",
+                          fontWeight: 400,
+                          borderRadius: "8px",
                         }}
                         onClick={() => {
                           if (isAuthenticate) {

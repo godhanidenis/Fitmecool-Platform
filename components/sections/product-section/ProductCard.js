@@ -224,7 +224,7 @@ const ProductCard = ({
         <div className={`${productsFiltersReducer.productLayout === "list" ? "md:flex " : ""}`}>
           <div
             className={`${
-              !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[auto] md:border-r-2" : ""
+              !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[66%] md:border-r-2" : ""
             }`}
           >
             <div className="container my-[5px] cursor-pointer product-parent-div">

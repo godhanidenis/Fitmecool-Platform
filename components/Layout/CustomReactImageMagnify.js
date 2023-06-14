@@ -50,7 +50,9 @@ const CustomReactImageMagnify = (props) => {
         <style jsx>
           {`
             img {
-              width: 100%;
+              width: 570px;
+              height: 570px;
+              object-fit: cover;
             }
 
             .zoom-box {

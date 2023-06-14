@@ -25,6 +25,7 @@ import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box } from "@mui/system";
 import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
 import shareIcon from "../../../assets/shareIcon.svg";
+import AddIcon from "@mui/icons-material/Add";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fbfbfb",
@@ -101,8 +102,8 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
 
   return (
     <>
-      <div className="flex justify-center container font-Nova">
-        <div className="grid-cols-12 mt-[-50px] rounded-xl sm:w-[85%] bg-[#FFFFFF]">
+      <div className="flex justify-center font-Nova">
+        <div className="grid-cols-12 mt-[-50px] rounded-xl sm:w-[100%] bg-[#FFFFFF]">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row	">
               <div className="mt-[-45px] flex justify-center">
@@ -137,7 +138,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                         <Typography color="#FFFFFF">See Branches</Typography>
                       </Button>
                     </div>
-                    <div className="flex gap-7 mb-[10px]">
+                    <div className="flex gap-7 mb-[10px] flex-wrap">
                       <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
                         <p className="text-[#878A99] text-[48px] font-semibold">{totalProducts}</p>
                         <p className="text-[#31333E] text-[24px] font-normal">Product</p>
@@ -201,7 +202,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                   </div>
                   <div className="flex sm:mt-[6%] items-start">
                     <Button
-                      className="border border-[#29977E] w-[120px]"
+                      className="border border-[#29977E] w-[120px] rounded-[8px]"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -246,7 +247,16 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                       }}
                     >
                       <Typography sx={{ textTransform: "none", color: "#29977E" }}>
-                        {shopFollowByUser ? "UnFollow" : "+ Follow"}
+                        {shopFollowByUser ? (
+                          "UnFollow"
+                        ) : (
+                          <>
+                            <div className="flex items-center">
+                              <AddIcon className="w-[22px] h-[22px]" />
+                              <div className="pt-[2px]">Follow</div>
+                            </div>
+                          </>
+                        )}
                       </Typography>
                     </Button>
                   </div>
