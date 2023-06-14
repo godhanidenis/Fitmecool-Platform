@@ -630,7 +630,7 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
               </Box>
               <div className="mt-5">
-                <div className="flex justify-between border-b border-[#8F8F8F] pb-[24px]">
+                <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
                   <span className="font-semibold text-[30px] text-[#29977E]">
                     {productDetails.data.product.data.product_name}
                   </span>
@@ -684,7 +684,7 @@ const ProductDetail = ({ productDetails }) => {
 
               <div className="mt-3">
                 <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">About</div>
-                <div className="border-b border-[#8F8F8F] pb-[24px]">
+                <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
                   <div className="font-normal text-lg text-[#888888]">
                     {productDetails.data.product.data.product_description}
                   </div>
