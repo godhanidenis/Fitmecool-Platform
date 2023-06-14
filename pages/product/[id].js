@@ -694,14 +694,14 @@ const ProductDetail = ({ productDetails }) => {
                   {/* <Divider /> */}
                   <div className="flex items-center">
                     <span className="text-sm">Category :</span>
-                    <span className="text-sm font-semibold mr-2 text-colorBlack">
+                    <span className="text-sm font-semibold mr-2 text-colorBlack ml-[9px]">
                       {productDetails.data.product.data.categoryInfo?.category_name}
                     </span>
                   </div>
                   <div className="flex mt-1 items-center">
                     <span className="text-sm">Color :</span>
                     <span
-                      className={`rounded-[50%] w-3 h-3`}
+                      className={`rounded-[50%] w-3 h-3 ml-[9px]`}
                       style={{
                         backgroundColor: productDetails.data.product.data.product_color,
                       }}
@@ -764,7 +764,7 @@ const ProductDetail = ({ productDetails }) => {
             </div>
           </div>
           <div className="mb-8">
-            <p className="text-colorBlack pt-4 font-semibold text-xl">SIMILAR PRODUCTS</p>
+            <p className="text-colorBlack pt-4 font-semibold text-xl pl-[25px]">SIMILAR PRODUCTS</p>
             <div
               style={{ marginLeft: "0px", marginRight: "0px" }}
               className="container cursor-pointer product-parent-div"
