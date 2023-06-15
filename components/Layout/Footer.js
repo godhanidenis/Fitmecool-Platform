@@ -42,7 +42,7 @@ const Footer = () => {
   return (
     <footer className="text-sm bg-colorPrimary text-colorWhite font-Nova relative">
       <div className="flex justify-between flex-wrap gap-4">
-        <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row items-start justify-between gap-8 sm:gap-20 ">
+        <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row items-start justify-between gap-8">
           <div className="flex flex-col sm:items-center md:items-start  max-w-[420px] ml-[16px] sm:ml-[80px] ">
             <div className="w-[220px] h-[50px] relative">
               {/* <Image src={HeaderLogo} alt="Composite logo" layout="fill" /> */}
