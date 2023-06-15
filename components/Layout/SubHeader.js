@@ -50,14 +50,14 @@ const SubHeader = () => {
 
   return (
     <div
-      className={`w-full bg-colorWhite shadow-md z-20 left-0 sticky ${
+      className={`shadow-md z-20 left-0 sticky ${
         scrollDirection === "down" ? "-top-32" : "top-[72px] lg:top-[83px]"
       } transition-all duration-500 hidden lg:flex`}
     >
-      <div className="container flex items-center">
-        <div className="pl-2 ml-40" onMouseLeave={handleMenuClose.bind(this)}>
+      <div className="flex items-center">
+        <div className="" onMouseLeave={handleMenuClose.bind(this)}  onClick={() => setOpen(!open)}>
           <CustomTab value={value}>
-            {["Men's", "Women's"].map((item, index) => (
+            {["MEN’S", "WOMEN’S"].map((item, index) => (
               <Tab
                 key={index}
                 onMouseEnter={handleMenuOpen.bind(this, index)}
@@ -76,11 +76,11 @@ const SubHeader = () => {
           >
             <Paper>
               <TabPanel value={value} index={0} className="p-6">
-                <div className="flex justify-between gap-5">
+                <div className="flex justify-between gap-5" onMouseLeave={handleMenuClose.bind(this)}>
                   <div>
-                    <p className="font-semibold text-colorPrimary mb-4">
+                    {/* <p className="font-semibold text-colorPrimary mb-4">
                       By Categories
-                    </p>
+                    </p> */}
                     <div className="grid grid-cols-9 gap-10">
                       <div className="col-span-4 p-1">
                         {menCategory.map((itm, index) => {
@@ -88,7 +88,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`text-colorBlack p-1 font-normal hover:font-semibold  ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {
@@ -128,7 +128,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`text-colorBlack p-1 font-normal hover:font-semibold  ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer  ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {
@@ -163,11 +163,11 @@ const SubHeader = () => {
               </TabPanel>
 
               <TabPanel value={value} index={1} className="p-6">
-                <div className="flex justify-between gap-5">
+                <div className="flex justify-between gap-5" onMouseLeave={handleMenuClose.bind(this)}>
                   <div>
-                    <p className="font-semibold text-colorPrimary mb-4">
+                    {/* <p className="font-semibold text-colorPrimary mb-4">
                       By Categories
-                    </p>
+                    </p> */}
                     <div className="grid grid-cols-9 gap-10">
                       <div className="col-span-4 p-1">
                         {womenCategory.map((itm, index) => {
@@ -175,7 +175,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`text-colorBlack p-1 font-normal hover:font-semibold  ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer  ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {
@@ -215,7 +215,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`text-colorBlack p-1 font-normal hover:font-semibold  ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {

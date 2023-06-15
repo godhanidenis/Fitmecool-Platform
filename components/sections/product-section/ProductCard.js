@@ -20,6 +20,9 @@ import { styled } from "@mui/material/styles";
 import facebookIcon from "../../../assets/facebook.png";
 import instagramIcon from "../../../assets/instagram.png";
 import googleIcon from "../../../assets/googleIcon.svg";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 
 const style = {
   position: "absolute",
@@ -33,6 +36,101 @@ const style = {
   boxShadow: 24,
   borderRadius: "12px",
   height: "auto",
+};
+
+const TrendingCustomLeftArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        left: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "28px",
+        height: "28px",
+        borderRadius: "50%",
+        marginLeft: "16px",
+        marginBottom: "25%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(135deg)",
+          cursor: "pointer",
+          position: "relative",
+          right: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
+const TrendingCustomRightArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        right: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "28px",
+        height: "28px",
+        borderRadius: "50%",
+        marginRight: "16px",
+        marginBottom: "25%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(-45deg)",
+          cursor: "pointer",
+          position: "relative",
+          left: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 1,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
 };
 
 const ProductCard = ({
@@ -71,24 +169,26 @@ const ProductCard = ({
 
   const items = [product.product_image.front, product.product_image.back, product.product_image.side].map((itm) => {
     return (
-      <Image
+      <img
+        style={{
+          width: onlyCarousal ? "100%" : 290,
+          height: productsFiltersReducer.productLayout === "list" ? 300 : 300,
+        }}
         src={itm ?? ""}
         alt={product.name}
-        width={250}
-        height={productsFiltersReducer.productLayout === "list" ? 300 : 300}
-        className="rounded object-cover"
+        className="rounded-t-xl object-cover"
         key={itm}
       />
     );
   });
   const shopId = product.branchInfo?.shop_id;
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
+  // const settings = {
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  // };
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
   const pageShareURL = window.location.href;
@@ -123,24 +223,25 @@ const ProductCard = ({
           </Link>
         </div>
       ) : (
-        <div
-          className={`${
-            productsFiltersReducer.productLayout === "list"
-              ? "md:flex mb-3 bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg"
-              : "bg-white shadow-[0_0_4px_rgba(0,0,0,0.25)] rounded-lg"
-          }`}
-        >
+        <div className={`${productsFiltersReducer.productLayout === "list" ? "md:flex " : "flex flex-col"}`}>
           <div
             className={`${
-              !onlyCarousal && productsFiltersReducer.productLayout === "list"
-                ? "w-[auto] md:border-r-2 border-b"
-                : "border-b"
+              !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[66%] md:border-r-2" : ""
             }`}
           >
-            <div className="container my-[5px] cursor-pointer product-parent-div">
+            <div className="cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
                 <div className="w-[100%]">
-                  <Slider {...settings}>{items}</Slider>
+                  <Carousel
+                    infinite
+                    responsive={responsive}
+                    customLeftArrow={<TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />}
+                    customRightArrow={<TrendingCustomRightArrow onClick={TrendingCustomRightArrow} />}
+                    dotListClass={"Landing_customDots"}
+                  >
+                    {items}
+                  </Carousel>
+                  {/* <Slider {...settings}>{items}</Slider> */}
                 </div>
               </div>
 
@@ -156,91 +257,107 @@ const ProductCard = ({
               )}
               {!shopProduct ? (
                 <>
-                  <button
-                    className={`w-8 h-8 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
-                    onClick={() => {
-                      if (isAuthenticate) {
-                        productLike({
-                          productInfo: {
-                            product_id: product.id,
-                            user_id: userProfile.id,
-                          },
-                        }).then(
-                          (res) => {
-                            dispatch(
-                              !productLikeByUser
-                                ? productLikeToggle({
-                                    productInfo: {
-                                      key: "like",
-                                      value: res.data.productLike.data,
-                                    },
-                                  })
-                                : productLikeToggle({
-                                    productInfo: {
-                                      key: "disLike",
-                                      value: product.id,
-                                    },
-                                  })
-                            );
-                            toast.success(res.data.productLike.message, {
-                              theme: "colored",
-                            });
-                          },
-                          (error) => {
-                            toast.error(error.message, { theme: "colored" });
-                          }
-                        );
-                      } else {
-                        if (themeLayout === "mobileScreen") {
-                          Router.push("/auth/signin");
+                  <div className="flex flex-col absolute top-0 right-[16px]">
+                    <button
+                      className={`w-8 h-8 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
+                      style={{
+                        backdropFilter: "blur(20px)",
+                      }}
+                      onClick={() => {
+                        if (isAuthenticate) {
+                          productLike({
+                            productInfo: {
+                              product_id: product.id,
+                              user_id: userProfile.id,
+                            },
+                          }).then(
+                            (res) => {
+                              dispatch(
+                                !productLikeByUser
+                                  ? productLikeToggle({
+                                      productInfo: {
+                                        key: "like",
+                                        value: res.data.productLike.data,
+                                      },
+                                    })
+                                  : productLikeToggle({
+                                      productInfo: {
+                                        key: "disLike",
+                                        value: product.id,
+                                      },
+                                    })
+                              );
+                              toast.success(res.data.productLike.message, {
+                                theme: "colored",
+                              });
+                            },
+                            (error) => {
+                              toast.error(error.message, { theme: "colored" });
+                            }
+                          );
                         } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          if (themeLayout === "mobileScreen") {
+                            Router.push("/auth/signin");
+                          } else {
+                            setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          }
                         }
-                      }
-                    }}
-                  >
-                    {!productLikeByUser ? <FavoriteBorderIcon fontSize="small" /> : "❤️"}
-                  </button>
-                  {onlyCarousal && (
-                    <>
-                      <HtmlTooltip
-                        title={
-                          <React.Fragment>
-                            <div className="">
-                              <div className="p-2 rounded-lg cursor-pointer">
-                                <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                  <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                                </FacebookShareButton>
+                      }}
+                    >
+                      {!productLikeByUser ? <FavoriteBorderIcon fontSize="small" className="!text-white" /> : "❤️"}
+                    </button>
+                    {onlyCarousal && (
+                      <>
+                        <HtmlTooltip
+                          title={
+                            <React.Fragment>
+                              <div className="">
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                    <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                  </FacebookShareButton>
+                                </div>
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                    {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                                    <WhatsappIcon size={25} round={true} />
+                                  </WhatsappShareButton>
+                                </div>
+                                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                  <EmailShareButton
+                                    subject="Product Detail Page"
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                  </EmailShareButton>
+                                </div>
                               </div>
-                              <div className="p-2 rounded-lg cursor-pointer">
-                                <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                  {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
-                                  <WhatsappIcon size={25} round={true} />
-                                </WhatsappShareButton>
-                              </div>
-                              <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                                <EmailShareButton
-                                  subject="Product Detail Page"
-                                  windowWidth={900}
-                                  windowHeight={900}
-                                  url={pageShareURL}
-                                >
-                                  <Image src={googleIcon ?? ""} alt="googleIcon" />
-                                </EmailShareButton>
-                              </div>
-                            </div>
-                          </React.Fragment>
-                        }
-                      >
-                        <button
-                          onClick={handleTooltipOpen}
-                          className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-12 right-0`}
+                            </React.Fragment>
+                          }
                         >
-                          <FileUploadOutlinedIcon fontSize="small" />
+                          <button
+                            onClick={handleTooltipOpen}
+                            className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
+                            style={{
+                              backdropFilter: "blur(20px)",
+                            }}
+                          >
+                            <FileUploadOutlinedIcon fontSize="small" />
+                          </button>
+                        </HtmlTooltip>
+                        <button
+                          className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300`}
+                          style={{
+                            backdropFilter: "blur(20px)",
+                          }}
+                        >
+                          <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />
                         </button>
-                      </HtmlTooltip>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </>
               ) : (
                 <button
@@ -253,12 +370,13 @@ const ProductCard = ({
                   <DeleteIcon className="!text-red-600" />
                 </button>
               )}
+
               {!onlyCarousal && productsFiltersReducer.productLayout === "grid" && (
                 <>
                   <div className="product-overlay">
                     <Link href={`/product/${product.id}`}>
                       <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                        <button className="text-colorWhite text-base px-4 py-2 w-full md:w-[60%] lg:w-full xl:w-[60%] bg-colorPrimary rounded-md detailButton whitespace-nowrap">
+                        <button className="text-colorWhite text-base px-4 py-2 w-full md:w-[70%] lg:w-full xl:w-[70%] bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
                           See Details
                         </button>
                       </a>
@@ -269,7 +387,11 @@ const ProductCard = ({
             </div>
           </div>
           {!onlyCarousal && (
-            <div className={`${productsFiltersReducer.productLayout === "list" ? "pl-3 md:w-[200%]" : "pl-3"}`}>
+            <div
+              className={`${
+                productsFiltersReducer.productLayout === "list" ? "pl-3 md:w-[200%] bg-[#FFFFFF]" : "pl-3 bg-[#FFFFFF]"
+              }`}
+            >
               {productsFiltersReducer.productLayout === "grid" && (
                 <div>
                   <p
@@ -349,6 +471,9 @@ const ProductCard = ({
               )}
             </div>
           )}
+
+
+
           <AuthModal
             open={open}
             handleClose={() => {

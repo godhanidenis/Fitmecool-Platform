@@ -50,11 +50,13 @@ const CustomReactImageMagnify = (props) => {
         <style jsx>
           {`
             img {
-              width: 80%;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
             }
 
             .zoom-box {
-              width: 80%;
+              width: 500px;
               height: 100%;
               position: absolute;
               margin-left: 175%;
@@ -67,6 +69,8 @@ const CustomReactImageMagnify = (props) => {
               display: flex;
               justify-content: center;
               align-items: center;
+              width: 100%;
+              height: 100%;
             }
 
             .image-preview:hover {

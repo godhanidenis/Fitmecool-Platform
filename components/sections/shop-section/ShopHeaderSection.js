@@ -24,6 +24,8 @@ import googleIcon from "../../../assets/googleIcon.svg";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box } from "@mui/system";
 import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import shareIcon from "../../../assets/shareIcon.svg";
+import AddIcon from "@mui/icons-material/Add";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fbfbfb",
@@ -100,8 +102,8 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
 
   return (
     <>
-      <div className="flex justify-center container">
-        <div className="grid-cols-12 mt-[-50px] rounded-xl sm:w-[85%] bg-[#FFFFFF]">
+      <div className="flex justify-center font-Nova">
+        <div className="grid-cols-12 mt-[-50px] rounded-xl sm:w-[100%] bg-[#FFFFFF]">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row	">
               <div className="mt-[-45px] flex justify-center">
@@ -120,16 +122,88 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     <div className="oneLineAfterThreeDots font-semibold text-2xl text-[#000000]">
                       {shopDetails.shop_name}
                     </div>
-                    <div className="text-[#888888] oneLineAfterThreeDots">Contourz by Taruna Manchanda</div>
-                    <p className="text-[#888888] text-sm font-normal oneLineAfterThreeDots">
+                    <p className="text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
                       <LocationOnIcon fontSize="small" className="!mr-1" />
                       {shopDetails.branch_info.map((itm) => itm.branch_type === "main" && itm.branch_address)}
                     </p>
+                    <div className="oneLineAfterThreeDots mt-[15px] text-[#151827] text-[24px] font-normal ">
+                      Contourz by Taruna Manchanda
+                    </div>
+                    <div className="mt-[24px] mb-[80px]">
+                      <Button
+                        variant="contained"
+                        className={`rounded-[500px] bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
+                        onClick={() => setAllBranchModalOpen(true)}
+                      >
+                        <Typography color="#FFFFFF">See Branches</Typography>
+                      </Button>
+                    </div>
+                    <div className="flex gap-7 mb-[10px] flex-wrap">
+                      <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
+                        <p className="text-[#878A99] text-[48px] font-semibold">{totalProducts}</p>
+                        <p className="text-[#31333E] text-[24px] font-normal">Product</p>
+                      </div>
+                      <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
+                        <p className="text-[#878A99] text-[48px] font-semibold">{totalFollowers}</p>
+                        <p className="text-[#31333E] text-[24px] font-normal">Followers</p>
+                      </div>
+                      <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
+                        <p className="text-[#878A99] text-[48px] font-semibold">{totalReview}</p>
+                        <p className="text-[#31333E] text-[24px] font-normal">Review</p>
+                      </div>
+                      <div
+                        onMouseLeave={() => setOpenToolTip(false)}
+                        className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center pt-[40px]"
+                      >
+                        <Image
+                          onClick={() => setOpenToolTip(!OpenToolTip)}
+                          src={shareIcon}
+                          className="cursor-pointer"
+                          alt=""
+                        />
+                        <HtmlTooltip
+                          title={
+                            <React.Fragment>
+                              <div className="flex">
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                    <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                  </FacebookShareButton>
+                                </div>
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                    {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
+                                    <WhatsappIcon size={25} round={true} />
+                                  </WhatsappShareButton>
+                                </div>
+                                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                  <EmailShareButton
+                                    subject="Shop Detail"
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                  </EmailShareButton>
+                                </div>
+                              </div>
+                            </React.Fragment>
+                          }
+                        >
+                          <p
+                            onClick={() => setOpenToolTip(!OpenToolTip)}
+                            className="text-[#31333E] text-[24px] font-normal cursor-pointer mt-[14px]"
+                          >
+                            Share
+                          </p>
+                        </HtmlTooltip>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex sm:mt-4 items-center">
+                  <div className="flex sm:mt-[6%] items-start">
                     <Button
+                      className="border border-[#29977E] w-[120px] rounded-[8px]"
                       variant="outlined"
-                      endIcon={<PersonAddIcon />}
                       onClick={() => {
                         if (isAuthenticate) {
                           shopFollow({
@@ -172,14 +246,25 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                         }
                       }}
                     >
-                      <Typography sx={{ textTransform: "none" }}>{shopFollowByUser ? "UnFollow" : "Follow"}</Typography>
+                      <Typography sx={{ textTransform: "none", color: "#29977E" }}>
+                        {shopFollowByUser ? (
+                          "UnFollow"
+                        ) : (
+                          <>
+                            <div className="flex items-center">
+                              <AddIcon className="w-[22px] h-[22px]" />
+                              <div className="pt-[2px]">Follow</div>
+                            </div>
+                          </>
+                        )}
+                      </Typography>
                     </Button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-span-12 items-center justify-end flex my-5 pl-[4%] pr-[4%]">
+          {/* <div className="col-span-12 items-center justify-end flex my-5 pl-[4%] pr-[4%]">
             <Button
               variant="contained"
               className={`rounded-xl bg-colorPrimary hover:bg-colorPrimary !flex !items-center !justify-center capitalize`}
@@ -187,9 +272,9 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
             >
               <Typography color="#FFFFFF">See Branches</Typography>
             </Button>
-          </div>
+          </div> */}
 
-          <Grid container sx={{ backgroundColor: "#fbfbfb" }}>
+          {/* <Grid container sx={{ backgroundColor: "#fbfbfb" }}>
             <Grid item sm={3}>
               <Item className="!cursor-pointer flex items-center justify-center flex-col sm:flex-row !p-3">
                 <ProductionQuantityLimitsIcon /> {totalProducts} Product
@@ -220,7 +305,6 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                       </div>
                       <div className="p-2 rounded-lg cursor-pointer">
                         <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                          {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
                           <WhatsappIcon size={25} round={true} />
                         </WhatsappShareButton>
                       </div>
@@ -241,7 +325,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                 </Item>
               </HtmlTooltip>
             </Grid>
-          </Grid>
+          </Grid> */}
         </div>
       </div>
       <AllBranchModal

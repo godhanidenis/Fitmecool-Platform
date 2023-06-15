@@ -42,10 +42,7 @@ import {
 } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import {
-  loadUserProfileStart,
-  userLogout,
-} from "../../redux/ducks/userProfile";
+import { loadUserProfileStart, userLogout } from "../../redux/ducks/userProfile";
 import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
@@ -53,6 +50,9 @@ import { useScrollDirection } from "../core/useScrollDirection";
 import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
+import SubHeader from "./SubHeader";
+import InputLabel from "@mui/material/InputLabel";
+import LocationIcon from "../../assets/LocationIcon.svg";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -138,9 +138,11 @@ const Header = ({ modalType }) => {
   const { areaLists } = useSelector((state) => state.areaLists);
   const { userProfile } = useSelector((state) => state.userProfile);
   const [openModel, setOpenModel] = React.useState(false);
-  const productsFiltersReducer = useSelector(
-    (state) => state.productsFiltersReducer
-  );
+  const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
+
+  const handleChangeLocation = (event) => {
+    setSelectedLocation(event.target.value);
+  };
 
   useEffect(() => {
     {
@@ -156,8 +158,7 @@ const Header = ({ modalType }) => {
     const getAccessToken = localStorage.getItem("token");
     setAccessToken(getAccessToken);
 
-    localStorage.getItem("userId") &&
-      dispatch(loadUserProfileStart({ id: localStorage.getItem("userId") }));
+    localStorage.getItem("userId") && dispatch(loadUserProfileStart({ id: localStorage.getItem("userId") }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
@@ -182,71 +183,78 @@ const Header = ({ modalType }) => {
         setAccessToken={setAccessToken}
       />
       <header
-        className={`py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky ${
+        className={`lg:py-0 py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
-            {router.pathname !== "/auth/login" &&
-              router.pathname !== "/auth/signup" && (
-                <MenuIcon
-                  sx={{ color: "white" }}
-                  fontSize="large"
-                  className="lg:!hidden"
-                  onClick={handleMobileSidebarClick}
-                />
-              )}
-            <Link
-              href={`${
-                userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
-              }`}
-            >
+            {router.pathname !== "/auth/login" && router.pathname !== "/auth/signup" && (
+              <MenuIcon
+                sx={{ color: "white" }}
+                fontSize="large"
+                className="lg:!hidden"
+                onClick={handleMobileSidebarClick}
+              />
+            )}
+            <Link href={`${userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"}`}>
               <div className="cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
-                  <span className="text-4xl">R</span>entbless
+                <h2 className="sm:text-2xl text-[18px] font-normal uppercase cursor-pointer text-colorWhite">
+                  <span className="sm:text-4xl text-[24px]">R</span>entbless
                   {/* <span className="text-4xl">B</span>ell */}
                 </h2>
                 {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
               </div>
             </Link>
             {userProfile.user_type !== "vendor" && (
-              <Autocomplete
-                className="hidden lg:flex"
-                size="small"
-                options={areaLists}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option.area}
-                sx={{
-                  width: 175,
-                  background: "white",
-                  borderRadius: "5px",
-                }}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option.area}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    placeholder="Location"
-                  />
-                )}
-              />
+              <div className="headerLocationDiv ml-[24px]">
+                <FormControl variant="standard" sx={{ minWidth: 110 }}>
+                  <InputLabel id="demo-simple-select-standard-label">
+                    <Image width={20} height={20} src={LocationIcon} />{" "}
+                    <span className="text-[#878A99] text-[14px] font-normal">Location</span>
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={selectedLocation}
+                    onChange={handleChangeLocation}
+                    label="Location"
+                  >
+                    {areaLists?.map((location, index) => (
+                      <MenuItem value={location?.pin} key={index}>
+                        {location?.area}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {/* <Autocomplete
+                  className="hidden lg:flex"
+                  size="small"
+                  options={areaLists}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option.area}
+                  sx={{
+                    width: 175,
+                    background: "#151827",
+                    borderRadius: "5px"
+                  }}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
+                      {option.area}
+                    </li>
+                  )}
+                  renderInput={(params) => <TextField {...params}  placeholder="Location" />}
+                /> */}
+              </div>
             )}
           </div>
-
+          <div className="font-Nova">
+            <SubHeader />
+          </div>
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
-              {userProfile.user_type !== "vendor" &&
+              {/* {userProfile.user_type !== "vendor" &&
                 router.pathname !== "/auth/login" &&
                 router.pathname !== "/auth/signup" && (
                   <li className="flex lg:hidden">
@@ -262,14 +270,12 @@ const Header = ({ modalType }) => {
                         },
                         ".MuiOutlinedInput-input": { padding: 0 },
                         ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                        "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
-                        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
+                        "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+                          border: 0,
+                        },
+                        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                          border: 0,
+                        },
                       }}
                     >
                       <MenuItem value="">City</MenuItem>
@@ -280,27 +286,17 @@ const Header = ({ modalType }) => {
                       ))}
                     </Select>
                   </li>
-                )}
+                )} */}
               {userProfile.user_type !== "vendor" && (
                 <>
                   <li className="cursor-pointer hidden lg:block">
-                    <SearchIcon
-                      sx={{ color: "white" }}
-                      fontSize="large"
-                      onClick={handleClickOpen}
-                    />
+                    <SearchIcon sx={{ color: "white" }} fontSize="large" onClick={handleClickOpen} />
                   </li>
                   <li className="hidden lg:block">
                     <Link href={`/productLike`} passHref>
                       <IconButton color="inherit">
-                        <Badge
-                          badgeContent={userProfile?.product_like_list?.length}
-                          color="error"
-                        >
-                          <FavoriteBorderOutlinedIcon
-                            sx={{ color: "white" }}
-                            fontSize="large"
-                          />
+                        <Badge badgeContent={userProfile?.product_like_list?.length} color="error">
+                          <FavoriteBorderOutlinedIcon sx={{ color: "white" }} fontSize="large" />
                         </Badge>
                       </IconButton>
                     </Link>
@@ -359,15 +355,8 @@ const Header = ({ modalType }) => {
             cursor: "pointer",
           }}
         >
-          <BootstrapDialog
-            onClose={handleClose}
-            aria-labelledby="customized-dialog-title"
-            open={openModel}
-          >
-            <BootstrapDialogTitle
-              id="customized-dialog-title"
-              onClose={handleClose}
-            >
+          <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={openModel}>
+            <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
               <div className="flex justify-center cursor-pointer">
                 <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
                   <span className="text-4xl">R</span>entbless
@@ -377,12 +366,7 @@ const Header = ({ modalType }) => {
             </BootstrapDialogTitle>
 
             <DialogContent dividers className="flex justify-center p-0">
-              <Grid
-                container
-                direction="column"
-                justifyContent="start"
-                alignItems="center"
-              >
+              <Grid container direction="column" justifyContent="start" alignItems="center">
                 <Grid item xs={6}>
                   <FormControl
                     sx={{
@@ -454,9 +438,7 @@ export const UserProfile = ({ setAccessToken }) => {
     setAnchorElUser(false);
   };
 
-  const options = [
-    { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
-  ];
+  const options = [{ icon: <ExitToAppIcon />, name: "Logout", func: logoutUser }];
   if (userProfile.user_type === "vendor" && userProfile.userHaveAnyShop) {
     options.unshift({
       icon: <DashboardIcon />,
@@ -521,8 +503,7 @@ export const UserProfile = ({ setAccessToken }) => {
           <Grow
             {...TransitionProps}
             style={{
-              transformOrigin:
-                placement === "bottom-end" ? "left top" : "left bottom",
+              transformOrigin: placement === "bottom-end" ? "left top" : "left bottom",
             }}
           >
             <Paper
@@ -551,22 +532,15 @@ export const UserProfile = ({ setAccessToken }) => {
                     <Avatar className="mb-2 !w-14 !h-14">
                       <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
                     </Avatar>
-                    <b>
-                      {userProfile?.first_name + " " + userProfile?.last_name}
-                    </b>
-                    <span className="font-medium text-base">
-                      {userProfile?.user_email}
-                    </span>
+                    <b>{userProfile?.first_name + " " + userProfile?.last_name}</b>
+                    <span className="font-medium text-base">{userProfile?.user_email}</span>
                   </div>
 
                   <Divider />
 
                   {options.map((itm) => (
                     <MenuItem key={itm.name} onClick={handleProfileClose}>
-                      <p
-                        className="flex items-center w-full text-center"
-                        onClick={itm.func}
-                      >
+                      <p className="flex items-center w-full text-center" onClick={itm.func}>
                         {itm.icon} <span className="ml-4"> {itm.name}</span>
                       </p>
                     </MenuItem>
