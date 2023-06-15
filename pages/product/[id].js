@@ -9,7 +9,14 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import Image from "next/image";
-import { Avatar, Box, Breadcrumbs, Button, Divider, Rating } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Breadcrumbs,
+  Button,
+  Divider,
+  Rating,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { getProductDetails } from "../../graphql/queries/productQueries";
@@ -21,7 +28,10 @@ import { AuthTypeModal } from "../../components/core/Enum";
 import { useDispatch, useSelector } from "react-redux";
 import { shopFollow } from "../../graphql/mutations/shops";
 import { toast } from "react-toastify";
-import { productLikeToggle, shopFollowToggle } from "../../redux/ducks/userProfile";
+import {
+  productLikeToggle,
+  shopFollowToggle,
+} from "../../redux/ducks/userProfile";
 import { productLike } from "../../graphql/mutations/products";
 import Link from "next/link";
 import SubHeader from "../../components/Layout/SubHeader";
@@ -37,7 +47,12 @@ import Slider from "react-slick";
 import Router from "next/router";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
-import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
@@ -69,7 +84,9 @@ const ProductDetail = ({ productDetails }) => {
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
-  const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
@@ -114,16 +131,21 @@ const ProductDetail = ({ productDetails }) => {
     }
 
     const followedShopsByUser = userProfile.shop_follower_list?.find(
-      (itm) => itm.shop_id === productDetails.data.product.data.branchInfo?.shop_id
+      (itm) =>
+        itm.shop_id === productDetails.data.product.data.branchInfo?.shop_id
     );
 
-    followedShopsByUser ? setShopFollowByUser(true) : setShopFollowByUser(false);
+    followedShopsByUser
+      ? setShopFollowByUser(true)
+      : setShopFollowByUser(false);
 
     const likedProductByUser = userProfile.product_like_list?.find(
       (itm) => itm.id === productDetails.data.product.data.id
     );
 
-    likedProductByUser ? setProductLikeByUser(true) : setProductLikeByUser(false);
+    likedProductByUser
+      ? setProductLikeByUser(true)
+      : setProductLikeByUser(false);
   }, [
     isAuthenticate,
     productDetails.data.product.data.branchInfo?.shop_id,
@@ -168,7 +190,9 @@ const ProductDetail = ({ productDetails }) => {
           alt="Product Images"
           width={250}
           height={300}
-          style={images === itm ? { border: "1px solid black" } : { border: "0" }}
+          style={
+            images === itm ? { border: "2px solid #29977E" } : { border: "0" }
+          }
           className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
         />
       </div>
@@ -177,12 +201,24 @@ const ProductDetail = ({ productDetails }) => {
 
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
-    return <div className={className} style={{ ...style, display: "block", color: "white" }} onClick={onClick} />;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block", color: "white" }}
+        onClick={onClick}
+      />
+    );
   }
 
   function SamplePrevArrow(props) {
     const { className, style, onClick } = props;
-    return <div className={className} style={{ ...style, display: "block" }} onClick={onClick} />;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block" }}
+        onClick={onClick}
+      />
+    );
   }
 
   const settings = {
@@ -238,41 +274,67 @@ const ProductDetail = ({ productDetails }) => {
                 {productDetails.data.product.data.categoryInfo?.category_type}
               </div>
             </Link>
-            <Link underline="hover" color="text.primary" href="#" aria-current="page">
-              <div className="font-semibold">{productDetails.data.product.data.categoryInfo?.category_name}</div>
+            <Link
+              underline="hover"
+              color="text.primary"
+              href="#"
+              aria-current="page"
+            >
+              <div className="font-semibold">
+                {productDetails.data.product.data.categoryInfo?.category_name}
+              </div>
             </Link>
           </Breadcrumbs>
         </div>
       </div>
-      <Box sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }} className="lg:!hidden font-Nova">
+      <Box
+        sx={{ boxShadow: "0 0 10px rgb(0 0 0 / 10%)" }}
+        className="lg:!hidden font-Nova"
+      >
         <div className="flex items-center bg-colorWhite p-3 sm:rounded-lg">
           <div className="flex items-center justify-between w-full gap-4">
             <div className="flex justify-start items-center gap-1 sm:gap-4">
               <div className="flex justify-center items-center w-[60px]">
                 <img
                   alt="Shop Logo"
-                  src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
-                  className="rounded-[50%] w-[50px] h-[50px]"
+                  src={
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      .shop_logo
+                  }
+                  className="rounded-[50%] w-[50px] h-[50px] object-cover"
                 />
               </div>
               <div className="flex flex-col justify-center ml-[9px]">
-                <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
-                  <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+                <Link
+                  href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                >
+                  <a
+                    target={`${
+                      themeLayout === "webScreen" ? "_blank" : "_self"
+                    }`}
+                  >
                     <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                      {productDetails.data.product.data.branchInfo?.shop_info.shop_name}
+                      {
+                        productDetails.data.product.data.branchInfo?.shop_info
+                          .shop_name
+                      }
                     </p>
                   </a>
                 </Link>
 
-                <p className="text-[#888888] text-xs sm:text-sm font-normal">25 days ago</p>
+                <p className="text-[#888888] text-xs sm:text-sm font-normal">
+                  25 days ago
+                </p>
               </div>
             </div>
             <div className="flex flex-col">
               <Rating
                 name="text-feedback"
-                value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
+                value={Math.round(
+                  productDetails.data.product.data.branchInfo?.shop_info
+                    .shop_rating
+                )}
                 readOnly
-                size="small"
                 emptyIcon={<StarIcon fontSize="inherit" />}
               />
               <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
@@ -298,7 +360,8 @@ const ProductDetail = ({ productDetails }) => {
                   if (isAuthenticate) {
                     shopFollow({
                       shopInfo: {
-                        shop_id: productDetails.data.product.data.branchInfo?.shop_id,
+                        shop_id:
+                          productDetails.data.product.data.branchInfo?.shop_id,
                         user_id: userProfile.id,
                       },
                     }).then(
@@ -314,7 +377,9 @@ const ProductDetail = ({ productDetails }) => {
                             : shopFollowToggle({
                                 shopInfo: {
                                   key: "unFollow",
-                                  value: productDetails.data.product.data.branchInfo?.shop_id,
+                                  value:
+                                    productDetails.data.product.data.branchInfo
+                                      ?.shop_id,
                                 },
                               })
                         );
@@ -342,8 +407,8 @@ const ProductDetail = ({ productDetails }) => {
                 ) : (
                   <>
                     <div className="flex items-center">
-                      <AddIcon className="w-[19px] h-[19px]" />
-                      <div className="pt-[2px] pr-[4px]">Follow</div>
+                      <AddIcon className="w-[19px] h-[19px] text-white" />
+                      <div className="pt-[2px] pr-[4px] text-white">Follow</div>
                     </div>
                   </>
                 )}
@@ -403,7 +468,12 @@ const ProductDetail = ({ productDetails }) => {
         )} */}
       </Box>
       <div className="sm:hidden font-Nova">
-        {productDetails && <ProductCard product={productDetails?.data?.product?.data} onlyCarousal={true} />}
+        {productDetails && (
+          <ProductCard
+            product={productDetails?.data?.product?.data}
+            onlyCarousal={true}
+          />
+        )}
       </div>
 
       <div className="bg-[#FAFCFC] font-Nova">
@@ -414,13 +484,12 @@ const ProductDetail = ({ productDetails }) => {
                 <div className="col-span-1">
                   <div className="p-2 pt-0">{items}</div>
                 </div>
-                <div className="col-span-3 border-2 flex justify-center items-center bg-colorWhite">
-                  <CustomReactImageMagnify large={images} preview={images} />
-                </div>
-                <div className="col-span-1"></div>
-                <div className="md:col-span-3 pt-5 justify-between  bg-colorWhite ">
-                  <div className="flex flex-wrap items-center gap-5 justify-between">
-                    <div className="">
+                <div className="col-span-3">
+                  <div className="border-2 flex justify-center items-center bg-colorWhite h-[600px] rounded-2xl">
+                    <CustomReactImageMagnify large={images} preview={images} />
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between mt-4">
+                    <div className="w-[30%]">
                       <Button
                         variant="outlined"
                         sx={{
@@ -434,7 +503,7 @@ const ProductDetail = ({ productDetails }) => {
                           // paddingLeft: "30px",
                           // paddingRight: "30px",
                           fontWeight: 600,
-                          fontSize: "14px",
+                          fontSize: "18px",
                         }}
                         onClick={() => {
                           if (isAuthenticate) {
@@ -456,7 +525,8 @@ const ProductDetail = ({ productDetails }) => {
                                     : productLikeToggle({
                                         productInfo: {
                                           key: "disLike",
-                                          value: productDetails.data.product.data.id,
+                                          value:
+                                            productDetails.data.product.data.id,
                                         },
                                       })
                                 );
@@ -465,33 +535,51 @@ const ProductDetail = ({ productDetails }) => {
                                 });
                               },
                               (error) => {
-                                toast.error(error.message, { theme: "colored" });
+                                toast.error(error.message, {
+                                  theme: "colored",
+                                });
                               }
                             );
                           } else {
                             if (themeLayout === "mobileScreen") {
                               Router.push("/auth/signin");
                             } else {
-                              setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                              setOpen(true),
+                                setAuthTypeModal(AuthTypeModal.Signin);
                             }
                           }
                         }}
                       >
-                        <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp; Like & Save
+                        <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />{" "}
+                        &nbsp; Like
                       </Button>
                     </div>
-                    <div className="" onMouseLeave={() => setOpenToolTip(false)}>
+                    <div
+                      className="w-[30%]"
+                      onMouseLeave={() => setOpenToolTip(false)}
+                    >
                       <HtmlTooltip
                         title={
                           <React.Fragment>
                             <div className="flex">
                               <div className="p-2 rounded-lg cursor-pointer">
-                                <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                  <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                <FacebookShareButton
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
+                                  <Image
+                                    src={facebookIcon ?? ""}
+                                    alt="facebookIcon"
+                                  />
                                 </FacebookShareButton>
                               </div>
                               <div className="p-2 rounded-lg cursor-pointer">
-                                <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                <WhatsappShareButton
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
                                   {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
                                   <WhatsappIcon size={25} round={true} />
                                 </WhatsappShareButton>
@@ -503,7 +591,10 @@ const ProductDetail = ({ productDetails }) => {
                                   windowHeight={900}
                                   url={pageShareURL}
                                 >
-                                  <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                  <Image
+                                    src={googleIcon ?? ""}
+                                    alt="googleIcon"
+                                  />
                                 </EmailShareButton>
                               </div>
                             </div>
@@ -524,71 +615,105 @@ const ProductDetail = ({ productDetails }) => {
                             // paddingLeft: "30px",
                             // paddingRight: "30px",
                             fontWeight: 600,
-                            fontSize: "14px",
+                            fontSize: "18px",
                           }}
                         >
-                          <Image src={FileUploadOutlinedIcon ?? FileUploadOutlinedIcon} alt="" /> &nbsp; Share
+                          <Image
+                            src={
+                              FileUploadOutlinedIcon ?? FileUploadOutlinedIcon
+                            }
+                            alt=""
+                          />{" "}
+                          &nbsp; Share
                         </Button>
                       </HtmlTooltip>
                     </div>
-                    <div className=" ">
+                    <div className="w-[30%]">
                       <Button
                         variant="outlined"
                         sx={{
                           textTransform: "none",
                           width: "100%",
-                          color: "rgba(21, 24, 39, 0.4)",
-                          border: "1px solid rgba(21, 24, 39, 0.4)",
+                          color: "#f34747",
+                          border: "1px solid #f34747",
                           borderRadius: "10px",
                           paddingTop: "12px",
                           paddingBottom: "12px",
                           // paddingLeft: "30px",
                           // paddingRight: "30px",
                           fontWeight: 600,
-                          fontSize: "14px",
+                          fontSize: "18px",
                         }}
                       >
-                        <ReportGmailerrorredOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" /> &nbsp;Report
+                        <ReportGmailerrorredOutlinedIcon className="!text-[#f34747]" />{" "}
+                        &nbsp;Report
                       </Button>
                     </div>
                   </div>
                 </div>
+                {/* <div className="col-span-1"></div>
+                <div className="md:col-span-3 pt-5 justify-between  bg-colorWhite ">
+                  
+                </div> */}
               </div>
             </div>
             <div className="col-span-2 lg:col-span-1">
-              <Box  className="!hidden lg:!block">
-                <div className="bg-colorWhite p-3 rounded-[16px] border border-['rgba(0, 0, 0, 0.1)']">
+              <Box className="!hidden lg:!block">
+                <div className="bg-colorPrimary p-3 rounded-[8px]">
                   <div className="flex items-center justify-between w-full gap-4">
                     <div className="flex justify-start items-center gap-1 sm:gap-4">
                       <div className="flex justify-center items-center">
                         <img
                           alt="Shop Logo"
-                          src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
-                          className="rounded-[50%] w-[50px] h-[50px]"
+                          src={
+                            productDetails.data.product.data.branchInfo
+                              ?.shop_info.shop_logo
+                          }
+                          className="rounded-[50%] w-[50px] h-[50px] object-cover"
                         />
                       </div>
                       <div className="flex flex-col justify-center">
-                        <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
-                          <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                            <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
-                              {productDetails.data.product.data.branchInfo?.shop_info.shop_name}
+                        <Link
+                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                        >
+                          <a
+                            target={`${
+                              themeLayout === "webScreen" ? "_blank" : "_self"
+                            }`}
+                          >
+                            <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                              {
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_info.shop_name
+                              }
                             </p>
                           </a>
                         </Link>
-                        <p className="text-[#888888] text-xs sm:text-sm font-normal">25 days ago</p>
+                        <p className="text-[#888888] text-xs sm:text-sm font-normal">
+                          25 days ago
+                        </p>
                       </div>
                     </div>
                     <div className="flex flex-col">
                       <Rating
                         name="text-feedback"
-                        value={Math.round(productDetails.data.product.data.branchInfo?.shop_info.shop_rating)}
+                        value={Math.round(
+                          productDetails.data.product.data.branchInfo?.shop_info
+                            .shop_rating
+                        )}
                         readOnly
-                        size="small"
                         emptyIcon={<StarIcon fontSize="inherit" />}
                       />
                       <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
-                        <LocationOnIcon fontSize="small" className="!mr-1" />
-                        {productDetails.data.product.data.branchInfo?.branch_address}
+                        <div className="flex items-center">
+                          <LocationOnIcon fontSize="small" className="!mr-1" />
+                          <span>
+                            {
+                              productDetails.data.product.data.branchInfo
+                                ?.branch_address
+                            }
+                          </span>
+                        </div>
                       </p>
                     </div>
 
@@ -597,8 +722,8 @@ const ProductDetail = ({ productDetails }) => {
                         variant="outlined"
                         sx={{
                           textTransform: "none",
-                          color: "rgba(49, 51, 62, 0.4)",
-                          border: "1px solid rgba(49, 51, 62, 0.4)",
+                          color: "white",
+                          border: "1px solid white",
                           paddingLeft: "14px",
                           width: "96px",
                           height: "36px",
@@ -610,7 +735,9 @@ const ProductDetail = ({ productDetails }) => {
                           if (isAuthenticate) {
                             shopFollow({
                               shopInfo: {
-                                shop_id: productDetails.data.product.data.branchInfo?.shop_id,
+                                shop_id:
+                                  productDetails.data.product.data.branchInfo
+                                    ?.shop_id,
                                 user_id: userProfile.id,
                               },
                             }).then(
@@ -626,7 +753,9 @@ const ProductDetail = ({ productDetails }) => {
                                     : shopFollowToggle({
                                         shopInfo: {
                                           key: "unFollow",
-                                          value: productDetails.data.product.data.branchInfo?.shop_id,
+                                          value:
+                                            productDetails.data.product.data
+                                              .branchInfo?.shop_id,
                                         },
                                       })
                                 );
@@ -644,7 +773,8 @@ const ProductDetail = ({ productDetails }) => {
                             if (themeLayout === "mobileScreen") {
                               Router.push("/auth/signin");
                             } else {
-                              setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                              setOpen(true),
+                                setAuthTypeModal(AuthTypeModal.Signin);
                             }
                           }
                         }}
@@ -654,8 +784,8 @@ const ProductDetail = ({ productDetails }) => {
                         ) : (
                           <>
                             <div className="flex items-center">
-                              <AddIcon className="w-[25px] h-[25px]" />
-                              <div className="pt-[2px]">Follow</div>
+                              <AddIcon className="w-[25px] h-[25px] text-white" />
+                              <div className="pt-[2px] text-white">Follow</div>
                             </div>
                           </>
                         )}
@@ -667,7 +797,7 @@ const ProductDetail = ({ productDetails }) => {
               </Box>
               <div className="mt-5">
                 <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                  <span className="font-semibold text-[30px] text-[#29977E]">
+                  <span className="font-semibold text-[30px] text-[#29977E] leading-9">
                     {productDetails.data.product.data.product_name}
                   </span>
                   <button
@@ -692,7 +822,8 @@ const ProductDetail = ({ productDetails }) => {
                                 : productLikeToggle({
                                     productInfo: {
                                       key: "disLike",
-                                      value: productDetails.data.product.data.id,
+                                      value:
+                                        productDetails.data.product.data.id,
                                     },
                                   })
                             );
@@ -713,25 +844,36 @@ const ProductDetail = ({ productDetails }) => {
                       }
                     }}
                   >
-                    {!productLikeByUser ? <FavoriteBorderIcon fontSize="medium" /> : "❤️"}
+                    {!productLikeByUser ? (
+                      <FavoriteBorderIcon fontSize="large" className="text-[#151827]" />
+                    ) : (
+                      "❤️"
+                    )}
                   </button>
                 </div>
               </div>
 
               <div className="mt-3">
-                <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">About</div>
+                <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">
+                  About
+                </div>
                 <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                  <div className="font-normal text-lg text-[#888888]">
+                  <div className="font-normal text-lg text-[#888888] leading-6">
                     {productDetails.data.product.data.product_description}
                   </div>
                 </div>
                 <div className="mt-6">
-                  <p className="font-semibold text-[22px] text-colorBlack ">Item Details</p>
+                  <p className="font-semibold text-[22px] text-colorBlack ">
+                    Item Details
+                  </p>
                   {/* <Divider /> */}
                   <div className="flex items-center">
                     <span className="text-sm">Category :</span>
                     <span className="text-sm font-semibold mr-2 text-colorBlack ml-[9px]">
-                      {productDetails.data.product.data.categoryInfo?.category_name}
+                      {
+                        productDetails.data.product.data.categoryInfo
+                          ?.category_name
+                      }
                     </span>
                   </div>
                   <div className="flex mt-1 items-center">
@@ -739,15 +881,16 @@ const ProductDetail = ({ productDetails }) => {
                     <span
                       className={`rounded-[50%] w-3 h-3 ml-[9px]`}
                       style={{
-                        backgroundColor: productDetails.data.product.data.product_color,
+                        backgroundColor:
+                          productDetails.data.product.data.product_color,
                       }}
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="sm:flex-row gap-2 sm:gap-0 mt-10 items-center justify-evenly">
-                <div className="mb-[16px]">
+              <div className="flex flex-col md:flex-row gap-2 sm:gap-0 mt-10 items-center justify-between">
+                <div className="w-[100%] md:w-[48%]">
                   <a
                     href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
                     target="_blank"
@@ -767,7 +910,7 @@ const ProductDetail = ({ productDetails }) => {
                 {/* <div className="w-full sm:w-auto text-center ">
                   <span className="text-lg text-colorStone">OR</span>
                 </div> */}
-                <div className="flex">
+                <div className="w-[100%] md:w-[48%]">
                   <button
                     className="bg-[#E8EBEA] text-[#31333E] text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
@@ -799,42 +942,50 @@ const ProductDetail = ({ productDetails }) => {
               </div> */}
             </div>
           </div>
-          <div className="mb-8">
-            <p className="text-colorBlack pt-4 font-semibold text-xl pl-[25px]">SIMILAR PRODUCTS</p>
+        </div>
+        <div className="pb-8 mt-4 sm:px-[80px] px-[10px] bg-[#E8EBEA] text-[#31333E]">
+            <p className="text-colorBlack pt-4 font-semibold text-xl pl-[25px]">
+              SIMILAR PRODUCTS
+            </p>
             <div
               style={{ marginLeft: "0px", marginRight: "0px" }}
-              className="container cursor-pointer product-parent-div"
+              className="cursor-pointer"
             >
-              <div className="grid grid-cols-1 place-items-center">
+              <div className="grid grid-cols-1">
                 <div
-                  className={productDetails.data.product.related?.length === 1 ? "oneItemStart w-[100%]" : "w-[100%]"}
+                  className={
+                    productDetails.data.product.related?.length === 1
+                      ? "oneItemStart w-[100%]"
+                      : "w-[100%]"
+                  }
                 >
                   <Slider {...settings}>
                     {productDetails.data.product.related &&
-                      productDetails.data.product.related?.map((product, index) => {
-                        if (index <= 4) {
-                          return (
-                            <div className="m-4" key={product.id}>
-                              <ProductCard product={product} />
-                            </div>
-                          );
-                        } else if (index === 5) {
-                          return (
-                            <ProductCard
-                              product={product}
-                              productDetails={productDetails}
-                              viewMore={true}
-                              key={product.id}
-                            />
-                          );
+                      productDetails.data.product.related?.map(
+                        (product, index) => {
+                          if (index <= 4) {
+                            return (
+                              <div className="m-4" key={product.id}>
+                                <ProductCard product={product} />
+                              </div>
+                            );
+                          } else if (index === 5) {
+                            return (
+                              <ProductCard
+                                product={product}
+                                productDetails={productDetails}
+                                viewMore={true}
+                                key={product.id}
+                              />
+                            );
+                          }
                         }
-                      })}
+                      )}
                   </Slider>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         {/* <div className="w-[100%] mt-10">
           <div className="container mb-8">
             <p className="text-colorBlack pt-4 font-semibold text-xl">SIMILAR PRODUCTS</p>
@@ -887,7 +1038,10 @@ const ProductDetail = ({ productDetails }) => {
                 <div className="flex justify-center items-center">
                   <img
                     alt="Shop Logo"
-                    src={productDetails.data.product.data.branchInfo?.shop_info?.shop_logo}
+                    src={
+                      productDetails.data.product.data.branchInfo?.shop_info
+                        ?.shop_logo
+                    }
                     width={60}
                     height={40}
                     className="rounded-[40%]"
@@ -895,10 +1049,16 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
                 <div className="flex flex-col justify-center">
                   <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                    {productDetails.data.product.data.branchInfo?.shop_info?.shop_name}
+                    {
+                      productDetails.data.product.data.branchInfo?.shop_info
+                        ?.shop_name
+                    }
                   </p>
                   <p className="text-[#888888] text-sm font-normal">
-                    {productDetails.data.product.data.branchInfo?.branch_address}
+                    {
+                      productDetails.data.product.data.branchInfo
+                        ?.branch_address
+                    }
                   </p>
                 </div>
               </div>
@@ -913,10 +1073,15 @@ const ProductDetail = ({ productDetails }) => {
                   <p className="text-[#000000] text-base font-semibold cursor-pointer">
                     {productDetails.data.product.data.branchInfo?.manager_name}
                   </p>
-                  <p className="text-colorBlack text-sm font-normal flex justify-end">- Manager</p>
+                  <p className="text-colorBlack text-sm font-normal flex justify-end">
+                    - Manager
+                  </p>
 
                   <p className="flex justify-center mt-1 text-[#000000] text-base font-semibold cursor-pointer">
-                    {productDetails.data.product.data.branchInfo?.manager_contact}
+                    {
+                      productDetails.data.product.data.branchInfo
+                        ?.manager_contact
+                    }
                   </p>
                 </div>
               </div>

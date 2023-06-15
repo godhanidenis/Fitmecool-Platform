@@ -47,8 +47,8 @@ const TrendingCustomLeftArrow = ({ onClick }) => {
         left: 0,
         position: "absolute",
         cursor: "pointer",
-        width: "38px",
-        height: "38px",
+        width: "28px",
+        height: "28px",
         borderRadius: "50%",
         marginLeft: "16px",
         marginBottom: "25%",
@@ -85,8 +85,8 @@ const TrendingCustomRightArrow = ({ onClick }) => {
         right: 0,
         position: "absolute",
         cursor: "pointer",
-        width: "38px",
-        height: "38px",
+        width: "28px",
+        height: "28px",
         borderRadius: "50%",
         marginRight: "16px",
         marginBottom: "25%",
@@ -223,13 +223,13 @@ const ProductCard = ({
           </Link>
         </div>
       ) : (
-        <div className={`${productsFiltersReducer.productLayout === "list" ? "md:flex " : ""}`}>
+        <div className={`${productsFiltersReducer.productLayout === "list" ? "md:flex " : "flex flex-col"}`}>
           <div
             className={`${
               !onlyCarousal && productsFiltersReducer.productLayout === "list" ? "w-[66%] md:border-r-2" : ""
             }`}
           >
-            <div className="container my-[5px] cursor-pointer product-parent-div">
+            <div className="cursor-pointer product-parent-div">
               <div className="grid grid-cols-1 place-items-center">
                 <div className="w-[100%]">
                   <Carousel
@@ -259,7 +259,7 @@ const ProductCard = ({
                 <>
                   <div className="flex flex-col absolute top-0 right-[16px]">
                     <button
-                      className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
+                      className={`w-8 h-8 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
                       style={{
                         backdropFilter: "blur(20px)",
                       }}
@@ -471,6 +471,9 @@ const ProductCard = ({
               )}
             </div>
           )}
+
+
+
           <AuthModal
             open={open}
             handleClose={() => {

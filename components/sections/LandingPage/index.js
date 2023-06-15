@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import DirectoryHero from "../../DirectoryHero/DirectoryHero";
-import LandingBg from "../../../assets/landing-page-img.png";
+import LandingBg from "../../../assets/cover.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadMoreProductsStart,
@@ -13,6 +13,7 @@ import { loadMoreShopsStart, loadShopsStart } from "../../../redux/ducks/shop";
 import ShopCard from "../shop-section/ShopCard";
 import Filter from "../../Filters";
 import { Pagination } from "@mui/material";
+import Image from "next/image";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -112,7 +113,15 @@ const LandingPage = () => {
 
   return (
     <>
-      <DirectoryHero bgImg={LandingBg.src} />
+      <div className="w-100 h-[300px] relative">
+          <Image
+            src={LandingBg}
+            alt=""
+            fill={true}
+            layout={"fill"}
+            objectFit={"cover"}
+          />
+        </div>
       <div className="container py-2 bg-white mb-[1px] mt-3">
         <div className="grid grid-cols-8 container">
           <div className="lg:col-span-2 hidden lg:block"></div>
