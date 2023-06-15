@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Autocomplete, Checkbox, TextField } from "@mui/material";
+import { Checkbox, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedShopsFilters } from "../../../redux/ducks/shopsFilters";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
+import CommonSearchField from "../CommonSearchField";
 
 const ShopByLocation = ({ setShopPageSkip }) => {
   const { areaLists } = useSelector((state) => state.areaLists);
 
-  const [selectedAreaLocation, setSelectedAreaLocation] = useState([]);
-  const [allAreaLocationLabel, setAllAreaLocationLabel] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
 
   const [abc, setAbc] = useState(false);
+
+  const [locationSearchValue, setLocationSearchValue] = useState("");
 
   const dispatch = useDispatch();
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
@@ -35,58 +32,51 @@ const ShopByLocation = ({ setShopPageSkip }) => {
 
   useEffect(() => {
     shopsFiltersReducer.appliedShopsFilters &&
-      setSelectedAreaLocation(
-        shopsFiltersReducer.appliedShopsFilters.locations.selectedValue.map(
-          (itm) => areaLists.find((i) => i.pin === itm).area
-        )
+      setSelectedData(
+        shopsFiltersReducer.appliedShopsFilters.locations.selectedValue
       );
   }, [shopsFiltersReducer.appliedShopsFilters, areaLists]);
 
-  useEffect(() => {
-    setAllAreaLocationLabel(areaLists.map((itm) => itm.area));
-  }, [areaLists]);
-
   return (
     <CardInteractive
-      cardTitle="Locations"
+      cardTitle="LOCATIONS"
       bottomComponent={
         <>
-          <Autocomplete
-            multiple
-            options={allAreaLocationLabel}
-            disableCloseOnSelect
-            getOptionLabel={(option) => option}
-            onChange={(event, newValue) => {
-              setSelectedAreaLocation(newValue);
-              setShopPageSkip(0);
-              setAbc(true);
-              setSelectedData(
-                newValue.map(
-                  (itm) => areaLists.find((ele) => ele.area === itm)?.pin
-                )
-              );
-            }}
-            value={selectedAreaLocation}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
-                />
-                {option}
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Area Location"
-                placeholder="Location"
-                size="small"
+          <FormControl fullWidth>
+            <FormGroup>
+              <CommonSearchField
+                value={locationSearchValue}
+                onChange={(e) => setLocationSearchValue(e.target.value)}
               />
-            )}
-          />
+              {(locationSearchValue !== ""
+                ? areaLists?.filter((i) =>
+                    i?.area
+                      .toLowerCase()
+                      .includes(locationSearchValue.toLowerCase())
+                  )
+                : areaLists
+              )?.map((itm) => (
+                <StyledFormLabelCheckBox
+                  key={itm.shop_name}
+                  value={itm.shop_name}
+                  control={
+                    <Checkbox
+                      checked={selectedData.includes(itm.id)}
+                      onChange={(event) => {
+                        const updatedSelection = selectedData.includes(itm.id)
+                          ? selectedData.filter((id) => id !== itm.id)
+                          : [...selectedData, itm.id];
+                        setSelectedData(updatedSelection);
+                        setShopPageSkip(0);
+                        setAbc(true);
+                      }}
+                    />
+                  }
+                  label={itm.area}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
         </>
       }
     />

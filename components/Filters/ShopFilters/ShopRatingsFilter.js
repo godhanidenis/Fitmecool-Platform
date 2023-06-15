@@ -33,7 +33,7 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
 
   return (
     <CardInteractive
-      cardTitle="Ratings"
+      cardTitle="RATINGS"
       bottomComponent={
         <Slider
           value={selectedData}

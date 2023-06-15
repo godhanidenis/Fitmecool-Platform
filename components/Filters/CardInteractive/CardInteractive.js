@@ -15,7 +15,7 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
         <span className="text-lg">{cardTitle}</span>
         <button
           type="button"
-          className={`w-3 h-2 transition-transform duration-300 ${
+          className={`w-3 h-2 text-black transition-transform duration-300 ${
             cardOpen ? "" : "rotate-180"
           }`}
         >
