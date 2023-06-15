@@ -141,7 +141,7 @@ const ProductCard = ({
   setEditProductId,
   viewMore,
   productDetails,
-  onlyCarousal
+  onlyCarousal,
 }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
@@ -169,11 +169,13 @@ const ProductCard = ({
 
   const items = [product.product_image.front, product.product_image.back, product.product_image.side].map((itm) => {
     return (
-      <Image
+      <img
+        style={{
+          width: onlyCarousal ? "100%" : 290,
+          height: productsFiltersReducer.productLayout === "list" ? 300 : 300,
+        }}
         src={itm ?? ""}
         alt={product.name}
-        width={250}
-        height={productsFiltersReducer.productLayout === "list" ? 300 : 300}
         className="rounded-t-xl object-cover"
         key={itm}
       />
@@ -385,7 +387,11 @@ const ProductCard = ({
             </div>
           </div>
           {!onlyCarousal && (
-            <div className={`${productsFiltersReducer.productLayout === "list" ? "pl-3 md:w-[200%]" : "pl-3"}`}>
+            <div
+              className={`${
+                productsFiltersReducer.productLayout === "list" ? "pl-3 md:w-[200%] bg-[#FFFFFF]" : "pl-3 bg-[#FFFFFF]"
+              }`}
+            >
               {productsFiltersReducer.productLayout === "grid" && (
                 <div>
                   <p

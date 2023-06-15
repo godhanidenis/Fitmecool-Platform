@@ -248,14 +248,14 @@ const ProductDetail = ({ productDetails }) => {
         <div className="flex items-center bg-colorWhite p-3 sm:rounded-lg">
           <div className="flex items-center justify-between w-full gap-4">
             <div className="flex justify-start items-center gap-1 sm:gap-4">
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center w-[60px]">
                 <img
                   alt="Shop Logo"
                   src={productDetails.data.product.data.branchInfo?.shop_info.shop_logo}
                   className="rounded-[50%] w-[50px] h-[50px]"
                 />
               </div>
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center ml-[9px]">
                 <Link href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}>
                   <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
                     <p className="oneLineAfterThreeDots text-[#000000] text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
@@ -281,17 +281,16 @@ const ProductDetail = ({ productDetails }) => {
               </p>
             </div>
 
-            <div className="flex items-center md:justify-end">
+            <div className="flex items-center md:justify-end w-[74px] h-[27px]">
               <Button
                 variant="outlined"
                 sx={{
                   textTransform: "none",
                   color: "rgba(49, 51, 62, 0.4)",
                   border: "1px solid rgba(49, 51, 62, 0.4)",
-                  paddingLeft: "14px",
                   width: "96px",
                   height: "36px",
-                  fontSize: "18px",
+                  fontSize: "14px",
                   fontWeight: "400",
                   borderRadius: "8px",
                 }}
@@ -343,8 +342,8 @@ const ProductDetail = ({ productDetails }) => {
                 ) : (
                   <>
                     <div className="flex items-center">
-                      <AddIcon className="w-[25px] h-[25px]" />
-                      <div className="pt-[2px]">Follow</div>
+                      <AddIcon className="w-[19px] h-[19px]" />
+                      <div className="pt-[2px] pr-[4px]">Follow</div>
                     </div>
                   </>
                 )}
@@ -407,7 +406,7 @@ const ProductDetail = ({ productDetails }) => {
         {productDetails && <ProductCard product={productDetails?.data?.product?.data} onlyCarousal={true} />}
       </div>
 
-      <div className="bg-colorWhite font-Nova">
+      <div className="bg-[#FAFCFC] font-Nova">
         <div className="!w-[100%] sm:px-[80px] px-[10px]">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1 hidden sm:flex">
