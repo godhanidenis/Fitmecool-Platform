@@ -9,7 +9,7 @@ body {
 
 @font-face {
   font-family: "Proxima Nova";
-  src: url("../public/Proxima\ Nova\ Font.otf")
+  src: url("../public/Proxima\ Nova\ Font.otf");
 }
 
 h1,
@@ -61,20 +61,24 @@ h6 {
   -webkit-line-clamp: 1 !important;
 }
 
-/* .ResponsiveGrid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
+.headerLocationDiv {
+  .css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input {
+    color: white;
+  }
 
-@media only screen and (max-width: 1629px)  {
-  .ResponsiveGrid{
-    grid-template-columns: repeat(2, 1fr);
+  .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
+    color: white;
+  }
+  .css-93rhz-MuiFormLabel-root-MuiInputLabel-root {
+    color: white;
+  }
+  .css-hemfl0-MuiFormLabel-root-MuiInputLabel-root {
+    color: white;
+  }
+  .css-1vulq2z-MuiInputBase-root-MuiInput-root-MuiSelect-root{
+    border-bottom: 1px solid gray;
+  }
+  .css-1mf6u8l-MuiSvgIcon-root-MuiSelect-icon{
+    color: white;
   }
 }
-@media only screen and (max-width: 1116px)  {
-  .ResponsiveGrid{
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
-  }
-} */

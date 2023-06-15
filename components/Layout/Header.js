@@ -51,6 +51,8 @@ import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
+import InputLabel from "@mui/material/InputLabel";
+import LocationIcon from "../../assets/LocationIcon.svg";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -138,6 +140,10 @@ const Header = ({ modalType }) => {
   const [openModel, setOpenModel] = React.useState(false);
   const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
 
+  const handleChangeLocation = (event) => {
+    setSelectedLocation(event.target.value);
+  };
+
   useEffect(() => {
     {
       modalType === "signin" && setOpen(true), setAuthTypeModal("signin");
@@ -177,7 +183,7 @@ const Header = ({ modalType }) => {
         setAccessToken={setAccessToken}
       />
       <header
-        className={`py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
+        className={`lg:py-0 py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
       >
@@ -193,33 +199,54 @@ const Header = ({ modalType }) => {
             )}
             <Link href={`${userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"}`}>
               <div className="cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
-                  <span className="text-4xl">R</span>entbless
+                <h2 className="sm:text-2xl text-[18px] font-normal uppercase cursor-pointer text-colorWhite">
+                  <span className="sm:text-4xl text-[24px]">R</span>entbless
                   {/* <span className="text-4xl">B</span>ell */}
                 </h2>
                 {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
               </div>
             </Link>
             {userProfile.user_type !== "vendor" && (
-              <Autocomplete
-                className="hidden lg:flex"
-                size="small"
-                options={areaLists}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option.area}
-                sx={{
-                  width: 175,
-                  background: "white",
-                  borderRadius: "5px",
-                }}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
-                    {option.area}
-                  </li>
-                )}
-                renderInput={(params) => <TextField {...params} variant="outlined" placeholder="Location" />}
-              />
+              <div className="headerLocationDiv ml-[24px]">
+                <FormControl variant="standard" sx={{ minWidth: 110 }}>
+                  <InputLabel id="demo-simple-select-standard-label">
+                    <Image width={20} height={20} src={LocationIcon} />{" "}
+                    <span className="text-[#878A99] text-[14px] font-normal">Location</span>
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={selectedLocation}
+                    onChange={handleChangeLocation}
+                    label="Location"
+                  >
+                    {areaLists?.map((location, index) => (
+                      <MenuItem value={location?.pin} key={index}>
+                        {location?.area}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {/* <Autocomplete
+                  className="hidden lg:flex"
+                  size="small"
+                  options={areaLists}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option.area}
+                  sx={{
+                    width: 175,
+                    background: "#151827",
+                    borderRadius: "5px"
+                  }}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
+                      {option.area}
+                    </li>
+                  )}
+                  renderInput={(params) => <TextField {...params}  placeholder="Location" />}
+                /> */}
+              </div>
             )}
           </div>
           <div className="font-Nova">
@@ -227,7 +254,7 @@ const Header = ({ modalType }) => {
           </div>
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
-              {userProfile.user_type !== "vendor" &&
+              {/* {userProfile.user_type !== "vendor" &&
                 router.pathname !== "/auth/login" &&
                 router.pathname !== "/auth/signup" && (
                   <li className="flex lg:hidden">
@@ -259,7 +286,7 @@ const Header = ({ modalType }) => {
                       ))}
                     </Select>
                   </li>
-                )}
+                )} */}
               {userProfile.user_type !== "vendor" && (
                 <>
                   <li className="cursor-pointer hidden lg:block">

@@ -123,9 +123,7 @@ const LandingPage = () => {
           />
         </div>
       <div className="container py-2 bg-white mb-[1px] mt-3">
-        <div className="grid grid-cols-8 container">
-          <div className="lg:col-span-2 hidden lg:block"></div>
-          <div className="col-span-8 lg:col-span-6">
+        <div className="container">
             <UpperFilter
               byShop={byShop}
               setByShop={setByShop}
@@ -133,7 +131,6 @@ const LandingPage = () => {
               setShopPageSkip={setShopPageSkip}
               showDrawerFilter={true}
             />
-          </div>
         </div>
       </div>
       <div className="grid grid-cols-8 container mb-4 ">

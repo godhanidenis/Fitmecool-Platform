@@ -55,7 +55,7 @@ const SubHeader = () => {
       } transition-all duration-500 hidden lg:flex`}
     >
       <div className="flex items-center">
-        <div className="" onClick={() => setOpen(!open)}>
+        <div className="" onMouseLeave={handleMenuClose.bind(this)}  onClick={() => setOpen(!open)}>
           <CustomTab value={value}>
             {["MEN’S", "WOMEN’S"].map((item, index) => (
               <Tab
