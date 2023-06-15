@@ -1,6 +1,13 @@
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { Box, Modal, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Modal,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import PropTypes from "prop-types";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -151,3 +158,20 @@ QontoStepIcon.propTypes = {
    */
   completed: PropTypes.bool,
 };
+
+export const StyledFormLabelCheckBox = styled(FormControlLabel)(
+  ({ theme, checked }) => ({
+    ".MuiFormControlLabel-label": {
+      color: `${checked ? "#29977E !important" : "#31333E"}`,
+      fontWeight: 600,
+      fontSize: "14px",
+      lineHeight: "14px",
+    },
+    ".MuiCheckbox-root": {
+      color: "#000000",
+    },
+    ".MuiCheckbox-root.Mui-checked": {
+      color: "#29977E",
+    },
+  })
+);
