@@ -226,7 +226,7 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      <SubHeader />
+      {/* <SubHeader /> */}
       <div className="bg-colorWhite font-Nova">
         <div className="pt-4 pb-2 !w-[100%] pl-[14px] sm:pl-[96px] ">
           <Breadcrumbs aria-label="breadcrumb">

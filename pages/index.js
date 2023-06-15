@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import LandingPage from "../components/sections/LandingPage";
-import SubHeader from "../components/Layout/SubHeader";
 import { useDispatch } from "react-redux";
 import { loadCategoriesStart } from "../redux/ducks/categories";
 import { loadAreaListsStart } from "../redux/ducks/areaLists";
@@ -25,7 +24,6 @@ const Home = () => {
   }
   return (
     <>
-      <SubHeader />
       <LandingPage />
     </>
   );

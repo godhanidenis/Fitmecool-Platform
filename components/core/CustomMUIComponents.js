@@ -36,16 +36,17 @@ export const CustomAuthModal = styled(Modal)(({ theme }) => ({
 export const CustomTab = styled(Tabs)(({ theme }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "#757575",
-    fontWeight: 400,
-    fontSize: "15px",
+    color: "#FFFFFF",
+    fontWeight: 600,
+    fontSize: "14px",
   },
   [`& .Mui-selected`]: {
-    fontWeight: 700,
-    color: "#95539B !important",
+    fontWeight: 600,
+    fontSize: "24px",
+    color: "#29977E !important",
   },
   [`& .MuiTabs-indicator`]: {
-    backgroundColor: "#95539B !important",
+    backgroundColor: "#29977E !important",
   },
 }));
 export function TabPanel(props) {

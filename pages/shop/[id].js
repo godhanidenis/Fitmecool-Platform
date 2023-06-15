@@ -199,7 +199,7 @@ const ShopDetail = ({ shopDetails }) => {
   }
   return (
     <>
-      <SubHeader />
+      {/* <SubHeader /> */}
       <div className="pb-20 md:pb-28 font-Nova">
         <DirectoryHero bgImg={shopDetails?.data?.shop?.shop_cover_image} />
         <div className="">
