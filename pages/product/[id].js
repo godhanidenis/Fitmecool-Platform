@@ -228,7 +228,7 @@ const ProductDetail = ({ productDetails }) => {
     <>
       <SubHeader />
       <div className="bg-colorWhite font-Nova">
-        <div className="pt-4 pb-2 !w-[100%] pl-[96px]">
+        <div className="pt-4 pb-2 !w-[100%] pl-[14px] sm:pl-[96px] ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               <div className="text-[#29977E] font-semibold">Product</div>
