@@ -69,9 +69,10 @@ const UpperFilter = ({
   return (
     <div className={`justify-between grid grid-cols-8`}>
       <div className="flex items-center col-span-2">
-        <p className="text-[#565f66] text-base font-bold pl-1">{`${
-          byShop ? "Shops (10 items)" : "Products (30 items)"
-        }`}</p>
+        <span className="text-[#565f66] text-base font-bold pl-1">
+          <span className="text-black">{ byShop ? 'Shops' : 'Products'}&nbsp;</span>
+          (30 items)
+        </span>
       </div>
 
       <div className="flex w-full justify-between items-center gap-2 col-span-6">

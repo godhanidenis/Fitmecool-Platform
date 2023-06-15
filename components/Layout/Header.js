@@ -199,7 +199,7 @@ const Header = ({ modalType }) => {
             )}
             <Link href={`${userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"}`}>
               <div className="cursor-pointer">
-                <h2 className="sm:text-2xl text-[18px] font-normal uppercase cursor-pointer text-colorWhite">
+                <h2 className="sm:text-2xl text-[18px] font-semibold uppercase cursor-pointer text-colorWhite">
                   <span className="sm:text-4xl text-[24px]">R</span>entbless
                   {/* <span className="text-4xl">B</span>ell */}
                 </h2>

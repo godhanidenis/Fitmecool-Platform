@@ -122,8 +122,8 @@ const LandingPage = () => {
             objectFit={"cover"}
           />
         </div>
-      <div className="container py-2 bg-white mb-[1px] mt-3">
-        <div className="container">
+      <div className="container py-2 bg-[#FAFCFC] mb-[1px] mt-3">
+        <div>
             <UpperFilter
               byShop={byShop}
               setByShop={setByShop}
@@ -142,7 +142,7 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 lg:col-span-6 p-6 bg-white">
+        <div className="col-span-8 lg:col-span-6 p-6 bg-[#FAFCFC]">
           <div className="container !w-[100%]">
             {!byShop ? (
               <>

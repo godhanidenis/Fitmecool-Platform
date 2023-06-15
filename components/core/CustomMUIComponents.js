@@ -51,7 +51,7 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
-    fontSize: "24px",
+    fontSize: "16px",
     color: "#29977E !important",
   },
   [`& .MuiTabs-indicator`]: {

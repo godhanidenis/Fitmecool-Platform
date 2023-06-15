@@ -49,7 +49,7 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
 
   return (
     <CardInteractive
-      cardTitle="Colors"
+      cardTitle="COLORS"
       bottomComponent={
         <>
           <FormControl fullWidth>
