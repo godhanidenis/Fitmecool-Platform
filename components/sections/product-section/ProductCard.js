@@ -239,7 +239,7 @@ const ProductCard = ({
         <div
           className={`${
             !onlyCarousal && productsFiltersReducer.productLayout === "list"
-              ? "w-[66%] md:border-r-2"
+              ? "w-full"
               : ""
           }`}
         >

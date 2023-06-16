@@ -6,6 +6,101 @@ import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
 import Carousel from "react-multi-carousel";
 
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 1,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
+
+const TrendingCustomLeftArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        left: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "38px",
+        height: "38px",
+        borderRadius: "50%",
+        marginLeft: "16px",
+        marginBottom: "25%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(135deg)",
+          cursor: "pointer",
+          position: "relative",
+          right: "-1px",
+        }}
+      />
+    </div>
+  );
+};
+
+const TrendingCustomRightArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        right: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "38px",
+        height: "38px",
+        borderRadius: "50%",
+        marginRight: "16px",
+        marginBottom: "25%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(-45deg)",
+          cursor: "pointer",
+          position: "relative",
+          left: "-1px",
+        }}
+      />
+    </div>
+  );
+};
+
 const ShopCard = ({ shop }) => {
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
 
@@ -17,7 +112,14 @@ const ShopCard = ({ shop }) => {
       <img
         style={{
           width: "100%",
-          height: shopsFiltersReducer.shopLayout === "list" ? 300 : 300,
+          height:
+            shopsFiltersReducer.shopLayout === "list"
+              ? themeLayout === "mobileScreen"
+                ? 250
+                : 300
+              : themeLayout === "mobileScreen"
+              ? 250
+              : 300,
         }}
         src={itm?.links ?? ""}
         alt={shop.name}
@@ -27,101 +129,6 @@ const ShopCard = ({ shop }) => {
     );
   });
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 1,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 1,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 1,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
-
-  const TrendingCustomLeftArrow = ({ onClick }) => {
-    return (
-      <div
-        style={{
-          background: "black",
-          color: "white",
-          left: 0,
-          position: "absolute",
-          cursor: "pointer",
-          width: "38px",
-          height: "38px",
-          borderRadius: "50%",
-          marginLeft: "16px",
-          marginBottom: "25%",
-          bottom: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onClick={() => onClick()}
-      >
-        <i
-          style={{
-            border: "solid",
-            width: "10px",
-            height: "10px",
-            borderWidth: "0px 2px 2px 0px",
-            display: "inline-block",
-            transform: "rotate(135deg)",
-            cursor: "pointer",
-            position: "relative",
-            right: "-1px",
-          }}
-        />
-      </div>
-    );
-  };
-
-  const TrendingCustomRightArrow = ({ onClick }) => {
-    return (
-      <div
-        style={{
-          background: "black",
-          color: "white",
-          right: 0,
-          position: "absolute",
-          cursor: "pointer",
-          width: "38px",
-          height: "38px",
-          borderRadius: "50%",
-          marginRight: "16px",
-          marginBottom: "25%",
-          bottom: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onClick={() => onClick()}
-      >
-        <i
-          style={{
-            border: "solid",
-            width: "10px",
-            height: "10px",
-            borderWidth: "0px 2px 2px 0px",
-            display: "inline-block",
-            transform: "rotate(-45deg)",
-            cursor: "pointer",
-            position: "relative",
-            left: "-1px",
-          }}
-        />
-      </div>
-    );
-  };
-
   return (
     <div className="bg-white rounded-lg ">
       <div className="">
@@ -130,6 +137,7 @@ const ShopCard = ({ shop }) => {
             <div className="w-[100%]">
               <Carousel
                 infinite
+                removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
                 customLeftArrow={
                   <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
