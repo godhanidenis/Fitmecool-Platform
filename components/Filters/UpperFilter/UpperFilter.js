@@ -69,9 +69,8 @@ const UpperFilter = ({
   return (
     <div className={`justify-between grid grid-cols-8`}>
       <div className="flex items-center col-span-2">
-        <p className="text-[#565f66] text-base font-bold pl-1">{`${
-          byShop ? "Shops (10 items)" : "Products (30 items)"
-        }`}</p>
+        <p className="text-[#151827] text-[16px] font-semibold pl-1">{`${byShop ? "Shops" : "Products"}`}</p>
+        <p className="text-[gray] text-[16px] font-semibold pl-1">{`${byShop ? "(10 items)" : "(30 items)"}`}</p>
       </div>
 
       <div className="flex w-full justify-between items-center gap-2 col-span-6">
@@ -161,49 +160,70 @@ const UpperFilter = ({
               showOnlyShopDetailPage={showOnlyShopDetailPage}
             />
           )}
-          <GridViewOutlinedIcon
-            fontSize="medium"
-            className={`${
-              !byShop && productsFiltersReducer.productLayout === "grid" ? "!text-[#29977E]" : "text-[#878A99] "
-            } ${byShop && shopsFiltersReducer.shopLayout === "grid" ? "!text-[#29977E]" : "text-[#878A99]"} cursor-pointer`}
-            onClick={() =>
-              !byShop
-                ? dispatch(
-                    changeProductsLayout({
-                      key: "productLayout",
-                      value: "grid",
-                    })
-                  )
-                : dispatch(
-                    changeShopsLayout({
-                      key: "shopLayout",
-                      value: "grid",
-                    })
-                  )
-            }
-          />
 
-          <SegmentOutlinedIcon
-            fontSize="medium"
-            className={`${
-              !byShop && productsFiltersReducer.productLayout === "list" ? "!text-[#29977E]" : "text-[#878A99]"
-            } ${byShop && shopsFiltersReducer.shopLayout === "list" ? "!text-[#29977E]" : "text-[#878A99]"} cursor-pointer`}
-            onClick={() =>
-              !byShop
-                ? dispatch(
-                    changeProductsLayout({
-                      key: "productLayout",
-                      value: "list",
-                    })
-                  )
-                : dispatch(
-                    changeShopsLayout({
-                      key: "shopLayout",
-                      value: "list",
-                    })
-                  )
-            }
-          />
+          <div className="flex">
+            <div
+              className={`${
+                !byShop && productsFiltersReducer.productLayout === "grid"
+                  ? "!text-[#29977E] mr-[5px] !bg-[#E8EBEA]"
+                  : "text-[#878A99] mr-[5px] bg-white"
+              } ${
+                byShop && shopsFiltersReducer.shopLayout === "grid"
+                  ? "!text-[#29977E] !bg-[#E8EBEA]"
+                  : "text-[#878A99] bg-white"
+              } cursor-pointer`}
+            >
+              <GridViewOutlinedIcon
+                fontSize="medium"
+                onClick={() =>
+                  !byShop
+                    ? dispatch(
+                        changeProductsLayout({
+                          key: "productLayout",
+                          value: "grid",
+                        })
+                      )
+                    : dispatch(
+                        changeShopsLayout({
+                          key: "shopLayout",
+                          value: "grid",
+                        })
+                      )
+                }
+              />
+            </div>
+
+            <div
+              className={`${
+                !byShop && productsFiltersReducer.productLayout === "list"
+                  ? "!text-[#29977E] !bg-[#E8EBEA]"
+                  : "text-[#878A99] bg-white"
+              } ${
+                byShop && shopsFiltersReducer.shopLayout === "list"
+                  ? "!text-[#29977E] !bg-[#E8EBEA]"
+                  : "text-[#878A99] bg-white"
+              } cursor-pointer`}
+            >
+              <SegmentOutlinedIcon
+                fontSize="medium"
+                onClick={() =>
+                  !byShop
+                    ? dispatch(
+                        changeProductsLayout({
+                          key: "productLayout",
+                          value: "list",
+                        })
+                      )
+                    : dispatch(
+                        changeShopsLayout({
+                          key: "shopLayout",
+                          value: "list",
+                        })
+                      )
+                }
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
