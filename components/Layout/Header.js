@@ -270,9 +270,10 @@ const Header = ({ modalType }) => {
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
                     <p
-                      onClick={() => {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      }}
+                      onClick={() => Router.push("/auth/user-type")}
+                      // onClick={() => {
+                      //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                      // }}
                       className="underline hover:scale-105 hidden lg:block"
                     >
                       SingIn / SignUp
@@ -293,14 +294,14 @@ const Header = ({ modalType }) => {
                 )}
               </li>
             </ul>
-            <AuthModal
+            {/* <AuthModal
               open={open}
               handleClose={() => {
                 setOpen(false);
               }}
               authTypeModal={authTypeModal}
               setAuthTypeModal={setAuthTypeModal}
-            />
+            /> */}
           </div>
         </div>
       </header>
