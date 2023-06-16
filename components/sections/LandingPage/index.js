@@ -125,7 +125,7 @@ const LandingPage = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-8 container mb-4 ">
+      <div className="grid grid-cols-8 container mb-4 font-Nova">
         <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
           <Filter
             byShop={byShop}
