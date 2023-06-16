@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Autocomplete, Checkbox, TextField } from "@mui/material";
+import { Checkbox, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
-
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
+import CommonSearchField from "../CommonSearchField";
 
 const ProductByShopFilter = ({ setProductPageSkip }) => {
-  const { shopsLimit, shopsCount, numOfPages, shopsData, loading, error } =
-    useSelector((state) => state.shops);
+  const { shopsData } = useSelector((state) => state.shops);
 
-  const [selectShopName, setSelectedShopName] = useState([]);
-  const [allShopLabel, setAllShopLabel] = useState([]);
   const [selectedData, setSelectedData] = useState([]);
 
   const [abc, setAbc] = useState(false);
+
+  const [shopSearchValue, setShopSearchValue] = useState("");
+
   const dispatch = useDispatch();
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
@@ -38,53 +34,51 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
 
   useEffect(() => {
     productsFiltersReducer.appliedProductsFilters &&
-      setSelectedShopName(
-        productsFiltersReducer.appliedProductsFilters.shopId.selectedValue.map(
-          (itm) => shopsData.find((i) => i.id === itm)?.shop_name
-        )
+      setSelectedData(
+        productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
       );
-  }, [productsFiltersReducer.appliedProductsFilters, shopsData]);
-
-  useEffect(() => {
-    setAllShopLabel(shopsData?.map((itm) => itm.shop_name));
-  }, [shopsData]);
+  }, [productsFiltersReducer.appliedProductsFilters]);
 
   return (
     <CardInteractive
-      cardTitle="Shops"
+      cardTitle="SHOPS"
       bottomComponent={
         <>
-          <Autocomplete
-            multiple
-            options={allShopLabel}
-            disableCloseOnSelect
-            getOptionLabel={(option) => option}
-            onChange={(event, newValue) => {
-              setSelectedShopName(newValue);
-              setProductPageSkip(0);
-              setAbc(true);
-              setSelectedData(
-                newValue.map(
-                  (itm) => shopsData.find((ele) => ele.shop_name === itm)?.id
-                )
-              );
-            }}
-            value={selectShopName}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
+          <FormControl fullWidth>
+            <CommonSearchField
+              value={shopSearchValue}
+              onChange={(e) => setShopSearchValue(e.target.value)}
+            />
+            <FormGroup>
+              {(shopSearchValue !== ""
+                ? shopsData?.filter((i) =>
+                    i?.shop_name
+                      .toLowerCase()
+                      .includes(shopSearchValue.toLowerCase())
+                  )
+                : shopsData
+              )?.map((itm) => (
+                <StyledFormLabelCheckBox
+                  key={itm.shop_name}
+                  value={itm.shop_name}
+                  control={
+                    <Checkbox
+                      checked={selectedData.includes(itm.id)}
+                      onChange={(event) => {
+                        const updatedSelection = selectedData.includes(itm.id)
+                          ? selectedData.filter((id) => id !== itm.id)
+                          : [...selectedData, itm.id];
+                        setSelectedData(updatedSelection);
+                        setProductPageSkip(0);
+                        setAbc(true);
+                      }}
+                    />
+                  }
+                  label={itm.shop_name}
                 />
-                {option}
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Shops" size="small" placeholder="Shop Name" />
-            )}
-          />
+              ))}
+            </FormGroup>
+          </FormControl>
         </>
       }
     />

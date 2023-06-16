@@ -9,6 +9,7 @@ import Link from "next/link";
 import LocationIcon from "../../assets/LocationIcon.svg";
 import CalIcon from "../../assets/CalIcon.svg";
 import EmailIcon from "../../assets/EmailIcon.svg";
+import { useSelector } from "react-redux";
 
 const socials = [
   {
@@ -39,20 +40,21 @@ const socials = [
 ];
 
 const Footer = () => {
+  const { userProfile } = useSelector((state) => state.userProfile);
   return (
     <footer className="text-sm bg-colorPrimary text-colorWhite font-Nova relative">
       <div className="flex justify-between flex-wrap gap-4">
-        <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row items-start justify-between gap-8">
-          <div className="flex flex-col sm:items-center md:items-start  max-w-[420px] ml-[16px] sm:ml-[80px] ">
-            <div className="w-[220px] h-[50px] relative">
-              {/* <Image src={HeaderLogo} alt="Composite logo" layout="fill" /> */}
-
-              <h2 className="text-[40px] font-bold cursor-pointer text-[#FAFCFC]">
-                {/* <span className="text-4xl">W</span>edding
-                <span className="text-4xl">B</span>ell */}
-                Rentbless
-              </h2>
-            </div>
+        <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row items-start justify-between gap-8 ml-[5.5%]">
+          <div className="flex flex-col sm:items-center md:items-start  max-w-[420px] ">
+          <Link href={`${userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"}`}>
+              <div className="cursor-pointer mb-3">
+                <h2 className="sm:text-2xl text-[18px] font-semibold uppercase cursor-pointer text-colorWhite -mt-2">
+                  <span className="sm:text-4xl text-[24px]">R</span>entbless
+                  {/* <span className="text-4xl">B</span>ell */}
+                </h2>
+                {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
+              </div>
+            </Link>
             <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px]">
               Best information about the company gies here but now lorem ipsum is
             </div>
@@ -71,7 +73,7 @@ const Footer = () => {
           </div>
           <ul className="flex flex-wrap gap-36 ml-[16px] sm:ml-[80px]">
             <li>
-              <h4 className="font-semibold text-[24px] mb-5 text-colorWhite">Products</h4>
+              <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">Products</h4>
               <ul className="flex flex-col items-start gap-3">
                 <li className="text-[18px] font-normal text-[#FAFCFC]">{`Men's`}</li>
                 <li className="text-[18px] font-normal text-[#FAFCFC]">{`Women's`}</li>
@@ -79,7 +81,7 @@ const Footer = () => {
               </ul>
             </li>
             <li>
-              <h4 className="font-semibold text-[24px] mb-5 text-colorWhite">Brands</h4>
+              <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">Brands</h4>
               <ul className="flex flex-col items-start gap-3">
                 <li className="text-[18px] font-normal text-[#FAFCFC]">FAQs</li>
                 <li className="text-[18px] font-normal text-[#FAFCFC]">How if Works</li>
@@ -97,7 +99,7 @@ const Footer = () => {
               <Image width={32} src={LocationIcon} alt="" />
               <div className="ml-[20px]">
                 <p className="text-[#FAFCFC] text-[18px] font-normal">Address</p>
-                <p className="text-[#DEFFF8] text-[16px] font-normal">A-32 City Complex, Surat</p>
+                <p className="text-[#DEFFF8] text-[16px] font-normal">304, Angel Square, Uttran, Surat</p>
               </div>
             </div>
 
@@ -105,21 +107,21 @@ const Footer = () => {
               <Image width={32} src={CalIcon} alt="" />
               <div className="ml-[20px]">
                 <p className="text-[#FAFCFC] text-[18px] font-normal">Contact Number</p>
-                <p className="text-[#DEFFF8] text-[16px] font-normal">+91 232 322 1515</p>
+                <p className="text-[#DEFFF8] text-[16px] font-normal">+91 953 725 6159</p>
               </div>
             </div>
             <div className="flex mb-[25px] sm:mb-[64px]">
               <Image width={32} src={EmailIcon} alt="" />
               <div className="ml-[20px]">
                 <p className="text-[#FAFCFC] text-[18px] font-normal">Email</p>
-                <p className="text-[#DEFFF8] text-[16px] font-normal">contact@composite.digital</p>
+                <p className="text-[#DEFFF8] text-[16px] font-normal">info@flyontech.com</p>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="py-[24px] text-center text-[#FFFFFF] font-normal border-t border-[gray]">
-        © 2022 - Ecommerce software by website™
+        © 2022 - Terms & Conditions | Privacy Policy
       </div>
     </footer>
   );

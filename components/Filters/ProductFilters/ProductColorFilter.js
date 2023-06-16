@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Autocomplete, capitalize, Checkbox, TextField } from "@mui/material";
+import { useState } from "react";
+import { capitalize, Checkbox, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { useDispatch, useSelector } from "react-redux";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
+import CommonSearchField from "../CommonSearchField";
 
 const colorsList = [
   "red",
@@ -27,47 +24,62 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+  const [colorSearchValue, setColorSearchValue] = useState("");
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    setProductPageSkip(0);
+    dispatch(
+      changeAppliedProductsFilters({
+        key: "productColor",
+        value: {
+          selectedValue: checked
+            ? [
+                ...productsFiltersReducer.appliedProductsFilters.productColor
+                  .selectedValue,
+                value,
+              ]
+            : productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.filter(
+                (item) => item !== value
+              ),
+        },
+      })
+    );
+  };
 
   return (
     <CardInteractive
-      cardTitle="Colors"
+      cardTitle="COLORS"
       bottomComponent={
         <>
-          <Autocomplete
-            multiple
-            options={colorsList}
-            disableCloseOnSelect
-            getOptionLabel={(option) => option}
-            onChange={(event, newValue) => {
-              setProductPageSkip(0);
-              dispatch(
-                changeAppliedProductsFilters({
-                  key: "productColor",
-                  value: {
-                    selectedValue: newValue,
-                  },
-                })
-              );
-            }}
-            value={
-              productsFiltersReducer.appliedProductsFilters.productColor
-                .selectedValue
-            }
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
+          <FormControl fullWidth>
+            <FormGroup>
+              <CommonSearchField
+                value={colorSearchValue}
+                onChange={(e) => setColorSearchValue(e.target.value)}
+              />
+              {(colorSearchValue !== ""
+                ? colorsList?.filter((i) =>
+                    i.toLowerCase().includes(colorSearchValue.toLowerCase())
+                  )
+                : colorsList
+              )?.map((item) => (
+                <StyledFormLabelCheckBox
+                  key={item}
+                  value={item}
+                  label={capitalize(item)}
+                  control={
+                    <Checkbox
+                      checked={productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.includes(
+                        item
+                      )}
+                      onChange={handleCheckboxChange}
+                    />
+                  }
                 />
-                {capitalize(option)}
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Colors" size="small" placeholder="color" />
-            )}
-          />
+              ))}
+            </FormGroup>
+          </FormControl>
         </>
       }
     />

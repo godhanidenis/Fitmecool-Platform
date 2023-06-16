@@ -22,7 +22,7 @@ h6 {
 }
 
 .container {
-  @apply w-[95%] max-w-[1246px] 2xl:max-w-[1536px] mx-auto;
+  @apply w-[90%] max-w-[1246px] 2xl:max-w-[1536px] mx-auto;
 }
 
 .MuiStepLabel-label.Mui-completed {
