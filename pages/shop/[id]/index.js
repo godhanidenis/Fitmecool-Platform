@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import DirectoryHero from "../../components/DirectoryHero/DirectoryHero";
+import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
 import {
   Avatar,
   Button,
@@ -9,35 +9,35 @@ import {
   Rating,
   TextareaAutosize,
 } from "@mui/material";
-import Filter from "../../components/Filters/index";
-import UpperFilter from "../../components/Filters/UpperFilter/UpperFilter";
+import Filter from "../../../components/Filters/index";
+import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
 
 import {
   getShopDetails,
   getShopFollowers,
   getShopReviews,
-} from "../../graphql/queries/shopQueries";
-import ShopHeaderSection from "../../components/sections/shop-section/ShopHeaderSection";
-import ProductCard from "../../components/sections/product-section/ProductCard";
+} from "../../../graphql/queries/shopQueries";
+import ShopHeaderSection from "../../../components/sections/shop-section/ShopHeaderSection";
+import ProductCard from "../../../components/sections/product-section/ProductCard";
 import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthTypeModal } from "../../components/core/Enum";
-import AuthModal from "../../components/core/AuthModal";
-import { shopReview } from "../../graphql/mutations/shops";
+import { AuthTypeModal } from "../../../components/core/Enum";
+import AuthModal from "../../../components/core/AuthModal";
+import { shopReview } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
-import { loadCategoriesStart } from "../../redux/ducks/categories";
-import { loadAreaListsStart } from "../../redux/ducks/areaLists";
+import { loadCategoriesStart } from "../../../redux/ducks/categories";
+import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
 import {
   loadMoreProductsStart,
   loadProductsStart,
-} from "../../redux/ducks/product";
+} from "../../../redux/ducks/product";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@mui/material/CircularProgress";
-import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
+import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import Router, { useRouter } from "next/router";
-import SubHeader from "../../components/Layout/SubHeader";
-import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
+import SubHeader from "../../../components/Layout/SubHeader";
+import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 
 const ShopDetail = ({ shopDetails }) => {
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);

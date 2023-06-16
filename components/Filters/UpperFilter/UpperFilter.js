@@ -70,39 +70,37 @@ const UpperFilter = ({
     <div className={`justify-between grid grid-cols-8`}>
       <div className="flex items-center col-span-2">
         <span className="text-[#565f66] text-base font-bold pl-1">
-          <span className="text-black">{ byShop ? 'Shops' : 'Products'}&nbsp;</span>
+          <span className="text-black">{byShop ? "Shops" : "Products"}&nbsp;</span>
           (30 items)
         </span>
       </div>
 
       <div className="flex w-full justify-between items-center gap-2 col-span-6">
-        <div>
-          <div className="flex items-center">
-            <p className="text-[gray] text-[16px] font-semibold">Sort by : </p>
-            <Button
-              onClick={(event) => {
-                setSortByAnchor(event.currentTarget);
-              }}
-              disableElevation
-              disableRipple
-              // variant="contained"
-              sx={{ backgroundColor: "rgba(149, 83, 155, 0.04) !important" }}
-              endIcon={
-                !openSortByAnchor ? (
-                  <ArrowDropDownIcon className="text-black" />
-                ) : (
-                  <ArrowDropUpIcon className="text-black" />
-                )
-              }
-              // className="capitalize"
-            >
-              <span className="text-black capitalize font-semibold text-sm">
-                {byShop
-                  ? GetSortByName(shopsFiltersReducer.sortFilters.sortType.selectedValue)
-                  : GetSortByName(productsFiltersReducer.sortFilters.sortType.selectedValue)}
-              </span>
-            </Button>
-          </div>
+        <div className="flex items-center px-6">
+          <p className="text-[gray] text-[16px] font-semibold">Sort by : </p>
+          <Button
+            onClick={(event) => {
+              setSortByAnchor(event.currentTarget);
+            }}
+            disableElevation
+            disableRipple
+            // variant="contained"
+            sx={{ backgroundColor: "rgba(149, 83, 155, 0.04) !important" }}
+            endIcon={
+              !openSortByAnchor ? (
+                <ArrowDropDownIcon className="text-black" />
+              ) : (
+                <ArrowDropUpIcon className="text-black" />
+              )
+            }
+            // className="capitalize"
+          >
+            <span className="text-black capitalize font-semibold text-sm">
+              {byShop
+                ? GetSortByName(shopsFiltersReducer.sortFilters.sortType.selectedValue)
+                : GetSortByName(productsFiltersReducer.sortFilters.sortType.selectedValue)}
+            </span>
+          </Button>
           <Popover
             anchorEl={sortByAnchor}
             open={openSortByAnchor}
@@ -163,17 +161,17 @@ const UpperFilter = ({
             />
           )}
 
-          <div className="flex">
+          <div className="flex gap-3">
             <div
               className={`${
                 !byShop && productsFiltersReducer.productLayout === "grid"
-                  ? "!text-[#29977E] mr-[5px] !bg-[#E8EBEA]"
-                  : "text-[#878A99] mr-[5px] bg-white"
+                  ? "!text-[#29977E] !bg-[#E8EBEA]"
+                  : "text-[#878A99] bg-white"
               } ${
                 byShop && shopsFiltersReducer.shopLayout === "grid"
                   ? "!text-[#29977E] !bg-[#E8EBEA]"
                   : "text-[#878A99] bg-white"
-              } cursor-pointer`}
+              } cursor-pointer px-2 py-1`}
             >
               <GridViewOutlinedIcon
                 fontSize="medium"
@@ -204,7 +202,7 @@ const UpperFilter = ({
                 byShop && shopsFiltersReducer.shopLayout === "list"
                   ? "!text-[#29977E] !bg-[#E8EBEA]"
                   : "text-[#878A99] bg-white"
-              } cursor-pointer`}
+              } cursor-pointer px-2 py-1`}
             >
               <SegmentOutlinedIcon
                 fontSize="medium"

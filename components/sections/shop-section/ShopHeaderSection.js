@@ -72,6 +72,26 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  const HandleGoToSeeBranch = () => {
+    router.push(`/shop/${shopDetails?.id}/seeBranch`)
+    // const serializedData = JSON.stringify(shopDetails?.branch_info);
+    // const queryString = new URLSearchParams(shopDetails).toString();
+
+    // router.push({
+    //   pathname: `/shop/${shopDetails?.id}/seeBranch/`,
+    //   query: { data: queryString },
+    // });
+
+    
+
+    // router.push(
+    //   {
+    //     pathname: `/shop/${shopDetails?.id}/seeBranch/`,
+    //     query: { data: "" },
+    //   }
+    // );
+  };
+
   const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -133,7 +153,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                       <Button
                         variant="contained"
                         className={`rounded-[500px] bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
-                        onClick={() => setAllBranchModalOpen(true)}
+                        onClick={() => HandleGoToSeeBranch()}
                       >
                         <Typography color="#FFFFFF">See Branches</Typography>
                       </Button>
