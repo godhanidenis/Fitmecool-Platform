@@ -187,7 +187,7 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <div className="bg-colorWhite font-Nova">
-        <div className="pt-4 pb-2 !w-[100%] pl-[14px] sm:pl-[96px] ">
+        <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[96px] ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               <div className="text-[#29977E] font-semibold">Product</div>
@@ -213,19 +213,18 @@ const ProductDetail = ({ productDetails }) => {
 
       <Box className="lg:!hidden font-Nova">
         <div className="flex items-center bg-colorPrimary p-3">
-          <div className="flex items-center justify-between w-full gap-4">
+          <div className="flex items-center justify-between w-full gap-3">
             <div className="flex justify-start items-center gap-1 sm:gap-4">
               <div className="flex justify-center items-center">
-                <img
-                  alt="Shop Logo"
+                <Avatar
+                  className="!w-12 !h-12"
                   src={
                     productDetails.data.product.data.branchInfo?.shop_info
                       .shop_logo
                   }
-                  className="rounded-[50%] w-[50px] h-[50px] object-cover"
                 />
               </div>
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center ">
                 <Link
                   href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                 >
@@ -255,7 +254,12 @@ const ProductDetail = ({ productDetails }) => {
                     .shop_rating
                 )}
                 readOnly
-                emptyIcon={<StarIcon fontSize="inherit" />}
+                emptyIcon={
+                  <StarIcon
+                    fontSize="small"
+                    sx={{ fontSize: "6px" }}
+                  />
+                }
               />
               <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
                 <div className="flex items-center">
@@ -277,10 +281,12 @@ const ProductDetail = ({ productDetails }) => {
                   textTransform: "none",
                   color: "white",
                   border: "1px solid white",
-                  paddingLeft: "14px",
-                  width: "96px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  px: 1,
                   height: "36px",
-                  fontSize: "18px",
+                  fontSize: "14px",
                   fontWeight: 400,
                   borderRadius: "8px",
                 }}
@@ -334,9 +340,9 @@ const ProductDetail = ({ productDetails }) => {
                   "Unfollow"
                 ) : (
                   <>
-                    <div className="flex items-center">
-                      <AddIcon className="w-[25px] h-[25px] text-white" />
-                      <div className="pt-[2px] text-white">Follow</div>
+                    <div className="flex items-center justify-center">
+                      <AddIcon className="text-white" fontSize="small" />
+                      <div className="text-white">Follow</div>
                     </div>
                   </>
                 )}
@@ -345,7 +351,7 @@ const ProductDetail = ({ productDetails }) => {
           </div>
         </div>
       </Box>
-      <div className="sm:hidden font-Nova mt-4">
+      <div className="sm:hidden font-Nova">
         {productDetails && (
           <ProductCard
             product={productDetails?.data?.product?.data}

@@ -189,11 +189,19 @@ const ProductCard = ({
       <img
         style={{
           width: "100%",
-          height: productsFiltersReducer.productLayout === "list" ? 300 : 300,
+          height: onlyCarousal
+            ? 400
+            : productsFiltersReducer.productLayout === "list"
+            ? themeLayout === "mobileScreen"
+              ? 250
+              : 300
+            : themeLayout === "mobileScreen"
+            ? 250
+            : 300,
         }}
         src={itm ?? ""}
         alt={product.name}
-        className="rounded-t-xl object-cover"
+        className={`${onlyCarousal ? "" : "rounded-t-xl"} object-cover`}
         key={itm}
       />
     );
@@ -241,6 +249,7 @@ const ProductCard = ({
                 <Carousel
                   infinite
                   arrows={onlyCarousal ? false : true}
+                  removeArrowOnDeviceType={["mobile"]}
                   responsive={responsive}
                   customLeftArrow={
                     <TrendingCustomLeftArrow
