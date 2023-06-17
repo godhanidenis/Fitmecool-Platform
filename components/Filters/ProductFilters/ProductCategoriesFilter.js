@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
+import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const ProductCategoriesFilter = ({ setProductPageSkip }) => {
   const { categories } = useSelector((state) => state.categories);
@@ -25,6 +26,9 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
 
   const [menSearchValue, setMenSearchValue] = useState("");
   const [womenSearchValue, setWomenSearchValue] = useState("");
+
+  const [menCatShowMore, setMenCatShowMore] = useState(true);
+  const [womenCatShowMore, setWomenCatShowMore] = useState(true);
 
   const dispatch = useDispatch();
   const productsFiltersReducer = useSelector(
@@ -90,9 +94,17 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                   onChange={(e) => setMenSearchValue(e.target.value)}
                 />
                 {(menSearchValue !== ""
-                  ? menCategoryLabel?.filter((i) =>
-                      i.toLowerCase().includes(menSearchValue.toLowerCase())
-                    )
+                  ? menCatShowMore
+                    ? menCategoryLabel
+                        ?.filter((i) =>
+                          i.toLowerCase().includes(menSearchValue.toLowerCase())
+                        )
+                        .slice(0, 3)
+                    : menCategoryLabel?.filter((i) =>
+                        i.toLowerCase().includes(menSearchValue.toLowerCase())
+                      )
+                  : menCatShowMore
+                  ? menCategoryLabel.slice(0, 3)
                   : menCategoryLabel
                 ).map((itm) => (
                   <StyledFormLabelCheckBox
@@ -122,6 +134,15 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                     label={itm}
                   />
                 ))}
+
+                {menCategoryLabel?.filter((i) =>
+                  i.toLowerCase().includes(menSearchValue.toLowerCase())
+                ).length > 3 && (
+                  <ShowMoreLessFilter
+                    value={menCatShowMore}
+                    onClick={() => setMenCatShowMore(!menCatShowMore)}
+                  />
+                )}
               </FormGroup>
             </FormControl>
           </>
@@ -139,9 +160,19 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                   onChange={(e) => setWomenSearchValue(e.target.value)}
                 />
                 {(womenSearchValue !== ""
-                  ? womenCategoryLabel?.filter((i) =>
-                      i.toLowerCase().includes(womenSearchValue.toLowerCase())
-                    )
+                  ? womenCatShowMore
+                    ? womenCategoryLabel
+                        ?.filter((i) =>
+                          i
+                            .toLowerCase()
+                            .includes(womenSearchValue.toLowerCase())
+                        )
+                        .slice(0, 3)
+                    : womenCategoryLabel?.filter((i) =>
+                        i.toLowerCase().includes(womenSearchValue.toLowerCase())
+                      )
+                  : womenCatShowMore
+                  ? womenCategoryLabel.slice(0, 3)
                   : womenCategoryLabel
                 ).map((itm) => (
                   <StyledFormLabelCheckBox
@@ -173,6 +204,14 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                     label={itm}
                   />
                 ))}
+                {womenCategoryLabel?.filter((i) =>
+                  i.toLowerCase().includes(womenSearchValue.toLowerCase())
+                ).length > 3 && (
+                  <ShowMoreLessFilter
+                    value={womenCatShowMore}
+                    onClick={() => setWomenCatShowMore(!womenCatShowMore)}
+                  />
+                )}
               </FormGroup>
             </FormControl>
           </>

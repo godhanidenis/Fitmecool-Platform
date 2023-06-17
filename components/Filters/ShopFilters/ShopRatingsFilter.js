@@ -43,7 +43,8 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
             setSelectedData(newRating);
           }}
           aria-labelledby="continuous-slider"
-          valueLabelDisplay="auto"
+          valueLabelDisplay="auto" 
+          className="!text-[#29977E]"
           min={0}
           max={5}
         />

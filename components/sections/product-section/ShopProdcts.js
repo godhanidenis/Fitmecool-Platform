@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
+import removeArrowOnDeviceType from "react";
 import Image from "next/image";
-import Link from "next/link";
 import Slider from "react-slick";
-import CreateSharpIcon from '@mui/icons-material/CreateSharp';
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import img from "../../../assets/product-image.png"
+import CreateSharpIcon from "@mui/icons-material/CreateSharp";
+import img from "../../../assets/product-image.png";
+
 const ShopProducts = ({ product }) => {
-  const items = [
-    img,
-    img,
-    img,
-  ].map((itm) => {
+  const items = [img, img, img].map((itm) => {
     return (
       <Image
-        src={itm ?? "" }
+        src={itm ?? ""}
         alt="aoa"
         width={250}
         height={400}
@@ -23,7 +17,6 @@ const ShopProducts = ({ product }) => {
       />
     );
   });
-
 
   const settings = {
     infinite: true,

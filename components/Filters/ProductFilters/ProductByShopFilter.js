@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
+import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const ProductByShopFilter = ({ setProductPageSkip }) => {
   const { shopsData } = useSelector((state) => state.shops);
@@ -14,6 +15,8 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
   const [abc, setAbc] = useState(false);
 
   const [shopSearchValue, setShopSearchValue] = useState("");
+
+  const [shopShowMore, setShopShowMore] = useState(true);
 
   const dispatch = useDispatch();
   const productsFiltersReducer = useSelector(
@@ -51,11 +54,21 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
             />
             <FormGroup>
               {(shopSearchValue !== ""
-                ? shopsData?.filter((i) =>
-                    i?.shop_name
-                      .toLowerCase()
-                      .includes(shopSearchValue.toLowerCase())
-                  )
+                ? shopShowMore
+                  ? shopsData
+                      ?.filter((i) =>
+                        i?.shop_name
+                          .toLowerCase()
+                          .includes(shopSearchValue.toLowerCase())
+                      )
+                      .slice(0, 3)
+                  : shopsData?.filter((i) =>
+                      i?.shop_name
+                        .toLowerCase()
+                        .includes(shopSearchValue.toLowerCase())
+                    )
+                : shopShowMore
+                ? shopsData.slice(0, 3)
                 : shopsData
               )?.map((itm) => (
                 <StyledFormLabelCheckBox
@@ -77,6 +90,16 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
                   label={itm.shop_name}
                 />
               ))}
+              {shopsData?.filter((i) =>
+                i?.shop_name
+                  .toLowerCase()
+                  .includes(shopSearchValue.toLowerCase())
+              ).length > 3 && (
+                <ShowMoreLessFilter
+                  value={shopShowMore}
+                  onClick={() => setShopShowMore(!shopShowMore)}
+                />
+              )}
             </FormGroup>
           </FormControl>
         </>

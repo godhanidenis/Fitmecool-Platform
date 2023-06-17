@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedShopsFilters } from "../../../redux/ducks/shopsFilters";
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
+import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const ShopByLocation = ({ setShopPageSkip }) => {
   const { areaLists } = useSelector((state) => state.areaLists);
@@ -14,6 +15,8 @@ const ShopByLocation = ({ setShopPageSkip }) => {
   const [abc, setAbc] = useState(false);
 
   const [locationSearchValue, setLocationSearchValue] = useState("");
+
+  const [locationShowMore, setLocationShowMore] = useState(true);
 
   const dispatch = useDispatch();
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
@@ -49,11 +52,21 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                 onChange={(e) => setLocationSearchValue(e.target.value)}
               />
               {(locationSearchValue !== ""
-                ? areaLists?.filter((i) =>
-                    i?.area
-                      .toLowerCase()
-                      .includes(locationSearchValue.toLowerCase())
-                  )
+                ? locationShowMore
+                  ? areaLists
+                      ?.filter((i) =>
+                        i?.area
+                          .toLowerCase()
+                          .includes(locationSearchValue.toLowerCase())
+                      )
+                      .slice(0, 3)
+                  : areaLists?.filter((i) =>
+                      i?.area
+                        .toLowerCase()
+                        .includes(locationSearchValue.toLowerCase())
+                    )
+                : locationShowMore
+                ? areaLists.slice(0, 3)
                 : areaLists
               )?.map((itm) => (
                 <StyledFormLabelCheckBox
@@ -75,6 +88,17 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                   label={itm.area}
                 />
               ))}
+
+              {areaLists?.filter((i) =>
+                i?.area
+                  .toLowerCase()
+                  .includes(locationSearchValue.toLowerCase())
+              ).length > 3 && (
+                <ShowMoreLessFilter
+                  value={locationShowMore}
+                  onClick={() => setLocationShowMore(!locationShowMore)}
+                />
+              )}
             </FormGroup>
           </FormControl>
         </>

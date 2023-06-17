@@ -17,8 +17,8 @@ const DrawerFilters = ({ setProductPageSkip, setByShop, byShop, setShopPageSkip 
         onClick={toggleFilterMenu}
         className={
           userType === "vendor"
-            ? "flex items-center p-3 text-colorBlack"
-            : "lg:hidden flex items-center p-3 text-colorBlack"
+            ? "flex items-center px-2 py-1 text-colorBlack"
+            : "lg:hidden flex items-center px-2 py-1 text-colorBlack"
         }
       >
         <FilterAltIcon />

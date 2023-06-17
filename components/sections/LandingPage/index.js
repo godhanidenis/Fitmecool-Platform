@@ -45,14 +45,6 @@ const LandingPage = () => {
   const [productPageSkip, setProductPageSkip] = useState(0);
   const [shopPageSkip, setShopPageSkip] = useState(0);
 
-  console.log(
-    "productsLimit,productsCount, numOfPages",
-    productsLimit,
-    productsCount,
-    numOfPages,
-    "productPageSkip",
-    productPageSkip
-  );
   const getAllProducts = () => {
     dispatch(
       loadProductsStart({
@@ -114,26 +106,26 @@ const LandingPage = () => {
   return (
     <>
       <div className="w-100 h-[300px] relative">
-          <Image
-            src={LandingBg}
-            alt=""
-            fill={true}
-            layout={"fill"}
-            objectFit={"cover"}
-          />
-        </div>
+        <Image
+          src={LandingBg}
+          alt=""
+          fill={true}
+          layout={"fill"}
+          objectFit={"cover"}
+        />
+      </div>
       <div className="container py-2 bg-[#FAFCFC] mb-[1px] mt-3">
         <div>
-            <UpperFilter
-              byShop={byShop}
-              setByShop={setByShop}
-              setProductPageSkip={setProductPageSkip}
-              setShopPageSkip={setShopPageSkip}
-              showDrawerFilter={true}
-            />
+          <UpperFilter
+            byShop={byShop}
+            setByShop={setByShop}
+            setProductPageSkip={setProductPageSkip}
+            setShopPageSkip={setShopPageSkip}
+            showDrawerFilter={true}
+          />
         </div>
       </div>
-      <div className="grid grid-cols-8 container mb-4 ">
+      <div className="grid grid-cols-8 container mb-4 font-Nova">
         <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
           <Filter
             byShop={byShop}
@@ -142,14 +134,14 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 lg:col-span-6 p-6 bg-[#FAFCFC]">
+        <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC]">
           <div className="container !w-[100%]">
             {!byShop ? (
               <>
                 <div
                   className={`${
                     productsFiltersReducer.productLayout === "list"
-                      ? " "
+                      ? "flex flex-col gap-5"
                       : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
                   }`}
                 >
@@ -159,14 +151,13 @@ const LandingPage = () => {
                     ))}
                 </div>
                 {productsCount > 6 && (
-                  <div className="flex items-center justify-between py-10">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
                     <p className="text-sm leading-[150%] text-[#15182766]">
                       Showing {productPageSkip + 1} -{" "}
                       {productsCount < (productPageSkip + 1) * productsLimit
                         ? productsCount
                         : (productPageSkip + 1) * productsLimit}{" "}
-                      of {productsCount}
-                      results
+                      of {productsCount} results
                     </p>
                     <Pagination
                       count={Math.ceil(productsCount / 6)}

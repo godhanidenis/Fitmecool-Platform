@@ -52,7 +52,9 @@ function MyApp({ Component, pageProps }) {
         <CssBaseline />
         <ToastContainer />
         <Provider store={store}>
-          <Header modalType={modalType} />
+          {!router.pathname.includes("/auth/") && (
+            <Header modalType={modalType} />
+          )}
           {router.pathname.includes("/vendor/") &&
           router.pathname !== "/vendor/shop-setup" ? (
             <VendorCommonLayout>
@@ -61,7 +63,7 @@ function MyApp({ Component, pageProps }) {
           ) : (
             <Component {...pageProps} />
           )}
-          <Footer />
+          {!router.pathname.includes("/auth/") && <Footer />}
         </Provider>
       </ThemeProvider>
     </>

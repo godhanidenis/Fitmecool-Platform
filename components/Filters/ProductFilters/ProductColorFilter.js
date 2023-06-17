@@ -5,6 +5,7 @@ import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilte
 import { useDispatch, useSelector } from "react-redux";
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
+import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const colorsList = [
   "red",
@@ -25,6 +26,8 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
     (state) => state.productsFiltersReducer
   );
   const [colorSearchValue, setColorSearchValue] = useState("");
+
+  const [colorShowMore, setColorShowMore] = useState(true);
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
@@ -59,9 +62,17 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
                 onChange={(e) => setColorSearchValue(e.target.value)}
               />
               {(colorSearchValue !== ""
-                ? colorsList?.filter((i) =>
-                    i.toLowerCase().includes(colorSearchValue.toLowerCase())
-                  )
+                ? colorShowMore
+                  ? colorsList
+                      ?.filter((i) =>
+                        i.toLowerCase().includes(colorSearchValue.toLowerCase())
+                      )
+                      .slice(0, 3)
+                  : colorsList?.filter((i) =>
+                      i.toLowerCase().includes(colorSearchValue.toLowerCase())
+                    )
+                : colorShowMore
+                ? colorsList.slice(0, 3)
                 : colorsList
               )?.map((item) => (
                 <StyledFormLabelCheckBox
@@ -78,6 +89,15 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
                   }
                 />
               ))}
+
+              {colorsList?.filter((i) =>
+                i.toLowerCase().includes(colorSearchValue.toLowerCase())
+              ).length > 3 && (
+                <ShowMoreLessFilter
+                  value={colorShowMore}
+                  onClick={() => setColorShowMore(!colorShowMore)}
+                />
+              )}
             </FormGroup>
           </FormControl>
         </>
