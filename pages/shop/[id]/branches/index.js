@@ -9,10 +9,15 @@ import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
 
 const Branches = ({ shopDetails, shopId }) => {
   const router = useRouter();
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const BackToGo = () => {
     router.push(`/shop/${shopId}`);
   };
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   return (
     <>
