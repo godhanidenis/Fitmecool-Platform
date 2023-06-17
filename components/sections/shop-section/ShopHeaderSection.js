@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Button, Divider, Grid, Tooltip, tooltipClasses, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Grid,
+  Tooltip,
+  tooltipClasses,
+  Typography,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ShareIcon from "@mui/icons-material/Share";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
@@ -23,11 +30,23 @@ import instagramIcon from "../../../assets/instagram.png";
 import googleIcon from "../../../assets/googleIcon.svg";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box } from "@mui/system";
-import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
 import shareIcon from "../../../assets/shareIcon.svg";
 import AddIcon from "@mui/icons-material/Add";
 
-const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFollowers, totalProducts, scrollRef }) => {
+const ShopHeaderSection = ({
+  shopDetails,
+  totalReview,
+  totalFollowers,
+  getAllFollowers,
+  totalProducts,
+  scrollRef,
+}) => {
   console.log("shopDetails", shopDetails);
 
   const pageShareURL = window.location.href;
@@ -42,7 +61,9 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   const router = useRouter();
 
   const dispatch = useDispatch();
-  const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const handleClick = () => {
@@ -76,9 +97,13 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
       setShopFollowByUser(false);
     }
 
-    const followedShopsByUser = userProfile.shop_follower_list?.find((itm) => itm.shop_id === router.query.id);
+    const followedShopsByUser = userProfile.shop_follower_list?.find(
+      (itm) => itm.shop_id === router.query.id
+    );
 
-    followedShopsByUser ? setShopFollowByUser(true) : setShopFollowByUser(false);
+    followedShopsByUser
+      ? setShopFollowByUser(true)
+      : setShopFollowByUser(false);
   }, [isAuthenticate, router.query.id, shopFollowByUser, userProfile]);
 
   return (
@@ -97,19 +122,22 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                   className="rounded-[50%]"
                 />
               </div>
-              <div className="flex flex-col w-full sm:ml-[4%]">
+              <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="flex justify-between flex-nowrap">
-                  <div className="flex flex-col sm:mt-5">
-                    <div className="oneLineAfterThreeDots font-semibold text-[48px] text-[#FFFFFF]">
+                  <div className="flex flex-col sm:mt-3">
+                    <div className="oneLineAfterThreeDots font-semibold text-[30px] text-[#FFFFFF]">
                       {shopDetails.shop_name}
                     </div>
-                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[24px] font-normal ">
+                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[18px] font-normal ">
                       Contourz by Taruna Manchanda
                     </div>
-                    <p className="pb-[55px] text-[#878A99] text-[24px] font-normal oneLineAfterThreeDots">
-                      <LocationOnIcon fontSize="small" className="!mr-1" />
-                      {shopDetails.branch_info.map((itm) => itm.branch_type === "main" && itm.branch_address)}
-                    </p>
+                    <span className="pb-[55px] text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
+                      <LocationOnIcon fontSize="small" className="-ml-1 !mr-1 text-[red]" />
+                      {shopDetails.branch_info.map(
+                        (itm) =>
+                          itm.branch_type === "main" && itm.branch_address
+                      )}
+                    </span>
 
                     {/* <div className="mt-[24px] mb-[80px]">
                       <Button
@@ -181,7 +209,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                       </div>
                     </div> */}
                   </div>
-                  <div className="flex sm:mt-[4%] items-start">
+                  <div className="flex sm:mt-6 items-start">
                     <Button
                       className="border !border-[#FFFFFF] w-[120px] rounded-[8px]"
                       variant="outlined"
@@ -222,12 +250,15 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                           if (themeLayout === "mobileScreen") {
                             Router.push("/auth/signin");
                           } else {
-                            setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                            setOpen(true),
+                              setAuthTypeModal(AuthTypeModal.Signin);
                           }
                         }
                       }}
                     >
-                      <Typography sx={{ textTransform: "none", color: "#FFFFFF" }}>
+                      <Typography
+                        sx={{ textTransform: "none", color: "#FFFFFF" }}
+                      >
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
@@ -267,54 +298,88 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
           <Grid container>
             <Grid item sm={3}>
               <div className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                <div className="flex items-center justify-between w-[100%]">
-                  <p>
-                    <ProductionQuantityLimitsIcon className="mr-[16px]" /> Product{" "}
-                  </p>
-                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalProducts}</p>
+                <div className="flex items-center justify-center w-[100%] py-2">
+                  <span>
+                    <ProductionQuantityLimitsIcon /> Products{" "}
+                  </span>
+                  <span className="text-[#FFFFFF] text-[32px] font-medium ml-4">
+                    {totalProducts}
+                  </span>
                 </div>
               </div>
             </Grid>
-            <Divider className="block" orientation="vertical" variant="middle" flexItem />
+            <Divider
+              className="block"
+              orientation="vertical"
+              variant="middle"
+              flexItem
+            />
             <Grid item sm={3}>
               <div className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                <div className="flex items-center justify-between w-[100%]">
-                  <p>
-                    <PeopleAltIcon className="mr-[16px]" /> Followers{" "}
-                  </p>
-                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalFollowers}</p>
+                <div className="flex items-center justify-center w-[100%] py-2">
+                  <span>
+                    <PeopleAltIcon /> Followers{" "}
+                  </span>
+                  <span className="text-[#FFFFFF] text-[32px] font-medium ml-4">
+                    {totalFollowers}
+                  </span>
                 </div>
               </div>
             </Grid>
-            <Divider className="block" orientation="vertical" variant="middle" flexItem />
+            <Divider
+              className="block"
+              orientation="vertical"
+              variant="middle"
+              flexItem
+            />
             <Grid item sm={3} onClick={handleClick}>
               <div className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                <div className="flex items-center justify-between w-[100%]">
-                  <p>
-                    <RateReviewIcon className="mr-[16px]" /> Review{" "}
-                  </p>
-                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalReview}</p>
+                <div className="flex items-center justify-center w-[100%] py-2">
+                  <span>
+                    <RateReviewIcon /> Reviews{" "}
+                  </span>
+                  <span className="text-[#FFFFFF] text-[32px] font-medium ml-4">
+                    {totalReview}
+                  </span>
                 </div>
               </div>
             </Grid>
-            <Divider className="block" orientation="vertical" variant="middle" flexItem />
+            <Divider
+              className="block"
+              orientation="vertical"
+              variant="middle"
+              flexItem
+            />
             <Grid item sm={2.9} onMouseLeave={() => setOpenToolTip(false)}>
               <HtmlTooltip
                 title={
                   <React.Fragment>
                     <div className="flex">
                       <div className="p-2 rounded-lg cursor-pointer">
-                        <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                        <FacebookShareButton
+                          windowWidth={900}
+                          windowHeight={900}
+                          url={pageShareURL}
+                        >
                           <Image src={facebookIcon ?? ""} alt="facebookIcon" />
                         </FacebookShareButton>
                       </div>
                       <div className="p-2 rounded-lg cursor-pointer">
-                        <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                        <WhatsappShareButton
+                          windowWidth={900}
+                          windowHeight={900}
+                          url={pageShareURL}
+                        >
                           <WhatsappIcon size={25} round={true} />
                         </WhatsappShareButton>
                       </div>
                       <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                        <EmailShareButton subject="Shop Detail" windowWidth={900} windowHeight={900} url={pageShareURL}>
+                        <EmailShareButton
+                          subject="Shop Detail"
+                          windowWidth={900}
+                          windowHeight={900}
+                          url={pageShareURL}
+                        >
                           <Image src={googleIcon ?? ""} alt="googleIcon" />
                         </EmailShareButton>
                       </div>
@@ -327,10 +392,9 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                   className="bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
                 >
                   {/* <ShareIcon /> Share */}
-                  <div className="flex items-center justify-between w-[100%]">
-                    <p className="py-[10px]">
-                      <ShareIcon className="mr-[16px]" /> Share{" "}
-                    </p>
+                  <div className="flex items-center justify-center w-[100%] py-2">
+                    <ShareIcon />
+                    <span className="py-[10px] ml-[2px]">Share </span>
                     {/* <p>{totalReview}</p> */}
                   </div>
                 </div>
