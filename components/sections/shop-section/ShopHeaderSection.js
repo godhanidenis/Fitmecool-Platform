@@ -27,29 +27,6 @@ import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButto
 import shareIcon from "../../../assets/shareIcon.svg";
 import AddIcon from "@mui/icons-material/Add";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fbfbfb",
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  boxShadow: "none",
-}));
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "50%",
-  maxWidth: "1200px",
-  bgcolor: "background.paper",
-  border: "0px solid #000",
-  boxShadow: 24,
-  borderRadius: "12px",
-  height: "auto",
-};
-
 const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFollowers, totalProducts, scrollRef }) => {
   console.log("shopDetails", shopDetails);
 
@@ -206,7 +183,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                   </div>
                   <div className="flex sm:mt-[4%] items-start">
                     <Button
-                      className="border border-[#FFFFFF] w-[120px] rounded-[8px]"
+                      className="border !border-[#FFFFFF] w-[120px] rounded-[8px]"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -266,7 +243,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     <div className="ml-[24px]">
                       <Button
                         variant="contained"
-                        className={`bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
+                        className={`!bg-[#29977E] !hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
                         onClick={() => HandleGoToSeeBranch()}
                       >
                         <Typography color="#FFFFFF">See Branches</Typography>
@@ -289,36 +266,36 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
 
           <Grid container>
             <Grid item sm={3}>
-              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+              <div className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                 <div className="flex items-center justify-between w-[100%]">
                   <p>
                     <ProductionQuantityLimitsIcon className="mr-[16px]" /> Product{" "}
                   </p>
                   <p className="text-[#FFFFFF] text-[32px] font-medium">{totalProducts}</p>
                 </div>
-              </Item>
+              </div>
             </Grid>
             <Divider className="block" orientation="vertical" variant="middle" flexItem />
             <Grid item sm={3}>
-              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+              <div className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                 <div className="flex items-center justify-between w-[100%]">
                   <p>
                     <PeopleAltIcon className="mr-[16px]" /> Followers{" "}
                   </p>
                   <p className="text-[#FFFFFF] text-[32px] font-medium">{totalFollowers}</p>
                 </div>
-              </Item>
+              </div>
             </Grid>
             <Divider className="block" orientation="vertical" variant="middle" flexItem />
             <Grid item sm={3} onClick={handleClick}>
-              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+              <div className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                 <div className="flex items-center justify-between w-[100%]">
                   <p>
                     <RateReviewIcon className="mr-[16px]" /> Review{" "}
                   </p>
                   <p className="text-[#FFFFFF] text-[32px] font-medium">{totalReview}</p>
                 </div>
-              </Item>
+              </div>
             </Grid>
             <Divider className="block" orientation="vertical" variant="middle" flexItem />
             <Grid item sm={2.9} onMouseLeave={() => setOpenToolTip(false)}>
@@ -345,7 +322,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                   </React.Fragment>
                 }
               >
-                <Item
+                <div
                   onClick={() => setOpenToolTip(!OpenToolTip)}
                   className="bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
                 >
@@ -356,88 +333,14 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     </p>
                     {/* <p>{totalReview}</p> */}
                   </div>
-                </Item>
+                </div>
               </HtmlTooltip>
             </Grid>
           </Grid>
         </div>
       </div>
-      <AllBranchModal
-        allBranchModalOpen={allBranchModalOpen}
-        setAllBranchModalOpen={setAllBranchModalOpen}
-        allBranchList={shopDetails?.branch_info}
-      />
-      <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      />
     </>
   );
 };
 
 export default ShopHeaderSection;
-
-const AllBranchModal = ({ allBranchModalOpen, setAllBranchModalOpen, allBranchList }) => {
-  console.log("allBranchList", allBranchList);
-  return (
-    <>
-      <CustomAuthModal
-        open={allBranchModalOpen}
-        onClose={() => setAllBranchModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2 !bg-[#F5F5F5]">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={() => setAllBranchModalOpen(false)} />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">All Branches</p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={() => setAllBranchModalOpen(false)}
-              />
-            </div>
-
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto my-5">
-              <div className="container grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-10">
-                {allBranchList.map((branch, index) => (
-                  <div className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1" key={index}>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Address : </b>
-                      {branch.branch_address}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch City : </b>
-                      {branch.branch_city}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch PinCode : </b>
-                      {branch.branch_pinCode}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Name :</b>
-                      {branch.manager_name}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Email :</b>
-                      {branch.manager_email}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Phone Number :</b>
-                      {branch.manager_contact}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
-    </>
-  );
-};
