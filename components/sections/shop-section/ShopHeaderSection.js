@@ -73,23 +73,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   };
 
   const HandleGoToSeeBranch = () => {
-    router.push(`/shop/${shopDetails?.id}/seeBranch`)
-    // const serializedData = JSON.stringify(shopDetails?.branch_info);
-    // const queryString = new URLSearchParams(shopDetails).toString();
-
-    // router.push({
-    //   pathname: `/shop/${shopDetails?.id}/seeBranch/`,
-    //   query: { data: queryString },
-    // });
-
-    
-
-    // router.push(
-    //   {
-    //     pathname: `/shop/${shopDetails?.id}/seeBranch/`,
-    //     query: { data: "" },
-    //   }
-    // );
+    router.push(`/shop/${shopDetails?.id}/seeBranch`);
   };
 
   const HtmlTooltip = styled(({ className, ...props }) => (
@@ -123,7 +107,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   return (
     <>
       <div className="flex justify-center font-Nova">
-        <div className="grid-cols-12 mt-[-50px] rounded-xl sm:w-[100%] bg-[#FFFFFF]">
+        <div className="grid-cols-12 mt-[-50px] sm:w-[90%] bg-[#151827]">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row	">
               <div className="mt-[-45px] flex justify-center">
@@ -139,17 +123,18 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
               <div className="flex flex-col w-full sm:ml-[4%]">
                 <div className="flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-5">
-                    <div className="oneLineAfterThreeDots font-semibold text-2xl text-[#000000]">
+                    <div className="oneLineAfterThreeDots font-semibold text-[48px] text-[#FFFFFF]">
                       {shopDetails.shop_name}
                     </div>
-                    <p className="text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
+                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[24px] font-normal ">
+                      Contourz by Taruna Manchanda
+                    </div>
+                    <p className="pb-[55px] text-[#878A99] text-[24px] font-normal oneLineAfterThreeDots">
                       <LocationOnIcon fontSize="small" className="!mr-1" />
                       {shopDetails.branch_info.map((itm) => itm.branch_type === "main" && itm.branch_address)}
                     </p>
-                    <div className="oneLineAfterThreeDots mt-[15px] text-[#151827] text-[24px] font-normal ">
-                      Contourz by Taruna Manchanda
-                    </div>
-                    <div className="mt-[24px] mb-[80px]">
+
+                    {/* <div className="mt-[24px] mb-[80px]">
                       <Button
                         variant="contained"
                         className={`rounded-[500px] bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
@@ -157,8 +142,8 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                       >
                         <Typography color="#FFFFFF">See Branches</Typography>
                       </Button>
-                    </div>
-                    <div className="flex gap-7 mb-[10px] flex-wrap">
+                    </div> */}
+                    {/* <div className="flex gap-7 mb-[10px] flex-wrap">
                       <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
                         <p className="text-[#878A99] text-[48px] font-semibold">{totalProducts}</p>
                         <p className="text-[#31333E] text-[24px] font-normal">Product</p>
@@ -192,7 +177,6 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                                 </div>
                                 <div className="p-2 rounded-lg cursor-pointer">
                                   <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                    {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
                                     <WhatsappIcon size={25} round={true} />
                                   </WhatsappShareButton>
                                 </div>
@@ -218,11 +202,11 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                           </p>
                         </HtmlTooltip>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
-                  <div className="flex sm:mt-[6%] items-start">
+                  <div className="flex sm:mt-[4%] items-start">
                     <Button
-                      className="border border-[#29977E] w-[120px] rounded-[8px]"
+                      className="border border-[#FFFFFF] w-[120px] rounded-[8px]"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -266,7 +250,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                         }
                       }}
                     >
-                      <Typography sx={{ textTransform: "none", color: "#29977E" }}>
+                      <Typography sx={{ textTransform: "none", color: "#FFFFFF" }}>
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
@@ -279,6 +263,15 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                         )}
                       </Typography>
                     </Button>
+                    <div className="ml-[24px]">
+                      <Button
+                        variant="contained"
+                        className={`bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
+                        onClick={() => HandleGoToSeeBranch()}
+                      >
+                        <Typography color="#FFFFFF">See Branches</Typography>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -294,26 +287,41 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
             </Button>
           </div> */}
 
-          {/* <Grid container sx={{ backgroundColor: "#fbfbfb" }}>
+          <Grid container>
             <Grid item sm={3}>
-              <Item className="!cursor-pointer flex items-center justify-center flex-col sm:flex-row !p-3">
-                <ProductionQuantityLimitsIcon /> {totalProducts} Product
+              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <div className="flex items-center justify-between w-[100%]">
+                  <p>
+                    <ProductionQuantityLimitsIcon className="mr-[16px]" /> Product{" "}
+                  </p>
+                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalProducts}</p>
+                </div>
               </Item>
             </Grid>
             <Divider className="block" orientation="vertical" variant="middle" flexItem />
             <Grid item sm={3}>
-              <Item className="!cursor-pointer flex items-center justify-center flex-col sm:flex-row !p-3">
-                <PeopleAltIcon /> {totalFollowers} Followers
+              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <div className="flex items-center justify-between w-[100%]">
+                  <p>
+                    <PeopleAltIcon className="mr-[16px]" /> Followers{" "}
+                  </p>
+                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalFollowers}</p>
+                </div>
               </Item>
             </Grid>
             <Divider className="block" orientation="vertical" variant="middle" flexItem />
             <Grid item sm={3} onClick={handleClick}>
-              <Item className="!cursor-pointer flex items-center justify-center flex-col sm:flex-row !p-3">
-                <RateReviewIcon /> {totalReview} Review
+              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <div className="flex items-center justify-between w-[100%]">
+                  <p>
+                    <RateReviewIcon className="mr-[16px]" /> Review{" "}
+                  </p>
+                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalReview}</p>
+                </div>
               </Item>
             </Grid>
             <Divider className="block" orientation="vertical" variant="middle" flexItem />
-            <Grid item sm={2.5} onMouseLeave={() => setOpenToolTip(false)}>
+            <Grid item sm={2.9} onMouseLeave={() => setOpenToolTip(false)}>
               <HtmlTooltip
                 title={
                   <React.Fragment>
@@ -339,13 +347,19 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
               >
                 <Item
                   onClick={() => setOpenToolTip(!OpenToolTip)}
-                  className="!cursor-pointer flex items-center justify-center flex-col sm:flex-row !p-3"
+                  className="bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
                 >
-                  <ShareIcon /> Share
+                  {/* <ShareIcon /> Share */}
+                  <div className="flex items-center justify-between w-[100%]">
+                    <p className="py-[10px]">
+                      <ShareIcon className="mr-[16px]" /> Share{" "}
+                    </p>
+                    {/* <p>{totalReview}</p> */}
+                  </div>
                 </Item>
               </HtmlTooltip>
             </Grid>
-          </Grid> */}
+          </Grid>
         </div>
       </div>
       <AllBranchModal
