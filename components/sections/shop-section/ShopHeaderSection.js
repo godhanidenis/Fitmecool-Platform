@@ -73,7 +73,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   };
 
   const HandleGoToSeeBranch = () => {
-    router.push(`/shop/${shopDetails?.id}/seeBranch`);
+    router.push(`/shop/${shopDetails?.id}/branches`);
   };
 
   const HtmlTooltip = styled(({ className, ...props }) => (

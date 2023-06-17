@@ -43,7 +43,6 @@ const ShopDetail = ({ shopDetails }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [avgShopRating, setAvgShopRating] = useState(0);
   const [totalFollowers, setTotalFollowers] = useState(0);
-  const [isHydrated, setIsHydrated] = useState(false);
 
   const router = useRouter();
 
@@ -57,10 +56,6 @@ const ShopDetail = ({ shopDetails }) => {
   const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
   const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
   const { themeLayout } = useSelector((state) => state.themeLayout);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
 
   const getMoreProductsList = () => {
     dispatch(
