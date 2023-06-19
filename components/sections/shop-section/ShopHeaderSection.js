@@ -94,7 +94,7 @@ const ShopHeaderSection = ({
   };
 
   const HandleGoToSeeBranch = () => {
-    router.push(`/shop/${shopDetails?.id}/seeBranch`);
+    router.push(`/shop/${shopDetails?.id}/branches`);
   };
 
   const HtmlTooltip = styled(({ className, ...props }) => (
@@ -145,22 +145,22 @@ const ShopHeaderSection = ({
                   className="rounded-[50%]"
                 />
               </div>
-              <div className="flex flex-col w-full sm:ml-[4%]">
+              <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="sm:flex justify-between flex-nowrap">
-                  <div className="flex flex-col sm:mt-5">
-                    <div className="oneLineAfterThreeDots font-semibold text-[48px] text-[#FFFFFF]">
+                  <div className="flex flex-col sm:mt-3">
+                    <div className="oneLineAfterThreeDots font-semibold text-[30px] text-[#FFFFFF]">
                       {shopDetails.shop_name}
                     </div>
-                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[24px] font-normal ">
+                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[18px] font-normal ">
                       Contourz by Taruna Manchanda
                     </div>
-                    <p className="sm:pb-[55px] pb-[30px] text-[#878A99] text-[24px] font-normal oneLineAfterThreeDots">
-                      <LocationOnIcon fontSize="small" className="!mr-1" />
+                    <span className="sm:pb-[55px] pb-[30px] text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
+                      <LocationOnIcon fontSize="small" className="-ml-1 !mr-1 text-[red]" />
                       {shopDetails.branch_info.map(
                         (itm) =>
                           itm.branch_type === "main" && itm.branch_address
                       )}
-                    </p>
+                    </span>
 
                     {/* <div className="mt-[24px] mb-[80px]">
                       <Button
@@ -254,9 +254,9 @@ const ShopHeaderSection = ({
                       </div>
                     </div> */}
                   </div>
-                  <div className="flex sm:mt-[4%] items-start">
+                  <div className="flex sm:mt-6 items-start">
                     <Button
-                      className="border border-colorGreen w-[120px] rounded-[8px]"
+                      className="border !border-[#FFFFFF] w-[120px] rounded-[8px]"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -301,7 +301,9 @@ const ShopHeaderSection = ({
                         }
                       }}
                     >
-                      <Typography sx={{ textTransform: "none", color: "#FFFFFF" }}>
+                      <Typography
+                        sx={{ textTransform: "none", color: "#FFFFFF" }}
+                      >
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
@@ -317,7 +319,7 @@ const ShopHeaderSection = ({
                     <div className="ml-[24px]">
                       <Button
                         variant="contained"
-                        className={`bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
+                        className={`!bg-[#29977E] !hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
                         onClick={() => HandleGoToSeeBranch()}
                       >
                         <Typography color="#FFFFFF">See Branches</Typography>
@@ -424,106 +426,8 @@ const ShopHeaderSection = ({
           </div>
         </div>
       </div>
-      <AllBranchModal
-        allBranchModalOpen={allBranchModalOpen}
-        setAllBranchModalOpen={setAllBranchModalOpen}
-        allBranchList={shopDetails?.branch_info}
-      />
-      {/* <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      /> */}
     </>
   );
 };
 
 export default ShopHeaderSection;
-
-const AllBranchModal = ({
-  allBranchModalOpen,
-  setAllBranchModalOpen,
-  allBranchList,
-}) => {
-  console.log("allBranchList", allBranchList);
-  return (
-    <>
-      <CustomAuthModal
-        open={allBranchModalOpen}
-        onClose={() => setAllBranchModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2 !bg-[#F5F5F5]">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={() => setAllBranchModalOpen(false)}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                All Branches
-              </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={() => setAllBranchModalOpen(false)}
-              />
-            </div>
-
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto my-5">
-              <div className="container grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-10">
-                {allBranchList.map((branch, index) => (
-                  <div
-                    className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
-                    key={index}
-                  >
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Address :{" "}
-                      </b>
-                      {branch.branch_address}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch City :{" "}
-                      </b>
-                      {branch.branch_city}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch PinCode :{" "}
-                      </b>
-                      {branch.branch_pinCode}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Manager Name :
-                      </b>
-                      {branch.manager_name}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Manager Email :
-                      </b>
-                      {branch.manager_email}
-                    </p>
-                    <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                        Branch Manager Phone Number :
-                      </b>
-                      {branch.manager_contact}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
-    </>
-  );
-};
