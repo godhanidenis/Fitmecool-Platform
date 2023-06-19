@@ -244,7 +244,7 @@ const ShopDetail = ({ shopDetails }) => {
                 <p className="text-[#181725] text-[26px] font-semibold">
                   Reviews for Contourz by Taruna Manchanda (44)
                 </p>
-                <div className="flex items-center mt-[60px]">
+                <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
                   {/* <p className="text-base">Rating + Distribution</p> */}
                   <div className="flex w-[30%] items-center flex-col">
                     <div className="rounded-lg p-1 flex items-center gap-1">
@@ -259,16 +259,16 @@ const ShopDetail = ({ shopDetails }) => {
                     {/* <p className="text-sm">({shopReviews.length} Review)</p> */}
                   </div>
 
-                  <div className="w-[70%] border-l">
+                  <div className="sm:w-[70%] w-[112%] sm:border-l">
                     {[5, 4, 3, 2, 1].map((star) => (
                       <div className="grid grid-cols-12 items-center p-1 gap-2.5" key={star}>
-                        <div className="flex items-center gap-1 col-span-4 pl-2">
+                        <div className="flex items-center gap-1 col-span-4 sm:pl-2">
                           <Rating className="text-[#151827]" size="medium" value={star} readOnly />
                           {/* <p className="font-semibold">{star}</p> */}
                           {/* <StarIcon fontSize="medium" className="!text-yellow-400" /> */}
                         </div>
 
-                        <div className="self-center col-span-7">
+                        <div className="ml-[5px] sm:ml-0 self-center col-span-7">
                           <CustomBorderLinearProgress
                             variant="determinate"
                             value={(shopReviews.filter((itm) => itm.stars === star).length * 100) / shopReviews.length}
@@ -282,9 +282,9 @@ const ShopDetail = ({ shopDetails }) => {
                   </div>
                 </div>
 
-                <p className="mt-5 text-[#181725] text-[20px] font-normal">Last Review Updated on 20 Apr 2022</p>
+                <p className="sm:mt-[50px] mt-[30px] text-[#181725] text-[20px] font-normal">Last Review Updated on 20 Apr 2022</p>
               </div>
-              <div className="md:w-[50%] p-5 pt-8 border-t sm:border-t-0 sm:border-l">
+              <div className="md:w-[50%] sm:p-5 pt-8 border-t sm:border-t-0 sm:border-l">
                 <p className="text-[18px] font-normal text-[#181725]">
                   Add A Review {shopDetails.data.shop.shop_name} Shop
                 </p>
@@ -421,7 +421,7 @@ const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 const ShopCommentsSection = ({ review }) => {
   return (
-    <div className="flex justify-center border-b mt-10">
+    <div className="flex justify-center border-b mt-10 relative">
       <div className="grid grid-cols-12 px-4 w-full">
         <div className="col-span-12">
           <div className="flex items-center">
@@ -430,7 +430,7 @@ const ShopCommentsSection = ({ review }) => {
             </div>
             <div className="flex flex-col w-full">
               <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">
-                <div className="flex items-start gap-10 justify-between w-full sm:justify-start">
+                <div className="flex items-start sm:gap-10 gap-[6px] w-full sm:justify-start">
                   <div className="flex flex-col">
                     <div className="font-semibold text-xl text-[#000000]">{review.user_name}</div>
                     <div className=" text-[#888888]">{review.user_type}</div>
@@ -439,13 +439,13 @@ const ShopCommentsSection = ({ review }) => {
                     <StarIcon fontSize="small" className="!text-white pl-1" />
                     <p className="text-white pr-[6px] font-semibold">{review.stars}</p>
                   </div>
-                </div>
-                <div className="sm:flex mr-5 flex-nowrap items-center hidden">
-                  <div className="flex gap-4 items-center">
+                <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
+                  <div className="flex gap-3 sm:gap-4 items-center">
                     <Image src={FbIcon} alt="" />
                     <Image className="" src={TwiterIcon} alt="" />
                     {/* <p className="text-colorPrimary font-semibold">Reply</p> */}
                   </div>
+                </div>
                 </div>
               </div>
             </div>

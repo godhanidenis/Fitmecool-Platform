@@ -107,7 +107,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   return (
     <>
       <div className="flex justify-center font-Nova">
-        <div className="grid-cols-12 mt-[-50px] sm:w-[90%] bg-[#151827]">
+        <div className="grid-cols-12 mt-[-50px] sm:w-[90%] w-[100%] bg-[#151827]">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row	">
               <div className="mt-[-45px] flex justify-center">
@@ -121,7 +121,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                 />
               </div>
               <div className="flex flex-col w-full sm:ml-[4%]">
-                <div className="flex justify-between flex-nowrap">
+                <div className="sm:flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-5">
                     <div className="oneLineAfterThreeDots font-semibold text-[48px] text-[#FFFFFF]">
                       {shopDetails.shop_name}
@@ -129,7 +129,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[24px] font-normal ">
                       Contourz by Taruna Manchanda
                     </div>
-                    <p className="pb-[55px] text-[#878A99] text-[24px] font-normal oneLineAfterThreeDots">
+                    <p className="sm:pb-[55px] pb-[30px] text-[#878A99] text-[24px] font-normal oneLineAfterThreeDots">
                       <LocationOnIcon fontSize="small" className="!mr-1" />
                       {shopDetails.branch_info.map((itm) => itm.branch_type === "main" && itm.branch_address)}
                     </p>
@@ -287,79 +287,90 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
             </Button>
           </div> */}
 
-          <Grid container>
-            <Grid item sm={3}>
-              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                <div className="flex items-center justify-between w-[100%]">
-                  <p>
-                    <ProductionQuantityLimitsIcon className="mr-[16px]" /> Product{" "}
-                  </p>
-                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalProducts}</p>
-                </div>
-              </Item>
-            </Grid>
-            <Divider className="block" orientation="vertical" variant="middle" flexItem />
-            <Grid item sm={3}>
-              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                <div className="flex items-center justify-between w-[100%]">
-                  <p>
-                    <PeopleAltIcon className="mr-[16px]" /> Followers{" "}
-                  </p>
-                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalFollowers}</p>
-                </div>
-              </Item>
-            </Grid>
-            <Divider className="block" orientation="vertical" variant="middle" flexItem />
-            <Grid item sm={3} onClick={handleClick}>
-              <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                <div className="flex items-center justify-between w-[100%]">
-                  <p>
-                    <RateReviewIcon className="mr-[16px]" /> Review{" "}
-                  </p>
-                  <p className="text-[#FFFFFF] text-[32px] font-medium">{totalReview}</p>
-                </div>
-              </Item>
-            </Grid>
-            <Divider className="block" orientation="vertical" variant="middle" flexItem />
-            <Grid item sm={2.9} onMouseLeave={() => setOpenToolTip(false)}>
-              <HtmlTooltip
-                title={
-                  <React.Fragment>
-                    <div className="flex">
-                      <div className="p-2 rounded-lg cursor-pointer">
-                        <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                          <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                        </FacebookShareButton>
-                      </div>
-                      <div className="p-2 rounded-lg cursor-pointer">
-                        <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                          <WhatsappIcon size={25} round={true} />
-                        </WhatsappShareButton>
-                      </div>
-                      <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                        <EmailShareButton subject="Shop Detail" windowWidth={900} windowHeight={900} url={pageShareURL}>
-                          <Image src={googleIcon ?? ""} alt="googleIcon" />
-                        </EmailShareButton>
-                      </div>
+          <div className="mt-[24px] sm:mt-0">
+            <Grid container>
+              <Grid item xs={3} sm={3}>
+                <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                  <div className="sm:flex items-center justify-between w-[100%]">
+                    <div className="flex items-center">
+                      <ProductionQuantityLimitsIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
+                      <p className="text-[10px] sm:text-[16px]">Product </p>
                     </div>
-                  </React.Fragment>
-                }
-              >
-                <Item
-                  onClick={() => setOpenToolTip(!OpenToolTip)}
-                  className="bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
-                >
-                  {/* <ShareIcon /> Share */}
-                  <div className="flex items-center justify-between w-[100%]">
-                    <p className="py-[10px]">
-                      <ShareIcon className="mr-[16px]" /> Share{" "}
-                    </p>
-                    {/* <p>{totalReview}</p> */}
+                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">{totalProducts}</p>
                   </div>
                 </Item>
-              </HtmlTooltip>
+              </Grid>
+              <Divider className="block" orientation="vertical" variant="middle" flexItem />
+              <Grid item xs={3} sm={3}>
+                <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                  <div className="sm:flex items-center justify-between w-[100%]">
+                    <div className="flex items-center">
+                      <PeopleAltIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
+                      <p className="text-[10px] sm:text-[16px]">Followers </p>
+                    </div>
+                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">{totalFollowers}</p>
+                  </div>
+                </Item>
+              </Grid>
+              <Divider className="block" orientation="vertical" variant="middle" flexItem />
+              <Grid item xs={3} sm={3} onClick={handleClick}>
+                <Item className="bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                  <div className="sm:flex items-center justify-between w-[100%]">
+                    <div className="flex items-center">
+                      <RateReviewIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
+                      <p className="text-[10px] sm:text-[16px]">Review </p>
+                    </div>
+                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">{totalReview}</p>
+                  </div>
+                </Item>
+              </Grid>
+              <Divider className="block" orientation="vertical" variant="middle" flexItem />
+              <Grid item xs={2.9} sm={2.9} onMouseLeave={() => setOpenToolTip(false)}>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <div className="flex">
+                        <div className="p-2 rounded-lg cursor-pointer">
+                          <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                            <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                          </FacebookShareButton>
+                        </div>
+                        <div className="p-2 rounded-lg cursor-pointer">
+                          <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                            <WhatsappIcon size={25} round={true} />
+                          </WhatsappShareButton>
+                        </div>
+                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                          <EmailShareButton
+                            subject="Shop Detail"
+                            windowWidth={900}
+                            windowHeight={900}
+                            url={pageShareURL}
+                          >
+                            <Image src={googleIcon ?? ""} alt="googleIcon" />
+                          </EmailShareButton>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  }
+                >
+                  <Item
+                    onClick={() => setOpenToolTip(!OpenToolTip)}
+                    className="bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
+                  >
+                    {/* <ShareIcon /> Share */}
+                    <div className="flex items-center justify-between w-[100%]">
+                      <div className="flex items-center">
+                        <ShareIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
+                        <p className="sm:py-[10px] py-[20px] text-[10px] sm:text-[16px]">Share </p>
+                      </div>
+                      {/* <p>{totalReview}</p> */}
+                    </div>
+                  </Item>
+                </HtmlTooltip>
+              </Grid>
             </Grid>
-          </Grid>
+          </div>
         </div>
       </div>
       <AllBranchModal
