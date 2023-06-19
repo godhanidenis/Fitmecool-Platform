@@ -190,10 +190,10 @@ const ProductDetail = ({ productDetails }) => {
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[96px] ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
-              <div className="text-[#29977E] font-semibold">Product</div>
+              <div className="text-colorGreen font-semibold">Product</div>
             </Link>
             <Link underline="hover" color="inherit" href="#">
-              <div className="text-[#29977E] font-semibold">
+              <div className="text-colorGreen font-semibold">
                 {productDetails.data.product.data.categoryInfo?.category_type}
               </div>
             </Link>
@@ -255,10 +255,7 @@ const ProductDetail = ({ productDetails }) => {
                 )}
                 readOnly
                 emptyIcon={
-                  <StarIcon
-                    fontSize="small"
-                    sx={{ fontSize: "6px" }}
-                  />
+                  <StarIcon fontSize="small" sx={{ fontSize: "6px" }} />
                 }
               />
               <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
@@ -328,11 +325,12 @@ const ProductDetail = ({ productDetails }) => {
                       }
                     );
                   } else {
-                    if (themeLayout === "mobileScreen") {
-                      Router.push("/auth/signin");
-                    } else {
-                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                    }
+                    Router.push("/auth/user-type");
+                    // if (themeLayout === "mobileScreen") {
+                    //   Router.push("/auth/signin");
+                    // } else {
+                    //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                    // }
                   }
                 }}
               >
@@ -423,12 +421,13 @@ const ProductDetail = ({ productDetails }) => {
                               }
                             );
                           } else {
-                            if (themeLayout === "mobileScreen") {
-                              Router.push("/auth/signin");
-                            } else {
-                              setOpen(true),
-                                setAuthTypeModal(AuthTypeModal.Signin);
-                            }
+                            Router.push("/auth/user-type");
+                            // if (themeLayout === "mobileScreen") {
+                            //   Router.push("/auth/signin");
+                            // } else {
+                            //   setOpen(true),
+                            //     setAuthTypeModal(AuthTypeModal.Signin);
+                            // }
                           }
                         }}
                       >
@@ -643,12 +642,13 @@ const ProductDetail = ({ productDetails }) => {
                               }
                             );
                           } else {
-                            if (themeLayout === "mobileScreen") {
-                              Router.push("/auth/signin");
-                            } else {
-                              setOpen(true),
-                                setAuthTypeModal(AuthTypeModal.Signin);
-                            }
+                            Router.push("/auth/user-type");
+                            // if (themeLayout === "mobileScreen") {
+                            //   Router.push("/auth/signin");
+                            // } else {
+                            //   setOpen(true),
+                            //     setAuthTypeModal(AuthTypeModal.Signin);
+                            // }
                           }
                         }}
                       >
@@ -669,7 +669,7 @@ const ProductDetail = ({ productDetails }) => {
               </Box>
               <div className="mt-5">
                 <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                  <span className="font-semibold text-[30px] text-[#29977E] leading-9">
+                  <span className="font-semibold text-[30px] text-colorGreen leading-9">
                     {productDetails.data.product.data.product_name}
                   </span>
                   <button
@@ -708,11 +708,12 @@ const ProductDetail = ({ productDetails }) => {
                           }
                         );
                       } else {
-                        if (themeLayout === "mobileScreen") {
-                          Router.push("/auth/signin");
-                        } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        }
+                        Router.push("/auth/user-type");
+                        // if (themeLayout === "mobileScreen") {
+                        //   Router.push("/auth/signin");
+                        // } else {
+                        //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        // }
                       }
                     }}
                   >
@@ -772,7 +773,7 @@ const ProductDetail = ({ productDetails }) => {
                     rel="noreferrer"
                   >
                     <button
-                      className="bg-[#29977E] text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
+                      className="bg-colorGreen text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                     >
@@ -839,14 +840,14 @@ const ProductDetail = ({ productDetails }) => {
         </div>
       </div>
 
-      <AuthModal
+      {/* <AuthModal
         open={open}
         handleClose={() => {
           setOpen(false);
         }}
         authTypeModal={authTypeModal}
         setAuthTypeModal={setAuthTypeModal}
-      />
+      /> */}
       <Modal
         open={openContactInfo}
         onClose={handleCloseContactInfo}

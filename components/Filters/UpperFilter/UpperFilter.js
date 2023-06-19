@@ -194,11 +194,11 @@ const UpperFilter = ({
             <div
               className={`${
                 !byShop && productsFiltersReducer.productLayout === "grid"
-                  ? "!text-[#29977E] bg-white"
+                  ? "!text-colorGreen bg-white"
                   : "text-[#878A99] bg-[#E8EBEA]"
               } ${
                 byShop && shopsFiltersReducer.shopLayout === "grid"
-                  ? "!text-[#29977E] bg-white"
+                  ? "!text-colorGreen bg-white"
                   : "text-[#878A99] bg-[#E8EBEA]"
               } cursor-pointer px-2 py-1 rounded-l`}
               style={{
@@ -232,11 +232,11 @@ const UpperFilter = ({
             <div
               className={`${
                 !byShop && productsFiltersReducer.productLayout === "list"
-                  ? "!text-[#29977E] bg-white"
+                  ? "!text-colorGreen bg-white"
                   : "text-[#878A99] bg-[#E8EBEA]"
               } ${
                 byShop && shopsFiltersReducer.shopLayout === "list"
-                  ? "!text-[#29977E] bg-white"
+                  ? "!text-colorGreen bg-white"
                   : "text-[#878A99] bg-[#E8EBEA]"
               } cursor-pointer px-2 py-1 rounded-r`}
               style={{

@@ -31,7 +31,7 @@ const Signup = () => {
   } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("user_type") === "vendor") {
+    if (localStorage.getItem("user_type_for_auth") === "vendor") {
       setAsVendor(true);
     } else {
       setAsVendor(false);
@@ -63,6 +63,7 @@ const Signup = () => {
         localStorage.setItem("token", res.data.signUp.token);
         localStorage.setItem("userId", res.data.signUp.user);
         toast.success(res.data.signUp.message, { theme: "colored" });
+        localStorage.removeItem("user_type_for_auth");
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
         Router.push(asVendor ? "/vendor/dashboard" : "/");
       },
@@ -160,26 +161,31 @@ const Signup = () => {
                   </span>
                 </div>
               )}
-              <input
-                type="text"
-                placeholder="Email Address"
-                {...register("user_email", {
-                  required: "Email is required",
+              {asVendor && (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Email Address"
+                    {...register("user_email", {
+                      required: "Email is required",
 
-                  pattern: {
-                    value:
-                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                    message: "Please enter a valid email",
-                  },
-                })}
-                className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
-              />
-              {errors.user_email && (
-                <div className="mt-1 ml-1">
-                  <span style={{ color: "red" }}>
-                    {errors.user_email?.message}
-                  </span>
-                </div>
+                      pattern: {
+                        value:
+                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        message: "Please enter a valid email",
+                      },
+                    })}
+                    className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
+                  />
+
+                  {errors.user_email && (
+                    <div className="mt-1 ml-1">
+                      <span style={{ color: "red" }}>
+                        {errors.user_email?.message}
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
               <div className="flex flex-col sm:flex-row  w-full gap-2">
                 <div className="relative w-full">

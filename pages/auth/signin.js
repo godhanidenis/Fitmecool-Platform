@@ -27,7 +27,7 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("user_type") === "vendor") {
+    if (localStorage.getItem("user_type_for_auth") === "vendor") {
       setAsVendor(true);
     } else {
       setAsVendor(false);
@@ -47,6 +47,7 @@ const Login = () => {
         localStorage.setItem("token", res.data.signIn.token);
         localStorage.setItem("userId", res.data.signIn.user);
         toast.success(res.data.signIn.message, { theme: "colored" });
+        localStorage.removeItem("user_type_for_auth");
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
         Router.push(asVendor ? "/vendor/dashboard" : "/");
       },

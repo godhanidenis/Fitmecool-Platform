@@ -96,12 +96,12 @@ const UserType = () => {
               Create Account
             </button>
             <p className="text-base max-[480px]:text-xs text-[#15182766] mt-2 flex justify-center">
-              Aleady have an account?
+              Already have an account?
               <span
                 className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
                 onClick={() => {
                   localStorage.setItem(
-                    "user_type",
+                    "user_type_for_auth",
                     selectedOption === "Business" ? "vendor" : "customer"
                   );
                   Router.push("/auth/signin");

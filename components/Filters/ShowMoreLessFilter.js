@@ -3,7 +3,7 @@ import React from "react";
 const ShowMoreLessFilter = ({ value, onClick }) => {
   return (
     <span
-      className="flex items-center justify-center cursor-pointer text-[#29977E] text-base"
+      className="flex items-center justify-center cursor-pointer text-colorGreen text-base"
       onClick={onClick}
     >
       {value ? "Show More" : "Show Less"}

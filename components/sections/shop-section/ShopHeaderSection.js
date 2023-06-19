@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Button, Divider, Grid, Tooltip, tooltipClasses, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Grid,
+  Tooltip,
+  tooltipClasses,
+  Typography,
+} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ShareIcon from "@mui/icons-material/Share";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
@@ -23,7 +30,12 @@ import instagramIcon from "../../../assets/instagram.png";
 import googleIcon from "../../../assets/googleIcon.svg";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box } from "@mui/system";
-import { EmailShareButton, FacebookShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
 import shareIcon from "../../../assets/shareIcon.svg";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -50,7 +62,14 @@ const style = {
   height: "auto",
 };
 
-const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFollowers, totalProducts, scrollRef }) => {
+const ShopHeaderSection = ({
+  shopDetails,
+  totalReview,
+  totalFollowers,
+  getAllFollowers,
+  totalProducts,
+  scrollRef,
+}) => {
   console.log("shopDetails", shopDetails);
 
   const pageShareURL = window.location.href;
@@ -65,7 +84,9 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   const router = useRouter();
 
   const dispatch = useDispatch();
-  const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const handleClick = () => {
@@ -73,7 +94,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
   };
 
   const HandleGoToSeeBranch = () => {
-    router.push(`/shop/${shopDetails?.id}/seeBranch`)
+    router.push(`/shop/${shopDetails?.id}/seeBranch`);
     // const serializedData = JSON.stringify(shopDetails?.branch_info);
     // const queryString = new URLSearchParams(shopDetails).toString();
 
@@ -81,8 +102,6 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
     //   pathname: `/shop/${shopDetails?.id}/seeBranch/`,
     //   query: { data: queryString },
     // });
-
-    
 
     // router.push(
     //   {
@@ -115,9 +134,13 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
       setShopFollowByUser(false);
     }
 
-    const followedShopsByUser = userProfile.shop_follower_list?.find((itm) => itm.shop_id === router.query.id);
+    const followedShopsByUser = userProfile.shop_follower_list?.find(
+      (itm) => itm.shop_id === router.query.id
+    );
 
-    followedShopsByUser ? setShopFollowByUser(true) : setShopFollowByUser(false);
+    followedShopsByUser
+      ? setShopFollowByUser(true)
+      : setShopFollowByUser(false);
   }, [isAuthenticate, router.query.id, shopFollowByUser, userProfile]);
 
   return (
@@ -144,7 +167,10 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     </div>
                     <p className="text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
                       <LocationOnIcon fontSize="small" className="!mr-1" />
-                      {shopDetails.branch_info.map((itm) => itm.branch_type === "main" && itm.branch_address)}
+                      {shopDetails.branch_info.map(
+                        (itm) =>
+                          itm.branch_type === "main" && itm.branch_address
+                      )}
                     </p>
                     <div className="oneLineAfterThreeDots mt-[15px] text-[#151827] text-[24px] font-normal ">
                       Contourz by Taruna Manchanda
@@ -152,7 +178,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     <div className="mt-[24px] mb-[80px]">
                       <Button
                         variant="contained"
-                        className={`rounded-[500px] bg-[#29977E] hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
+                        className={`rounded-[500px] bg-colorGreen hover:bg-colorGreen !flex !items-center !justify-center capitalize`}
                         onClick={() => HandleGoToSeeBranch()}
                       >
                         <Typography color="#FFFFFF">See Branches</Typography>
@@ -160,16 +186,28 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                     </div>
                     <div className="flex gap-7 mb-[10px] flex-wrap">
                       <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
-                        <p className="text-[#878A99] text-[48px] font-semibold">{totalProducts}</p>
-                        <p className="text-[#31333E] text-[24px] font-normal">Product</p>
+                        <p className="text-[#878A99] text-[48px] font-semibold">
+                          {totalProducts}
+                        </p>
+                        <p className="text-[#31333E] text-[24px] font-normal">
+                          Product
+                        </p>
                       </div>
                       <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
-                        <p className="text-[#878A99] text-[48px] font-semibold">{totalFollowers}</p>
-                        <p className="text-[#31333E] text-[24px] font-normal">Followers</p>
+                        <p className="text-[#878A99] text-[48px] font-semibold">
+                          {totalFollowers}
+                        </p>
+                        <p className="text-[#31333E] text-[24px] font-normal">
+                          Followers
+                        </p>
                       </div>
                       <div className="w-[175px] h-[176px] border border-[#151827] rounded-xl flex flex-col justify-center items-center">
-                        <p className="text-[#878A99] text-[48px] font-semibold">{totalReview}</p>
-                        <p className="text-[#31333E] text-[24px] font-normal">Review</p>
+                        <p className="text-[#878A99] text-[48px] font-semibold">
+                          {totalReview}
+                        </p>
+                        <p className="text-[#31333E] text-[24px] font-normal">
+                          Review
+                        </p>
                       </div>
                       <div
                         onMouseLeave={() => setOpenToolTip(false)}
@@ -186,12 +224,23 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                             <React.Fragment>
                               <div className="flex">
                                 <div className="p-2 rounded-lg cursor-pointer">
-                                  <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                                    <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                                  <FacebookShareButton
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <Image
+                                      src={facebookIcon ?? ""}
+                                      alt="facebookIcon"
+                                    />
                                   </FacebookShareButton>
                                 </div>
                                 <div className="p-2 rounded-lg cursor-pointer">
-                                  <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
+                                  <WhatsappShareButton
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
                                     {/* <Image src={instagramIcon ?? "" } alt="instagramIcon" /> */}
                                     <WhatsappIcon size={25} round={true} />
                                   </WhatsappShareButton>
@@ -203,7 +252,10 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                                     windowHeight={900}
                                     url={pageShareURL}
                                   >
-                                    <Image src={googleIcon ?? ""} alt="googleIcon" />
+                                    <Image
+                                      src={googleIcon ?? ""}
+                                      alt="googleIcon"
+                                    />
                                   </EmailShareButton>
                                 </div>
                               </div>
@@ -222,7 +274,7 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                   </div>
                   <div className="flex sm:mt-[6%] items-start">
                     <Button
-                      className="border border-[#29977E] w-[120px] rounded-[8px]"
+                      className="border border-colorGreen w-[120px] rounded-[8px]"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -258,15 +310,18 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
                             }
                           );
                         } else {
-                          if (themeLayout === "mobileScreen") {
-                            Router.push("/auth/signin");
-                          } else {
-                            setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                          }
+                          Router.push("/auth/user-type");
+                          // if (themeLayout === "mobileScreen") {
+                          //   Router.push("/auth/signin");
+                          // } else {
+                          //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                          // }
                         }
                       }}
                     >
-                      <Typography sx={{ textTransform: "none", color: "#29977E" }}>
+                      <Typography
+                        sx={{ textTransform: "none", color: "#29977E" }}
+                      >
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
@@ -353,21 +408,25 @@ const ShopHeaderSection = ({ shopDetails, totalReview, totalFollowers, getAllFol
         setAllBranchModalOpen={setAllBranchModalOpen}
         allBranchList={shopDetails?.branch_info}
       />
-      <AuthModal
+      {/* <AuthModal
         open={open}
         handleClose={() => {
           setOpen(false);
         }}
         authTypeModal={authTypeModal}
         setAuthTypeModal={setAuthTypeModal}
-      />
+      /> */}
     </>
   );
 };
 
 export default ShopHeaderSection;
 
-const AllBranchModal = ({ allBranchModalOpen, setAllBranchModalOpen, allBranchList }) => {
+const AllBranchModal = ({
+  allBranchModalOpen,
+  setAllBranchModalOpen,
+  allBranchList,
+}) => {
   console.log("allBranchList", allBranchList);
   return (
     <>
@@ -381,8 +440,13 @@ const AllBranchModal = ({ allBranchModalOpen, setAllBranchModalOpen, allBranchLi
         <Box sx={style} className="!w-[90%] lg:!w-1/2 !bg-[#F5F5F5]">
           <div className="p-5">
             <div className="flex items-center">
-              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={() => setAllBranchModalOpen(false)} />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">All Branches</p>
+              <ArrowBackIcon
+                className="!text-black !cursor-pointer"
+                onClick={() => setAllBranchModalOpen(false)}
+              />
+              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+                All Branches
+              </p>
               <CloseIcon
                 className="!text-black !ml-auto !cursor-pointer"
                 onClick={() => setAllBranchModalOpen(false)}
@@ -392,29 +456,44 @@ const AllBranchModal = ({ allBranchModalOpen, setAllBranchModalOpen, allBranchLi
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto my-5">
               <div className="container grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-10">
                 {allBranchList.map((branch, index) => (
-                  <div className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1" key={index}>
+                  <div
+                    className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
+                    key={index}
+                  >
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Address : </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Address :{" "}
+                      </b>
                       {branch.branch_address}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch City : </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch City :{" "}
+                      </b>
                       {branch.branch_city}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch PinCode : </b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch PinCode :{" "}
+                      </b>
                       {branch.branch_pinCode}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Name :</b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Manager Name :
+                      </b>
                       {branch.manager_name}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Email :</b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Manager Email :
+                      </b>
                       {branch.manager_email}
                     </p>
                     <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                      <b className="mr-2 text-sm sm:text-base lg:text-lg">Branch Manager Phone Number :</b>
+                      <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                        Branch Manager Phone Number :
+                      </b>
                       {branch.manager_contact}
                     </p>
                   </div>
