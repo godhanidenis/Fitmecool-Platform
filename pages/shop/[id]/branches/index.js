@@ -19,6 +19,10 @@ const Branches = ({ shopDetails, shopId }) => {
     setIsHydrated(true);
   }, []);
 
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <>
       <div className="sm:mt-[97px] mt-[43px] sm:ml-[85px] font-Nova">
@@ -38,7 +42,7 @@ const Branches = ({ shopDetails, shopId }) => {
               alt=""
             />
           </div>
-          <div className="ml-[24px]">
+          <div className="ml-[24px] flex flex-col">
             <span className="sm:text-[32px] text-[30px] font-semibold text-[#151827]">
               {shopDetails?.data?.shop?.shop_name}
             </span>
@@ -53,9 +57,9 @@ const Branches = ({ shopDetails, shopId }) => {
               <SeeBranchDropDown
                 cardTitle={`Branch ${index + 1}`}
                 bottomComponent={
-                  <div className="mb-[72px]">
+                  <div className="sm:mb-[72px] mb-[16px]">
                     <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 ml-[50px]">
-                      <div>
+                      <div className="flex flex-col">
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Address
                         </span>
@@ -63,7 +67,7 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.branch_address}
                         </span>
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch City
                         </span>
@@ -71,7 +75,7 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.branch_city}
                         </span>
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Pincode
                         </span>
@@ -79,7 +83,7 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.branch_pinCode}
                         </span>
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Manager Name
                         </span>
@@ -87,7 +91,7 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.manager_name}
                         </span>
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Manager Email
                         </span>
@@ -95,7 +99,7 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.manager_email}
                         </span>
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Manager Phone Number
                         </span>
