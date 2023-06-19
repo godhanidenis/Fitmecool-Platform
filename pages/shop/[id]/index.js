@@ -316,7 +316,7 @@ const ShopDetail = ({ shopDetails }) => {
                 <div className="flex justify-end gap-6 mt-5">
                   <button
                     disabled={submitButtonDisable}
-                    className={`bg-colorGreen rounded-[8px] text-white p-2 text-[16px] font-semibold px-[40px] py-[16px] flex items-center justify-center ${
+                    className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${
                       submitButtonDisable && "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={() => {
@@ -389,7 +389,7 @@ const ShopDetail = ({ shopDetails }) => {
           )}
         </div>
         <div className="mt-[80px] flex justify-center">
-          <button className="text-[#29977E] border border-[#29977E] text-[24px] font-normal rounded-[16px] py-[24px] px-[48px] bg-[#FAFCFC]">
+          <button className="text-[#29977E] border border-[#29977E] text-xl font-normal rounded-[16px] py-[16px] px-[38px] bg-[#FAFCFC]">
             View All
           </button>
         </div>
@@ -436,7 +436,7 @@ const ShopCommentsSection = ({ review }) => {
               <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">
                 <div className="flex items-start sm:gap-10 gap-[6px] w-full sm:justify-start">
                   <div className="flex flex-col">
-                    <div className="font-semibold text-xl text-[#000000]">
+                    <div className="font-semibold sm:text-xl text-lg text-[#000000]">
                       {review.user_name}
                     </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
@@ -449,8 +449,12 @@ const ShopCommentsSection = ({ review }) => {
                   </div>
                   <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
                     <div className="flex gap-3 sm:gap-4 items-center">
-                      <Image src={FbIcon} alt="" />
+                    <div className="w-[24px] h-[24px] sm:w-auto sm:h-auto">
+                      <Image src={FbIcon} alt="fb" />
+                    </div>
+                    <div className="w-[24px] h-[24px] sm:w-auto sm:h-auto">
                       <Image className="" src={TwiterIcon} alt="" />
+                    </div>
                       {/* <p className="text-colorPrimary font-semibold">Reply</p> */}
                     </div>
                   </div>

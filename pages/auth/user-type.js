@@ -22,7 +22,7 @@ const UserType = () => {
     <div className="bg-background w-full">
       <div className="bg-white flex w-full min-h-[100vh] overflow-auto p-10 gap-10">
         <div className="md:w-[50%] sm:w-full flex flex-col">
-          <div className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary">
+          <div onClick={() => Router.push("/")} className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary cursor-pointer">
             Rentbless
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
