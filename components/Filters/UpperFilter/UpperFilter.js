@@ -179,7 +179,7 @@ const UpperFilter = ({
             </Box>
           </Popover>
         </div>
-        <div className="flex gap-5">
+        <div className="flex gap-5 pr-6">
           {showDrawerFilter && (
             <DrawerFilters
               byShop={byShop}

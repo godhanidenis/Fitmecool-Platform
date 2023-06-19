@@ -74,7 +74,7 @@ const Footer = () => {
                 ))}
             </ul>
           </div>
-          <ul className="flex flex-wrap gap-36 ml-[16px] sm:ml-[80px]">
+          <ul className="flex flex-wrap sm:gap-36 gap-28 ml-[16px] sm:ml-[80px]">
             <li>
               <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">
                 Products
@@ -105,7 +105,7 @@ const Footer = () => {
           <h4 className="w-[100vw] text-center sm:w-auto font-semibold text-[28px] sm:text-[32px] mb-5 text-[#FAFCFC] bg-colorGreen sm:py-[33px] py-[23px] sm:px-[75px] px-[57px]">
             Get in Touch with Us
           </h4>
-          <div className="flex flex-col items-start ml-[80px]">
+          <div className="flex flex-col items-start sm:ml-[80px] ml-[57px]">
             <div className="flex mb-[30px]">
               <Image width={32} src={LocationIcon} alt="" />
               <div className="ml-[20px]">

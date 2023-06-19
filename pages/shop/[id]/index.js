@@ -3,11 +3,11 @@ import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
 import {
   Avatar,
   Button,
-  Grid,
   LinearProgress,
   Pagination,
   Rating,
   TextareaAutosize,
+  linearProgressClasses,
 } from "@mui/material";
 import Filter from "../../../components/Filters/index";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
@@ -26,14 +26,14 @@ import { shopReview } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import { loadCategoriesStart } from "../../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
-import {
-  loadMoreProductsStart,
-  loadProductsStart,
-} from "../../../redux/ducks/product";
+import { loadProductsStart } from "../../../redux/ducks/product";
 import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import Router, { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
+import FbIcon from "../../../assets/fbIconShop.svg";
+import TwiterIcon from "../../../assets/twiterIconShop.svg";
+import Image from "next/image";
 
 const ShopDetail = ({ shopDetails }) => {
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
@@ -174,17 +174,14 @@ const ShopDetail = ({ shopDetails }) => {
             scrollRef={myDivRef}
           />
         </div>
-        <div className="container py-2 bg-white mb-[1px] mt-3">
-          <div className="grid grid-cols-8 container">
-            <div className="lg:col-span-2 hidden lg:block"></div>
-            <div className="col-span-8 lg:col-span-6">
-              <UpperFilter
-                setProductPageSkip={setProductPageSkip}
-                forShopPage={true}
-                showDrawerFilter={true}
-                showOnlyShopDetailPage={true}
-              />
-            </div>
+        <div className="py-2 bg-white mb-[1px] mt-3">
+          <div className="container">
+            <UpperFilter
+              setProductPageSkip={setProductPageSkip}
+              forShopPage={true}
+              showDrawerFilter={true}
+              showOnlyShopDetailPage={true}
+            />
           </div>
         </div>
         <div className="grid grid-cols-8 container">
@@ -194,9 +191,15 @@ const ShopDetail = ({ shopDetails }) => {
               setProductPageSkip={setProductPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 p-6 bg-white">
+          <div className="col-span-8 lg:col-span-6 sm:p-6 bg-white">
             <div className="w-[100%]">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10">
+              <div
+                className={`${
+                  productsFiltersReducer.productLayout === "list"
+                    ? "flex flex-col gap-5"
+                    : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
+                }`}
+              >
                 {productsData &&
                   productsData?.map((product) => (
                     <ProductCard product={product} key={product.id} />
@@ -222,81 +225,74 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           </div>
         </div>
-        <div
-          ref={myDivRef}
-          className="bg-[#FFFFFF] pb-0 mt-8 container shadow-[0_0_4px_rgba(0,0,0,0.25)]"
-        >
-          <Grid
-            container
-            sx={{ pb: "12px", borderBottom: "1px solid #d7d7d7" }}
-          >
-            <Grid item xs={12} className="pl-4 pt-3">
-              Reviews for Contourz by Taruna Manchanda (44)
-            </Grid>
-          </Grid>
-          <div className="border-b">
+        <div ref={myDivRef} className="bg-[#FFFFFF] pb-0 mt-8 container ">
+          <div className="">
             <div className="md:flex gap-7 px-4">
-              <div className="md:w-[40%] py-3 rounded-md">
-                <div className="flex justify-between">
-                  <p className="text-base">Rating + Distribution</p>
-                  <div className="flex items-center flex-col">
+              <div className="md:w-[50%] pb-3 rounded-md">
+                <p className="text-[#181725] text-[26px] font-semibold">
+                  Reviews for Contourz by Taruna Manchanda (44)
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
+                  <div className="flex w-[30%] items-center flex-col">
                     <div className="rounded-lg p-1 flex items-center gap-1">
-                      <StarIcon
-                        fontSize="medium"
-                        className="!text-yellow-400"
-                      />
-                      <p className="text-colorBlack font-semibold">
+                      <p className="text-[#181725] text-[58px] font-normal">
                         {avgShopRating}
+                        <span className="text-[30px]">/5</span>
                       </p>
                     </div>
-                    <p className="text-sm">({shopReviews.length} Review)</p>
+                    <Rating size="large" value={avgShopRating} readOnly />
+                  </div>
+
+                  <div className="sm:w-[70%] w-[112%] sm:border-l">
+                    {[5, 4, 3, 2, 1].map((star) => (
+                      <div
+                        className="grid grid-cols-12 items-center p-1 gap-2.5"
+                        key={star}
+                      >
+                        <div className="flex items-center gap-1 col-span-4 sm:pl-2">
+                          <Rating
+                            className="text-[#151827]"
+                            size="medium"
+                            value={star}
+                            readOnly
+                          />
+                        </div>
+
+                        <div className="ml-[5px] sm:ml-0 self-center col-span-7">
+                          <CustomBorderLinearProgress
+                            variant="determinate"
+                            value={
+                              (shopReviews.filter((itm) => itm.stars === star)
+                                .length *
+                                100) /
+                              shopReviews.length
+                            }
+                          />
+                        </div>
+                        <p className="text-sm font-normal text-center col-span-1">
+                          {
+                            shopReviews.filter((itm) => itm.stars === star)
+                              .length
+                          }
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {[5, 4, 3, 2, 1].map((star) => (
-                  <div
-                    className="grid grid-cols-6 items-center mt-3 p-1 gap-2.5"
-                    key={star}
-                  >
-                    <div className="flex items-center gap-1 col-span-1">
-                      <p className="font-semibold">{star}</p>
-                      <StarIcon
-                        fontSize="medium"
-                        className="!text-yellow-400"
-                      />
-                    </div>
-
-                    <div className="self-center col-span-4">
-                      <CustomBorderLinearProgress
-                        variant="determinate"
-                        value={
-                          (shopReviews.filter((itm) => itm.stars === star)
-                            .length *
-                            100) /
-                          shopReviews.length
-                        }
-                      />
-                    </div>
-                    <p className="text-sm font-normal text-center col-span-1">
-                      {shopReviews.filter((itm) => itm.stars === star).length}{" "}
-                      Review
-                    </p>
-                  </div>
-                ))}
-
-                <p className="mt-5 italic font-normal text-base">
+                <p className="sm:mt-[50px] mt-[30px] text-[#181725] text-[20px] font-normal">
                   Last Review Updated on 20 Apr 2022
                 </p>
               </div>
-              <div className="md:w-[60%] p-5 pt-8 border-t sm:border-t-0 sm:border-l">
-                <p className="text-base font-semibold text-colorStone">
-                  Review {shopDetails.data.shop.shop_name} Shop
+              <div className="md:w-[50%] sm:p-5 pt-8 border-t sm:border-t-0 sm:border-l">
+                <p className="text-[18px] font-normal text-[#181725]">
+                  Add A Review {shopDetails.data.shop.shop_name} Shop
                 </p>
-                <p className="text-base py-4 font-semibold text-colorStone mt-1">
+                <p className="text-[14px] py-4 font-normal text-[#31333E] mt-1">
                   Rate vendor
                 </p>
                 <div className="flex justify-between mt-1">
-                  <p className="text-base font-semibold text-colorStone">
+                  <p className="text-[14px] font-normal text-[#31333E]">
                     Rate our of
                   </p>
                   <Rating
@@ -306,6 +302,9 @@ const ShopDetail = ({ shopDetails }) => {
                   />
                 </div>
                 <div className="mt-5">
+                  <p className="text-[#31333E] text-[14px] font-normal pb-[8px]">
+                    Your Review *
+                  </p>
                   <TextareaAutosize
                     minRows={5}
                     placeholder="Tell us about experience*"
@@ -389,6 +388,11 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           )}
         </div>
+        <div className="mt-[80px] flex justify-center">
+          <button className="text-[#29977E] border border-[#29977E] text-[24px] font-normal rounded-[16px] py-[24px] px-[48px] bg-[#FAFCFC]">
+            View All
+          </button>
+        </div>
       </div>
     </>
   );
@@ -410,11 +414,18 @@ export async function getServerSideProps(context) {
 
 const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 12,
+  borderRadius: "12px",
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: "rgba(24, 23, 37, 0.1)",
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    backgroundColor: "rgba(21, 24, 39, 0.4)",
+  },
 }));
 
 const ShopCommentsSection = ({ review }) => {
   return (
-    <div className="flex justify-center border-b mt-10">
+    <div className="flex justify-center border-b mt-10 relative">
       <div className="grid grid-cols-12 px-4 w-full">
         <div className="col-span-12">
           <div className="flex items-center">
@@ -423,37 +434,38 @@ const ShopCommentsSection = ({ review }) => {
             </div>
             <div className="flex flex-col w-full">
               <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">
-                <div className="flex items-center gap-10 justify-between w-full sm:justify-start">
+                <div className="flex items-start sm:gap-10 gap-[6px] w-full sm:justify-start">
                   <div className="flex flex-col">
                     <div className="font-semibold text-xl text-[#000000]">
                       {review.user_name}
                     </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
                   </div>
-                  <div className="p-2 flex items-center gap-1 bg-colorWhite">
-                    <StarIcon fontSize="medium" className="!text-yellow-400" />
-                    <p className="text-colorBlack font-semibold">
+                  <div className="flex items-center gap-1 bg-[#29977E]">
+                    <StarIcon fontSize="small" className="!text-white pl-1" />
+                    <p className="text-white pr-[6px] font-semibold">
                       {review.stars}
                     </p>
                   </div>
-                </div>
-                <div className="sm:flex mt-4 mr-5 flex-nowrap items-center hidden">
-                  <div className="flex items-center">
-                    <p className="text-colorPrimary font-semibold">Reply</p>
+                  <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
+                    <div className="flex gap-3 sm:gap-4 items-center">
+                      <Image src={FbIcon} alt="" />
+                      <Image className="" src={TwiterIcon} alt="" />
+                      {/* <p className="text-colorPrimary font-semibold">Reply</p> */}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-span-12 items-center text-sm flex p-3 font-normal gap-2.5">
+        <div className="col-span-12 items-center text-sm flex py-3 font-normal gap-2.5">
           {review.message}
-
-          <div className="sm:hidden flex items-center ml-auto">
+          {/* <div className="sm:hidden flex items-center ml-auto">
             <div className="flex items-center">
               <p className="text-colorPrimary font-semibold">Reply</p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
