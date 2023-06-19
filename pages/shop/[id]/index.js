@@ -389,7 +389,7 @@ const ShopDetail = ({ shopDetails }) => {
           )}
         </div>
         <div className="mt-[80px] flex justify-center">
-          <button className="text-[#29977E] border border-[#29977E] text-xl font-normal rounded-[16px] py-[16px] px-[38px] bg-[#FAFCFC]">
+          <button className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[16px] px-[38px] bg-[#FAFCFC]">
             View All
           </button>
         </div>
@@ -441,7 +441,7 @@ const ShopCommentsSection = ({ review }) => {
                     </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
                   </div>
-                  <div className="flex items-center gap-1 bg-[#29977E]">
+                  <div className="flex items-center gap-1 bg-colorGreen">
                     <StarIcon fontSize="small" className="!text-white pl-1" />
                     <p className="text-white pr-[6px] font-semibold">
                       {review.stars}

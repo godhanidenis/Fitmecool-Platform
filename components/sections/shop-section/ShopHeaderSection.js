@@ -198,7 +198,7 @@ const ShopHeaderSection = ({
                     <div className="ml-[24px]">
                       <Button
                         variant="contained"
-                        className={`!bg-[#29977E] !hover:bg-[#29977E] !flex !items-center !justify-center capitalize`}
+                        className={`!bg-colorGreen !hover:bg-colorGreen !flex !items-center !justify-center capitalize`}
                         onClick={() => HandleGoToSeeBranch()}
                       >
                         <Typography color="#FFFFFF">See Branches</Typography>
