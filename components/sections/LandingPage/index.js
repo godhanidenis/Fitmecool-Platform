@@ -134,14 +134,14 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 lg:col-span-6 py-6 px-0 sm:p-6 bg-[#FAFCFC]">
+        <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC]">
           <div className="container !w-[100%]">
             {!byShop ? (
               <>
                 <div
                   className={`${
                     productsFiltersReducer.productLayout === "list"
-                      ? " "
+                      ? "flex flex-col gap-5"
                       : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
                   }`}
                 >

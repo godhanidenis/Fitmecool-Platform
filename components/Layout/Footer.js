@@ -91,7 +91,7 @@ const Footer = () => {
           </ul>
         </div>
         <div className="sm:border-l border-[gray]">
-          <h4 className="w-[100vw] text-center sm:w-auto font-semibold text-[28px] sm:text-[32px] mb-5 text-[#FAFCFC] bg-[#29977E] sm:py-[33px] py-[23px] sm:px-[75px] px-[57px]">
+          <h4 className="w-[100vw] text-center sm:w-auto font-semibold text-[28px] sm:text-[32px] mb-5 text-[#FAFCFC] bg-colorGreen sm:py-[33px] py-[23px] sm:px-[75px] px-[57px]">
             Get in Touch with Us
           </h4>
           <div className="flex flex-col items-start ml-[80px]">

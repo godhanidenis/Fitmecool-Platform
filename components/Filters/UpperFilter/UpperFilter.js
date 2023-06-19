@@ -41,6 +41,10 @@ const UpperFilter = ({
     (state) => state.productsFiltersReducer
   );
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
+
+  const { productsCount } = useSelector((state) => state.products);
+  const { shopsCount } = useSelector((state) => state.shops);
+
   const handleChangeSortType = (event, newValue) => {
     setProductPageSkip(0);
     setSortByAnchor(null);
@@ -82,7 +86,7 @@ const UpperFilter = ({
           <span className="text-black">
             {byShop ? "Shops" : "Products"}&nbsp;
           </span>
-          (30 items)
+          ({byShop ? shopsCount : productsCount} items)
         </span>
       </div>
 
@@ -95,7 +99,6 @@ const UpperFilter = ({
             }}
             disableElevation
             disableRipple
-            sx={{ backgroundColor: "rgba(149, 83, 155, 0.04) !important" }}
             endIcon={
               !openSortByAnchor ? (
                 <KeyboardArrowDownIcon className="text-black" />
@@ -187,17 +190,24 @@ const UpperFilter = ({
             />
           )}
 
-          <div className="flex gap-3">
+          <div className="flex">
             <div
               className={`${
                 !byShop && productsFiltersReducer.productLayout === "grid"
-                  ? "!text-[#29977E] !bg-[#E8EBEA]"
-                  : "text-[#878A99] bg-white"
+                  ? "!text-colorGreen bg-white"
+                  : "text-[#878A99] bg-[#E8EBEA]"
               } ${
                 byShop && shopsFiltersReducer.shopLayout === "grid"
-                  ? "!text-[#29977E] !bg-[#E8EBEA]"
-                  : "text-[#878A99] bg-white"
-              } cursor-pointer px-2 py-1`}
+                  ? "!text-colorGreen bg-white"
+                  : "text-[#878A99] bg-[#E8EBEA]"
+              } cursor-pointer px-2 py-1 rounded-l`}
+              style={{
+                boxShadow:
+                  ((!byShop &&
+                    productsFiltersReducer.productLayout === "grid") ||
+                    (byShop && shopsFiltersReducer.shopLayout === "grid")) &&
+                  "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
+              }}
             >
               <GridViewOutlinedIcon
                 fontSize="medium"
@@ -222,13 +232,20 @@ const UpperFilter = ({
             <div
               className={`${
                 !byShop && productsFiltersReducer.productLayout === "list"
-                  ? "!text-[#29977E] !bg-[#E8EBEA]"
-                  : "text-[#878A99] bg-white"
+                  ? "!text-colorGreen bg-white"
+                  : "text-[#878A99] bg-[#E8EBEA]"
               } ${
                 byShop && shopsFiltersReducer.shopLayout === "list"
-                  ? "!text-[#29977E] !bg-[#E8EBEA]"
-                  : "text-[#878A99] bg-white"
-              } cursor-pointer px-2 py-1`}
+                  ? "!text-colorGreen bg-white"
+                  : "text-[#878A99] bg-[#E8EBEA]"
+              } cursor-pointer px-2 py-1 rounded-r`}
+              style={{
+                boxShadow:
+                  ((!byShop &&
+                    productsFiltersReducer.productLayout === "list") ||
+                    (byShop && shopsFiltersReducer.shopLayout === "list")) &&
+                  "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
+              }}
             >
               <SegmentOutlinedIcon
                 fontSize="medium"

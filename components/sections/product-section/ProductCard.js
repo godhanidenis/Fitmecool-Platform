@@ -239,7 +239,7 @@ const ProductCard = ({
         <div
           className={`${
             !onlyCarousal && productsFiltersReducer.productLayout === "list"
-              ? "w-[66%] md:border-r-2"
+              ? "w-full"
               : ""
           }`}
         >
@@ -319,11 +319,12 @@ const ProductCard = ({
                           }
                         );
                       } else {
-                        if (themeLayout === "mobileScreen") {
-                          Router.push("/auth/signin");
-                        } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        }
+                        Router.push("/auth/user-type");
+                        // if (themeLayout === "mobileScreen") {
+                        //   Router.push("/auth/signin");
+                        // } else {
+                        //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        // }
                       }
                     }}
                   >
@@ -515,7 +516,7 @@ const ProductCard = ({
             )}
           </div>
         )}
-
+        {/* 
         <AuthModal
           open={open}
           handleClose={() => {
@@ -523,7 +524,7 @@ const ProductCard = ({
           }}
           authTypeModal={authTypeModal}
           setAuthTypeModal={setAuthTypeModal}
-        />
+        /> */}
 
         <CustomAuthModal
           open={productDeleteModalOpen}
@@ -571,11 +572,12 @@ const ProductCard = ({
                       );
                       setProductDeleteModalOpen(false);
                     } else {
-                      if (themeLayout === "mobileScreen") {
-                        Router.push("/auth/signin");
-                      } else {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      }
+                      Router.push("/auth/user-type");
+                      // if (themeLayout === "mobileScreen") {
+                      //   Router.push("/auth/signin");
+                      // } else {
+                      //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                      // }
                     }
                   }}
                 >

@@ -175,9 +175,7 @@ export default function SignUp({ changeAuthModalType, handleClose }) {
                           label="Last Name"
                           variant="standard"
                           className="w-full"
-                          {...register("last_name", {
-                            required: "LastName is required",
-                          })}
+                           
                         />
                       </Box>
                       <div className="mt-2 ml-9">

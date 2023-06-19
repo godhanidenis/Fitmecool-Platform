@@ -88,7 +88,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`p-1 font-semibold text-[#151827] hover:text-[#29977E] hover:font-semibold cursor-pointer ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] hover:text-colorGreen hover:font-semibold cursor-pointer ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {
@@ -128,7 +128,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer  ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-colorGreen hover:font-semibold cursor-pointer  ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {
@@ -175,7 +175,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer  ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-colorGreen hover:font-semibold cursor-pointer  ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {
@@ -215,7 +215,7 @@ const SubHeader = () => {
                             return (
                               <p
                                 key={itm.id}
-                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-[#29977E] hover:font-semibold cursor-pointer ${setActiveLink(
+                                className={`p-1 font-semibold text-[#151827] opacity-50 hover:opacity-100 hover:text-colorGreen hover:font-semibold cursor-pointer ${setActiveLink(
                                   itm.id
                                 )}`}
                                 onClick={() => {

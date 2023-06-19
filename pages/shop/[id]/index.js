@@ -306,7 +306,7 @@ const ShopDetail = ({ shopDetails }) => {
                 <div className="flex justify-end gap-6 mt-5">
                   <button
                     disabled={submitButtonDisable}
-                    className={`bg-[#29977E] rounded-[8px] text-white p-2 text-[16px] font-semibold px-[40px] py-[16px] flex items-center justify-center ${
+                    className={`bg-colorGreen rounded-[8px] text-white p-2 text-[16px] font-semibold px-[40px] py-[16px] flex items-center justify-center ${
                       submitButtonDisable && "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={() => {
@@ -341,11 +341,12 @@ const ShopDetail = ({ shopDetails }) => {
                           });
                         }
                       } else {
-                        if (themeLayout === "mobileScreen") {
-                          Router.push("/auth/signin");
-                        } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        }
+                        Router.push("/auth/user-type");
+                        // if (themeLayout === "mobileScreen") {
+                        //   Router.push("/auth/signin");
+                        // } else {
+                        //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
+                        // }
                       }
                     }}
                   >
@@ -381,14 +382,15 @@ const ShopDetail = ({ shopDetails }) => {
           </button>
         </div>
 
+        {/* 
         <AuthModal
           open={open}
           handleClose={() => {
             setOpen(false);
           }}
           authTypeModal={authTypeModal}
-          setAuthTypeModal={setAuthTypeModal}
-        />
+          setAuthTypeModal={setAuthTypeModal} 
+        />*/}
       </div>
     </>
   );

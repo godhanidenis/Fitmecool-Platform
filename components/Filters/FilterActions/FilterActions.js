@@ -25,10 +25,10 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
                 className="hidden peer"
                 onChange={switchHandler}
               />
-              <span className="py-2 bg-[#29977E] peer-checked:text-black peer-checked:bg-[#F0F3F4] text-white w-full text-center">
+              <span className="py-2 bg-colorGreen peer-checked:text-black peer-checked:bg-[#F0F3F4] text-white w-full text-center">
                 Product
               </span>
-              <span className="py-2 dark:bg-white-300 bg-[#F0F3F4] peer-checked:bg-[#29977E] text-black peer-checked:text-white w-full text-center">
+              <span className="py-2 dark:bg-white-300 bg-[#F0F3F4] peer-checked:bg-colorGreen text-black peer-checked:text-white w-full text-center">
                 Shop
               </span>
             </label>
