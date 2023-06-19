@@ -55,7 +55,11 @@ const SubHeader = () => {
       } transition-all duration-500 hidden lg:flex`}
     >
       <div className="flex items-center">
-        <div className="" onMouseLeave={handleMenuClose.bind(this)}  onClick={() => setOpen(!open)}>
+        <div
+          className=""
+          onMouseLeave={handleMenuClose.bind(this)}
+          onClick={() => setOpen(!open)}
+        >
           <CustomTab value={value}>
             {["MEN’S", "WOMEN’S"].map((item, index) => (
               <Tab
@@ -76,11 +80,11 @@ const SubHeader = () => {
           >
             <Paper>
               <TabPanel value={value} index={0} className="p-6">
-                <div className="flex justify-between gap-5" onMouseLeave={handleMenuClose.bind(this)}>
+                <div
+                  className="flex justify-between gap-5"
+                  onMouseLeave={handleMenuClose.bind(this)}
+                >
                   <div>
-                    {/* <p className="font-semibold text-colorPrimary mb-4">
-                      By Categories
-                    </p> */}
                     <div className="grid grid-cols-9 gap-10">
                       <div className="col-span-4 p-1">
                         {menCategory.map((itm, index) => {
@@ -163,11 +167,11 @@ const SubHeader = () => {
               </TabPanel>
 
               <TabPanel value={value} index={1} className="p-6">
-                <div className="flex justify-between gap-5" onMouseLeave={handleMenuClose.bind(this)}>
+                <div
+                  className="flex justify-between gap-5"
+                  onMouseLeave={handleMenuClose.bind(this)}
+                >
                   <div>
-                    {/* <p className="font-semibold text-colorPrimary mb-4">
-                      By Categories
-                    </p> */}
                     <div className="grid grid-cols-9 gap-10">
                       <div className="col-span-4 p-1">
                         {womenCategory.map((itm, index) => {

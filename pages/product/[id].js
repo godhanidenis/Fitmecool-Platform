@@ -20,8 +20,6 @@ import { getProductDetails } from "../../graphql/queries/productQueries";
 import ProfileIcon from "../../assets/profile.png";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ProductCard from "../../components/sections/product-section/ProductCard";
-import AuthModal from "../../components/core/AuthModal";
-import { AuthTypeModal } from "../../components/core/Enum";
 import { useDispatch, useSelector } from "react-redux";
 import { shopFollow } from "../../graphql/mutations/shops";
 import { toast } from "react-toastify";
@@ -66,9 +64,6 @@ const ContactStyle = {
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -326,11 +321,6 @@ const ProductDetail = ({ productDetails }) => {
                     );
                   } else {
                     Router.push("/auth/user-type");
-                    // if (themeLayout === "mobileScreen") {
-                    //   Router.push("/auth/signin");
-                    // } else {
-                    //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                    // }
                   }
                 }}
               >
@@ -422,12 +412,6 @@ const ProductDetail = ({ productDetails }) => {
                             );
                           } else {
                             Router.push("/auth/user-type");
-                            // if (themeLayout === "mobileScreen") {
-                            //   Router.push("/auth/signin");
-                            // } else {
-                            //   setOpen(true),
-                            //     setAuthTypeModal(AuthTypeModal.Signin);
-                            // }
                           }
                         }}
                       >
@@ -643,12 +627,6 @@ const ProductDetail = ({ productDetails }) => {
                             );
                           } else {
                             Router.push("/auth/user-type");
-                            // if (themeLayout === "mobileScreen") {
-                            //   Router.push("/auth/signin");
-                            // } else {
-                            //   setOpen(true),
-                            //     setAuthTypeModal(AuthTypeModal.Signin);
-                            // }
                           }
                         }}
                       >
@@ -709,11 +687,6 @@ const ProductDetail = ({ productDetails }) => {
                         );
                       } else {
                         Router.push("/auth/user-type");
-                        // if (themeLayout === "mobileScreen") {
-                        //   Router.push("/auth/signin");
-                        // } else {
-                        //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        // }
                       }
                     }}
                   >
@@ -840,14 +813,6 @@ const ProductDetail = ({ productDetails }) => {
         </div>
       </div>
 
-      {/* <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      /> */}
       <Modal
         open={openContactInfo}
         onClose={handleCloseContactInfo}

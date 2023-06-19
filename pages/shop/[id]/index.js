@@ -22,8 +22,6 @@ import ProductCard from "../../../components/sections/product-section/ProductCar
 import StarIcon from "@mui/icons-material/Star";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthTypeModal } from "../../../components/core/Enum";
-import AuthModal from "../../../components/core/AuthModal";
 import { shopReview } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import { loadCategoriesStart } from "../../../redux/ducks/categories";
@@ -32,11 +30,9 @@ import {
   loadMoreProductsStart,
   loadProductsStart,
 } from "../../../redux/ducks/product";
-import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import Router, { useRouter } from "next/router";
-import SubHeader from "../../../components/Layout/SubHeader";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 
 const ShopDetail = ({ shopDetails }) => {
@@ -45,9 +41,6 @@ const ShopDetail = ({ shopDetails }) => {
 
   const [stars, setStars] = useState(0);
   const [message, setMessage] = useState("");
-
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
 
   const [showAllReview, setShowAllReview] = useState(false);
   const [productPageSkip, setProductPageSkip] = useState(0);
@@ -82,29 +75,6 @@ const ShopDetail = ({ shopDetails }) => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  const getMoreProductsList = () => {
-    dispatch(
-      loadMoreProductsStart({
-        pageData: {
-          skip: productPageSkip,
-          limit: 6,
-        },
-        filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
-        },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
-      })
-    );
-  };
 
   const getAllProducts = () => {
     dispatch(
@@ -179,13 +149,6 @@ const ShopDetail = ({ shopDetails }) => {
     productPageSkip,
   ]);
 
-  // useEffect(() => {
-  //   if (productPageSkip > 0) {
-  //     getMoreProductsList();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, productPageSkip]);
-
   useEffect(() => {
     getAllReviews();
     getAllFollowers();
@@ -199,7 +162,6 @@ const ShopDetail = ({ shopDetails }) => {
   }
   return (
     <>
-      {/* <SubHeader /> */}
       <div className="pb-20 md:pb-28 font-Nova">
         <DirectoryHero bgImg={shopDetails?.data?.shop?.shop_cover_image} />
         <div className="">
@@ -234,25 +196,6 @@ const ShopDetail = ({ shopDetails }) => {
           </div>
           <div className="col-span-8 lg:col-span-6 p-6 bg-white">
             <div className="w-[100%]">
-              {/* <UpperFilter
-                setProductPageSkip={setProductPageSkip}
-                forShopPage={true}
-              /> */}
-
-              {/* <p className="font-bold text-2xl text-colorBlack">
-                Special Products
-              </p> */}
-              {/* <InfiniteScroll
-                className="!overflow-hidden p-0.5"
-                dataLength={productsData.length}
-                next={() => setProductPageSkip(productPageSkip + 6)}
-                hasMore={productsData.length < productsCount}
-                loader={
-                  <div className="text-center">
-                    <CircularProgress />
-                  </div>
-                }
-              > */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10">
                 {productsData &&
                   productsData?.map((product) => (
@@ -276,8 +219,6 @@ const ShopDetail = ({ shopDetails }) => {
                   />
                 </div>
               )}
-
-              {/* </InfiniteScroll> */}
             </div>
           </div>
         </div>
@@ -412,11 +353,6 @@ const ShopDetail = ({ shopDetails }) => {
                         }
                       } else {
                         Router.push("/auth/user-type");
-                        // if (themeLayout === "mobileScreen") {
-                        //   Router.push("/auth/signin");
-                        // } else {
-                        //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        // }
                       }
                     }}
                   >
@@ -453,15 +389,6 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           )}
         </div>
-        {/* 
-        <AuthModal
-          open={open}
-          handleClose={() => {
-            setOpen(false);
-          }}
-          authTypeModal={authTypeModal}
-          setAuthTypeModal={setAuthTypeModal} 
-        />*/}
       </div>
     </>
   );

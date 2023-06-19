@@ -16,7 +16,8 @@ const CustomReactImageMagnify = (props) => {
       let xpercent = Math.round(100 / (bounds.width / xposition));
       let ypercent = Math.round(100 / (bounds.height / yposition));
 
-      document.querySelector(".zoom-box").style.backgroundPosition = xpercent + "% " + ypercent + "%";
+      document.querySelector(".zoom-box").style.backgroundPosition =
+        xpercent + "% " + ypercent + "%";
     });
   }, []);
 

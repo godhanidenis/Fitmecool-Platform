@@ -20,9 +20,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
-import AuthModal from "../core/AuthModal";
 import ProfileIcon from "../../assets/profile.png";
-import { AuthTypeModal } from "../core/Enum";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
@@ -36,8 +34,6 @@ import {
   Popper,
   Select,
 } from "@mui/material";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
   loadUserProfileStart,
   userLogout,
@@ -103,16 +99,13 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const Header = ({ modalType }) => {
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
+const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const isScreenWide = useResizeScreenLayout();
 
@@ -139,12 +132,6 @@ const Header = ({ modalType }) => {
   const handleChangeLocation = (event) => {
     setSelectedLocation(event.target.value);
   };
-
-  useEffect(() => {
-    {
-      modalType === "signin" && setOpen(true), setAuthTypeModal("signin");
-    }
-  }, [modalType]);
 
   useEffect(() => {
     setSearchBarValue(productsFiltersReducer.searchBarData);
@@ -186,15 +173,13 @@ const Header = ({ modalType }) => {
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
-            {router.pathname !== "/auth/login" &&
-              router.pathname !== "/auth/signup" && (
-                <MenuIcon
-                  sx={{ color: "white" }}
-                  fontSize="large"
-                  className="lg:!hidden"
-                  onClick={handleMobileSidebarClick}
-                />
-              )}
+            <MenuIcon
+              sx={{ color: "white" }}
+              fontSize="large"
+              className="lg:!hidden"
+              onClick={handleMobileSidebarClick}
+            />
+
             <Link
               href={`${
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
@@ -271,9 +256,6 @@ const Header = ({ modalType }) => {
                   <div className="flex text-colorWhite cursor-pointer">
                     <p
                       onClick={() => Router.push("/auth/user-type")}
-                      // onClick={() => {
-                      //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      // }}
                       className="underline hover:scale-105 hidden lg:block"
                     >
                       SingIn / SignUp
@@ -283,7 +265,7 @@ const Header = ({ modalType }) => {
                       sx={{ color: "white" }}
                       fontSize="large"
                       className="lg:!hidden"
-                      onClick={() => Router.push("/auth/signin")}
+                      onClick={() => Router.push("/auth/user-type")}
                     />
                   </div>
                 )}
@@ -294,14 +276,6 @@ const Header = ({ modalType }) => {
                 )}
               </li>
             </ul>
-            {/* <AuthModal
-              open={open}
-              handleClose={() => {
-                setOpen(false);
-              }}
-              authTypeModal={authTypeModal}
-              setAuthTypeModal={setAuthTypeModal}
-            /> */}
           </div>
         </div>
       </header>

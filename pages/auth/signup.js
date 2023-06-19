@@ -10,6 +10,7 @@ import { signUp } from "../../graphql/mutations/authMutations";
 import { loginUserId } from "../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Signup = () => {
   const [asVendor, setAsVendor] = useState(false);
@@ -35,6 +36,14 @@ const Signup = () => {
       setAsVendor(true);
     } else {
       setAsVendor(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Router.push(
+        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
+      );
     }
   }, []);
 
@@ -76,10 +85,14 @@ const Signup = () => {
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
   return (
-    <div className="bg-background py-2 w-full flex justify-center items-center h-screen">
-      <div className="bg-white flex w-full p-5 sm:p-10 sm:gap-10 h-screen overflow-hidden">
-        <div className="md:w-[50%] sm:w-full relative">
-          <div className="text-3xl  font-bold max-[600px]:text-xl text-colorPrimary">
+    <div className="bg-background w-full">
+      <div className="bg-white flex w-full p-5 sm:p-10 sm:gap-10 min-h-[100vh] overflow-auto">
+        <div className="md:w-[50%] sm:w-full flex flex-col">
+          <div className="text-3xl  font-bold max-[600px]:text-xl text-colorPrimary flex items-center gap-4">
+            <ArrowBackIcon
+              onClick={() => Router.push("/auth/user-type")}
+              className="cursor-pointer"
+            />
             Rentbless
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
@@ -100,7 +113,7 @@ const Signup = () => {
           <p className="my-2 flex justify-center font-semibold text-colorPrimary">
             Or
           </p>
-          <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
+          <form onReset={reset}>
             <div className="space-y-3 max-h-[400px] min-h-[200px] h-auto overflow-auto">
               <div className="flex flex-col sm:flex-row w-full gap-2">
                 <div className="w-full">
@@ -253,31 +266,33 @@ const Signup = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute bottom-0 w-full">
-              <button
-                type="submit"
-                className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
-              >
-                {loading && (
-                  <CircularProgress
-                    size={20}
-                    color="primary"
-                    sx={{ color: "white", mr: 1 }}
-                  />
-                )}
-                Sign Up
-              </button>
-              <p className="text-base max-[480px]:text-xs text-gray-400  mt-2 flex justify-center">
-                Already have an account?
-                <span
-                  className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
-                  onClick={() => Router.push("/auth/signin")}
-                >
-                  Login
-                </span>
-              </p>
-            </div>
           </form>
+          <div className="flex-grow"></div>
+          <div className="mt-5 w-full">
+            <button
+              type="submit"
+              onClick={handleSubmit(onSubmit, onError)}
+              className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+            >
+              {loading && (
+                <CircularProgress
+                  size={20}
+                  color="primary"
+                  sx={{ color: "white", mr: 1 }}
+                />
+              )}
+              Sign Up
+            </button>
+            <p className="text-base max-[480px]:text-xs text-gray-400  mt-2 flex justify-center">
+              Already have an account?
+              <span
+                className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
+                onClick={() => Router.push("/auth/signin")}
+              >
+                Login
+              </span>
+            </p>
+          </div>
         </div>
         <div className="bg-neutral-300 md:w-[50%]  rounded-3xl sm:w-0"></div>
       </div>

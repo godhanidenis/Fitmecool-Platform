@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
@@ -10,10 +10,18 @@ const UserType = () => {
     setSelectedOption(option);
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Router.push(
+        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
+      );
+    }
+  }, []);
+
   return (
-    <div className="bg-background py-2 w-full flex justify-center items-center h-screen">
-      <div className="bg-white flex w-full p-10 gap-10 h-screen overflow-hidden">
-        <div className="md:w-[50%] sm:w-full relative">
+    <div className="bg-background w-full">
+      <div className="bg-white flex w-full min-h-[100vh] overflow-auto p-10 gap-10">
+        <div className="md:w-[50%] sm:w-full flex flex-col">
           <div className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary">
             Rentbless
           </div>
@@ -24,7 +32,7 @@ const UserType = () => {
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
           </p>
-          <div className="flex  my-8 gap-6 max-[380px]:flex-col">
+          <div className="flex my-8 gap-6 max-[380px]:flex-col">
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
                 selectedOption === "Customer" &&
@@ -81,9 +89,12 @@ const UserType = () => {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 w-full">
+
+          <div className="flex-grow"></div>
+
+          <div className="w-full">
             <button
-              className=" h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+              className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
               onClick={() => {
                 localStorage.setItem(
                   "user_type",

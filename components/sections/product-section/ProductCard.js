@@ -8,8 +8,6 @@ import {
   deleteProduct,
   productLike,
 } from "../../../graphql/mutations/products";
-import AuthModal from "../../core/AuthModal";
-import { AuthTypeModal } from "../../core/Enum";
 import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -148,9 +146,6 @@ const ProductCard = ({
   onlyCarousal,
 }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
 
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState();
@@ -320,11 +315,6 @@ const ProductCard = ({
                         );
                       } else {
                         Router.push("/auth/user-type");
-                        // if (themeLayout === "mobileScreen") {
-                        //   Router.push("/auth/signin");
-                        // } else {
-                        //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        // }
                       }
                     }}
                   >
@@ -516,15 +506,6 @@ const ProductCard = ({
             )}
           </div>
         )}
-        {/* 
-        <AuthModal
-          open={open}
-          handleClose={() => {
-            setOpen(false);
-          }}
-          authTypeModal={authTypeModal}
-          setAuthTypeModal={setAuthTypeModal}
-        /> */}
 
         <CustomAuthModal
           open={productDeleteModalOpen}
@@ -573,11 +554,6 @@ const ProductCard = ({
                       setProductDeleteModalOpen(false);
                     } else {
                       Router.push("/auth/user-type");
-                      // if (themeLayout === "mobileScreen") {
-                      //   Router.push("/auth/signin");
-                      // } else {
-                      //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      // }
                     }
                   }}
                 >

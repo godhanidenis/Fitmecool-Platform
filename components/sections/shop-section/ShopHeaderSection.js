@@ -1,32 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import {
-  Button,
-  Divider,
-  Grid,
-  Tooltip,
-  tooltipClasses,
-  Typography,
-} from "@mui/material";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ShareIcon from "@mui/icons-material/Share";
+import { Button, Tooltip, tooltipClasses, Typography } from "@mui/material";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { shopFollow } from "../../../graphql/mutations/shops";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthTypeModal } from "../../core/Enum";
-import AuthModal from "../../core/AuthModal";
 import Router, { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import facebookIcon from "../../../assets/facebook.png";
-import instagramIcon from "../../../assets/instagram.png";
 import googleIcon from "../../../assets/googleIcon.svg";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box } from "@mui/system";
@@ -95,20 +80,6 @@ const ShopHeaderSection = ({
 
   const HandleGoToSeeBranch = () => {
     router.push(`/shop/${shopDetails?.id}/seeBranch`);
-    // const serializedData = JSON.stringify(shopDetails?.branch_info);
-    // const queryString = new URLSearchParams(shopDetails).toString();
-
-    // router.push({
-    //   pathname: `/shop/${shopDetails?.id}/seeBranch/`,
-    //   query: { data: queryString },
-    // });
-
-    // router.push(
-    //   {
-    //     pathname: `/shop/${shopDetails?.id}/seeBranch/`,
-    //     query: { data: "" },
-    //   }
-    // );
   };
 
   const HtmlTooltip = styled(({ className, ...props }) => (
@@ -311,11 +282,6 @@ const ShopHeaderSection = ({
                           );
                         } else {
                           Router.push("/auth/user-type");
-                          // if (themeLayout === "mobileScreen") {
-                          //   Router.push("/auth/signin");
-                          // } else {
-                          //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                          // }
                         }
                       }}
                     >
@@ -408,14 +374,6 @@ const ShopHeaderSection = ({
         setAllBranchModalOpen={setAllBranchModalOpen}
         allBranchList={shopDetails?.branch_info}
       />
-      {/* <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      /> */}
     </>
   );
 };
