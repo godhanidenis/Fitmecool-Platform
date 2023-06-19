@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
-import { Avatar, Button, Grid, LinearProgress, Pagination, Rating, TextareaAutosize, linearProgressClasses } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Grid,
+  LinearProgress,
+  Pagination,
+  Rating,
+  TextareaAutosize,
+  linearProgressClasses,
+} from "@mui/material";
 import Filter from "../../../components/Filters/index";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
 
@@ -173,12 +182,12 @@ const ShopDetail = ({ shopDetails }) => {
         </div>
         <div className="py-2 bg-white mb-[1px] mt-3">
           <div className="container">
-              <UpperFilter
-                setProductPageSkip={setProductPageSkip}
-                forShopPage={true}
-                showDrawerFilter={true}
-                showOnlyShopDetailPage={true}
-              />
+            <UpperFilter
+              setProductPageSkip={setProductPageSkip}
+              forShopPage={true}
+              showDrawerFilter={true}
+              showOnlyShopDetailPage={true}
+            />
           </div>
         </div>
         <div className="grid grid-cols-8 container">
@@ -206,7 +215,13 @@ const ShopDetail = ({ shopDetails }) => {
                   </div>
                 }
               > */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10">
+              <div
+                className={`${
+                  productsFiltersReducer.productLayout === "list"
+                    ? "flex flex-col gap-5"
+                    : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
+                }`}
+              >
                 {productsData && productsData?.map((product) => <ProductCard product={product} key={product.id} />)}
               </div>
 
@@ -279,7 +294,9 @@ const ShopDetail = ({ shopDetails }) => {
                   </div>
                 </div>
 
-                <p className="sm:mt-[50px] mt-[30px] text-[#181725] text-[20px] font-normal">Last Review Updated on 20 Apr 2022</p>
+                <p className="sm:mt-[50px] mt-[30px] text-[#181725] text-[20px] font-normal">
+                  Last Review Updated on 20 Apr 2022
+                </p>
               </div>
               <div className="md:w-[50%] sm:p-5 pt-8 border-t sm:border-t-0 sm:border-l">
                 <p className="text-[18px] font-normal text-[#181725]">
@@ -409,12 +426,12 @@ export async function getServerSideProps(context) {
 
 const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 12,
-  borderRadius:"12px",
+  borderRadius: "12px",
   [`&.${linearProgressClasses.colorPrimary}`]: {
     backgroundColor: "rgba(24, 23, 37, 0.1)",
   },
   [`& .${linearProgressClasses.bar}`]: {
-    backgroundColor: 'rgba(21, 24, 39, 0.4)',
+    backgroundColor: "rgba(21, 24, 39, 0.4)",
   },
 }));
 
@@ -438,13 +455,13 @@ const ShopCommentsSection = ({ review }) => {
                     <StarIcon fontSize="small" className="!text-white pl-1" />
                     <p className="text-white pr-[6px] font-semibold">{review.stars}</p>
                   </div>
-                <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
-                  <div className="flex gap-3 sm:gap-4 items-center">
-                    <Image src={FbIcon} alt="" />
-                    <Image className="" src={TwiterIcon} alt="" />
-                    {/* <p className="text-colorPrimary font-semibold">Reply</p> */}
+                  <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
+                    <div className="flex gap-3 sm:gap-4 items-center">
+                      <Image src={FbIcon} alt="" />
+                      <Image className="" src={TwiterIcon} alt="" />
+                      {/* <p className="text-colorPrimary font-semibold">Reply</p> */}
+                    </div>
                   </div>
-                </div>
                 </div>
               </div>
             </div>
