@@ -25,7 +25,7 @@ const Branches = ({ shopDetails, shopId }) => {
 
   return (
     <>
-      <div className="sm:mt-[97px] mt-[43px] sm:ml-[85px] font-Nova">
+      <div className="sm:mt-[97px] mt-[43px] sm:mx-[80px] font-Nova">
         <div className="flex items-center mb-[64px]">
           <div className="w-[44px] h-[39px] sm:mr-[30px]">
             <ArrowBackIcon
@@ -53,13 +53,16 @@ const Branches = ({ shopDetails, shopId }) => {
         </div>
         {shopDetails?.data?.shop?.branch_info?.map((item, index) => {
           return (
-            <div className="sm:ml-[30px] ml-[10px]" key={index}>
+            <div className="sm:ml-[30px] mx-[10px]" key={index}>
               <SeeBranchDropDown
                 cardTitle={`Branch ${index + 1}`}
                 bottomComponent={
-                  <div className="sm:mb-[72px] mb-[16px]">
-                    <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 ml-[50px]">
-                      <div className="flex flex-col">
+                  <div className="mb-[16px]">
+                    <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 ml-[18px]">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col bg-[#FFFFFF] rounded-2xl p-4"
+                      >
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Address
                         </span>
@@ -67,7 +70,10 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.branch_address}
                         </span>
                       </div>
-                      <div className="flex flex-col">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col bg-[#FFFFFF] rounded-2xl p-4"
+                      >
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch City
                         </span>
@@ -75,7 +81,10 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.branch_city}
                         </span>
                       </div>
-                      <div className="flex flex-col">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col bg-[#FFFFFF] rounded-2xl p-4"
+                      >
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Pincode
                         </span>
@@ -83,7 +92,10 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.branch_pinCode}
                         </span>
                       </div>
-                      <div className="flex flex-col">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col bg-[#FFFFFF] rounded-2xl p-4"
+                      >
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Manager Name
                         </span>
@@ -91,7 +103,10 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.manager_name}
                         </span>
                       </div>
-                      <div className="flex flex-col">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col bg-[#FFFFFF] rounded-2xl p-4"
+                      >
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Manager Email
                         </span>
@@ -99,7 +114,10 @@ const Branches = ({ shopDetails, shopId }) => {
                           {item?.manager_email}
                         </span>
                       </div>
-                      <div className="flex flex-col">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col bg-[#FFFFFF] rounded-2xl p-4"
+                      >
                         <span className="text-[gray] text-[16px] font-semibold">
                           Branch Manager Phone Number
                         </span>

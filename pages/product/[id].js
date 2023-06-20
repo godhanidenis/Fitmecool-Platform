@@ -256,7 +256,7 @@ const ProductDetail = ({ productDetails }) => {
               <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
                 <div className="flex items-center">
                   <LocationOnIcon fontSize="small" className="!mr-1" />
-                  <span>
+                  <span className="line-clamp-1">
                     {
                       productDetails.data.product.data.branchInfo
                         ?.branch_address

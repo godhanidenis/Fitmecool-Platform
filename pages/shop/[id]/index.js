@@ -12,7 +12,11 @@ import {
 import Filter from "../../../components/Filters/index";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
 
-import { getShopDetails, getShopFollowers, getShopReviews } from "../../../graphql/queries/shopQueries";
+import {
+  getShopDetails,
+  getShopFollowers,
+  getShopReviews,
+} from "../../../graphql/queries/shopQueries";
 import ShopHeaderSection from "../../../components/sections/shop-section/ShopHeaderSection";
 import ProductCard from "../../../components/sections/product-section/ProductCard";
 import StarIcon from "@mui/icons-material/Star";
@@ -51,12 +55,21 @@ const ShopDetail = ({ shopDetails }) => {
   const dispatch = useDispatch();
   const myDivRef = useRef(null);
 
-  const { productsLimit, productsCount, numOfPages, productsData, loading, error } = useSelector(
-    (state) => state.products
-  );
+  const {
+    productsLimit,
+    productsCount,
+    numOfPages,
+    productsData,
+    loading,
+    error,
+  } = useSelector((state) => state.products);
 
-  const { userProfile, isAuthenticate } = useSelector((state) => state.userProfile);
-  const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
+  const { userProfile, isAuthenticate } = useSelector(
+    (state) => state.userProfile
+  );
+  const productsFiltersReducer = useSelector(
+    (state) => state.productsFiltersReducer
+  );
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
   useEffect(() => {
@@ -71,10 +84,15 @@ const ShopDetail = ({ shopDetails }) => {
           limit: 6,
         },
         filter: {
-          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
-          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
+          category_id:
+            productsFiltersReducer.appliedProductsFilters.categoryId
+              .selectedValue,
+          product_color:
+            productsFiltersReducer.appliedProductsFilters.productColor
+              .selectedValue,
         },
-        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId:
+          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -82,21 +100,31 @@ const ShopDetail = ({ shopDetails }) => {
   };
 
   const getAllReviews = () => {
-    getShopReviews({ id: router.query.id }).then((res) => setShopReviews(res.data.shopReview));
+    getShopReviews({ id: router.query.id }).then((res) =>
+      setShopReviews(res.data.shopReview)
+    );
   };
 
   const getAllFollowers = () => {
-    getShopFollowers({ id: router.query.id }).then((res) => setTotalFollowers(res.data.shopFollower?.length));
+    getShopFollowers({ id: router.query.id }).then((res) =>
+      setTotalFollowers(res.data.shopFollower?.length)
+    );
   };
 
   useEffect(() => {
     var rating = 0;
-    shopReviews.map((itm) => setAvgShopRating(Math.round((rating += itm.stars) / shopReviews.length)));
+    shopReviews.map((itm) =>
+      setAvgShopRating(Math.round((rating += itm.stars) / shopReviews.length))
+    );
   }, [shopReviews]);
 
   useEffect(() => {
-    const reviewedShopsByUser = shopReviews.find((itm) => itm.user_id === userProfile.id);
-    reviewedShopsByUser ? setSubmitButtonDisable(true) : setSubmitButtonDisable(false);
+    const reviewedShopsByUser = shopReviews.find(
+      (itm) => itm.user_id === userProfile.id
+    );
+    reviewedShopsByUser
+      ? setSubmitButtonDisable(true)
+      : setSubmitButtonDisable(false);
   }, [router.query.id, userProfile.id, shopReviews]);
 
   useEffect(() => {
@@ -146,7 +174,7 @@ const ShopDetail = ({ shopDetails }) => {
             scrollRef={myDivRef}
           />
         </div>
-        <div className="py-2 bg-white mb-[1px] mt-3">
+        <div className="py-2 mb-[1px] mt-3">
           <div className="container">
             <UpperFilter
               setProductPageSkip={setProductPageSkip}
@@ -158,9 +186,12 @@ const ShopDetail = ({ shopDetails }) => {
         </div>
         <div className="grid grid-cols-8 container">
           <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
-            <Filter productByShop={true} setProductPageSkip={setProductPageSkip} />
+            <Filter
+              productByShop={true}
+              setProductPageSkip={setProductPageSkip}
+            />
           </div>
-          <div className="col-span-8 lg:col-span-6 sm:p-6 bg-white">
+          <div className="col-span-8 lg:col-span-6 sm:p-6">
             <div className="w-[100%]">
               <div
                 className={`${
@@ -169,147 +200,182 @@ const ShopDetail = ({ shopDetails }) => {
                     : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
                 }`}
               >
-                {productsData && productsData?.map((product) => <ProductCard product={product} key={product.id} />)}
+                {productsData &&
+                  productsData?.map((product) => (
+                    <ProductCard product={product} key={product.id} />
+                  ))}
               </div>
 
               {productsCount > 6 && (
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
-                    <p className="text-sm leading-[150%] text-[#15182766]">
-                      Showing {productPageSkip + 1} -{" "}
-                      {productsCount < (productPageSkip + 1) * productsLimit
-                        ? productsCount
-                        : (productPageSkip + 1) * productsLimit}{" "}
-                      of {productsCount} results
-                    </p>
-                    <Pagination
-                      count={Math.ceil(productsCount / 6)}
-                      page={
-                        (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
-                      }
-                      onChange={(e, p) => {
-                        setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                      }}
-                    />
-                  </div>
-                )}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
+                  <p className="text-sm leading-[150%] text-[#15182766]">
+                    Showing {productPageSkip + 1} -{" "}
+                    {productsCount < (productPageSkip + 1) * productsLimit
+                      ? productsCount
+                      : (productPageSkip + 1) * productsLimit}{" "}
+                    of {productsCount} results
+                  </p>
+                  <Pagination
+                    count={Math.ceil(productsCount / 6)}
+                    page={
+                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                    }
+                    onChange={(e, p) => {
+                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <div ref={myDivRef} className="bg-[#FFFFFF] pb-0 mt-8 container ">
-          <div className="">
-            <div className="md:flex gap-7 px-4">
-              <div className="md:w-[50%] pb-3 rounded-md">
-                <p className="text-[#181725] text-[26px] font-semibold">
-                  Reviews for Contourz by Taruna Manchanda (44)
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
-                  <div className="flex w-[30%] items-center flex-col">
-                    <div className="rounded-lg p-1 flex items-center gap-1">
-                      <p className="text-[#181725] text-[58px] font-normal">
-                        {avgShopRating}
-                        <span className="text-[30px]">/5</span>
+        <div
+          ref={myDivRef}
+          className="bg-[#FFFFFF] mt-8 py-6 sm:px-20 shadow-md shadow-[#18172505]"
+        >
+          <div className="md:flex gap-7 container">
+            <div className="md:w-[50%] pb-3 rounded-md">
+              <p className="text-[#181725] text-base sm:text-[26px] font-semibold">
+                Reviews for Contourz by Taruna Manchanda (44)
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
+                <div className="flex w-[30%] items-center flex-col">
+                  <div className="rounded-lg p-1 flex items-center gap-1">
+                    <p className="text-[#181725] text-[58px] font-normal">
+                      {avgShopRating}
+                      <span className="text-[30px]">/5</span>
+                    </p>
+                  </div>
+                  <Rating size="large" value={avgShopRating} readOnly />
+                </div>
+
+                <div className="sm:w-[70%] w-[112%] sm:border-l px-[14px] sm:px-0">
+                  {[5, 4, 3, 2, 1].map((star) => (
+                    <div
+                      className="grid grid-cols-12 items-center p-1 gap-2.5"
+                      key={star}
+                    >
+                      <div className="flex items-center gap-1 col-span-4 sm:pl-2">
+                        <Rating
+                          className="text-[#151827]"
+                          size="medium"
+                          value={star}
+                          readOnly
+                        />
+                      </div>
+
+                      <div className="ml-[5px] sm:ml-0 self-center col-span-7">
+                        <CustomBorderLinearProgress
+                          variant="determinate"
+                          value={
+                            (shopReviews.filter((itm) => itm.stars === star)
+                              .length *
+                              100) /
+                            shopReviews.length
+                          }
+                        />
+                      </div>
+                      <p className="text-sm font-normal text-center col-span-1">
+                        {shopReviews.filter((itm) => itm.stars === star).length}
                       </p>
                     </div>
-                    <Rating size="large" value={avgShopRating} readOnly />
-                  </div>
-
-                  <div className="sm:w-[70%] w-[112%] sm:border-l">
-                    {[5, 4, 3, 2, 1].map((star) => (
-                      <div className="grid grid-cols-12 items-center p-1 gap-2.5" key={star}>
-                        <div className="flex items-center gap-1 col-span-4 sm:pl-2">
-                          <Rating className="text-[#151827]" size="medium" value={star} readOnly />
-                        </div>
-
-                        <div className="ml-[5px] sm:ml-0 self-center col-span-7">
-                          <CustomBorderLinearProgress
-                            variant="determinate"
-                            value={(shopReviews.filter((itm) => itm.stars === star).length * 100) / shopReviews.length}
-                          />
-                        </div>
-                        <p className="text-sm font-normal text-center col-span-1">
-                          {shopReviews.filter((itm) => itm.stars === star).length}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  ))}
                 </div>
-
-                <p className="sm:mt-[50px] mt-[30px] text-[#181725] text-[20px] font-normal">
-                  Last Review Updated on 20 Apr 2022
-                </p>
               </div>
-              <div className="md:w-[50%] sm:p-5 pt-8 border-t sm:border-t-0 sm:border-l">
-                <p className="text-[18px] font-normal text-[#181725]">
-                  Add A Review {shopDetails.data.shop.shop_name} Shop
+
+              <p className="sm:mt-[16%] mt-[30px] text-[#181725] text-[20px] font-normal">
+                Last Review Updated on 20 Apr 2022
+              </p>
+            </div>
+            <div className="md:w-[50%] sm:p-5 pt-8 pb-5 border-t sm:border-t-0 sm:border-l">
+              <p className="text-[18px] font-normal text-[#181725]">
+                Add A Review {shopDetails.data.shop.shop_name} Shop
+              </p>
+              <p className="text-[14px] py-4 font-normal text-[#31333E] mt-1">
+                Rate vendor
+              </p>
+              <div className="flex justify-between mt-1">
+                <p className="text-[14px] font-normal text-[#31333E]">
+                  Rate our of
                 </p>
-                <p className="text-[14px] py-4 font-normal text-[#31333E] mt-1">Rate vendor</p>
-                <div className="flex justify-between mt-1">
-                  <p className="text-[14px] font-normal text-[#31333E]">Rate our of</p>
-                  <Rating size="large" value={stars} onChange={(e) => setStars(Number(e.target.value))} />
-                </div>
-                <div className="mt-5">
-                  <p className="text-[#31333E] text-[14px] font-normal pb-[8px]">Your Review *</p>
-                  <TextareaAutosize
-                    minRows={5}
-                    placeholder="Tell us about experience*"
-                    className="w-full p-2 border text-sm"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                </div>
-                <div className="flex justify-end gap-6 mt-5">
-                  <button
-                    disabled={submitButtonDisable}
-                    className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${
-                      submitButtonDisable && "opacity-50 cursor-not-allowed"
-                    }`}
-                    onClick={() => {
-                      if (isAuthenticate) {
-                        if (stars > 0 && message !== "") {
-                          setLoadingSubmitReview(true);
-                          shopReview({
-                            shopInfo: {
-                              message: message,
-                              shop_id: router.query.id,
-                              stars: stars,
-                              user_id: userProfile.id,
-                            },
-                          }).then(
-                            (res) => {
-                              getAllReviews();
-                              toast.success("Review Submitted Successfully!!", {
-                                theme: "colored",
-                              });
-                              setLoadingSubmitReview(false);
-                            },
-                            (error) => {
-                              setLoadingSubmitReview(false);
-                              toast.error("Review not Submitted!!", {
-                                theme: "colored",
-                              });
-                            }
-                          );
-                        } else {
-                          toast.error("Please Select Review Fields!!", {
-                            theme: "colored",
-                          });
-                        }
+                <Rating
+                  size="large"
+                  value={stars}
+                  onChange={(e) => setStars(Number(e.target.value))}
+                />
+              </div>
+              <div className="mt-5">
+                <p className="text-[#31333E] text-[14px] font-normal pb-[8px]">
+                  Your Review *
+                </p>
+                <TextareaAutosize
+                  minRows={5}
+                  placeholder="Tell us about experience*"
+                  className="w-full p-2 border text-sm"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </div>
+              <div className="flex justify-end gap-6 mt-5">
+                <button
+                  disabled={submitButtonDisable}
+                  className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${
+                    submitButtonDisable && "opacity-50 cursor-not-allowed"
+                  }`}
+                  onClick={() => {
+                    if (isAuthenticate) {
+                      if (stars > 0 && message !== "") {
+                        setLoadingSubmitReview(true);
+                        shopReview({
+                          shopInfo: {
+                            message: message,
+                            shop_id: router.query.id,
+                            stars: stars,
+                            user_id: userProfile.id,
+                          },
+                        }).then(
+                          (res) => {
+                            getAllReviews();
+                            toast.success("Review Submitted Successfully!!", {
+                              theme: "colored",
+                            });
+                            setLoadingSubmitReview(false);
+                          },
+                          (error) => {
+                            setLoadingSubmitReview(false);
+                            toast.error("Review not Submitted!!", {
+                              theme: "colored",
+                            });
+                          }
+                        );
                       } else {
-                        Router.push("/auth/user-type");
+                        toast.error("Please Select Review Fields!!", {
+                          theme: "colored",
+                        });
                       }
-                    }}
-                  >
-                    {loadingSubmitReview && (
-                      <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />
-                    )}
-                    Submit Review
-                  </button>
-                </div>
+                    } else {
+                      Router.push("/auth/user-type");
+                    }
+                  }}
+                >
+                  {loadingSubmitReview && (
+                    <CircularProgress
+                      size={20}
+                      color="primary"
+                      sx={{ color: "white", mr: 1 }}
+                    />
+                  )}
+                  Submit Review
+                </button>
               </div>
             </div>
           </div>
-
-          {((showAllReview && shopReviews) || (!showAllReview && shopReviews.slice(0, 2))).map((review) => (
+        </div>
+        <div className="pb-0 mt-8 container ">
+          {(
+            (showAllReview && shopReviews) ||
+            (!showAllReview && shopReviews.slice(0, 2))
+          ).map((review) => (
             <ShopCommentsSection review={review} key={review.id} />
           ))}
 
@@ -367,12 +433,16 @@ const ShopCommentsSection = ({ review }) => {
               <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">
                 <div className="flex items-start sm:gap-10 gap-[6px] w-full sm:justify-start">
                   <div className="flex flex-col">
-                    <div className="font-semibold sm:text-xl text-lg text-[#000000]">{review.user_name}</div>
+                    <div className="font-semibold sm:text-xl text-lg text-[#000000]">
+                      {review.user_name}
+                    </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
                   </div>
                   <div className="flex items-center gap-1 bg-colorGreen rounded ">
                     <StarIcon fontSize="small" className="!text-white pl-1" />
-                    <p className="text-white pr-[6px] font-semibold">{review.stars}</p>
+                    <p className="text-white pr-[6px] font-semibold">
+                      {review.stars}
+                    </p>
                   </div>
                   <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
                     <div className="flex gap-3 sm:gap-4 items-center">
