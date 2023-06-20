@@ -195,6 +195,7 @@ const ShopHeaderSection = ({
                       <a
                         target="_blank"
                         href={`/shop/${shopDetails?.id}/branches`}
+                        rel="noreferrer"
                       >
                         <Button
                           variant="contained"
