@@ -101,7 +101,7 @@ const ShopHeaderSection = ({
   return (
     <>
       <div className="flex justify-center font-Nova">
-        <div className="grid-cols-12 mt-[-50px] sm:w-[90%] w-[100%] bg-[#151827]">
+        <div className="grid-cols-12 mt-[-50px] container bg-[#151827]">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row	">
               <div className="mt-[-45px] flex justify-center">
@@ -239,7 +239,7 @@ const ShopHeaderSection = ({
                         fontSize="small"
                         className="sm:mr-[16px] mr-[5px]"
                       />
-                      <p className="text-[10px] sm:text-[16px]">Followers </p>
+                      <p className="text-[9px] sm:text-[16px]">Followers </p>
                     </div>
                     <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">
                       {totalFollowers}
