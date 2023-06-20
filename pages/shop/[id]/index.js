@@ -36,6 +36,7 @@ import TwiterIcon from "../../../assets/twiterIconShop.svg";
 import Image from "next/image";
 
 const ShopDetail = ({ shopDetails }) => {
+  console.log("shopDetailsshopDetails", shopDetails);
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
   const [submitButtonDisable, setSubmitButtonDisable] = useState(false);
 
@@ -379,7 +380,7 @@ const ShopDetail = ({ shopDetails }) => {
             <ShopCommentsSection review={review} key={review.id} />
           ))}
 
-          {shopReviews?.length > 2 && (
+          {/* {shopReviews?.length > 2 && (
             <div className="mt-[80px] flex justify-center">
               <button
                 onClick={() => setShowAllReview(!showAllReview)}
@@ -387,6 +388,19 @@ const ShopDetail = ({ shopDetails }) => {
               >
                 {showAllReview ? "Show Less" : "View All"}
               </button>
+            </div>
+          )} */}
+          {shopReviews?.length > 2 && (
+            <div className="mt-[80px] flex justify-center">
+              <a
+                target="_blank"
+                href={`/shop/${shopDetails?.data?.shop?.id}/reviews`}
+                rel="noreferrer"
+              >
+                <button className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[16px] px-[38px] bg-[#FAFCFC]">
+                  View All
+                </button>
+              </a>
             </div>
           )}
         </div>
@@ -443,17 +457,6 @@ const ShopCommentsSection = ({ review }) => {
                     <p className="text-white pr-[6px] font-semibold">
                       {review.stars}
                     </p>
-                  </div>
-                  <div className="flex sm:mr-5 items-center absolute right-0 top-[30px] sm:top-0">
-                    <div className="flex gap-3 sm:gap-4 items-center">
-                      <div className="w-[24px] h-[24px] sm:w-auto sm:h-auto">
-                        <Image src={FbIcon} alt="fb" />
-                      </div>
-                      <div className="w-[24px] h-[24px] sm:w-auto sm:h-auto">
-                        <Image className="" src={TwiterIcon} alt="" />
-                      </div>
-                      {/* <p className="text-colorPrimary font-semibold">Reply</p> */}
-                    </div>
                   </div>
                 </div>
               </div>

@@ -46,18 +46,20 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
     color: "#FFFFFF",
     fontWeight: 600,
     fontSize: "14px",
-    paddingTop:"32px",
-    paddingBottom:"32px",
+    paddingTop: "32px",
+    paddingBottom: "32px",
+  },
+  [`& .Mui-selected:hover`]: {
+    color: "#29977E !important",
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
     fontSize: "16px",
-    color: "#29977E !important",
+    color: "#FFFFFF !important",
   },
   [`& .MuiTabs-indicator`]: {
     backgroundColor: "#29977E !important",
-    height:"5px",
-   
+    height: "5px",
   },
 }));
 export function TabPanel(props) {
