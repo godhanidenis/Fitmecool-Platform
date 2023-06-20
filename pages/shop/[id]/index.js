@@ -191,7 +191,7 @@ const ShopDetail = ({ shopDetails }) => {
               setProductPageSkip={setProductPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 sm:p-6">
+          <div className="col-span-8 lg:col-span-6 sm:p-6 sm:!pr-0">
             <div className="w-[100%]">
               <div
                 className={`${
