@@ -9,7 +9,7 @@ const SeeBranchDropDown = ({ cardTitle = "", bottomComponent }) => {
   return (
     <CardWrapper>
       <div className="bg-[#FAFCFC] border-2 border-[#F3F6F6] rounded-2xl mb-6">
-        <div className="bg-[#F3F6F6] rounded-[16px]">
+        <div className={`bg-[#F3F6F6] rounded-t-2xl`}>
           <FilterTitle
             handleOpenClick={handleOpenClick}
             className="flex items-center pt-[6px]"

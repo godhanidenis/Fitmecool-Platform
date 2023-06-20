@@ -201,6 +201,21 @@ const UpperFilter = ({
                   ? "!text-colorGreen bg-white"
                   : "text-[#878A99] bg-[#E8EBEA]"
               } cursor-pointer px-2 py-1 rounded-l`}
+              onClick={() =>
+                !byShop
+                  ? dispatch(
+                      changeProductsLayout({
+                        key: "productLayout",
+                        value: "grid",
+                      })
+                    )
+                  : dispatch(
+                      changeShopsLayout({
+                        key: "shopLayout",
+                        value: "grid",
+                      })
+                    )
+              }
               style={{
                 boxShadow:
                   ((!byShop &&
@@ -209,24 +224,7 @@ const UpperFilter = ({
                   "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
               }}
             >
-              <GridViewOutlinedIcon
-                fontSize="medium"
-                onClick={() =>
-                  !byShop
-                    ? dispatch(
-                        changeProductsLayout({
-                          key: "productLayout",
-                          value: "grid",
-                        })
-                      )
-                    : dispatch(
-                        changeShopsLayout({
-                          key: "shopLayout",
-                          value: "grid",
-                        })
-                      )
-                }
-              />
+              <GridViewOutlinedIcon fontSize="medium" />
             </div>
 
             <div
@@ -239,6 +237,21 @@ const UpperFilter = ({
                   ? "!text-colorGreen bg-white"
                   : "text-[#878A99] bg-[#E8EBEA]"
               } cursor-pointer px-2 py-1 rounded-r`}
+              onClick={() =>
+                !byShop
+                  ? dispatch(
+                      changeProductsLayout({
+                        key: "productLayout",
+                        value: "list",
+                      })
+                    )
+                  : dispatch(
+                      changeShopsLayout({
+                        key: "shopLayout",
+                        value: "list",
+                      })
+                    )
+              }
               style={{
                 boxShadow:
                   ((!byShop &&
@@ -247,24 +260,7 @@ const UpperFilter = ({
                   "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
               }}
             >
-              <SegmentOutlinedIcon
-                fontSize="medium"
-                onClick={() =>
-                  !byShop
-                    ? dispatch(
-                        changeProductsLayout({
-                          key: "productLayout",
-                          value: "list",
-                        })
-                      )
-                    : dispatch(
-                        changeShopsLayout({
-                          key: "shopLayout",
-                          value: "list",
-                        })
-                      )
-                }
-              />
+              <SegmentOutlinedIcon fontSize="medium" />
             </div>
           </div>
         </div>
