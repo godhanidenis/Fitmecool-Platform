@@ -74,11 +74,12 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                   value={itm.shop_name}
                   control={
                     <Checkbox
-                      checked={selectedData.includes(itm.id)}
+                      checked={selectedData.includes(itm.pin)}
                       onChange={(event) => {
-                        const updatedSelection = selectedData.includes(itm.id)
-                          ? selectedData.filter((id) => id !== itm.id)
-                          : [...selectedData, itm.id];
+                        const updatedSelection = selectedData.includes(itm.pin)
+                          ? selectedData.filter((id) => id !== itm.pin)
+                          : [...selectedData, itm.pin];
+
                         setSelectedData(updatedSelection);
                         setShopPageSkip(0);
                         setAbc(true);
