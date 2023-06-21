@@ -1,9 +1,10 @@
-.auth-cover > span {
+/* .auth-cover > span {
   top: 5% !important;
-}
+} */
 
 .auth-cover {
-  background: url("../assets/login-cover.png") no-repeat center center fixed;
+  background: url("../assets/images/loginPageImage.svg") no-repeat center center;
+  background-size: cover !important;
 }
 
 .signUpAsNotVendor-height {

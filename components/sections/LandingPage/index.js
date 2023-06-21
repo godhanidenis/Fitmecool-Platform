@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import DirectoryHero from "../../DirectoryHero/DirectoryHero";
-import LandingBg from "../../../assets/cover.png";
+import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadMoreProductsStart,
@@ -107,7 +106,7 @@ const LandingPage = () => {
     <>
       <div className="w-100 h-[300px] relative">
         <Image
-          src={LandingBg}
+          src={LandingPageCoverImg}
           alt=""
           fill={true}
           layout={"fill"}

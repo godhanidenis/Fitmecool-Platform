@@ -177,7 +177,7 @@ const Login = () => {
             </p>
           </div>
         </div>
-        <div className="bg-neutral-300 md:w-[50%]  rounded-3xl sm:w-0"></div>
+        <div className="hidden md:block md:w-[50%] auth-cover rounded-3xl"></div>
       </div>
     </div>
   );
