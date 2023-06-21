@@ -232,7 +232,8 @@ const ShopDetail = ({ shopDetails }) => {
           <div className="md:flex gap-7 container">
             <div className="md:w-[50%] pb-3 rounded-md">
               <p className="text-[#181725] text-base sm:text-[26px] font-semibold">
-                Reviews for Contourz by Taruna Manchanda (44)
+                Reviews for {shopDetails.data.shop.shop_name} Shop (
+                {shopReviews?.length})
               </p>
               <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
                 <div className="flex w-[30%] items-center flex-col">

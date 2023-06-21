@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { shopReview } from "../../../../graphql/mutations/shops";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 12,
@@ -44,6 +45,10 @@ const Reviews = ({ shopDetails }) => {
   const [message, setMessage] = useState("");
   const [submitButtonDisable, setSubmitButtonDisable] = useState(false);
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
+
+  const BackToGo = () => {
+    router.push(`/shop/${router?.query?.id}`);
+  };
 
   const getAllReviews = () => {
     getShopReviews({ id: router.query.id }).then((res) =>
@@ -76,11 +81,18 @@ const Reviews = ({ shopDetails }) => {
   return (
     <>
       <div className="pb-20 md:pb-28 font-Nova">
-        <div className="bg-[#FFFFFF] mt-8 py-6 sm:px-20 shadow-md shadow-[#18172505]">
+        <div className="w-[44px] h-[39px] mt-[2%] ml-[3%]">
+          <ArrowBackIcon
+            onClick={() => BackToGo()}
+            className="w-[44px] h-[39px] mr-[30px] cursor-pointer"
+          />
+        </div>
+        <div className="bg-[#FFFFFF] sm:mt-8 py-6 sm:px-20 shadow-md shadow-[#18172505]">
           <div className="md:flex gap-7 container">
             <div className="md:w-[50%] pb-3 rounded-md">
               <p className="text-[#181725] text-base sm:text-[26px] font-semibold">
-                Reviews for Contourz by Taruna Manchanda (44)
+                Reviews for {shopDetails.data.shop.shop_name} Shop (
+                {shopReviews?.length})
               </p>
               <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
                 <div className="flex w-[30%] items-center flex-col">
