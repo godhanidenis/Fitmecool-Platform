@@ -48,6 +48,8 @@ import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
 import InputLabel from "@mui/material/InputLabel";
 import LocationIcon from "../../assets/LocationIcon.svg";
+import { loadAreaListsStart } from "../../redux/ducks/areaLists";
+import { loadCategoriesStart } from "../../redux/ducks/categories";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -132,6 +134,12 @@ const Header = () => {
   const handleChangeLocation = (event) => {
     setSelectedLocation(event.target.value);
   };
+
+  useEffect(() => {
+    dispatch(loadCategoriesStart());
+    dispatch(loadAreaListsStart());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   useEffect(() => {
     setSearchBarValue(productsFiltersReducer.searchBarData);

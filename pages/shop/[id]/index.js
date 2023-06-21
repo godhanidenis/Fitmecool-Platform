@@ -36,16 +36,11 @@ import TwiterIcon from "../../../assets/twiterIconShop.svg";
 import Image from "next/image";
 
 const ShopDetail = ({ shopDetails }) => {
-  console.log("shopDetailsshopDetails", shopDetails);
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
   const [submitButtonDisable, setSubmitButtonDisable] = useState(false);
-
   const [stars, setStars] = useState(0);
   const [message, setMessage] = useState("");
-
-  const [showAllReview, setShowAllReview] = useState(false);
   const [productPageSkip, setProductPageSkip] = useState(0);
-
   const [shopReviews, setShopReviews] = useState([]);
   const [avgShopRating, setAvgShopRating] = useState(0);
   const [totalFollowers, setTotalFollowers] = useState(0);
@@ -373,24 +368,10 @@ const ShopDetail = ({ shopDetails }) => {
           </div>
         </div>
         <div className="pb-0 mt-8 container ">
-          {(
-            (showAllReview && shopReviews) ||
-            (!showAllReview && shopReviews.slice(0, 2))
-          ).map((review) => (
+          {shopReviews.slice(0, 6)?.map((review) => (
             <ShopCommentsSection review={review} key={review.id} />
           ))}
-
-          {/* {shopReviews?.length > 2 && (
-            <div className="mt-[80px] flex justify-center">
-              <button
-                onClick={() => setShowAllReview(!showAllReview)}
-                className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[16px] px-[38px] bg-[#FAFCFC]"
-              >
-                {showAllReview ? "Show Less" : "View All"}
-              </button>
-            </div>
-          )} */}
-          {shopReviews?.length > 2 && (
+          {shopReviews?.length > 6 && (
             <div className="mt-[80px] flex justify-center">
               <a
                 target="_blank"
