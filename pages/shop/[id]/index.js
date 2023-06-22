@@ -227,7 +227,7 @@ const ShopDetail = ({ shopDetails }) => {
         </div>
         <div
           ref={myDivRef}
-          className="bg-[#FFFFFF] mt-8 py-6 sm:px-20 shadow-md shadow-[#18172505]"
+          className="bg-[#FFFFFF] mt-8 py-6 xl:px-20 shadow-md shadow-[#18172505]"
         >
           <div className="md:flex gap-7 container">
             <div className="md:w-[50%] pb-3 rounded-md">
@@ -235,7 +235,7 @@ const ShopDetail = ({ shopDetails }) => {
                 Reviews for {shopDetails.data.shop.shop_name} Shop (
                 {shopReviews?.length})
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
+              <div className="flex !flex-col xl:!flex-row gap-3 items-center lg:mt-[60px]">
                 <div className="flex w-[30%] items-center flex-col">
                   <div className="rounded-lg p-1 flex items-center gap-1">
                     <p className="text-[#181725] text-[58px] font-normal">
@@ -246,13 +246,13 @@ const ShopDetail = ({ shopDetails }) => {
                   <Rating size="large" value={avgShopRating} readOnly />
                 </div>
 
-                <div className="sm:w-[70%] w-[112%] sm:border-l px-[14px] sm:px-0">
+                <div className="sm:w-[100%] w-[112%] xl:border-l px-[14px] sm:px-0">
                   {[5, 4, 3, 2, 1].map((star) => (
                     <div
-                      className="grid grid-cols-12 items-center p-1 gap-2.5"
+                      className="items-center p-1 flex gap-1 w-full"
                       key={star}
                     >
-                      <div className="flex items-center gap-1 col-span-4 sm:pl-2">
+                      <div className="flex items-center mr-2 gap-1 sm:pl-2 lg:w-[30%] w-[40%]">
                         <Rating
                           className="text-[#151827]"
                           size="medium"
@@ -261,7 +261,7 @@ const ShopDetail = ({ shopDetails }) => {
                         />
                       </div>
 
-                      <div className="ml-[5px] sm:ml-0 self-center col-span-7">
+                      <div className="ml-[5px] sm:ml-0 self-center lg:w-[60%] w-[50%] ">
                         <CustomBorderLinearProgress
                           variant="determinate"
                           value={
@@ -272,7 +272,7 @@ const ShopDetail = ({ shopDetails }) => {
                           }
                         />
                       </div>
-                      <p className="text-sm font-normal text-center col-span-1">
+                      <p className="text-sm font-normal text-center col-span-1 w-[10%]">
                         {shopReviews.filter((itm) => itm.stars === star).length}
                       </p>
                     </div>

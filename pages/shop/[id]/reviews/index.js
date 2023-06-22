@@ -81,20 +81,20 @@ const Reviews = ({ shopDetails }) => {
   return (
     <>
       <div className="pb-20 md:pb-28 font-Nova">
-        <div className="w-[44px] h-[39px] mt-[2%] ml-[3%]">
+        <div className="w-[44px] h-[39px] mt-2 ml-[3%]">
           <ArrowBackIcon
             onClick={() => BackToGo()}
             className="w-[44px] h-[39px] mr-[30px] cursor-pointer"
           />
         </div>
-        <div className="bg-[#FFFFFF] sm:mt-8 py-6 sm:px-20 shadow-md shadow-[#18172505]">
+        <div className="bg-[#FFFFFF] sm:mt-5 py-6 xl:px-20 shadow-md shadow-[#18172505]">
           <div className="md:flex gap-7 container">
             <div className="md:w-[50%] pb-3 rounded-md">
               <p className="text-[#181725] text-base sm:text-[26px] font-semibold">
                 Reviews for {shopDetails.data.shop.shop_name} Shop (
                 {shopReviews?.length})
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 items-center sm:mt-[60px]">
+              <div className="flex !flex-col xl:!flex-row gap-3 items-center lg:mt-[60px]">
                 <div className="flex w-[30%] items-center flex-col">
                   <div className="rounded-lg p-1 flex items-center gap-1">
                     <p className="text-[#181725] text-[58px] font-normal">
@@ -105,13 +105,13 @@ const Reviews = ({ shopDetails }) => {
                   <Rating size="large" value={avgShopRating} readOnly />
                 </div>
 
-                <div className="sm:w-[70%] w-[112%] sm:border-l px-[14px] sm:px-0">
+                <div className="sm:w-[100%] w-[112%] xl:border-l px-[14px] sm:px-0">
                   {[5, 4, 3, 2, 1].map((star) => (
                     <div
-                      className="grid grid-cols-12 items-center p-1 gap-2.5"
+                      className="items-center p-1 flex gap-1 w-full"
                       key={star}
                     >
-                      <div className="flex items-center gap-1 col-span-4 sm:pl-2">
+                      <div className="flex items-center mr-2 gap-1 sm:pl-2 lg:w-[30%] w-[40%]">
                         <Rating
                           className="text-[#151827]"
                           size="medium"
@@ -120,22 +120,19 @@ const Reviews = ({ shopDetails }) => {
                         />
                       </div>
 
-                      <div className="ml-[5px] sm:ml-0 self-center col-span-7">
+                      <div className="ml-[5px] sm:ml-0 self-center lg:w-[60%] w-[50%] ">
                         <CustomBorderLinearProgress
                           variant="determinate"
                           value={
-                            (shopReviews?.filter((itm) => itm.stars === star)
+                            (shopReviews.filter((itm) => itm.stars === star)
                               .length *
                               100) /
-                            shopReviews?.length
+                            shopReviews.length
                           }
                         />
                       </div>
-                      <p className="text-sm font-normal text-center col-span-1">
-                        {
-                          shopReviews?.filter((itm) => itm.stars === star)
-                            .length
-                        }
+                      <p className="text-sm font-normal text-center col-span-1 w-[10%]">
+                        {shopReviews.filter((itm) => itm.stars === star).length}
                       </p>
                     </div>
                   ))}
@@ -148,7 +145,7 @@ const Reviews = ({ shopDetails }) => {
             </div>
             <div className="md:w-[50%] sm:p-5 pt-8 pb-5 border-t sm:border-t-0 sm:border-l">
               <p className="text-[18px] font-normal text-[#181725]">
-                Add A Review {shopDetails?.data?.shop?.shop_name} Shop
+                Add A Review {shopDetails.data.shop.shop_name} Shop
               </p>
               <p className="text-[14px] py-4 font-normal text-[#31333E] mt-1">
                 Rate vendor
