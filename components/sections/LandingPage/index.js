@@ -113,7 +113,7 @@ const LandingPage = () => {
           objectFit={"cover"}
         />
       </div>
-      <div className="container py-2 bg-[#FAFCFC] mb-[1px] mt-3">
+      <div className="container py-4 bg-[#FAFCFC]">
         <div>
           <UpperFilter
             byShop={byShop}
@@ -125,7 +125,7 @@ const LandingPage = () => {
         </div>
       </div>
       <div className="grid grid-cols-8 container mb-4 font-Nova">
-        <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
+        <div className="lg:col-span-2 hidden lg:block bg-white shadow-xl">
           <Filter
             byShop={byShop}
             setByShop={setByShop}
@@ -133,7 +133,7 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC]">
+        <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC] !pt-0 !pr-0">
           <div className="container !w-[100%]">
             {!byShop ? (
               <>

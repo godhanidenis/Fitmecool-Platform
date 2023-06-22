@@ -4,6 +4,7 @@ import ProductByShopFilter from "./ProductFilters/ProductByShopFilter";
 import ProductColorFilter from "./ProductFilters/ProductColorFilter";
 import ShopRatingsFilter from "./ShopFilters/ShopRatingsFilter";
 import ProductCategoriesFilter from "./ProductFilters/ProductCategoriesFilter";
+import { Divider } from "@mui/material";
 
 const Filter = ({
   byShop,
@@ -20,19 +21,21 @@ const Filter = ({
         productByShop={productByShop}
       />
 
+      {/* <Divider /> */}
+
       {!byShop ? (
-        <>
+        <div className="px-4">
           <ProductCategoriesFilter setProductPageSkip={setProductPageSkip} />
           {!productByShop && (
             <ProductByShopFilter setProductPageSkip={setProductPageSkip} />
           )}
           <ProductColorFilter setProductPageSkip={setProductPageSkip} />
-        </>
+        </div>
       ) : (
-        <>
+        <div className="px-4">
           <ShopByLocation setShopPageSkip={setShopPageSkip} />
           <ShopRatingsFilter setShopPageSkip={setShopPageSkip} />
-        </>
+        </div>
       )}
     </div>
   );

@@ -121,7 +121,7 @@ const ShopHeaderSection = ({
                       {shopDetails.shop_name}
                     </div>
                     <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[18px] font-normal ">
-                      Contourz by Taruna Manchanda
+                      {"Let's be Effortlessly Cool: Embrace Your Signature Style with Us"}
                     </div>
                     <span className="sm:pb-[55px] pb-[30px] text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
                       <LocationOnIcon
@@ -218,15 +218,15 @@ const ShopHeaderSection = ({
             <Grid container>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
                 <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                  <div className="sm:flex items-center justify-between w-[100%]">
+                  <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <ProductionQuantityLimitsIcon
-                        fontSize="small"
-                        className="sm:mr-[16px] mr-[5px]"
+                        fontSize="medium"
+                        className="sm:mr-[8px] mr-[5px]"
                       />
-                      <p className="text-[10px] sm:text-[16px]">Product </p>
+                      <p className="text-[10px] sm:text-[16px]">Products</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">
+                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
                       {totalProducts}
                     </p>
                   </div>
@@ -234,15 +234,15 @@ const ShopHeaderSection = ({
               </Grid>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
                 <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                  <div className="sm:flex items-center justify-between w-[100%]">
+                  <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <PeopleAltIcon
-                        fontSize="small"
-                        className="sm:mr-[16px] mr-[5px]"
+                        fontSize="medium"
+                        className="sm:mr-[8px] mr-[5px]"
                       />
-                      <p className="text-[9px] sm:text-[16px]">Followers </p>
+                      <p className="text-[9px] sm:text-[16px]">Followers</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">
+                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
                       {totalFollowers}
                     </p>
                   </div>
@@ -256,15 +256,15 @@ const ShopHeaderSection = ({
                 onClick={handleClick}
               >
                 <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                  <div className="sm:flex items-center justify-between w-[100%]">
+                  <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <RateReviewIcon
-                        fontSize="small"
-                        className="sm:mr-[16px] mr-[5px]"
+                        fontSize="medium"
+                        className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[10px] sm:text-[16px]">Review </p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium">
+                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
                       {totalReview}
                     </p>
                   </div>
@@ -277,15 +277,15 @@ const ShopHeaderSection = ({
                 onMouseLeave={() => setOpenToolTip(false)}
               >
                 <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
-                  <div className="lg:flex items-center justify-between w-[100%]">
+                  <div className="lg:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <ShareIcon
-                        fontSize="small"
-                        className="sm:mr-[16px] mr-[5px]"
+                        fontSize="medium"
+                        className="sm:mr-[8px] mr-[5px]"
                       />
-                      <p className="text-[10px] sm:text-[16px]">Share </p>
+                      <p className="text-[10px] sm:text-[16px]">Share</p>
                     </div>
-                    <div className="flex gap-1 pt-[12px] sm:pt-0">
+                    <div className="flex pt-[12px] sm:pt-0 ml-6 items-center">
                       <div className="lg:p-2 rounded-lg cursor-pointer">
                         <FacebookShareButton
                           windowWidth={900}

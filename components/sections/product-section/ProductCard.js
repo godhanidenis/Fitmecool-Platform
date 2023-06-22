@@ -225,7 +225,7 @@ const ProductCard = ({
   return (
     <>
       <div
-        className={`${
+        className={`shadow-xl ${
           productsFiltersReducer.productLayout === "list"
             ? "md:flex "
             : "flex flex-col"

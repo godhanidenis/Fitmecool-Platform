@@ -170,7 +170,7 @@ const ShopDetail = ({ shopDetails }) => {
             scrollRef={myDivRef}
           />
         </div>
-        <div className="py-2 mb-[1px] mt-3">
+        <div className="py-4">
           <div className="container">
             <UpperFilter
               setProductPageSkip={setProductPageSkip}
@@ -181,7 +181,7 @@ const ShopDetail = ({ shopDetails }) => {
           </div>
         </div>
         <div className="grid grid-cols-8 container">
-          <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
+          <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white shadow-xl">
             <Filter
               productByShop={true}
               setProductPageSkip={setProductPageSkip}
@@ -288,23 +288,22 @@ const ShopDetail = ({ shopDetails }) => {
               <p className="text-[18px] font-normal text-[#181725]">
                 Add A Review {shopDetails.data.shop.shop_name} Shop
               </p>
-              <p className="text-[14px] py-4 font-normal text-[#31333E] mt-1">
-                Rate vendor
-              </p>
-              <div className="flex justify-between mt-1">
-                <p className="text-[14px] font-normal text-[#31333E]">
-                  Rate our of
-                </p>
+              <div className="flex mt-8 items-center">
+                <span className="text-[14px] font-normal text-[#31333E] mr-4">
+                  Rate out of 5
+                  <span className="text-[red] text-[16px] ml-[2px]">*</span>
+                </span>
                 <Rating
                   size="large"
                   value={stars}
                   onChange={(e) => setStars(Number(e.target.value))}
                 />
               </div>
-              <div className="mt-5">
-                <p className="text-[#31333E] text-[14px] font-normal pb-[8px]">
-                  Your Review *
-                </p>
+              <div className="mt-5 flex">
+                <span className="text-[#31333E] text-[14px] font-normal pb-[8px] whitespace-nowrap mr-4">
+                  Your Review
+                  <span className="text-[red] text-[16px] ml-[2px]">*</span>
+                </span>
                 <TextareaAutosize
                   minRows={5}
                   placeholder="Tell us about experience*"
@@ -379,7 +378,7 @@ const ShopDetail = ({ shopDetails }) => {
                 href={`/shop/${shopDetails?.data?.shop?.id}/reviews`}
                 rel="noreferrer"
               >
-                <button className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[16px] px-[38px] bg-[#FAFCFC]">
+                <button className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[8px] px-[8px] bg-[#FAFCFC]">
                   View All
                 </button>
               </a>
@@ -421,37 +420,37 @@ const ShopCommentsSection = ({ review }) => {
     <div className="flex justify-center border-b mt-10 relative">
       <div className="grid grid-cols-12 px-4 w-full">
         <div className="col-span-12">
-          <div className="flex items-center">
-            <div className="flex justify-center items-center">
+          <div className="flex">
+            <div className="flex justify-center">
               <Avatar sx={{ width: 56, height: 56 }} />
             </div>
             <div className="flex flex-col w-full">
               <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">
                 <div className="flex items-start sm:gap-10 gap-[6px] w-full sm:justify-start">
                   <div className="flex flex-col">
-                    <div className="font-semibold sm:text-xl text-lg text-[#000000]">
-                      {review.user_name}
+                    <div className="flex">
+                      <div className="font-semibold sm:text-xl text-lg text-[#000000]">
+                        {review.user_name}
+                      </div>
+                      <div className="flex items-center gap-1 bg-colorGreen rounded ml-2">
+                        <StarIcon
+                          fontSize="small"
+                          className="!text-white pl-1"
+                        />
+                        <p className="text-white pr-[6px] font-semibold">
+                          {review.stars}
+                        </p>
+                      </div>
                     </div>
                     <div className=" text-[#888888]">{review.user_type}</div>
-                  </div>
-                  <div className="flex items-center gap-1 bg-colorGreen rounded ">
-                    <StarIcon fontSize="small" className="!text-white pl-1" />
-                    <p className="text-white pr-[6px] font-semibold">
-                      {review.stars}
-                    </p>
+                    <div className="col-span-12 items-center text-sm flex py-3 font-normal gap-2.5">
+                      {review.message}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="col-span-12 items-center text-sm flex py-3 font-normal gap-2.5">
-          {review.message}
-          {/* <div className="sm:hidden flex items-center ml-auto">
-            <div className="flex items-center">
-              <p className="text-colorPrimary font-semibold">Reply</p>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

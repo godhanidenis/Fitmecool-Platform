@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, FormControl, FormGroup } from "@mui/material";
+import { Checkbox, Divider, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -149,6 +149,8 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
         }
       />
 
+      <Divider sx={{margin:"12px"}}/>
+
       <CardInteractive
         cardTitle="WOMEN"
         bottomComponent={
@@ -217,6 +219,9 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
           </>
         }
       />
+
+      <Divider sx={{margin:"12px"}}/>
+
     </>
   );
 };
