@@ -93,7 +93,11 @@ const Signup = () => {
               onClick={() => Router.push("/auth/user-type")}
               className="cursor-pointer"
             />
-            Rentbless
+            <div className="">
+              <h2 className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary uppercase">
+                <span className="sm:text-4xl text-[24px]">R</span>entbless
+              </h2>
+            </div>
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
             Create an account

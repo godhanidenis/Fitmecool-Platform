@@ -22,11 +22,10 @@ const UserType = () => {
     <div className="bg-background w-full">
       <div className="bg-white flex w-full min-h-[100vh] overflow-auto p-10 gap-10">
         <div className="md:w-[50%] sm:w-full flex flex-col">
-          <div
-            onClick={() => Router.push("/")}
-            className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary cursor-pointer"
-          >
-            Rentbless
+          <div onClick={() => Router.push("/")} className="cursor-pointer">
+            <h2 className="text-3xl font-bold text-colorPrimary uppercase cursor-pointer">
+              <span className="text-4xl">R</span>entbless
+            </h2>
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
             Join Over Business

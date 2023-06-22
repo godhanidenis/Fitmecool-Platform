@@ -180,6 +180,24 @@ const LandingPage = () => {
                 </div>
 
                 {shopsCount > 6 && (
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
+                    <p className="text-sm leading-[150%] text-[#15182766]">
+                      Showing {shopPageSkip + 1} -{" "}
+                      {shopsCount < (shopPageSkip + 1) * shopsLimit
+                        ? shopsCount
+                        : (shopPageSkip + 1) * shopsLimit}{" "}
+                      of {shopsCount} results
+                    </p>
+                    <Pagination
+                      count={Math.ceil(shopsCount / 6)}
+                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
+                      onChange={(e, p) => {
+                        setShopPageSkip((p === 1 && 0) || (p - 1) * 6);
+                      }}
+                    />
+                  </div>
+                )}
+                {/* {shopsCount > 6 && (
                   <div className="flex items-center justify-center py-10">
                     <Pagination
                       count={Math.ceil(shopsCount / 6)}
@@ -192,7 +210,7 @@ const LandingPage = () => {
                       }}
                     />
                   </div>
-                )}
+                )} */}
               </>
             )}
           </div>
