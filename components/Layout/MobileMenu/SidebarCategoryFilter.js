@@ -6,10 +6,7 @@ const SidebarCategoryFilter = ({ title, bottomComponent }) => {
 
   return (
     <>
-      <div
-        className="cursor-pointer mt-5"
-        onClick={handleOpenClick}
-      >
+      <div className="cursor-pointer mt-5" onClick={handleOpenClick}>
         <h4
           className={`text-sm text-[#4a4a4a] font-semibold flex items-center justify-between`}
         >

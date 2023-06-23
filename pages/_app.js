@@ -17,32 +17,21 @@ import { ToastContainer } from "react-toastify";
 import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#95539B",
+      main: "#151827",
     },
     background: {
-      default: "#f1f3f6 !important",
+      default: "#FAFCFC !important",
     },
   },
 });
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const [modalType, setModalType] = useState("");
 
-  useEffect(() => {
-    if (window.history.state === "signin") {
-      setModalType(window.history.state);
-    } else {
-      setModalType("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typeof window !== "undefined" && window.history.state]);
   return (
     <>
       <Head>
@@ -52,7 +41,7 @@ function MyApp({ Component, pageProps }) {
         <CssBaseline />
         <ToastContainer />
         <Provider store={store}>
-          <Header modalType={modalType} />
+          {!router.pathname.includes("/auth/") && <Header />}
           {router.pathname.includes("/vendor/") &&
           router.pathname !== "/vendor/shop-setup" ? (
             <VendorCommonLayout>
@@ -61,7 +50,7 @@ function MyApp({ Component, pageProps }) {
           ) : (
             <Component {...pageProps} />
           )}
-          <Footer />
+          {!router.pathname.includes("/auth/") && <Footer />}
         </Provider>
       </ThemeProvider>
     </>

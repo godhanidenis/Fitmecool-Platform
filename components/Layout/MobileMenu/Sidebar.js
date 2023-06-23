@@ -84,7 +84,11 @@ const Sidebar = ({
           ) : (
             <div className="flex gap-5 cursor-pointer">
               <Avatar sx={{ width: 56, height: 56 }}>
-                <Image src={ProfileIcon ?? "" } alt="ProfileIcon" layout="fill" />
+                <Image
+                  src={ProfileIcon ?? ""}
+                  alt="ProfileIcon"
+                  layout="fill"
+                />
               </Avatar>
               <div className="flex flex-col justify-center">
                 <b>{userProfile?.first_name + " " + userProfile?.last_name}</b>

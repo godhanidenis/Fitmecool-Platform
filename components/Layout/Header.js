@@ -9,9 +9,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
@@ -23,13 +20,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
-import AuthModal from "../core/AuthModal";
 import ProfileIcon from "../../assets/profile.png";
-import { AuthTypeModal } from "../core/Enum";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
-  Checkbox,
   ClickAwayListener,
   Divider,
   Grid,
@@ -40,8 +34,6 @@ import {
   Popper,
   Select,
 } from "@mui/material";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
   loadUserProfileStart,
   userLogout,
@@ -53,6 +45,11 @@ import { useScrollDirection } from "../core/useScrollDirection";
 import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
+import SubHeader from "./SubHeader";
+import InputLabel from "@mui/material/InputLabel";
+import LocationIcon from "../../assets/LocationIcon.svg";
+import { loadAreaListsStart } from "../../redux/ducks/areaLists";
+import { loadCategoriesStart } from "../../redux/ducks/categories";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -62,8 +59,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     backgroundColor: "#CAA9CD !important",
   },
   "& .MuiDialog-paper": {
-    // background:"#95539B",
-    // opacity:".5",
     top: "0",
     position: "absolute",
     maxHeight: "50vh",
@@ -106,19 +101,13 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-const Header = ({ modalType }) => {
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
+const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const isScreenWide = useResizeScreenLayout();
 
@@ -142,11 +131,15 @@ const Header = ({ modalType }) => {
     (state) => state.productsFiltersReducer
   );
 
+  const handleChangeLocation = (event) => {
+    setSelectedLocation(event.target.value);
+  };
+
   useEffect(() => {
-    {
-      modalType === "signin" && setOpen(true), setAuthTypeModal("signin");
-    }
-  }, [modalType]);
+    dispatch(loadCategoriesStart());
+    dispatch(loadAreaListsStart());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   useEffect(() => {
     setSearchBarValue(productsFiltersReducer.searchBarData);
@@ -182,105 +175,64 @@ const Header = ({ modalType }) => {
         setAccessToken={setAccessToken}
       />
       <header
-        className={`py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky ${
+        className={`lg:py-0 py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
-            {router.pathname !== "/auth/login" &&
-              router.pathname !== "/auth/signup" && (
-                <MenuIcon
-                  sx={{ color: "white" }}
-                  fontSize="large"
-                  className="lg:!hidden"
-                  onClick={handleMobileSidebarClick}
-                />
-              )}
+            <MenuIcon
+              sx={{ color: "white" }}
+              fontSize="large"
+              className="lg:!hidden"
+              onClick={handleMobileSidebarClick}
+            />
+
             <Link
               href={`${
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
               }`}
             >
               <div className="cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
-                  <span className="text-4xl">R</span>entbless
-                  {/* <span className="text-4xl">B</span>ell */}
+                <h2 className="sm:text-2xl text-[18px] font-semibold uppercase cursor-pointer text-colorWhite">
+                  <span className="sm:text-4xl text-[24px]">R</span>entbless
                 </h2>
-                {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
               </div>
             </Link>
             {userProfile.user_type !== "vendor" && (
-              <Autocomplete
-                className="hidden lg:flex"
-                size="small"
-                options={areaLists}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option.area}
-                sx={{
-                  width: 175,
-                  background: "white",
-                  borderRadius: "5px",
-                }}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option.area}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    placeholder="Location"
-                  />
-                )}
-              />
+              <div className="headerLocationDiv ml-[24px]">
+                <FormControl variant="standard" sx={{ minWidth: 110 }}>
+                  <InputLabel
+                    id="demo-simple-select-standard-label"
+                    className="flex items-center gap-1"
+                  >
+                    <Image width={20} height={20} src={LocationIcon} alt="" />
+                    <span className="text-[#878A99] text-[14px] font-normal">
+                      Location
+                    </span>
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={selectedLocation}
+                    onChange={handleChangeLocation}
+                    label="Location"
+                  >
+                    {areaLists?.map((location, index) => (
+                      <MenuItem value={location?.pin} key={index}>
+                        {location?.area}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
             )}
           </div>
-
+          <div className="font-Nova">
+            <SubHeader />
+          </div>
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
-              {userProfile.user_type !== "vendor" &&
-                router.pathname !== "/auth/login" &&
-                router.pathname !== "/auth/signup" && (
-                  <li className="flex lg:hidden">
-                    <Select
-                      value={selectedLocation}
-                      displayEmpty
-                      onChange={(e) => setSelectedLocation(e.target.value)}
-                      sx={{
-                        boxShadow: "none",
-                        color: "white",
-                        ".MuiSvgIcon-root ": {
-                          fill: "white !important",
-                        },
-                        ".MuiOutlinedInput-input": { padding: 0 },
-                        ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                        "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
-                        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
-                      }}
-                    >
-                      <MenuItem value="">City</MenuItem>
-                      {areaLists?.map((location, index) => (
-                        <MenuItem value={location?.pin} key={index}>
-                          {location?.area}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </li>
-                )}
               {userProfile.user_type !== "vendor" && (
                 <>
                   <li className="cursor-pointer hidden lg:block">
@@ -311,9 +263,7 @@ const Header = ({ modalType }) => {
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
                     <p
-                      onClick={() => {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      }}
+                      onClick={() => Router.push("/auth/user-type")}
                       className="underline hover:scale-105 hidden lg:block"
                     >
                       SingIn / SignUp
@@ -323,7 +273,7 @@ const Header = ({ modalType }) => {
                       sx={{ color: "white" }}
                       fontSize="large"
                       className="lg:!hidden"
-                      onClick={() => Router.push("/auth/signin")}
+                      onClick={() => Router.push("/auth/user-type")}
                     />
                   </div>
                 )}
@@ -334,14 +284,6 @@ const Header = ({ modalType }) => {
                 )}
               </li>
             </ul>
-            <AuthModal
-              open={open}
-              handleClose={() => {
-                setOpen(false);
-              }}
-              authTypeModal={authTypeModal}
-              setAuthTypeModal={setAuthTypeModal}
-            />
           </div>
         </div>
       </header>
@@ -371,7 +313,6 @@ const Header = ({ modalType }) => {
               <div className="flex justify-center cursor-pointer">
                 <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
                   <span className="text-4xl">R</span>entbless
-                  {/* <span className="text-4xl">B</span>ell */}
                 </h2>
               </div>
             </BootstrapDialogTitle>

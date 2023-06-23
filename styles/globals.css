@@ -7,6 +7,11 @@ body {
   @apply bg-colorWhite text-colorStone;
 }
 
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("../public/Proxima\ Nova\ Font.otf");
+}
+
 h1,
 h2,
 h3,
@@ -17,7 +22,7 @@ h6 {
 }
 
 .container {
-  @apply w-[95%] max-w-[1246px] 2xl:max-w-[1536px] mx-auto;
+  @apply w-[90%] max-w-[1246px] 2xl:max-w-[1536px] mx-auto;
 }
 
 .MuiStepLabel-label.Mui-completed {
@@ -56,3 +61,34 @@ h6 {
   -webkit-line-clamp: 1 !important;
 }
 
+.headerLocationDiv {
+  .css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input {
+    color: white;
+  }
+
+  .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
+    color: white;
+  }
+  .css-93rhz-MuiFormLabel-root-MuiInputLabel-root {
+    color: white;
+  }
+  .css-hemfl0-MuiFormLabel-root-MuiInputLabel-root {
+    color: white;
+  }
+  .css-1vulq2z-MuiInputBase-root-MuiInput-root-MuiSelect-root{
+    border-bottom: 1px solid gray;
+  }
+  .css-1mf6u8l-MuiSvgIcon-root-MuiSelect-icon{
+    color: white;
+  }
+}
+
+.css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  color: white;
+  background-color: #151827;
+}
+
+.css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected:hover {
+  color: white;
+  background-color: #151827;
+}

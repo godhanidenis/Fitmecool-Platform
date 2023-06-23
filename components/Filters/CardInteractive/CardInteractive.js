@@ -12,10 +12,10 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
         handleOpenClick={handleOpenClick}
         className="flex items-center justify-between"
       >
-        <span className="text-lg">{cardTitle}</span>
+        <span className="text-base">{cardTitle}</span>
         <button
           type="button"
-          className={`w-3 h-2 transition-transform duration-300 ${
+          className={`w-3 h-2 text-black transition-transform duration-300 ${
             cardOpen ? "" : "rotate-180"
           }`}
         >
@@ -36,14 +36,8 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
       </FilterTitle>
       {cardOpen && (
         <div
-          className={`px-3 ${
-            cardTitle == "Shops" ||
-            cardTitle == "Colors" ||
-            cardTitle == "Locations"
-              ? "pt-3"
-              : ""
-          } `}
-        >
+          className={`${ cardTitle == "RATINGS" ? "px-6" : "px-4"}`}
+        > 
           {bottomComponent}
         </div>
       )}

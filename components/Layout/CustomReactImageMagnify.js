@@ -16,7 +16,8 @@ const CustomReactImageMagnify = (props) => {
       let xpercent = Math.round(100 / (bounds.width / xposition));
       let ypercent = Math.round(100 / (bounds.height / yposition));
 
-      document.querySelector(".zoom-box").style.backgroundPosition = xpercent + "% " + ypercent + "%";
+      document.querySelector(".zoom-box").style.backgroundPosition =
+        xpercent + "% " + ypercent + "%";
     });
   }, []);
 
@@ -50,11 +51,13 @@ const CustomReactImageMagnify = (props) => {
         <style jsx>
           {`
             img {
-              width: 80%;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
             }
 
             .zoom-box {
-              width: 80%;
+              width: 500px;
               height: 100%;
               position: absolute;
               margin-left: 175%;
@@ -67,6 +70,8 @@ const CustomReactImageMagnify = (props) => {
               display: flex;
               justify-content: center;
               align-items: center;
+              width: 100%;
+              height: 100%;
             }
 
             .image-preview:hover {

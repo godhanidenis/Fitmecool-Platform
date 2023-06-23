@@ -33,7 +33,7 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
 
   return (
     <CardInteractive
-      cardTitle="Ratings"
+      cardTitle="RATINGS"
       bottomComponent={
         <Slider
           value={selectedData}
@@ -43,7 +43,8 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
             setSelectedData(newRating);
           }}
           aria-labelledby="continuous-slider"
-          valueLabelDisplay="auto"
+          valueLabelDisplay="auto" 
+          className="!text-colorGreen"
           min={0}
           max={5}
         />

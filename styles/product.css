@@ -20,7 +20,7 @@
 }
 .detailButton {
   position: absolute;
-  top: 92%;
+  top: 93%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
@@ -51,4 +51,11 @@
 .BrainhubCarouselItem {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.oneItemStart {
+  .slick-slider .slick-track,
+  .slick-slider .slick-list {
+    display: initial;
+  }
 }

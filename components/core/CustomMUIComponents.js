@@ -1,6 +1,13 @@
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { Box, Modal, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Modal,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import PropTypes from "prop-types";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -36,16 +43,23 @@ export const CustomAuthModal = styled(Modal)(({ theme }) => ({
 export const CustomTab = styled(Tabs)(({ theme }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "#757575",
-    fontWeight: 400,
-    fontSize: "15px",
+    color: "#FFFFFF",
+    fontWeight: 600,
+    fontSize: "14px",
+    paddingTop: "32px",
+    paddingBottom: "32px",
+  },
+  [`& .Mui-selected:hover`]: {
+    color: "#29977E !important",
   },
   [`& .Mui-selected`]: {
-    fontWeight: 700,
-    color: "#95539B !important",
+    fontWeight: 600,
+    fontSize: "16px",
+    color: "#FFFFFF !important",
   },
   [`& .MuiTabs-indicator`]: {
-    backgroundColor: "#95539B !important",
+    backgroundColor: "#29977E !important",
+    height: "5px",
   },
 }));
 export function TabPanel(props) {
@@ -150,3 +164,19 @@ QontoStepIcon.propTypes = {
    */
   completed: PropTypes.bool,
 };
+
+export const StyledFormLabelCheckBox = styled(FormControlLabel)(
+  ({ theme, checked }) => ({
+    ".MuiFormControlLabel-label": {
+      color: `${checked ? "#29977E !important" : "#31333E"}`,
+      fontSize: "15px",
+      lineHeight: "14px",
+    },
+    ".MuiCheckbox-root": {
+      color: "#000000",
+    },
+    ".MuiCheckbox-root.Mui-checked": {
+      color: "#29977E",
+    },
+  })
+);

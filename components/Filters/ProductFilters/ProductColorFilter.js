@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Autocomplete, capitalize, Checkbox, TextField } from "@mui/material";
+import { useState } from "react";
+import { capitalize, Checkbox, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { useDispatch, useSelector } from "react-redux";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
+import CommonSearchField from "../CommonSearchField";
+import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const colorsList = [
   "red",
@@ -27,47 +25,81 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
+  const [colorSearchValue, setColorSearchValue] = useState("");
+
+  const [colorShowMore, setColorShowMore] = useState(true);
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    setProductPageSkip(0);
+    dispatch(
+      changeAppliedProductsFilters({
+        key: "productColor",
+        value: {
+          selectedValue: checked
+            ? [
+                ...productsFiltersReducer.appliedProductsFilters.productColor
+                  .selectedValue,
+                value,
+              ]
+            : productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.filter(
+                (item) => item !== value
+              ),
+        },
+      })
+    );
+  };
 
   return (
     <CardInteractive
-      cardTitle="Colors"
+      cardTitle="COLORS"
       bottomComponent={
         <>
-          <Autocomplete
-            multiple
-            options={colorsList}
-            disableCloseOnSelect
-            getOptionLabel={(option) => option}
-            onChange={(event, newValue) => {
-              setProductPageSkip(0);
-              dispatch(
-                changeAppliedProductsFilters({
-                  key: "productColor",
-                  value: {
-                    selectedValue: newValue,
-                  },
-                })
-              );
-            }}
-            value={
-              productsFiltersReducer.appliedProductsFilters.productColor
-                .selectedValue
-            }
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
+          <FormControl fullWidth>
+            <FormGroup>
+              <CommonSearchField
+                value={colorSearchValue}
+                onChange={(e) => setColorSearchValue(e.target.value)}
+              />
+              {(colorSearchValue !== ""
+                ? colorShowMore
+                  ? colorsList
+                      ?.filter((i) =>
+                        i.toLowerCase().includes(colorSearchValue.toLowerCase())
+                      )
+                      .slice(0, 3)
+                  : colorsList?.filter((i) =>
+                      i.toLowerCase().includes(colorSearchValue.toLowerCase())
+                    )
+                : colorShowMore
+                ? colorsList.slice(0, 3)
+                : colorsList
+              )?.map((item) => (
+                <StyledFormLabelCheckBox
+                  key={item}
+                  value={item}
+                  label={capitalize(item)}
+                  control={
+                    <Checkbox
+                      checked={productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.includes(
+                        item
+                      )}
+                      onChange={handleCheckboxChange}
+                    />
+                  }
                 />
-                {capitalize(option)}
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} label="Colors" size="small" placeholder="color" />
-            )}
-          />
+              ))}
+
+              {colorsList?.filter((i) =>
+                i.toLowerCase().includes(colorSearchValue.toLowerCase())
+              ).length > 3 && (
+                <ShowMoreLessFilter
+                  value={colorShowMore}
+                  onClick={() => setColorShowMore(!colorShowMore)}
+                />
+              )}
+            </FormGroup>
+          </FormControl>
         </>
       }
     />

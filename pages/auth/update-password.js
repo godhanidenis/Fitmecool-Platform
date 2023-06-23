@@ -8,19 +8,15 @@ import LockIcon from "@mui/icons-material/Lock";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import InputAdornment from "@mui/material/InputAdornment";
-import Button from "@mui/material/Button";
 import { CustomTextField } from "../../components/core/CustomMUIComponents";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { Alert, CircularProgress } from "@mui/material";
 import Router from "next/router";
-import { AuthTypeModal } from "../../components/core/Enum";
-// import withAuth from './../../components/core/PrivateRoute';
 
 const UpdatePassword = () => {
   const router = useRouter();
 
-  const { token } = router.query;
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,9 +28,8 @@ const UpdatePassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+
     reset,
-    watch,
     getValues,
   } = useForm();
 
@@ -55,12 +50,11 @@ const UpdatePassword = () => {
           <div className="text-start">
             <Link href="/">
               <button className="text-white  focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
-                <Image src={backIcon ?? "" } alt="back" />
+                <Image src={backIcon ?? ""} alt="back" />
               </button>
             </Link>
           </div>
           <div className="col-span-2.5 flex items-center justify-center">
-            {/* <Image src={Logo} alt="Logo" /> */}
             <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
               <span className="text-4xl">W</span>edding
               <span className="text-4xl">B</span>ell
@@ -86,10 +80,7 @@ const UpdatePassword = () => {
                 {success && (
                   <span
                     className="cursor-pointer text-[rgb(95, 33, 32)] ml-1 font-bold underline"
-                    onClick={() => {
-                      window.history.pushState(AuthTypeModal.Signin, "", "/"),
-                        Router.push("/");
-                    }}
+                    onClick={() => Router.push("/auth/user-type")}
                   >
                     Login
                   </span>
@@ -204,4 +195,3 @@ const UpdatePassword = () => {
   );
 };
 export default UpdatePassword;
-// export default withAuth(UpdatePassword);
