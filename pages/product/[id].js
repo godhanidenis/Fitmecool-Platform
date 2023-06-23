@@ -211,13 +211,17 @@ const ProductDetail = ({ productDetails }) => {
           <div className="flex items-center justify-between w-full gap-3">
             <div className="flex justify-start items-center gap-1 sm:gap-4">
               <div className="flex justify-center items-center">
+              <Link
+                  href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                >
                 <Avatar
-                  className="!w-12 !h-12"
+                  className="!w-12 !h-12 cursor-pointer"
                   src={
                     productDetails.data.product.data.branchInfo?.shop_info
                       .shop_logo
                   }
                 />
+                </Link>
               </div>
               <div className="flex flex-col justify-center ">
                 <Link
@@ -228,7 +232,7 @@ const ProductDetail = ({ productDetails }) => {
                       themeLayout === "webScreen" ? "_blank" : "_self"
                     }`}
                   >
-                    <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                    <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
                       {
                         productDetails.data.product.data.branchInfo?.shop_info
                           .shop_name
@@ -519,14 +523,18 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="flex items-center justify-between w-full gap-4">
                     <div className="flex justify-start items-center gap-1 sm:gap-4">
                       <div className="flex justify-center items-center">
+                      <Link
+                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                        >
                         <img
                           alt="Shop Logo"
                           src={
                             productDetails.data.product.data.branchInfo
                               ?.shop_info.shop_logo
                           }
-                          className="rounded-[50%] w-[50px] h-[50px] object-cover"
+                          className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
                         />
+                        </Link>
                       </div>
                       <div className="flex flex-col justify-center">
                         <Link
@@ -537,7 +545,7 @@ const ProductDetail = ({ productDetails }) => {
                               themeLayout === "webScreen" ? "_blank" : "_self"
                             }`}
                           >
-                            <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                            <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer  hover:text-colorGreen">
                               {
                                 productDetails.data.product.data.branchInfo
                                   ?.shop_info.shop_name
@@ -799,7 +807,7 @@ const ProductDetail = ({ productDetails }) => {
           <div
             className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
               isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
-            } gap-4 sm:gap-8 place-items-center mt-8`}
+            } gap-4 sm:gap-8 place-items-center mt-4`}
           >
             {productDetails.data.product.related &&
               productDetails.data.product.related

@@ -82,8 +82,8 @@ const UpperFilter = ({
       className={`justify-between flex sm:grid flex-col-reverse grid-cols-8`}
     >
       <div className="flex items-center sm:col-span-2 mt-5 sm:mt-0">
-        <span className="text-[#979ca0] text-base font-bold">
-          <span className="text-black">
+        <span className="text-[#979ca0] text-base">
+          <span className="text-black font-bold">
             {byShop ? "Shops" : "Products"}&nbsp;
           </span>
           ({byShop ? shopsCount : productsCount} items)
@@ -92,7 +92,7 @@ const UpperFilter = ({
 
       <div className="flex w-full justify-between items-center gap-2 sm:col-span-6">
         <div className="flex items-center sm:px-6">
-          <p className="text-[gray] text-[16px] font-semibold">Sort by : </p>
+          <p className="text-black text-[16px] font-bold">Sort By :</p>
           <Button
             onClick={(event) => {
               setSortByAnchor(event.currentTarget);
@@ -101,13 +101,13 @@ const UpperFilter = ({
             disableRipple
             endIcon={
               !openSortByAnchor ? (
-                <KeyboardArrowDownIcon className="text-black" />
+                <KeyboardArrowDownIcon className="text-[#979ca0]" />
               ) : (
-                <KeyboardArrowUpIcon className="text-black" />
+                <KeyboardArrowUpIcon className="text-[#979ca0]" />
               )
             }
           >
-            <span className="text-black capitalize font-semibold text-sm">
+            <span className="text-[#979ca0] capitalize text-base">
               {byShop
                 ? GetSortByName(
                     shopsFiltersReducer.sortFilters.sortType.selectedValue
@@ -180,7 +180,7 @@ const UpperFilter = ({
           </Popover>
         </div>
         <div
-          className={`flex gap-5 ${showOnlyShopDetailPage ? "pr-0" : "pr-6"} `}
+          className={`flex gap-5`}
         >
           {showDrawerFilter && (
             <DrawerFilters

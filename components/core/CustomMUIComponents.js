@@ -169,8 +169,7 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
   ({ theme, checked }) => ({
     ".MuiFormControlLabel-label": {
       color: `${checked ? "#29977E !important" : "#31333E"}`,
-      fontWeight: 600,
-      fontSize: "14px",
+      fontSize: "15px",
       lineHeight: "14px",
     },
     ".MuiCheckbox-root": {

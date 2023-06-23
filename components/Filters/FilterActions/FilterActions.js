@@ -11,13 +11,13 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
 
   return (
     <>
-      <div className="p-2 items-center">
-        <span>
-          <b className="text-[black] text-[22px] uppercase">Filters</b>
-        </span>
+      <div className="items-center">
+        <div className="bg-colorPrimary py-2 px-4">
+          <span className="text-white text-[22px]">Filters</span>
+        </div>
 
         {!productByShop && (
-          <div className="flex items-center gap-2 mt-6 w-full">
+          <div className="flex items-center gap-2 mt-6 w-full px-6">
             <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800 w-full">
               <input
                 id="Toggle4"

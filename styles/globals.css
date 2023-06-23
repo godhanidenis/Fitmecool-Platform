@@ -82,3 +82,13 @@ h6 {
     color: white;
   }
 }
+
+.css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  color: white;
+  background-color: #151827;
+}
+
+.css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected:hover {
+  color: white;
+  background-color: #151827;
+}
