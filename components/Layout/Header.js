@@ -110,6 +110,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const isScreenWide = useResizeScreenLayout();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -175,9 +176,11 @@ const Header = () => {
         setAccessToken={setAccessToken}
       />
       <header
-        className={`lg:py-0 py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
+        className={`${
+          router.pathname === "/vendor/shop-setup" ? "lg:py-4" : "lg:py-0"
+        } py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
-        } transition-all duration-500`}
+        }  transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
@@ -228,9 +231,11 @@ const Header = () => {
               </div>
             )}
           </div>
-          <div className="font-Nova">
-            <SubHeader />
-          </div>
+          {userProfile.user_type !== "vendor" && (
+            <div className="font-Nova">
+              <SubHeader />
+            </div>
+          )}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
               {userProfile.user_type !== "vendor" && (
