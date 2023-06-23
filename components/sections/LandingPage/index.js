@@ -159,6 +159,7 @@ const LandingPage = () => {
                       of {productsCount} results
                     </p>
                     <Pagination
+                      color="primary"
                       count={Math.ceil(productsCount / 6)}
                       page={
                         (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
@@ -189,6 +190,7 @@ const LandingPage = () => {
                       of {shopsCount} results
                     </p>
                     <Pagination
+                      color="primary"
                       count={Math.ceil(shopsCount / 6)}
                       page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
                       onChange={(e, p) => {

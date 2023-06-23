@@ -12,17 +12,154 @@ import {
   styled,
   Radio,
   RadioGroup,
+  MenuItem,
+  Divider,
+  Button,
+  IconButton,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
 import AddIcon from "@mui/icons-material/Add";
 import { useForm } from "react-hook-form";
+import {
+  CustomAuthModal,
+  CustomTextField,
+} from "../../../components/core/CustomMUIComponents";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+const subBranchStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "50%",
+  maxWidth: "1200px",
+  bgcolor: "background.paper",
+  border: "0px solid #000",
+  boxShadow: 24,
+  borderRadius: "12px",
+  height: "auto",
+};
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 2,
+  outline: "none",
+  width: "80%",
+};
+
+const IOSSwitchMax = styled((props) => (
+  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+))(({ theme }) => ({
+  width: 70,
+  height: 35,
+  padding: 0,
+  "& .MuiSwitch-switchBase": {
+    padding: 0,
+    margin: 3,
+    transitionDuration: "300ms",
+    "&.Mui-checked": {
+      transform: "translateX(35px)",
+      color: "#fff",
+      "& + .MuiSwitch-track": {
+        backgroundColor: theme.palette.mode === "dark" ? "#2ECA45" : "#29977E",
+        opacity: 1,
+        border: 0,
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: 0.5,
+      },
+    },
+    "&.Mui-focusVisible .MuiSwitch-thumb": {
+      color: "#33cf4d",
+      border: "6px solid #fff",
+    },
+    "&.Mui-disabled .MuiSwitch-thumb": {
+      color:
+        theme.palette.mode === "light"
+          ? theme.palette.grey[100]
+          : theme.palette.grey[600],
+    },
+    "&.Mui-disabled + .MuiSwitch-track": {
+      opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    boxSizing: "border-box",
+    width: 28,
+    height: 28,
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 35,
+    backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+    opacity: 1,
+    transition: theme.transitions.create(["background-color"], {
+      duration: 500,
+    }),
+  },
+}));
+const IOSSwitchMin = styled((props) => (
+  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+))(({ theme }) => ({
+  width: 21,
+  height: 13,
+  padding: 0,
+  "& .MuiSwitch-switchBase": {
+    padding: 0,
+    margin: 1,
+    transitionDuration: "300ms",
+    "&.Mui-checked": {
+      transform: "translateX(8px)",
+      color: "#fff",
+      "& + .MuiSwitch-track": {
+        backgroundColor: theme.palette.mode === "dark" ? "#2ECA45" : "#29977E",
+        opacity: 1,
+        border: 0,
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: 0.5,
+      },
+    },
+    "&.Mui-focusVisible .MuiSwitch-thumb": {
+      color: "#33cf4d",
+      border: "6px solid #fff",
+    },
+    "&.Mui-disabled .MuiSwitch-thumb": {
+      color:
+        theme.palette.mode === "light"
+          ? theme.palette.grey[100]
+          : theme.palette.grey[600],
+    },
+    "&.Mui-disabled + .MuiSwitch-track": {
+      opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    boxSizing: "border-box",
+    width: 11,
+    height: 11,
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 13 / 2,
+    backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+    opacity: 1,
+    transition: theme.transitions.create(["background-color"], {
+      duration: 500,
+    }),
+  },
+}));
 
 const ShopPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("Shop");
-  const [currentStep, setCurrentStep] = useState(3);
+  const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
@@ -47,6 +184,28 @@ const ShopPage = () => {
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
+  const [sameAsOwner, setSameAsOwner] = useState("False");
+  const [individual, setIndividual] = useState(false);
+  const [subBranchModalOpen, setSubBranchModalOpen] = useState(false);
+  const [subBranch, setSubBranch] = useState([]);
+  const [subBranchEdit, setSubBranchEdit] = useState();
+
+  const [hoursModalOpen, setHoursModalOpen] = useState(false);
+  const [daysTimeModalOpen, setDaysTimeModalOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState();
+  const [selectedWeek, setSelectedWeek] = useState();
+  const [selectedAllHours, setSelectedAllHours] = useState();
+
+  const [hours, setHours] = useState([
+    { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Monday", value: ["09:00 AM - 10:00 PM"] },
+    { key: "Tuesday", value: ["07:00 AM - 08:00 PM"] },
+    { key: "Wednesday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Thursday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Friday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
+  ]);
+
   const {
     register,
     handleSubmit,
@@ -59,128 +218,19 @@ const ShopPage = () => {
     control,
   } = useForm();
 
-  const IOSSwitchMax = styled((props) => (
-    <Switch
-      focusVisibleClassName=".Mui-focusVisible"
-      disableRipple
-      {...props}
-    />
-  ))(({ theme }) => ({
-    width: 70,
-    height: 35,
-    padding: 0,
-    "& .MuiSwitch-switchBase": {
-      padding: 0,
-      margin: 3,
-      transitionDuration: "300ms",
-      "&.Mui-checked": {
-        transform: "translateX(35px)",
-        color: "#fff",
-        "& + .MuiSwitch-track": {
-          backgroundColor:
-            theme.palette.mode === "dark" ? "#2ECA45" : "#29977E",
-          opacity: 1,
-          border: 0,
-        },
-        "&.Mui-disabled + .MuiSwitch-track": {
-          opacity: 0.5,
-        },
-      },
-      "&.Mui-focusVisible .MuiSwitch-thumb": {
-        color: "#33cf4d",
-        border: "6px solid #fff",
-      },
-      "&.Mui-disabled .MuiSwitch-thumb": {
-        color:
-          theme.palette.mode === "light"
-            ? theme.palette.grey[100]
-            : theme.palette.grey[600],
-      },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-      },
-    },
-    "& .MuiSwitch-thumb": {
-      boxSizing: "border-box",
-      width: 28,
-      height: 28,
-    },
-    "& .MuiSwitch-track": {
-      borderRadius: 35,
-      backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
-      opacity: 1,
-      transition: theme.transitions.create(["background-color"], {
-        duration: 500,
-      }),
-    },
-  }));
-  const IOSSwitchMin = styled((props) => (
-    <Switch
-      focusVisibleClassName=".Mui-focusVisible"
-      disableRipple
-      {...props}
-    />
-  ))(({ theme }) => ({
-    width: 21,
-    height: 13,
-    padding: 0,
-    "& .MuiSwitch-switchBase": {
-      padding: 0,
-      margin: 1,
-      transitionDuration: "300ms",
-      "&.Mui-checked": {
-        transform: "translateX(8px)",
-        color: "#fff",
-        "& + .MuiSwitch-track": {
-          backgroundColor:
-            theme.palette.mode === "dark" ? "#2ECA45" : "#29977E",
-          opacity: 1,
-          border: 0,
-        },
-        "&.Mui-disabled + .MuiSwitch-track": {
-          opacity: 0.5,
-        },
-      },
-      "&.Mui-focusVisible .MuiSwitch-thumb": {
-        color: "#33cf4d",
-        border: "6px solid #fff",
-      },
-      "&.Mui-disabled .MuiSwitch-thumb": {
-        color:
-          theme.palette.mode === "light"
-            ? theme.palette.grey[100]
-            : theme.palette.grey[600],
-      },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-      },
-    },
-    "& .MuiSwitch-thumb": {
-      boxSizing: "border-box",
-      width: 11,
-      height: 11,
-    },
-    "& .MuiSwitch-track": {
-      borderRadius: 13 / 2,
-      backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
-      opacity: 1,
-      transition: theme.transitions.create(["background-color"], {
-        duration: 500,
-      }),
-    },
-  }));
-
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 2,
-    outline: "none",
-    width: "80%",
-  };
+  useEffect(() => {
+    if (sameAsOwner === "True") {
+      setValue("manager_first_name", getValues("first_name"));
+      setValue("manager_last_name", getValues("last_name"));
+      setValue("manager_user_email", getValues("user_email"));
+      setValue("manager_user_contact", getValues("user_contact"));
+    } else {
+      setValue("manager_first_name", "");
+      setValue("manager_last_name", "");
+      setValue("manager_user_email", "");
+      setValue("manager_user_contact", "");
+    }
+  }, [getValues, sameAsOwner, setValue, currentStep]);
 
   const onShopLogoPreviewImage = (e) => {
     const reader = new FileReader();
@@ -256,8 +306,9 @@ const ShopPage = () => {
     setShopTimeDetails(option);
   };
 
-  const handleClick = (option) => {
+  const handleClickIndividual = (option, active) => {
     setSelectedOption(option);
+    setIndividual(active);
   };
 
   //   const handleDragEnter = (e) => {
@@ -358,7 +409,7 @@ const ShopPage = () => {
                 selectedOption === "Shop" &&
                 "bg-colorGreen rounded-md text-white"
               }`}
-              onClick={() => handleClick("Shop")}
+              onClick={() => handleClickIndividual("Shop", false)}
             >
               Shop
             </button>
@@ -367,7 +418,7 @@ const ShopPage = () => {
                 selectedOption === "Individual" &&
                 "bg-colorGreen rounded-md text-white"
               }`}
-              onClick={() => handleClick("Individual")}
+              onClick={() => handleClickIndividual("Individual", true)}
             >
               Individual
             </button>
@@ -654,261 +705,180 @@ const ShopPage = () => {
                         </div>
                       )}
                     </div>
-                    <div className="w-full relative">
-                      <label
-                        htmlFor="shopEmail"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Shop Email
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
-                        type="email"
-                        id="shopEmail"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                        placeholder="Your shop email"
-                        {...register("shop_email", {
-                          required: "Shop email is required",
+                    {!individual && (
+                      <>
+                        <div className="w-full relative">
+                          <label
+                            htmlFor="shopEmail"
+                            className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                          >
+                            Shop Email
+                            <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
+                              *
+                            </span>
+                          </label>
+                          <input
+                            type="email"
+                            id="shopEmail"
+                            className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                            placeholder="Your shop email"
+                            {...register("shop_email", {
+                              required: "Shop email is required",
 
-                          pattern: {
-                            value:
-                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                            message: "Please enter a valid email",
-                          },
-                        })}
-                      />
-                      {errors.shop_email && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.shop_email?.message}
-                          </span>
+                              pattern: {
+                                value:
+                                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                message: "Please enter a valid email",
+                              },
+                            })}
+                          />
+                          {errors.shop_email && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.shop_email?.message}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="w-full relative">
-                      <label
-                        htmlFor="personalWebLink1"
-                        className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                        <div className="w-full relative">
+                          <label
+                            htmlFor="personalWebLink1"
+                            className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                          >
+                            Personal Website Link
+                          </label>
+                          <input
+                            type="text"
+                            id="personalWebLink1"
+                            className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                            placeholder="Personal Website Link"
+                            {...register("personal_website", {
+                              // required: "Personal Website is required",
+                            })}
+                          />
+                          {errors.personal_website && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.personal_website?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
+                          <div className="w-1/2 relative max-md:w-full">
+                            <label
+                              htmlFor="fbLink"
+                              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                            >
+                              Fackbook Link
+                            </label>
+                            <input
+                              type="text"
+                              id="fbLink"
+                              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                              placeholder="Your facebook link"
+                              {...register("facebook_link", {
+                                // required: "Facebook Link is required",
+                              })}
+                            />
+                            {errors.facebook_link && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.facebook_link?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="w-1/2 relative max-md:w-full">
+                            <label
+                              htmlFor="igLink"
+                              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                            >
+                              Instagram Link
+                            </label>
+                            <input
+                              type="text"
+                              id="igLink"
+                              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                              placeholder="Your instagram link"
+                              {...register("instagram_link", {
+                                // required: "Instagram Link is required",
+                              })}
+                            />
+                            {errors.instagram_link && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.instagram_link?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  {!individual && (
+                    <>
+                      <div className="flex justify-between items-center my-10">
+                        <div className="flex">
+                          {shopTimeDetails === "Show" ? (
+                            <KeyboardArrowUpIcon
+                              onClick={() => handleShopTimeDetails("Hide")}
+                              className="cursor-pointer"
+                            />
+                          ) : (
+                            <KeyboardArrowDownIcon
+                              onClick={() => handleShopTimeDetails("Show")}
+                              className="cursor-pointer"
+                            />
+                          )}
+                          <div className="uppercase font-semibold sm:text-lg text-sm">
+                            Shop Open/Close Time
+                          </div>
+                        </div>
+                        <div
+                          className="flex gap-2 mr-4 items-center cursor-pointer"
+                          onClick={() => setHoursModalOpen(true)}
+                        >
+                          <EditIcon
+                            fontSize="small"
+                            className="text-gray-400"
+                          />
+                          <div className="text-gray-400 sm:text-lg text-sm">
+                            Edit
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className={`space-y-10 ${
+                          shopTimeDetails === "Hide" && "hidden"
+                        }`}
                       >
-                        Personal Website Link
-                      </label>
-                      <input
-                        type="text"
-                        id="personalWebLink1"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                        placeholder="Personal Website Link"
-                        {...register("personal_website", {
-                          // required: "Personal Website is required",
-                        })}
-                      />
-                      {errors.personal_website && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.personal_website?.message}
-                          </span>
+                        <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
+                          {hours.map((day, index) => (
+                            <div className="relative" key={index}>
+                              <label
+                                htmlFor="sunday"
+                                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                              >
+                                {day["key"]}
+                              </label>
+                              {day["value"]?.map((time, index) => (
+                                <input
+                                  type="text"
+                                  id="sunday"
+                                  value={time}
+                                  className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 outline-none"
+                                  readOnly
+                                />
+                              ))}
+                            </div>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                    <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
-                      <div className="w-1/2 relative max-md:w-full">
-                        <label
-                          htmlFor="fbLink"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Fackbook Link
-                        </label>
-                        <input
-                          type="text"
-                          id="fbLink"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="Your facebook link"
-                          {...register("facebook_link", {
-                            // required: "Facebook Link is required",
-                          })}
-                        />
-                        {errors.facebook_link && (
-                          <div className="mt-2">
-                            <span style={{ color: "red" }}>
-                              {errors.facebook_link?.message}
-                            </span>
-                          </div>
-                        )}
                       </div>
-                      <div className="w-1/2 relative max-md:w-full">
-                        <label
-                          htmlFor="igLink"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Instagram Link
-                        </label>
-                        <input
-                          type="text"
-                          id="igLink"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="Your instagram link"
-                          {...register("instagram_link", {
-                            // required: "Instagram Link is required",
-                          })}
-                        />
-                        {errors.instagram_link && (
-                          <div className="mt-2">
-                            <span style={{ color: "red" }}>
-                              {errors.instagram_link?.message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center my-10">
-                    <div className="flex">
-                      {shopTimeDetails === "Show" ? (
-                        <KeyboardArrowUpIcon
-                          onClick={() => handleShopTimeDetails("Hide")}
-                          className="cursor-pointer"
-                        />
-                      ) : (
-                        <KeyboardArrowDownIcon
-                          onClick={() => handleShopTimeDetails("Show")}
-                          className="cursor-pointer"
-                        />
-                      )}
-                      <div className="uppercase font-semibold sm:text-lg text-sm">
-                        Shop Open/Close Time
-                      </div>
-                    </div>
-                    <div
-                      className="flex gap-2 mr-4 items-center cursor-pointer"
-                      onClick={handleOpen}
-                    >
-                      <EditIcon fontSize="small" className="text-gray-400" />
-                      <div className="text-gray-400 sm:text-lg text-sm">
-                        Edit
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className={`space-y-10 ${
-                      shopTimeDetails === "Hide" && "hidden"
-                    }`}
-                  >
-                    <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-2">
-                      <div className="relative">
-                        <label
-                          htmlFor="sunday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Sunday
-                        </label>
-                        <input
-                          type="text"
-                          id="sunday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                      <div className="relative ">
-                        <label
-                          htmlFor="monday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Monday
-                        </label>
-                        <input
-                          type="text"
-                          id="monday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                      <div className="relative">
-                        <label
-                          htmlFor="tuesday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Tuesday
-                        </label>
-                        <input
-                          type="text"
-                          id="tuesday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                      <div className="relative">
-                        <label
-                          htmlFor="wednesday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Wednesday
-                        </label>
-                        <input
-                          type="text"
-                          id="wednesday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                      <div className="relative">
-                        <label
-                          htmlFor="thursday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Thursday
-                        </label>
-                        <input
-                          type="text"
-                          id="thursday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                      <div className="relative">
-                        <label
-                          htmlFor="friday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Friday
-                        </label>
-                        <input
-                          type="text"
-                          id="friday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                      <div className="relative">
-                        <label
-                          htmlFor="saturday"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Saturday
-                        </label>
-                        <input
-                          type="text"
-                          id="saturday"
-                          value="09:00 AM - 08:00 PM"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="09:00 AM - 08:00 PM"
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
+
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -917,515 +887,18 @@ const ShopPage = () => {
                     onError={onError}
                   />
                 </div>
-                <Modal
-                  open={open}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style} className="max-h-[80vh] overflow-y-auto">
-                    <div className="sm:p-5 lg:p-5 xl:p-10 p-1">
-                      <div className="flex justify-between items-center">
-                        <div className="sm:text-2xl lg:text-3xl xl:text-5xl text-[16px] font-bold">
-                          Hours
-                        </div>
-                        <span className="hidden sm:block">
-                          <CloseIcon
-                            className="text-gray-500"
-                            fontSize="large"
-                            onClick={handleClose}
-                          />
-                        </span>
-                        <span className="sm:hidden">
-                          <CloseIcon
-                            className="text-gray-500"
-                            fontSize="small"
-                            onClick={handleClose}
-                          />
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7">
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Sunday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Monday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Tuesday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Wednesday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Thursday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Friday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                          <div className="xl:w-[45%] lg:w-[40%] w-[50%] flex  xl:gap-32  items-center">
-                            <div className="xl:text-3xl w-[60%] max-[400px]:w-[65%] lg:text-2xl sm:text-lg text-xs font-semibold">
-                              Saturday
-                            </div>
-                            <div className="flex items-center  w-[40%] max-[400px]:w-[35%]">
-                              <span className="hidden md:block">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMax
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-                              <span className="md:hidden">
-                                <FormControlLabel
-                                  control={
-                                    <IOSSwitchMin
-                                      sx={{ m: 0 }}
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              </span>
-
-                              <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                                Open
-                              </span>
-                            </div>
-                          </div>
-                          <div className="xl:w-[55%] lg:w-[60%] w-[50%] flex gap-4 sm:items-center items-start">
-                            <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  Start with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                              <div className="relative">
-                                <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                                  End with
-                                </span>
-                                <input
-                                  type="time"
-                                  id="saturday"
-                                  className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                                />
-                              </div>
-                            </div>
-                            <span className="border border-gray-200 rounded-full text-gray-400 hidden sm:block hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon className="m-3" />
-                            </span>
-                            <span className="border border-gray-200 rounded-full sm:hidden text-gray-400  hover:text-white hover:bg-colorGreen hover:border-colorGreen">
-                              <EditIcon fontSize="small" className="m-1" />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex lg:gap-4 gap-1 lg:mt-20 mt-10">
-                        <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
-                          <span className="hidden sm:block">
-                            <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                          </span>
-                          <span className="sm:hidden">
-                            <EditIcon className="-ml-1" fontSize="small" />
-                          </span>
-                          Edit all hours
-                        </button>
-                        <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
-                          <span className="hidden sm:block">
-                            <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                          </span>
-                          <span className="sm:hidden">
-                            <EditIcon className="-ml-1" fontSize="small" />
-                          </span>
-                          Edit Mon to Sat
-                        </button>
-                        <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
-                          <span className="hidden sm:block">
-                            <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                          </span>
-                          <span className="sm:hidden">
-                            <EditIcon className="-ml-1" fontSize="small" />
-                          </span>
-                          Edit Sunday
-                        </button>
-                      </div>
-                      <div className="flex justify-end lg:mt-32 lg:gap-6 mt-20 gap-4">
-                        <button className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen">
-                          Cancel
-                        </button>
-                        <button className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen">
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  </Box>
-                </Modal>
+                <HoursModal
+                  hoursModalOpen={hoursModalOpen}
+                  setHoursModalOpen={setHoursModalOpen}
+                  setDaysTimeModalOpen={setDaysTimeModalOpen}
+                  hours={hours}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  setSelectedWeek={setSelectedWeek}
+                  selectedWeek={selectedWeek}
+                  selectedAllHours={selectedAllHours}
+                  setSelectedAllHours={setSelectedAllHours}
+                />
               </>
             )}
 
@@ -1730,7 +1203,17 @@ const ShopPage = () => {
                         id="address"
                         className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                         placeholder="Your address"
+                        {...register("address", {
+                          required: "Address is required",
+                        })}
                       />
+                      {errors.address && (
+                        <div className="mt-2">
+                          <span style={{ color: "red" }}>
+                            {errors.address?.message}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
@@ -1748,7 +1231,17 @@ const ShopPage = () => {
                           id="city"
                           className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                           placeholder="Your city"
+                          {...register("city", {
+                            required: "City is required",
+                          })}
                         />
+                        {errors.city && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.city?.message}
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <label
@@ -1761,11 +1254,21 @@ const ShopPage = () => {
                           </span>
                         </label>
                         <input
-                          type="text"
                           id="pincode"
                           className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                           placeholder="Your pincode"
+                          type="number"
+                          {...register("pin_code", {
+                            required: "PinCode is required",
+                          })}
                         />
+                        {errors.pin_code && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.pin_code?.message}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1793,15 +1296,23 @@ const ShopPage = () => {
                     <RadioGroup
                       row
                       name="row-radio-buttons-group"
-                      defaultValue="yes"
+                      //   defaultValue="True"
+                      value={sameAsOwner}
+                      onChange={(e) => {
+                        if (e.target.value === "True") {
+                          setSameAsOwner("True");
+                        } else {
+                          setSameAsOwner("False");
+                        }
+                      }}
                     >
                       <div className="flex gap-4">
                         <div className="flex items-center">
                           <span className="hidden sm:inline">
                             <Radio
                               name="saveAsOwner"
-                              id="yes"
-                              value="yes"
+                              id="True"
+                              value="True"
                               sx={{
                                 color: "rgba(21, 24, 39, 0.1)",
                                 "& .MuiSvgIcon-root": {
@@ -1816,8 +1327,8 @@ const ShopPage = () => {
                           <span className="sm:hidden">
                             <Radio
                               name="saveAsOwner"
-                              id="yes"
-                              value="yes"
+                              id="True"
+                              value="True"
                               sx={{
                                 color: "rgba(21, 24, 39, 0.1)",
                                 "& .MuiSvgIcon-root": {
@@ -1830,7 +1341,7 @@ const ShopPage = () => {
                             />
                           </span>
                           <label
-                            htmlFor="yes"
+                            htmlFor="True"
                             className="sm:text-xl text-sm text-gray-400 font-semibold"
                           >
                             Yes
@@ -1840,8 +1351,8 @@ const ShopPage = () => {
                           <span className="hidden sm:inline">
                             <Radio
                               name="saveAsOwner"
-                              id="no"
-                              value="no"
+                              id="False"
+                              value="False"
                               sx={{
                                 color: "rgba(21, 24, 39, 0.1)",
                                 "& .MuiSvgIcon-root": {
@@ -1856,8 +1367,8 @@ const ShopPage = () => {
                           <span className="sm:hidden">
                             <Radio
                               name="saveAsOwner"
-                              id="no"
-                              value="no"
+                              id="False"
+                              value="False"
                               sx={{
                                 color: "rgba(21, 24, 39, 0.1)",
                                 "& .MuiSvgIcon-root": {
@@ -1870,7 +1381,7 @@ const ShopPage = () => {
                             />
                           </span>
                           <label
-                            htmlFor="no"
+                            htmlFor="False"
                             className="sm:text-xl text-sm text-gray-400 font-semibold"
                           >
                             No
@@ -1895,7 +1406,18 @@ const ShopPage = () => {
                           id="managerfName"
                           className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                           placeholder="Manager first name"
+                          disabled={sameAsOwner === "True"}
+                          {...register("manager_first_name", {
+                            required: "Manager FirstName is required",
+                          })}
                         />
+                        {errors.manager_first_name && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.manager_first_name?.message}
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <label
@@ -1912,7 +1434,18 @@ const ShopPage = () => {
                           id="mangerlName"
                           className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                           placeholder="Manager last name"
+                          disabled={sameAsOwner === "True"}
+                          {...register("manager_last_name", {
+                            required: "Manager LastName is required",
+                          })}
                         />
+                        {errors.manager_last_name && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.manager_last_name?.message}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="w-full relative">
@@ -1930,7 +1463,24 @@ const ShopPage = () => {
                         id="managerEmail"
                         className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                         placeholder="Manager email address"
+                        disabled={sameAsOwner === "True"}
+                        {...register("manager_user_email", {
+                          required: "Manager Email is required",
+
+                          pattern: {
+                            value:
+                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            message: "Please enter a valid email",
+                          },
+                        })}
                       />
+                      {errors.manager_user_email && (
+                        <div className="mt-2">
+                          <span style={{ color: "red" }}>
+                            {errors.manager_user_email?.message}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="w-full relative">
                       <label
@@ -1943,24 +1493,128 @@ const ShopPage = () => {
                         </span>
                       </label>
                       <input
-                        type="text"
+                        type="number"
                         id="managerPhone"
                         className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
                         placeholder="Manager phone number"
+                        disabled={sameAsOwner === "True"}
+                        {...register("manager_user_contact", {
+                          required: "Manager Contact Number is required",
+                          pattern: {
+                            value: /^[0-9]{10}$/,
+                            message: "Please enter a valid number",
+                          },
+                        })}
                       />
+                      {errors.manager_user_contact && (
+                        <div className="mt-2">
+                          <span style={{ color: "red" }}>
+                            {errors.manager_user_contact?.message}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="my-10">
-                    <button className="uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen">
-                      Sub Branch
-                      <span className="hidden sm:inline">
-                        <AddIcon fontSize="large" className="ml-2" />
-                      </span>
-                      <span className="sm:hidden">
-                        <AddIcon fontSize="small" className="ml-2" />
-                      </span>
-                    </button>
-                  </div>
+                  {!individual && (
+                    <div className="my-10">
+                      <button
+                        onClick={() => setSubBranchModalOpen(true)}
+                        disabled={!isValid}
+                        className="uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen"
+                      >
+                        Sub Branch
+                        <span className="hidden sm:inline">
+                          <AddIcon fontSize="large" className="ml-2" />
+                        </span>
+                        <span className="sm:hidden">
+                          <AddIcon fontSize="small" className="ml-2" />
+                        </span>
+                      </button>
+                    </div>
+                  )}
+
+                  {subBranch?.length > 0 && (
+                    <div className="mb-10">
+                      <h3 className="text-colorPrimary text-lg font-semibold leading-8 container my-5">
+                        Sub Branches
+                      </h3>
+                      <div className="container grid grid-cols-1 sm:grid-cols-2 gap-10">
+                        {subBranch?.map((sub, index) => (
+                          <div
+                            className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
+                            key={index}
+                          >
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                                Branch Address :{" "}
+                              </b>
+                              {sub.subManagerAddress}
+                            </p>
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                                Branch City :{" "}
+                              </b>
+                              {sub.subManagerCity}
+                            </p>
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                                Branch PinCode :{" "}
+                              </b>
+                              {sub.subManagerPinCode}
+                            </p>
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                                Branch Manager Name :
+                              </b>
+                              {sub.subManagerFirstName +
+                                " " +
+                                sub.subManagerLastName}
+                            </p>
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                                Branch Manager Email :
+                              </b>
+                              {sub.subManagerEmail}
+                            </p>
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
+                                Branch Manager Phone Number :
+                              </b>
+                              {sub.subManagerPhone}
+                            </p>
+
+                            <div className="container mt-5">
+                              <Divider />
+                            </div>
+                            <div className="container mt-5 flex items-center justify-end gap-5">
+                              <IconButton
+                                aria-label="delete"
+                                className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-red-600 hover:!bg-red-600"
+                                onClick={() => {
+                                  setSubBranch(
+                                    subBranch.filter((itm) => itm.id !== sub.id)
+                                  );
+                                }}
+                              >
+                                <DeleteIcon className="!text-colorWhite" />
+                              </IconButton>
+                              <IconButton
+                                aria-label="delete"
+                                className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-colorStone hover:!bg-colorStone"
+                                onClick={() => {
+                                  setSubBranchModalOpen(true);
+                                  setSubBranchEdit(sub);
+                                }}
+                              >
+                                <EditIcon className="!text-colorWhite" />
+                              </IconButton>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1971,26 +1625,19 @@ const ShopPage = () => {
                 </div>
               </>
             )}
-
-            {/* {currentStep === 1 ? (
-              <SignUpBusinessDetails
-                currentStep={currentStep}
-                setCurrentStep={setCurrentStep}
-              />
-            ) : currentStep === 2 ? (
-              <SignUpBusinessPhotos
-                currentStep={currentStep}
-                setCurrentStep={setCurrentStep}
-              />
-            ) : (
-              <SignUpBusinessBranches
-                currentStep={currentStep}
-                setCurrentStep={setCurrentStep}
-              />
-            )} */}
           </div>
         </div>
       </div>
+      <SubBranchModal
+        subBranchModalOpen={subBranchModalOpen}
+        setSubBranchModalOpen={setSubBranchModalOpen}
+        subBranch={subBranch}
+        setSubBranch={setSubBranch}
+        setValue={setValue}
+        getValues={getValues}
+        subBranchEdit={subBranchEdit}
+        setSubBranchEdit={setSubBranchEdit}
+      />
     </>
   );
 };
@@ -2021,5 +1668,635 @@ const ActionButtons = ({
         {currentStep === 3 ? "Submit" : "Next"}
       </button>
     </div>
+  );
+};
+
+const SubBranchModal = ({
+  subBranchModalOpen,
+  setSubBranchModalOpen,
+  subBranch,
+  setSubBranch,
+  setValue,
+  getValues,
+  setSubBranchEdit,
+  subBranchEdit,
+}) => {
+  const [managerValue, setManagerValue] = useState("");
+
+  const [subManagerAddress, setSubManagerAddress] = useState("");
+  const [subManagerCity, setSubManagerCity] = useState("");
+  const [subManagerPinCode, setSubManagerPinCode] = useState("");
+
+  const [subManagerFirstName, setSubManagerFirstName] = useState("");
+  const [subManagerLastName, setSubManagerLastName] = useState("");
+  const [subManagerEmail, setSubManagerEmail] = useState("");
+  const [subManagerPhone, setSubManagerPhone] = useState("");
+
+  const [error, setError] = useState({
+    subManagerAddressError: "",
+    subManagerCityError: "",
+    subManagerPinCodeError: "",
+    subManagerFirstNameError: "",
+    subManagerLastNameError: "",
+    subManagerEmailError: "",
+    subManagerPhoneError: "",
+  });
+
+  useEffect(() => {
+    if (managerValue === "Same as owner") {
+      setSubManagerFirstName(getValues("first_name"));
+      setSubManagerLastName(getValues("last_name"));
+      setSubManagerEmail(getValues("user_email"));
+      setSubManagerPhone(getValues("user_contact"));
+      error.subManagerFirstNameError = "";
+      error.subManagerLastNameError = "";
+      error.subManagerEmailError = "";
+      error.subManagerPhoneError = "";
+    } else if (managerValue === "same as main branch manager") {
+      setSubManagerFirstName(getValues("manager_first_name"));
+      setSubManagerLastName(getValues("manager_last_name"));
+      setSubManagerEmail(getValues("manager_user_email"));
+      setSubManagerPhone(getValues("manager_user_contact"));
+      error.subManagerFirstNameError = "";
+      error.subManagerLastNameError = "";
+      error.subManagerEmailError = "";
+      error.subManagerPhoneError = "";
+    } else {
+      setSubManagerFirstName("");
+      setSubManagerLastName("");
+      setSubManagerEmail("");
+      setSubManagerPhone("");
+    }
+  }, [error, getValues, managerValue, setValue]);
+
+  useEffect(() => {
+    if (subBranchEdit !== undefined) {
+      setSubManagerAddress(subBranchEdit.subManagerAddress);
+      setSubManagerCity(subBranchEdit.subManagerCity);
+      setSubManagerPinCode(subBranchEdit.subManagerPinCode);
+      setSubManagerFirstName(subBranchEdit.subManagerFirstName);
+      setSubManagerLastName(subBranchEdit.subManagerLastName);
+      setSubManagerEmail(subBranchEdit.subManagerEmail);
+      setSubManagerPhone(subBranchEdit.subManagerPhone);
+    }
+  }, [subBranchEdit]);
+
+  const subBranchSubmit = () => {
+    let allError = {};
+    if (!subManagerAddress) {
+      allError.subManagerAddressError = "SubManagerAddress is require";
+    } else {
+      allError.subManagerAddressError = "";
+    }
+    if (!subManagerCity) {
+      allError.subManagerCityError = "SubManagerCity is require";
+    } else {
+      allError.subManagerCityError = "";
+    }
+
+    if (!subManagerPinCode) {
+      allError.subManagerPinCodeError = "SubManagerPinCode is require";
+    } else {
+      allError.subManagerPinCodeError = "";
+    }
+
+    if (!subManagerFirstName) {
+      allError.subManagerFirstNameError = "SubManagerFirstName is require";
+    } else {
+      allError.subManagerFirstNameError = "";
+    }
+    if (!subManagerLastName) {
+      allError.subManagerLastNameError = "SubManagerLastName is require";
+    } else {
+      allError.subManagerLastNameError = "";
+    }
+    if (!subManagerEmail) {
+      allError.subManagerEmailError = "SubManagerEmail is require";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(subManagerEmail)
+    ) {
+      allError.subManagerEmailError = "Invalid SubManagerEmail address";
+    } else {
+      allError.subManagerEmailError = "";
+    }
+    if (!subManagerPhone) {
+      allError.subManagerPhoneError = "SubManagerPhone is require";
+    } else if (subManagerPhone.length != 10) {
+      allError.subManagerPhoneError =
+        "SubManagerPhone Number must be 10 numbers";
+    } else {
+      allError.subManagerPhoneError = "";
+    }
+
+    if (
+      !subManagerAddress ||
+      !subManagerCity ||
+      !subManagerPinCode ||
+      !subManagerFirstName ||
+      !subManagerLastName ||
+      !subManagerEmail ||
+      !subManagerPhone
+    ) {
+      setError(allError);
+    } else {
+      if (subBranchEdit === undefined) {
+        setSubBranch([
+          ...subBranch,
+          {
+            id: subBranch.length + 1,
+            subManagerAddress,
+            subManagerCity,
+            subManagerPinCode,
+            subManagerFirstName,
+            subManagerLastName,
+            subManagerEmail,
+            subManagerPhone,
+          },
+        ]);
+        handleSubBranchModalClose();
+      } else {
+        const editSelectedSubBranchIndex = subBranch.findIndex(
+          (sub) => sub.id === subBranchEdit.id
+        );
+
+        const editSelectedSubBranch = [...subBranch];
+
+        editSelectedSubBranch[editSelectedSubBranchIndex] = {
+          id: subBranchEdit.id,
+          subManagerAddress,
+          subManagerCity,
+          subManagerPinCode,
+          subManagerFirstName,
+          subManagerLastName,
+          subManagerEmail,
+          subManagerPhone,
+        };
+        setSubBranch(editSelectedSubBranch);
+        handleSubBranchModalClose();
+      }
+    }
+  };
+
+  const handleSubBranchModalClose = () => {
+    setSubBranchModalOpen(false);
+    setSubManagerAddress("");
+    setSubManagerCity("");
+    setSubManagerPinCode("");
+    setSubManagerFirstName();
+    setSubManagerLastName("");
+    setSubManagerEmail("");
+    setManagerValue("");
+    setSubManagerPhone("");
+    setSubBranchEdit();
+    error.subManagerFirstNameError = "";
+    error.subManagerLastNameError = "";
+    error.subManagerEmailError = "";
+    error.subManagerPhoneError = "";
+    error.subManagerFirstNameError = "";
+    error.subManagerLastNameError = "";
+    error.subManagerEmailError = "";
+    error.subManagerPhoneError = "";
+    error.subManagerAddressError = "";
+    error.subManagerCityError = "";
+    error.subManagerPinCodeError = "";
+  };
+  return (
+    <>
+      <CustomAuthModal
+        open={subBranchModalOpen}
+        onClose={handleSubBranchModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="animate__animated animate__slideInDown"
+      >
+        <Box sx={subBranchStyle} className="!w-[90%] lg:!w-1/2">
+          <div className="p-5">
+            <div className="flex items-center">
+              <ArrowBackIcon
+                className="!text-black !cursor-pointer"
+                onClick={handleSubBranchModalClose}
+              />
+              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+                {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
+              </p>
+              <CloseIcon
+                className="!text-black !ml-auto !cursor-pointer"
+                onClick={handleSubBranchModalClose}
+              />
+            </div>
+
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
+              <div className="container bg-colorWhite rounded-lg my-5 sm:my-10 p-5 space-y-5">
+                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+                  Branches
+                </h3>
+                <form>
+                  <div className="flex flex-col space-y-3">
+                    <p className="mt-2 container flex items-center text-colorBlack text-lg">
+                      Sub Branch
+                    </p>
+                    <div className="flex items-center justify-center container gap-20">
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="Address"
+                            variant="standard"
+                            className="w-full"
+                            value={subManagerAddress}
+                            onChange={(e) => {
+                              setSubManagerAddress(e.target.value);
+                              error.subManagerAddressError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerAddressError || ""}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="City"
+                            variant="standard"
+                            className="w-full"
+                            value={subManagerCity}
+                            onChange={(e) => {
+                              setSubManagerCity(e.target.value);
+                              error.subManagerCityError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerCityError || ""}
+                        </span>
+                      </div>
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="PinCode"
+                            variant="standard"
+                            className="w-full"
+                            type="number"
+                            value={subManagerPinCode}
+                            onChange={(e) => {
+                              setSubManagerPinCode(e.target.value);
+                              error.subManagerPinCodeError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerPinCodeError || ""}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center items-center">
+                      <div className="flex justify-between items-center container gap-5 sm:gap-10">
+                        <span className="font-semibold text-lg text-[#11142D] mt-5">
+                          Manager:
+                        </span>
+
+                        <CustomTextField
+                          label="Manager"
+                          variant="standard"
+                          select
+                          fullWidth
+                          value={managerValue}
+                          onChange={(e) => setManagerValue(e.target.value)}
+                        >
+                          <MenuItem value="">None</MenuItem>
+                          {["Same as owner", "same as main branch manager"].map(
+                            (man) => (
+                              <MenuItem value={man} key={man}>
+                                {man}
+                              </MenuItem>
+                            )
+                          )}
+                        </CustomTextField>
+                      </div>
+                    </div>
+
+                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
+                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                        Name:
+                      </p>
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="Manager First Name"
+                            variant="standard"
+                            className="w-full"
+                            disabled={
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
+                            }
+                            value={subManagerFirstName}
+                            onChange={(e) => {
+                              setSubManagerFirstName(e.target.value);
+                              error.subManagerFirstNameError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerFirstNameError || ""}
+                        </span>
+                      </div>
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="Manager Last Name"
+                            variant="standard"
+                            className="w-full"
+                            disabled={
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
+                            }
+                            value={subManagerLastName}
+                            onChange={(e) => {
+                              setSubManagerLastName(e.target.value);
+                              error.subManagerLastNameError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerLastNameError || ""}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
+                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Email:
+                      </p>
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="Manager Email Address"
+                            variant="standard"
+                            className="w-full"
+                            type="email"
+                            disabled={
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
+                            }
+                            value={subManagerEmail}
+                            onChange={(e) => {
+                              setSubManagerEmail(e.target.value);
+                              error.subManagerEmailError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerEmailError || ""}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
+                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Phone:
+                      </p>
+                      <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextField
+                            id="input-with-sx"
+                            label="Manager Phone Number"
+                            variant="standard"
+                            className="w-full"
+                            type="number"
+                            disabled={
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
+                            }
+                            value={subManagerPhone}
+                            onChange={(e) => {
+                              setSubManagerPhone(e.target.value);
+                              if (e.target.value.length != 10) {
+                                error.subManagerPhoneError =
+                                  "SubManagerPhone Number must be 10 numbers";
+                              } else {
+                                error.subManagerPhoneError = "";
+                              }
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerPhoneError || ""}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div className="container mt-5">
+              <Divider />
+            </div>
+            <div className="container mt-5 flex items-center justify-end gap-5">
+              <Button
+                variant="outlined"
+                className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                onClick={handleSubBranchModalClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
+                onClick={subBranchSubmit}
+              >
+                {subBranchEdit?.id ? "Update" : "Save"}
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </CustomAuthModal>
+    </>
+  );
+};
+
+const HoursModal = ({
+  hoursModalOpen,
+  setHoursModalOpen,
+  setDaysTimeModalOpen,
+  hours,
+  selectedDay,
+  setSelectedDay,
+  setSelectedWeek,
+  selectedWeek,
+  selectedAllHours,
+  setSelectedAllHours,
+}) => {
+  return (
+    <>
+      <CustomAuthModal
+        open={hoursModalOpen}
+        onClose={() => setHoursModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="animate__animated animate__slideInDown"
+      >
+        <Box sx={style} className="!w-[90%] lg:!w-[80%]">
+          <div className="sm:p-5 lg:p-5 p-1">
+            <div className="flex justify-between items-center">
+              <div className="sm:text-2xl lg:text-3xl xl:text-5xl text-[16px] font-bold">
+                Hours
+              </div>
+              <span>
+                <CloseIcon
+                  className="text-gray-500 !text-xl sm:!text-3xl"
+                  fontSize="large"
+                  onClick={() => setHoursModalOpen(false)}
+                />
+              </span>
+            </div>
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
+              <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
+                {hours?.map((day, index) => (
+                  <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
+                    <div className="xl:w-[30%] lg:w-[30%] w-[20%] flex  xl:gap-32  items-center">
+                      <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
+                        {day["key"]}
+                      </div>
+                    </div>
+                    {day["value"].map((time, index) => (
+                      <div className="xl:w-[70%] lg:w-[70%] w-[80%] flex gap-4 sm:items-center items-start">
+                        <div className="flex items-center ">
+                          <span className="hidden md:block">
+                            <FormControlLabel
+                              control={
+                                <IOSSwitchMax sx={{ m: 0 }} defaultChecked />
+                              }
+                            />
+                          </span>
+                          <span className="md:hidden">
+                            <FormControlLabel
+                              control={
+                                <IOSSwitchMin sx={{ m: 0 }} defaultChecked />
+                              }
+                            />
+                          </span>
+
+                          <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
+                            Open
+                          </span>
+                        </div>
+                        <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
+                          <div className="relative">
+                            <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                              Start with
+                            </span>
+                            <input
+                              value={
+                                time?.split(" - ")[0]?.split(" ")[1] === "PM"
+                                  ? String(
+                                      Number(
+                                        time
+                                          ?.split(" - ")[1]
+                                          ?.split(" ")[0]
+                                          ?.split(":")[0]
+                                      ) + 12
+                                    ) +
+                                    ":" +
+                                    time
+                                      ?.split(" - ")[0]
+                                      ?.split(" ")[0]
+                                      ?.split(":")[1]
+                                  : time?.split(" - ")[0]?.split(" ")[0]
+                              }
+                              type="time"
+                              id="saturday"
+                              className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                            />
+                          </div>
+                          <div className="relative">
+                            <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                              End with
+                            </span>
+                            <input
+                              type="time"
+                              value={
+                                time?.split(" - ")[1]?.split(" ")[1] === "PM"
+                                  ? String(
+                                      Number(
+                                        time
+                                          ?.split(" - ")[1]
+                                          ?.split(" ")[0]
+                                          ?.split(":")[0]
+                                      ) + 12
+                                    ) +
+                                    ":" +
+                                    time
+                                      ?.split(" - ")[1]
+                                      ?.split(" ")[0]
+                                      ?.split(":")[1]
+                                  : time?.split(" - ")[1]?.split(" ")[0]
+                              }
+                              id="saturday"
+                              className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                            />
+                          </div>
+                        </div>
+                        <span className="border border-gray-200 rounded-full text-gray-400 hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
+                          <EditIcon className="m-1 sm:m-3" />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div className="flex lg:gap-4 gap-1 lg:mt-20 mt-10">
+                <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
+                  <span className="hidden sm:block">
+                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <EditIcon className="-ml-1" fontSize="small" />
+                  </span>
+                  Edit all hours
+                </button>
+                <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
+                  <span className="hidden sm:block">
+                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <EditIcon className="-ml-1" fontSize="small" />
+                  </span>
+                  Edit Mon to Sat
+                </button>
+                <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
+                  <span className="hidden sm:block">
+                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <EditIcon className="-ml-1" fontSize="small" />
+                  </span>
+                  Edit Sunday
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-5 lg:gap-6 gap-4">
+              <button className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen">
+                Cancel
+              </button>
+              <button className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen">
+                Save
+              </button>
+            </div>
+          </div>
+        </Box>
+      </CustomAuthModal>
+    </>
   );
 };
