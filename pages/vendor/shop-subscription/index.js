@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 const ShopSubscription = () => {
   const [checked, setChecked] = useState(false);
 
+  //for deployed comment
   const [subscriptionAllPlans, setSubscriptionAllPlans] = useState({});
 
   const [currentPlan, setCurrentPlan] = useState();
