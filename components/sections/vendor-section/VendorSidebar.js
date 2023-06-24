@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import { useRouter } from "next/router";
 import { Avatar, Divider } from "@mui/material";
 import { useSelector } from "react-redux";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import StarIcon from "@mui/icons-material/Star";
+import { TbShare3 } from "react-icons/tb";
 
 const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
   const router = useRouter();
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
-
+  const [value, setValue] = useState(4);
+  const labels = {
+    1: "1.0",
+    2: "2.0",
+    3: "3.0",
+    4: "4.0",
+    5: "5.0",
+  };
+  function getLabelText(value) {
+    return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
+  }
   const setActiveLink = (path) => {
     const withoutLastChunk = router.pathname.slice(
       0,
@@ -22,64 +37,83 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
   };
 
   return (
-    <div className="lg:bg-white flex flex-col lg:h-full">
-      <div className="flex flex-col items-center justify-center gap-3 my-10">
-        <Avatar
-          src={vendorShopDetails?.shop_logo}
-          alt="Shop Logo"
-          sx={{ width: 100, height: 100 }}
-        />
-
-        <p className="text-colorBlack font-semibold text-lg">
-          {vendorShopDetails?.shop_name}
-        </p>
+    <div className="bg-white rounded-3xl lg:p-10 p-5 py-10">
+      <div className="flex justify-center">
+        <div className="xl:w-[278px] xl:h-[278px] lg:h-[200px] sm:h-[150px] lg:w-[200px] sm:w-[150px] h-[200px] w-[200px] mb-10 rounded-full"></div>
       </div>
-      <Divider className="w-full lg:w-[75%] mx-auto" />
-      <div className="flex justify-center flex-col w-[90%] lg:w-[75%] mx-auto my-5">
-        <div
-          className={`${setActiveLink(
-            "/vendor/dashboard"
-          )} text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          style={{ transition: "all 0.5s" }}
-          onClick={() => {
-            router.push("/vendor/dashboard");
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <DashboardIcon className="!mr-3" /> Dashboard
-          </p>
+      <div className="flex flex-col items-center lg:gap-2 gap-1">
+        <div className="xl:text-4xl lg:text-xl sm:text-sm text-[32px] font-bold text-colorBlack">
+          GJ5 Fashion
         </div>
-
-        <div
-          className={`${setActiveLink(
-            "/vendor/shopEdit"
-          )} text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => {
-            router.push(`/vendor/shopEdit/${vendorShopDetails?.id}`);
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <Inventory2Icon className="!mr-3" />
-            Shop
-          </p>
+        <div className="flex items-center">
+          <span>
+            <LocationOnOutlinedIcon
+              className="text-gray-400"
+              sx={{
+                fontSize: 16,
+                "@media (max-width: 768px)": {
+                  fontSize: 12,
+                },
+                "@media (max-width: 648px)": {
+                  fontSize: 24,
+                },
+              }}
+            />
+          </span>
+          <span className="xl:text-2xl lg:text-lg sm:text-sm text-[22px] text-gray-400">
+            Yogi Chowk
+          </span>
         </div>
-
-        <div
-          className={`${setActiveLink(
-            "/vendor/shop"
-          )}  text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => {
-            router.push(`/vendor/shop/${vendorShopDetails?.id}`);
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <ListAltIcon className="!mr-3" />
-            Products
-          </p>
-        </div>
+        <span className="flex items-center">
+          <Rating
+            sx={{
+              fontSize: 16,
+              "@media (max-width: 768px)": {
+                fontSize: 10,
+              },
+              "@media (max-width: 648px)": {
+                fontSize: 16,
+              },
+            }}
+            name="read-only"
+            value={value}
+            getLabelText={getLabelText}
+            emptyIcon={
+              <StarIcon
+                sx={{
+                  opacity: 0.55,
+                  fontSize: 16,
+                  "@media (max-width: 768px)": {
+                    fontSize: 10,
+                  },
+                  "@media (max-width: 648px)": {
+                    fontSize: 16,
+                  },
+                }}
+              />
+            }
+            readOnly
+          />
+          {value !== null && (
+            <Box
+              sx={{
+                ml: 1,
+                fontSize: 18,
+                "@media (max-width: 768px)": {
+                  fontSize: 12,
+                },
+                "@media (max-width: 648px)": {
+                  fontSize: 16,
+                },
+              }}
+            >
+              {labels[value]}
+            </Box>
+          )}
+        </span>
+        <span className="text-2xl text-gray-400 m-10">
+          <TbShare3 className="lg:text-2xl xl:text-3xl sm:text-xl text-2xl" />
+        </span>
       </div>
     </div>
   );
