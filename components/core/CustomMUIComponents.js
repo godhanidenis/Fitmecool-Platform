@@ -49,13 +49,16 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
     paddingTop: "32px",
     paddingBottom: "32px",
   },
+  [`& .MuiTab-root:hover`]: {
+    color: "#29977E !important",
+  },
   [`& .Mui-selected:hover`]: {
     color: "#29977E !important",
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
     fontSize: "16px",
-    color: "#FFFFFF !important",
+    color: "#29977E !important",
   },
   [`& .MuiTabs-indicator`]: {
     backgroundColor: "#29977E !important",

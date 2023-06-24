@@ -99,7 +99,7 @@ const UserType = () => {
               className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
               onClick={() => {
                 localStorage.setItem(
-                  "user_type",
+                  "user_type_for_auth",
                   selectedOption === "Business" ? "vendor" : "customer"
                 );
 

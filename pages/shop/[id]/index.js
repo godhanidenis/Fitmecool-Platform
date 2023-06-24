@@ -212,6 +212,7 @@ const ShopDetail = ({ shopDetails }) => {
                     of {productsCount} results
                   </p>
                   <Pagination
+                    color="primary"
                     count={Math.ceil(productsCount / 6)}
                     page={
                       (productPageSkip === 0 && 1) || productPageSkip / 6 + 1

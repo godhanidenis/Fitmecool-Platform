@@ -50,8 +50,8 @@ import InputLabel from "@mui/material/InputLabel";
 import LocationIcon from "../../assets/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
-import { Tab } from "@mui/material";
-import { CustomTab } from "../core/CustomMUIComponents";
+import Venderheader from "./Venderheader";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -111,6 +111,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const isScreenWide = useResizeScreenLayout();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -178,9 +179,9 @@ const Header = () => {
       <header
         className={`${
           router.pathname === "/vendor/shop-setup" ? "lg:py-4" : "lg:py-0"
-        } flex items-center h-[80px] w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
+        } py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
-        } transition-all duration-500`}
+        }  transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
@@ -231,27 +232,17 @@ const Header = () => {
               </div>
             )}
           </div>
-          {accessToken && (
-            <>
-              <div className="lg:flex list-none uppercase text-sm gap-8 items-center hidden">
-                <li className="hover:text-2xl hover:text-colorGreen cursor-pointer text-white text-sm hover:border-b-2 hover:border-b-colorGreen">
-                  <Link href="/vendor/dashboard">Dashboard</Link>
-                </li>
-                <li className="hover:text-2xl hover:text-colorGreen cursor-pointer text-white text-sm  hover:border-b-2 hover:border-b-colorGreen">
-                  <Link href="/vendor/shopEdit/">Shop</Link>
-                </li>
-                <li className="hover:text-2xl hover:text-colorGreen cursor-pointer text-white text-sm hover:border-spacing-y-8 hover:border-b-2 hover:border-b-colorGreen">
-                  <Link href="/vendor/shop/">Products</Link>
-                </li>
-              </div>
-            </>
-          )}
-
           {userProfile.user_type !== "vendor" && (
             <div className="font-Nova">
               <SubHeader />
             </div>
           )}
+          {userProfile.user_type === "vendor" &&
+            router.pathname !== "/vendor/shop-setup" && (
+              <div className="font-Nova">
+                <Venderheader />
+              </div>
+            )}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
               {userProfile.user_type !== "vendor" && (
