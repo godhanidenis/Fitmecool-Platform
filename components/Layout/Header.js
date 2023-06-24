@@ -50,6 +50,7 @@ import InputLabel from "@mui/material/InputLabel";
 import LocationIcon from "../../assets/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
+import Venderheader from "./Venderheader";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -236,6 +237,12 @@ const Header = () => {
               <SubHeader />
             </div>
           )}
+          {userProfile.user_type === "vendor" &&
+            router.pathname !== "/vendor/shop-setup" && (
+              <div className="font-Nova">
+                <Venderheader />
+              </div>
+            )}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
               {userProfile.user_type !== "vendor" && (
