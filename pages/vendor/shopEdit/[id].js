@@ -19,6 +19,7 @@ import {
   a11yProps,
   CustomAuthModal,
   CustomTextField,
+  CustomVenderShopTab,
   TabPanel,
 } from "../../../components/core/CustomMUIComponents";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -638,10 +639,10 @@ const ShopEdit = () => {
   return (
     <>
       <div className="min-h-screen">
-        <div className="bg-white m-2">
+        <div className="m-2">
           <div className="py-2">
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
+            <Box>
+              <CustomVenderShopTab
                 value={value}
                 onChange={handleChange}
                 aria-label="basic tabs example"
@@ -662,20 +663,17 @@ const ShopEdit = () => {
                     className="capitalize text-base"
                   />
                 ))}
-              </Tabs>
+              </CustomVenderShopTab>
             </Box>
           </div>
           <TabPanel value={value} index={0}>
-            <div className="bg-colorWhite rounded-lg p-5 ">
-              {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-              Owner Details
-            </h3> */}
+            <div className="rounded-lg p-5 ">
               <form>
                 <div className="flex flex-col space-y-3">
-                  <div className="flex gap-10 sm:gap-20 w-full justify-between items-center">
-                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                    Name:
-                  </p> */}
+                  {/* <div className="flex gap-10 sm:gap-20 w-full justify-between items-center">
+                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                      Name:
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextField
@@ -716,12 +714,61 @@ const ShopEdit = () => {
                         )}
                       </div>
                     </div>
+                  </div> */}
+                  <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                    <div className="sm:w-1/2 relative w-full">
+                      <label
+                        htmlFor="fName"
+                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                      >
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        id="fName"
+                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl bg-[#FAFCFC] rounded-xl border border-gray-200 focus:border-black outline-none"
+                        placeholder="Your first name"
+                        {...ownerInfoRegister("first_name", {
+                          required: "FirstName is required",
+                        })}
+                      />
+                      <div className="mt-2">
+                        {ownerInfoErrors?.first_name && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {ownerInfoErrors.first_name?.message}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="sm:w-1/2 relative w-full">
+                      <label
+                        htmlFor="lName"
+                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                      >
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        id="lName"
+                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl bg-[#FAFCFC] rounded-xl border border-gray-200 focus:border-black outline-none"
+                        placeholder="Your last name"
+                        {...ownerInfoRegister("last_name", {
+                          required: "LastName is required",
+                        })}
+                      />
+                      <div className="mt-2">
+                        {ownerInfoErrors?.last_name && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {ownerInfoErrors.last_name?.message}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                    Email:
-                  </p> */}
+                    <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                      Email:
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextField
@@ -751,9 +798,9 @@ const ShopEdit = () => {
                   </div>
 
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                    Phone:
-                  </p> */}
+                    <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                      Phone:
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextField
@@ -813,7 +860,7 @@ const ShopEdit = () => {
           </TabPanel>
 
           <TabPanel value={value} index={1}>
-            <div className="bg-colorWhite rounded-lg p-5 ">
+            <div className=" rounded-lg p-5 ">
               <div className="flex w-full  items-center justify-between">
                 {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                 Shop Info
@@ -1054,7 +1101,7 @@ const ShopEdit = () => {
           </TabPanel>
 
           <TabPanel value={value} index={2}>
-            <div className="bg-colorWhite rounded-lg p-5 ">
+            <div className=" rounded-lg p-5 ">
               <form>
                 <div className="flex flex-col">
                   {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
@@ -1402,7 +1449,7 @@ const ShopEdit = () => {
           </TabPanel>
 
           <TabPanel value={value} index={4}>
-            <div className="container bg-colorWhite rounded-lg my-5 p-5 ">
+            <div className="container rounded-lg my-5 p-5 ">
               <div className="flex flex-col space-y-3">
                 <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Shop Layout

@@ -27,7 +27,7 @@ const Venderheader = () => {
   }, []);
 
   return (
-    <div className="flex items-center">
+    <div className="sm:flex hidden items-center">
       <div className="">
         <CustomTab
           value={value}

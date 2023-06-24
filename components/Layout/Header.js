@@ -185,12 +185,14 @@ const Header = () => {
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
-            <MenuIcon
-              sx={{ color: "white" }}
-              fontSize="large"
-              className="lg:!hidden"
-              onClick={handleMobileSidebarClick}
-            />
+            {userProfile.user_type !== "vendor" && (
+              <MenuIcon
+                sx={{ color: "white" }}
+                fontSize="large"
+                className="lg:!hidden"
+                onClick={handleMobileSidebarClick}
+              />
+            )}
 
             <Link
               href={`${

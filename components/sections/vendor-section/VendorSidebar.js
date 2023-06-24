@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
@@ -36,10 +36,16 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
       : "text-[#544E5D] hover:opacity-50";
   };
 
+  console.log("data", vendorShopDetails);
   return (
     <div className="bg-white rounded-3xl lg:p-10 p-5 py-10">
       <div className="flex justify-center">
-        <div className="xl:w-[278px] xl:h-[278px] lg:h-[200px] sm:h-[150px] lg:w-[200px] sm:w-[150px] h-[200px] w-[200px] mb-10 rounded-full"></div>
+        <div className="xl:w-[278px] xl:h-[278px] lg:h-[200px] sm:h-[150px] lg:w-[200px] sm:w-[150px] h-[200px] w-[200px] mb-10 rounded-full">
+          <img
+            src={vendorShopDetails?.shop_logo}
+            className="object-cover rounded-full w-full h-full"
+          />
+        </div>
       </div>
       <div className="flex flex-col items-center lg:gap-2 gap-1">
         <div className="xl:text-4xl lg:text-xl sm:text-sm text-[32px] font-bold text-colorBlack">
@@ -50,7 +56,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
             <LocationOnOutlinedIcon
               className="text-gray-400"
               sx={{
-                fontSize: 16,
+                fontSize: 24,
                 "@media (max-width: 768px)": {
                   fontSize: 12,
                 },
@@ -111,7 +117,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
             </Box>
           )}
         </span>
-        <span className="text-2xl text-gray-400 m-10">
+        <span className="text-2xl text-gray-400 m-10 border border-gray-200 rounded-full p-3">
           <TbShare3 className="lg:text-2xl xl:text-3xl sm:text-xl text-2xl" />
         </span>
       </div>
