@@ -7,15 +7,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   FormControlLabel,
-  Modal,
-  Switch,
-  styled,
   Radio,
   RadioGroup,
   MenuItem,
   Divider,
   Button,
   IconButton,
+  Checkbox,
+  TextField,
+  CircularProgress,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -27,6 +27,14 @@ import {
 } from "../../../components/core/CustomMUIComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
+import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
+import { VideoUploadFile } from "../../../services/VideoUploadFile";
+import { shopRegistration } from "../../../graphql/mutations/shops";
+import { setShopRegisterId } from "../../../redux/ducks/userProfile";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 const subBranchStyle = {
   position: "absolute",
@@ -54,108 +62,10 @@ const style = {
   width: "80%",
 };
 
-const IOSSwitchMax = styled((props) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-  width: 70,
-  height: 35,
-  padding: 0,
-  "& .MuiSwitch-switchBase": {
-    padding: 0,
-    margin: 3,
-    transitionDuration: "300ms",
-    "&.Mui-checked": {
-      transform: "translateX(35px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        backgroundColor: theme.palette.mode === "dark" ? "#2ECA45" : "#29977E",
-        opacity: 1,
-        border: 0,
-      },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: 0.5,
-      },
-    },
-    "&.Mui-focusVisible .MuiSwitch-thumb": {
-      color: "#33cf4d",
-      border: "6px solid #fff",
-    },
-    "&.Mui-disabled .MuiSwitch-thumb": {
-      color:
-        theme.palette.mode === "light"
-          ? theme.palette.grey[100]
-          : theme.palette.grey[600],
-    },
-    "&.Mui-disabled + .MuiSwitch-track": {
-      opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxSizing: "border-box",
-    width: 28,
-    height: 28,
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 35,
-    backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
-    opacity: 1,
-    transition: theme.transitions.create(["background-color"], {
-      duration: 500,
-    }),
-  },
-}));
-const IOSSwitchMin = styled((props) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-  width: 21,
-  height: 13,
-  padding: 0,
-  "& .MuiSwitch-switchBase": {
-    padding: 0,
-    margin: 1,
-    transitionDuration: "300ms",
-    "&.Mui-checked": {
-      transform: "translateX(8px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        backgroundColor: theme.palette.mode === "dark" ? "#2ECA45" : "#29977E",
-        opacity: 1,
-        border: 0,
-      },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: 0.5,
-      },
-    },
-    "&.Mui-focusVisible .MuiSwitch-thumb": {
-      color: "#33cf4d",
-      border: "6px solid #fff",
-    },
-    "&.Mui-disabled .MuiSwitch-thumb": {
-      color:
-        theme.palette.mode === "light"
-          ? theme.palette.grey[100]
-          : theme.palette.grey[600],
-    },
-    "&.Mui-disabled + .MuiSwitch-track": {
-      opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxSizing: "border-box",
-    width: 11,
-    height: 11,
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 13 / 2,
-    backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
-    opacity: 1,
-    transition: theme.transitions.create(["background-color"], {
-      duration: 500,
-    }),
-  },
-}));
-
 const ShopPage = () => {
+  const { userProfile } = useSelector((state) => state.userProfile);
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("Shop");
@@ -163,11 +73,7 @@ const ShopPage = () => {
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [dragging, setDragging] = useState(false);
-  const [media, setMedia] = useState(new Array(6).fill(null));
+
   const [mainBranch, setMainBranch] = useState("Show");
   const [managerDetails, setManagerDetails] = useState("Show");
 
@@ -195,6 +101,7 @@ const ShopPage = () => {
   const [selectedDay, setSelectedDay] = useState();
   const [selectedWeek, setSelectedWeek] = useState();
   const [selectedAllHours, setSelectedAllHours] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [hours, setHours] = useState([
     { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
@@ -311,51 +218,9 @@ const ShopPage = () => {
     setIndividual(active);
   };
 
-  //   const handleDragEnter = (e) => {
-  //     e.preventDefault();
-  //     setDragging(true);
-  //   };
-
-  //   const handleDragLeave = (e) => {
-  //     e.preventDefault();
-  //     setDragging(false);
-  //   };
-
-  //   const handleDragOver = (e) => {
-  //     e.preventDefault();
-  //   };
-
-  //   const handleDrop = (e, boxIndex) => {
-  //     e.preventDefault();
-  //     setDragging(false);
-  //     const file = e.dataTransfer.files[0];
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onload = () => {
-  //         const updatedMedia = [...media];
-  //         updatedMedia[boxIndex] = reader.result;
-  //         setMedia(updatedMedia);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
-
   const handleBrowseClick = (boxIndex) => {
     document.getElementById(`file-input-${boxIndex}`).click();
   };
-
-  //   const handleFileChange = (e, boxIndex) => {
-  //     const file = e.target.files[0];
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onload = () => {
-  //         const updatedMedia = [...media];
-  //         updatedMedia[boxIndex] = reader.result;
-  //         setMedia(updatedMedia);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
 
   const handleMainBranchDetails = (option) => {
     setMainBranch(option);
@@ -364,11 +229,199 @@ const ShopPage = () => {
     setManagerDetails(option);
   };
 
+  const returnSubBranchData = (val) => {
+    return {
+      branch_address: val.subManagerAddress,
+      branch_pinCode: val.subManagerPinCode,
+      branch_city: val.city,
+      manager_name: val.subManagerFirstName + " " + val.subManagerLastName,
+      manager_contact: val.subManagerPhone,
+      manager_email: val.manager_user_email,
+      branch_type: "sub",
+    };
+  };
+
   const onSubmit = (data) => {
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
       console.log("Data To be Submitted !!", data);
+      setLoading(true);
+      SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
+        SingleImageUploadFile(uploadShopBackground).then(
+          (backgroundResponse) => {
+            MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
+              uploadShopVideo !== ""
+                ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
+                    shopRegistration({
+                      userId: userProfile.id,
+                      ownerInfo: {
+                        owner_firstName: data.first_name,
+                        owner_lastName: data.last_name,
+                        owner_email: data.user_email,
+                        owner_contact: data.user_contact,
+                      },
+                      shopInfo: {
+                        shop_logo: logoResponse.data.data.singleUpload,
+                        shop_cover_image:
+                          backgroundResponse.data.data.singleUpload,
+                        shop_images:
+                          imagesResponse.data.data.multipleUpload.map((itm) => {
+                            return { links: itm };
+                          }),
+                        shop_video: videoResponse.data.data.singleUpload,
+
+                        form_steps: "3",
+                        shop_social_link: {
+                          facebook: individual ? "" : data.facebook_link,
+                          instagram: individual ? "" : data.instagram_link,
+                          website: individual ? "" : data.personal_website,
+                        },
+                        shop_name: data.shop_name,
+                        shop_email: data.shop_email,
+                        shop_type: individual ? "individual" : "shop",
+                        shop_time: hours.map((day) => {
+                          return {
+                            week: day["key"],
+                            open_time:
+                              day["value"][0] === "Closed" ||
+                              day["value"][0] === "Open 24 hours"
+                                ? "-"
+                                : day["value"][0].split(" - ")[0],
+                            close_time:
+                              day["value"][0] === "Closed" ||
+                              day["value"][0] === "Open 24 hours"
+                                ? "-"
+                                : day["value"][0].split(" - ")[1],
+                            is_close:
+                              day["value"][0] === "Closed" ? true : false,
+                            is_24Hours_open:
+                              day["value"][0] === "Open 24 hours"
+                                ? true
+                                : false,
+                          };
+                        }),
+                      },
+                      branchInfo: [
+                        {
+                          branch_address: data.address,
+                          branch_city: data.city,
+                          branch_pinCode: data.pin_code,
+                          manager_name:
+                            data.manager_first_name +
+                            " " +
+                            data.manager_last_name,
+                          manager_contact: data.manager_user_contact,
+                          manager_email: data.manager_user_email,
+                          branch_type: "main",
+                        },
+                        ...(subBranch.length > 0
+                          ? subBranch.map(returnSubBranchData)
+                          : []),
+                      ],
+                    }).then(
+                      (res) => {
+                        console.log("res:::", res);
+                        dispatch(
+                          setShopRegisterId(res.data.createShop.shopInfo.id)
+                        );
+                        toast.success(res.data.createShop.message, {
+                          theme: "colored",
+                        });
+                        setLoading(false);
+                        localStorage.setItem("userHaveAnyShop", "true");
+                        router.push("/vendor/dashboard");
+                      },
+                      (error) => {
+                        setLoading(false);
+                        toast.error(error.message, { theme: "colored" });
+                      }
+                    );
+                  })
+                : shopRegistration({
+                    userId: userProfile.id,
+                    ownerInfo: {
+                      owner_firstName: data.first_name,
+                      owner_lastName: data.last_name,
+                      owner_email: data.user_email,
+                      owner_contact: data.user_contact,
+                    },
+                    shopInfo: {
+                      shop_logo: logoResponse.data.data.singleUpload,
+                      shop_cover_image:
+                        backgroundResponse.data.data.singleUpload,
+                      shop_images: imagesResponse.data.data.multipleUpload.map(
+                        (itm) => {
+                          return { links: itm };
+                        }
+                      ),
+                      form_steps: "3",
+                      shop_social_link: {
+                        facebook: individual ? "" : data.facebook_link,
+                        instagram: individual ? "" : data.instagram_link,
+                        website: individual ? "" : data.personal_website,
+                      },
+                      shop_name: data.shop_name,
+                      shop_email: data.shop_email,
+                      shop_type: individual ? "individual" : "shop",
+                      shop_time: hours.map((day) => {
+                        return {
+                          week: day["key"],
+                          open_time:
+                            day["value"][0] === "Closed" ||
+                            day["value"][0] === "Open 24 hours"
+                              ? "-"
+                              : day["value"][0].split(" - ")[0],
+                          close_time:
+                            day["value"][0] === "Closed" ||
+                            day["value"][0] === "Open 24 hours"
+                              ? "-"
+                              : day["value"][0].split(" - ")[1],
+                          is_close: day["value"][0] === "Closed" ? true : false,
+                          is_24Hours_open:
+                            day["value"][0] === "Open 24 hours" ? true : false,
+                        };
+                      }),
+                    },
+                    branchInfo: [
+                      {
+                        branch_address: data.address,
+                        branch_pinCode: data.pin_code,
+                        branch_city: data.city,
+                        manager_name:
+                          data.manager_first_name +
+                          " " +
+                          data.manager_last_name,
+                        manager_contact: data.manager_user_contact,
+                        manager_email: data.manager_user_email,
+                        branch_type: "main",
+                      },
+                      ...(subBranch.length > 0
+                        ? subBranch.map(returnSubBranchData)
+                        : []),
+                    ],
+                  }).then(
+                    (res) => {
+                      console.log("res:::", res);
+                      dispatch(
+                        setShopRegisterId(res.data.createShop.shopInfo.id)
+                      );
+                      toast.success(res.data.createShop.message, {
+                        theme: "colored",
+                      });
+                      setLoading(false);
+                      localStorage.setItem("userHaveAnyShop", "true");
+                      router.push("/vendor/dashboard");
+                    },
+                    (error) => {
+                      setLoading(false);
+                      toast.error(error.message, { theme: "colored" });
+                    }
+                  );
+            });
+          }
+        );
+      });
     }
   };
 
@@ -868,7 +921,13 @@ const ShopPage = () => {
                                   type="text"
                                   id="sunday"
                                   value={time}
-                                  className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 outline-none"
+                                  className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 outline-none ${
+                                    time === "Closed"
+                                      ? "text-red-600"
+                                      : time === "Open 24 hours"
+                                      ? "text-green-600"
+                                      : ""
+                                  }`}
                                   readOnly
                                 />
                               ))}
@@ -885,6 +944,7 @@ const ShopPage = () => {
                     handleSubmit={handleSubmit}
                     onSubmit={onSubmit}
                     onError={onError}
+                    loading={loading}
                   />
                 </div>
                 <HoursModal
@@ -899,6 +959,18 @@ const ShopPage = () => {
                   selectedAllHours={selectedAllHours}
                   setSelectedAllHours={setSelectedAllHours}
                 />
+                <DaysTimeModal
+                  daysTimeModalOpen={daysTimeModalOpen}
+                  setDaysTimeModalOpen={setDaysTimeModalOpen}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  hours={hours}
+                  setHours={setHours}
+                  setSelectedWeek={setSelectedWeek}
+                  selectedWeek={selectedWeek}
+                  selectedAllHours={selectedAllHours}
+                  setSelectedAllHours={setSelectedAllHours}
+                />
               </>
             )}
 
@@ -906,13 +978,9 @@ const ShopPage = () => {
               <>
                 <div className="sm:mx-10 mx-3">
                   <div className="grid grid-cols-3 gap-10 my-10">
-                    <div className="flex justify-center col-span-3">
+                    <div className="flex flex-col items-center justify-center col-span-3">
                       <div
                         className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
-                        //   onDragEnter={handleDragEnter}
-                        //   onDragLeave={handleDragLeave}
-                        //   onDragOver={handleDragOver}
-                        //   onDrop={(e) => handleDrop(e, 0)}
                         onClick={() => handleBrowseClick(0)}
                       >
                         {shopLogo !== "" ? (
@@ -944,10 +1012,11 @@ const ShopPage = () => {
                           type="file"
                           accept="image/*,video/*"
                           className="hidden"
-                          // onChange={(e) => handleFileChange(e, 0)}
                           {...register("shopLogo", {
                             required:
-                              shopLogo === "" ? "shopLogo is required" : false,
+                              shopLogo === ""
+                                ? "ShopLogo is required *"
+                                : false,
                             onChange: (e) => {
                               if (e.target.files && e.target.files.length > 0) {
                                 onShopLogoPreviewImage(e);
@@ -956,75 +1025,72 @@ const ShopPage = () => {
                           })}
                         />
                       </div>
-                    </div>
-                    {errors.shopLogo && (
-                      <div className="">
-                        <span style={{ color: "red" }}>
-                          {errors.shopLogo?.message}
-                        </span>
-                      </div>
-                    )}
-
-                    <div
-                      className="w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                      //   onDragEnter={handleDragEnter}
-                      //   onDragLeave={handleDragLeave}
-                      //   onDragOver={handleDragOver}
-                      //   onDrop={(e) => handleDrop(e, 1)}
-                      onClick={() => handleBrowseClick(1)}
-                    >
-                      {shopBackground !== "" ? (
-                        <div className="w-full sm:h-[350px]  h-[200px]">
-                          <img
-                            src={shopBackground}
-                            alt="Uploaded Image"
-                            className="object-cover h-full w-full rounded-3xl"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex flex-col gap-4">
-                          <span className="flex justify-center">
-                            <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                      {errors.shopLogo && (
+                        <div className="mt-2">
+                          <span style={{ color: "red" }}>
+                            {errors.shopLogo?.message}
                           </span>
-                          <div className="flex flex-col gap-1">
-                            <p className="sm:text-2xl text-sm font-bold text-gray-400">
-                              <span className="text-colorGreen">
-                                Click to Upload
-                              </span>{" "}
-                              Cover Image
-                            </p>
-                            <p className="sm:text-sm text-xs text-gray-400 text-center">
-                              We Support JPG, PNG & No Size Limit
-                            </p>
-                          </div>
                         </div>
                       )}
-                      <input
-                        id="file-input-1"
-                        type="file"
-                        accept="image/*,video/*"
-                        className="hidden"
-                        // onChange={(e) => handleFileChange(e, 1)}
-                        {...register("shopBackground", {
-                          required:
-                            shopBackground === ""
-                              ? "shopBackground is required"
-                              : false,
-                          onChange: (e) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              onShopBackgroundPreviewImage(e);
-                            }
-                          },
-                        })}
-                      />
                     </div>
-                    {errors.shopBackground && (
-                      <div className="">
-                        <span style={{ color: "red" }}>
-                          {errors.shopBackground?.message}
-                        </span>
+
+                    <div className="flex flex-col items-center justify-center col-span-3">
+                      <div
+                        className="w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                        onClick={() => handleBrowseClick(1)}
+                      >
+                        {shopBackground !== "" ? (
+                          <div className="w-full sm:h-[350px]  h-[200px]">
+                            <img
+                              src={shopBackground}
+                              alt="Uploaded Image"
+                              className="object-cover h-full w-full rounded-3xl"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-4">
+                            <span className="flex justify-center">
+                              <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                            </span>
+                            <div className="flex flex-col gap-1">
+                              <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                                <span className="text-colorGreen">
+                                  Click to Upload
+                                </span>{" "}
+                                Cover Image
+                              </p>
+                              <p className="sm:text-sm text-xs text-gray-400 text-center">
+                                We Support JPG, PNG & No Size Limit
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        <input
+                          id="file-input-1"
+                          type="file"
+                          accept="image/*,video/*"
+                          className="hidden"
+                          {...register("shopBackground", {
+                            required:
+                              shopBackground === ""
+                                ? "ShopBackground is required *"
+                                : false,
+                            onChange: (e) => {
+                              if (e.target.files && e.target.files.length > 0) {
+                                onShopBackgroundPreviewImage(e);
+                              }
+                            },
+                          })}
+                        />
                       </div>
-                    )}
+                      {errors.shopBackground && (
+                        <div className="mt-2">
+                          <span style={{ color: "red" }}>
+                            {errors.shopBackground?.message}
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
                     <div className="col-span-3">
                       <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
@@ -1074,10 +1140,9 @@ const ShopPage = () => {
                                   type="file"
                                   accept="image/*,video/*"
                                   className="hidden"
-                                  //   onChange={(e) => handleFileChange(e, 2)}
                                   {...register("shopImages", {
                                     required: !ShopImgError[index]
-                                      ? "Shop All Image is required"
+                                      ? "Shop all images is required *"
                                       : false,
                                     onChange: (e) => {
                                       createShopImagesChange(e, index);
@@ -1090,7 +1155,7 @@ const ShopPage = () => {
                         })}
                       </div>
                       {errors.shopImages && (
-                        <div className="">
+                        <div className="flex justify-center mt-2">
                           <span style={{ color: "red" }}>
                             {errors.shopImages?.message}
                           </span>
@@ -1103,10 +1168,6 @@ const ShopPage = () => {
                       </div>
                       <div
                         className="w-full cursor-pointer sm:h-[350px] h-[200px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                        // onDragEnter={handleDragEnter}
-                        // onDragLeave={handleDragLeave}
-                        // onDragOver={handleDragOver}
-                        // onDrop={(e) => handleDrop(e, 5)}
                         onClick={() => handleBrowseClick(5)}
                       >
                         {shopVideo !== "" ? (
@@ -1142,7 +1203,6 @@ const ShopPage = () => {
                           accept="image/*,video/*"
                           className="hidden"
                           controls
-                          //   onChange={(e) => handleFileChange(e, 5)}
                           onClick={(e) => (e.target.value = null)}
                           onChange={(e) => {
                             if (e.target.files && e.target.files.length > 0) {
@@ -1159,6 +1219,7 @@ const ShopPage = () => {
                     handleSubmit={handleSubmit}
                     onSubmit={onSubmit}
                     onError={onError}
+                    loading={loading}
                   />
                 </div>
               </>
@@ -1296,7 +1357,6 @@ const ShopPage = () => {
                     <RadioGroup
                       row
                       name="row-radio-buttons-group"
-                      //   defaultValue="True"
                       value={sameAsOwner}
                       onChange={(e) => {
                         if (e.target.value === "True") {
@@ -1520,7 +1580,9 @@ const ShopPage = () => {
                       <button
                         onClick={() => setSubBranchModalOpen(true)}
                         disabled={!isValid}
-                        className="uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen"
+                        className={`${
+                          !isValid ? "opacity-50" : "opacity-100"
+                        } cursor-pointer uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen`}
                       >
                         Sub Branch
                         <span className="hidden sm:inline">
@@ -1535,34 +1597,34 @@ const ShopPage = () => {
 
                   {subBranch?.length > 0 && (
                     <div className="mb-10">
-                      <h3 className="text-colorPrimary text-lg font-semibold leading-8 container my-5">
+                      <h3 className="text-colorPrimary text-lg font-semibold leading-8 my-5">
                         Sub Branches
                       </h3>
-                      <div className="container grid grid-cols-1 sm:grid-cols-2 gap-10">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                         {subBranch?.map((sub, index) => (
                           <div
-                            className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
+                            className="bg-colorWhite rounded-xl flex flex-col gap-1"
                             key={index}
                           >
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
                               <b className="mr-2 text-sm sm:text-base lg:text-lg">
                                 Branch Address :{" "}
                               </b>
                               {sub.subManagerAddress}
                             </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
                               <b className="mr-2 text-sm sm:text-base lg:text-lg">
                                 Branch City :{" "}
                               </b>
                               {sub.subManagerCity}
                             </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
                               <b className="mr-2 text-sm sm:text-base lg:text-lg">
                                 Branch PinCode :{" "}
                               </b>
                               {sub.subManagerPinCode}
                             </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
                               <b className="mr-2 text-sm sm:text-base lg:text-lg">
                                 Branch Manager Name :
                               </b>
@@ -1570,13 +1632,13 @@ const ShopPage = () => {
                                 " " +
                                 sub.subManagerLastName}
                             </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
                               <b className="mr-2 text-sm sm:text-base lg:text-lg">
                                 Branch Manager Email :
                               </b>
                               {sub.subManagerEmail}
                             </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
+                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
                               <b className="mr-2 text-sm sm:text-base lg:text-lg">
                                 Branch Manager Phone Number :
                               </b>
@@ -1621,6 +1683,7 @@ const ShopPage = () => {
                     handleSubmit={handleSubmit}
                     onSubmit={onSubmit}
                     onError={onError}
+                    loading={loading}
                   />
                 </div>
               </>
@@ -1650,6 +1713,7 @@ const ActionButtons = ({
   handleSubmit,
   onSubmit,
   onError,
+  loading,
 }) => {
   return (
     <div className="flex justify-end sm:gap-4 gap-2 mt-10">
@@ -1665,6 +1729,13 @@ const ActionButtons = ({
         className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-2xl rounded-[4px] text-sm px-8 py-2"
         onClick={handleSubmit(onSubmit, onError)}
       >
+        {loading && (
+          <CircularProgress
+            size={20}
+            color="primary"
+            sx={{ color: "white", mr: 1 }}
+          />
+        )}
         {currentStep === 3 ? "Submit" : "Next"}
       </button>
     </div>
@@ -2105,14 +2176,14 @@ const SubBranchModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                className="rounded-xl capitalize text-colorGreen hover:bg-white bg-white border border-colorGreen hover:border-colorGreen py-2 px-5"
                 onClick={handleSubBranchModalClose}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
+                className="rounded-xl capitalize text-colorWhite bg-colorGreen hover:bg-colorGreen py-2 px-5"
                 onClick={subBranchSubmit}
               >
                 {subBranchEdit?.id ? "Update" : "Save"}
@@ -2163,100 +2234,126 @@ const HoursModal = ({
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
                 {hours?.map((day, index) => (
-                  <div className="flex sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
-                    <div className="xl:w-[30%] lg:w-[30%] w-[20%] flex  xl:gap-32  items-center">
+                  <div className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
+                    <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
                       <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
                         {day["key"]}
                       </div>
                     </div>
                     {day["value"].map((time, index) => (
-                      <div className="xl:w-[70%] lg:w-[70%] w-[80%] flex gap-4 sm:items-center items-start">
-                        <div className="flex items-center ">
-                          <span className="hidden md:block">
-                            <FormControlLabel
-                              control={
-                                <IOSSwitchMax sx={{ m: 0 }} defaultChecked />
-                              }
-                            />
-                          </span>
-                          <span className="md:hidden">
-                            <FormControlLabel
-                              control={
-                                <IOSSwitchMin sx={{ m: 0 }} defaultChecked />
-                              }
-                            />
-                          </span>
+                      <div
+                        key={index}
+                        className="flex gap-2 sm:gap-4 sm:items-center items-start sm:mr-20"
+                      >
+                        {time === "Closed" || time === "Open 24 hours" ? (
+                          <p
+                            className={`${
+                              time === "Closed"
+                                ? "text-red-600"
+                                : time === "Open 24 hours"
+                                ? "text-green-600"
+                                : ""
+                            } font-semibold text-2xl`}
+                          >
+                            {time}
+                          </p>
+                        ) : (
+                          <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
+                            <div className="relative">
+                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                                Start with
+                              </span>
+                              <input
+                                value={
+                                  time?.split(" - ")[0]?.split(" ")[1] === "PM"
+                                    ? String(
+                                        Number(
+                                          time
+                                            ?.split(" - ")[1]
+                                            ?.split(" ")[0]
+                                            ?.split(":")[0]
+                                        ) + 12
+                                      ) +
+                                      ":" +
+                                      time
+                                        ?.split(" - ")[0]
+                                        ?.split(" ")[0]
+                                        ?.split(":")[1]
+                                    : time?.split(" - ")[0]?.split(" ")[0]
+                                }
+                                type="time"
+                                readOnly
+                                id="saturday"
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                              />
+                            </div>
+                            <div className="relative">
+                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                                End with
+                              </span>
+                              <input
+                                type="time"
+                                value={
+                                  time?.split(" - ")[1]?.split(" ")[1] === "PM"
+                                    ? String(
+                                        Number(
+                                          time
+                                            ?.split(" - ")[1]
+                                            ?.split(" ")[0]
+                                            ?.split(":")[0]
+                                        ) + 12
+                                      ) +
+                                      ":" +
+                                      time
+                                        ?.split(" - ")[1]
+                                        ?.split(" ")[0]
+                                        ?.split(":")[1]
+                                    : time?.split(" - ")[1]?.split(" ")[0]
+                                }
+                                id="saturday"
+                                readOnly
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                              />
+                            </div>
+                          </div>
+                        )}
 
-                          <span className="xl:text-2xl lg:text-xl sm:text-lg text-xs -ml-2 sm:ml-0 font-semibold">
-                            Open
-                          </span>
-                        </div>
-                        <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
-                          <div className="relative">
-                            <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                              Start with
-                            </span>
-                            <input
-                              value={
-                                time?.split(" - ")[0]?.split(" ")[1] === "PM"
-                                  ? String(
-                                      Number(
-                                        time
-                                          ?.split(" - ")[1]
-                                          ?.split(" ")[0]
-                                          ?.split(":")[0]
-                                      ) + 12
-                                    ) +
-                                    ":" +
-                                    time
-                                      ?.split(" - ")[0]
-                                      ?.split(" ")[0]
-                                      ?.split(":")[1]
-                                  : time?.split(" - ")[0]?.split(" ")[0]
-                              }
-                              type="time"
-                              id="saturday"
-                              className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                            />
+                        <span
+                          onClick={() => {
+                            setDaysTimeModalOpen(true);
+                            setSelectedDay(day["key"] + " - " + time);
+                          }}
+                          className="border mr-2 sm:mr-0 border-gray-200 rounded-full text-gray-400 hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen"
+                        >
+                          <div className="hidden sm:block cursor-pointer">
+                            <EditIcon className="m-1 sm:m-3" />
                           </div>
-                          <div className="relative">
-                            <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
-                              End with
-                            </span>
-                            <input
-                              type="time"
-                              value={
-                                time?.split(" - ")[1]?.split(" ")[1] === "PM"
-                                  ? String(
-                                      Number(
-                                        time
-                                          ?.split(" - ")[1]
-                                          ?.split(" ")[0]
-                                          ?.split(":")[0]
-                                      ) + 12
-                                    ) +
-                                    ":" +
-                                    time
-                                      ?.split(" - ")[1]
-                                      ?.split(" ")[0]
-                                      ?.split(":")[1]
-                                  : time?.split(" - ")[1]?.split(" ")[0]
-                              }
-                              id="saturday"
-                              className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
-                            />
+                          <div className="sm:hidden cursor-pointer">
+                            <EditIcon fontSize="small" className="m-1 sm:m-3" />
                           </div>
-                        </div>
-                        <span className="border border-gray-200 rounded-full text-gray-400 hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen">
-                          <EditIcon className="m-1 sm:m-3" />
                         </span>
                       </div>
                     ))}
                   </div>
                 ))}
               </div>
-              <div className="flex lg:gap-4 gap-1 lg:mt-20 mt-10">
-                <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
+              <div className="flex justify-center sm:justify-start lg:gap-4 gap-1 lg:mt-20 mt-10">
+                <button
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+
+                    setSelectedAllHours([
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
+                  }}
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
                   </span>
@@ -2265,7 +2362,21 @@ const HoursModal = ({
                   </span>
                   Edit all hours
                 </button>
-                <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
+                <button
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+
+                    setSelectedWeek([
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
+                  }}
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
                   </span>
@@ -2274,7 +2385,18 @@ const HoursModal = ({
                   </span>
                   Edit Mon to Sat
                 </button>
-                <button className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen">
+                <button
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+                    setSelectedDay(
+                      "Sunday" +
+                        " - " +
+                        hours[hours.findIndex((item) => item.key === "Sunday")]
+                          .value
+                    );
+                  }}
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
                   </span>
@@ -2287,12 +2409,345 @@ const HoursModal = ({
             </div>
 
             <div className="flex justify-end mt-5 lg:gap-6 gap-4">
-              <button className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen">
+              <button
+                onClick={() => setHoursModalOpen(false)}
+                className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen"
+              >
                 Cancel
               </button>
-              <button className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen">
+              <button
+                onClick={() => setHoursModalOpen(false)}
+                className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen"
+              >
                 Save
               </button>
+            </div>
+          </div>
+        </Box>
+      </CustomAuthModal>
+    </>
+  );
+};
+
+const DaysTimeModal = ({
+  daysTimeModalOpen,
+  setDaysTimeModalOpen,
+  selectedDay,
+  setSelectedDay,
+  hours,
+  setHours,
+  setSelectedWeek,
+  selectedWeek,
+  selectedAllHours,
+  setSelectedAllHours,
+}) => {
+  const [startTime, setStartTime] = useState();
+  const [closeTime, setCloseTime] = useState();
+  const [closed, setClosed] = useState(false);
+  const [open24Hours, setOpen24Hours] = useState(false);
+
+  useEffect(() => {
+    setStartTime(
+      selectedDay?.split(" - ")[1]?.split(" ")[1] === "PM"
+        ? String(
+            Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) +
+              12
+          ) +
+            ":" +
+            selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[1]
+        : selectedDay?.split(" - ")[1]?.split(" ")[0]
+    );
+
+    setCloseTime(
+      selectedDay?.split(" - ")[2]?.split(" ")[1] === "PM"
+        ? String(
+            Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) +
+              12
+          ) +
+            ":" +
+            selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[1]
+        : selectedDay?.split(" - ")[2]?.split(" ")[0]
+    );
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (selectedDay?.split(" - ")[1] === "Closed") {
+      setClosed(true);
+    } else {
+      setClosed(false);
+    }
+
+    if (selectedDay?.split(" - ")[1] === "Open 24 hours") {
+      setOpen24Hours(true);
+    } else {
+      setOpen24Hours(false);
+    }
+  }, [selectedDay]);
+
+  const saveDaysTimeData = () => {
+    if ((closed || open24Hours) && selectedDay) {
+      const index = hours.findIndex(
+        (item) => item.key === selectedDay?.split(" - ")[0]
+      );
+      if (hours[index]?.value) {
+        hours[index].value = open24Hours ? ["Open 24 hours"] : ["Closed"];
+        setHours(hours);
+      }
+      handleCloseDaysTimeModal();
+    }
+
+    if ((closed || open24Hours) && selectedWeek) {
+      hours.map((itm) =>
+        selectedWeek?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
+          }
+          return itm;
+        })
+      );
+      handleCloseDaysTimeModal();
+    }
+
+    if ((closed || open24Hours) && selectedAllHours) {
+      hours.map((itm) =>
+        selectedAllHours?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
+          }
+          return itm;
+        })
+      );
+      handleCloseDaysTimeModal();
+    }
+
+    if (hours && !closed && !open24Hours && selectedWeek) {
+      hours.map((itm) =>
+        selectedWeek?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = [
+              `${
+                startTime?.split(":")[0] > 12
+                  ? startTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    startTime?.split(":")[1] +
+                    " PM"
+                  : startTime + " AM"
+              }  - ${
+                closeTime?.split(":")[0] > 12
+                  ? closeTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    closeTime?.split(":")[1] +
+                    " PM"
+                  : closeTime + " AM"
+              } `,
+            ]);
+          }
+          return itm;
+        })
+      );
+
+      handleCloseDaysTimeModal();
+    }
+
+    if (hours && !closed && !open24Hours && selectedAllHours) {
+      hours.map((itm) =>
+        selectedAllHours?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = [
+              `${
+                startTime?.split(":")[0] > 12
+                  ? startTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    startTime?.split(":")[1] +
+                    " PM"
+                  : startTime + " AM"
+              }  - ${
+                closeTime?.split(":")[0] > 12
+                  ? closeTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    closeTime?.split(":")[1] +
+                    " PM"
+                  : closeTime + " AM"
+              } `,
+            ]);
+          }
+          return itm;
+        })
+      );
+
+      handleCloseDaysTimeModal();
+    }
+
+    if (
+      hours &&
+      !closed &&
+      !open24Hours &&
+      selectedWeek === undefined &&
+      selectedAllHours === undefined
+    ) {
+      const index = hours.findIndex(
+        (item) => item.key === selectedDay?.split(" - ")[0]
+      );
+      if (hours[index]?.value && startTime && closeTime) {
+        hours[index].value = [
+          `${
+            startTime.split(":")[0] > 12
+              ? startTime.split(":")[0] -
+                12 +
+                ":" +
+                startTime.split(":")[1] +
+                " PM"
+              : startTime + " AM"
+          }  - ${
+            closeTime.split(":")[0] > 12
+              ? closeTime.split(":")[0] -
+                12 +
+                ":" +
+                closeTime.split(":")[1] +
+                " PM"
+              : closeTime + " AM"
+          } `,
+        ];
+        setHours(hours);
+      }
+
+      handleCloseDaysTimeModal();
+    }
+  };
+
+  const handleCloseDaysTimeModal = () => {
+    setDaysTimeModalOpen(false);
+    setSelectedWeek();
+    setSelectedDay();
+    setSelectedAllHours();
+    setClosed(false);
+    setOpen24Hours(false);
+    setStartTime();
+    setCloseTime();
+  };
+
+  return (
+    <>
+      <CustomAuthModal
+        open={daysTimeModalOpen}
+        onClose={handleCloseDaysTimeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="animate__animated animate__slideInDown"
+      >
+        <Box sx={style} className="!w-[80%] lg:!w-[40%]">
+          <div className="p-5">
+            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
+              Select days & time
+            </p>
+
+            <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
+              <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
+                {[
+                  "Sunday",
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                ].map((itm) => (
+                  <div
+                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] ${
+                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
+                    } ${
+                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
+                    } ${
+                      selectedAllHours?.find((day) => day === itm) &&
+                      "bg-[#bdbbbb]"
+                    }  hover:bg-[#bdbbbb] cursor-pointer`}
+                    key={itm}
+                  >
+                    {itm.charAt(0)}
+                  </div>
+                ))}
+              </div>
+
+              <div className="container mt-5">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={open24Hours}
+                      onChange={(e) => {
+                        setOpen24Hours(e.target.checked);
+                        if (closed) {
+                          setClosed(!e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label="Open 24 Hours"
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={closed}
+                      onChange={(e) => {
+                        setClosed(e.target.checked);
+                        if (open24Hours) {
+                          setOpen24Hours(!e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label="Closed"
+                />
+              </div>
+              {!(closed || open24Hours) && (
+                <div className="container mt-5 flex flex-col sm:flex-row sm:items-center items-start gap-10">
+                  <TextField
+                    label="Open Time"
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => {
+                      setStartTime(e.target.value);
+                    }}
+                  />
+
+                  <TextField
+                    label="Close Time"
+                    type="time"
+                    value={closeTime}
+                    onChange={(e) => {
+                      setCloseTime(e.target.value);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="container mt-5">
+              <Divider />
+            </div>
+            <div className="container mt-5 flex items-center justify-end gap-5">
+              <Button
+                variant="outlined"
+                className="rounded-xl capitalize font-semibold hover:bg-white bg-white text-colorGreen border-2 border-colorGreen hover:border-colorGreen py-2 px-5"
+                onClick={handleCloseDaysTimeModal}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                className="rounded-xl capitalize font-semibold text-white bg-colorGreen hover:bg-colorGreen border-2 border-colorGreen py-2 px-5"
+                onClick={saveDaysTimeData}
+                disabled={
+                  (startTime && closeTime) === undefined &&
+                  !open24Hours &&
+                  !closed
+                }
+              >
+                Save
+              </Button>
             </div>
           </div>
         </Box>
