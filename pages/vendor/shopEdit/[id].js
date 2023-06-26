@@ -3424,7 +3424,7 @@ const DaysTimeModal = ({
                       selectedAllHours?.find((day) => day === itm) &&
                       "bg-[#bdbbbb]"
                     }  hover:bg-[#bdbbbb] cursor-pointer`}
-                    key={itm}
+                    
                   >
                     {itm.charAt(0)}
                   </div>
