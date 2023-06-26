@@ -5,7 +5,14 @@ import { SiHandshake } from "react-icons/si";
 import Router from "next/router";
 
 const UserType = () => {
-  const [selectedOption, setSelectedOption] = useState("Customer");
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState(
+    typeof window !== "undefined" &&
+      (localStorage.getItem("user_type_for_auth")
+        ? localStorage.getItem("user_type_for_auth")
+        : "customer")
+  );
   const handleDivClick = (option) => {
     setSelectedOption(option);
   };
@@ -17,6 +24,14 @@ const UserType = () => {
       );
     }
   }, []);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <div className="bg-background w-full">
@@ -37,22 +52,22 @@ const UserType = () => {
           <div className="flex my-8 gap-6 max-[380px]:flex-col">
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-                selectedOption === "Customer" &&
+                selectedOption === "customer" &&
                 "border-2 border-colorGreen rounded-2xl"
               }`}
-              onClick={() => handleDivClick("Customer")}
+              onClick={() => handleDivClick("customer")}
             >
               <div className="flex justify-between">
                 <GroupsIcon
                   className={`${
-                    selectedOption === "Customer"
+                    selectedOption === "customer"
                       ? "text-colorGreen"
                       : "text-colorPrimary"
                   }`}
                   fontSize="large"
                 />
 
-                {selectedOption === "Customer" && (
+                {selectedOption === "customer" && (
                   <CheckCircleIcon className="text-colorGreen" />
                 )}
               </div>
@@ -65,21 +80,21 @@ const UserType = () => {
             </div>
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-                selectedOption === "Business" &&
+                selectedOption === "vendor" &&
                 "border-2 border-colorGreen rounded-2xl"
               }`}
-              onClick={() => handleDivClick("Business")}
+              onClick={() => handleDivClick("vendor")}
             >
               <div className="flex justify-between">
                 <SiHandshake
                   className={`${
-                    selectedOption === "Business"
+                    selectedOption === "vendor"
                       ? "text-colorGreen"
                       : "text-colorPrimary"
                   }`}
                   fontSize="25px"
                 />
-                {selectedOption === "Business" && (
+                {selectedOption === "vendor" && (
                   <CheckCircleIcon className="text-colorGreen" />
                 )}
               </div>
@@ -100,7 +115,7 @@ const UserType = () => {
               onClick={() => {
                 localStorage.setItem(
                   "user_type_for_auth",
-                  selectedOption === "Business" ? "vendor" : "customer"
+                  selectedOption === "vendor" ? "vendor" : "customer"
                 );
 
                 Router.push("/auth/signup");
@@ -115,7 +130,7 @@ const UserType = () => {
                 onClick={() => {
                   localStorage.setItem(
                     "user_type_for_auth",
-                    selectedOption === "Business" ? "vendor" : "customer"
+                    selectedOption === "vendor" ? "vendor" : "customer"
                   );
                   Router.push("/auth/signin");
                 }}
