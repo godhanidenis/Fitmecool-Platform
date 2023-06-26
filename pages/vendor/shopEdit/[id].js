@@ -138,7 +138,8 @@ const ShopEdit = () => {
   const [uploadShopBackground, setUploadShopBackground] = useState("");
 
   const [shopImages, setShopImages] = useState([]);
-  const [uploadShopImages, setUploadShopImages] = useState("");
+  const [uploadShopImages, setUploadShopImages] = useState([]);
+  const [getUploadShopImages, setGetUploadShopImages] = useState([]);
 
   const [ShopEditImg, setShopEditImg] = useState("");
   const [shopVideo, setShopVideo] = useState("");
@@ -268,6 +269,7 @@ const ShopEdit = () => {
   }, [userProfile?.userCreatedShopId]);
 
   useEffect(() => {
+    console.log("gbbbbbbbbbbbb");
     if (userProfile?.userCreatedShopId) {
       getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
         (ownerRes) => {
@@ -327,7 +329,8 @@ const ShopEdit = () => {
             file
           ) {
             console.log("uploadShopImages00000000", file);
-            setUploadShopImages((old) => [...old, file]);
+            setGetUploadShopImages((old) => [...old, file]);
+            // setUploadShopImages((old) => [...old, file]);
           });
       });
       setShopImages(vendorShopDetails?.shop_images);
@@ -427,6 +430,10 @@ const ShopEdit = () => {
     shopInfoSetValue,
     vendorShopDetails,
   ]);
+
+  useEffect(() => {
+    setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
+  }, [getUploadShopImages?.length]);
 
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
