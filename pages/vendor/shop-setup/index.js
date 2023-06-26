@@ -280,7 +280,7 @@ const ShopPage = () => {
                         shop_name: data.shop_name,
                         shop_email: data.shop_email,
                         shop_type: individual ? "individual" : "shop",
-                        shop_time: hours.map((day) => {
+                        shop_time: hours?.map((day) => {
                           return {
                             week: day["key"],
                             open_time:
@@ -316,7 +316,7 @@ const ShopPage = () => {
                           branch_type: "main",
                         },
                         ...(subBranch.length > 0
-                          ? subBranch.map(returnSubBranchData)
+                          ? subBranch?.map(returnSubBranchData)
                           : []),
                       ],
                     }).then(
@@ -350,7 +350,7 @@ const ShopPage = () => {
                       shop_logo: logoResponse.data.data.singleUpload,
                       shop_cover_image:
                         backgroundResponse.data.data.singleUpload,
-                      shop_images: imagesResponse.data.data.multipleUpload.map(
+                      shop_images: imagesResponse.data.data.multipleUpload?.map(
                         (itm) => {
                           return { links: itm };
                         }
@@ -364,7 +364,7 @@ const ShopPage = () => {
                       shop_name: data.shop_name,
                       shop_email: data.shop_email,
                       shop_type: individual ? "individual" : "shop",
-                      shop_time: hours.map((day) => {
+                      shop_time: hours?.map((day) => {
                         return {
                           week: day["key"],
                           open_time:
@@ -397,7 +397,7 @@ const ShopPage = () => {
                         branch_type: "main",
                       },
                       ...(subBranch.length > 0
-                        ? subBranch.map(returnSubBranchData)
+                        ? subBranch?.map(returnSubBranchData)
                         : []),
                     ],
                   }).then(
@@ -908,7 +908,7 @@ const ShopPage = () => {
                         }`}
                       >
                         <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
-                          {hours.map((day, index) => (
+                          {hours?.map((day, index) => (
                             <div className="relative" key={index}>
                               <label
                                 htmlFor="sunday"
@@ -918,6 +918,7 @@ const ShopPage = () => {
                               </label>
                               {day["value"]?.map((time, index) => (
                                 <input
+                                  key={index}
                                   type="text"
                                   id="sunday"
                                   value={time}
@@ -1101,6 +1102,7 @@ const ShopPage = () => {
                           return (
                             <>
                               <div
+                                key={index}
                                 className="w-full cursor-pointer sm:h-[400px] h-[300px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                                 onClick={() =>
                                   handleBrowseClickShopImages(
@@ -2042,13 +2044,14 @@ const SubBranchModal = ({
                           onChange={(e) => setManagerValue(e.target.value)}
                         >
                           <MenuItem value="">None</MenuItem>
-                          {["Same as owner", "same as main branch manager"].map(
-                            (man) => (
-                              <MenuItem value={man} key={man}>
-                                {man}
-                              </MenuItem>
-                            )
-                          )}
+                          {[
+                            "Same as owner",
+                            "same as main branch manager",
+                          ]?.map((man) => (
+                            <MenuItem value={man} key={man}>
+                              {man}
+                            </MenuItem>
+                          ))}
                         </CustomTextField>
                       </div>
                     </div>
@@ -2234,7 +2237,10 @@ const HoursModal = ({
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
                 {hours?.map((day, index) => (
-                  <div className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
+                  <div
+                    key={index}
+                    className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
+                  >
                     <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
                       <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
                         {day["key"]}
@@ -2655,7 +2661,7 @@ const DaysTimeModal = ({
                   "Thursday",
                   "Friday",
                   "Saturday",
-                ].map((itm) => (
+                ].map((itm, index) => (
                   <div
                     className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] ${
                       selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"

@@ -217,7 +217,7 @@ const ShopHeaderSection = ({
           <div className="mt-[24px] sm:mt-0 relative">
             <Grid container>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <ProductionQuantityLimitsIcon
@@ -233,7 +233,7 @@ const ShopHeaderSection = ({
                 </Item>
               </Grid>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <PeopleAltIcon
@@ -255,7 +255,7 @@ const ShopHeaderSection = ({
                 sm={3}
                 onClick={handleClick}
               >
-                <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <RateReviewIcon
@@ -276,7 +276,7 @@ const ShopHeaderSection = ({
                 sm={3}
                 onMouseLeave={() => setOpenToolTip(false)}
               >
-                <Item className="!bg-[#1F2233] text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
                   <div className="lg:flex items-center justify-center w-[100%]">
                     <div className="flex items-center">
                       <ShareIcon

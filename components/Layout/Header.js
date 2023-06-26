@@ -73,6 +73,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
+const StyledSelect = styled(Select)`
+  & .MuiInputBase-input {
+    color: white;
+  }
+
+  & .MuiSelect-icon {
+    color: white;
+  }
+  & .MuiInputLabel-root {
+    color: white;
+  }
+`;
+
 function BootstrapDialogTitle(props) {
   const { children, onClose, ...other } = props;
 
@@ -207,17 +220,20 @@ const Header = () => {
             </Link>
             {userProfile.user_type !== "vendor" && (
               <div className="headerLocationDiv ml-[24px]">
-                <FormControl variant="standard" sx={{ minWidth: 110 }}>
+                <FormControl
+                  variant="standard"
+                  sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
+                >
                   <InputLabel
                     id="demo-simple-select-standard-label"
-                    className="flex items-center gap-1"
+                    className="!flex !items-center !gap-1"
                   >
                     <Image width={20} height={20} src={LocationIcon} alt="" />
                     <span className="text-[#878A99] text-[14px] font-normal">
                       Location
                     </span>
                   </InputLabel>
-                  <Select
+                  <StyledSelect
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
@@ -229,7 +245,7 @@ const Header = () => {
                         {location?.area}
                       </MenuItem>
                     ))}
-                  </Select>
+                  </StyledSelect>
                 </FormControl>
               </div>
             )}

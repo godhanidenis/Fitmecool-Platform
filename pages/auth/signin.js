@@ -85,7 +85,7 @@ const Login = () => {
             </div>
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
-            Login As a Customer!
+            Login As a {asVendor ? "Vendor" : "Customer"} !
           </div>
           <p className="text-xl mt-4 text-gray-400 max-[600px]:text-sm">
             Lorem Ipsum is simply dummy text of the printing and typesetting
