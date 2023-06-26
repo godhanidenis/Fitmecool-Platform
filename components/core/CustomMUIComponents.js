@@ -65,6 +65,30 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
     height: "5px",
   },
 }));
+
+export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
+  [`& .MuiTab-root`]: {
+    textTransform: "none",
+    color: "rgba(21, 24, 39, 0.56)",
+    fontWeight: 600,
+    fontSize: "18px",
+    lineHeight: "16px",
+    paddingX: "20px",
+    paddingY: "16px",
+    marginRight: "16px",
+  },
+
+  [`& .Mui-selected`]: {
+    backgroundColor: "#151827",
+    borderRadius: "500px",
+    color: "#FFF !important",
+    fontWeight: 500,
+  },
+  [`& .MuiTabs-indicator`]: {
+    display: "none",
+  },
+}));
+
 export function TabPanel(props) {
   const { children, value, index, ...other } = props;
 

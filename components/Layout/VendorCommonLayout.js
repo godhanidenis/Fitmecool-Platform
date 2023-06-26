@@ -44,7 +44,7 @@ const VendorCommonLayout = ({ children }) => {
         </div>
         <div className="w-full md:w-3/4">{children}</div>
       </div> */}
-      <div className="flex flex-col md:flex-row min-h-screen lg:p-10 lg:gap-16 gap-10 p-5">
+      <div className="flex flex-col md:flex-row min-h-screen lg:p-10  gap-10 p-5">
         <div className="w-full  md:w-[30%] relative mb-[350px] sm:mb-0">
           <div className="absolute lg:-top-36 -top-32 left-0 right-0 bottom-0">
             <VendorSidebar vendorShopDetails={vendorShopDetails} />
