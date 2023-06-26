@@ -76,6 +76,12 @@ export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
     paddingX: "20px",
     paddingY: "16px",
     marginRight: "16px",
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "14px",
+      paddingX: "16px",
+      paddingY: "12px",
+    },
   },
 
   [`& .Mui-selected`]: {

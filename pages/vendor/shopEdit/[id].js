@@ -28,7 +28,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm } from "react-hook-form";
 import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useSelector } from "react-redux";
 import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
@@ -48,6 +49,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const style = {
   position: "absolute",
@@ -66,6 +69,9 @@ const style = {
 const ShopEdit = () => {
   const [individual, setIndividual] = useState(false);
   const [sameAsOwner, setSameAsOwner] = useState("False");
+  const [shopTimeDetails, setShopTimeDetails] = useState("Show");
+  const [managerDetails, setManagerDetails] = useState("Show");
+  const [branchDetails, setBranchDetails] = useState("Show");
 
   const [hours, setHours] = useState([
     { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
@@ -155,7 +161,22 @@ const ShopEdit = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const handleShopTimeDetails = (option) => {
+    setShopTimeDetails(option);
+  };
 
+  const handleManagerDetails = (option) => {
+    setManagerDetails(option);
+  };
+  const handleBranchDetails = (option, id) => {
+    subBranchList.map((element, index) => {
+      if (index == id) {
+        setBranchDetails(option);
+      }
+    });
+  };
+
+  console.log("data", subBranchList);
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -667,10 +688,10 @@ const ShopEdit = () => {
             </Box>
           </div>
           <TabPanel value={value} index={0}>
-            <div className="rounded-lg p-5 ">
-              <form>
+            <div className="rounded-lg  mt-10">
+              {/* <form>
                 <div className="flex flex-col space-y-3">
-                  {/* <div className="flex gap-10 sm:gap-20 w-full justify-between items-center">
+                  <div className="flex gap-10 sm:gap-20 w-full justify-between items-center">
                     <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                       Name:
                     </p>
@@ -714,57 +735,8 @@ const ShopEdit = () => {
                         )}
                       </div>
                     </div>
-                  </div> */}
-                  <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
-                    <div className="sm:w-1/2 relative w-full">
-                      <label
-                        htmlFor="fName"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        id="fName"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl bg-[#FAFCFC] rounded-xl border border-gray-200 focus:border-black outline-none"
-                        placeholder="Your first name"
-                        {...ownerInfoRegister("first_name", {
-                          required: "FirstName is required",
-                        })}
-                      />
-                      <div className="mt-2">
-                        {ownerInfoErrors?.first_name && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {ownerInfoErrors.first_name?.message}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="sm:w-1/2 relative w-full">
-                      <label
-                        htmlFor="lName"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        id="lName"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl bg-[#FAFCFC] rounded-xl border border-gray-200 focus:border-black outline-none"
-                        placeholder="Your last name"
-                        {...ownerInfoRegister("last_name", {
-                          required: "LastName is required",
-                        })}
-                      />
-                      <div className="mt-2">
-                        {ownerInfoErrors?.last_name && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {ownerInfoErrors.last_name?.message}
-                          </span>
-                        )}
-                      </div>
-                    </div>
                   </div>
+
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
                     <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                       Email:
@@ -855,18 +827,151 @@ const ShopEdit = () => {
                     </Box>
                   </div>
                 </div>
-              </form>
+              </form> */}
+              <div className="flex flex-col space-y-10">
+                <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                  <div className="sm:w-1/2 relative w-full">
+                    <label
+                      htmlFor="fName"
+                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="fName"
+                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      placeholder="Your first name"
+                      {...ownerInfoRegister("first_name", {
+                        required: "FirstName is required",
+                      })}
+                    />
+                    <div className="mt-2">
+                      {ownerInfoErrors?.first_name && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {ownerInfoErrors.first_name?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="sm:w-1/2 relative w-full">
+                    <label
+                      htmlFor="lName"
+                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lName"
+                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      placeholder="Your last name"
+                      {...ownerInfoRegister("last_name", {
+                        required: "LastName is required",
+                      })}
+                    />
+                    <div className="mt-2">
+                      {ownerInfoErrors?.last_name && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {ownerInfoErrors.last_name?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full relative">
+                  <label
+                    htmlFor="email"
+                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    placeholder="yourmail@gmail.com"
+                    {...ownerInfoRegister("user_email", {
+                      required: "Email is required",
+
+                      pattern: {
+                        value:
+                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        message: "Please enter a valid email",
+                      },
+                    })}
+                  />
+                  <div className="mt-2">
+                    {ownerInfoErrors?.user_email && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {ownerInfoErrors.user_email?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full relative">
+                  <label
+                    htmlFor="phone"
+                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    id=""
+                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    placeholder="Your phone number"
+                    {...ownerInfoRegister("user_contact", {
+                      required: "Contact Number is required",
+                      minLength: {
+                        value: 10,
+                        message: "Contact Number must be 10 numbers",
+                      },
+                      maxLength: {
+                        value: 10,
+                        message: "Contact Number must be 10 numbers",
+                      },
+                    })}
+                  />
+                  <div className="mt-2">
+                    {ownerInfoErrors?.user_contact && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {ownerInfoErrors.user_contact?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center justify-center">
+                  <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                    <button
+                      type="submit"
+                      onClick={ownerInfoHandleSubmit(
+                        ownerInfoOnSubmit,
+                        ownerInfoOError
+                      )}
+                      className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                                     shadow-lg flex items-center justify-center"
+                    >
+                      {ownerLoading && (
+                        <CircularProgress
+                          size={20}
+                          color="primary"
+                          sx={{ color: "white", mr: 1 }}
+                        />
+                      )}
+                      Update
+                    </button>
+                  </Box>
+                </div>
+              </div>
             </div>
           </TabPanel>
 
           <TabPanel value={value} index={1}>
-            <div className=" rounded-lg p-5 ">
-              <div className="flex w-full  items-center justify-between">
-                {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                Shop Info
-              </h3> */}
+            <div className=" rounded-lg mt-10">
+              {/* <div className="flex w-full  items-center justify-between">
 
-                {/* <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                 <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
                   <input
                     id="Toggle4"
@@ -882,7 +987,7 @@ const ShopEdit = () => {
                     Individual
                   </span>
                 </label>
-              </div> */}
+              </div>
               </div>
               <form>
                 <div className="flex flex-col">
@@ -1071,8 +1176,227 @@ const ShopEdit = () => {
                     </Box>
                   </div>
                 </div>
-              </form>
+              </form> */}
+              <div className="space-y-10">
+                <div className="w-full relative">
+                  <label
+                    htmlFor="shopName"
+                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                  >
+                    Shop Name
+                  </label>
+                  <input
+                    type="text"
+                    id="shopName"
+                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    placeholder="Your shop name"
+                    {...shopInfoRegister("shop_name", {
+                      required: "Shop Name is required",
+                    })}
+                  />
+                  <div className="mt-2">
+                    {shopInfoErrors.shop_name && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {shopInfoErrors.shop_name?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {!individual && (
+                  <>
+                    <div className="w-full relative">
+                      <label
+                        htmlFor="shopEmail"
+                        className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                      >
+                        Shop Email
+                      </label>
+                      <input
+                        type="email"
+                        id="shopEmail"
+                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        placeholder="Your shop email"
+                        {...shopInfoRegister("shop_email", {
+                          required: "Shop Email is required",
 
+                          pattern: {
+                            value:
+                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            message: "Please enter a valid email",
+                          },
+                        })}
+                      />
+                      <div className="mt-2">
+                        {shopInfoErrors.shop_email && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {shopInfoErrors.shop_email?.message}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-full relative">
+                      <label
+                        htmlFor="personalWebLink1"
+                        className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                      >
+                        Personal Website Link
+                      </label>
+                      <input
+                        type="text"
+                        id="personalWebLink1"
+                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        placeholder="Personal Website Link"
+                        {...shopInfoRegister("personal_website", {
+                          required: "Personal Website is required",
+                        })}
+                      />
+                      <div className="mt-2">
+                        {shopInfoErrors.personal_website && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {shopInfoErrors.personal_website?.message}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
+                      <div className="w-1/2 relative max-md:w-full">
+                        <label
+                          htmlFor="fbLink"
+                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                        >
+                          Fackbook Link
+                        </label>
+                        <input
+                          type="text"
+                          id="fbLink"
+                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          placeholder="Your facebook link"
+                          {...shopInfoRegister("facebook_link", {
+                            required: "Facebook Link is required",
+                          })}
+                        />
+                        <div className="mt-2">
+                          {shopInfoErrors.facebook_link && (
+                            <span style={{ color: "red" }} className="-mb-6">
+                              {shopInfoErrors.facebook_link?.message}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-1/2 relative max-md:w-full">
+                        <label
+                          htmlFor="igLink"
+                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                        >
+                          Instagram Link
+                        </label>
+                        <input
+                          type="text"
+                          id="igLink"
+                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          placeholder="Your instagram link"
+                          {...shopInfoRegister("instagram_link", {
+                            required: "Instagram Link is required",
+                          })}
+                        />
+                        <div className="mt-2">
+                          {shopInfoErrors.instagram_link && (
+                            <span style={{ color: "red" }} className="-mb-6">
+                              {shopInfoErrors.instagram_link?.message}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+              {!individual && (
+                <>
+                  <div className="flex justify-between items-center my-10">
+                    <div className="flex">
+                      {shopTimeDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleShopTimeDetails("Hide")}
+                          className="cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleShopTimeDetails("Show")}
+                          className="cursor-pointer"
+                        />
+                      )}
+                      <div className="uppercase font-semibold sm:text-lg text-sm">
+                        Shop Open/Close Time
+                      </div>
+                    </div>
+                    <div
+                      className="flex gap-2 mr-4 items-center cursor-pointer"
+                      onClick={() => setHoursModalOpen(true)}
+                    >
+                      <EditIcon fontSize="small" className="text-gray-400" />
+                      <div className="text-gray-400 sm:text-lg text-sm">
+                        Edit
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`space-y-10 ${
+                      shopTimeDetails === "Hide" && "hidden"
+                    }`}
+                  >
+                    <div className="w-full grid sm:grid-cols-2 gap-y-8 gap-4 grid-cols-1">
+                      {hours.map((day, index) => (
+                        <div className="relative" key={index}>
+                          <label
+                            htmlFor="sunday"
+                            className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                          >
+                            {day["key"]}
+                          </label>
+                          {day["value"]?.map((time, index) => (
+                            <input
+                              type="text"
+                              id="sunday"
+                              value={time}
+                              className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 outline-none ${
+                                time === "Closed"
+                                  ? "text-red-600"
+                                  : time === "Open 24 hours"
+                                  ? "text-green-600"
+                                  : ""
+                              }`}
+                              readOnly
+                            />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                        <button
+                          type="submit"
+                          onClick={shopInfoHandleSubmit(
+                            shopInfoOnSubmit,
+                            shopInfoOError
+                          )}
+                          className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                                     shadow-lg flex items-center justify-center"
+                        >
+                          {shopLoading && (
+                            <CircularProgress
+                              size={20}
+                              color="primary"
+                              sx={{ color: "white", mr: 1 }}
+                            />
+                          )}
+                          Update
+                        </button>
+                      </Box>
+                    </div>
+                  </div>
+                </>
+              )}
               <HoursModal
                 hoursModalOpen={hoursModalOpen}
                 setHoursModalOpen={setHoursModalOpen}
@@ -1085,6 +1409,7 @@ const ShopEdit = () => {
                 selectedAllHours={selectedAllHours}
                 setSelectedAllHours={setSelectedAllHours}
               />
+
               <DaysTimeModal
                 daysTimeModalOpen={daysTimeModalOpen}
                 setDaysTimeModalOpen={setDaysTimeModalOpen}
@@ -1101,12 +1426,12 @@ const ShopEdit = () => {
           </TabPanel>
 
           <TabPanel value={value} index={2}>
-            <div className=" rounded-lg p-5 ">
-              <form>
+            <div className="rounded-lg mt-10">
+              {/* <form>
                 <div className="flex flex-col">
-                  {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                     Main Branch
-                  </h3> */}
+                  </h3>
                   <div className="flex items-center justify-center">
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
@@ -1211,9 +1536,9 @@ const ShopEdit = () => {
                   </div>
 
                   <div className="flex gap-10 sm:gap-20 w-full justify-between items-center">
-                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                       Name:
-                    </p> */}
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextField
@@ -1259,9 +1584,9 @@ const ShopEdit = () => {
                   </div>
 
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                    <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                       Email:
-                    </p> */}
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextField
@@ -1292,9 +1617,9 @@ const ShopEdit = () => {
                   </div>
 
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                    <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                       Phone:
-                    </p> */}
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextField
@@ -1352,12 +1677,344 @@ const ShopEdit = () => {
                     </Box>
                   </div>
                 </div>
-              </form>
+              </form> */}
+              <div className="space-y-10">
+                <div className="w-full relative">
+                  <label
+                    htmlFor="address"
+                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                  >
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    id="address"
+                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    placeholder="Your address"
+                    {...mainBranchInfoRegister("address", {
+                      required: "Address is required",
+                    })}
+                  />
+                  <div className="mt-2">
+                    {mainBranchInfoErrors.address && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {mainBranchInfoErrors.address?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                  <div className="sm:w-1/2 relative w-full">
+                    <label
+                      htmlFor="city"
+                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                    >
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      id="city"
+                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      placeholder="Your city"
+                      {...mainBranchInfoRegister("city", {
+                        required: "City is required",
+                      })}
+                    />
+                    <div className="mt-2">
+                      {mainBranchInfoErrors.city && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {mainBranchInfoErrors.city?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="sm:w-1/2 relative w-full">
+                    <label
+                      htmlFor="pincode"
+                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                    >
+                      Pincode
+                    </label>
+                    <input
+                      id="pincode"
+                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      placeholder="Your pincode"
+                      type="number"
+                      {...mainBranchInfoRegister("pin_code", {
+                        required: "PinCode is required",
+                      })}
+                    />
+                    <div className="mt-2">
+                      {mainBranchInfoErrors.pin_code && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {mainBranchInfoErrors.pin_code?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex my-5">
+                {managerDetails === "Show" ? (
+                  <KeyboardArrowUpIcon
+                    onClick={() => handleManagerDetails("Hide")}
+                    className="cursor-pointer"
+                  />
+                ) : (
+                  <KeyboardArrowDownIcon
+                    onClick={() => handleManagerDetails("Show")}
+                    className="cursor-pointer"
+                  />
+                )}
+                <div className="font-semibold sm:text-lg text-sm">
+                  Manager Details
+                </div>
+              </div>
+              <div
+                className={`space-y-10 ${
+                  managerDetails === "Hide" && "hidden"
+                }`}
+              >
+                <RadioGroup
+                  row
+                  name="row-radio-buttons-group"
+                  value={sameAsOwner}
+                  onChange={(e) => {
+                    if (e.target.value === "True") {
+                      setSameAsOwner("True");
+                    } else {
+                      setSameAsOwner("False");
+                    }
+                  }}
+                >
+                  <div className="flex gap-4">
+                    <div className="flex items-center">
+                      <span className="hidden sm:inline">
+                        <Radio
+                          name="saveAsOwner"
+                          id="True"
+                          value="True"
+                          sx={{
+                            color: "rgba(21, 24, 39, 0.1)",
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 30,
+                            },
+                            "&.Mui-checked": {
+                              color: "#29977E",
+                            },
+                          }}
+                        />
+                      </span>
+                      <span className="sm:hidden">
+                        <Radio
+                          name="saveAsOwner"
+                          id="True"
+                          value="True"
+                          sx={{
+                            color: "rgba(21, 24, 39, 0.1)",
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 20,
+                            },
+                            "&.Mui-checked": {
+                              color: "#29977E",
+                            },
+                          }}
+                        />
+                      </span>
+                      <label
+                        htmlFor="True"
+                        className="sm:text-xl text-sm text-gray-400 font-semibold"
+                      >
+                        Yes
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="hidden sm:inline">
+                        <Radio
+                          name="saveAsOwner"
+                          id="False"
+                          value="False"
+                          sx={{
+                            color: "rgba(21, 24, 39, 0.1)",
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 30,
+                            },
+                            "&.Mui-checked": {
+                              color: "#29977E",
+                            },
+                          }}
+                        />
+                      </span>
+                      <span className="sm:hidden">
+                        <Radio
+                          name="saveAsOwner"
+                          id="False"
+                          value="False"
+                          sx={{
+                            color: "rgba(21, 24, 39, 0.1)",
+                            "& .MuiSvgIcon-root": {
+                              fontSize: 20,
+                            },
+                            "&.Mui-checked": {
+                              color: "#29977E",
+                            },
+                          }}
+                        />
+                      </span>
+                      <label
+                        htmlFor="False"
+                        className="sm:text-xl text-sm text-gray-400 font-semibold"
+                      >
+                        No
+                      </label>
+                    </div>
+                  </div>
+                </RadioGroup>
+
+                <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                  <div className="sm:w-1/2 relative w-full">
+                    <label
+                      htmlFor="managerfName"
+                      className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="managerfName"
+                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      placeholder="Manager first name"
+                      disabled={sameAsOwner === "True"}
+                      {...mainBranchInfoRegister("manager_first_name", {
+                        required: "Manager FirstName is required",
+                      })}
+                    />
+                    <div className="mt-2">
+                      {mainBranchInfoErrors.manager_first_name && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {mainBranchInfoErrors.manager_first_name?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="sm:w-1/2 relative w-full">
+                    <label
+                      htmlFor="mangerlName"
+                      className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="mangerlName"
+                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      placeholder="Manager last name"
+                      disabled={sameAsOwner === "True"}
+                      {...mainBranchInfoRegister("manager_last_name", {
+                        required: "Manager LastName is required",
+                      })}
+                    />
+                    <div className="mt-2">
+                      {mainBranchInfoErrors.manager_last_name && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {mainBranchInfoErrors.manager_last_name?.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full relative">
+                  <label
+                    htmlFor="managerEmail"
+                    className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                  >
+                    E-Mail
+                  </label>
+                  <input
+                    type="email"
+                    id="managerEmail"
+                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    placeholder="Manager email address"
+                    disabled={sameAsOwner === "True"}
+                    {...mainBranchInfoRegister("manager_user_email", {
+                      required: "Manager Email is required",
+
+                      pattern: {
+                        value:
+                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        message: "Please enter a valid email",
+                      },
+                    })}
+                  />
+                  <div className="mt-2">
+                    {mainBranchInfoErrors.manager_user_email && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {mainBranchInfoErrors.manager_user_email?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full relative">
+                  <label
+                    htmlFor="managerPhone"
+                    className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    type="number"
+                    id="managerPhone"
+                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    placeholder="Manager phone number"
+                    disabled={sameAsOwner === "True"}
+                    {...mainBranchInfoRegister("manager_user_contact", {
+                      required: "Manager Contact Number is required",
+                      minLength: {
+                        value: 10,
+                        message: "Manager Contact Number must be 10 numbers",
+                      },
+                      maxLength: {
+                        value: 10,
+                        message: "Manager Contact Number must be 10 numbers",
+                      },
+                    })}
+                  />
+                  <div className="mt-2">
+                    {mainBranchInfoErrors.manager_user_contact && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {mainBranchInfoErrors.manager_user_contact?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                  <button
+                    type="submit"
+                    onClick={mainBranchInfoHandleSubmit(
+                      mainBranchInfoOnSubmit,
+                      mainBranchInfoOError
+                    )}
+                    className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                                     shadow-lg flex items-center justify-center"
+                  >
+                    {mainBranchLoading && (
+                      <CircularProgress
+                        size={20}
+                        color="primary"
+                        sx={{ color: "white", mr: 1 }}
+                      />
+                    )}
+                    Update
+                  </button>
+                </Box>
+              </div>
             </div>
           </TabPanel>
 
           <TabPanel value={value} index={3}>
-            {subBranchList.length > 0 && (
+            {/* {subBranchList.length > 0 && ( 
               <div className="">
                 <div className="flex items-center justify-between container">
                   <h3 className="text-colorPrimary text-xl font-semibold leading-8">
@@ -1444,6 +2101,129 @@ const ShopEdit = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            )} */}
+            {!individual && (
+              <div className="flex justify-end mt-10">
+                <button
+                  onClick={() => setSubBranchModalOpen(true)}
+                  className="opacity-100
+                   cursor-pointer uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
+                >
+                  <span className="hidden sm:inline">
+                    <AddIcon fontSize="large" className="mr-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <AddIcon fontSize="small" className="mr-2" />
+                  </span>
+                  Sub Branch
+                </button>
+              </div>
+            )}
+
+            {subBranchList?.length > 0 && (
+              <div className="w-full">
+                {subBranchList?.map((sub, index) => (
+                  <>
+                    <div className="sm:my-10 my-5 w-full flex justify-between">
+                      <div className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        {branchDetails === "Show" ? (
+                          <KeyboardArrowUpIcon
+                            onClick={() => handleBranchDetails("Hide")}
+                            className="cursor-pointer"
+                          />
+                        ) : (
+                          <KeyboardArrowDownIcon
+                            onClick={() => handleBranchDetails("Show")}
+                            className="cursor-pointer"
+                          />
+                        )}
+                        {"   "}
+                        Branch {index + 1}
+                      </div>
+                      <div className="flex gap-4">
+                        <span className="bg-[#D63848]  text-white rounded-full sm:p-2 px-2 py-1">
+                          <DeleteOutlineOutlinedIcon
+                            sx={{
+                              "@media (max-width: 648px)": {
+                                fontSize: 16,
+                              },
+                            }}
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setBranchDeleteModalOpen(true);
+                              setDeleteBranchId(sub.id);
+                            }}
+                          />
+                        </span>
+                        <span className="bg-[#151827]  text-white rounded-full sm:p-2 px-2 py-1">
+                          <EditOutlinedIcon
+                            sx={{
+                              "@media (max-width: 648px)": {
+                                fontSize: 16,
+                              },
+                            }}
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSubBranchModalOpen(true);
+                              setEditSubBranchId(sub.id);
+                            }}
+                          />
+                        </span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-y-10 mb-16">
+                      <div className=" flex flex-col gap-2">
+                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                          Branch Address :-
+                        </p>
+                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                          {sub.branch_address}
+                        </p>
+                      </div>
+                      <div className=" flex flex-col gap-2">
+                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                          Branch City :-
+                        </p>
+                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                          {sub.branch_city}
+                        </p>
+                      </div>
+                      <div className=" flex flex-col gap-2">
+                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                          Branch pincode :-
+                        </p>
+                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                          {sub.branch_pinCode}
+                        </p>
+                      </div>
+                      <div className=" flex flex-col gap-2">
+                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                          Branch Manager Name :-
+                        </p>
+                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                          {sub.manager_name}
+                        </p>
+                      </div>
+                      <div className=" flex flex-col gap-2">
+                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                          Branch Manager Email :-
+                        </p>
+                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                          {sub.manager_email}
+                        </p>
+                      </div>
+                      <div className=" flex flex-col gap-2">
+                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                          Branch Manager Phone Number :-
+                        </p>
+                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                          {sub.manager_contact}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ))}
               </div>
             )}
           </TabPanel>
@@ -1932,67 +2712,128 @@ const HoursModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={() => setHoursModalOpen(false)}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+        <Box sx={style} className="!w-[90%] lg:!w-[80%]">
+          <div className="sm:p-5 lg:p-5 p-1">
+            <div className="flex justify-between items-center">
+              <div className="sm:text-2xl lg:text-3xl xl:text-5xl text-[16px] font-bold">
                 Hours
-              </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={() => setHoursModalOpen(false)}
-              />
+              </div>
+              <span>
+                <CloseIcon
+                  className="text-gray-500 !text-xl sm:!text-3xl"
+                  fontSize="large"
+                  onClick={() => setHoursModalOpen(false)}
+                />
+              </span>
             </div>
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
-              <div className="flex flex-col gap-2 mt-10 container">
-                {hours.map((day, index) => (
-                  <div
-                    className="flex items-center justify-between text-colorBlack text-sm sm:text-base"
-                    key={index}
-                  >
-                    <p>
-                      <b>{day["key"]}</b>
-                    </p>
-
-                    <div className="flex flex-col">
-                      {day["value"].map((time, index) => (
-                        <div className="flex items-center gap-5" key={index}>
+              <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
+                {hours?.map((day, index) => (
+                  <div className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
+                    <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
+                      <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
+                        {day["key"]}
+                      </div>
+                    </div>
+                    {day["value"].map((time, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-2 sm:gap-4 sm:items-center items-start sm:mr-20"
+                      >
+                        {time === "Closed" || time === "Open 24 hours" ? (
                           <p
-                            className={
+                            className={`${
                               time === "Closed"
                                 ? "text-red-600"
                                 : time === "Open 24 hours"
                                 ? "text-green-600"
                                 : ""
-                            }
+                            } font-semibold text-2xl`}
                           >
                             {time}
                           </p>
-                          <div
-                            className="p-1 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
-                            onClick={() => {
-                              setDaysTimeModalOpen(true);
-                              setSelectedDay(day["key"] + " - " + time);
-                            }}
-                          >
-                            <EditIcon />
+                        ) : (
+                          <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
+                            <div className="relative">
+                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                                Start with
+                              </span>
+                              <input
+                                value={
+                                  time?.split(" - ")[0]?.split(" ")[1] === "PM"
+                                    ? String(
+                                        Number(
+                                          time
+                                            ?.split(" - ")[1]
+                                            ?.split(" ")[0]
+                                            ?.split(":")[0]
+                                        ) + 12
+                                      ) +
+                                      ":" +
+                                      time
+                                        ?.split(" - ")[0]
+                                        ?.split(" ")[0]
+                                        ?.split(":")[1]
+                                    : time?.split(" - ")[0]?.split(" ")[0]
+                                }
+                                type="time"
+                                readOnly
+                                id="saturday"
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                              />
+                            </div>
+                            <div className="relative">
+                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                                End with
+                              </span>
+                              <input
+                                type="time"
+                                value={
+                                  time?.split(" - ")[1]?.split(" ")[1] === "PM"
+                                    ? String(
+                                        Number(
+                                          time
+                                            ?.split(" - ")[1]
+                                            ?.split(" ")[0]
+                                            ?.split(":")[0]
+                                        ) + 12
+                                      ) +
+                                      ":" +
+                                      time
+                                        ?.split(" - ")[1]
+                                        ?.split(" ")[0]
+                                        ?.split(":")[1]
+                                    : time?.split(" - ")[1]?.split(" ")[0]
+                                }
+                                id="saturday"
+                                readOnly
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        )}
+
+                        <span
+                          onClick={() => {
+                            setDaysTimeModalOpen(true);
+                            setSelectedDay(day["key"] + " - " + time);
+                          }}
+                          className="border mr-2 sm:mr-0 border-gray-200 rounded-full text-gray-400 hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen"
+                        >
+                          <div className="hidden sm:block cursor-pointer">
+                            <EditIcon className="m-1 sm:m-3" />
+                          </div>
+                          <div className="sm:hidden cursor-pointer">
+                            <EditIcon fontSize="small" className="m-1 sm:m-3" />
+                          </div>
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-
-              <div className="mt-10 container flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-10">
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className="rounded-xl capitalize text-colorBlack"
+              <div className="flex justify-center sm:justify-start lg:gap-4 gap-1 lg:mt-20 mt-10">
+                <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
@@ -2006,13 +2847,17 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
-                  Edit All Hours
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className="rounded-xl capitalize text-colorBlack"
+                  <span className="hidden sm:block">
+                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <EditIcon className="-ml-1" fontSize="small" />
+                  </span>
+                  Edit all hours
+                </button>
+                <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
@@ -2025,13 +2870,17 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
-                  Edit Mon - Sat
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className="rounded-xl capitalize text-colorBlack"
+                  <span className="hidden sm:block">
+                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <EditIcon className="-ml-1" fontSize="small" />
+                  </span>
+                  Edit Mon to Sat
+                </button>
+                <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
                     setSelectedDay(
@@ -2041,29 +2890,32 @@ const HoursModal = ({
                           .value
                     );
                   }}
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
+                  <span className="hidden sm:block">
+                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
+                  </span>
+                  <span className="sm:hidden">
+                    <EditIcon className="-ml-1" fontSize="small" />
+                  </span>
                   Edit Sunday
-                </Button>
+                </button>
               </div>
             </div>
-            <div className="container mt-5">
-              <Divider />
-            </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
+
+            <div className="flex justify-end mt-5 lg:gap-6 gap-4">
+              <button
                 onClick={() => setHoursModalOpen(false)}
+                className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen"
               >
                 Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
+              </button>
+              <button
                 onClick={() => setHoursModalOpen(false)}
+                className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen"
               >
                 Save
-              </Button>
+              </button>
             </div>
           </div>
         </Box>
@@ -2071,7 +2923,6 @@ const HoursModal = ({
     </>
   );
 };
-
 const DaysTimeModal = ({
   daysTimeModalOpen,
   setDaysTimeModalOpen,
@@ -2374,14 +3225,14 @@ const DaysTimeModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                className="rounded-xl capitalize font-semibold hover:bg-white bg-white text-colorGreen border-2 border-colorGreen hover:border-colorGreen py-2 px-5"
                 onClick={handleCloseDaysTimeModal}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
+                className="rounded-xl capitalize font-semibold text-white bg-colorGreen hover:bg-colorGreen border-2 border-colorGreen py-2 px-5"
                 onClick={saveDaysTimeData}
                 disabled={
                   (startTime && closeTime) === undefined &&

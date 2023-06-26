@@ -39,7 +39,7 @@ const Venderheader = () => {
             <Tab
               key={index}
               data-key={index}
-              label={item}
+              label={item.toUpperCase()}
               onClick={() => {
                 item === "Dashboard" && router.push("/vendor/dashboard");
                 item === "Shop" &&
