@@ -51,6 +51,7 @@ import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { TbPhotoPlus } from "react-icons/tb";
 
 const style = {
   position: "absolute",
@@ -145,8 +146,7 @@ const ShopEdit = () => {
   const [uploadShopBackground, setUploadShopBackground] = useState("");
 
   const [shopImages, setShopImages] = useState([]);
-  const [uploadShopImages, setUploadShopImages] = useState([]);
-  const [getUploadShopImages, setGetUploadShopImages] = useState([]);
+  const [uploadShopImages, setUploadShopImages] = useState("");
 
   const [ShopEditImg, setShopEditImg] = useState("");
   const [shopVideo, setShopVideo] = useState("");
@@ -291,7 +291,6 @@ const ShopEdit = () => {
   }, [userProfile?.userCreatedShopId]);
 
   useEffect(() => {
-    console.log("gbbbbbbbbbbbb");
     if (userProfile?.userCreatedShopId) {
       getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
         (ownerRes) => {
@@ -351,8 +350,7 @@ const ShopEdit = () => {
             file
           ) {
             console.log("uploadShopImages00000000", file);
-            setGetUploadShopImages((old) => [...old, file]);
-            // setUploadShopImages((old) => [...old, file]);
+            setUploadShopImages((old) => [...old, file]);
           });
       });
       setShopImages(vendorShopDetails?.shop_images);
@@ -452,10 +450,6 @@ const ShopEdit = () => {
     shopInfoSetValue,
     vendorShopDetails,
   ]);
-
-  useEffect(() => {
-    setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
-  }, [getUploadShopImages?.length]);
 
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
@@ -1363,6 +1357,7 @@ const ShopEdit = () => {
                           </label>
                           {day["value"]?.map((time, index) => (
                             <input
+                              key={index}
                               type="text"
                               id="sunday"
                               value={time}
@@ -2132,7 +2127,10 @@ const ShopEdit = () => {
               <div className="w-full">
                 {subBranchList?.map((sub, index) => (
                   <>
-                    <div className="sm:my-10 my-5 w-full flex justify-between">
+                    <div
+                      key={index}
+                      className="sm:my-10 my-5 w-full flex justify-between"
+                    >
                       <div className="sm:text-[16px] text-[8px] font-semibold text-black">
                         {branchDetails === "Show" ? (
                           <KeyboardArrowUpIcon
@@ -2166,7 +2164,7 @@ const ShopEdit = () => {
                         <span className="bg-[#151827]  text-white rounded-full sm:p-2 px-2 py-1">
                           <EditOutlinedIcon
                             sx={{
-                              "@media (max-width: 648px)": {
+                              "@media (max-width: 768px)": {
                                 fontSize: 16,
                               },
                             }}
@@ -2236,8 +2234,8 @@ const ShopEdit = () => {
           </TabPanel>
 
           <TabPanel value={value} index={4}>
-            <div className="container rounded-lg my-5 p-5 ">
-              <div className="flex flex-col space-y-3">
+            <div className="container rounded-lg mt-10">
+              {/* <div className="flex flex-col space-y-3">
                 <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Shop Layout
                 </h3>
@@ -2452,7 +2450,6 @@ const ShopEdit = () => {
                             >
                               <EditIcon
                                 style={{ color: "black", cursor: "pointer" }}
-                                // onClick={() => handleEdit(image?.links)}
                                 onClick={() => (
                                   setShopEditImg(image?.links),
                                   document.getElementById("shopEditId").click()
@@ -2471,7 +2468,7 @@ const ShopEdit = () => {
                     Shop Video
                   </h4>
 
-                  {/* <div className="flex justify-center flex-col items-center">
+                  <div className="flex justify-center flex-col items-center">
                     <div className="flex  justify-center">
                       <Button
                         variant="contained"
@@ -2495,9 +2492,9 @@ const ShopEdit = () => {
                         />
                       </Button>
                     </div>
-                  </div> */}
+                  </div>
 
-                  {/* {shopVideo !== "" && ( */}
+                  {shopVideo !== "" && (
                   <div className="flex  justify-center mt-10">
                     <div className="flex flex-col w-full">
                       <div className="grid grid-cols-1 place-items-center">
@@ -2600,7 +2597,7 @@ const ShopEdit = () => {
                       </div>
                     </div>
                   </div>
-                  {/* )} */}
+                   )} 
                 </div>
 
                 <div className="flex items-center justify-center">
@@ -2625,6 +2622,264 @@ const ShopEdit = () => {
                     </button>
                   </Box>
                 </div>
+              </div> */}
+              <div className="grid grid-cols-3 gap-10 my-10">
+                <div className="flex flex-col items-center justify-center col-span-3">
+                  <div
+                    className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
+                    onClick={() => handleBrowseClick(0)}
+                  >
+                    {shopLogo !== "" ? (
+                      <div className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px]">
+                        <img
+                          src={shopLogo}
+                          alt="Uploaded Image"
+                          className="object-cover h-full w-full rounded-full"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-4">
+                        <span className="flex justify-center">
+                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                        </span>
+                        <div className="flex flex-col gap-1">
+                          <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                            Click to upload{" "}
+                            <span className="text-colorGreen">logo</span>
+                          </p>
+                          <p className="sm:text-sm text-xs text-gray-400 text-center">
+                            No Size Limit
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <input
+                      id="file-input-0"
+                      type="file"
+                      accept="image/*,video/*"
+                      className="hidden"
+                      {...shopLayoutRegister("shopLogo", {
+                        required:
+                          shopLogo === "" ? "shopLogo is required" : false,
+                        onChange: (e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            onShopLogoPreviewImage(e);
+                          }
+                        },
+                      })}
+                    />
+                  </div>
+                  <div className="mt-2">
+                    {shopLayoutErrors.shopLogo && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {shopLayoutErrors.shopLogo?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center justify-center col-span-3">
+                  <div
+                    className="w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                    onClick={() => handleBrowseClick(1)}
+                  >
+                    {shopBackground !== "" ? (
+                      <div className="w-full sm:h-[350px]  h-[200px]">
+                        <img
+                          src={shopBackground}
+                          alt="Uploaded Image"
+                          className="object-cover h-full w-full rounded-3xl"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-4">
+                        <span className="flex justify-center">
+                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                        </span>
+                        <div className="flex flex-col gap-1">
+                          <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                            <span className="text-colorGreen">
+                              Click to Upload
+                            </span>{" "}
+                            Cover Image
+                          </p>
+                          <p className="sm:text-sm text-xs text-gray-400 text-center">
+                            We Support JPG, PNG & No Size Limit
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <input
+                      id="file-input-1"
+                      type="file"
+                      accept="image/*,video/*"
+                      className="hidden"
+                      {...shopLayoutRegister("shopBackground", {
+                        required:
+                          shopBackground === ""
+                            ? "shopBackground is required"
+                            : false,
+                        onChange: (e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            onShopBackgroundPreviewImage(e);
+                          }
+                        },
+                      })}
+                    />
+                  </div>
+                  <div className="mt-2">
+                    {shopLayoutErrors.shopBackground && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {shopLayoutErrors.shopBackground?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-span-3">
+                  <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
+                    Shop Images
+                  </div>
+                  <div className="flex xl:gap-8 xl:flex-row flex-col gap-4">
+                    {["One", "Two", "Three"]?.map((item, index) => {
+                      return (
+                        <>
+                          <div
+                            key={index}
+                            className="w-full cursor-pointer sm:h-[400px] h-[300px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                            onClick={() =>
+                              handleBrowseClickShopImages(
+                                `shopImage${item}`,
+                                index
+                              )
+                            }
+                          >
+                            {shopImages[index] ? (
+                              <div className="w-full sm:h-[400px]  h-[300px]">
+                                <img
+                                  src={shopImages[index] ?? ""}
+                                  alt="Uploaded Image"
+                                  className="object-cover h-full w-full rounded-3xl"
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex flex-col gap-4">
+                                <span className="flex justify-center">
+                                  <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <p className="sm:text-lg text-sm font-bold text-gray-400">
+                                    <span className="text-colorGreen">
+                                      Click to Upload{" "}
+                                    </span>
+                                    Front Image
+                                  </p>
+                                  <p className="text-xs text-gray-400 text-center">
+                                    We Support JPG, PNG & No Size Limit
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            <input
+                              id={`shopImage${item}`}
+                              type="file"
+                              accept="image/*,video/*"
+                              className="hidden"
+                              {...shopLayoutRegister("shopImages", {
+                                required:
+                                  shopImages?.length === 0
+                                    ? "Shop Image is required"
+                                    : false,
+                                onChange: (e) => {
+                                  updateShopImagesChange(e);
+                                },
+                              })}
+                            />
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-2">
+                    {shopLayoutErrors.shopImages && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {shopLayoutErrors.shopImages?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="w-full col-span-3">
+                  <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
+                    Shop Video
+                  </div>
+                  <div
+                    className="w-full cursor-pointer sm:h-[350px] h-[200px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                    onClick={() => handleBrowseClick(5)}
+                  >
+                    {shopVideo !== "" ? (
+                      <div className="w-full sm:h-[350px]  h-[200px]">
+                        <video
+                          className="object-cover h-full w-full rounded-3xl"
+                          controls
+                        >
+                          <source src={shopVideo}></source>
+                        </video>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-4">
+                        <span className="flex justify-center">
+                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                        </span>
+                        <div className="flex flex-col gap-1">
+                          <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                            <span className="text-colorGreen">
+                              Click to Upload
+                            </span>{" "}
+                            Shop Video
+                          </p>
+                          <p className="sm:text-sm text-xs text-gray-400 text-center">
+                            No Size Limit
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <input
+                      id="file-input-5"
+                      type="file"
+                      accept="image/*,video/*"
+                      className="hidden"
+                      controls
+                      onClick={(e) => (e.target.value = null)}
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          onShopVideoPreview(e);
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                  <button
+                    type="submit"
+                    onClick={shopLayoutHandleSubmit(
+                      shopLayoutOnSubmit,
+                      shopLayoutOnError
+                    )}
+                    className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                                     shadow-lg flex items-center justify-center"
+                  >
+                    {shopLayoutLoading && (
+                      <CircularProgress
+                        size={20}
+                        color="primary"
+                        sx={{ color: "white", mr: 1 }}
+                      />
+                    )}
+                    Update Shop Layout
+                  </button>
+                </Box>
               </div>
             </div>
           </TabPanel>
@@ -2736,7 +2991,10 @@ const HoursModal = ({
             <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
                 {hours?.map((day, index) => (
-                  <div className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2">
+                  <div
+                    key={index}
+                    className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
+                  >
                     <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
                       <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
                         {day["key"]}
@@ -3155,8 +3413,9 @@ const DaysTimeModal = ({
                   "Thursday",
                   "Friday",
                   "Saturday",
-                ].map((itm) => (
+                ].map((itm, index) => (
                   <div
+                    key={index}
                     className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%] border rounded-[50%] ${
                       selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
                     } ${
