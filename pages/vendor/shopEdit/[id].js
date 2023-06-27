@@ -2144,24 +2144,26 @@ const ShopEdit = () => {
                   <>
                     <div
                       key={index}
-                      className="sm:my-10 my-5 w-full flex justify-between"
+                      style={{
+                        borderRadius: branchDetails[sub.id]
+                          ? "16px 16px 0px 0px"
+                          : "16px",
+                      }}
+                      className="sm:mt-10 mt-5 w-full flex justify-between bg-[#F3F6F6] items-center"
                     >
-                      <div className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
+                      <div
+                        onClick={() => handleBranchDetails(sub.id)}
+                        className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black py-6 pl-6 cursor-pointer"
+                      >
                         {branchDetails[sub.id] ? (
-                          <KeyboardArrowUpIcon
-                            onClick={() => handleBranchDetails(sub.id)}
-                            className="cursor-pointer"
-                          />
+                          <KeyboardArrowUpIcon className="cursor-pointer" />
                         ) : (
-                          <KeyboardArrowDownIcon
-                            onClick={() => handleBranchDetails(sub.id)}
-                            className="cursor-pointer"
-                          />
+                          <KeyboardArrowDownIcon className="cursor-pointer" />
                         )}
                         {"   "}
                         Branch {index + 1}
                       </div>
-                      <div className="flex gap-4">
+                      <div className="flex gap-4 pr-6">
                         <span className="bg-[#D63848]  text-white rounded-full lg:p-2 px-2 py-1">
                           <DeleteOutlineOutlinedIcon
                             sx={{
@@ -2194,53 +2196,72 @@ const ShopEdit = () => {
                     </div>
 
                     <div
-                      className={` grid grid-cols-2 gap-y-10 mb-16 ${
+                      style={{ border: "2px solid #F3F6F6" }}
+                      className={` grid grid-cols-2 gap-y-6 mb-16 py-6 ${
                         !branchDetails[sub.id] && "hidden"
                       }`}
                     >
-                      <div className=" flex flex-col gap-2">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
+                      >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Address :-
+                          Branch Address
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_address}
                         </p>
                       </div>
-                      <div className=" flex flex-col gap-2">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
+                      >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch City :-
+                          Branch City
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_city}
                         </p>
                       </div>
-                      <div className=" flex flex-col gap-2">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
+                      >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch pincode :-
+                          Branch pincode
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_pinCode}
                         </p>
                       </div>
-                      <div className=" flex flex-col gap-2">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
+                      >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Manager Name :-
+                          Branch Manager Name
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_name}
                         </p>
                       </div>
-                      <div className=" flex flex-col gap-2">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
+                      >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Manager Email :-
+                          Branch Manager Email
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_email}
                         </p>
                       </div>
-                      <div className=" flex flex-col gap-2">
+                      <div
+                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
+                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
+                      >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Manager Phone Number :-
+                          Branch Manager Phone Number
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_contact}
