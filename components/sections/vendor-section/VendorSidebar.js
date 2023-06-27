@@ -15,12 +15,16 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
   const router = useRouter();
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
-  const [value, setValue] = useState(4);
+  const [value, setValue] = useState(vendorShopDetails?.shop_rating);
   const labels = {
     1: "1.0",
+    1.5: "1.5",
     2: "2.0",
+    2.5: "2.5",
     3: "3.0",
+    3.5: "3.5",
     4: "4.0",
+    4.5: "4.5",
     5: "5.0",
   };
   function getLabelText(value) {
@@ -49,7 +53,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
       </div>
       <div className="flex flex-col items-center lg:gap-2 gap-1">
         <div className="xl:text-4xl lg:text-xl sm:text-sm text-[32px] font-bold text-colorBlack">
-          GJ5 Fashion
+          {vendorShopDetails?.shop_name}
         </div>
         <div className="flex items-center">
           <span>
@@ -67,7 +71,9 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
             />
           </span>
           <span className="xl:text-2xl lg:text-lg sm:text-sm text-[22px] text-gray-400">
-            Yogi Chowk
+            {vendorShopDetails?.branch_info?.map((item) =>
+              item?.branch_type === "main" ? item.branch_address : ""
+            )}
           </span>
         </div>
         <span className="flex items-center">
@@ -81,6 +87,7 @@ const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
                 fontSize: 16,
               },
             }}
+            precision={0.5}
             name="read-only"
             value={value}
             getLabelText={getLabelText}

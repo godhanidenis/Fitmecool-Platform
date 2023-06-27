@@ -147,10 +147,13 @@ const ShopEdit = () => {
 
   const [shopImages, setShopImages] = useState([]);
   const [uploadShopImages, setUploadShopImages] = useState("");
+  const [getUploadShopImages, setGetUploadShopImages] = useState([]);
 
   const [ShopEditImg, setShopEditImg] = useState("");
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
+
+  console.log("shopVideoshopVideo", uploadShopVideo);
 
   const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
   const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
@@ -238,6 +241,7 @@ const ShopEdit = () => {
   };
 
   const onShopVideoPreview = (e) => {
+    // setShopVideo("");
     const reader = new FileReader();
     if (e.target.files && e.target.files.length > 0) {
       setUploadShopVideo(e.target.files[0]);
@@ -350,7 +354,8 @@ const ShopEdit = () => {
             file
           ) {
             console.log("uploadShopImages00000000", file);
-            setUploadShopImages((old) => [...old, file]);
+            setGetUploadShopImages((old) => [...old, file]);
+            // setUploadShopImages((old) => [...old, file]);
           });
       });
       setShopImages(vendorShopDetails?.shop_images);
@@ -450,6 +455,10 @@ const ShopEdit = () => {
     shopInfoSetValue,
     vendorShopDetails,
   ]);
+
+  useEffect(() => {
+    setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
+  }, [getUploadShopImages?.length]);
 
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
@@ -2110,7 +2119,7 @@ const ShopEdit = () => {
                 <button
                   onClick={() => setSubBranchModalOpen(true)}
                   className="opacity-100
-                   cursor-pointer uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
+                   cursor-pointer uppercase border-2  lg:px-8 lg:py-3 lg:text-xl sm:px-6 sm:py-2 sm:text-sm px-3 py-2 text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
                 >
                   <span className="hidden sm:inline">
                     <AddIcon fontSize="large" className="mr-2" />
@@ -2131,7 +2140,7 @@ const ShopEdit = () => {
                       key={index}
                       className="sm:my-10 my-5 w-full flex justify-between"
                     >
-                      <div className="sm:text-[16px] text-[8px] font-semibold text-black">
+                      <div className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                         {branchDetails === "Show" ? (
                           <KeyboardArrowUpIcon
                             onClick={() => handleBranchDetails("Hide")}
@@ -2147,10 +2156,10 @@ const ShopEdit = () => {
                         Branch {index + 1}
                       </div>
                       <div className="flex gap-4">
-                        <span className="bg-[#D63848]  text-white rounded-full sm:p-2 px-2 py-1">
+                        <span className="bg-[#D63848]  text-white rounded-full lg:p-2 px-2 py-1">
                           <DeleteOutlineOutlinedIcon
                             sx={{
-                              "@media (max-width: 648px)": {
+                              "@media (max-width: 768px)": {
                                 fontSize: 16,
                               },
                             }}
@@ -2161,7 +2170,7 @@ const ShopEdit = () => {
                             }}
                           />
                         </span>
-                        <span className="bg-[#151827]  text-white rounded-full sm:p-2 px-2 py-1">
+                        <span className="bg-[#151827]  text-white rounded-full lg:p-2 px-2 py-1">
                           <EditOutlinedIcon
                             sx={{
                               "@media (max-width: 768px)": {
@@ -2179,50 +2188,50 @@ const ShopEdit = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-y-10 mb-16">
                       <div className=" flex flex-col gap-2">
-                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch Address :-
                         </p>
-                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_address}
                         </p>
                       </div>
                       <div className=" flex flex-col gap-2">
-                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch City :-
                         </p>
-                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_city}
                         </p>
                       </div>
                       <div className=" flex flex-col gap-2">
-                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch pincode :-
                         </p>
-                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_pinCode}
                         </p>
                       </div>
                       <div className=" flex flex-col gap-2">
-                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch Manager Name :-
                         </p>
-                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_name}
                         </p>
                       </div>
                       <div className=" flex flex-col gap-2">
-                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch Manager Email :-
                         </p>
-                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_email}
                         </p>
                       </div>
                       <div className=" flex flex-col gap-2">
-                        <p className="sm:text-[16px] text-[8px] text-gray-400 font-semibold">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch Manager Phone Number :-
                         </p>
-                        <p className="sm:text-[16px] text-[8px] font-semibold text-black">
+                        <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_contact}
                         </p>
                       </div>
@@ -2625,17 +2634,31 @@ const ShopEdit = () => {
               </div> */}
               <div className="grid grid-cols-3 gap-10 my-10">
                 <div className="flex flex-col items-center justify-center col-span-3">
+                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black">
+                    Logo
+                  </div>
                   <div
-                    className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
-                    onClick={() => handleBrowseClick(0)}
+                    className="sm:w-[210px]  sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
+                    onClick={() => {
+                      shopLogo === "" &&
+                        document.getElementById("shopLogo").click();
+                    }}
                   >
                     {shopLogo !== "" ? (
-                      <div className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px]">
+                      <div className="sm:w-[210px] relative  sm:h-[210px] h-[130px] w-[130px]">
                         <img
                           src={shopLogo}
                           alt="Uploaded Image"
                           className="object-cover h-full w-full rounded-full"
                         />
+                        <span className="absolute right-4 bottom-2 border border-black rounded-full p-2 bg-black">
+                          <EditIcon
+                            style={{ color: "white" }}
+                            onClick={() => {
+                              document.getElementById("shopLogo").click();
+                            }}
+                          />
+                        </span>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-4">
@@ -2654,9 +2677,10 @@ const ShopEdit = () => {
                       </div>
                     )}
                     <input
-                      id="file-input-0"
                       type="file"
-                      accept="image/*,video/*"
+                      id="shopLogo"
+                      name="shopLogo"
+                      accept="image/*"
                       className="hidden"
                       {...shopLayoutRegister("shopLogo", {
                         required:
@@ -2679,17 +2703,31 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex flex-col items-center justify-center col-span-3">
+                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black">
+                    Cover Image
+                  </div>
                   <div
-                    className="w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                    onClick={() => handleBrowseClick(1)}
+                    className="w-full cursor-pointer  sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                    onClick={() => {
+                      shopBackground === "" &&
+                        document.getElementById("shopBackground").click();
+                    }}
                   >
                     {shopBackground !== "" ? (
-                      <div className="w-full sm:h-[350px]  h-[200px]">
+                      <div className="w-full relative sm:h-[290px]  h-[180px]">
                         <img
                           src={shopBackground}
                           alt="Uploaded Image"
                           className="object-cover h-full w-full rounded-3xl"
                         />
+                        <span className="absolute right-4 top-4 border border-black rounded-full p-2 bg-black">
+                          <EditIcon
+                            style={{ color: "white" }}
+                            onClick={() =>
+                              document.getElementById("shopBackground").click()
+                            }
+                          />
+                        </span>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-4">
@@ -2710,9 +2748,10 @@ const ShopEdit = () => {
                       </div>
                     )}
                     <input
-                      id="file-input-1"
+                      id="shopBackground"
+                      name="shopBackground"
                       type="file"
-                      accept="image/*,video/*"
+                      accept="image/*"
                       className="hidden"
                       {...shopLayoutRegister("shopBackground", {
                         required:
@@ -2737,30 +2776,41 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="col-span-3">
-                  <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
+                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black flex justify-center">
                     Shop Images
+                    <span className="text-gray-400 ml-1">
+                      (Front, Back & Side)
+                    </span>
                   </div>
                   <div className="flex xl:gap-8 xl:flex-row flex-col gap-4">
-                    {["One", "Two", "Three"]?.map((item, index) => {
+                    {shopImages?.map((image, index) => {
                       return (
                         <>
                           <div
                             key={index}
-                            className="w-full cursor-pointer sm:h-[400px] h-[300px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                            className="w-full  cursor-pointer sm:h-[290px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                             onClick={() =>
-                              handleBrowseClickShopImages(
-                                `shopImage${item}`,
-                                index
-                              )
+                              document.getElementById("shopEditId").click()
                             }
                           >
-                            {shopImages[index] ? (
-                              <div className="w-full sm:h-[400px]  h-[300px]">
+                            {shopImages?.length > 0 && shopImages[index] ? (
+                              <div className="w-full relative sm:h-[290px]  h-[344px]">
                                 <img
-                                  src={shopImages[index] ?? ""}
+                                  src={image?.links ?? ""}
                                   alt="Uploaded Image"
                                   className="object-cover h-full w-full rounded-3xl"
                                 />
+                                <span className="absolute right-4 top-4 border border-black rounded-full p-2 bg-black">
+                                  <EditIcon
+                                    style={{ color: "white" }}
+                                    onClick={() => (
+                                      setShopEditImg(image?.links),
+                                      document
+                                        .getElementById("shopEditId")
+                                        .click()
+                                    )}
+                                  />
+                                </span>
                               </div>
                             ) : (
                               <div className="flex flex-col gap-4">
@@ -2781,9 +2831,10 @@ const ShopEdit = () => {
                               </div>
                             )}
                             <input
-                              id={`shopImage${item}`}
+                              id="shopEditId"
                               type="file"
-                              accept="image/*,video/*"
+                              accept="image/*"
+                              multiple
                               className="hidden"
                               {...shopLayoutRegister("shopImages", {
                                 required:
@@ -2809,21 +2860,41 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full col-span-3">
-                  <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
+                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black flex justify-center">
                     Shop Video
                   </div>
                   <div
-                    className="w-full cursor-pointer sm:h-[350px] h-[200px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                    onClick={() => handleBrowseClick(5)}
+                    className="w-full cursor-pointer  sm:h-[290px] h-[180px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                    onClick={() => {
+                      shopVideo == "" &&
+                        document.getElementById("shopVideoId").click();
+                    }}
                   >
                     {shopVideo !== "" ? (
-                      <div className="w-full sm:h-[350px]  h-[200px]">
+                      <div className="w-full sm:h-[290px] relative  h-[180px]">
                         <video
+                          autoPlay
                           className="object-cover h-full w-full rounded-3xl"
                           controls
+                          src={shopVideo}
+                        ></video>
+                        <span className="absolute right-4 top-4 border border-black rounded-full p-2 bg-black">
+                          <EditIcon
+                            onClick={() => {
+                              document.getElementById("shopVideoId").click();
+                            }}
+                            style={{ color: "white" }}
+                          />
+                        </span>
+                        <span
+                          onClick={() => {
+                            setShopVideo("");
+                            setUploadShopVideo("");
+                          }}
+                          className="absolute right-4 top-[70px] border border-[#D63848] rounded-full p-2 bg-[#D63848]"
                         >
-                          <source src={shopVideo}></source>
-                        </video>
+                          <DeleteIcon style={{ color: "white" }} />
+                        </span>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-4">
@@ -2844,10 +2915,11 @@ const ShopEdit = () => {
                       </div>
                     )}
                     <input
-                      id="file-input-5"
                       type="file"
-                      accept="image/*,video/*"
-                      className="hidden"
+                      id="shopVideoId"
+                      name="shopVideo"
+                      accept="video/*"
+                      hidden
                       controls
                       onClick={(e) => (e.target.value = null)}
                       onChange={(e) => {
@@ -2867,7 +2939,7 @@ const ShopEdit = () => {
                       shopLayoutOnSubmit,
                       shopLayoutOnError
                     )}
-                    className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                    className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[65%] lg:w-[45%] xl:w-[35%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
                                      shadow-lg flex items-center justify-center"
                   >
                     {shopLayoutLoading && (
@@ -3424,7 +3496,6 @@ const DaysTimeModal = ({
                       selectedAllHours?.find((day) => day === itm) &&
                       "bg-[#bdbbbb]"
                     }  hover:bg-[#bdbbbb] cursor-pointer`}
-                    
                   >
                     {itm.charAt(0)}
                   </div>
