@@ -72,7 +72,7 @@ const ShopEdit = () => {
   const [sameAsOwner, setSameAsOwner] = useState("False");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
   const [managerDetails, setManagerDetails] = useState("Show");
-  const [branchDetails, setBranchDetails] = useState("Show");
+  const [branchDetails, setBranchDetails] = useState({});
 
   const [hours, setHours] = useState([
     { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
@@ -172,15 +172,21 @@ const ShopEdit = () => {
   const handleManagerDetails = (option) => {
     setManagerDetails(option);
   };
-  const handleBranchDetails = (option, id) => {
-    subBranchList.map((element, index) => {
-      if (index == id) {
-        setBranchDetails(option);
-      }
-    });
+  const handleBranchDetails = (id) => {
+    setBranchDetails((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id] || false,
+    }));
   };
 
-  console.log("data", subBranchList);
+  if (Object.keys(branchDetails).length === 0) {
+    subBranchList.forEach((item) => {
+      setBranchDetails((prevState) => ({
+        ...prevState,
+        [item.id]: true,
+      }));
+    });
+  }
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -2141,14 +2147,14 @@ const ShopEdit = () => {
                       className="sm:my-10 my-5 w-full flex justify-between"
                     >
                       <div className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
-                        {branchDetails === "Show" ? (
+                        {branchDetails[sub.id] ? (
                           <KeyboardArrowUpIcon
-                            onClick={() => handleBranchDetails("Hide")}
+                            onClick={() => handleBranchDetails(sub.id)}
                             className="cursor-pointer"
                           />
                         ) : (
                           <KeyboardArrowDownIcon
-                            onClick={() => handleBranchDetails("Show")}
+                            onClick={() => handleBranchDetails(sub.id)}
                             className="cursor-pointer"
                           />
                         )}
@@ -2186,7 +2192,12 @@ const ShopEdit = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-y-10 mb-16">
+
+                    <div
+                      className={` grid grid-cols-2 gap-y-10 mb-16 ${
+                        !branchDetails[sub.id] && "hidden"
+                      }`}
+                    >
                       <div className=" flex flex-col gap-2">
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
                           Branch Address :-
