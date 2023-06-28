@@ -31,6 +31,7 @@ const VendorShopSubHeader = () => {
     <div className="w-full font-Nova flex items-center py-4 bg-[#FAFCFC] sm:hidden">
       {["Dashboard", "Shop", "Products"].map((item, index) => (
         <p
+          key={index}
           onClick={() => {
             item === "Dashboard" && router.push("/vendor/dashboard");
             item === "Shop" &&
