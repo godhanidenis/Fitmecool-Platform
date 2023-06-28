@@ -7,7 +7,10 @@ import Router from "next/router";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { signUp } from "../../graphql/mutations/authMutations";
-import { loginUserId } from "../../redux/ducks/userProfile";
+import {
+  loadUserProfileStart,
+  loginUserId,
+} from "../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -69,12 +72,15 @@ const Signup = () => {
     ).then(
       (res) => {
         dispatch(loginUserId(res.data.signUp.user));
+        dispatch(loadUserProfileStart({ id: res.data.signUp.user }));
         localStorage.setItem("token", res.data.signUp.token);
         localStorage.setItem("userId", res.data.signUp.user);
         toast.success(res.data.signUp.message, { theme: "colored" });
         localStorage.removeItem("user_type_for_auth");
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        Router.push(asVendor ? "/vendor/dashboard" : "/");
+        setTimeout(() => {
+          Router.push(asVendor ? "/vendor/dashboard" : "/");
+        }, 1500);
       },
       (error) => {
         setLoading(false);
