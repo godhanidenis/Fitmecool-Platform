@@ -10,7 +10,10 @@ import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import { signIn } from "../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
-import { loginUserId } from "../../redux/ducks/userProfile";
+import {
+  loadUserProfileStart,
+  loginUserId,
+} from "../../redux/ducks/userProfile";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Login = () => {
@@ -53,12 +56,15 @@ const Login = () => {
       (res) => {
         setLoading(false);
         dispatch(loginUserId(res.data.signIn.user));
+        dispatch(loadUserProfileStart({ id: res.data.signIn.user }));
         localStorage.setItem("token", res.data.signIn.token);
         localStorage.setItem("userId", res.data.signIn.user);
         toast.success(res.data.signIn.message, { theme: "colored" });
         localStorage.removeItem("user_type_for_auth");
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        Router.push(asVendor ? "/vendor/dashboard" : "/");
+        setTimeout(() => {
+          Router.push(asVendor ? "/vendor/dashboard" : "/");
+        }, 1500);
       },
       (error) => {
         setLoading(false);
