@@ -42,6 +42,51 @@ export const buySubscription = async (payload) => {
   return result;
 };
 
+export const renewSubscription = async (payload) => {
+  const result = await client.mutate({
+    mutation: gql`
+      mutation RenewSubscription($subscriptionId: String, $newPlanId: String) {
+        renewSubscription(
+          subscriptionId: $subscriptionId
+          newPlanId: $newPlanId
+        ) {
+          id
+          entity
+          plan_id
+          customer_id
+          status
+          current_start
+          current_end
+          ended_at
+          quantity
+          charge_at
+          start_at
+          end_at
+          auth_attempts
+          total_count
+          paid_count
+          customer_notify
+          created_at
+          expire_by
+          short_url
+          has_scheduled_changes
+          change_scheduled_at
+          source
+          payment_method
+          offer_id
+          remaining_count
+        }
+      }
+    `,
+    fetchPolicy: "no-cache",
+    variables: {
+      subscriptionId: payload.subscriptionId,
+      newPlanId: payload.newPlanId,
+    },
+  });
+  return result;
+};
+
 export const paymentVerification = async (payload) => {
   const result = await client.mutate({
     mutation: gql`

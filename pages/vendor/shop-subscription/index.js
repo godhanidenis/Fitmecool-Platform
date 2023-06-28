@@ -39,9 +39,11 @@ const ShopSubscription = () => {
   useEffect(() => {
     if (userProfile?.subscriptionId) {
       getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
-        (res) =>
+        (res) => {
+          console.log("res-->>>", res);
           res?.data?.singleSubscription?.status === "active" &&
-          setCurrentPlan(res?.data?.singleSubscription)
+            setCurrentPlan(res?.data?.singleSubscription);
+        }
       );
     }
   }, [userProfile?.subscriptionId]);
@@ -56,6 +58,13 @@ const ShopSubscription = () => {
       }));
     }
   }, [currentPlan?.id, currentPlan?.plan_id, subscriptionAllPlans?.items]);
+
+  const isSubscriptionExpired = (subscription) => {
+    const currentDate = new Date();
+    const dueDate = new Date(subscription.dueDate);
+
+    return currentDate > dueDate;
+  };
 
   const checkoutHandler = async (plan) => {
     await getRazorPayApiKey().then(async (keyRes) => {
