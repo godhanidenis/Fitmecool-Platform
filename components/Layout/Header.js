@@ -533,11 +533,14 @@ export const UserProfile = ({ setAccessToken }) => {
                   <Divider />
 
                   {options.map((itm) => (
-                    <MenuItem key={itm.name} onClick={handleProfileClose}>
-                      <p
-                        className="flex items-center w-full text-center"
-                        onClick={itm.func}
-                      >
+                    <MenuItem
+                      key={itm.name}
+                      onClick={() => {
+                        handleProfileClose();
+                        itm.func();
+                      }}
+                    >
+                      <p className="flex items-center w-full text-center">
                         {itm.icon} <span className="ml-4"> {itm.name}</span>
                       </p>
                     </MenuItem>
