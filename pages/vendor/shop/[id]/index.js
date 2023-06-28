@@ -14,34 +14,34 @@ import Image from "next/image";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
-import { loadCategoriesStart } from "../../../redux/ducks/categories";
-import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
+import { MultipleImageUploadFile } from "../../../../services/MultipleImageUploadFile";
+import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
+import { loadCategoriesStart } from "../../../../redux/ducks/categories";
+import { loadAreaListsStart } from "../../../../redux/ducks/areaLists";
 // import InfiniteScroll from "react-infinite-scroll-component";
-import ProductCard from "../../../components/sections/product-section/ProductCard";
-import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+import ProductCard from "../../../../components/sections/product-section/ProductCard";
+import { changeAppliedProductsFilters } from "../../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
 import {
   loadMoreProductsStart,
   loadProductsStart,
-} from "../../../redux/ducks/product";
+} from "../../../../redux/ducks/product";
 import {
   CustomAuthModal,
   CustomTextField,
-} from "../../../components/core/CustomMUIComponents";
+} from "../../../../components/core/CustomMUIComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
-import { getBranchLists } from "../../../graphql/queries/branchListsQueries";
+import { getBranchLists } from "../../../../graphql/queries/branchListsQueries";
 import {
   createProduct,
   updateProduct,
-} from "../../../graphql/mutations/products";
+} from "../../../../graphql/mutations/products";
 import { toast } from "react-toastify";
-import { VideoUploadFile } from "../../../services/VideoUploadFile";
-import { getProductDetails } from "../../../graphql/queries/productQueries";
-import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { VideoUploadFile } from "../../../../services/VideoUploadFile";
+import { getProductDetails } from "../../../../graphql/queries/productQueries";
+import { deleteMedia } from "../../../../graphql/mutations/deleteMedia";
+import { withAuth } from "../../../../components/core/PrivateRouteForVendor";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
@@ -547,6 +547,7 @@ const ShopDetailsPage = () => {
     setEditProductId();
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   if (!isHydrated) {
     return null;
@@ -558,7 +559,12 @@ const ShopDetailsPage = () => {
         <div className="flex flex-col mt-2">
           <div className="flex w-[95%] mx-auto flex-row-reverse bg-colorWhite py-2">
             <button
-              onClick={() => setProductListingModalOpen(true)}
+              // onClick={() => setProductListingModalOpen(true)}
+              onClick={() =>
+                router.push(
+                  `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+                )
+              }
               className="text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
             >
               <AddIcon className="mr-2" />
@@ -572,6 +578,7 @@ const ShopDetailsPage = () => {
                 setProductPageSkip={setProductPageSkip}
                 forShopPage={true}
                 showDrawerFilter={true}
+                isVendor={true}
               />
 
               {/* <p className="font-bold text-2xl text-colorBlack">
@@ -946,7 +953,7 @@ const ShopDetailsPage = () => {
                         {["One", "Two", "Three"]?.map((item, index) => {
                           return (
                             <>
-                              <div className="h-[100%]">
+                              <div className="h-[100%]" key={index}>
                                 <input
                                   type="file"
                                   id={`productImage${item}`}

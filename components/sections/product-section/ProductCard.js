@@ -13,7 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CustomAuthModal } from "../../core/CustomMUIComponents";
 import { Box, Button, Tooltip, tooltipClasses } from "@mui/material";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import {
   EmailShareButton,
@@ -149,6 +149,8 @@ const ProductCard = ({
 
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState();
+  const router = useRouter();
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const dispatch = useDispatch();
   const productsFiltersReducer = useSelector(
@@ -160,7 +162,7 @@ const ProductCard = ({
     (state) => state.userProfile
   );
 
-  console.log("product", product.branchInfo.shop_info.shop_logo);
+  console.log("vendorShopDetails", vendorShopDetails);
 
   useEffect(() => {
     if (!isAuthenticate) {
@@ -269,7 +271,16 @@ const ProductCard = ({
               <button
                 className={`sm:w-10 sm:h-10 w-8 h-8 rounded-full transition-colors bg-black text-white duration-300 hover:opacity-80  absolute sm:top-[70px] top-16 right-4`}
                 onClick={() => {
-                  setEditProductId(product.id);
+                  console.log(
+                    "object",
+                    product.id,
+                    "{vendorShopDetails?.id",
+                    vendorShopDetails?.id
+                  );
+                  // setEditProductId(product.id);
+                  router.push(
+                    `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/${product.id}`
+                  );
                 }}
               >
                 <EditIcon

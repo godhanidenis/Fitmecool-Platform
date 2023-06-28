@@ -42,8 +42,10 @@ function MyApp({ Component, pageProps }) {
         <ToastContainer />
         <Provider store={store}>
           {!router.pathname.includes("/auth/") && <Header />}
+
           {router.pathname.includes("/vendor/") &&
-          router.pathname !== "/vendor/shop-setup" ? (
+          router.pathname !== "/vendor/shop-setup" &&
+          !router.pathname.includes("/addEditProduct") ? (
             <VendorCommonLayout>
               <Component {...pageProps} />
             </VendorCommonLayout>

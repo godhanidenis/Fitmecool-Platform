@@ -17,15 +17,19 @@ const Venderheader = () => {
       router.pathname.lastIndexOf("/")
     );
 
-    if (withoutLastChunk == "/vendor/dashboard") {
+    if (router.pathname === "/vendor/dashboard") {
       setValue(0);
     } else if (withoutLastChunk === "/vendor/shopEdit") {
       setValue(1);
-    } else if (withoutLastChunk === "/vendor/shop") {
+    } else if (
+      withoutLastChunk === "/vendor/shop" ||
+      `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+    ) {
       setValue(2);
     }
-  }, []);
+  }, [router.pathname]);
 
+  console.log("value", value);
   return (
     <div className="sm:flex hidden items-center">
       <div className="">
