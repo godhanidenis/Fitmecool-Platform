@@ -6,13 +6,10 @@ import {
   CircularProgress,
   Divider,
   FormControlLabel,
-  IconButton,
   MenuItem,
   Radio,
   RadioGroup,
-  Switch,
   Tab,
-  Tabs,
   TextField,
 } from "@mui/material";
 import {
@@ -22,7 +19,6 @@ import {
   CustomVenderShopTab,
   TabPanel,
 } from "../../../components/core/CustomMUIComponents";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
