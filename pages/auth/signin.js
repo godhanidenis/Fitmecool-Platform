@@ -62,7 +62,9 @@ const Login = () => {
         toast.success(res.data.signIn.message, { theme: "colored" });
         localStorage.removeItem("user_type_for_auth");
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        Router.push(asVendor ? "/vendor/dashboard" : "/");
+        setTimeout(() => {
+          Router.push(asVendor ? "/vendor/dashboard" : "/");
+        }, 1000);
       },
       (error) => {
         setLoading(false);
