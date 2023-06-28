@@ -72,6 +72,7 @@ export const withoutAuth = (WrappedComponent) => {
         return <WrappedComponent {...props} />;
       } else {
         Router.push("/vendor/dashboard");
+        return false;
       }
     }
     return null;
