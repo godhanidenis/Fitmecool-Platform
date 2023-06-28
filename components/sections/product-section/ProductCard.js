@@ -160,6 +160,8 @@ const ProductCard = ({
     (state) => state.userProfile
   );
 
+  console.log("product", product.branchInfo.shop_info.shop_logo);
+
   useEffect(() => {
     if (!isAuthenticate) {
       setProductLikeByUser(false);
@@ -265,12 +267,19 @@ const ProductCard = ({
 
             {shopProduct && (
               <button
-                className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 left-0`}
+                className={`sm:w-10 sm:h-10 w-8 h-8 rounded-full transition-colors bg-black text-white duration-300 hover:opacity-80  absolute sm:top-[70px] top-16 right-4`}
                 onClick={() => {
                   setEditProductId(product.id);
                 }}
               >
-                <EditIcon />
+                <EditIcon
+                  sx={{
+                    fontSize: 20,
+                    "@media (max-width: 648px)": {
+                      fontSize: 16,
+                    },
+                  }}
+                />
               </button>
             )}
             {!shopProduct ? (
@@ -392,13 +401,21 @@ const ProductCard = ({
               </>
             ) : (
               <button
-                className={`w-10 h-10 rounded-full transition-colors bg-[#f5f5f5] duration-300 hover:opacity-80  absolute top-0 right-0`}
+                className={`sm:w-10 sm:h-10 w-8 h-8 rounded-full transition-colors bg-[#D63848] duration-300 hover:opacity-80  absolute top-4 right-4`}
                 onClick={() => {
                   setProductDeleteModalOpen(true);
                   setDeleteProductId(product.id);
                 }}
               >
-                <DeleteIcon className="!text-red-600" />
+                <DeleteIcon
+                  className="!text-white"
+                  sx={{
+                    fontSize: 20,
+                    "@media (max-width: 648px)": {
+                      fontSize: 16,
+                    },
+                  }}
+                />
               </button>
             )}
 
@@ -412,7 +429,7 @@ const ProductCard = ({
                           themeLayout === "webScreen" ? "_blank" : "_self"
                         }`}
                       >
-                        <button className="text-colorWhite text-base px-4 py-2 w-full md:w-[70%] lg:w-full xl:w-[70%] bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
+                        <button className="text-colorWhite sm:text-base text-[10px] px-5 sm:py-2 py-1 w-[80%] bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
                           See Details
                         </button>
                       </a>
@@ -433,25 +450,23 @@ const ProductCard = ({
             {productsFiltersReducer.productLayout === "grid" && (
               <div>
                 <p
-                  className="oneLineAfterThreeDots font-semibold text-[#565f66] text-base mt-2"
+                  className="oneLineAfterThreeDots font-semibold text-black sm:text-base text-[10px] mt-4"
                   title={product.product_name}
                 >
                   {product.product_name}
                 </p>
               </div>
             )}
-            <div className="flex gap-2 justify-start items-center mt-5 mb-2">
+            <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
               <div className="flex justify-center items-center">
-                <Image
+                <img
                   alt="Shop Logo"
                   src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
-                  width={
-                    productsFiltersReducer.productLayout === "list" ? 45 : 16
-                  }
-                  height={
-                    productsFiltersReducer.productLayout === "list" ? 45 : 16
-                  }
-                  className="rounded-[50%]"
+                  className={`rounded-[50%] ${
+                    productsFiltersReducer.productLayout === "list"
+                      ? "w-11 h-11"
+                      : "sm:w-6 sm:h-6 w-4 h-4"
+                  }`}
                 />
               </div>
               <div className="flex flex-col justify-center">
@@ -462,12 +477,11 @@ const ProductCard = ({
                     }`}
                   >
                     <span
-                      style={
+                      className={`text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary  ${
                         productsFiltersReducer.productLayout === "list"
-                          ? { fontSize: "20px" }
-                          : { fontSize: "10px" }
-                      }
-                      className={`text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-[10px] `}
+                          ? "text-xl"
+                          : "text-[8px] sm:text-sm "
+                      }`}
                     >
                       {product.branchInfo?.shop_info?.shop_name}
                     </span>

@@ -2669,28 +2669,26 @@ const ShopEdit = () => {
                   <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black">
                     Logo
                   </div>
-                  <div
-                    className="sm:w-[210px]  sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
-                    onClick={() => {
-                      shopLogo === "" &&
-                        document.getElementById("shopLogo").click();
-                    }}
-                  >
+                  <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center">
+                    <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                      <EditIcon
+                        sx={{
+                          "@media (max-width: 768px)": {
+                            fontSize: 16,
+                          },
+                        }}
+                        onClick={() => {
+                          document.getElementById("shopLogo").click();
+                        }}
+                      />
+                    </span>
                     {shopLogo !== "" ? (
-                      <div className="sm:w-[210px] relative  sm:h-[210px] h-[130px] w-[130px]">
+                      <div className="sm:w-[210px]   sm:h-[210px] h-[130px] w-[130px]">
                         <img
                           src={shopLogo}
                           alt="Uploaded Image"
                           className="object-cover h-full w-full rounded-full"
                         />
-                        <span className="absolute right-4 bottom-2 border border-black rounded-full p-2 bg-black">
-                          <EditIcon
-                            style={{ color: "white" }}
-                            onClick={() => {
-                              document.getElementById("shopLogo").click();
-                            }}
-                          />
-                        </span>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-4">
@@ -2738,28 +2736,26 @@ const ShopEdit = () => {
                   <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black">
                     Cover Image
                   </div>
-                  <div
-                    className="w-full cursor-pointer  sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                    onClick={() => {
-                      shopBackground === "" &&
-                        document.getElementById("shopBackground").click();
-                    }}
-                  >
+                  <div className="w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center">
+                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                      <EditIcon
+                        sx={{
+                          "@media (max-width: 768px)": {
+                            fontSize: 16,
+                          },
+                        }}
+                        onClick={() =>
+                          document.getElementById("shopBackground").click()
+                        }
+                      />
+                    </span>
                     {shopBackground !== "" ? (
-                      <div className="w-full relative sm:h-[290px]  h-[180px]">
+                      <div className="w-full  sm:h-[290px]  h-[180px]">
                         <img
                           src={shopBackground}
                           alt="Uploaded Image"
                           className="object-cover h-full w-full rounded-3xl"
                         />
-                        <span className="absolute right-4 top-4 border border-black rounded-full p-2 bg-black">
-                          <EditIcon
-                            style={{ color: "white" }}
-                            onClick={() =>
-                              document.getElementById("shopBackground").click()
-                            }
-                          />
-                        </span>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-4">
@@ -2808,7 +2804,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="col-span-3">
-                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black flex justify-center">
+                  <div className="sm:text-2xl text-sm  font-semibold  mb-5 mx-2 text-black flex justify-center">
                     Shop Images
                     <span className="text-gray-400 ml-1">
                       (Front, Back & Side)
@@ -2820,11 +2816,21 @@ const ShopEdit = () => {
                         <>
                           <div
                             key={index}
-                            className="w-full  cursor-pointer sm:h-[290px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                            onClick={() =>
-                              document.getElementById("shopEditId").click()
-                            }
+                            className="w-full  cursor-pointer relative sm:h-[290px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                           >
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50">
+                              <EditIcon
+                                sx={{
+                                  "@media (max-width: 768px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                                onClick={() => (
+                                  setShopEditImg(image?.links),
+                                  document.getElementById("shopEditId").click()
+                                )}
+                              />
+                            </span>
                             {shopImages?.length > 0 && shopImages[index] ? (
                               <div className="w-full relative sm:h-[290px]  h-[344px]">
                                 <img
@@ -2832,17 +2838,6 @@ const ShopEdit = () => {
                                   alt="Uploaded Image"
                                   className="object-cover h-full w-full rounded-3xl"
                                 />
-                                <span className="absolute right-4 top-4 border border-black rounded-full p-2 bg-black">
-                                  <EditIcon
-                                    style={{ color: "white" }}
-                                    onClick={() => (
-                                      setShopEditImg(image?.links),
-                                      document
-                                        .getElementById("shopEditId")
-                                        .click()
-                                    )}
-                                  />
-                                </span>
                               </div>
                             ) : (
                               <div className="flex flex-col gap-4">
@@ -2910,12 +2905,16 @@ const ShopEdit = () => {
                           controls
                           src={shopVideo}
                         ></video>
-                        <span className="absolute right-4 top-4 border border-black rounded-full p-2 bg-black">
+                        <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
                           <EditIcon
                             onClick={() => {
                               document.getElementById("shopVideoId").click();
                             }}
-                            style={{ color: "white" }}
+                            sx={{
+                              "@media (max-width: 768px)": {
+                                fontSize: 16,
+                              },
+                            }}
                           />
                         </span>
                         <span

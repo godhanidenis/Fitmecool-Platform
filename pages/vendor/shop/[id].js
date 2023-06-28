@@ -44,6 +44,7 @@ import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 
 const style = {
   position: "absolute",
@@ -553,13 +554,14 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      <div className="bg-colorWhite pb-20 md:pb-28">
+      <div className="bg-colorWhite mt-10 sm:mt-0">
         <div className="flex flex-col mt-2">
           <div className="flex w-[95%] mx-auto flex-row-reverse bg-colorWhite py-2">
             <button
               onClick={() => setProductListingModalOpen(true)}
-              className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
+              className="text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
             >
+              <AddIcon className="mr-2" />
               Add Products
             </button>
           </div>
@@ -590,7 +592,7 @@ const ShopDetailsPage = () => {
                 className={`${
                   productsFiltersReducer?.productLayout === "list"
                     ? ""
-                    : "mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10"
+                    : "mt-4 grid grid-cols-2  lg:grid-cols-3 gap-4 place-items-center mb-10"
                 }`}
               >
                 {productsData &&
