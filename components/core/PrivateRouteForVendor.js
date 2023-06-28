@@ -15,13 +15,15 @@ export const withAuth = (WrappedComponent) => {
             return <WrappedComponent {...props} />;
           } else {
             Router.push("/vendor/shop-setup");
+            return false;
           }
         } else {
           Router.push("/");
+          return false;
         }
-      } else;
-      {
+      } else {
         Router.push("/");
+        return false;
       }
     }
     return null;
@@ -43,12 +45,15 @@ export const withAuthWithoutShop = (WrappedComponent) => {
             return <WrappedComponent {...props} />;
           } else {
             Router.push("/vendor/dashboard");
+            return false;
           }
         } else {
           Router.push("/");
+          return false;
         }
       } else {
         Router.push("/");
+        return false;
       }
     }
     return null;

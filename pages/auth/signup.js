@@ -80,7 +80,7 @@ const Signup = () => {
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
         setTimeout(() => {
           Router.push(asVendor ? "/vendor/dashboard" : "/");
-        }, 1500);
+        }, 1000);
       },
       (error) => {
         setLoading(false);
