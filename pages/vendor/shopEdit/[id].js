@@ -2155,7 +2155,7 @@ const ShopEdit = () => {
                         className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
                       >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Address
+                          Branch Address :-
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_address}
@@ -2166,7 +2166,7 @@ const ShopEdit = () => {
                         className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
                       >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch City
+                          Branch City :-
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_city}
@@ -2177,7 +2177,7 @@ const ShopEdit = () => {
                         className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
                       >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch pincode
+                          Branch pincode :-
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.branch_pinCode}
@@ -2188,7 +2188,7 @@ const ShopEdit = () => {
                         className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
                       >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Manager Name
+                          Branch Manager Name :-
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_name}
@@ -2199,7 +2199,7 @@ const ShopEdit = () => {
                         className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
                       >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Manager Email
+                          Branch Manager Email :-
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_email}
@@ -2210,7 +2210,7 @@ const ShopEdit = () => {
                         className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
                       >
                         <p className="lg:text-[16px] sm:text-xs text-[8px] text-gray-400 font-semibold">
-                          Branch Manager Phone Number
+                          Branch Manager Phone Number :-
                         </p>
                         <p className="lg:text-[16px] sm:text-xs text-[8px] font-semibold text-black">
                           {sub.manager_contact}
