@@ -35,6 +35,7 @@ import { setShopRegisterId } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 
 const subBranchStyle = {
   position: "absolute",
@@ -591,23 +592,17 @@ const ShopPage = () => {
                   >
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
-                        <label
-                          htmlFor="fName"
-                          className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          First Name
-                          <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                            *
-                          </span>
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label=" First Name"
                           type="text"
                           id="fName"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={true}
                           placeholder="Your first name"
-                          {...register("first_name", {
-                            required: "First name is required",
-                          })}
+                          formValue={{
+                            ...register("first_name", {
+                              required: "First name is required",
+                            }),
+                          }}
                         />
                         {errors.first_name && (
                           <div className="mt-2">
@@ -618,23 +613,17 @@ const ShopPage = () => {
                         )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
-                        <label
-                          htmlFor="lName"
-                          className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Last Name
-                          <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                            *
-                          </span>
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label="  Last Name"
                           type="text"
                           id="lName"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={true}
                           placeholder="Your last name"
-                          {...register("last_name", {
-                            required: "Last name is required",
-                          })}
+                          formValue={{
+                            ...register("last_name", {
+                              required: "Last name is required",
+                            }),
+                          }}
                         />
                         {errors.last_name && (
                           <div className="mt-2">
@@ -646,29 +635,23 @@ const ShopPage = () => {
                       </div>
                     </div>
                     <div className="w-full relative">
-                      <label
-                        htmlFor="email"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        E-Mail
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label=" E-Mail"
                         type="email"
                         id="email"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={true}
                         placeholder="yourmail@gmail.com"
-                        {...register("user_email", {
-                          required: "Email is required",
+                        formValue={{
+                          ...register("user_email", {
+                            required: "Email is required",
 
-                          pattern: {
-                            value:
-                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                            message: "Please enter a valid email",
-                          },
-                        })}
+                            pattern: {
+                              value:
+                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                              message: "Please enter a valid email",
+                            },
+                          }),
+                        }}
                       />
                       {errors.user_email && (
                         <div className="mt-2">
@@ -679,27 +662,21 @@ const ShopPage = () => {
                       )}
                     </div>
                     <div className="w-full relative">
-                      <label
-                        htmlFor="phone"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Phone Number
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label=" Phone Number"
                         type="text"
-                        id=""
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        id="phone"
+                        isRequired={true}
                         placeholder="Your phone number"
-                        {...register("user_contact", {
-                          required: "Contact number is required",
-                          pattern: {
-                            value: /^[0-9]{10}$/,
-                            message: "Please enter a valid mobile number",
-                          },
-                        })}
+                        formValue={{
+                          ...register("user_contact", {
+                            required: "Contact number is required",
+                            pattern: {
+                              value: /^[0-9]{10}$/,
+                              message: "Please enter a valid mobile number",
+                            },
+                          }),
+                        }}
                       />
                       {errors.user_contact && (
                         <div className="mt-2">
@@ -732,23 +709,17 @@ const ShopPage = () => {
                     }`}
                   >
                     <div className="w-full relative">
-                      <label
-                        htmlFor="shopName"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Shop Name
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label=" Shop Name"
                         type="text"
                         id="shopName"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={true}
                         placeholder="Your shop name"
-                        {...register("shop_name", {
-                          required: "Shop name is required",
-                        })}
+                        formValue={{
+                          ...register("shop_name", {
+                            required: "Shop name is required",
+                          }),
+                        }}
                       />
                       {errors.shop_name && (
                         <div className="mt-2">
@@ -761,29 +732,23 @@ const ShopPage = () => {
                     {!individual && (
                       <>
                         <div className="w-full relative">
-                          <label
-                            htmlFor="shopEmail"
-                            className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                          >
-                            Shop Email
-                            <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                              *
-                            </span>
-                          </label>
-                          <input
+                          <CustomTextFieldVendor
+                            label="Shop Email"
                             type="email"
                             id="shopEmail"
-                            className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                            isRequired={true}
                             placeholder="Your shop email"
-                            {...register("shop_email", {
-                              required: "Shop email is required",
+                            formValue={{
+                              ...register("shop_email", {
+                                required: "Shop email is required",
 
-                              pattern: {
-                                value:
-                                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                message: "Please enter a valid email",
-                              },
-                            })}
+                                pattern: {
+                                  value:
+                                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                  message: "Please enter a valid email",
+                                },
+                              }),
+                            }}
                           />
                           {errors.shop_email && (
                             <div className="mt-2">
@@ -794,20 +759,17 @@ const ShopPage = () => {
                           )}
                         </div>
                         <div className="w-full relative">
-                          <label
-                            htmlFor="personalWebLink1"
-                            className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                          >
-                            Personal Website Link
-                          </label>
-                          <input
+                          <CustomTextFieldVendor
+                            label=" Personal Website Link"
                             type="text"
                             id="personalWebLink1"
-                            className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                            isRequired={false}
                             placeholder="Personal Website Link"
-                            {...register("personal_website", {
-                              // required: "Personal Website is required",
-                            })}
+                            formValue={{
+                              ...register("personal_website", {
+                                // required: "Personal Website is required",
+                              }),
+                            }}
                           />
                           {errors.personal_website && (
                             <div className="mt-2">
@@ -819,20 +781,17 @@ const ShopPage = () => {
                         </div>
                         <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
                           <div className="w-1/2 relative max-md:w-full">
-                            <label
-                              htmlFor="fbLink"
-                              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                            >
-                              Fackbook Link
-                            </label>
-                            <input
+                            <CustomTextFieldVendor
+                              label="  Fackbook Link"
                               type="text"
                               id="fbLink"
-                              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                              isRequired={false}
                               placeholder="Your facebook link"
-                              {...register("facebook_link", {
-                                // required: "Facebook Link is required",
-                              })}
+                              formValue={{
+                                ...register("facebook_link", {
+                                  // required: "Facebook Link is required",
+                                }),
+                              }}
                             />
                             {errors.facebook_link && (
                               <div className="mt-2">
@@ -843,20 +802,17 @@ const ShopPage = () => {
                             )}
                           </div>
                           <div className="w-1/2 relative max-md:w-full">
-                            <label
-                              htmlFor="igLink"
-                              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                            >
-                              Instagram Link
-                            </label>
-                            <input
+                            <CustomTextFieldVendor
+                              label=" Instagram Link"
                               type="text"
                               id="igLink"
-                              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                              isRequired={false}
                               placeholder="Your instagram link"
-                              {...register("instagram_link", {
-                                // required: "Instagram Link is required",
-                              })}
+                              formValue={{
+                                ...register("instagram_link", {
+                                  // required: "Instagram Link is required",
+                                }),
+                              }}
                             />
                             {errors.instagram_link && (
                               <div className="mt-2">

@@ -21,6 +21,7 @@ import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
 
 import { capitalize, CircularProgress } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
+import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
 
 const AddEditProductPage = () => {
   const {
@@ -415,20 +416,17 @@ const AddEditProductPage = () => {
         </div>
         <div className={`space-y-10 sm:my-16 my-10 mx-5`}>
           <div className="w-full relative">
-            <label
-              htmlFor="pname"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm text-black"
-            >
-              Name
-            </label>
-            <input
+            <CustomTextFieldVendor
+              label="Name"
               type="text"
               id="pname"
-              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+              isRequired={false}
               placeholder="Product Name"
-              {...register("product_name", {
-                required: "Product Name is required",
-              })}
+              formValue={{
+                ...register("product_name", {
+                  required: "Product Name is required",
+                }),
+              }}
             />
             <div className="mt-2">
               {errors.product_name && (
@@ -439,20 +437,17 @@ const AddEditProductPage = () => {
             </div>
           </div>
           <div className="w-full relative">
-            <label
-              htmlFor="pdescription"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm text-black"
-            >
-              Description
-            </label>
-            <input
+            <CustomTextFieldVendor
+              label="Description"
               type="text"
               id="pdescription"
-              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+              isRequired={false}
               placeholder="Product Description"
-              {...register("product_description", {
-                required: "Product Description is required",
-              })}
+              formValue={{
+                ...register("product_description", {
+                  required: "Product Description is required",
+                }),
+              }}
             />
             <div className="mt-2">
               {errors.product_description && (

@@ -48,6 +48,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TbPhotoPlus } from "react-icons/tb";
+import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 
 const style = {
   position: "absolute",
@@ -843,20 +844,17 @@ const ShopEdit = () => {
               <div className="flex flex-col space-y-10">
                 <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                   <div className="sm:w-1/2 relative w-full">
-                    <label
-                      htmlFor="fName"
-                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                    >
-                      First Name
-                    </label>
-                    <input
+                    <CustomTextFieldVendor
+                      label="First Name"
                       type="text"
                       id="fName"
-                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      isRequired={false}
                       placeholder="Your first name"
-                      {...ownerInfoRegister("first_name", {
-                        required: "FirstName is required",
-                      })}
+                      formValue={{
+                        ...ownerInfoRegister("first_name", {
+                          required: "FirstName is required",
+                        }),
+                      }}
                     />
                     <div className="mt-2">
                       {ownerInfoErrors?.first_name && (
@@ -867,20 +865,17 @@ const ShopEdit = () => {
                     </div>
                   </div>
                   <div className="sm:w-1/2 relative w-full">
-                    <label
-                      htmlFor="lName"
-                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                    >
-                      Last Name
-                    </label>
-                    <input
+                    <CustomTextFieldVendor
+                      label="Last Name"
                       type="text"
                       id="lName"
-                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      isRequired={false}
                       placeholder="Your last name"
-                      {...ownerInfoRegister("last_name", {
-                        required: "LastName is required",
-                      })}
+                      formValue={{
+                        ...ownerInfoRegister("last_name", {
+                          required: "LastName is required",
+                        }),
+                      }}
                     />
                     <div className="mt-2">
                       {ownerInfoErrors?.last_name && (
@@ -892,26 +887,23 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full relative">
-                  <label
-                    htmlFor="email"
-                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                  >
-                    Email Address
-                  </label>
-                  <input
+                  <CustomTextFieldVendor
+                    label="Email Address"
                     type="email"
                     id="email"
-                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    isRequired={false}
                     placeholder="yourmail@gmail.com"
-                    {...ownerInfoRegister("user_email", {
-                      required: "Email is required",
+                    formValue={{
+                      ...ownerInfoRegister("user_email", {
+                        required: "Email is required",
 
-                      pattern: {
-                        value:
-                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                        message: "Please enter a valid email",
-                      },
-                    })}
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: "Please enter a valid email",
+                        },
+                      }),
+                    }}
                   />
                   <div className="mt-2">
                     {ownerInfoErrors?.user_email && (
@@ -922,28 +914,25 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full relative">
-                  <label
-                    htmlFor="phone"
-                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                  >
-                    Phone Number
-                  </label>
-                  <input
+                  <CustomTextFieldVendor
+                    label="Phone Number"
                     type="text"
-                    id=""
-                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    id="phone"
+                    isRequired={false}
                     placeholder="Your phone number"
-                    {...ownerInfoRegister("user_contact", {
-                      required: "Contact Number is required",
-                      minLength: {
-                        value: 10,
-                        message: "Contact Number must be 10 numbers",
-                      },
-                      maxLength: {
-                        value: 10,
-                        message: "Contact Number must be 10 numbers",
-                      },
-                    })}
+                    formValue={{
+                      ...ownerInfoRegister("user_contact", {
+                        required: "Contact Number is required",
+                        minLength: {
+                          value: 10,
+                          message: "Contact Number must be 10 numbers",
+                        },
+                        maxLength: {
+                          value: 10,
+                          message: "Contact Number must be 10 numbers",
+                        },
+                      }),
+                    }}
                   />
                   <div className="mt-2">
                     {ownerInfoErrors?.user_contact && (
@@ -1191,20 +1180,17 @@ const ShopEdit = () => {
               </form> */}
               <div className="space-y-10">
                 <div className="w-full relative">
-                  <label
-                    htmlFor="shopName"
-                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                  >
-                    Shop Name
-                  </label>
-                  <input
+                  <CustomTextFieldVendor
+                    label="Shop Name"
                     type="text"
                     id="shopName"
-                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    isRequired={false}
                     placeholder="Your shop name"
-                    {...shopInfoRegister("shop_name", {
-                      required: "Shop Name is required",
-                    })}
+                    formValue={{
+                      ...shopInfoRegister("shop_name", {
+                        required: "Shop Name is required",
+                      }),
+                    }}
                   />
                   <div className="mt-2">
                     {shopInfoErrors.shop_name && (
@@ -1217,26 +1203,23 @@ const ShopEdit = () => {
                 {!individual && (
                   <>
                     <div className="w-full relative">
-                      <label
-                        htmlFor="shopEmail"
-                        className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Shop Email
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label="Shop Email"
                         type="email"
                         id="shopEmail"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={false}
                         placeholder="Your shop email"
-                        {...shopInfoRegister("shop_email", {
-                          required: "Shop Email is required",
+                        formValue={{
+                          ...shopInfoRegister("shop_email", {
+                            required: "Shop Email is required",
 
-                          pattern: {
-                            value:
-                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                            message: "Please enter a valid email",
-                          },
-                        })}
+                            pattern: {
+                              value:
+                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                              message: "Please enter a valid email",
+                            },
+                          }),
+                        }}
                       />
                       <div className="mt-2">
                         {shopInfoErrors.shop_email && (
@@ -1247,20 +1230,17 @@ const ShopEdit = () => {
                       </div>
                     </div>
                     <div className="w-full relative">
-                      <label
-                        htmlFor="personalWebLink1"
-                        className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Personal Website Link
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label=" Personal Website Link"
                         type="text"
                         id="personalWebLink1"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={false}
                         placeholder="Personal Website Link"
-                        {...shopInfoRegister("personal_website", {
-                          required: "Personal Website is required",
-                        })}
+                        formValue={{
+                          ...shopInfoRegister("personal_website", {
+                            required: "Personal Website is required",
+                          }),
+                        }}
                       />
                       <div className="mt-2">
                         {shopInfoErrors.personal_website && (
@@ -1272,20 +1252,17 @@ const ShopEdit = () => {
                     </div>
                     <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
                       <div className="w-1/2 relative max-md:w-full">
-                        <label
-                          htmlFor="fbLink"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Fackbook Link
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label=" Fackbook Link"
                           type="text"
                           id="fbLink"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={false}
                           placeholder="Your facebook link"
-                          {...shopInfoRegister("facebook_link", {
-                            required: "Facebook Link is required",
-                          })}
+                          formValue={{
+                            ...shopInfoRegister("facebook_link", {
+                              required: "Facebook Link is required",
+                            }),
+                          }}
                         />
                         <div className="mt-2">
                           {shopInfoErrors.facebook_link && (
@@ -1296,20 +1273,17 @@ const ShopEdit = () => {
                         </div>
                       </div>
                       <div className="w-1/2 relative max-md:w-full">
-                        <label
-                          htmlFor="igLink"
-                          className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Instagram Link
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label=" Instagram Link"
                           type="text"
                           id="igLink"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={false}
                           placeholder="Your instagram link"
-                          {...shopInfoRegister("instagram_link", {
-                            required: "Instagram Link is required",
-                          })}
+                          formValue={{
+                            ...shopInfoRegister("instagram_link", {
+                              required: "Instagram Link is required",
+                            }),
+                          }}
                         />
                         <div className="mt-2">
                           {shopInfoErrors.instagram_link && (
@@ -1693,20 +1667,17 @@ const ShopEdit = () => {
               </form> */}
               <div className="space-y-10">
                 <div className="w-full relative">
-                  <label
-                    htmlFor="address"
-                    className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                  >
-                    Address
-                  </label>
-                  <input
+                  <CustomTextFieldVendor
+                    label="Address"
                     type="text"
                     id="address"
-                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    isRequired={false}
                     placeholder="Your address"
-                    {...mainBranchInfoRegister("address", {
-                      required: "Address is required",
-                    })}
+                    formValue={{
+                      ...mainBranchInfoRegister("address", {
+                        required: "Address is required",
+                      }),
+                    }}
                   />
                   <div className="mt-2">
                     {mainBranchInfoErrors.address && (
@@ -1718,20 +1689,17 @@ const ShopEdit = () => {
                 </div>
                 <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                   <div className="sm:w-1/2 relative w-full">
-                    <label
-                      htmlFor="city"
-                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                    >
-                      City
-                    </label>
-                    <input
+                    <CustomTextFieldVendor
+                      label=" City"
                       type="text"
                       id="city"
-                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      isRequired={false}
                       placeholder="Your city"
-                      {...mainBranchInfoRegister("city", {
-                        required: "City is required",
-                      })}
+                      formValue={{
+                        ...mainBranchInfoRegister("city", {
+                          required: "City is required",
+                        }),
+                      }}
                     />
                     <div className="mt-2">
                       {mainBranchInfoErrors.city && (
@@ -1742,20 +1710,17 @@ const ShopEdit = () => {
                     </div>
                   </div>
                   <div className="sm:w-1/2 relative w-full">
-                    <label
-                      htmlFor="pincode"
-                      className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                    >
-                      Pincode
-                    </label>
-                    <input
-                      id="pincode"
-                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                      placeholder="Your pincode"
+                    <CustomTextFieldVendor
+                      label=" Pincode"
                       type="number"
-                      {...mainBranchInfoRegister("pin_code", {
-                        required: "PinCode is required",
-                      })}
+                      id="pincode"
+                      isRequired={false}
+                      placeholder="Your pincode"
+                      formValue={{
+                        ...mainBranchInfoRegister("pin_code", {
+                          required: "PinCode is required",
+                        }),
+                      }}
                     />
                     <div className="mt-2">
                       {mainBranchInfoErrors.pin_code && (
@@ -1886,21 +1851,18 @@ const ShopEdit = () => {
 
                 <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                   <div className="sm:w-1/2 relative w-full">
-                    <label
-                      htmlFor="managerfName"
-                      className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                    >
-                      First Name
-                    </label>
-                    <input
+                    <CustomTextFieldVendor
+                      label=" First Name"
                       type="text"
                       id="managerfName"
-                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      isRequired={false}
                       placeholder="Manager first name"
                       disabled={sameAsOwner === "True"}
-                      {...mainBranchInfoRegister("manager_first_name", {
-                        required: "Manager FirstName is required",
-                      })}
+                      formValue={{
+                        ...mainBranchInfoRegister("manager_first_name", {
+                          required: "Manager FirstName is required",
+                        }),
+                      }}
                     />
                     <div className="mt-2">
                       {mainBranchInfoErrors.manager_first_name && (
@@ -1911,21 +1873,18 @@ const ShopEdit = () => {
                     </div>
                   </div>
                   <div className="sm:w-1/2 relative w-full">
-                    <label
-                      htmlFor="mangerlName"
-                      className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                    >
-                      Last Name
-                    </label>
-                    <input
+                    <CustomTextFieldVendor
+                      label=" Last Name"
                       type="text"
                       id="mangerlName"
-                      className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                      isRequired={false}
                       placeholder="Manager last name"
                       disabled={sameAsOwner === "True"}
-                      {...mainBranchInfoRegister("manager_last_name", {
-                        required: "Manager LastName is required",
-                      })}
+                      formValue={{
+                        ...mainBranchInfoRegister("manager_last_name", {
+                          required: "Manager LastName is required",
+                        }),
+                      }}
                     />
                     <div className="mt-2">
                       {mainBranchInfoErrors.manager_last_name && (
@@ -1937,27 +1896,24 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full relative">
-                  <label
-                    htmlFor="managerEmail"
-                    className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                  >
-                    E-Mail
-                  </label>
-                  <input
+                  <CustomTextFieldVendor
+                    label=" E-Mail"
                     type="email"
                     id="managerEmail"
-                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    isRequired={false}
                     placeholder="Manager email address"
                     disabled={sameAsOwner === "True"}
-                    {...mainBranchInfoRegister("manager_user_email", {
-                      required: "Manager Email is required",
+                    formValue={{
+                      ...mainBranchInfoRegister("manager_user_email", {
+                        required: "Manager Email is required",
 
-                      pattern: {
-                        value:
-                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                        message: "Please enter a valid email",
-                      },
-                    })}
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: "Please enter a valid email",
+                        },
+                      }),
+                    }}
                   />
                   <div className="mt-2">
                     {mainBranchInfoErrors.manager_user_email && (
@@ -1968,29 +1924,26 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full relative">
-                  <label
-                    htmlFor="managerPhone"
-                    className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                  >
-                    Phone Number
-                  </label>
-                  <input
+                  <CustomTextFieldVendor
+                    label=" Phone Number"
                     type="number"
                     id="managerPhone"
-                    className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                    isRequired={false}
                     placeholder="Manager phone number"
                     disabled={sameAsOwner === "True"}
-                    {...mainBranchInfoRegister("manager_user_contact", {
-                      required: "Manager Contact Number is required",
-                      minLength: {
-                        value: 10,
-                        message: "Manager Contact Number must be 10 numbers",
-                      },
-                      maxLength: {
-                        value: 10,
-                        message: "Manager Contact Number must be 10 numbers",
-                      },
-                    })}
+                    formValue={{
+                      ...mainBranchInfoRegister("manager_user_contact", {
+                        required: "Manager Contact Number is required",
+                        minLength: {
+                          value: 10,
+                          message: "Manager Contact Number must be 10 numbers",
+                        },
+                        maxLength: {
+                          value: 10,
+                          message: "Manager Contact Number must be 10 numbers",
+                        },
+                      }),
+                    }}
                   />
                   <div className="mt-2">
                     {mainBranchInfoErrors.manager_user_contact && (
