@@ -404,6 +404,7 @@ const AddEditProductPage = () => {
                   fontSize: 24,
                 },
               }}
+              className="cursor-pointer"
               onClick={() =>
                 router.push(`/vendor/shop/${vendorShopDetails?.id}/`)
               }
