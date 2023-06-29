@@ -393,7 +393,7 @@ const AddEditProductPage = () => {
   return (
     <div>
       <VendorShopSubHeader />
-      <div className="p-10">
+      <div className="sm:p-10 p-6">
         <div className="font-semibold text-black flex items-center gap-2">
           <span>
             <ArrowBackIcon
@@ -413,7 +413,7 @@ const AddEditProductPage = () => {
             {editProductId === undefined ? "Add" : "Update"} Product
           </span>
         </div>
-        <div className={`space-y-10 sm:my-16 my-10 mx-5`}>
+        <div className={`space-y-10 sm:my-16 my-10 sm:mx-5`}>
           <div className="w-full relative">
             <label
               htmlFor="pname"
