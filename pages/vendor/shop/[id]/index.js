@@ -555,9 +555,9 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      <div className="bg-colorWhite mt-10 sm:mt-0">
+      <div className="mt-10 sm:mt-0">
         <div className="flex flex-col mt-2">
-          <div className="flex w-[95%] mx-auto flex-row-reverse bg-colorWhite py-2">
+          <div className="flex w-[95%] mx-auto flex-row-reverse py-2">
             <button
               // onClick={() => setProductListingModalOpen(true)}
               onClick={() =>
@@ -572,7 +572,7 @@ const ShopDetailsPage = () => {
             </button>
           </div>
 
-          <div className="bg-[#F5F5F5] rounded-lg pt-4">
+          <div className="rounded-lg pt-4">
             <div className="w-[95%] mx-auto">
               <UpperFilter
                 setProductPageSkip={setProductPageSkip}
