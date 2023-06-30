@@ -283,10 +283,32 @@ const ShopEdit = () => {
         ownerInfoGetValue("user_contact")
       );
     } else {
-      mainBranchInfoSetValue("manager_first_name", "");
-      mainBranchInfoSetValue("manager_last_name", "");
-      mainBranchInfoSetValue("manager_user_email", "");
-      mainBranchInfoSetValue("manager_user_contact", "");
+      // mainBranchInfoSetValue("manager_first_name", "");
+      // mainBranchInfoSetValue("manager_last_name", "");
+      // mainBranchInfoSetValue("manager_user_email", "");
+      // mainBranchInfoSetValue("manager_user_contact", "");
+      const mainBranches = vendorShopDetails?.branch_info?.find(
+        (itm) => itm.branch_type === "main"
+      );
+      setMainBranch(mainBranches);
+
+      mainBranchInfoSetValue("address", mainBranches?.branch_address);
+      mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
+
+      mainBranchInfoSetValue(
+        "manager_first_name",
+        mainBranches?.manager_name.split(" ")[0]
+      );
+      mainBranchInfoSetValue(
+        "manager_last_name",
+        mainBranches?.manager_name.split(" ")[1]
+      );
+      mainBranchInfoSetValue(
+        "manager_user_contact",
+        mainBranches?.manager_contact
+      );
+      mainBranchInfoSetValue("city", mainBranches?.branch_city);
+      mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
     }
   }, [sameAsOwner, mainBranchInfoSetValue, ownerInfoGetValue]);
 
