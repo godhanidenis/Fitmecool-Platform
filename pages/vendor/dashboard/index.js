@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
-import { GiNotebook } from "react-icons/gi";
+import BookIcon from "@mui/icons-material/Book";
 
 const ShopDashboard = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -91,7 +91,7 @@ const ShopDashboard = () => {
             </p>
           </div>
           <span className="bg-[#F3F6F6]  rounded-full p-3">
-            <GiNotebook
+            <BookIcon
               sx={{
                 fontSize: 24,
                 "@media (max-width: 1024px)": {
