@@ -14,40 +14,35 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import StoreIcon from "@mui/icons-material/Store";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 
 const VendorSidebar = ({ vendorShopDetails }) => {
   const [ratingValue, setRatingValue] = useState(null);
 
-  const [OpenToolTip, setOpenToolTip] = useState(false);
-  const pageShareURL = typeof window !== "undefined" && window.location.href;
+  const router = useRouter();
 
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#ffffff",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)",
-    },
-  }));
+  const [selectedValue, setSelectedValue] = useState("");
 
-  const ShareIconComponent = React.forwardRef(function MyComponent(props, ref) {
-    //  Spread the props to the underlying DOM element.
-    return (
-      <div {...props} ref={ref}>
-        <TbShare3
-          onClick={props.onClick}
-          className="lg:text-2xl xl:text-3xl sm:text-xl text-2xl"
-        />
-      </div>
+  useEffect(() => {
+    const withoutLastChunk = router.pathname.slice(
+      0,
+      router.pathname.lastIndexOf("/")
     );
-  });
 
-  const handleTooltipOpen = () => {
-    setOpenToolTip(!OpenToolTip);
-  };
+    if (router.pathname === "/vendor/dashboard") {
+      setSelectedValue("Dashboard");
+    } else if (withoutLastChunk === "/vendor/shopEdit") {
+      setSelectedValue("Shop");
+    } else if (
+      withoutLastChunk === "/vendor/shop" ||
+      `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+    ) {
+      setSelectedValue("Products");
+    }
+  }, [router.pathname]);
 
   useEffect(() => {
     if (vendorShopDetails) {
@@ -56,20 +51,51 @@ const VendorSidebar = ({ vendorShopDetails }) => {
   }, [vendorShopDetails]);
 
   return (
-    <div className="bg-white rounded-3xl lg:p-10 p-5 py-10">
+    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center">
       <div className="flex justify-center">
-        <div className="xl:w-[278px] xl:h-[278px] lg:h-[200px] sm:h-[150px] lg:w-[200px] sm:w-[150px] h-[200px] w-[200px] mb-10 rounded-full">
+        <div className="w-[182px] h-[182px] mb-10 sm:mt-10 rounded-full">
           <img
             src={vendorShopDetails?.shop_logo}
             className="object-cover rounded-full w-full h-full"
           />
         </div>
       </div>
-      <div className="flex flex-col items-center lg:gap-2 gap-1">
-        <div className="xl:text-4xl lg:text-xl sm:text-sm text-[32px] font-bold text-colorBlack">
+      <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
+        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-8 whitespace-nowrap">
           {vendorShopDetails?.shop_name}
         </div>
-        <div className="flex items-center">
+        <div
+          style={{ opacity: 0.20000000298023224 }}
+          className="w-full h-[1px] bg-[#B1B1B1] sm:mb-11"
+        ></div>
+        <div className="w-full font-Nova ml-[30%] hidden sm:block">
+          {["Dashboard", "Shop", "Products"].map((item, index) => (
+            <p
+              key={index}
+              onClick={() => {
+                item === "Dashboard" && router.push("/vendor/dashboard");
+                item === "Shop" &&
+                  router.push(`/vendor/shopEdit/${vendorShopDetails?.id}`);
+                item === "Products" &&
+                  router.push(`/vendor/shop/${vendorShopDetails?.id}`);
+              }}
+              className={`font-semibold pb-10 text-xl ${
+                selectedValue === item ? "text-[#29977E]" : "text-[#151827]"
+              }  cursor-pointer uppercase`}
+            >
+              {item === "Dashboard" ? (
+                <DashboardIcon className="mr-4" />
+              ) : item === "Shop" ? (
+                <StoreIcon className="mr-4" />
+              ) : (
+                <ProductionQuantityLimitsIcon className="mr-4" />
+              )}
+
+              {item}
+            </p>
+          ))}
+        </div>
+        {/* <div className="flex items-center">
           <span>
             <LocationOnOutlinedIcon
               className="text-gray-400"
@@ -89,8 +115,8 @@ const VendorSidebar = ({ vendorShopDetails }) => {
               item?.branch_type === "main" ? item.branch_address : ""
             )}
           </span>
-        </div>
-        <span className="flex items-center">
+        </div> */}
+        {/* <span className="flex items-center">
           <Rating
             sx={{
               fontSize: 16,
@@ -136,50 +162,7 @@ const VendorSidebar = ({ vendorShopDetails }) => {
               {ratingValue}
             </Box>
           )}
-        </span>
-        <div
-          onMouseLeave={() => setOpenToolTip(false)}
-          className="text-gray-400 m-10 border border-gray-200 rounded-full p-3 cursor-pointer"
-        >
-          <HtmlTooltip
-            title={
-              // <React.Fragment>
-              <div className="flex">
-                <div className="p-2 rounded-lg cursor-pointer">
-                  <FacebookShareButton
-                    windowWidth={900}
-                    windowHeight={900}
-                    url={pageShareURL}
-                  >
-                    <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                  </FacebookShareButton>
-                </div>
-                <div className="p-2 rounded-lg cursor-pointer">
-                  <WhatsappShareButton
-                    windowWidth={900}
-                    windowHeight={900}
-                    url={pageShareURL}
-                  >
-                    <WhatsappIcon size={25} round={true} />
-                  </WhatsappShareButton>
-                </div>
-                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                  <EmailShareButton
-                    subject="Product Detail Page"
-                    windowWidth={900}
-                    windowHeight={900}
-                    url={pageShareURL}
-                  >
-                    <Image src={googleIcon ?? ""} alt="googleIcon" />
-                  </EmailShareButton>
-                </div>
-              </div>
-              // </React.Fragment>
-            }
-          >
-            <ShareIconComponent onClick={handleTooltipOpen} />
-          </HtmlTooltip>
-        </div>
+        </span> */}
       </div>
     </div>
   );

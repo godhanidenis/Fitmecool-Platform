@@ -21,20 +21,17 @@ const VendorCommonLayout = ({ children }) => {
     <>
       <div className="w-full relative font-Nova">
         <VendorShopSubHeader />
-        <img
-          src={vendorShopDetails?.shop_cover_image}
-          alt="shop cover image"
-          className="h-[396px] w-full"
-        />
       </div>
 
-      <div className="flex flex-col md:flex-row min-h-screen gap-10 p-5 sm:px-10 font-Nova">
-        <div className="w-full  md:w-[30%] relative mb-[350px] sm:mb-0">
-          <div className="absolute lg:-top-36 -top-32 left-0 right-0 bottom-0">
+      <div className="flex flex-col md:flex-row min-h-screen sm:gap-10  font-Nova">
+        <div className="sm:w-[310px] w-full relative">
+          <div className="">
             <VendorSidebar vendorShopDetails={vendorShopDetails} />
           </div>
         </div>
-        <div className="w-full md:w-[70%] mt-12 sm:mt-0">{children}</div>
+        <div className="w-full lg:w-[70%] sm:w-2/3 sm:mt-6 sm:mr-5">
+          {children}
+        </div>
       </div>
     </>
   );

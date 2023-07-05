@@ -555,7 +555,7 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      <div className="mt-10 sm:mt-0">
+      <div className="">
         <div className="flex flex-col mt-2">
           <div className="flex w-[95%] mx-auto flex-row-reverse py-2">
             <button
@@ -905,48 +905,6 @@ const ShopDetailsPage = () => {
                   <h4 className="font-bold mb-3 flex justify-center items-center">
                     Product Images
                   </h4>
-
-                  {/* <div className="flex justify-center flex-col items-center">
-                    <div className="flex justify-center">
-                      <Button
-                        variant="contained"
-                        component="label"
-                        className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                      >
-                        Choose Product Images
-                        <input
-                          type="file"
-                          hidden
-                          multiple
-                          accept="image/*"
-                          {...register("productImages", {
-                            required: productImages.length === 0 ? "Product Image is required" : false,
-                            onChange: (e) => {
-                              createProductImagesChange(e);
-                            },
-                          })}
-                        />
-                      </Button>
-                    </div>
-                    <div className="mt-2">
-                      {errors.productImages && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {errors.productImages?.message}
-                        </span>
-                      )}
-                    </div>
-                  </div> */}
-                  {/* <div className="flex  justify-center">
-                    <div className="flex flex-col w-full">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
-                        {productImages.map((image, index) => (
-                          <div key={index}>
-                            <Image src={image ?? ""} alt="Product Preview" height={150} width={200} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div> */}
                   <div className="flex justify-center mt-10">
                     <div className="flex items-center flex-col w-full">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-10 place-items-center">
@@ -1072,31 +1030,6 @@ const ShopDetailsPage = () => {
                     Product Video
                   </h4>
                   <div className="flex items-center justify-center flex-col">
-                    {/* <div className="flex justify-center flex-col items-center">
-                      <div className="flex justify-center">
-                        <Button
-                          variant="contained"
-                          component="label"
-                          className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                        >
-                          Choose Product Video
-                          <input
-                            type="file"
-                            id="productVideo"
-                            name="productVideo"
-                            accept="video/*"
-                            hidden
-                            controls
-                            onChange={(e) => {
-                              if (e.target.files && e.target.files.length > 0) {
-                                onProductVideoPreview(e);
-                              }
-                            }}
-                          />
-                        </Button>
-                      </div>
-                    </div> */}
-                    {/* {productVideo !== undefined && ( */}
                     <div className="flex  justify-center ">
                       <div className="flex flex-col w-full">
                         <div className="grid grid-cols-1 place-items-center">
@@ -1199,34 +1132,6 @@ const ShopDetailsPage = () => {
                               </div>
                             )}
                           </div>
-
-                          {/* <div>
-                              <video
-                                autoPlay
-                                style={{ width: "300px", height: "200px" }}
-                                controls
-                                src={productVideo}
-                              ></video>
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                                style={{
-                                  position: "relative",
-                                  right: 10,
-                                  bottom: 20,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <CancelIcon
-                                  style={{ color: "black" }}
-                                  onClick={() => {
-                                    setProductVideo();
-                                    setUploadProductVideo();
-                                  }}
-                                />
-                              </div>
-                            </div> */}
                         </div>
                       </div>
                     </div>
