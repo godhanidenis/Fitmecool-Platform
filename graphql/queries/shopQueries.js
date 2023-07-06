@@ -309,6 +309,7 @@ export const getShopOwnerDetail = async (payload) => {
     variables: {
       shopOwnerId: payload.id,
     },
+    fetchPolicy: "no-cache",
   });
   return result;
 };

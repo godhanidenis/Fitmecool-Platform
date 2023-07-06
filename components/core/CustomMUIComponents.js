@@ -34,6 +34,15 @@ export const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
+export const CustomMuiTextField = styled(TextField)(({ theme }) => ({
+  [`& label`]: {
+    fontWeight: 600,
+    fontSize: "16px",
+    lineHeight: "normal",
+    color: "#151827",
+  },
+}));
+
 export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   [`& .MuiBackdrop-root`]: {
     backgroundColor: "transparent !important",

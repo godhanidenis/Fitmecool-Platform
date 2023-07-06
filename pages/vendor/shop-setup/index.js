@@ -1208,23 +1208,17 @@ const ShopPage = () => {
                     }`}
                   >
                     <div className="w-full relative">
-                      <label
-                        htmlFor="address"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Address
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label="Address"
                         type="text"
                         id="address"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={true}
                         placeholder="Your address"
-                        {...register("address", {
-                          required: "Address is required",
-                        })}
+                        formValue={{
+                          ...register("address", {
+                            required: "Address is required",
+                          }),
+                        }}
                       />
                       {errors.address && (
                         <div className="mt-2">
@@ -1236,23 +1230,17 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
-                        <label
-                          htmlFor="city"
-                          className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          City
-                          <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                            *
-                          </span>
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label=" City"
                           type="text"
                           id="city"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={true}
                           placeholder="Your city"
-                          {...register("city", {
-                            required: "City is required",
-                          })}
+                          formValue={{
+                            ...register("city", {
+                              required: "City is required",
+                            }),
+                          }}
                         />
                         {errors.city && (
                           <div className="mt-2">
@@ -1263,23 +1251,17 @@ const ShopPage = () => {
                         )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
-                        <label
-                          htmlFor="pincode"
-                          className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Pincode
-                          <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                            *
-                          </span>
-                        </label>
-                        <input
-                          id="pincode"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-                          placeholder="Your pincode"
+                        <CustomTextFieldVendor
+                          label=" Pincode"
                           type="number"
-                          {...register("pin_code", {
-                            required: "PinCode is required",
-                          })}
+                          id="pincode"
+                          isRequired={true}
+                          placeholder="Your pincode"
+                          formValue={{
+                            ...register("pin_code", {
+                              required: "PinCode is required",
+                            }),
+                          }}
                         />
                         {errors.pin_code && (
                           <div className="mt-2">
@@ -1410,24 +1392,18 @@ const ShopPage = () => {
 
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
-                        <label
-                          htmlFor="managerfName"
-                          className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          First Name
-                          <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                            *
-                          </span>
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label="First Name"
                           type="text"
                           id="managerfName"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={true}
                           placeholder="Manager first name"
                           disabled={sameAsOwner === "True"}
-                          {...register("manager_first_name", {
-                            required: "Manager FirstName is required",
-                          })}
+                          formValue={{
+                            ...register("manager_first_name", {
+                              required: "Manager FirstName is required",
+                            }),
+                          }}
                         />
                         {errors.manager_first_name && (
                           <div className="mt-2">
@@ -1438,24 +1414,18 @@ const ShopPage = () => {
                         )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
-                        <label
-                          htmlFor="mangerlName"
-                          className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                        >
-                          Last Name
-                          <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                            *
-                          </span>
-                        </label>
-                        <input
+                        <CustomTextFieldVendor
+                          label=" Last Name"
                           type="text"
                           id="mangerlName"
-                          className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                          isRequired={true}
                           placeholder="Manager last name"
                           disabled={sameAsOwner === "True"}
-                          {...register("manager_last_name", {
-                            required: "Manager LastName is required",
-                          })}
+                          formValue={{
+                            ...register("manager_last_name", {
+                              required: "Manager LastName is required",
+                            }),
+                          }}
                         />
                         {errors.manager_last_name && (
                           <div className="mt-2">
@@ -1467,30 +1437,24 @@ const ShopPage = () => {
                       </div>
                     </div>
                     <div className="w-full relative">
-                      <label
-                        htmlFor="managerEmail"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        E-Mail
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label=" E-Mail"
                         type="email"
                         id="managerEmail"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={true}
                         placeholder="Manager email address"
                         disabled={sameAsOwner === "True"}
-                        {...register("manager_user_email", {
-                          required: "Manager Email is required",
+                        formValue={{
+                          ...register("manager_user_email", {
+                            required: "Manager Email is required",
 
-                          pattern: {
-                            value:
-                              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                            message: "Please enter a valid email",
-                          },
-                        })}
+                            pattern: {
+                              value:
+                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                              message: "Please enter a valid email",
+                            },
+                          }),
+                        }}
                       />
                       {errors.manager_user_email && (
                         <div className="mt-2">
@@ -1501,28 +1465,22 @@ const ShopPage = () => {
                       )}
                     </div>
                     <div className="w-full relative">
-                      <label
-                        htmlFor="managerPhone"
-                        className="absolute -top-4 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
-                      >
-                        Phone Number
-                        <span className="required text-red-500 pl-2 sm:text-2xl text-lg">
-                          *
-                        </span>
-                      </label>
-                      <input
+                      <CustomTextFieldVendor
+                        label="Phone Number"
                         type="number"
                         id="managerPhone"
-                        className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                        isRequired={true}
                         placeholder="Manager phone number"
                         disabled={sameAsOwner === "True"}
-                        {...register("manager_user_contact", {
-                          required: "Manager Contact Number is required",
-                          pattern: {
-                            value: /^[0-9]{10}$/,
-                            message: "Please enter a valid number",
-                          },
-                        })}
+                        formValue={{
+                          ...register("manager_user_contact", {
+                            required: "Manager Contact Number is required",
+                            pattern: {
+                              value: /^[0-9]{10}$/,
+                              message: "Please enter a valid number",
+                            },
+                          }),
+                        }}
                       />
                       {errors.manager_user_contact && (
                         <div className="mt-2">
