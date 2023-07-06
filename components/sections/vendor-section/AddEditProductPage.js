@@ -30,6 +30,7 @@ const AddEditProductPage = () => {
     formState: { errors },
     reset,
     setValue,
+    getValues,
   } = useForm();
 
   const [SelectImgIndex, setSelectImgIndex] = useState();
@@ -423,6 +424,8 @@ const AddEditProductPage = () => {
               id="pname"
               isRequired={false}
               placeholder="Product Name"
+              fieldValue={getValues("product_name")}
+              fieldError={errors?.product_name}
               formValue={{
                 ...register("product_name", {
                   required: "Product Name is required",
@@ -444,6 +447,8 @@ const AddEditProductPage = () => {
               id="pdescription"
               isRequired={false}
               placeholder="Product Description"
+              fieldValue={getValues("product_description")}
+              fieldError={errors?.product_description}
               formValue={{
                 ...register("product_description", {
                   required: "Product Description is required",

@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -49,6 +49,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TbPhotoPlus } from "react-icons/tb";
 import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
+import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 
 const style = {
   position: "absolute",
@@ -84,6 +85,7 @@ const ShopEdit = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+  const dispatch = useDispatch();
 
   const {
     register: ownerInfoRegister,
@@ -91,6 +93,7 @@ const ShopEdit = () => {
     formState: { errors: ownerInfoErrors },
     setValue: ownerInfoSetValue,
     getValues: ownerInfoGetValue,
+    reset: ownerInfoReset,
   } = useForm();
 
   const {
@@ -98,6 +101,7 @@ const ShopEdit = () => {
     handleSubmit: shopInfoHandleSubmit,
     formState: { errors: shopInfoErrors },
     setValue: shopInfoSetValue,
+    reset: shopInfoReset,
   } = useForm();
 
   const {
@@ -106,12 +110,14 @@ const ShopEdit = () => {
     formState: { errors: mainBranchInfoErrors },
     setValue: mainBranchInfoSetValue,
     getValues: mainBranchInfoGetValue,
+    reset: mainBranchInfoReset,
   } = useForm();
 
   const {
     register: shopLayoutRegister,
     handleSubmit: shopLayoutHandleSubmit,
     formState: { errors: shopLayoutErrors },
+    reset: shopLayoutReset,
   } = useForm();
 
   const [shopOwnerId, setShopOwnerId] = useState("");
@@ -187,6 +193,10 @@ const ShopEdit = () => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  useEffect(() => {
+    ownerInfoReset();
+  }, [value]);
 
   const srcToFile = async (src, fileName, mimeType) => {
     console.log("src, fileName, mimeType :", src, fileName, mimeType);
@@ -312,6 +322,11 @@ const ShopEdit = () => {
     }
   }, [sameAsOwner, mainBranchInfoSetValue, ownerInfoGetValue]);
 
+  useEffect(() => {
+    if (userProfile?.userCreatedShopId) {
+      dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
+    }
+  }, [dispatch, userProfile?.userCreatedShopId, value]);
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
       getAllSubBranchList();
@@ -479,6 +494,7 @@ const ShopEdit = () => {
     ownerInfoSetValue,
     shopInfoSetValue,
     vendorShopDetails,
+    value,
   ]);
 
   useEffect(() => {
@@ -733,12 +749,15 @@ const ShopEdit = () => {
                       id="fName"
                       isRequired={false}
                       placeholder="Your first name"
+                      fieldValue={ownerInfoGetValue("first_name")}
+                      fieldError={ownerInfoErrors?.first_name}
                       formValue={{
                         ...ownerInfoRegister("first_name", {
                           required: "FirstName is required",
                         }),
                       }}
                     />
+
                     <div className="mt-2">
                       {ownerInfoErrors?.first_name && (
                         <span style={{ color: "red" }} className="-mb-6">
@@ -754,6 +773,8 @@ const ShopEdit = () => {
                       id="lName"
                       isRequired={false}
                       placeholder="Your last name"
+                      fieldValue={ownerInfoGetValue("last_name")}
+                      fieldError={ownerInfoErrors?.last_name}
                       formValue={{
                         ...ownerInfoRegister("last_name", {
                           required: "LastName is required",
@@ -776,6 +797,8 @@ const ShopEdit = () => {
                     id="email"
                     isRequired={false}
                     placeholder="yourmail@gmail.com"
+                    fieldValue={ownerInfoGetValue("user_email")}
+                    fieldError={ownerInfoErrors?.user_email}
                     formValue={{
                       ...ownerInfoRegister("user_email", {
                         required: "Email is required",
@@ -803,6 +826,8 @@ const ShopEdit = () => {
                     id="phone"
                     isRequired={false}
                     placeholder="Your phone number"
+                    fieldValue={ownerInfoGetValue("user_contact")}
+                    fieldError={ownerInfoErrors?.user_contact}
                     formValue={{
                       ...ownerInfoRegister("user_contact", {
                         required: "Contact Number is required",

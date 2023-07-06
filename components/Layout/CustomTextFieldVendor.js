@@ -1,4 +1,6 @@
+import { TextField } from "@mui/material";
 import React from "react";
+import { CustomMuiTextField } from "../core/CustomMUIComponents";
 
 const CustomTextFieldVendor = ({
   label,
@@ -7,11 +9,14 @@ const CustomTextFieldVendor = ({
   placeholder,
   isRequired,
   formValue,
+  fieldValue,
+  fieldError,
   ...rest
 }) => {
+  console.log("formValue", fieldValue, fieldError, "::::-->>");
   return (
     <>
-      <label
+      {/* <label
         htmlFor={id}
         className={`absolute  left-5 px-2 bg-white font-semibold sm:text-xl text-sm ${
           isRequired ? "-top-4" : "sm:-top-4 -top-3 "
@@ -33,6 +38,18 @@ const CustomTextFieldVendor = ({
         placeholder={placeholder}
         {...formValue}
         {...rest}
+      /> */}
+      <CustomMuiTextField
+        type={type}
+        id={id}
+        fullWidth
+        {...formValue}
+        {...rest}
+        variant="outlined"
+        label={label}
+        InputLabelProps={{
+          shrink: !!fieldValue || fieldError,
+        }}
       />
     </>
   );
