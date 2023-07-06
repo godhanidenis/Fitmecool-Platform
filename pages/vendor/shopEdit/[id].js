@@ -1506,7 +1506,7 @@ const ShopEdit = () => {
 
                     <div
                       style={{ border: "2px solid #F3F6F6" }}
-                      className={` grid sm:grid-cols-2 grid-cols-1 gap-y-6 mb-16 py-6 ${
+                      className={` grid lg:grid-cols-2 grid-cols-1 gap-y-6 mb-16 py-6 ${
                         !branchDetails[sub.id] && "hidden"
                       }`}
                     >
