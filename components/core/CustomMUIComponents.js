@@ -71,7 +71,7 @@ export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
     textTransform: "none",
     color: "rgba(21, 24, 39, 0.56)",
     fontWeight: 600,
-    fontSize: "18px",
+    fontSize: "16px",
     lineHeight: "16px",
     paddingX: "20px",
     paddingY: "16px",

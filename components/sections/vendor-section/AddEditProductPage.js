@@ -411,7 +411,7 @@ const AddEditProductPage = () => {
               }
             />
           </span>
-          <span className="sm:text-3xl text-2xl">
+          <span className="sm:text-2xl text-xl">
             {" "}
             {editProductId === undefined ? "Add" : "Update"} Product
           </span>
@@ -466,7 +466,7 @@ const AddEditProductPage = () => {
           <div className="w-full relative">
             <label
               htmlFor="pcolor"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm text-black"
+              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
             >
               Color
             </label>
@@ -499,7 +499,7 @@ const AddEditProductPage = () => {
           <div className="w-full relative">
             <label
               htmlFor="ptype"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm text-black"
+              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
             >
               Type
             </label>
@@ -536,12 +536,12 @@ const AddEditProductPage = () => {
             <div className="w-full relative">
               <label
                 htmlFor="pcategory"
-                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm text-black"
+                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
               >
                 Category
               </label>
               <select
-                className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
+                className="w-full px-7 sm:py-5 py-3 text-sm sm:text-lg rounded-xl border border-gray-200 focus:border-black outline-none"
                 {...register("product_category", {
                   required: "product Category is required",
                 })}
@@ -576,7 +576,7 @@ const AddEditProductPage = () => {
           <div className="w-full relative">
             <label
               htmlFor="pbranch"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm text-black"
+              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
             >
               Branch
             </label>
@@ -606,16 +606,16 @@ const AddEditProductPage = () => {
         </div>
         <div className="grid grid-cols-3 gap-10 my-10 mx-5">
           <div className="col-span-3">
-            <div className="sm:text-2xl text-sm  font-semibold  mb-5 mx-2 text-black ">
+            <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black ">
               Product Images
             </div>
-            <div className="flex lg:gap-8 lg:flex-row flex-col gap-4">
+            <div className="sm:w-2/3 flex lg:gap-8 lg:flex-row flex-col gap-4">
               {["One", "Two", "Three"]?.map((item, index) => {
                 return (
                   <>
                     <div
                       key={index}
-                      className="w-full  cursor-pointer  sm:h-[413px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                      className="w-full sm:w-2/3  cursor-pointer  sm:h-[344px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                       onClick={() => {
                         productImages[index] === undefined
                           ? (setSelectImgIndex(index),
@@ -626,7 +626,7 @@ const AddEditProductPage = () => {
                       }}
                     >
                       {productImages[index] ? (
-                        <div className="w-full relative sm:h-[413px]  h-[344px]">
+                        <div className="w-full relative sm:h-[344px]  h-[344px]">
                           <img
                             src={productImages[index] ?? ""}
                             alt="Uploaded Image"
@@ -695,11 +695,11 @@ const AddEditProductPage = () => {
             </div>
           </div>
           <div className="w-full col-span-3">
-            <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black ">
+            <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black ">
               Product Video
             </div>
             <div
-              className="w-full cursor-pointer  sm:h-[350px] h-[214px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+              className="sm:w-2/3 w-full cursor-pointer  sm:h-[350px] h-[214px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
               onClick={() => {
                 productVideo == "" &&
                   document.getElementById("productVideoId").click();
@@ -770,7 +770,7 @@ const AddEditProductPage = () => {
         </div>
         <div className="flex justify-end sm:gap-4 gap-2 mt-16">
           <button
-            className="sm:py-3 sm:px-12 font-semibold sm:text-2xl text-sm px-8 py-2"
+            className="bg-white rounded-[4px] sm:py-3 sm:px-12 font-semibold sm:text-xl text-sm px-8 py-2 border"
             onClick={() =>
               router.push(`/vendor/shop/${vendorShopDetails?.id}/`)
             }
@@ -778,7 +778,7 @@ const AddEditProductPage = () => {
             Cancel
           </button>
           <button
-            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-2xl rounded-[4px] text-sm px-8 py-2"
+            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2"
             type="submit"
             onClick={handleSubmit(onSubmit, onError)}
             onReset={reset}

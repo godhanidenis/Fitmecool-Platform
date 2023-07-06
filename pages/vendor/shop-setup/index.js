@@ -868,7 +868,7 @@ const ShopPage = () => {
                             <div className="relative" key={index}>
                               <label
                                 htmlFor="sunday"
-                                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm"
                               >
                                 {day["key"]}
                               </label>
@@ -878,7 +878,7 @@ const ShopPage = () => {
                                   type="text"
                                   id="sunday"
                                   value={time}
-                                  className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 outline-none ${
+                                  className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-lg rounded-xl border border-gray-200 outline-none ${
                                     time === "Closed"
                                       ? "text-red-600"
                                       : time === "Open 24 hours"
@@ -954,7 +954,7 @@ const ShopPage = () => {
                               <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                             </span>
                             <div className="flex flex-col gap-1">
-                              <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                              <p className="sm:text-xl text-sm font-bold text-gray-400">
                                 Click to upload{" "}
                                 <span className="text-colorGreen">logo</span>
                               </p>
@@ -993,7 +993,7 @@ const ShopPage = () => {
 
                     <div className="flex flex-col items-center justify-center col-span-3">
                       <div
-                        className="w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                        className="sm:w-2/3 w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                         onClick={() => handleBrowseClick(1)}
                       >
                         {shopBackground !== "" ? (
@@ -1050,16 +1050,16 @@ const ShopPage = () => {
                     </div>
 
                     <div className="col-span-3">
-                      <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
+                      <div className="sm:w-[85%] sm:mx-auto sm:text-xl text-lg font-semibold  mb-10 mx-2">
                         Shop Images
                       </div>
-                      <div className="flex xl:gap-8 xl:flex-row flex-col gap-4">
+                      <div className="sm:w-[85%] sm:mx-auto flex xl:gap-8 xl:flex-row flex-col gap-4">
                         {["One", "Two", "Three"]?.map((item, index) => {
                           return (
                             <>
                               <div
                                 key={index}
-                                className="w-full cursor-pointer sm:h-[400px] h-[300px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                                className="w-full cursor-pointer sm:h-[344px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                                 onClick={() =>
                                   handleBrowseClickShopImages(
                                     `shopImage${item}`,
@@ -1068,7 +1068,7 @@ const ShopPage = () => {
                                 }
                               >
                                 {shopImages[index] ? (
-                                  <div className="w-full sm:h-[400px]  h-[300px]">
+                                  <div className="w-full sm:h-[344px] h-[344px]">
                                     <img
                                       src={shopImages[index] ?? ""}
                                       alt="Uploaded Image"
@@ -1121,11 +1121,11 @@ const ShopPage = () => {
                       )}
                     </div>
                     <div className="w-full col-span-3">
-                      <div className="sm:text-2xl text-lg font-semibold  mb-10 mx-2">
+                      <div className="sm:w-2/3 sm:mx-auto sm:text-xl text-lg font-semibold  mb-10 mx-2">
                         Shop Video
                       </div>
                       <div
-                        className="w-full cursor-pointer sm:h-[350px] h-[200px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                        className="sm:w-2/3 w-full sm:mx-auto cursor-pointer sm:h-[350px] h-[200px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                         onClick={() => handleBrowseClick(5)}
                       >
                         {shopVideo !== "" ? (
@@ -1498,11 +1498,11 @@ const ShopPage = () => {
                         disabled={!isValid}
                         className={`${
                           !isValid ? "opacity-50" : "opacity-100"
-                        } cursor-pointer uppercase border-2  sm:px-8 sm:py-3 sm:text-xl px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen`}
+                        } cursor-pointer flex items-center uppercase border-2  sm:px-8 sm:py-3 sm:text-base px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen`}
                       >
                         Sub Branch
                         <span className="hidden sm:inline">
-                          <AddIcon fontSize="large" className="ml-2" />
+                          <AddIcon fontSize="medium" className="ml-2" />
                         </span>
                         <span className="sm:hidden">
                           <AddIcon fontSize="small" className="ml-2" />
@@ -1637,12 +1637,12 @@ const ActionButtons = ({
         onClick={() => {
           currentStep > 1 && setCurrentStep(currentStep - 1);
         }}
-        className="sm:py-3 sm:px-12 font-semibold sm:text-2xl text-sm px-8 py-2"
+        className="bg-[#FAFCFC] sm:py-3 sm:px-12 font-semibold sm:text-lg text-sm px-8 py-2 rounded-[4px] border"
       >
         Back
       </button>
       <button
-        className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-2xl rounded-[4px] text-sm px-8 py-2"
+        className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-lg rounded-[4px] text-sm px-8 py-2"
         onClick={handleSubmit(onSubmit, onError)}
       >
         {loading && (
@@ -2137,9 +2137,7 @@ const HoursModal = ({
         <Box sx={style} className="!w-[90%] lg:!w-[80%]">
           <div className="sm:p-5 lg:p-5 p-1">
             <div className="flex justify-between items-center">
-              <div className="sm:text-2xl lg:text-3xl xl:text-5xl text-[16px] font-bold">
-                Hours
-              </div>
+              <div className="sm:text-2xl text-[16px] font-bold">Hours</div>
               <span>
                 <CloseIcon
                   className="text-gray-500 !text-xl sm:!text-3xl"
@@ -2155,8 +2153,8 @@ const HoursModal = ({
                     key={index}
                     className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
                   >
-                    <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
-                      <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
+                    <div className="flex xl:gap-32  items-center mt-1 sm:mt-0">
+                      <div className="sm:text-2xl text-base font-semibold">
                         {day["key"]}
                       </div>
                     </div>
@@ -2180,7 +2178,7 @@ const HoursModal = ({
                         ) : (
                           <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
                                 Start with
                               </span>
                               <input
@@ -2204,11 +2202,11 @@ const HoursModal = ({
                                 type="time"
                                 readOnly
                                 id="saturday"
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
                                 End with
                               </span>
                               <input
@@ -2232,7 +2230,7 @@ const HoursModal = ({
                                 }
                                 id="saturday"
                                 readOnly
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                           </div>
@@ -2257,7 +2255,7 @@ const HoursModal = ({
                   </div>
                 ))}
               </div>
-              <div className="flex justify-center sm:justify-start lg:gap-4 gap-1 lg:mt-20 mt-10">
+              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 lg:mt-20 mt-10">
                 <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
@@ -2272,7 +2270,7 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
@@ -2295,7 +2293,7 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
@@ -2315,7 +2313,7 @@ const HoursModal = ({
                           .value
                     );
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
@@ -2331,13 +2329,13 @@ const HoursModal = ({
             <div className="flex justify-end mt-5 lg:gap-6 gap-4">
               <button
                 onClick={() => setHoursModalOpen(false)}
-                className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen"
+                className="uppercase font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm py-1 px-3 rounded-[4px] lg:rounded-md border-2 border-colorGreen"
               >
                 Cancel
               </button>
               <button
                 onClick={() => setHoursModalOpen(false)}
-                className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen"
+                className="uppercase font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm px-3 py-1 rounded-[4px] lg:rounded-md bg-colorGreen"
               >
                 Save
               </button>

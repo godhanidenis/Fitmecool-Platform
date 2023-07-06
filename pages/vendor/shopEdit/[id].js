@@ -858,7 +858,7 @@ const ShopEdit = () => {
                         ownerInfoOnSubmit,
                         ownerInfoOError
                       )}
-                      className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                      className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
                                      shadow-lg flex items-center justify-center"
                     >
                       {ownerLoading && (
@@ -1036,7 +1036,7 @@ const ShopEdit = () => {
                         <div className="relative" key={index}>
                           <label
                             htmlFor="sunday"
-                            className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-xl text-sm"
+                            className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-base text-sm"
                           >
                             {day["key"]}
                           </label>
@@ -1046,7 +1046,7 @@ const ShopEdit = () => {
                               type="text"
                               id="sunday"
                               value={time}
-                              className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 outline-none ${
+                              className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-lg rounded-xl border border-gray-200 outline-none ${
                                 time === "Closed"
                                   ? "text-red-600"
                                   : time === "Open 24 hours"
@@ -1060,15 +1060,15 @@ const ShopEdit = () => {
                       ))}
                     </div>
                     <div className="flex items-center justify-center">
-                      <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                      <Box className="flex pt-2 my-4 w-full sm:justify-end justify-center">
                         <button
                           type="submit"
                           onClick={shopInfoHandleSubmit(
                             shopInfoOnSubmit,
                             shopInfoOError
                           )}
-                          className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                                     shadow-lg flex items-center justify-center"
+                          className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                          shadow-lg flex items-center justify-center"
                         >
                           {shopLoading && (
                             <CircularProgress
@@ -1411,8 +1411,8 @@ const ShopEdit = () => {
                       mainBranchInfoOnSubmit,
                       mainBranchInfoOError
                     )}
-                    className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[30%] lg:w-[20%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                                     shadow-lg flex items-center justify-center"
+                    className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                          shadow-lg flex items-center justify-center"
                   >
                     {mainBranchLoading && (
                       <CircularProgress
@@ -1433,11 +1433,11 @@ const ShopEdit = () => {
               <div className="flex justify-end mt-10">
                 <button
                   onClick={() => setSubBranchModalOpen(true)}
-                  className="opacity-100
-                   cursor-pointer uppercase border-2  lg:px-8 lg:py-3 lg:text-xl sm:px-6 sm:py-2 sm:text-sm px-3 py-2 text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
+                  className="flex items-center opacity-100
+                   cursor-pointer uppercase border-2  lg:px-8 lg:py-3 sm:px-6 sm:py-2 px-3 py-2 sm:text-lg text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
                 >
                   <span className="hidden sm:inline">
-                    <AddIcon fontSize="large" className="mr-2" />
+                    <AddIcon fontSize="medium" className="mr-2" />
                   </span>
                   <span className="sm:hidden">
                     <AddIcon fontSize="small" className="mr-2" />
@@ -1587,7 +1587,7 @@ const ShopEdit = () => {
             <div className="container rounded-lg mt-10">
               <div className="grid grid-cols-3 gap-10 my-10">
                 <div className="flex flex-col items-center justify-center col-span-3">
-                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black">
+                  <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
                     Logo
                   </div>
                   <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center">
@@ -1654,10 +1654,10 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="flex flex-col items-center justify-center col-span-3">
-                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black">
+                  <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
                     Cover Image
                   </div>
-                  <div className="w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center">
+                  <div className="sm:w-2/3 w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center">
                     <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
                       <EditIcon
                         sx={{
@@ -1725,7 +1725,7 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="col-span-3">
-                  <div className="sm:text-2xl text-sm  font-semibold  mb-5 mx-2 text-black flex justify-center">
+                  <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black flex justify-center">
                     Shop Images
                     <span className="text-gray-400 ml-1">
                       (Front, Back & Side)
@@ -1808,11 +1808,11 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full col-span-3">
-                  <div className="sm:text-2xl text-sm font-semibold  mb-5 mx-2 text-black flex justify-center">
+                  <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black flex justify-center">
                     Shop Video
                   </div>
                   <div
-                    className="w-full cursor-pointer  sm:h-[290px] h-[180px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                    className="sm:w-2/3 w-full sm:mx-auto cursor-pointer  sm:h-[290px] h-[180px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
                     onClick={() => {
                       shopVideo == "" &&
                         document.getElementById("shopVideoId").click();
@@ -1884,15 +1884,15 @@ const ShopEdit = () => {
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                <Box className="flex pt-2 my-4 w-full sm:justify-end justify-center">
                   <button
                     type="submit"
                     onClick={shopLayoutHandleSubmit(
                       shopLayoutOnSubmit,
                       shopLayoutOnError
                     )}
-                    className="bg-colorGreen sm:text-2xl text-lg  mr-1 text-white sm:w-[65%] lg:w-[45%] xl:w-[35%] w-full py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                                     shadow-lg flex items-center justify-center"
+                    className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
+                          shadow-lg flex items-center justify-center"
                   >
                     {shopLayoutLoading && (
                       <CircularProgress
@@ -1999,11 +1999,9 @@ const HoursModal = ({
         className="animate__animated animate__slideInDown"
       >
         <Box sx={style} className="!w-[90%] lg:!w-[80%]">
-          <div className="sm:p-5 lg:p-5 p-1">
+          <div className="sm:p-5 lg:p-5 p-2">
             <div className="flex justify-between items-center">
-              <div className="sm:text-2xl lg:text-3xl xl:text-5xl text-[16px] font-bold">
-                Hours
-              </div>
+              <div className="sm:text-2xl text-[16px] font-bold">Hours</div>
               <span>
                 <CloseIcon
                   className="text-gray-500 !text-xl sm:!text-3xl"
@@ -2020,7 +2018,7 @@ const HoursModal = ({
                     className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
                   >
                     <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
-                      <div className="xl:text-3xl lg:text-2xl sm:text-lg text-xs font-semibold">
+                      <div className="sm:text-2xl text-base font-semibold">
                         {day["key"]}
                       </div>
                     </div>
@@ -2044,7 +2042,7 @@ const HoursModal = ({
                         ) : (
                           <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
                                 Start with
                               </span>
                               <input
@@ -2068,11 +2066,11 @@ const HoursModal = ({
                                 type="time"
                                 readOnly
                                 id="saturday"
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[6px] font-semibold sm:left-10 left-5">
+                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
                                 End with
                               </span>
                               <input
@@ -2096,7 +2094,7 @@ const HoursModal = ({
                                 }
                                 id="saturday"
                                 readOnly
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3  text-xs  xl:text-2xl sm:text-xl font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
+                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                           </div>
@@ -2121,7 +2119,7 @@ const HoursModal = ({
                   </div>
                 ))}
               </div>
-              <div className="flex justify-center sm:justify-start lg:gap-4 gap-1 lg:mt-20 mt-10">
+              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 lg:mt-20 mt-10">
                 <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
@@ -2136,7 +2134,7 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
@@ -2159,7 +2157,7 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
@@ -2179,7 +2177,7 @@ const HoursModal = ({
                           .value
                     );
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 lg:text-xl sm:px-5 sm:py-2 sm:text-sm max-[400px]:text-[7px] text-[9px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
                   <span className="hidden sm:block">
                     <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
@@ -2195,13 +2193,13 @@ const HoursModal = ({
             <div className="flex justify-end mt-5 lg:gap-6 gap-4">
               <button
                 onClick={() => setHoursModalOpen(false)}
-                className="uppercase lg:text-xl font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm py-1 px-3 text-xs rounded-[4px] lg:rounded-md border-2 border-colorGreen"
+                className="uppercase font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm py-1 px-3 rounded-[4px] lg:rounded-md border-2 border-colorGreen"
               >
                 Cancel
               </button>
               <button
                 onClick={() => setHoursModalOpen(false)}
-                className="uppercase lg:text-xl font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-sm px-3 py-1 text-xs rounded-[4px] lg:rounded-md bg-colorGreen"
+                className="uppercase font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm px-3 py-1 rounded-[4px] lg:rounded-md bg-colorGreen"
               >
                 Save
               </button>
