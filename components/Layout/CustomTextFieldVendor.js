@@ -1,6 +1,5 @@
 import { TextField } from "@mui/material";
 import React from "react";
-import { CustomMuiTextField } from "../core/CustomMUIComponents";
 
 const CustomTextFieldVendor = ({
   label,
@@ -39,7 +38,7 @@ const CustomTextFieldVendor = ({
         {...formValue}
         {...rest}
       /> */}
-      <CustomMuiTextField
+      <TextField
         type={type}
         id={id}
         fullWidth
