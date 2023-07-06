@@ -1,21 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
 import Router from "next/router";
 
 const UserType = () => {
-  const [selectedOption, setSelectedOption] = useState("Customer");
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState(
+    typeof window !== "undefined" &&
+      (localStorage.getItem("user_type_for_auth")
+        ? localStorage.getItem("user_type_for_auth")
+        : "customer")
+  );
   const handleDivClick = (option) => {
     setSelectedOption(option);
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Router.push(
+        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
-    <div className="bg-background py-2 w-full flex justify-center items-center h-screen">
-      <div className="bg-white flex w-full p-10 gap-10 h-screen overflow-hidden">
-        <div className="md:w-[50%] sm:w-full relative">
-          <div className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary">
-            Rentbless
+    <div className="bg-background w-full">
+      <div className="bg-white flex w-full min-h-[100vh] overflow-auto p-10 gap-10">
+        <div className="md:w-[50%] sm:w-full flex flex-col">
+          <div onClick={() => Router.push("/")} className="cursor-pointer">
+            <h2 className="text-3xl font-bold text-colorPrimary uppercase cursor-pointer">
+              <span className="text-4xl">R</span>entbless
+            </h2>
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
             Join Over Business
@@ -24,25 +49,25 @@ const UserType = () => {
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
           </p>
-          <div className="flex  my-8 gap-6 max-[380px]:flex-col">
+          <div className="flex my-8 gap-6 max-[380px]:flex-col">
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-                selectedOption === "Customer" &&
+                selectedOption === "customer" &&
                 "border-2 border-colorGreen rounded-2xl"
               }`}
-              onClick={() => handleDivClick("Customer")}
+              onClick={() => handleDivClick("customer")}
             >
               <div className="flex justify-between">
                 <GroupsIcon
                   className={`${
-                    selectedOption === "Customer"
+                    selectedOption === "customer"
                       ? "text-colorGreen"
                       : "text-colorPrimary"
                   }`}
                   fontSize="large"
                 />
 
-                {selectedOption === "Customer" && (
+                {selectedOption === "customer" && (
                   <CheckCircleIcon className="text-colorGreen" />
                 )}
               </div>
@@ -55,21 +80,21 @@ const UserType = () => {
             </div>
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-                selectedOption === "Business" &&
+                selectedOption === "vendor" &&
                 "border-2 border-colorGreen rounded-2xl"
               }`}
-              onClick={() => handleDivClick("Business")}
+              onClick={() => handleDivClick("vendor")}
             >
               <div className="flex justify-between">
                 <SiHandshake
                   className={`${
-                    selectedOption === "Business"
+                    selectedOption === "vendor"
                       ? "text-colorGreen"
                       : "text-colorPrimary"
                   }`}
                   fontSize="25px"
                 />
-                {selectedOption === "Business" && (
+                {selectedOption === "vendor" && (
                   <CheckCircleIcon className="text-colorGreen" />
                 )}
               </div>
@@ -81,13 +106,16 @@ const UserType = () => {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 w-full">
+
+          <div className="flex-grow"></div>
+
+          <div className="w-full">
             <button
-              className=" h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+              className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
               onClick={() => {
                 localStorage.setItem(
-                  "user_type",
-                  selectedOption === "Business" ? "vendor" : "customer"
+                  "user_type_for_auth",
+                  selectedOption === "vendor" ? "vendor" : "customer"
                 );
 
                 Router.push("/auth/signup");
@@ -96,13 +124,13 @@ const UserType = () => {
               Create Account
             </button>
             <p className="text-base max-[480px]:text-xs text-[#15182766] mt-2 flex justify-center">
-              Aleady have an account?
+              Already have an account?
               <span
                 className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
                 onClick={() => {
                   localStorage.setItem(
-                    "user_type",
-                    selectedOption === "Business" ? "vendor" : "customer"
+                    "user_type_for_auth",
+                    selectedOption === "vendor" ? "vendor" : "customer"
                   );
                   Router.push("/auth/signin");
                 }}
@@ -112,7 +140,7 @@ const UserType = () => {
             </p>
           </div>
         </div>
-        <div className="bg-neutral-300 md:w-[50%]  rounded-3xl sm:w-0"></div>
+        <div className="hidden md:block md:w-[50%] auth-cover rounded-3xl"></div>
       </div>
     </div>
   );

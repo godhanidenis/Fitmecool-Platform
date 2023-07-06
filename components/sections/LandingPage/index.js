@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import DirectoryHero from "../../DirectoryHero/DirectoryHero";
-import LandingBg from "../../../assets/cover.png";
+import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadMoreProductsStart,
@@ -107,14 +106,14 @@ const LandingPage = () => {
     <>
       <div className="w-100 h-[300px] relative">
         <Image
-          src={LandingBg}
+          src={LandingPageCoverImg}
           alt=""
           fill={true}
           layout={"fill"}
           objectFit={"cover"}
         />
       </div>
-      <div className="container py-2 bg-[#FAFCFC] mb-[1px] mt-3">
+      <div className="container py-4 bg-[#FAFCFC]">
         <div>
           <UpperFilter
             byShop={byShop}
@@ -126,7 +125,7 @@ const LandingPage = () => {
         </div>
       </div>
       <div className="grid grid-cols-8 container mb-4 font-Nova">
-        <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white mr-[1px]">
+        <div className="lg:col-span-2 hidden lg:block bg-white shadow-xl">
           <Filter
             byShop={byShop}
             setByShop={setByShop}
@@ -134,7 +133,7 @@ const LandingPage = () => {
             setShopPageSkip={setShopPageSkip}
           />
         </div>
-        <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC]">
+        <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC] !pt-0 !pr-0">
           <div className="container !w-[100%]">
             {!byShop ? (
               <>
@@ -160,6 +159,7 @@ const LandingPage = () => {
                       of {productsCount} results
                     </p>
                     <Pagination
+                      color="primary"
                       count={Math.ceil(productsCount / 6)}
                       page={
                         (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
@@ -181,6 +181,25 @@ const LandingPage = () => {
                 </div>
 
                 {shopsCount > 6 && (
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
+                    <p className="text-sm leading-[150%] text-[#15182766]">
+                      Showing {shopPageSkip + 1} -{" "}
+                      {shopsCount < (shopPageSkip + 1) * shopsLimit
+                        ? shopsCount
+                        : (shopPageSkip + 1) * shopsLimit}{" "}
+                      of {shopsCount} results
+                    </p>
+                    <Pagination
+                      color="primary"
+                      count={Math.ceil(shopsCount / 6)}
+                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
+                      onChange={(e, p) => {
+                        setShopPageSkip((p === 1 && 0) || (p - 1) * 6);
+                      }}
+                    />
+                  </div>
+                )}
+                {/* {shopsCount > 6 && (
                   <div className="flex items-center justify-center py-10">
                     <Pagination
                       count={Math.ceil(shopsCount / 6)}
@@ -193,7 +212,7 @@ const LandingPage = () => {
                       }}
                     />
                   </div>
-                )}
+                )} */}
               </>
             )}
           </div>

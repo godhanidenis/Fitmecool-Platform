@@ -14,27 +14,37 @@ import Image from "next/image";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
-import { loadCategoriesStart } from "../../../redux/ducks/categories";
-import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
+import { MultipleImageUploadFile } from "../../../../services/MultipleImageUploadFile";
+import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
+import { loadCategoriesStart } from "../../../../redux/ducks/categories";
+import { loadAreaListsStart } from "../../../../redux/ducks/areaLists";
 // import InfiniteScroll from "react-infinite-scroll-component";
-import ProductCard from "../../../components/sections/product-section/ProductCard";
-import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+import ProductCard from "../../../../components/sections/product-section/ProductCard";
+import { changeAppliedProductsFilters } from "../../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
-import { loadMoreProductsStart, loadProductsStart } from "../../../redux/ducks/product";
-import { CustomAuthModal, CustomTextField } from "../../../components/core/CustomMUIComponents";
+import {
+  loadMoreProductsStart,
+  loadProductsStart,
+} from "../../../../redux/ducks/product";
+import {
+  CustomAuthModal,
+  CustomTextField,
+} from "../../../../components/core/CustomMUIComponents";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
-import { getBranchLists } from "../../../graphql/queries/branchListsQueries";
-import { createProduct, updateProduct } from "../../../graphql/mutations/products";
+import { getBranchLists } from "../../../../graphql/queries/branchListsQueries";
+import {
+  createProduct,
+  updateProduct,
+} from "../../../../graphql/mutations/products";
 import { toast } from "react-toastify";
-import { VideoUploadFile } from "../../../services/VideoUploadFile";
-import { getProductDetails } from "../../../graphql/queries/productQueries";
-import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { VideoUploadFile } from "../../../../services/VideoUploadFile";
+import { getProductDetails } from "../../../../graphql/queries/productQueries";
+import { deleteMedia } from "../../../../graphql/mutations/deleteMedia";
+import { withAuth } from "../../../../components/core/PrivateRouteForVendor";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 
 const style = {
   position: "absolute",
@@ -50,7 +60,18 @@ const style = {
   height: "auto",
 };
 
-const colorsList = ["red", "pink", "yellow", "wine", "purple", "blue", "orange", "green", "white", "black"];
+const colorsList = [
+  "red",
+  "pink",
+  "yellow",
+  "wine",
+  "purple",
+  "blue",
+  "orange",
+  "green",
+  "white",
+  "black",
+];
 
 const ShopDetailsPage = () => {
   const [productListingModalOpen, setProductListingModalOpen] = useState(false);
@@ -84,9 +105,13 @@ const ShopDetailsPage = () => {
   const [productType, setProductType] = useState();
 
   const dispatch = useDispatch();
-  const { productsCount, productsData } = useSelector((state) => state.products);
+  const { productsCount, productsData } = useSelector(
+    (state) => state.products
+  );
 
-  const productsFiltersReducer = useSelector((state) => state.productsFiltersReducer);
+  const productsFiltersReducer = useSelector(
+    (state) => state.productsFiltersReducer
+  );
 
   const {
     register,
@@ -108,7 +133,10 @@ const ShopDetailsPage = () => {
         console.log("res:::", res.data.product.data);
 
         setValue("product_name", res.data.product.data.product_name);
-        setValue("product_description", res.data.product.data.product_description);
+        setValue(
+          "product_description",
+          res.data.product.data.product_description
+        );
         setValue("product_color", res.data.product.data.product_color);
         setValue("product_type", res.data.product.data.product_type);
         setProductType(res.data.product.data.product_type);
@@ -116,52 +144,94 @@ const ShopDetailsPage = () => {
         setValue("product_branch", res.data.product.data.branchInfo.id);
 
         res.data.product.data.product_image.front &&
-          srcToFile(res.data.product.data.product_image.front, "profile.png", "image/png").then(function (file) {
+          srcToFile(
+            res.data.product.data.product_image.front,
+            "profile.png",
+            "image/png"
+          ).then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
         res.data.product.data.product_image.back &&
-          srcToFile(res.data.product.data.product_image.back, "profile.png", "image/png").then(function (file) {
+          srcToFile(
+            res.data.product.data.product_image.back,
+            "profile.png",
+            "image/png"
+          ).then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
         res.data.product.data.product_image.side &&
-          srcToFile(res.data.product.data.product_image.side, "profile.png", "image/png").then(function (file) {
+          srcToFile(
+            res.data.product.data.product_image.side,
+            "profile.png",
+            "image/png"
+          ).then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
 
         res.data.product.data.product_image.front &&
-          setProductImages((old) => [...old, res.data.product.data.product_image.front]);
+          setProductImages((old) => [
+            ...old,
+            res.data.product.data.product_image.front,
+          ]);
         res.data.product.data.product_image.back &&
-          setProductImages((old) => [...old, res.data.product.data.product_image.back]);
+          setProductImages((old) => [
+            ...old,
+            res.data.product.data.product_image.back,
+          ]);
         res.data.product.data.product_image.side &&
-          setProductImages((old) => [...old, res.data.product.data.product_image.side]);
+          setProductImages((old) => [
+            ...old,
+            res.data.product.data.product_image.side,
+          ]);
 
         res.data.product.data.product_image.front &&
-          setProductAllMediaImages((old) => [...old, res.data.product.data.product_image.front]);
+          setProductAllMediaImages((old) => [
+            ...old,
+            res.data.product.data.product_image.front,
+          ]);
         res.data.product.data.product_image.back &&
-          setProductAllMediaImages((old) => [...old, res.data.product.data.product_image.back]);
+          setProductAllMediaImages((old) => [
+            ...old,
+            res.data.product.data.product_image.back,
+          ]);
         res.data.product.data.product_image.side &&
-          setProductAllMediaImages((old) => [...old, res.data.product.data.product_image.side]);
+          setProductAllMediaImages((old) => [
+            ...old,
+            res.data.product.data.product_image.side,
+          ]);
 
         res.data.product.data.product_video &&
-          srcToFile(res.data.product.data.product_video, "profile.mp4", "video").then(function (file) {
+          srcToFile(
+            res.data.product.data.product_video,
+            "profile.mp4",
+            "video"
+          ).then(function (file) {
             setUploadProductVideo(file);
           });
 
-        res.data.product.data.product_video && setProductVideo(res.data.product.data.product_video);
+        res.data.product.data.product_video &&
+          setProductVideo(res.data.product.data.product_video);
 
-        res.data.product.data.product_video && setProductAllMediaVideo(res.data.product.data.product_video);
+        res.data.product.data.product_video &&
+          setProductAllMediaVideo(res.data.product.data.product_video);
       });
     }
   }, [editProductId, setValue]);
 
   useEffect(() => {
-    setMenCategoryLabel(categories.filter((itm) => itm.category_type === "Men").map((i) => i));
-    setWomenCategoryLabel(categories.filter((itm) => itm.category_type === "Women").map((i) => i));
+    setMenCategoryLabel(
+      categories.filter((itm) => itm.category_type === "Men").map((i) => i)
+    );
+    setWomenCategoryLabel(
+      categories.filter((itm) => itm.category_type === "Women").map((i) => i)
+    );
   }, [categories]);
 
   useEffect(() => {
     getBranchLists().then((res) => {
-      const branches = res.data.branchList.filter((branch) => branch.shop_id === id);
+      const branches = res.data.branchList.filter(
+        (branch) => branch.shop_id === id
+      );
 
       setBranchList(branches);
     });
@@ -175,10 +245,15 @@ const ShopDetailsPage = () => {
           limit: 6,
         },
         filter: {
-          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
-          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
+          category_id:
+            productsFiltersReducer.appliedProductsFilters.categoryId
+              .selectedValue,
+          product_color:
+            productsFiltersReducer.appliedProductsFilters.productColor
+              .selectedValue,
         },
-        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId:
+          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -193,10 +268,15 @@ const ShopDetailsPage = () => {
           limit: 6,
         },
         filter: {
-          category_id: productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
-          product_color: productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
+          category_id:
+            productsFiltersReducer.appliedProductsFilters.categoryId
+              .selectedValue,
+          product_color:
+            productsFiltersReducer.appliedProductsFilters.productColor
+              .selectedValue,
         },
-        shopId: productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        shopId:
+          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
         search: productsFiltersReducer.searchBarData,
       })
@@ -216,7 +296,10 @@ const ShopDetailsPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (productsFiltersReducer.appliedProductsFilters.shopId.selectedValue.length > 0) {
+    if (
+      productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
+        .length > 0
+    ) {
       getAllProducts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -242,8 +325,6 @@ const ShopDetailsPage = () => {
   }, [dispatch]);
 
   const onSubmit = (data) => {
-    console.log("data", data);
-
     setLoading(true);
     if (editProductId === undefined) {
       MultipleImageUploadFile(uploadProductImages).then((res) => {
@@ -448,8 +529,8 @@ const ShopDetailsPage = () => {
   };
 
   async function srcToFile(src, fileName, mimeType) {
-    const res = await fetch(src , {
-      mode: 'no-cors'
+    const res = await fetch(src, {
+      mode: "no-cors",
     });
     const buf = await res.arrayBuffer();
     return new File([buf], fileName, { type: mimeType });
@@ -466,6 +547,7 @@ const ShopDetailsPage = () => {
     setEditProductId();
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   if (!isHydrated) {
     return null;
@@ -473,20 +555,31 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      <div className="bg-colorWhite pb-20 md:pb-28">
+      <div className="">
         <div className="flex flex-col mt-2">
-          <div className="flex w-[95%] mx-auto flex-row-reverse bg-colorWhite py-2">
+          <div className="flex w-[95%] mx-auto flex-row-reverse py-2">
             <button
-              onClick={() => setProductListingModalOpen(true)}
-              className="bg-colorPrimary text-colorGrey text-lg p-2 px-6 rounded"
+              // onClick={() => setProductListingModalOpen(true)}
+              onClick={() =>
+                router.push(
+                  `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+                )
+              }
+              className="flex items-center text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
             >
+              <AddIcon className="mr-2" />
               Add Products
             </button>
           </div>
 
-          <div className="bg-[#F5F5F5] rounded-lg pt-4">
+          <div className="rounded-lg pt-4">
             <div className="w-[95%] mx-auto">
-              <UpperFilter setProductPageSkip={setProductPageSkip} forShopPage={true} showDrawerFilter={true} />
+              <UpperFilter
+                setProductPageSkip={setProductPageSkip}
+                forShopPage={true}
+                showDrawerFilter={true}
+                isVendor={true}
+              />
 
               {/* <p className="font-bold text-2xl text-colorBlack">
                   Special Products
@@ -506,7 +599,7 @@ const ShopDetailsPage = () => {
                 className={`${
                   productsFiltersReducer?.productLayout === "list"
                     ? ""
-                    : "mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 sm:gap-10 place-items-center mb-10"
+                    : "mt-4 grid grid-cols-2  lg:grid-cols-3 gap-4 place-items-center mb-10"
                 }`}
               >
                 {productsData &&
@@ -529,7 +622,9 @@ const ShopDetailsPage = () => {
                     color="primary"
                     variant="outlined"
                     shape="rounded"
-                    page={(productPageSkip === 0 && 1) || productPageSkip / 6 + 1}
+                    page={
+                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                    }
                     onChange={(e, p) => {
                       setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
                     }}
@@ -552,16 +647,24 @@ const ShopDetailsPage = () => {
         <Box sx={style} className="md:!w-[70%] !w-[90%]">
           <div className="p-5">
             <div className="flex items-center mb-5">
-              <ArrowBackIcon className="!text-black !cursor-pointer" onClick={handleProductListingModalClose} />
+              <ArrowBackIcon
+                className="!text-black !cursor-pointer"
+                onClick={handleProductListingModalClose}
+              />
               <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
                 {editProductId === undefined ? "Add" : "Update"} Product
               </p>
-              <CloseIcon className="!text-black !ml-auto !cursor-pointer" onClick={handleProductListingModalClose} />
+              <CloseIcon
+                className="!text-black !ml-auto !cursor-pointer"
+                onClick={handleProductListingModalClose}
+              />
             </div>
             <form className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
               <div className="flex flex-col space-y-2">
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Name:</p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
+                    Name:
+                  </p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -585,7 +688,9 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-2 sm:gap-12">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Description:</p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
+                    Description:
+                  </p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextField
@@ -609,11 +714,16 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Color:</p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
+                    Color:
+                  </p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <FormControl fullWidth>
-                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                        <InputLabel
+                          variant="standard"
+                          htmlFor="uncontrolled-native"
+                        >
                           Product Color
                         </InputLabel>
                         <NativeSelect
@@ -648,11 +758,16 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="flex items-center justify-center container gap-7 sm:gap-24">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Type:</p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
+                    Type:
+                  </p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <FormControl fullWidth>
-                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                        <InputLabel
+                          variant="standard"
+                          htmlFor="uncontrolled-native"
+                        >
                           Product Type
                         </InputLabel>
                         <NativeSelect
@@ -691,11 +806,16 @@ const ShopDetailsPage = () => {
 
                 {productType && (
                   <div className="flex items-center justify-center container gap-4 sm:gap-16">
-                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Category:</p>
+                    <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
+                      Category:
+                    </p>
                     <div className="w-full">
                       <Box sx={{ display: "flex" }}>
                         <FormControl fullWidth>
-                          <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                          <InputLabel
+                            variant="standard"
+                            htmlFor="uncontrolled-native"
+                          >
                             Product Category
                           </InputLabel>
                           <NativeSelect
@@ -736,11 +856,16 @@ const ShopDetailsPage = () => {
                 )}
 
                 <div className="flex items-center justify-center container gap-5 sm:gap-20">
-                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">Branch:</p>
+                  <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg font-bold">
+                    Branch:
+                  </p>
                   <div className="w-full">
                     <Box sx={{ display: "flex" }}>
                       <FormControl fullWidth>
-                        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                        <InputLabel
+                          variant="standard"
+                          htmlFor="uncontrolled-native"
+                        >
                           Product Branch
                         </InputLabel>
                         <NativeSelect
@@ -756,7 +881,11 @@ const ShopDetailsPage = () => {
                           </option>
                           {branchList.map((branch) => (
                             <option value={branch.id} key={branch.id}>
-                              {branch.branch_address + " " + "(" + branch.branch_type + ")"}
+                              {branch.branch_address +
+                                " " +
+                                "(" +
+                                branch.branch_type +
+                                ")"}
                             </option>
                           ))}
                         </NativeSelect>
@@ -773,56 +902,16 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">Product Images</h4>
-
-                  {/* <div className="flex justify-center flex-col items-center">
-                    <div className="flex justify-center">
-                      <Button
-                        variant="contained"
-                        component="label"
-                        className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                      >
-                        Choose Product Images
-                        <input
-                          type="file"
-                          hidden
-                          multiple
-                          accept="image/*"
-                          {...register("productImages", {
-                            required: productImages.length === 0 ? "Product Image is required" : false,
-                            onChange: (e) => {
-                              createProductImagesChange(e);
-                            },
-                          })}
-                        />
-                      </Button>
-                    </div>
-                    <div className="mt-2">
-                      {errors.productImages && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {errors.productImages?.message}
-                        </span>
-                      )}
-                    </div>
-                  </div> */}
-                  {/* <div className="flex  justify-center">
-                    <div className="flex flex-col w-full">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 place-items-center">
-                        {productImages.map((image, index) => (
-                          <div key={index}>
-                            <Image src={image ?? ""} alt="Product Preview" height={150} width={200} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div> */}
+                  <h4 className="font-bold mb-3 flex justify-center items-center">
+                    Product Images
+                  </h4>
                   <div className="flex justify-center mt-10">
                     <div className="flex items-center flex-col w-full">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-10 place-items-center">
                         {["One", "Two", "Three"]?.map((item, index) => {
                           return (
                             <>
-                              <div className="h-[100%]">
+                              <div className="h-[100%]" key={index}>
                                 <input
                                   type="file"
                                   id={`productImage${item}`}
@@ -830,7 +919,9 @@ const ShopDetailsPage = () => {
                                   hidden
                                   accept="image/*"
                                   {...register("productImages", {
-                                    required: !ProductImgError[index] ? "Product All Image is required" : false,
+                                    required: !ProductImgError[index]
+                                      ? "Product All Image is required"
+                                      : false,
                                     onChange: (e) => {
                                       createProductImagesChange(e);
                                     },
@@ -857,17 +948,30 @@ const ShopDetailsPage = () => {
                                       }}
                                     >
                                       <EditIcon
-                                        style={{ color: "black", cursor: "pointer" }}
+                                        style={{
+                                          color: "black",
+                                          cursor: "pointer",
+                                        }}
                                         onClick={() => {
                                           setSelectImgIndex(index),
-                                            document.getElementById(`productImage${item}`).click();
+                                            document
+                                              .getElementById(
+                                                `productImage${item}`
+                                              )
+                                              .click();
                                         }}
                                       />
                                     </div>
                                   </div>
                                 ) : (
                                   <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                                    <div style={{ marginTop: "35%", marginBottom: "35%" }} className="mx-8">
+                                    <div
+                                      style={{
+                                        marginTop: "35%",
+                                        marginBottom: "35%",
+                                      }}
+                                      className="mx-8"
+                                    >
                                       <div
                                         style={{ width: "inherit" }}
                                         className="mb-2 flex justify-center items-center"
@@ -876,7 +980,13 @@ const ShopDetailsPage = () => {
                                       </div>
                                       <div className="w-max mb-3 text-sm font-emoji">
                                         <p>
-                                          Upload {item === "One" ? "Front" : item === "Two" ? "Back" : "Side"} Image
+                                          Upload{" "}
+                                          {item === "One"
+                                            ? "Front"
+                                            : item === "Two"
+                                            ? "Back"
+                                            : "Side"}{" "}
+                                          Image
                                         </p>
                                       </div>
                                       <div className="mb-2">
@@ -886,7 +996,11 @@ const ShopDetailsPage = () => {
                                           className="w-full !capitalize !bg-gray-500 !rounded-3xl"
                                           onClick={() => {
                                             setSelectImgIndex(index),
-                                              document.getElementById(`productImage${item}`).click();
+                                              document
+                                                .getElementById(
+                                                  `productImage${item}`
+                                                )
+                                                .click();
                                           }}
                                         >
                                           Upload
@@ -912,33 +1026,10 @@ const ShopDetailsPage = () => {
                 </div>
 
                 <div className="items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">Product Video</h4>
+                  <h4 className="font-bold mb-3 flex justify-center items-center">
+                    Product Video
+                  </h4>
                   <div className="flex items-center justify-center flex-col">
-                    {/* <div className="flex justify-center flex-col items-center">
-                      <div className="flex justify-center">
-                        <Button
-                          variant="contained"
-                          component="label"
-                          className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                        >
-                          Choose Product Video
-                          <input
-                            type="file"
-                            id="productVideo"
-                            name="productVideo"
-                            accept="video/*"
-                            hidden
-                            controls
-                            onChange={(e) => {
-                              if (e.target.files && e.target.files.length > 0) {
-                                onProductVideoPreview(e);
-                              }
-                            }}
-                          />
-                        </Button>
-                      </div>
-                    </div> */}
-                    {/* {productVideo !== undefined && ( */}
                     <div className="flex  justify-center ">
                       <div className="flex flex-col w-full">
                         <div className="grid grid-cols-1 place-items-center">
@@ -952,7 +1043,10 @@ const ShopDetailsPage = () => {
                               controls
                               onClick={(e) => (e.target.value = null)}
                               onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
+                                if (
+                                  e.target.files &&
+                                  e.target.files.length > 0
+                                ) {
                                   onProductVideoPreview(e);
                                 }
                               }}
@@ -1000,7 +1094,9 @@ const ShopDetailsPage = () => {
                                     <EditIcon
                                       style={{ color: "black" }}
                                       onClick={() => {
-                                        document.getElementById("productVideoId").click();
+                                        document
+                                          .getElementById("productVideoId")
+                                          .click();
                                       }}
                                     />
                                   </button>
@@ -1009,7 +1105,10 @@ const ShopDetailsPage = () => {
                             ) : (
                               <div className="w-[275px] md:w-[300px] h-[150px] border border-[cadetblue] flex justify-center items-center">
                                 <div className="m-8">
-                                  <div style={{ width: "inherit" }} className="mb-2 flex justify-center items-center">
+                                  <div
+                                    style={{ width: "inherit" }}
+                                    className="mb-2 flex justify-center items-center"
+                                  >
                                     <AddAPhotoIcon />
                                   </div>
                                   <div className="mb-3 px-[32px] text-sm font-emoji">
@@ -1021,7 +1120,9 @@ const ShopDetailsPage = () => {
                                       component="label"
                                       className="w-full !capitalize !bg-gray-500 !rounded-3xl"
                                       onClick={() => {
-                                        document.getElementById("productVideoId").click();
+                                        document
+                                          .getElementById("productVideoId")
+                                          .click();
                                       }}
                                     >
                                       Upload
@@ -1031,34 +1132,6 @@ const ShopDetailsPage = () => {
                               </div>
                             )}
                           </div>
-
-                          {/* <div>
-                              <video
-                                autoPlay
-                                style={{ width: "300px", height: "200px" }}
-                                controls
-                                src={productVideo}
-                              ></video>
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                                style={{
-                                  position: "relative",
-                                  right: 10,
-                                  bottom: 20,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <CancelIcon
-                                  style={{ color: "black" }}
-                                  onClick={() => {
-                                    setProductVideo();
-                                    setUploadProductVideo();
-                                  }}
-                                />
-                              </div>
-                            </div> */}
                         </div>
                       </div>
                     </div>
@@ -1086,7 +1159,13 @@ const ShopDetailsPage = () => {
                 variant="contained"
                 className="rounded-xl capitalize text-colorWhite bg-colorPrimary hover:bg-colorPrimary py-2 px-5"
               >
-                {loading && <CircularProgress size={20} color="primary" sx={{ color: "white", mr: 1 }} />}
+                {loading && (
+                  <CircularProgress
+                    size={20}
+                    color="primary"
+                    sx={{ color: "white", mr: 1 }}
+                  />
+                )}
                 {editProductId === undefined ? "Create" : "Update"}
               </Button>
             </div>

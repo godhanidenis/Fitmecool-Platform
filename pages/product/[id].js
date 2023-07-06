@@ -20,8 +20,6 @@ import { getProductDetails } from "../../graphql/queries/productQueries";
 import ProfileIcon from "../../assets/profile.png";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ProductCard from "../../components/sections/product-section/ProductCard";
-import AuthModal from "../../components/core/AuthModal";
-import { AuthTypeModal } from "../../components/core/Enum";
 import { useDispatch, useSelector } from "react-redux";
 import { shopFollow } from "../../graphql/mutations/shops";
 import { toast } from "react-toastify";
@@ -66,9 +64,6 @@ const ContactStyle = {
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -190,10 +185,10 @@ const ProductDetail = ({ productDetails }) => {
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[96px] ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
-              <div className="text-[#29977E] font-semibold">Product</div>
+              <div className="text-colorGreen font-semibold">Product</div>
             </Link>
             <Link underline="hover" color="inherit" href="#">
-              <div className="text-[#29977E] font-semibold">
+              <div className="text-colorGreen font-semibold">
                 {productDetails.data.product.data.categoryInfo?.category_type}
               </div>
             </Link>
@@ -216,13 +211,17 @@ const ProductDetail = ({ productDetails }) => {
           <div className="flex items-center justify-between w-full gap-3">
             <div className="flex justify-start items-center gap-1 sm:gap-4">
               <div className="flex justify-center items-center">
+              <Link
+                  href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                >
                 <Avatar
-                  className="!w-12 !h-12"
+                  className="!w-12 !h-12 cursor-pointer"
                   src={
                     productDetails.data.product.data.branchInfo?.shop_info
                       .shop_logo
                   }
                 />
+                </Link>
               </div>
               <div className="flex flex-col justify-center ">
                 <Link
@@ -233,7 +232,7 @@ const ProductDetail = ({ productDetails }) => {
                       themeLayout === "webScreen" ? "_blank" : "_self"
                     }`}
                   >
-                    <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                    <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
                       {
                         productDetails.data.product.data.branchInfo?.shop_info
                           .shop_name
@@ -255,16 +254,13 @@ const ProductDetail = ({ productDetails }) => {
                 )}
                 readOnly
                 emptyIcon={
-                  <StarIcon
-                    fontSize="small"
-                    sx={{ fontSize: "6px" }}
-                  />
+                  <StarIcon fontSize="small" sx={{ fontSize: "6px" }} />
                 }
               />
               <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
                 <div className="flex items-center">
                   <LocationOnIcon fontSize="small" className="!mr-1" />
-                  <span>
+                  <span className="line-clamp-1">
                     {
                       productDetails.data.product.data.branchInfo
                         ?.branch_address
@@ -328,11 +324,7 @@ const ProductDetail = ({ productDetails }) => {
                       }
                     );
                   } else {
-                    if (themeLayout === "mobileScreen") {
-                      Router.push("/auth/signin");
-                    } else {
-                      setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                    }
+                    Router.push("/auth/user-type");
                   }
                 }}
               >
@@ -423,12 +415,7 @@ const ProductDetail = ({ productDetails }) => {
                               }
                             );
                           } else {
-                            if (themeLayout === "mobileScreen") {
-                              Router.push("/auth/signin");
-                            } else {
-                              setOpen(true),
-                                setAuthTypeModal(AuthTypeModal.Signin);
-                            }
+                            Router.push("/auth/user-type");
                           }
                         }}
                       >
@@ -536,14 +523,18 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="flex items-center justify-between w-full gap-4">
                     <div className="flex justify-start items-center gap-1 sm:gap-4">
                       <div className="flex justify-center items-center">
+                      <Link
+                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                        >
                         <img
                           alt="Shop Logo"
                           src={
                             productDetails.data.product.data.branchInfo
                               ?.shop_info.shop_logo
                           }
-                          className="rounded-[50%] w-[50px] h-[50px] object-cover"
+                          className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
                         />
+                        </Link>
                       </div>
                       <div className="flex flex-col justify-center">
                         <Link
@@ -554,7 +545,7 @@ const ProductDetail = ({ productDetails }) => {
                               themeLayout === "webScreen" ? "_blank" : "_self"
                             }`}
                           >
-                            <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                            <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer  hover:text-colorGreen">
                               {
                                 productDetails.data.product.data.branchInfo
                                   ?.shop_info.shop_name
@@ -643,12 +634,7 @@ const ProductDetail = ({ productDetails }) => {
                               }
                             );
                           } else {
-                            if (themeLayout === "mobileScreen") {
-                              Router.push("/auth/signin");
-                            } else {
-                              setOpen(true),
-                                setAuthTypeModal(AuthTypeModal.Signin);
-                            }
+                            Router.push("/auth/user-type");
                           }
                         }}
                       >
@@ -669,7 +655,7 @@ const ProductDetail = ({ productDetails }) => {
               </Box>
               <div className="mt-5">
                 <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                  <span className="font-semibold text-[30px] text-[#29977E] leading-9">
+                  <span className="font-semibold text-[30px] text-colorGreen leading-9">
                     {productDetails.data.product.data.product_name}
                   </span>
                   <button
@@ -708,11 +694,7 @@ const ProductDetail = ({ productDetails }) => {
                           }
                         );
                       } else {
-                        if (themeLayout === "mobileScreen") {
-                          Router.push("/auth/signin");
-                        } else {
-                          setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                        }
+                        Router.push("/auth/user-type");
                       }
                     }}
                   >
@@ -772,7 +754,7 @@ const ProductDetail = ({ productDetails }) => {
                     rel="noreferrer"
                   >
                     <button
-                      className="bg-[#29977E] text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
+                      className="bg-colorGreen text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                     >
@@ -825,7 +807,7 @@ const ProductDetail = ({ productDetails }) => {
           <div
             className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
               isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
-            } gap-4 sm:gap-8 place-items-center mt-8`}
+            } gap-4 sm:gap-8 place-items-center mt-4`}
           >
             {productDetails.data.product.related &&
               productDetails.data.product.related
@@ -839,14 +821,6 @@ const ProductDetail = ({ productDetails }) => {
         </div>
       </div>
 
-      <AuthModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
-        authTypeModal={authTypeModal}
-        setAuthTypeModal={setAuthTypeModal}
-      />
       <Modal
         open={openContactInfo}
         onClose={handleCloseContactInfo}

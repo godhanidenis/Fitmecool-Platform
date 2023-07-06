@@ -1,19 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../assets/HeaderLogo.png";
-import Button from "@mui/material/Button";
 import backIcon from "../../assets/svg/backIcon.svg";
 import Box from "@mui/material/Box";
 import EmailIcon from "@mui/icons-material/Email";
-import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { CustomTextField } from "../../components/core/CustomMUIComponents";
 import CircularProgress from "@mui/material/CircularProgress";
-import Router from "next/router";
 
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Alert } from "@mui/material";
-// import withAuth from './../../components/core/PrivateRoute';
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -24,14 +19,10 @@ const ForgotPassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
-    watch,
-    getValues,
   } = useForm();
   const onSubmit = async (data) => {
     console.log("data", data);
-    
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
@@ -47,13 +38,11 @@ const ForgotPassword = () => {
           <div className="text-start">
             <Link href="/">
               <button className="text-white  focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
-                <Image src={backIcon ?? "" } alt="back" />
+                <Image src={backIcon ?? ""} alt="back" />
               </button>
             </Link>
           </div>
           <div className="col-span-2.5 flex items-center justify-center">
-            {/* <Image src={Logo} alt="LoginImage" /> */}
-
             <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
               <span className="text-4xl">W</span>edding
               <span className="text-4xl">B</span>ell
@@ -134,4 +123,3 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
-// export default withAuth(ForgotPassword);

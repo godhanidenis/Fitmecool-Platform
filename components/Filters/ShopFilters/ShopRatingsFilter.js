@@ -44,7 +44,7 @@ const ShopRatingsFilter = ({ setShopPageSkip }) => {
           }}
           aria-labelledby="continuous-slider"
           valueLabelDisplay="auto" 
-          className="!text-[#29977E]"
+          className="!text-colorGreen"
           min={0}
           max={5}
         />

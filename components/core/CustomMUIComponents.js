@@ -46,8 +46,14 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
     color: "#FFFFFF",
     fontWeight: 600,
     fontSize: "14px",
-    paddingTop:"32px",
-    paddingBottom:"32px",
+    paddingTop: "32px",
+    paddingBottom: "32px",
+  },
+  [`& .MuiTab-root:hover`]: {
+    color: "#29977E !important",
+  },
+  [`& .Mui-selected:hover`]: {
+    color: "#29977E !important",
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
@@ -56,10 +62,39 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
   },
   [`& .MuiTabs-indicator`]: {
     backgroundColor: "#29977E !important",
-    height:"5px",
-   
+    height: "5px",
   },
 }));
+
+export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
+  [`& .MuiTab-root`]: {
+    textTransform: "none",
+    color: "rgba(21, 24, 39, 0.56)",
+    fontWeight: 600,
+    fontSize: "16px",
+    lineHeight: "16px",
+    paddingX: "20px",
+    paddingY: "16px",
+    marginRight: "16px",
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "14px",
+      paddingX: "16px",
+      paddingY: "12px",
+    },
+  },
+
+  [`& .Mui-selected`]: {
+    backgroundColor: "#151827",
+    borderRadius: "500px",
+    color: "#FFF !important",
+    fontWeight: 500,
+  },
+  [`& .MuiTabs-indicator`]: {
+    display: "none",
+  },
+}));
+
 export function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -167,8 +202,7 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
   ({ theme, checked }) => ({
     ".MuiFormControlLabel-label": {
       color: `${checked ? "#29977E !important" : "#31333E"}`,
-      fontWeight: 600,
-      fontSize: "14px",
+      fontSize: "15px",
       lineHeight: "14px",
     },
     ".MuiCheckbox-root": {

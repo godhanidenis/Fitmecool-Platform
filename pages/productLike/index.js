@@ -26,7 +26,7 @@ const ProductLikePage = () => {
       {userProfile.product_like_list?.length === 0 || !isAuthenticate ? (
         <div className="flex flex-col justify-center bg-[#F5F5F5] my-10 w-[95%] mx-auto gap-5 h-[calc(100vh-150px)] items-center">
           <Image
-            src={EmptyCart ?? "" }
+            src={EmptyCart ?? ""}
             width={200}
             height={200}
             alt="EmptyCart"
@@ -34,11 +34,6 @@ const ProductLikePage = () => {
           />
           <h1 className="font-bold animate__animated animate__slideInUp text-3xl">
             Your wishlist is empty!!
-            {/* <Link href="/" passHref>
-              <strong className="text-colorPrimary !font-extrabold underline ml-2 cursor-pointer">
-                View Products
-              </strong>
-            </Link> */}
           </h1>
           <p>
             Save your favourite items so you <br /> don&apos;t lose sight of

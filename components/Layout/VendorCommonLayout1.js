@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
-import VendorShopSubHeader from "./VendorShopSubHeader";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -18,22 +17,21 @@ const VendorCommonLayout = ({ children }) => {
   }, [dispatch, userProfile?.userCreatedShopId]);
 
   return (
-    <>
-      <div className="w-full relative font-Nova">
-        <VendorShopSubHeader />
+    <div className="grid grid-cols-12">
+      <div className="hidden lg:block lg:col-span-2">
+        <VendorSidebar vendorShopDetails={vendorShopDetails} />
       </div>
-
-      <div className="flex flex-col md:flex-row min-h-screen sm:gap-10  font-Nova">
-        <div className="sm:w-[310px] w-full relative">
-          <div className="">
-            <VendorSidebar vendorShopDetails={vendorShopDetails} />
-          </div>
+      <div className="col-span-12 lg:col-span-10">
+        <div className="w-full">
+          <img
+            src={vendorShopDetails?.shop_cover_image}
+            alt="shop cover image"
+            className="h-[222px] w-full"
+          />
         </div>
-        <div className="w-full lg:w-[70%] sm:w-[60%] sm:mt-6 sm:mr-5">
-          {children}
-        </div>
+        {children}
       </div>
-    </>
+    </div>
   );
 };
 

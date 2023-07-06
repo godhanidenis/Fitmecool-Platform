@@ -13,15 +13,18 @@ export const withAuth = (WrappedComponent) => {
         if (userType === "vendor") {
           if (userHaveAnyShop === "true") {
             return <WrappedComponent {...props} />;
+          } else {
+            Router.push("/vendor/shop-setup");
+            return false;
           }
-          Router.push("/vendor/shop-setup");
-          return null;
+        } else {
+          Router.push("/");
+          return false;
         }
+      } else {
         Router.push("/");
-        return null;
+        return false;
       }
-      Router.push("/");
-      return null;
     }
     return null;
   };
@@ -40,15 +43,18 @@ export const withAuthWithoutShop = (WrappedComponent) => {
         if (userType === "vendor") {
           if (userHaveAnyShop === "false") {
             return <WrappedComponent {...props} />;
+          } else {
+            Router.push("/vendor/dashboard");
+            return false;
           }
-          Router.push("/vendor/dashboard");
-          return null;
+        } else {
+          Router.push("/");
+          return false;
         }
+      } else {
         Router.push("/");
-        return null;
+        return false;
       }
-      Router.push("/");
-      return null;
     }
     return null;
   };
@@ -64,9 +70,10 @@ export const withoutAuth = (WrappedComponent) => {
 
       if (userType !== "vendor") {
         return <WrappedComponent {...props} />;
+      } else {
+        Router.push("/vendor/dashboard");
+        return false;
       }
-      Router.push("/vendor/dashboard");
-      return null;
     }
     return null;
   };

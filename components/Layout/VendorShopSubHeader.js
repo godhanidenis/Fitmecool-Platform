@@ -1,70 +1,62 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import StoreIcon from "@mui/icons-material/Store";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 
 const VendorShopSubHeader = () => {
-  const { userProfile } = useSelector((state) => state.userProfile);
-  const [isTop, setIsTop] = useState(true);
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const router = useRouter();
 
+  const [selectedValue, setSelectedValue] = useState("");
+
   useEffect(() => {
-    const handleScroll = () => {
-      setIsTop(window.scrollY === 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const setActiveLink = (path) => {
     const withoutLastChunk = router.pathname.slice(
       0,
       router.pathname.lastIndexOf("/")
     );
 
-    return router.pathname === path || withoutLastChunk === path
-      ? "text-colorPrimary hover:text-colorPrimary"
-      : "text-[#544E5D] hover:opacity-50";
-  };
+    if (router.pathname === "/vendor/dashboard") {
+      setSelectedValue("Dashboard");
+    } else if (withoutLastChunk === "/vendor/shopEdit") {
+      setSelectedValue("Shop");
+    } else if (
+      withoutLastChunk === "/vendor/shop" ||
+      `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+    ) {
+      setSelectedValue("Products");
+    }
+  }, [router.pathname]);
+
   return (
-    <div
-      className={`w-full ${
-        isTop
-          ? "sticky top-0 left-0  transition-all duration-500 transform origin-top"
-          : ""
-      }bg-[#F5F5F5] z-10 shadow-md`}
-    >
-      <div className="container flex items-center">
-        <ul className="flex items-center gap-10 p-5">
-          <li
-            className={`${setActiveLink(
-              "/vendor/dashboard"
-            )} text-base xl:text-lg`}
-          >
-            <Link href="/vendor/dashboard">Dashboard</Link>
-          </li>
-          <li
-            className={`${setActiveLink(
-              "/vendor/shopEdit"
-            )}  text-base xl:text-lg`}
-          >
-            <Link href={`/vendor/shopEdit/${userProfile.userCreatedShopId}`}>
-              Shop
-            </Link>
-          </li>
-          <li
-            className={`${setActiveLink("/vendor/shop")} text-base xl:text-lg`}
-          >
-            <Link href={`/vendor/shop/${userProfile.userCreatedShopId}`}>
-              Products
-            </Link>
-          </li>
-        </ul>
-      </div>
+    <div className="w-full font-Nova flex items-center py-4 pl-4 bg-[#FAFCFC] sm:hidden">
+      {["Dashboard", "Shop", "Products"].map((item, index) => (
+        <p
+          key={index}
+          onClick={() => {
+            item === "Dashboard" && router.push("/vendor/dashboard");
+            item === "Shop" &&
+              router.push(`/vendor/shopEdit/${vendorShopDetails?.id}`);
+            item === "Products" &&
+              router.push(`/vendor/shop/${vendorShopDetails?.id}`);
+          }}
+          className={`font-semibold sm:pb-10 text-base mr-4 ${
+            selectedValue === item ? "text-[#29977E]" : "text-[#151827]"
+          }  cursor-pointer uppercase`}
+        >
+          {item === "Dashboard" ? (
+            <DashboardIcon fontSize="small" className="mr-2" />
+          ) : item === "Shop" ? (
+            <StoreIcon fontSize="small" className="mr-2" />
+          ) : (
+            <ProductionQuantityLimitsIcon fontSize="small" className="mr-2" />
+          )}
+
+          {item}
+        </p>
+      ))}
     </div>
   );
 };

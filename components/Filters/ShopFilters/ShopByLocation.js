@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, FormControl, FormGroup } from "@mui/material";
+import { Checkbox, Divider, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedShopsFilters } from "../../../redux/ducks/shopsFilters";
@@ -41,6 +41,7 @@ const ShopByLocation = ({ setShopPageSkip }) => {
   }, [shopsFiltersReducer.appliedShopsFilters, areaLists]);
 
   return (
+    <>
     <CardInteractive
       cardTitle="LOCATIONS"
       bottomComponent={
@@ -74,11 +75,12 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                   value={itm.shop_name}
                   control={
                     <Checkbox
-                      checked={selectedData.includes(itm.id)}
+                      checked={selectedData.includes(itm.pin)}
                       onChange={(event) => {
-                        const updatedSelection = selectedData.includes(itm.id)
-                          ? selectedData.filter((id) => id !== itm.id)
-                          : [...selectedData, itm.id];
+                        const updatedSelection = selectedData.includes(itm.pin)
+                          ? selectedData.filter((id) => id !== itm.pin)
+                          : [...selectedData, itm.pin];
+
                         setSelectedData(updatedSelection);
                         setShopPageSkip(0);
                         setAbc(true);
@@ -104,6 +106,9 @@ const ShopByLocation = ({ setShopPageSkip }) => {
         </>
       }
     />
+    <Divider sx={{margin:"12px"}}/>
+    </>
+    
   );
 };
 

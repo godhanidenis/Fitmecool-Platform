@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, FormControl, FormGroup } from "@mui/material";
+import { Checkbox, Divider, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
@@ -43,68 +43,71 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
   }, [productsFiltersReducer.appliedProductsFilters]);
 
   return (
-    <CardInteractive
-      cardTitle="SHOPS"
-      bottomComponent={
-        <>
-          <FormControl fullWidth>
-            <CommonSearchField
-              value={shopSearchValue}
-              onChange={(e) => setShopSearchValue(e.target.value)}
-            />
-            <FormGroup>
-              {(shopSearchValue !== ""
-                ? shopShowMore
-                  ? shopsData
-                      ?.filter((i) =>
+    <>
+      <CardInteractive
+        cardTitle="SHOPS"
+        bottomComponent={
+          <>
+            <FormControl fullWidth>
+              <CommonSearchField
+                value={shopSearchValue}
+                onChange={(e) => setShopSearchValue(e.target.value)}
+              />
+              <FormGroup>
+                {(shopSearchValue !== ""
+                  ? shopShowMore
+                    ? shopsData
+                        ?.filter((i) =>
+                          i?.shop_name
+                            .toLowerCase()
+                            .includes(shopSearchValue.toLowerCase())
+                        )
+                        .slice(0, 3)
+                    : shopsData?.filter((i) =>
                         i?.shop_name
                           .toLowerCase()
                           .includes(shopSearchValue.toLowerCase())
                       )
-                      .slice(0, 3)
-                  : shopsData?.filter((i) =>
-                      i?.shop_name
-                        .toLowerCase()
-                        .includes(shopSearchValue.toLowerCase())
-                    )
-                : shopShowMore
-                ? shopsData.slice(0, 3)
-                : shopsData
-              )?.map((itm) => (
-                <StyledFormLabelCheckBox
-                  key={itm.shop_name}
-                  value={itm.shop_name}
-                  control={
-                    <Checkbox
-                      checked={selectedData.includes(itm.id)}
-                      onChange={(event) => {
-                        const updatedSelection = selectedData.includes(itm.id)
-                          ? selectedData.filter((id) => id !== itm.id)
-                          : [...selectedData, itm.id];
-                        setSelectedData(updatedSelection);
-                        setProductPageSkip(0);
-                        setAbc(true);
-                      }}
-                    />
-                  }
-                  label={itm.shop_name}
-                />
-              ))}
-              {shopsData?.filter((i) =>
-                i?.shop_name
-                  .toLowerCase()
-                  .includes(shopSearchValue.toLowerCase())
-              ).length > 3 && (
-                <ShowMoreLessFilter
-                  value={shopShowMore}
-                  onClick={() => setShopShowMore(!shopShowMore)}
-                />
-              )}
-            </FormGroup>
-          </FormControl>
-        </>
-      }
-    />
+                  : shopShowMore
+                  ? shopsData.slice(0, 3)
+                  : shopsData
+                )?.map((itm) => (
+                  <StyledFormLabelCheckBox
+                    key={itm.shop_name}
+                    value={itm.shop_name}
+                    control={
+                      <Checkbox
+                        checked={selectedData.includes(itm.id)}
+                        onChange={(event) => {
+                          const updatedSelection = selectedData.includes(itm.id)
+                            ? selectedData.filter((id) => id !== itm.id)
+                            : [...selectedData, itm.id];
+                          setSelectedData(updatedSelection);
+                          setProductPageSkip(0);
+                          setAbc(true);
+                        }}
+                      />
+                    }
+                    label={itm.shop_name}
+                  />
+                ))}
+                {shopsData?.filter((i) =>
+                  i?.shop_name
+                    .toLowerCase()
+                    .includes(shopSearchValue.toLowerCase())
+                ).length > 3 && (
+                  <ShowMoreLessFilter
+                    value={shopShowMore}
+                    onClick={() => setShopShowMore(!shopShowMore)}
+                  />
+                )}
+              </FormGroup>
+            </FormControl>
+          </>
+        }
+      />
+      <Divider sx={{margin:"12px"}}/>
+    </>
   );
 };
 

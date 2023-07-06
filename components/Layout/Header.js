@@ -20,9 +20,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
-import AuthModal from "../core/AuthModal";
 import ProfileIcon from "../../assets/profile.png";
-import { AuthTypeModal } from "../core/Enum";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
@@ -36,8 +34,6 @@ import {
   Popper,
   Select,
 } from "@mui/material";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
   loadUserProfileStart,
   userLogout,
@@ -52,6 +48,9 @@ import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
 import InputLabel from "@mui/material/InputLabel";
 import LocationIcon from "../../assets/LocationIcon.svg";
+import { loadAreaListsStart } from "../../redux/ducks/areaLists";
+import { loadCategoriesStart } from "../../redux/ducks/categories";
+import Venderheader from "./Venderheader";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -73,6 +72,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
+
+const StyledSelect = styled(Select)`
+  & .MuiInputBase-input {
+    color: white;
+  }
+
+  & .MuiSelect-icon {
+    color: white;
+  }
+  & .MuiInputLabel-root {
+    color: white;
+  }
+`;
 
 function BootstrapDialogTitle(props) {
   const { children, onClose, ...other } = props;
@@ -103,18 +115,16 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const Header = ({ modalType }) => {
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
+const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const isScreenWide = useResizeScreenLayout();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -141,10 +151,10 @@ const Header = ({ modalType }) => {
   };
 
   useEffect(() => {
-    {
-      modalType === "signin" && setOpen(true), setAuthTypeModal("signin");
-    }
-  }, [modalType]);
+    dispatch(loadCategoriesStart());
+    dispatch(loadAreaListsStart());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   useEffect(() => {
     setSearchBarValue(productsFiltersReducer.searchBarData);
@@ -180,21 +190,23 @@ const Header = ({ modalType }) => {
         setAccessToken={setAccessToken}
       />
       <header
-        className={`lg:py-0 py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
+        className={`${
+          userProfile.user_type === "vendor" ? "py-4" : "py-4 sm:py-0"
+        } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
-        } transition-all duration-500`}
+        }  transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
-            {router.pathname !== "/auth/login" &&
-              router.pathname !== "/auth/signup" && (
-                <MenuIcon
-                  sx={{ color: "white" }}
-                  fontSize="large"
-                  className="lg:!hidden"
-                  onClick={handleMobileSidebarClick}
-                />
-              )}
+            {userProfile.user_type !== "vendor" && (
+              <MenuIcon
+                sx={{ color: "white" }}
+                fontSize="large"
+                className="lg:!hidden"
+                onClick={handleMobileSidebarClick}
+              />
+            )}
+
             <Link
               href={`${
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
@@ -208,17 +220,20 @@ const Header = ({ modalType }) => {
             </Link>
             {userProfile.user_type !== "vendor" && (
               <div className="headerLocationDiv ml-[24px]">
-                <FormControl variant="standard" sx={{ minWidth: 110 }}>
+                <FormControl
+                  variant="standard"
+                  sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
+                >
                   <InputLabel
                     id="demo-simple-select-standard-label"
-                    className="flex items-center gap-1"
+                    className="!flex !items-center !gap-1"
                   >
                     <Image width={20} height={20} src={LocationIcon} alt="" />
                     <span className="text-[#878A99] text-[14px] font-normal">
                       Location
                     </span>
                   </InputLabel>
-                  <Select
+                  <StyledSelect
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
@@ -230,14 +245,22 @@ const Header = ({ modalType }) => {
                         {location?.area}
                       </MenuItem>
                     ))}
-                  </Select>
+                  </StyledSelect>
                 </FormControl>
               </div>
             )}
           </div>
-          <div className="font-Nova">
-            <SubHeader />
-          </div>
+          {userProfile.user_type !== "vendor" && (
+            <div className="font-Nova">
+              <SubHeader />
+            </div>
+          )}
+          {/* {userProfile.user_type === "vendor" &&
+            router.pathname !== "/vendor/shop-setup" && (
+              <div className="font-Nova">
+                <Venderheader />
+              </div>
+            )} */}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
               {userProfile.user_type !== "vendor" && (
@@ -271,9 +294,6 @@ const Header = ({ modalType }) => {
                   <div className="flex text-colorWhite cursor-pointer">
                     <p
                       onClick={() => Router.push("/auth/user-type")}
-                      // onClick={() => {
-                      //   setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      // }}
                       className="underline hover:scale-105 hidden lg:block"
                     >
                       SingIn / SignUp
@@ -283,7 +303,7 @@ const Header = ({ modalType }) => {
                       sx={{ color: "white" }}
                       fontSize="large"
                       className="lg:!hidden"
-                      onClick={() => Router.push("/auth/signin")}
+                      onClick={() => Router.push("/auth/user-type")}
                     />
                   </div>
                 )}
@@ -294,14 +314,6 @@ const Header = ({ modalType }) => {
                 )}
               </li>
             </ul>
-            {/* <AuthModal
-              open={open}
-              handleClose={() => {
-                setOpen(false);
-              }}
-              authTypeModal={authTypeModal}
-              setAuthTypeModal={setAuthTypeModal}
-            /> */}
           </div>
         </div>
       </header>
@@ -521,11 +533,14 @@ export const UserProfile = ({ setAccessToken }) => {
                   <Divider />
 
                   {options.map((itm) => (
-                    <MenuItem key={itm.name} onClick={handleProfileClose}>
-                      <p
-                        className="flex items-center w-full text-center"
-                        onClick={itm.func}
-                      >
+                    <MenuItem
+                      key={itm.name}
+                      onClick={() => {
+                        handleProfileClose();
+                        itm.func();
+                      }}
+                    >
+                      <p className="flex items-center w-full text-center">
                         {itm.icon} <span className="ml-4"> {itm.name}</span>
                       </p>
                     </MenuItem>

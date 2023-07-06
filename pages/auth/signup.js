@@ -7,9 +7,13 @@ import Router from "next/router";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { signUp } from "../../graphql/mutations/authMutations";
-import { loginUserId } from "../../redux/ducks/userProfile";
+import {
+  loadUserProfileStart,
+  loginUserId,
+} from "../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Signup = () => {
   const [asVendor, setAsVendor] = useState(false);
@@ -31,10 +35,18 @@ const Signup = () => {
   } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("user_type") === "vendor") {
+    if (localStorage.getItem("user_type_for_auth") === "vendor") {
       setAsVendor(true);
     } else {
       setAsVendor(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Router.push(
+        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
+      );
     }
   }, []);
 
@@ -60,11 +72,15 @@ const Signup = () => {
     ).then(
       (res) => {
         dispatch(loginUserId(res.data.signUp.user));
+        dispatch(loadUserProfileStart({ id: res.data.signUp.user }));
         localStorage.setItem("token", res.data.signUp.token);
         localStorage.setItem("userId", res.data.signUp.user);
         toast.success(res.data.signUp.message, { theme: "colored" });
+        localStorage.removeItem("user_type_for_auth");
         localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        Router.push(asVendor ? "/vendor/dashboard" : "/");
+        setTimeout(() => {
+          Router.push(asVendor ? "/vendor/dashboard" : "/");
+        }, 1000);
       },
       (error) => {
         setLoading(false);
@@ -75,11 +91,19 @@ const Signup = () => {
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
   return (
-    <div className="bg-background py-2 w-full flex justify-center items-center h-screen">
-      <div className="bg-white flex w-full p-5 sm:p-10 sm:gap-10 h-screen overflow-hidden">
-        <div className="md:w-[50%] sm:w-full relative">
-          <div className="text-3xl  font-bold max-[600px]:text-xl text-colorPrimary">
-            Rentbless
+    <div className="bg-background w-full">
+      <div className="bg-white flex w-full p-5 sm:p-10 sm:gap-10 min-h-[100vh] overflow-auto">
+        <div className="md:w-[50%] sm:w-full flex flex-col">
+          <div className="text-3xl  font-bold max-[600px]:text-xl text-colorPrimary flex items-center gap-4">
+            <ArrowBackIcon
+              onClick={() => Router.push("/auth/user-type")}
+              className="cursor-pointer"
+            />
+            <div className="">
+              <h2 className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary uppercase">
+                <span className="sm:text-4xl text-[24px]">R</span>entbless
+              </h2>
+            </div>
           </div>
           <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
             Create an account
@@ -99,7 +123,7 @@ const Signup = () => {
           <p className="my-2 flex justify-center font-semibold text-colorPrimary">
             Or
           </p>
-          <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
+          <form onReset={reset}>
             <div className="space-y-3 max-h-[400px] min-h-[200px] h-auto overflow-auto">
               <div className="flex flex-col sm:flex-row w-full gap-2">
                 <div className="w-full">
@@ -160,26 +184,31 @@ const Signup = () => {
                   </span>
                 </div>
               )}
-              <input
-                type="text"
-                placeholder="Email Address"
-                {...register("user_email", {
-                  required: "Email is required",
+              {asVendor && (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Email Address"
+                    {...register("user_email", {
+                      required: "Email is required",
 
-                  pattern: {
-                    value:
-                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                    message: "Please enter a valid email",
-                  },
-                })}
-                className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
-              />
-              {errors.user_email && (
-                <div className="mt-1 ml-1">
-                  <span style={{ color: "red" }}>
-                    {errors.user_email?.message}
-                  </span>
-                </div>
+                      pattern: {
+                        value:
+                          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                        message: "Please enter a valid email",
+                      },
+                    })}
+                    className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
+                  />
+
+                  {errors.user_email && (
+                    <div className="mt-1 ml-1">
+                      <span style={{ color: "red" }}>
+                        {errors.user_email?.message}
+                      </span>
+                    </div>
+                  )}
+                </>
               )}
               <div className="flex flex-col sm:flex-row  w-full gap-2">
                 <div className="relative w-full">
@@ -247,33 +276,35 @@ const Signup = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute bottom-0 w-full">
-              <button
-                type="submit"
-                className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
-              >
-                {loading && (
-                  <CircularProgress
-                    size={20}
-                    color="primary"
-                    sx={{ color: "white", mr: 1 }}
-                  />
-                )}
-                Sign Up
-              </button>
-              <p className="text-base max-[480px]:text-xs text-gray-400  mt-2 flex justify-center">
-                Already have an account?
-                <span
-                  className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
-                  onClick={() => Router.push("/auth/signin")}
-                >
-                  Login
-                </span>
-              </p>
-            </div>
           </form>
+          <div className="flex-grow"></div>
+          <div className="mt-5 w-full">
+            <button
+              type="submit"
+              onClick={handleSubmit(onSubmit, onError)}
+              className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+            >
+              {loading && (
+                <CircularProgress
+                  size={20}
+                  color="primary"
+                  sx={{ color: "white", mr: 1 }}
+                />
+              )}
+              Sign Up
+            </button>
+            <p className="text-base max-[480px]:text-xs text-gray-400  mt-2 flex justify-center">
+              Already have an account?
+              <span
+                className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
+                onClick={() => Router.push("/auth/signin")}
+              >
+                Login
+              </span>
+            </p>
+          </div>
         </div>
-        <div className="bg-neutral-300 md:w-[50%]  rounded-3xl sm:w-0"></div>
+        <div className="hidden md:block md:w-[50%] auth-cover rounded-3xl"></div>
       </div>
     </div>
   );
