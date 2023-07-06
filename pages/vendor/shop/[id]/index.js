@@ -565,7 +565,7 @@ const ShopDetailsPage = () => {
                   `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
                 )
               }
-              className="text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
+              className="flex items-center text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
             >
               <AddIcon className="mr-2" />
               Add Products

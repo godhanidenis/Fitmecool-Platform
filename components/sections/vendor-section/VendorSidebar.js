@@ -79,7 +79,7 @@ const VendorSidebar = ({ vendorShopDetails }) => {
                 item === "Products" &&
                   router.push(`/vendor/shop/${vendorShopDetails?.id}`);
               }}
-              className={`font-semibold pb-10 text-xl ${
+              className={`font-semibold pb-10 text-lg ${
                 selectedValue === item ? "text-[#29977E]" : "text-[#151827]"
               }  cursor-pointer uppercase`}
             >
