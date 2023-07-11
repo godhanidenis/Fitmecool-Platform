@@ -34,6 +34,7 @@ const UpperFilter = ({
   setShopPageSkip,
   showOnlyShopDetailPage,
   isVendor,
+  hideGridAndLine,
 }) => {
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
@@ -399,79 +400,83 @@ const UpperFilter = ({
             />
           )}
 
-          <div className="flex">
-            <div
-              className={`${
-                !byShop && productsFiltersReducer.productLayout === "grid"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } ${
-                byShop && shopsFiltersReducer.shopLayout === "grid"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } cursor-pointer px-2 py-1 rounded-l`}
-              onClick={() =>
-                !byShop
-                  ? dispatch(
-                      changeProductsLayout({
-                        key: "productLayout",
-                        value: "grid",
-                      })
-                    )
-                  : dispatch(
-                      changeShopsLayout({
-                        key: "shopLayout",
-                        value: "grid",
-                      })
-                    )
-              }
-              style={{
-                boxShadow:
-                  ((!byShop &&
-                    productsFiltersReducer.productLayout === "grid") ||
-                    (byShop && shopsFiltersReducer.shopLayout === "grid")) &&
-                  "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-              }}
-            >
-              <GridViewOutlinedIcon fontSize="medium" />
-            </div>
+          {hideGridAndLine ? (
+            ""
+          ) : (
+            <div className="flex">
+              <div
+                className={`${
+                  !byShop && productsFiltersReducer.productLayout === "grid"
+                    ? "!text-colorGreen bg-white"
+                    : "text-[#878A99] bg-[#E8EBEA]"
+                } ${
+                  byShop && shopsFiltersReducer.shopLayout === "grid"
+                    ? "!text-colorGreen bg-white"
+                    : "text-[#878A99] bg-[#E8EBEA]"
+                } cursor-pointer px-2 py-1 rounded-l`}
+                onClick={() =>
+                  !byShop
+                    ? dispatch(
+                        changeProductsLayout({
+                          key: "productLayout",
+                          value: "grid",
+                        })
+                      )
+                    : dispatch(
+                        changeShopsLayout({
+                          key: "shopLayout",
+                          value: "grid",
+                        })
+                      )
+                }
+                style={{
+                  boxShadow:
+                    ((!byShop &&
+                      productsFiltersReducer.productLayout === "grid") ||
+                      (byShop && shopsFiltersReducer.shopLayout === "grid")) &&
+                    "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
+                }}
+              >
+                <GridViewOutlinedIcon fontSize="medium" />
+              </div>
 
-            <div
-              className={`${
-                !byShop && productsFiltersReducer.productLayout === "list"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } ${
-                byShop && shopsFiltersReducer.shopLayout === "list"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } cursor-pointer px-2 py-1 rounded-r`}
-              onClick={() =>
-                !byShop
-                  ? dispatch(
-                      changeProductsLayout({
-                        key: "productLayout",
-                        value: "list",
-                      })
-                    )
-                  : dispatch(
-                      changeShopsLayout({
-                        key: "shopLayout",
-                        value: "list",
-                      })
-                    )
-              }
-              style={{
-                boxShadow:
-                  ((!byShop &&
-                    productsFiltersReducer.productLayout === "list") ||
-                    (byShop && shopsFiltersReducer.shopLayout === "list")) &&
-                  "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-              }}
-            >
-              <SegmentOutlinedIcon fontSize="medium" />
+              <div
+                className={`${
+                  !byShop && productsFiltersReducer.productLayout === "list"
+                    ? "!text-colorGreen bg-white"
+                    : "text-[#878A99] bg-[#E8EBEA]"
+                } ${
+                  byShop && shopsFiltersReducer.shopLayout === "list"
+                    ? "!text-colorGreen bg-white"
+                    : "text-[#878A99] bg-[#E8EBEA]"
+                } cursor-pointer px-2 py-1 rounded-r`}
+                onClick={() =>
+                  !byShop
+                    ? dispatch(
+                        changeProductsLayout({
+                          key: "productLayout",
+                          value: "list",
+                        })
+                      )
+                    : dispatch(
+                        changeShopsLayout({
+                          key: "shopLayout",
+                          value: "list",
+                        })
+                      )
+                }
+                style={{
+                  boxShadow:
+                    ((!byShop &&
+                      productsFiltersReducer.productLayout === "list") ||
+                      (byShop && shopsFiltersReducer.shopLayout === "list")) &&
+                    "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
+                }}
+              >
+                <SegmentOutlinedIcon fontSize="medium" />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
