@@ -50,6 +50,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TbPhotoPlus } from "react-icons/tb";
 import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
+import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 
 const style = {
   position: "absolute",
@@ -1034,26 +1035,13 @@ const ShopEdit = () => {
                     <div className="w-full grid sm:grid-cols-2 gap-y-8 gap-4 grid-cols-1">
                       {hours.map((day, index) => (
                         <div className="relative" key={index}>
-                          <label
-                            htmlFor="sunday"
-                            className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-base text-sm"
-                          >
-                            {day["key"]}
-                          </label>
                           {day["value"]?.map((time, index) => (
-                            <input
-                              key={index}
+                            <TimeCustomTextField
                               type="text"
-                              id="sunday"
+                              id={index}
+                              variant="outlined"
+                              label={day["key"]}
                               value={time}
-                              className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-lg rounded-xl border border-gray-200 outline-none ${
-                                time === "Closed"
-                                  ? "text-red-600"
-                                  : time === "Open 24 hours"
-                                  ? "text-green-600"
-                                  : ""
-                              }`}
-                              readOnly
                             />
                           ))}
                         </div>
@@ -1998,10 +1986,10 @@ const HoursModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-[80%]">
-          <div className="sm:p-5 lg:p-5 p-2">
+        <Box sx={style} className="!w-[90%] lg:!w-[80%] xl:!w-[50%]">
+          <div className="sm:p-5 lg:p-5 p-1">
             <div className="flex justify-between items-center">
-              <div className="sm:text-2xl text-[16px] font-bold">Hours</div>
+              <div className="sm:text-[28px] text-[16px] font-bold">Hours</div>
               <span>
                 <CloseIcon
                   className="text-gray-500 !text-xl sm:!text-3xl"
@@ -2010,15 +1998,15 @@ const HoursModal = ({
                 />
               </span>
             </div>
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
-              <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-400px)] overflow-auto">
+              <div className="grid grid-cols-1 gap-y-5 my-2">
                 {hours?.map((day, index) => (
                   <div
                     key={index}
                     className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
                   >
-                    <div className="flex  xl:gap-32  items-center mt-1 sm:mt-0">
-                      <div className="sm:text-2xl text-base font-semibold">
+                    <div className="flex xl:gap-32  items-center mt-1 sm:mt-0">
+                      <div className="sm:text-xl text-sm font-semibold">
                         {day["key"]}
                       </div>
                     </div>
@@ -2035,17 +2023,18 @@ const HoursModal = ({
                                 : time === "Open 24 hours"
                                 ? "text-green-600"
                                 : ""
-                            } font-semibold text-2xl`}
+                            } font-semibold text-xl`}
                           >
                             {time}
                           </p>
                         ) : (
-                          <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
+                          <div className="flex lg:gap-4 gap-2 sm:flex-row flex-col">
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
-                                Start with
-                              </span>
-                              <input
+                              <TimeCustomTextField
+                                type="time"
+                                id={index}
+                                variant="outlined"
+                                label="Start with"
                                 value={
                                   time?.split(" - ")[0]?.split(" ")[1] === "PM"
                                     ? String(
@@ -2063,18 +2052,14 @@ const HoursModal = ({
                                         ?.split(":")[1]
                                     : time?.split(" - ")[0]?.split(" ")[0]
                                 }
-                                type="time"
-                                readOnly
-                                id="saturday"
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
-                                End with
-                              </span>
-                              <input
+                              <TimeCustomTextField
                                 type="time"
+                                id={index}
+                                variant="outlined"
+                                label="End with"
                                 value={
                                   time?.split(" - ")[1]?.split(" ")[1] === "PM"
                                     ? String(
@@ -2092,9 +2077,6 @@ const HoursModal = ({
                                         ?.split(":")[1]
                                     : time?.split(" - ")[1]?.split(" ")[0]
                                 }
-                                id="saturday"
-                                readOnly
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                           </div>
@@ -2119,7 +2101,7 @@ const HoursModal = ({
                   </div>
                 ))}
               </div>
-              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 lg:mt-20 mt-10">
+              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 mt-8">
                 <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
@@ -2411,6 +2393,14 @@ const DaysTimeModal = ({
     setCloseTime();
   };
 
+  const DisableButton = () => {
+    if ((startTime && closeTime) === undefined && !open24Hours && !closed) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <CustomAuthModal
@@ -2512,20 +2502,18 @@ const DaysTimeModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize font-semibold hover:bg-white bg-white text-colorGreen border-2 border-colorGreen hover:border-colorGreen py-2 px-5"
+                className="rounded-xl capitalize font-semibold hover:!bg-white !bg-white !text-colorGreen border-2 !border-colorGreen hover:!border-colorGreen py-2 px-5"
                 onClick={handleCloseDaysTimeModal}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize font-semibold text-white bg-colorGreen hover:bg-colorGreen border-2 border-colorGreen py-2 px-5"
+                className={`rounded-xl capitalize font-semibold !text-white ${
+                  !DisableButton() && "!bg-colorGreen"
+                } hover:!bg-colorGreen border-2 !border-colorGreen py-2 px-5`}
                 onClick={saveDaysTimeData}
-                disabled={
-                  (startTime && closeTime) === undefined &&
-                  !open24Hours &&
-                  !closed
-                }
+                disabled={DisableButton()}
               >
                 Save
               </Button>

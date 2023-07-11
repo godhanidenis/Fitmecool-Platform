@@ -19,9 +19,26 @@ import {
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
 
-import { capitalize, CircularProgress } from "@mui/material";
+import {
+  capitalize,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  NativeSelect,
+  Select,
+  styled,
+} from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
+
+const NativeSelectInput = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    // Custom styles for the select input
+    color: "#1518278F",
+    marginLeft: 10,
+  },
+}));
 
 const AddEditProductPage = () => {
   const {
@@ -464,29 +481,33 @@ const AddEditProductPage = () => {
             </div>
           </div>
           <div className="w-full relative">
-            <label
-              htmlFor="pcolor"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
-            >
-              Color
-            </label>
-            <select
-              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-              {...register("product_color", {
-                required: "Product Color is required",
-              })}
-            >
-              <option value="" disabled selected>
-                Product Color
-              </option>
-              {colorsList.map((color, index) => {
-                return (
-                  <option value={color} key={index}>
-                    {capitalize(color)}
-                  </option>
-                );
-              })}
-            </select>
+            <FormControl fullWidth>
+              <InputLabel id="color-id">Product Color</InputLabel>
+              <NativeSelectInput
+                native
+                labelId="color-id"
+                id=""
+                label="Product Color"
+                InputLabelProps={{
+                  shrink: !!getValues("product_color") || errors?.product_color,
+                }}
+                {...register("product_color", {
+                  required: "Product Color is required",
+                })}
+              >
+                <option value="">
+                  <em></em>
+                </option>
+                {colorsList?.map((color, index) => {
+                  return (
+                    <option key={index} value={color}>
+                      {" "}
+                      {capitalize(color)}
+                    </option>
+                  );
+                })}
+              </NativeSelectInput>
+            </FormControl>
 
             <div className="mt-2">
               {errors.product_color && (
@@ -497,32 +518,35 @@ const AddEditProductPage = () => {
             </div>
           </div>
           <div className="w-full relative">
-            <label
-              htmlFor="ptype"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
-            >
-              Type
-            </label>
-            <select
-              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-              {...register("product_type", {
-                required: "product Type is required",
-                onChange: (e) => {
-                  setProductType(e.target.value);
-                },
-              })}
-            >
-              <option value="" disabled selected>
-                Product Type
-              </option>
-              {["Men", "Women"].map((type, index) => {
-                return (
-                  <option value={type} key={index}>
-                    {capitalize(type)}
-                  </option>
-                );
-              })}
-            </select>
+            <FormControl fullWidth>
+              <InputLabel id="product-Type-id">product Type</InputLabel>
+              <NativeSelectInput
+                native
+                labelId="product-Type-id"
+                id=""
+                label="product Type"
+                fieldValue={getValues("product_type")}
+                fieldError={errors?.product_type}
+                {...register("product_type", {
+                  required: "product Type is required",
+                  onChange: (e) => {
+                    setProductType(e.target.value);
+                  },
+                })}
+              >
+                <option value="">
+                  <em></em>
+                </option>
+                {["Men", "Women"].map((type, index) => {
+                  return (
+                    <option key={index} value={type}>
+                      {" "}
+                      {capitalize(type)}
+                    </option>
+                  );
+                })}
+              </NativeSelectInput>
+            </FormControl>
 
             <div className="mt-2">
               {errors.product_type && (
@@ -534,34 +558,34 @@ const AddEditProductPage = () => {
           </div>
           {productType && (
             <div className="w-full relative">
-              <label
-                htmlFor="pcategory"
-                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
-              >
-                Category
-              </label>
-              <select
-                className="w-full px-7 sm:py-5 py-3 text-sm sm:text-lg rounded-xl border border-gray-200 focus:border-black outline-none"
-                {...register("product_category", {
-                  required: "product Category is required",
-                })}
-              >
-                <option value="" disabled selected>
-                  Product Category
-                </option>
-                {productType === "Men" &&
-                  menCategoryLabel.map((cat) => (
-                    <option value={cat.id} key={cat.id}>
-                      {cat.category_name}
-                    </option>
-                  ))}
-                {productType === "Women" &&
-                  womenCategoryLabel.map((cat) => (
-                    <option value={cat.id} key={cat.id}>
-                      {cat.category_name}
-                    </option>
-                  ))}
-              </select>
+              <FormControl fullWidth>
+                <InputLabel id="Category-id">Category</InputLabel>
+                <NativeSelectInput
+                  native
+                  labelId="Category-id"
+                  id=""
+                  label="Category"
+                  {...register("product_category", {
+                    required: "product Category is required",
+                  })}
+                >
+                  <option value="">
+                    <em></em>
+                  </option>
+                  {productType === "Men" &&
+                    menCategoryLabel.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.category_name}
+                      </option>
+                    ))}
+                  {productType === "Women" &&
+                    womenCategoryLabel.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.category_name}
+                      </option>
+                    ))}
+                </NativeSelectInput>
+              </FormControl>
 
               <div className="mt-2">
                 {errors.product_category && (
@@ -573,28 +597,49 @@ const AddEditProductPage = () => {
             </div>
           )}
 
-          <div className="w-full relative">
-            <label
-              htmlFor="pbranch"
-              className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm text-black"
-            >
-              Branch
-            </label>
-            <select
-              className="w-full px-7 sm:py-5 py-3 text-sm sm:text-xl rounded-xl border border-gray-200 focus:border-black outline-none"
-              {...register("product_branch", {
-                required: "product Branch is required",
-              })}
-            >
-              <option value="" disabled selected>
-                Product Branch
-              </option>
-              {branchList.map((branch) => (
-                <option value={branch.id} key={branch.id}>
-                  {branch.branch_address + " " + "(" + branch.branch_type + ")"}
+          <div className="w-full relative hidden">
+            <FormControl fullWidth>
+              <InputLabel id="branch_id">Branch1</InputLabel>
+              <NativeSelectInput
+                native
+                labelId="branch_id"
+                id=""
+                label="Branch"
+                {...register("product_branch", {})}
+              >
+                <option value="">
+                  <em></em>
                 </option>
-              ))}
-            </select>
+              </NativeSelectInput>
+            </FormControl>
+          </div>
+
+          <div className="w-full relative">
+            <FormControl fullWidth>
+              <InputLabel id="Branch-id">Branch</InputLabel>
+              <NativeSelectInput
+                native
+                labelId="Branch-id"
+                id=""
+                label="Branch"
+                {...register("product_branch", {
+                  required: "product Branch is required",
+                })}
+              >
+                <option value="">
+                  <em></em>
+                </option>
+                {branchList.map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.branch_address +
+                      " " +
+                      "(" +
+                      branch.branch_type +
+                      ")"}
+                  </option>
+                ))}
+              </NativeSelectInput>
+            </FormControl>
             <div className="mt-2">
               {errors.product_branch && (
                 <span style={{ color: "red" }} className="-mb-6">
