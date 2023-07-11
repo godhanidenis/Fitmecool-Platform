@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TbPhotoPlus } from "react-icons/tb";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -48,6 +48,7 @@ const AddEditProductPage = () => {
     reset,
     setValue,
     getValues,
+    control,
   } = useForm();
 
   const [SelectImgIndex, setSelectImgIndex] = useState();
@@ -154,91 +155,95 @@ const AddEditProductPage = () => {
       getProductDetails({ id: editProductId }).then((res) => {
         console.log("res:::", res.data.product.data);
 
-        setValue("product_name", res.data.product.data.product_name);
+        setValue("product_name", res?.data?.product?.data?.product_name);
         setValue(
           "product_description",
-          res.data.product.data.product_description
+          res?.data?.product?.data?.product_description
         );
-        setValue("product_color", res.data.product.data.product_color);
-        setValue("product_type", res.data.product.data.product_type);
-        setProductType(res.data.product.data.product_type);
-        setValue("product_category", res.data.product.data.categoryInfo.id);
-        setValue("product_branch", res.data.product.data.branchInfo.id);
+        setValue("product_color", res?.data?.product.data?.product_color);
+        setValue("product_type", res?.data?.product?.data?.product_type);
+        setProductType(res?.data?.product?.data.product_type);
+        setValue(
+          "product_category",
+          res?.data?.product?.data?.categoryInfo?.id
+        );
+        setValue("product_branch", res?.data?.product?.data?.branchInfo?.id);
 
-        res.data.product.data.product_image.front &&
+        res?.data?.product?.data?.product_image?.front &&
           srcToFile(
-            res.data.product.data.product_image.front,
+            res?.data?.product?.data?.product_image?.front,
             "profile.png",
             "image/png"
           ).then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
-        res.data.product.data.product_image.back &&
+        res?.data?.product?.data?.product_image?.back &&
           srcToFile(
-            res.data.product.data.product_image.back,
+            res?.data?.product?.data?.product_image?.back,
             "profile.png",
             "image/png"
           ).then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
-        res.data.product.data.product_image.side &&
+        res?.data?.product?.data?.product_image?.side &&
           srcToFile(
-            res.data.product.data.product_image.side,
+            res?.data?.product?.data?.product_image?.side,
             "profile.png",
             "image/png"
           ).then(function (file) {
             setUploadProductImages((old) => [...old, file]);
           });
 
-        res.data.product.data.product_image.front &&
+        res?.data?.product?.data?.product_image?.front &&
           setProductImages((old) => [
             ...old,
-            res.data.product.data.product_image.front,
+            res?.data?.product?.data?.product_image?.front,
           ]);
-        res.data.product.data.product_image.back &&
+        res?.data?.product?.data?.product_image?.back &&
           setProductImages((old) => [
             ...old,
-            res.data.product.data.product_image.back,
+            res?.data?.product?.data?.product_image?.back,
           ]);
-        res.data.product.data.product_image.side &&
+        res?.data?.product?.data?.product_image?.side &&
           setProductImages((old) => [
             ...old,
-            res.data.product.data.product_image.side,
+            res?.data?.product?.data?.product_image?.side,
           ]);
 
-        res.data.product.data.product_image.front &&
+        res?.data?.product?.data?.product_image?.front &&
           setProductAllMediaImages((old) => [
             ...old,
-            res.data.product.data.product_image.front,
+            res?.data?.product?.data?.product_image?.front,
           ]);
-        res.data.product.data.product_image.back &&
+        res?.data?.product?.data?.product_image?.back &&
           setProductAllMediaImages((old) => [
             ...old,
-            res.data.product.data.product_image.back,
+            res?.data?.product?.data?.product_image?.back,
           ]);
-        res.data.product.data.product_image.side &&
+        res?.data?.product?.data?.product_image?.side &&
           setProductAllMediaImages((old) => [
             ...old,
-            res.data.product.data.product_image.side,
+            res?.data?.product?.data?.product_image?.side,
           ]);
 
-        res.data.product.data.product_video &&
+        res?.data?.product?.data?.product_video &&
           srcToFile(
-            res.data.product.data.product_video,
+            res?.data?.product?.data?.product_video,
             "profile.mp4",
             "video"
           ).then(function (file) {
             setUploadProductVideo(file);
           });
 
-        res.data.product.data.product_video &&
-          setProductVideo(res.data.product.data.product_video);
+        res?.data?.product?.data?.product_video &&
+          setProductVideo(res?.data?.product?.data?.product_video);
 
-        res.data.product.data.product_video &&
-          setProductAllMediaVideo(res.data.product.data.product_video);
+        res?.data?.product?.data?.product_video &&
+          setProductAllMediaVideo(res?.data?.product?.data?.product_video);
       });
     }
   }, [editProductId, setValue]);
+
   const onProductVideoPreview = (e) => {
     const reader = new FileReader();
     if (e.target.files && e.target.files.length > 0) {
@@ -249,6 +254,7 @@ const AddEditProductPage = () => {
       });
     }
   };
+
   const onSubmit = (data) => {
     setLoading(true);
     if (editProductId === undefined) {
@@ -482,31 +488,38 @@ const AddEditProductPage = () => {
           </div>
           <div className="w-full relative">
             <FormControl fullWidth>
-              <InputLabel id="color-id">Product Color</InputLabel>
-              <NativeSelectInput
-                native
-                labelId="color-id"
-                id=""
-                label="Product Color"
-                InputLabelProps={{
-                  shrink: !!getValues("product_color") || errors?.product_color,
-                }}
-                {...register("product_color", {
-                  required: "Product Color is required",
-                })}
-              >
-                <option value="">
-                  <em></em>
-                </option>
-                {colorsList?.map((color, index) => {
-                  return (
-                    <option key={index} value={color}>
-                      {" "}
-                      {capitalize(color)}
-                    </option>
-                  );
-                })}
-              </NativeSelectInput>
+              <Controller
+                name="product_color"
+                control={control}
+                defaultValue="" // Set the initial value here
+                render={({ field }) => (
+                  <>
+                    <InputLabel id="color-id">Product Color</InputLabel>
+                    <NativeSelectInput
+                      {...field}
+                      native
+                      labelId="color-id"
+                      id=""
+                      label="Product Color"
+                      {...register("product_color", {
+                        required: "Product Color is required",
+                      })}
+                    >
+                      <option value="">
+                        <em></em>
+                      </option>
+                      {colorsList?.map((color, index) => {
+                        return (
+                          <option key={index} value={color}>
+                            {" "}
+                            {capitalize(color)}
+                          </option>
+                        );
+                      })}
+                    </NativeSelectInput>
+                  </>
+                )}
+              />
             </FormControl>
 
             <div className="mt-2">
@@ -519,33 +532,41 @@ const AddEditProductPage = () => {
           </div>
           <div className="w-full relative">
             <FormControl fullWidth>
-              <InputLabel id="product-Type-id">product Type</InputLabel>
-              <NativeSelectInput
-                native
-                labelId="product-Type-id"
-                id=""
-                label="product Type"
-                fieldValue={getValues("product_type")}
-                fieldError={errors?.product_type}
-                {...register("product_type", {
-                  required: "product Type is required",
-                  onChange: (e) => {
-                    setProductType(e.target.value);
-                  },
-                })}
-              >
-                <option value="">
-                  <em></em>
-                </option>
-                {["Men", "Women"].map((type, index) => {
-                  return (
-                    <option key={index} value={type}>
-                      {" "}
-                      {capitalize(type)}
-                    </option>
-                  );
-                })}
-              </NativeSelectInput>
+              <Controller
+                name="product_type"
+                control={control}
+                defaultValue="" // Set the initial value here
+                render={({ field }) => (
+                  <>
+                    <InputLabel id="product-Type-id">product Type</InputLabel>
+                    <NativeSelectInput
+                      {...field}
+                      native
+                      labelId="product-Type-id"
+                      id=""
+                      label="product Type"
+                      {...register("product_type", {
+                        required: "product Type is required",
+                        onChange: (e) => {
+                          setProductType(e.target.value);
+                        },
+                      })}
+                    >
+                      <option value="">
+                        <em></em>
+                      </option>
+                      {["Men", "Women"].map((type, index) => {
+                        return (
+                          <option key={index} value={type}>
+                            {" "}
+                            {capitalize(type)}
+                          </option>
+                        );
+                      })}
+                    </NativeSelectInput>
+                  </>
+                )}
+              />
             </FormControl>
 
             <div className="mt-2">
@@ -559,32 +580,42 @@ const AddEditProductPage = () => {
           {productType && (
             <div className="w-full relative">
               <FormControl fullWidth>
-                <InputLabel id="Category-id">Category</InputLabel>
-                <NativeSelectInput
-                  native
-                  labelId="Category-id"
-                  id=""
-                  label="Category"
-                  {...register("product_category", {
-                    required: "product Category is required",
-                  })}
-                >
-                  <option value="">
-                    <em></em>
-                  </option>
-                  {productType === "Men" &&
-                    menCategoryLabel.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.category_name}
-                      </option>
-                    ))}
-                  {productType === "Women" &&
-                    womenCategoryLabel.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.category_name}
-                      </option>
-                    ))}
-                </NativeSelectInput>
+                <Controller
+                  name="product_category"
+                  control={control}
+                  defaultValue="" // Set the initial value here
+                  render={({ field }) => (
+                    <>
+                      <InputLabel id="Category-id">Category</InputLabel>
+                      <NativeSelectInput
+                        {...field}
+                        native
+                        labelId="Category-id"
+                        id=""
+                        label="Category"
+                        {...register("product_category", {
+                          required: "product Category is required",
+                        })}
+                      >
+                        <option value="">
+                          <em></em>
+                        </option>
+                        {productType === "Men" &&
+                          menCategoryLabel.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.category_name}
+                            </option>
+                          ))}
+                        {productType === "Women" &&
+                          womenCategoryLabel.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.category_name}
+                            </option>
+                          ))}
+                      </NativeSelectInput>
+                    </>
+                  )}
+                />
               </FormControl>
 
               <div className="mt-2">
@@ -597,48 +628,41 @@ const AddEditProductPage = () => {
             </div>
           )}
 
-          <div className="w-full relative hidden">
-            <FormControl fullWidth>
-              <InputLabel id="branch_id">Branch1</InputLabel>
-              <NativeSelectInput
-                native
-                labelId="branch_id"
-                id=""
-                label="Branch"
-                {...register("product_branch", {})}
-              >
-                <option value="">
-                  <em></em>
-                </option>
-              </NativeSelectInput>
-            </FormControl>
-          </div>
-
           <div className="w-full relative">
             <FormControl fullWidth>
-              <InputLabel id="Branch-id">Branch</InputLabel>
-              <NativeSelectInput
-                native
-                labelId="Branch-id"
-                id=""
-                label="Branch"
-                {...register("product_branch", {
-                  required: "product Branch is required",
-                })}
-              >
-                <option value="">
-                  <em></em>
-                </option>
-                {branchList.map((branch) => (
-                  <option key={branch.id} value={branch.id}>
-                    {branch.branch_address +
-                      " " +
-                      "(" +
-                      branch.branch_type +
-                      ")"}
-                  </option>
-                ))}
-              </NativeSelectInput>
+              <Controller
+                name="product_branch"
+                control={control}
+                defaultValue="" // Set the initial value here
+                render={({ field }) => (
+                  <>
+                    <InputLabel id="Branch-id">Branch</InputLabel>
+                    <NativeSelectInput
+                      {...field}
+                      native
+                      labelId="Branch-id"
+                      id=""
+                      label="Branch"
+                      {...register("product_branch", {
+                        required: "product Branch is required",
+                      })}
+                    >
+                      <option value="">
+                        <em></em>
+                      </option>
+                      {branchList.map((branch) => (
+                        <option key={branch.id} value={branch.id}>
+                          {branch.branch_address +
+                            " " +
+                            "(" +
+                            branch.branch_type +
+                            ")"}
+                        </option>
+                      ))}
+                    </NativeSelectInput>
+                  </>
+                )}
+              />
             </FormControl>
             <div className="mt-2">
               {errors.product_branch && (
