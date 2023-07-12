@@ -2716,7 +2716,7 @@ const SubBranchModal = ({
     setSubManagerAddress("");
     setSubManagerCity("");
     setSubManagerPinCode("");
-    setSubManagerFirstName();
+    setSubManagerFirstName("");
     setSubManagerLastName("");
     setSubManagerEmail("");
     setManagerValue("");
