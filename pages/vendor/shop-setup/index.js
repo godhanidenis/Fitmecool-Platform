@@ -906,6 +906,7 @@ const ShopPage = () => {
                             <div className="relative" key={index}>
                               {day["value"]?.map((time, index) => (
                                 <TimeCustomTextField
+                                  key={index}
                                   type="text"
                                   id={index}
                                   variant="outlined"
