@@ -53,7 +53,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import VenderProductTable from "../../../../components/Layout/VenderProducttable";
+import VenderProductTable from "../../../../components/Layout/VenderProductTable";
 
 const style = {
   position: "absolute",
