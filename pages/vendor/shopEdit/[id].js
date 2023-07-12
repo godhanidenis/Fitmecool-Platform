@@ -2860,28 +2860,6 @@ const SubBranchModal = ({
                       {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                         Name:
                       </p> */}
-                      {/* <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager First Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerFirstName}
-                            onChange={(e) => {
-                              setSubManagerFirstName(e.target.value);
-                              error.subManagerFirstNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerFirstNameError || ""}
-                        </span>
-                      </div> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
                           <CustomTextFieldVendor
