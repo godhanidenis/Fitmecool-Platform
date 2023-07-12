@@ -31,6 +31,8 @@ import {
 } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
 
 const NativeSelectInput = styled(Select)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -418,7 +420,7 @@ const AddEditProductPage = () => {
   return (
     <div>
       <VendorShopSubHeader />
-      <div className="sm:p-10 p-6">
+      <div className="container sm:p-0 sm:py-10 p-6">
         <div className="font-semibold text-black flex items-center gap-2">
           <span>
             <ArrowBackIcon
@@ -439,179 +441,84 @@ const AddEditProductPage = () => {
             {editProductId === undefined ? "Add" : "Update"} Product
           </span>
         </div>
-        <div className={`space-y-10 sm:my-16 my-10 sm:mx-5`}>
-          <div className="w-full relative">
-            <CustomTextFieldVendor
-              label="Name"
-              type="text"
-              id="pname"
-              isRequired={false}
-              placeholder="Product Name"
-              fieldValue={getValues("product_name")}
-              fieldError={errors?.product_name}
-              formValue={{
-                ...register("product_name", {
-                  required: "Product Name is required",
-                }),
-              }}
-            />
-            <div className="mt-2">
-              {errors.product_name && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errors.product_name?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="w-full relative">
-            <CustomTextFieldVendor
-              label="Description"
-              type="text"
-              id="pdescription"
-              isRequired={false}
-              placeholder="Product Description"
-              fieldValue={getValues("product_description")}
-              fieldError={errors?.product_description}
-              formValue={{
-                ...register("product_description", {
-                  required: "Product Description is required",
-                }),
-              }}
-            />
-            <div className="mt-2">
-              {errors.product_description && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errors.product_description?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="w-full relative">
-            <FormControl fullWidth>
-              <Controller
-                name="product_color"
-                control={control}
-                defaultValue="" // Set the initial value here
-                render={({ field }) => (
-                  <>
-                    <InputLabel id="color-id">Product Color</InputLabel>
-                    <NativeSelectInput
-                      {...field}
-                      native
-                      labelId="color-id"
-                      id=""
-                      label="Product Color"
-                      {...register("product_color", {
-                        required: "Product Color is required",
-                      })}
-                    >
-                      <option value="">
-                        <em></em>
-                      </option>
-                      {colorsList?.map((color, index) => {
-                        return (
-                          <option key={index} value={color}>
-                            {" "}
-                            {capitalize(color)}
-                          </option>
-                        );
-                      })}
-                    </NativeSelectInput>
-                  </>
-                )}
+        <div className="flex justify-between">
+          <div className={`w-[50%] space-y-10 my-10 sm:mx-5`}>
+            <div className="w-full relative">
+              <CustomTextFieldVendor
+                label="Name"
+                type="text"
+                id="pname"
+                isRequired={false}
+                placeholder="Product Name"
+                fieldValue={getValues("product_name")}
+                fieldError={errors?.product_name}
+                formValue={{
+                  ...register("product_name", {
+                    required: "Product Name is required",
+                  }),
+                }}
               />
-            </FormControl>
-
-            <div className="mt-2">
-              {errors.product_color && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errors.product_color?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="w-full relative">
-            <FormControl fullWidth>
-              <Controller
-                name="product_type"
-                control={control}
-                defaultValue="" // Set the initial value here
-                render={({ field }) => (
-                  <>
-                    <InputLabel id="product-Type-id">product Type</InputLabel>
-                    <NativeSelectInput
-                      {...field}
-                      native
-                      labelId="product-Type-id"
-                      id=""
-                      label="product Type"
-                      {...register("product_type", {
-                        required: "product Type is required",
-                        onChange: (e) => {
-                          setProductType(e.target.value);
-                        },
-                      })}
-                    >
-                      <option value="">
-                        <em></em>
-                      </option>
-                      {["Men", "Women"].map((type, index) => {
-                        return (
-                          <option key={index} value={type}>
-                            {" "}
-                            {capitalize(type)}
-                          </option>
-                        );
-                      })}
-                    </NativeSelectInput>
-                  </>
+              <div className="mt-2">
+                {errors.product_name && (
+                  <span style={{ color: "red" }} className="-mb-6">
+                    {errors.product_name?.message}
+                  </span>
                 )}
-              />
-            </FormControl>
-
-            <div className="mt-2">
-              {errors.product_type && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errors.product_type?.message}
-                </span>
-              )}
+              </div>
             </div>
-          </div>
-          {productType && (
+            <div className="w-full relative">
+              <CustomTextFieldVendor
+                label="Description"
+                type="text"
+                id="pdescription"
+                isRequired={false}
+                placeholder="Product Description"
+                fieldValue={getValues("product_description")}
+                fieldError={errors?.product_description}
+                formValue={{
+                  ...register("product_description", {
+                    required: "Product Description is required",
+                  }),
+                }}
+              />
+              <div className="mt-2">
+                {errors.product_description && (
+                  <span style={{ color: "red" }} className="-mb-6">
+                    {errors.product_description?.message}
+                  </span>
+                )}
+              </div>
+            </div>
             <div className="w-full relative">
               <FormControl fullWidth>
                 <Controller
-                  name="product_category"
+                  name="product_color"
                   control={control}
                   defaultValue="" // Set the initial value here
                   render={({ field }) => (
                     <>
-                      <InputLabel id="Category-id">Category</InputLabel>
+                      <InputLabel id="color-id">Product Color</InputLabel>
                       <NativeSelectInput
                         {...field}
                         native
-                        labelId="Category-id"
+                        labelId="color-id"
                         id=""
-                        label="Category"
-                        {...register("product_category", {
-                          required: "product Category is required",
+                        label="Product Color"
+                        {...register("product_color", {
+                          required: "Product Color is required",
                         })}
                       >
                         <option value="">
                           <em></em>
                         </option>
-                        {productType === "Men" &&
-                          menCategoryLabel.map((cat) => (
-                            <option key={cat.id} value={cat.id}>
-                              {cat.category_name}
+                        {colorsList?.map((color, index) => {
+                          return (
+                            <option key={index} value={color}>
+                              {" "}
+                              {capitalize(color)}
                             </option>
-                          ))}
-                        {productType === "Women" &&
-                          womenCategoryLabel.map((cat) => (
-                            <option key={cat.id} value={cat.id}>
-                              {cat.category_name}
-                            </option>
-                          ))}
+                          );
+                        })}
                       </NativeSelectInput>
                     </>
                   )}
@@ -619,58 +526,158 @@ const AddEditProductPage = () => {
               </FormControl>
 
               <div className="mt-2">
-                {errors.product_category && (
+                {errors.product_color && (
                   <span style={{ color: "red" }} className="-mb-6">
-                    {errors.product_category?.message}
+                    {errors.product_color?.message}
                   </span>
                 )}
               </div>
             </div>
-          )}
-
-          <div className="w-full relative">
-            <FormControl fullWidth>
-              <Controller
-                name="product_branch"
-                control={control}
-                defaultValue="" // Set the initial value here
-                render={({ field }) => (
-                  <>
-                    <InputLabel id="Branch-id">Branch</InputLabel>
-                    <NativeSelectInput
-                      {...field}
-                      native
-                      labelId="Branch-id"
-                      id=""
-                      label="Branch"
-                      {...register("product_branch", {
-                        required: "product Branch is required",
-                      })}
-                    >
-                      <option value="">
-                        <em></em>
-                      </option>
-                      {branchList.map((branch) => (
-                        <option key={branch.id} value={branch.id}>
-                          {branch.branch_address +
-                            " " +
-                            "(" +
-                            branch.branch_type +
-                            ")"}
+            <div className="w-full relative">
+              <FormControl fullWidth>
+                <Controller
+                  name="product_type"
+                  control={control}
+                  defaultValue="" // Set the initial value here
+                  render={({ field }) => (
+                    <>
+                      <InputLabel id="product-Type-id">product Type</InputLabel>
+                      <NativeSelectInput
+                        {...field}
+                        native
+                        labelId="product-Type-id"
+                        id=""
+                        label="product Type"
+                        {...register("product_type", {
+                          required: "product Type is required",
+                          onChange: (e) => {
+                            setProductType(e.target.value);
+                          },
+                        })}
+                      >
+                        <option value="">
+                          <em></em>
                         </option>
-                      ))}
-                    </NativeSelectInput>
-                  </>
+                        {["Men", "Women"].map((type, index) => {
+                          return (
+                            <option key={index} value={type}>
+                              {" "}
+                              {capitalize(type)}
+                            </option>
+                          );
+                        })}
+                      </NativeSelectInput>
+                    </>
+                  )}
+                />
+              </FormControl>
+
+              <div className="mt-2">
+                {errors.product_type && (
+                  <span style={{ color: "red" }} className="-mb-6">
+                    {errors.product_type?.message}
+                  </span>
                 )}
-              />
-            </FormControl>
-            <div className="mt-2">
-              {errors.product_branch && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errors.product_branch?.message}
-                </span>
-              )}
+              </div>
             </div>
+            {productType && (
+              <div className="w-full relative">
+                <FormControl fullWidth>
+                  <Controller
+                    name="product_category"
+                    control={control}
+                    defaultValue="" // Set the initial value here
+                    render={({ field }) => (
+                      <>
+                        <InputLabel id="Category-id">Category</InputLabel>
+                        <NativeSelectInput
+                          {...field}
+                          native
+                          labelId="Category-id"
+                          id=""
+                          label="Category"
+                          {...register("product_category", {
+                            required: "product Category is required",
+                          })}
+                        >
+                          <option value="">
+                            <em></em>
+                          </option>
+                          {productType === "Men" &&
+                            menCategoryLabel.map((cat) => (
+                              <option key={cat.id} value={cat.id}>
+                                {cat.category_name}
+                              </option>
+                            ))}
+                          {productType === "Women" &&
+                            womenCategoryLabel.map((cat) => (
+                              <option key={cat.id} value={cat.id}>
+                                {cat.category_name}
+                              </option>
+                            ))}
+                        </NativeSelectInput>
+                      </>
+                    )}
+                  />
+                </FormControl>
+
+                <div className="mt-2">
+                  {errors.product_category && (
+                    <span style={{ color: "red" }} className="-mb-6">
+                      {errors.product_category?.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="w-full relative">
+              <FormControl fullWidth>
+                <Controller
+                  name="product_branch"
+                  control={control}
+                  defaultValue="" // Set the initial value here
+                  render={({ field }) => (
+                    <>
+                      <InputLabel id="Branch-id">Branch</InputLabel>
+                      <NativeSelectInput
+                        {...field}
+                        native
+                        labelId="Branch-id"
+                        id=""
+                        label="Branch"
+                        {...register("product_branch", {
+                          required: "product Branch is required",
+                        })}
+                      >
+                        <option value="">
+                          <em></em>
+                        </option>
+                        {branchList.map((branch) => (
+                          <option key={branch.id} value={branch.id}>
+                            {branch.branch_address +
+                              " " +
+                              "(" +
+                              branch.branch_type +
+                              ")"}
+                          </option>
+                        ))}
+                      </NativeSelectInput>
+                    </>
+                  )}
+                />
+              </FormControl>
+              <div className="mt-2">
+                {errors.product_branch && (
+                  <span style={{ color: "red" }} className="-mb-6">
+                    {errors.product_branch?.message}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="w-[50%]  my-10">
+            <SunEditor height="auto" />
           </div>
         </div>
         <div className="grid grid-cols-3 gap-10 my-10 mx-5">
@@ -678,7 +685,7 @@ const AddEditProductPage = () => {
             <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black ">
               Product Images
             </div>
-            <div className="sm:w-2/3 flex lg:gap-8 lg:flex-row flex-col gap-4">
+            <div className="xl:w-2/3 flex lg:gap-8 lg:flex-row flex-col gap-4">
               {["One", "Two", "Three"]?.map((item, index) => {
                 return (
                   <>

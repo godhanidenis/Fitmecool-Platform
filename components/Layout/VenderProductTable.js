@@ -76,7 +76,7 @@ const VenderProductTable = ({
                   <TableCell align="left">{index + 1}</TableCell>
                   <TableCell align="left">
                     <img
-                      className="w-16 h-12"
+                      className="w-16 h-12 object-cover"
                       src={item?.product_image?.front}
                       alt=""
                     />

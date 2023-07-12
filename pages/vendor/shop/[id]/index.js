@@ -578,7 +578,7 @@ const ShopDetailsPage = () => {
     <>
       <div className="">
         <div className="flex flex-col mt-2">
-          <div className="flex w-[95%] mx-auto flex-row-reverse py-2">
+          <div className="flex w-[95%] ml-auto flex-row-reverse py-2">
             <button
               // onClick={() => setProductListingModalOpen(true)}
               onClick={() =>
@@ -594,7 +594,7 @@ const ShopDetailsPage = () => {
           </div>
 
           <div className="rounded-lg pt-4">
-            <div className="w-[95%] mx-auto">
+            <div className="w-[95%] ml-auto">
               <UpperFilter
                 setProductPageSkip={setProductPageSkip}
                 forShopPage={true}
