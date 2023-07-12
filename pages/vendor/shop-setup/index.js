@@ -2175,14 +2175,14 @@ const SubBranchModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize text-colorGreen hover:bg-white bg-white border border-colorGreen hover:border-colorGreen py-2 px-5"
+                className="rounded-xl capitalize !text-colorGreen hover:!bg-white !bg-white border !border-colorGreen hover:!border-colorGreen py-2 px-5"
                 onClick={handleSubBranchModalClose}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorGreen hover:bg-colorGreen py-2 px-5"
+                className="rounded-xl capitalize !text-colorWhite !bg-colorGreen hover:!bg-colorGreen py-2 px-5"
                 onClick={subBranchSubmit}
               >
                 {subBranchEdit?.id ? "Update" : "Save"}
