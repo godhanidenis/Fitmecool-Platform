@@ -9,6 +9,7 @@ import {
 import {
   buySubscription,
   paymentVerification,
+  renewSubscription,
 } from "../../../graphql/mutations/subscription";
 import { loadUserProfileStart } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
@@ -59,9 +60,9 @@ const ShopSubscription = () => {
     }
   }, [currentPlan?.id, currentPlan?.plan_id, subscriptionAllPlans?.items]);
 
-  const isSubscriptionExpired = (subscription) => {
+  const isSubscriptionExpired = (subscriptionDueDate) => {
     const currentDate = new Date();
-    const dueDate = new Date(subscription.dueDate);
+    const dueDate = new Date(subscriptionDueDate);
 
     return currentDate > dueDate;
   };
@@ -112,6 +113,58 @@ const ShopSubscription = () => {
       });
     });
   };
+
+  const renewSubscriptionCheckoutHandler = async (plan) => {
+    await getRazorPayApiKey().then(async (keyRes) => {
+      await renewSubscription({
+        subscriptionId: userProfile?.subscriptionId,
+        newPlanId: plan?.id,
+      }).then((subscriptionRes) => {
+        console.log("subscriptionRes", subscriptionRes);
+        const options = {
+          key: keyRes?.data?.getRazorPayApiKey,
+          subscription_id: subscriptionRes?.data?.renewSubscription.id,
+          name: plan?.item?.name,
+          description: plan?.item?.description,
+          image:
+            "https://media.licdn.com/dms/image/C4D0BAQGlDTkE0BPXvw/company-logo_200_200/0/1639393777775?e=2147483647&v=beta&t=pu-oXJMsAa8-EY62pFVvrRR6T4cHEWzbbmxB-xBSj8k",
+          handler: async function (response) {
+            await paymentVerification({
+              razorpaySubscriptionId: response.razorpay_subscription_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+              razorpay_plan_id: plan?.id,
+              userId: userProfile?.id,
+              shopId: userProfile?.userCreatedShopId,
+            }).then(
+              (response) => {
+                dispatch(loadUserProfileStart({ id: userProfile?.id }));
+                response?.data?.paymentVerification?.status === "success"
+                  ? toast.success(
+                      `Your Subscription Successfully!! Reference No. ${response?.data?.paymentVerification?.razorpay_payment_id}`
+                    )
+                  : toast.error(
+                      `Your Subscription Failed!! Reference No. ${response?.data?.paymentVerification?.razorpay_payment_id}`
+                    );
+                // router.push(response?.data?.paymentVerification);
+              },
+              (err) => console.log("error: ", err)
+            );
+          },
+          notes: {
+            address: "FlyOnTech Solutions",
+          },
+          theme: {
+            color: "#95539B",
+          },
+        };
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+      });
+    });
+  };
+
   return (
     <>
       <div className="flex items-center justify-center min-h-[95vh]">
@@ -153,17 +206,28 @@ const ShopSubscription = () => {
                 {userProfile?.subscriptionStatus &&
                 currentPlan?.plan_id === plan?.id ? (
                   <div className="mt-4">
-                    <b>Current Plan</b>
-                    <p>
-                      Renews{" "}
-                      {new Date(
-                        currentPlan?.current_end * 1000
-                      ).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
+                    {isSubscriptionExpired(currentPlan?.current_end * 1000) ? (
+                      <button
+                        className="border border-colorPrimary text-colorPrimary py-2 px-3 mt-4 rounded-md"
+                        onClick={() => renewSubscriptionCheckoutHandler(plan)}
+                      >
+                        Renew Plan
+                      </button>
+                    ) : (
+                      <>
+                        <b>Current Plan</b>
+                        <p>
+                          Renews{" "}
+                          {new Date(
+                            currentPlan?.current_end * 1000
+                          ).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <button
