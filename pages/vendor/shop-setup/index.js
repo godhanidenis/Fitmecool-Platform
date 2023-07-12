@@ -16,11 +16,12 @@ import {
   Checkbox,
   TextField,
   CircularProgress,
+  FormControl,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
 import AddIcon from "@mui/icons-material/Add";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   CustomAuthModal,
   CustomTextField,
@@ -139,6 +140,25 @@ const ShopPage = () => {
       setValue("manager_user_email", "");
       setValue("manager_user_contact", "");
     }
+  }, [getValues, sameAsOwner, setValue, currentStep]);
+
+  const [subBranchButtonShow, setSubBranchButtonShow] = useState(false);
+
+  const getAllValues = () => {
+    if (
+      getValues("manager_first_name") === "" ||
+      getValues("manager_last_name") === "" ||
+      getValues("manager_user_email") === "" ||
+      getValues("manager_user_contact") === ""
+    ) {
+      setSubBranchButtonShow(false);
+    } else {
+      setSubBranchButtonShow(true);
+    }
+  };
+
+  useEffect(() => {
+    getAllValues();
   }, [getValues, sameAsOwner, setValue, currentStep]);
 
   const onShopLogoPreviewImage = (e) => {
@@ -519,7 +539,7 @@ const ShopPage = () => {
                   <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px]  border-colorGreen"></span>
                 )}
 
-                {currentStep === 2 ? (
+                {currentStep === 3 ? (
                   <>
                     <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
                     <span className="sm:h-8 sm:w-8 h-4 w-4  rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
@@ -594,9 +614,10 @@ const ShopPage = () => {
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
-                          label=" First Name"
+                          label="First Name"
                           type="text"
                           id="fName"
+                          name="first_name"
                           isRequired={true}
                           placeholder="Your first name"
                           fieldValue={getValues("first_name")}
@@ -617,9 +638,10 @@ const ShopPage = () => {
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
-                          label="  Last Name"
+                          label="Last Name"
                           type="text"
                           id="lName"
+                          name="last_name"
                           isRequired={true}
                           placeholder="Your last name"
                           fieldValue={getValues("last_name")}
@@ -641,9 +663,10 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label=" E-Mail"
+                        label="E-Mail"
                         type="email"
                         id="email"
+                        name="user_email"
                         isRequired={true}
                         placeholder="yourmail@gmail.com"
                         fieldValue={getValues("user_email")}
@@ -670,9 +693,10 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label=" Phone Number"
+                        label="Phone Number"
                         type="text"
                         id="phone"
+                        name="user_contact"
                         isRequired={true}
                         placeholder="Your phone number"
                         fieldValue={getValues("user_contact")}
@@ -719,7 +743,8 @@ const ShopPage = () => {
                   >
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label=" Shop Name"
+                        name="shop_name"
+                        label="Shop Name"
                         type="text"
                         id="shopName"
                         isRequired={true}
@@ -742,6 +767,7 @@ const ShopPage = () => {
                       <>
                         <div className="w-full relative">
                           <CustomTextFieldVendor
+                            name="shop_email"
                             label="Shop Email"
                             type="email"
                             id="shopEmail"
@@ -769,7 +795,8 @@ const ShopPage = () => {
                         </div>
                         <div className="w-full relative">
                           <CustomTextFieldVendor
-                            label=" Personal Website Link"
+                            name="personal_website"
+                            label="Personal Website Link"
                             type="text"
                             id="personalWebLink1"
                             isRequired={false}
@@ -791,7 +818,8 @@ const ShopPage = () => {
                         <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
                           <div className="w-1/2 relative max-md:w-full">
                             <CustomTextFieldVendor
-                              label="  Fackbook Link"
+                              name="facebook_link"
+                              label="Fackbook Link"
                               type="text"
                               id="fbLink"
                               isRequired={false}
@@ -812,6 +840,7 @@ const ShopPage = () => {
                           </div>
                           <div className="w-1/2 relative max-md:w-full">
                             <CustomTextFieldVendor
+                              name="instagram_link"
                               label=" Instagram Link"
                               type="text"
                               id="igLink"
@@ -1205,6 +1234,7 @@ const ShopPage = () => {
                   >
                     <div className="w-full relative">
                       <CustomTextFieldVendor
+                        name="address"
                         label="Address"
                         type="text"
                         id="address"
@@ -1227,6 +1257,7 @@ const ShopPage = () => {
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
+                          name="city"
                           label=" City"
                           type="text"
                           id="city"
@@ -1248,6 +1279,7 @@ const ShopPage = () => {
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
+                          name="pin_code"
                           label=" Pincode"
                           type="number"
                           id="pincode"
@@ -1388,19 +1420,32 @@ const ShopPage = () => {
 
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
-                        <CustomTextFieldVendor
-                          label="First Name"
-                          type="text"
-                          id="managerfName"
-                          isRequired={true}
-                          placeholder="Manager first name"
-                          disabled={sameAsOwner === "True"}
-                          formValue={{
-                            ...register("manager_first_name", {
-                              required: "Manager FirstName is required",
-                            }),
-                          }}
-                        />
+                        <FormControl fullWidth>
+                          <Controller
+                            name="manager_first_name"
+                            control={control}
+                            defaultValue="" // Set the initial value here
+                            render={({ field }) => (
+                              <>
+                                <TextField
+                                  {...field}
+                                  label="First Name"
+                                  type="text"
+                                  id="managerfName"
+                                  isRequired={true}
+                                  placeholder="Manager first name"
+                                  disabled={sameAsOwner === "True"}
+                                  {...register("manager_first_name", {
+                                    required: "Manager FirstName is required",
+                                    onChange: () => {
+                                      getAllValues();
+                                    },
+                                  })}
+                                />
+                              </>
+                            )}
+                          />
+                        </FormControl>
                         {errors.manager_first_name && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
@@ -1410,19 +1455,32 @@ const ShopPage = () => {
                         )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
-                        <CustomTextFieldVendor
-                          label=" Last Name"
-                          type="text"
-                          id="mangerlName"
-                          isRequired={true}
-                          placeholder="Manager last name"
-                          disabled={sameAsOwner === "True"}
-                          formValue={{
-                            ...register("manager_last_name", {
-                              required: "Manager LastName is required",
-                            }),
-                          }}
-                        />
+                        <FormControl fullWidth>
+                          <Controller
+                            name="manager_last_name"
+                            control={control}
+                            defaultValue="" // Set the initial value here
+                            render={({ field }) => (
+                              <>
+                                <TextField
+                                  {...field}
+                                  label=" Last Name"
+                                  type="text"
+                                  id="mangerlName"
+                                  isRequired={true}
+                                  placeholder="Manager last name"
+                                  disabled={sameAsOwner === "True"}
+                                  {...register("manager_last_name", {
+                                    required: "Manager LastName is required",
+                                    onChange: () => {
+                                      getAllValues();
+                                    },
+                                  })}
+                                />
+                              </>
+                            )}
+                          />
+                        </FormControl>
                         {errors.manager_last_name && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
@@ -1433,25 +1491,38 @@ const ShopPage = () => {
                       </div>
                     </div>
                     <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        label=" E-Mail"
-                        type="email"
-                        id="managerEmail"
-                        isRequired={true}
-                        placeholder="Manager email address"
-                        disabled={sameAsOwner === "True"}
-                        formValue={{
-                          ...register("manager_user_email", {
-                            required: "Manager Email is required",
+                      <FormControl fullWidth>
+                        <Controller
+                          name="manager_user_email"
+                          control={control}
+                          defaultValue="" // Set the initial value here
+                          render={({ field }) => (
+                            <>
+                              <TextField
+                                {...field}
+                                label=" E-Mail"
+                                type="email"
+                                id="managerEmail"
+                                isRequired={true}
+                                placeholder="Manager email address"
+                                disabled={sameAsOwner === "True"}
+                                {...register("manager_user_email", {
+                                  required: "Manager Email is required",
 
-                            pattern: {
-                              value:
-                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                              message: "Please enter a valid email",
-                            },
-                          }),
-                        }}
-                      />
+                                  pattern: {
+                                    value:
+                                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                    message: "Please enter a valid email",
+                                  },
+                                  onChange: () => {
+                                    getAllValues();
+                                  },
+                                })}
+                              />
+                            </>
+                          )}
+                        />
+                      </FormControl>
                       {errors.manager_user_email && (
                         <div className="mt-2">
                           <span style={{ color: "red" }}>
@@ -1461,23 +1532,37 @@ const ShopPage = () => {
                       )}
                     </div>
                     <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        label="Phone Number"
-                        type="number"
-                        id="managerPhone"
-                        isRequired={true}
-                        placeholder="Manager phone number"
-                        disabled={sameAsOwner === "True"}
-                        formValue={{
-                          ...register("manager_user_contact", {
-                            required: "Manager Contact Number is required",
-                            pattern: {
-                              value: /^[0-9]{10}$/,
-                              message: "Please enter a valid number",
-                            },
-                          }),
-                        }}
-                      />
+                      <FormControl fullWidth>
+                        <Controller
+                          name="manager_user_contact"
+                          control={control}
+                          defaultValue="" // Set the initial value here
+                          render={({ field }) => (
+                            <>
+                              <TextField
+                                {...field}
+                                label="Phone Number"
+                                type="number"
+                                id="managerPhone"
+                                isRequired={true}
+                                placeholder="Manager phone number"
+                                disabled={sameAsOwner === "True"}
+                                {...register("manager_user_contact", {
+                                  required:
+                                    "Manager Contact Number is required",
+                                  pattern: {
+                                    value: /^[0-9]{10}$/,
+                                    message: "Please enter a valid number",
+                                  },
+                                  onChange: () => {
+                                    getAllValues();
+                                  },
+                                })}
+                              />
+                            </>
+                          )}
+                        />
+                      </FormControl>
                       {errors.manager_user_contact && (
                         <div className="mt-2">
                           <span style={{ color: "red" }}>
@@ -1491,9 +1576,9 @@ const ShopPage = () => {
                     <div className="my-10">
                       <button
                         onClick={() => setSubBranchModalOpen(true)}
-                        disabled={!isValid}
+                        disabled={!subBranchButtonShow}
                         className={`${
-                          !isValid ? "opacity-50" : "opacity-100"
+                          !subBranchButtonShow ? "opacity-50" : "opacity-100"
                         } cursor-pointer flex items-center uppercase border-2  sm:px-8 sm:py-3 sm:text-base px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen`}
                       >
                         Sub Branch
