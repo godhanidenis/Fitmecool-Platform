@@ -2759,20 +2759,20 @@ const SubBranchModal = ({
               />
             </div>
 
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-450px)] overflow-auto mt-6">
               <div className="bg-colorWhite rounded-lg p-5 ">
-                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+                {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Branches
-                </h3>
+                </h3> */}
                 <form>
                   <div className="flex flex-col space-y-3">
-                    <p className="mt-2 container flex items-center text-colorBlack text-lg">
+                    {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
                       Sub Branch
-                    </p>
+                    </p> */}
                     <div className="flex items-center justify-center container">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Address"
                             variant="standard"
@@ -2790,10 +2790,10 @@ const SubBranchModal = ({
                       </div>
                     </div>
 
-                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
+                    <div className="container flex flex-col sm:flex-row space-y-3 mt-4 sm:gap-20 w-full justify-between items-center">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="City"
                             variant="standard"
@@ -2811,7 +2811,7 @@ const SubBranchModal = ({
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="PinCode"
                             variant="standard"
@@ -2832,11 +2832,11 @@ const SubBranchModal = ({
 
                     <div className="flex justify-center items-center">
                       <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
+                        {/* <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
                           Manager:
-                        </span>
+                        </span> */}
 
-                        <CustomTextField
+                        <CustomTextFieldVendor
                           label="Manager"
                           variant="standard"
                           select
@@ -2852,17 +2852,39 @@ const SubBranchModal = ({
                               </MenuItem>
                             )
                           )}
-                        </CustomTextField>
+                        </CustomTextFieldVendor>
                       </div>
                     </div>
 
                     <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                      {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                         Name:
-                      </p>
+                      </p> */}
+                      {/* <div className="w-full flex flex-col gap-2">
+                        <Box sx={{ display: "flex" }}>
+                          <CustomTextFieldVendor
+                            id="input-with-sx"
+                            label="Manager First Name"
+                            variant="standard"
+                            className="w-full"
+                            disabled={
+                              managerValue === "Same as owner" ||
+                              managerValue === "same as main branch manager"
+                            }
+                            value={subManagerFirstName}
+                            onChange={(e) => {
+                              setSubManagerFirstName(e.target.value);
+                              error.subManagerFirstNameError = "";
+                            }}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerFirstNameError || ""}
+                        </span>
+                      </div> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager First Name"
                             variant="standard"
@@ -2884,7 +2906,7 @@ const SubBranchModal = ({
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager Last Name"
                             variant="standard"
@@ -2907,12 +2929,12 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                         Email:
-                      </p>
+                      </p> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager Email Address"
                             variant="standard"
@@ -2936,12 +2958,12 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                         Phone:
-                      </p>
+                      </p> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager Phone Number"
                             variant="standard"
@@ -2979,14 +3001,14 @@ const SubBranchModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                className="rounded-xl capitalize !text-colorBlack py-2 px-5"
                 onClick={handleSubBranchModalClose}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
+                className="rounded-xl capitalize !text-colorWhite !bg-colorGreen py-2 px-5"
                 onClick={subBranchSubmit}
               >
                 {editSubBranchId === undefined ? "Save" : "Update"}

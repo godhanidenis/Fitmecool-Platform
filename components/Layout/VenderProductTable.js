@@ -87,7 +87,9 @@ const VenderProductTable = ({
                   <TableCell align="left">{item?.product_name}</TableCell>
                   <TableCell align="left">{item?.product_color}</TableCell>
                   <TableCell align="left">
-                    {item?.product_description}
+                    <div className="line-clamp-2">
+                      {item?.product_description}
+                    </div>
                   </TableCell>
                   <TableCell align="left">
                     <div className="flex gap-2">
@@ -154,14 +156,14 @@ const VenderProductTable = ({
               <div className="container mt-5 flex items-center justify-end gap-5">
                 <Button
                   variant="outlined"
-                  className="rounded-xl capitalize text-colorBlack py-2 px-5"
+                  className="rounded-xl capitalize !text-colorBlack py-2 px-5"
                   onClick={() => setProductDeleteModalOpen(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   variant="contained"
-                  className="rounded-xl capitalize text-colorWhite bg-red-600 hover:bg-red-600 py-2 px-5"
+                  className="rounded-xl capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"
                   onClick={() => {
                     if (isAuthenticate) {
                       deleteProduct({ id: deleteProductId }).then(
