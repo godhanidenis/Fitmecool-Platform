@@ -53,13 +53,27 @@ const VenderProductTable = ({
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">No</TableCell>
-                <TableCell align="left">Thumbnail</TableCell>
-                <TableCell align="left">Shop Name</TableCell>
-                <TableCell align="left">Product Name</TableCell>
-                <TableCell align="left">Color</TableCell>
-                <TableCell align="left">Description</TableCell>
-                <TableCell align="left">Action</TableCell>
+                <TableCell align="left">
+                  <b>No</b>
+                </TableCell>
+                <TableCell align="left">
+                  <b>Thumbnail</b>
+                </TableCell>
+                <TableCell align="left">
+                  <b>Shop Name</b>
+                </TableCell>
+                <TableCell align="left">
+                  <b>Product Name</b>
+                </TableCell>
+                <TableCell align="left">
+                  <b>Color</b>
+                </TableCell>
+                <TableCell align="left">
+                  <b>Description</b>
+                </TableCell>
+                <TableCell align="left">
+                  <b>Action</b>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

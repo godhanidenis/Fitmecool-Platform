@@ -51,6 +51,7 @@ import { TbPhotoPlus } from "react-icons/tb";
 import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
+import VendorBranchTable from "../../../components/Layout/VendorBranchTable";
 
 const style = {
   position: "absolute",
@@ -1436,7 +1437,33 @@ const ShopEdit = () => {
               </div>
             )}
 
-            {subBranchList?.length > 0 && (
+            {subBranchModalOpen ? (
+              <SubBranchModal
+                subBranchModalOpen={subBranchModalOpen}
+                setSubBranchModalOpen={setSubBranchModalOpen}
+                getAllSubBranchList={getAllSubBranchList}
+                ShopId={userProfile?.userCreatedShopId}
+                editSubBranchId={editSubBranchId}
+                setEditSubBranchId={setEditSubBranchId}
+                mainBranchInfoGetValue={mainBranchInfoGetValue}
+                ownerInfoGetValue={ownerInfoGetValue}
+              />
+            ) : (
+              <>
+                <div className="mt-8">
+                  <VendorBranchTable
+                    subBranchList={subBranchList}
+                    getAllSubBranchList={getAllSubBranchList}
+                    setSubBranchModalOpen={setSubBranchModalOpen}
+                    setEditSubBranchId={setEditSubBranchId}
+                    setBranchDeleteModalOpen={setBranchDeleteModalOpen}
+                    setDeleteBranchId={setDeleteBranchId}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* {subBranchList?.length > 0 && (
               <div className="w-full">
                 {subBranchList?.map((sub, index) => (
                   <>
@@ -1569,147 +1596,149 @@ const ShopEdit = () => {
                   </>
                 ))}
               </div>
-            )}
+            )} */}
           </TabPanel>
 
           <TabPanel value={value} index={4}>
             <div className="container rounded-lg mt-10">
               <div className="grid grid-cols-3 gap-10 my-10">
-                <div className="flex flex-col items-center justify-center col-span-3">
-                  <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
-                    Logo
-                  </div>
-                  <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center">
-                    <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
-                      <EditIcon
-                        sx={{
-                          "@media (max-width: 768px)": {
-                            fontSize: 16,
-                          },
-                        }}
-                        onClick={() => {
-                          document.getElementById("shopLogo").click();
-                        }}
-                      />
-                    </span>
-                    {shopLogo !== "" ? (
-                      <div className="sm:w-[210px]   sm:h-[210px] h-[130px] w-[130px]">
-                        <img
-                          src={shopLogo}
-                          alt="Uploaded Image"
-                          className="object-cover h-full w-full rounded-full"
+                <div className="col-span-3 lg:flex justify-center gap-3">
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
+                      Logo
+                    </div>
+                    <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center">
+                      <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                        <EditIcon
+                          sx={{
+                            "@media (max-width: 768px)": {
+                              fontSize: 16,
+                            },
+                          }}
+                          onClick={() => {
+                            document.getElementById("shopLogo").click();
+                          }}
                         />
-                      </div>
-                    ) : (
-                      <div className="flex flex-col gap-4">
-                        <span className="flex justify-center">
-                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                        </span>
-                        <div className="flex flex-col gap-1">
-                          <p className="sm:text-2xl text-sm font-bold text-gray-400">
-                            Click to upload{" "}
-                            <span className="text-colorGreen">logo</span>
-                          </p>
-                          <p className="sm:text-sm text-xs text-gray-400 text-center">
-                            No Size Limit
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    <input
-                      type="file"
-                      id="shopLogo"
-                      name="shopLogo"
-                      accept="image/*"
-                      className="hidden"
-                      {...shopLayoutRegister("shopLogo", {
-                        required:
-                          shopLogo === "" ? "shopLogo is required" : false,
-                        onChange: (e) => {
-                          if (e.target.files && e.target.files.length > 0) {
-                            onShopLogoPreviewImage(e);
-                          }
-                        },
-                      })}
-                    />
-                  </div>
-                  <div className="mt-2">
-                    {shopLayoutErrors.shopLogo && (
-                      <span style={{ color: "red" }} className="-mb-6">
-                        {shopLayoutErrors.shopLogo?.message}
                       </span>
-                    )}
+                      {shopLogo !== "" ? (
+                        <div className="sm:w-[210px]   sm:h-[210px] h-[130px] w-[130px]">
+                          <img
+                            src={shopLogo}
+                            alt="Uploaded Image"
+                            className="object-cover h-full w-full rounded-full"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-4">
+                          <span className="flex justify-center">
+                            <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                          </span>
+                          <div className="flex flex-col gap-1">
+                            <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                              Click to upload{" "}
+                              <span className="text-colorGreen">logo</span>
+                            </p>
+                            <p className="sm:text-sm text-xs text-gray-400 text-center">
+                              No Size Limit
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        id="shopLogo"
+                        name="shopLogo"
+                        accept="image/*"
+                        className="hidden"
+                        {...shopLayoutRegister("shopLogo", {
+                          required:
+                            shopLogo === "" ? "shopLogo is required" : false,
+                          onChange: (e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                              onShopLogoPreviewImage(e);
+                            }
+                          },
+                        })}
+                      />
+                    </div>
+                    <div className="mt-2">
+                      {shopLayoutErrors.shopLogo && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {shopLayoutErrors.shopLogo?.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-col items-center justify-center col-span-3">
-                  <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
-                    Cover Image
-                  </div>
-                  <div className="sm:w-2/3 w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center">
-                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
-                      <EditIcon
-                        sx={{
-                          "@media (max-width: 768px)": {
-                            fontSize: 16,
-                          },
-                        }}
-                        onClick={() =>
-                          document.getElementById("shopBackground").click()
-                        }
-                      />
-                    </span>
-                    {shopBackground !== "" ? (
-                      <div className="w-full  sm:h-[290px]  h-[180px]">
-                        <img
-                          src={shopBackground}
-                          alt="Uploaded Image"
-                          className="object-cover h-full w-full rounded-3xl"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex flex-col gap-4">
-                        <span className="flex justify-center">
-                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                        </span>
-                        <div className="flex flex-col gap-1">
-                          <p className="sm:text-2xl text-sm font-bold text-gray-400">
-                            <span className="text-colorGreen">
-                              Click to Upload
-                            </span>{" "}
-                            Cover Image
-                          </p>
-                          <p className="sm:text-sm text-xs text-gray-400 text-center">
-                            We Support JPG, PNG & No Size Limit
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    <input
-                      id="shopBackground"
-                      name="shopBackground"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      {...shopLayoutRegister("shopBackground", {
-                        required:
-                          shopBackground === ""
-                            ? "shopBackground is required"
-                            : false,
-                        onChange: (e) => {
-                          if (e.target.files && e.target.files.length > 0) {
-                            onShopBackgroundPreviewImage(e);
+                  <div className="flex flex-col mt-4 items-center justify-center">
+                    <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
+                      Cover Image
+                    </div>
+                    <div className="sm:w-2/3 w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center">
+                      <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                        <EditIcon
+                          sx={{
+                            "@media (max-width: 768px)": {
+                              fontSize: 16,
+                            },
+                          }}
+                          onClick={() =>
+                            document.getElementById("shopBackground").click()
                           }
-                        },
-                      })}
-                    />
-                  </div>
-                  <div className="mt-2">
-                    {shopLayoutErrors.shopBackground && (
-                      <span style={{ color: "red" }} className="-mb-6">
-                        {shopLayoutErrors.shopBackground?.message}
+                        />
                       </span>
-                    )}
+                      {shopBackground !== "" ? (
+                        <div className="w-full  sm:h-[290px]  h-[180px]">
+                          <img
+                            src={shopBackground}
+                            alt="Uploaded Image"
+                            className="object-cover h-full w-full rounded-3xl"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-4">
+                          <span className="flex justify-center">
+                            <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                          </span>
+                          <div className="flex flex-col gap-1">
+                            <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                              <span className="text-colorGreen">
+                                Click to Upload
+                              </span>{" "}
+                              Cover Image
+                            </p>
+                            <p className="sm:text-sm text-xs text-gray-400 text-center">
+                              We Support JPG, PNG & No Size Limit
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      <input
+                        id="shopBackground"
+                        name="shopBackground"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        {...shopLayoutRegister("shopBackground", {
+                          required:
+                            shopBackground === ""
+                              ? "shopBackground is required"
+                              : false,
+                          onChange: (e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                              onShopBackgroundPreviewImage(e);
+                            }
+                          },
+                        })}
+                      />
+                    </div>
+                    <div className="mt-2">
+                      {shopLayoutErrors.shopBackground && (
+                        <span style={{ color: "red" }} className="-mb-6">
+                          {shopLayoutErrors.shopBackground?.message}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1898,7 +1927,7 @@ const ShopEdit = () => {
           </TabPanel>
         </div>
       </div>
-      <SubBranchModal
+      {/* <SubBranchModal
         subBranchModalOpen={subBranchModalOpen}
         setSubBranchModalOpen={setSubBranchModalOpen}
         getAllSubBranchList={getAllSubBranchList}
@@ -1907,7 +1936,7 @@ const ShopEdit = () => {
         setEditSubBranchId={setEditSubBranchId}
         mainBranchInfoGetValue={mainBranchInfoGetValue}
         ownerInfoGetValue={ownerInfoGetValue}
-      />
+      /> */}
 
       <CustomAuthModal
         open={branchDeleteModalOpen}
@@ -2736,265 +2765,268 @@ const SubBranchModal = ({
   };
   return (
     <>
-      <CustomAuthModal
+      {/* <CustomAuthModal
         open={subBranchModalOpen}
         onClose={handleSubBranchModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
-      >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
-              </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
-            </div>
+      > */}
+      <Box className="!w-[100%]">
+        <div className="py-5">
+          <div className="flex items-center">
+            <ArrowBackIcon
+              className="!text-black !cursor-pointer"
+              onClick={handleSubBranchModalClose}
+            />
+            <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+              Back To All Branches
+            </p>
+            {/* <CloseIcon
+              className="!text-black !ml-auto !cursor-pointer"
+              onClick={handleSubBranchModalClose}
+            /> */}
+          </div>
 
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-450px)] overflow-auto mt-6">
-              <div className="bg-colorWhite rounded-lg p-5 ">
-                {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+          <div className="mt-6">
+            <div className="sm:ml-14 rounded-lg">
+              {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Branches
                 </h3> */}
-                <form>
-                  <div className="flex flex-col space-y-3">
-                    {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
+              <p className="flex items-center text-colorBlack text-xl mb-5 font-semibold">
+                {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
+              </p>
+              <form>
+                <div className="flex flex-col space-y-3">
+                  {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
                       Sub Branch
                     </p> */}
-                    <div className="flex items-center justify-center container">
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Address"
-                            variant="standard"
-                            className="w-full"
-                            value={subManagerAddress}
-                            onChange={(e) => {
-                              setSubManagerAddress(e.target.value);
-                              error.subManagerAddressError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerAddressError || ""}
-                        </span>
-                      </div>
+                  <div className="flex items-center justify-center">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Address"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerAddress}
+                          onChange={(e) => {
+                            setSubManagerAddress(e.target.value);
+                            error.subManagerAddressError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerAddressError || ""}
+                      </span>
                     </div>
+                  </div>
 
-                    <div className="container flex flex-col sm:flex-row space-y-3 mt-4 sm:gap-20 w-full justify-between items-center">
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="City"
-                            variant="standard"
-                            className="w-full"
-                            value={subManagerCity}
-                            onChange={(e) => {
-                              setSubManagerCity(e.target.value);
-                              error.subManagerCityError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerCityError || ""}
-                        </span>
-                      </div>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="PinCode"
-                            variant="standard"
-                            className="w-full"
-                            type="number"
-                            value={subManagerPinCode}
-                            onChange={(e) => {
-                              setSubManagerPinCode(e.target.value);
-                              error.subManagerPinCodeError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPinCodeError || ""}
-                        </span>
-                      </div>
+                  <div className="flex flex-col sm:flex-row mt-4 sm:gap-20 w-full justify-between items-center">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="City"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerCity}
+                          onChange={(e) => {
+                            setSubManagerCity(e.target.value);
+                            error.subManagerCityError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerCityError || ""}
+                      </span>
                     </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="PinCode"
+                          variant="standard"
+                          className="w-full"
+                          type="number"
+                          value={subManagerPinCode}
+                          onChange={(e) => {
+                            setSubManagerPinCode(e.target.value);
+                            error.subManagerPinCodeError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPinCodeError || ""}
+                      </span>
+                    </div>
+                  </div>
 
-                    <div className="flex justify-center items-center">
-                      <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        {/* <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
+                  <div className="flex justify-center items-center">
+                    <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
+                      {/* <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
                           Manager:
                         </span> */}
 
-                        <CustomTextFieldVendor
-                          label="Manager"
-                          variant="standard"
-                          select
-                          fullWidth
-                          value={managerValue}
-                          onChange={(e) => setManagerValue(e.target.value)}
-                        >
-                          <MenuItem value="">None</MenuItem>
-                          {["Same as owner", "same as main branch manager"].map(
-                            (man) => (
-                              <MenuItem value={man} key={man}>
-                                {man}
-                              </MenuItem>
-                            )
-                          )}
-                        </CustomTextFieldVendor>
-                      </div>
-                    </div>
-
-                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                        Name:
-                      </p> */}
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager First Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerFirstName}
-                            onChange={(e) => {
-                              setSubManagerFirstName(e.target.value);
-                              error.subManagerFirstNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerFirstNameError || ""}
-                        </span>
-                      </div>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager Last Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerLastName}
-                            onChange={(e) => {
-                              setSubManagerLastName(e.target.value);
-                              error.subManagerLastNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerLastNameError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Email:
-                      </p> */}
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager Email Address"
-                            variant="standard"
-                            className="w-full"
-                            type="email"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerEmail}
-                            onChange={(e) => {
-                              setSubManagerEmail(e.target.value);
-                              error.subManagerEmailError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerEmailError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Phone:
-                      </p> */}
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager Phone Number"
-                            variant="standard"
-                            className="w-full"
-                            type="number"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerPhone}
-                            onChange={(e) => {
-                              setSubManagerPhone(e.target.value);
-                              if (e.target.value.length != 10) {
-                                error.subManagerPhoneError =
-                                  "SubManagerPhone Number must be 10 numbers";
-                              } else {
-                                error.subManagerPhoneError = "";
-                              }
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPhoneError || ""}
-                        </span>
-                      </div>
+                      <CustomTextFieldVendor
+                        label="Manager"
+                        variant="standard"
+                        select
+                        fullWidth
+                        value={managerValue}
+                        onChange={(e) => setManagerValue(e.target.value)}
+                      >
+                        <MenuItem value="">None</MenuItem>
+                        {["Same as owner", "same as main branch manager"].map(
+                          (man) => (
+                            <MenuItem value={man} key={man}>
+                              {man}
+                            </MenuItem>
+                          )
+                        )}
+                      </CustomTextFieldVendor>
                     </div>
                   </div>
-                </form>
-              </div>
-            </div>
 
-            <div className="container mt-5">
-              <Divider />
-            </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize !text-colorBlack py-2 px-5"
-                onClick={handleSubBranchModalClose}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize !text-colorWhite !bg-colorGreen py-2 px-5"
-                onClick={subBranchSubmit}
-              >
-                {editSubBranchId === undefined ? "Save" : "Update"}
-              </Button>
+                  <div className="flex flex-col sm:flex-row sm:gap-20 w-full justify-between items-center !mt-5">
+                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                        Name:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager First Name"
+                          variant="standard"
+                          className="w-full"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerFirstName}
+                          onChange={(e) => {
+                            setSubManagerFirstName(e.target.value);
+                            error.subManagerFirstNameError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerFirstNameError || ""}
+                      </span>
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Last Name"
+                          variant="standard"
+                          className="w-full"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerLastName}
+                          onChange={(e) => {
+                            setSubManagerLastName(e.target.value);
+                            error.subManagerLastNameError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerLastNameError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-10 sm:gap-20">
+                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Email:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Email Address"
+                          variant="standard"
+                          className="w-full"
+                          type="email"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerEmail}
+                          onChange={(e) => {
+                            setSubManagerEmail(e.target.value);
+                            error.subManagerEmailError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerEmailError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-10 sm:gap-20">
+                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Phone:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Phone Number"
+                          variant="standard"
+                          className="w-full"
+                          type="number"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerPhone}
+                          onChange={(e) => {
+                            setSubManagerPhone(e.target.value);
+                            if (e.target.value.length != 10) {
+                              error.subManagerPhoneError =
+                                "SubManagerPhone Number must be 10 numbers";
+                            } else {
+                              error.subManagerPhoneError = "";
+                            }
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPhoneError || ""}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-        </Box>
-      </CustomAuthModal>
+
+          {/* <div className="container mt-5">
+            <Divider />
+          </div> */}
+          <div className="mt-2 flex items-center justify-end gap-5">
+            <Button
+              variant="outlined"
+              className="rounded-xl capitalize !text-colorBlack py-2 px-5"
+              onClick={handleSubBranchModalClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              className="rounded-xl capitalize !text-colorWhite !bg-colorGreen py-2 px-5"
+              onClick={subBranchSubmit}
+            >
+              {editSubBranchId === undefined ? "Save" : "Update"}
+            </Button>
+          </div>
+        </div>
+      </Box>
+      {/* </CustomAuthModal> */}
     </>
   );
 };

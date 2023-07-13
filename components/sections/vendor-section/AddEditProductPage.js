@@ -31,8 +31,13 @@ import {
 } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
-import SunEditor from "suneditor-react";
+// import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
+import dynamic from "next/dynamic";
+
+const SunEditor = dynamic(() => import("suneditor-react"), {
+  ssr: false,
+});
 
 const NativeSelectInput = styled(Select)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -441,8 +446,8 @@ const AddEditProductPage = () => {
             {editProductId === undefined ? "Add" : "Update"} Product
           </span>
         </div>
-        <div className="flex justify-between">
-          <div className={`w-[50%] space-y-10 my-10 sm:mx-5`}>
+        <div className="sm:flex justify-between">
+          <div className={`sm:w-[50%] space-y-10 my-10 sm:mx-5`}>
             <div className="w-full relative">
               <CustomTextFieldVendor
                 label="Name"
@@ -676,16 +681,16 @@ const AddEditProductPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-[50%]  my-10">
-            <SunEditor height="auto" />
+          <div className="sm:w-[50%] my-10">
+            <SunEditor height="370px" />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-10 my-10 mx-5">
-          <div className="col-span-3">
-            <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black ">
-              Product Images
-            </div>
-            <div className="xl:w-2/3 flex lg:gap-8 lg:flex-row flex-col gap-4">
+        <div className="gap-10 my-10 sm:ml-5">
+          <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black ">
+            Product Images And Video
+          </div>
+          <div className="w-full lg:flex gap-8">
+            <div className="lg:w-[65%] w-full flex lg:gap-8 lg:flex-row flex-col gap-4">
               {["One", "Two", "Three"]?.map((item, index) => {
                 return (
                   <>
@@ -725,7 +730,7 @@ const AddEditProductPage = () => {
                           </span>
                         </div>
                       ) : (
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 px-3 py-3">
                           <span className="flex justify-center">
                             <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                           </span>
@@ -762,20 +767,9 @@ const AddEditProductPage = () => {
                 );
               })}
             </div>
-            <div className="mt-2">
-              {errors.productImages && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errors.productImages?.message}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="w-full col-span-3">
-            <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black ">
-              Product Video
-            </div>
+
             <div
-              className="sm:w-2/3 w-full cursor-pointer  sm:h-[350px] h-[214px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+              className="lg:w-[35%] mt-4 lg:mt-0 w-full cursor-pointer  sm:h-[350px] h-[214px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
               onClick={() => {
                 productVideo == "" &&
                   document.getElementById("productVideoId").click();
@@ -812,7 +806,7 @@ const AddEditProductPage = () => {
                   </span>
                 </div>
               ) : (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 px-3">
                   <span className="flex justify-center">
                     <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                   </span>
@@ -843,6 +837,18 @@ const AddEditProductPage = () => {
               />
             </div>
           </div>
+          <div className="mt-2">
+            {errors.productImages && (
+              <span style={{ color: "red" }} className="-mb-6">
+                {errors.productImages?.message}
+              </span>
+            )}
+          </div>
+          {/* <div className="w-full">
+            <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black ">
+              Product Video
+            </div>
+          </div> */}
         </div>
         <div className="flex justify-end sm:gap-4 gap-2 mt-16">
           <button
