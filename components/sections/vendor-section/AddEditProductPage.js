@@ -709,6 +709,7 @@ const AddEditProductPage = () => {
             </div>
           </div>
           <div className="sm:w-[50%] my-10">
+            <p className="text-sm font-medium pb-2 font-Nova">Description</p>
             <SunEditor
               setOptions={{
                 buttonList: [
@@ -724,7 +725,7 @@ const AddEditProductPage = () => {
               // onChange={(content) => {
               //   setValue("product_description", content);
               // }}
-              height="290px"
+              height="250px"
             />
             <div className="mt-2">
               {errorDescription && (
