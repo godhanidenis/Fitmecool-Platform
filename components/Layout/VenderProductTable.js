@@ -18,6 +18,7 @@ import { useState } from "react";
 import { deleteProduct } from "../../graphql/mutations/products";
 import { toast } from "react-toastify";
 import { CustomAuthModal } from "../core/CustomMUIComponents";
+import HTMLReactParser from "html-react-parser";
 
 const style = {
   position: "absolute",
@@ -102,7 +103,8 @@ const VenderProductTable = ({
                   <TableCell align="left">{item?.product_color}</TableCell>
                   <TableCell align="left">
                     <div className="line-clamp-2">
-                      {item?.product_description}
+                      {HTMLReactParser(item?.product_description)}
+                      {/* {item?.product_description} */}
                     </div>
                   </TableCell>
                   <TableCell align="left">

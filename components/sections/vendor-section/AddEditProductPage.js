@@ -91,6 +91,8 @@ const AddEditProductPage = () => {
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [editorDescriptionContent, setEditorDescriptionContent] = useState("");
+  const [errorDescription, setErrorDescription] = useState("");
 
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
@@ -163,8 +165,11 @@ const AddEditProductPage = () => {
         console.log("res:::", res.data.product.data);
 
         setValue("product_name", res?.data?.product?.data?.product_name);
-        setValue(
-          "product_description",
+        // setValue(
+        //   "product_description",
+        //   res?.data?.product?.data?.product_description
+        // );
+        setEditorDescriptionContent(
           res?.data?.product?.data?.product_description
         );
         setValue("product_color", res?.data?.product.data?.product_color);
@@ -262,18 +267,71 @@ const AddEditProductPage = () => {
     }
   };
 
+  const handleEditorChange = (content) => {
+    setEditorDescriptionContent(content);
+
+    const trimmedContent = content.trim();
+    if (trimmedContent === "" || trimmedContent === "<p><br></p>") {
+      setErrorDescription("Product description is required");
+    } else {
+      setErrorDescription("");
+    }
+  };
+
+  const isEditorEmpty = () => {
+    const trimmedContent = editorDescriptionContent.trim();
+    return trimmedContent === "" || trimmedContent === "<p><br></p>";
+  };
+
   const onSubmit = (data) => {
-    setLoading(true);
-    if (editProductId === undefined) {
-      MultipleImageUploadFile(uploadProductImages).then((res) => {
-        uploadProductVideo !== undefined
-          ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-              createProduct({
+    if (isEditorEmpty()) {
+      setErrorDescription("Product description is required");
+    } else {
+      setErrorDescription("");
+      setLoading(true);
+      if (editProductId === undefined) {
+        MultipleImageUploadFile(uploadProductImages).then((res) => {
+          uploadProductVideo !== undefined
+            ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
+                createProduct({
+                  productInfo: {
+                    branch_id: data.product_branch,
+                    category_id: data.product_category,
+                    product_color: data.product_color,
+                    product_description: editorDescriptionContent,
+                    product_name: data.product_name,
+                    product_type: data.product_type,
+                    product_image: {
+                      front: res.data.data.multipleUpload[0],
+                      back: res.data.data.multipleUpload[1],
+                      side: res.data.data.multipleUpload[2],
+                    },
+                    product_video: videoResponse.data.data.singleUpload,
+                  },
+                }).then(
+                  (res) => {
+                    console.log("res:::", res);
+                    toast.success(res.data.createProduct.message, {
+                      theme: "colored",
+                    });
+                    setLoading(false);
+                    handleProductListingModalClose();
+                    router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
+                    // setProductPageSkip(0);
+                    // getAllProducts();
+                  },
+                  (error) => {
+                    setLoading(false);
+                    toast.error(error.message, { theme: "colored" });
+                  }
+                );
+              })
+            : createProduct({
                 productInfo: {
                   branch_id: data.product_branch,
                   category_id: data.product_category,
                   product_color: data.product_color,
-                  product_description: data.product_description,
+                  product_description: editorDescriptionContent,
                   product_name: data.product_name,
                   product_type: data.product_type,
                   product_image: {
@@ -281,7 +339,6 @@ const AddEditProductPage = () => {
                     back: res.data.data.multipleUpload[1],
                     side: res.data.data.multipleUpload[2],
                   },
-                  product_video: videoResponse.data.data.singleUpload,
                 },
               }).then(
                 (res) => {
@@ -300,63 +357,65 @@ const AddEditProductPage = () => {
                   toast.error(error.message, { theme: "colored" });
                 }
               );
-            })
-          : createProduct({
-              productInfo: {
-                branch_id: data.product_branch,
-                category_id: data.product_category,
-                product_color: data.product_color,
-                product_description: data.product_description,
-                product_name: data.product_name,
-                product_type: data.product_type,
-                product_image: {
-                  front: res.data.data.multipleUpload[0],
-                  back: res.data.data.multipleUpload[1],
-                  side: res.data.data.multipleUpload[2],
-                },
-              },
-            }).then(
-              (res) => {
-                console.log("res:::", res);
-                toast.success(res.data.createProduct.message, {
-                  theme: "colored",
-                });
-                setLoading(false);
-                handleProductListingModalClose();
-                router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                // setProductPageSkip(0);
-                // getAllProducts();
-              },
-              (error) => {
-                setLoading(false);
-                toast.error(error.message, { theme: "colored" });
-              }
-            );
-      });
-    } else {
-      productAllMediaImages.map((img) =>
-        deleteMedia({
-          file: img,
-          fileType: "image",
-        }).then((res) => setProductAllMediaImages([]))
-      );
+        });
+      } else {
+        productAllMediaImages.map((img) =>
+          deleteMedia({
+            file: img,
+            fileType: "image",
+          }).then((res) => setProductAllMediaImages([]))
+        );
 
-      productAllMediaVideo !== undefined &&
-        deleteMedia({
-          file: productAllMediaVideo,
-          fileType: "video",
-        }).then((res) => setProductAllMediaVideo());
+        productAllMediaVideo !== undefined &&
+          deleteMedia({
+            file: productAllMediaVideo,
+            fileType: "video",
+          }).then((res) => setProductAllMediaVideo());
 
-      MultipleImageUploadFile(uploadProductImages).then((res) => {
-        uploadProductVideo !== undefined
-          ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-              updateProduct({
+        MultipleImageUploadFile(uploadProductImages).then((res) => {
+          uploadProductVideo !== undefined
+            ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
+                updateProduct({
+                  id: editProductId,
+                  productInfo: {
+                    branch_id: data.product_branch,
+                    category_id: data.product_category,
+                    product_color: data.product_color,
+                    product_description: editorDescriptionContent,
+                    product_name: data.product_name,
+                    product_type: data.product_type,
+                    product_image: {
+                      front: res.data.data.multipleUpload[0],
+                      back: res.data.data.multipleUpload[1],
+                      side: res.data.data.multipleUpload[2],
+                    },
+                    product_video: videoResponse.data.data.singleUpload,
+                  },
+                }).then(
+                  (res) => {
+                    console.log("res:::", res);
+                    toast.success(res.data.updateProduct.message, {
+                      theme: "colored",
+                    });
+                    setLoading(false);
+                    handleProductListingModalClose();
+                    router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
+                    // setProductPageSkip(0);
+                    // getAllProducts();
+                  },
+                  (error) => {
+                    setLoading(false);
+                    toast.error(error.message, { theme: "colored" });
+                  }
+                );
+              })
+            : updateProduct({
                 id: editProductId,
                 productInfo: {
                   branch_id: data.product_branch,
                   category_id: data.product_category,
                   product_color: data.product_color,
-                  product_description: data.product_description,
+                  product_description: editorDescriptionContent,
                   product_name: data.product_name,
                   product_type: data.product_type,
                   product_image: {
@@ -364,7 +423,6 @@ const AddEditProductPage = () => {
                     back: res.data.data.multipleUpload[1],
                     side: res.data.data.multipleUpload[2],
                   },
-                  product_video: videoResponse.data.data.singleUpload,
                 },
               }).then(
                 (res) => {
@@ -383,42 +441,11 @@ const AddEditProductPage = () => {
                   toast.error(error.message, { theme: "colored" });
                 }
               );
-            })
-          : updateProduct({
-              id: editProductId,
-              productInfo: {
-                branch_id: data.product_branch,
-                category_id: data.product_category,
-                product_color: data.product_color,
-                product_description: data.product_description,
-                product_name: data.product_name,
-                product_type: data.product_type,
-                product_image: {
-                  front: res.data.data.multipleUpload[0],
-                  back: res.data.data.multipleUpload[1],
-                  side: res.data.data.multipleUpload[2],
-                },
-              },
-            }).then(
-              (res) => {
-                console.log("res:::", res);
-                toast.success(res.data.updateProduct.message, {
-                  theme: "colored",
-                });
-                setLoading(false);
-                handleProductListingModalClose();
-                router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                // setProductPageSkip(0);
-                // getAllProducts();
-              },
-              (error) => {
-                setLoading(false);
-                toast.error(error.message, { theme: "colored" });
-              }
-            );
-      });
+        });
+      }
     }
   };
+
   if (!isHydrated) {
     return null;
   }
@@ -471,7 +498,7 @@ const AddEditProductPage = () => {
                 )}
               </div>
             </div>
-            <div className="w-full relative">
+            {/* <div className="w-full relative">
               <CustomTextFieldVendor
                 label="Description"
                 type="text"
@@ -493,7 +520,7 @@ const AddEditProductPage = () => {
                   </span>
                 )}
               </div>
-            </div>
+            </div> */}
             <div className="w-full relative">
               <FormControl fullWidth>
                 <Controller
@@ -682,7 +709,30 @@ const AddEditProductPage = () => {
             </div>
           </div>
           <div className="sm:w-[50%] my-10">
-            <SunEditor height="370px" />
+            <SunEditor
+              setOptions={{
+                buttonList: [
+                  ["undo", "redo"],
+                  ["bold", "underline", "italic"],
+                ],
+              }}
+              setContents={editorDescriptionContent}
+              onChange={handleEditorChange}
+              // {...register("product_description", {
+              //   required: "Product description is required",
+              // })}
+              // onChange={(content) => {
+              //   setValue("product_description", content);
+              // }}
+              height="290px"
+            />
+            <div className="mt-2">
+              {errorDescription && (
+                <span style={{ color: "red" }} className="-mb-6">
+                  {errorDescription}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <div className="gap-10 my-10 sm:ml-5">
@@ -739,7 +789,11 @@ const AddEditProductPage = () => {
                               <span className="text-colorGreen">
                                 Click to Upload{" "}
                               </span>
-                              Front Image
+                              {item === "One"
+                                ? "Front Image"
+                                : item === "Two"
+                                ? "Back Image"
+                                : "Side Image"}
                             </p>
                             <p className="text-xs text-gray-400 text-center">
                               We Support JPG, PNG & No Size Limit

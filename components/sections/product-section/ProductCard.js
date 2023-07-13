@@ -27,6 +27,7 @@ import googleIcon from "../../../assets/googleIcon.svg";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
+import HTMLReactParser from "html-react-parser";
 
 const style = {
   position: "absolute",
@@ -511,9 +512,9 @@ const ProductCard = ({
                   </p>
                   <p
                     className="text-[#565f66] text-base mt-2"
-                    title={product.product_description}
+                    title={HTMLReactParser(product.product_description)}
                   >
-                    {product.product_description}
+                    {HTMLReactParser(product.product_description)}
                   </p>
                   <Link href={`/product/${product.id}`}>
                     <a

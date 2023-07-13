@@ -49,6 +49,7 @@ import {
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
+import HTMLReactParser from "html-react-parser";
 
 const ContactStyle = {
   position: "absolute",
@@ -211,16 +212,16 @@ const ProductDetail = ({ productDetails }) => {
           <div className="flex items-center justify-between w-full gap-3">
             <div className="flex justify-start items-center gap-1 sm:gap-4">
               <div className="flex justify-center items-center">
-              <Link
+                <Link
                   href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                 >
-                <Avatar
-                  className="!w-12 !h-12 cursor-pointer"
-                  src={
-                    productDetails.data.product.data.branchInfo?.shop_info
-                      .shop_logo
-                  }
-                />
+                  <Avatar
+                    className="!w-12 !h-12 cursor-pointer"
+                    src={
+                      productDetails.data.product.data.branchInfo?.shop_info
+                        .shop_logo
+                    }
+                  />
                 </Link>
               </div>
               <div className="flex flex-col justify-center ">
@@ -523,17 +524,17 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="flex items-center justify-between w-full gap-4">
                     <div className="flex justify-start items-center gap-1 sm:gap-4">
                       <div className="flex justify-center items-center">
-                      <Link
+                        <Link
                           href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                         >
-                        <img
-                          alt="Shop Logo"
-                          src={
-                            productDetails.data.product.data.branchInfo
-                              ?.shop_info.shop_logo
-                          }
-                          className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
-                        />
+                          <img
+                            alt="Shop Logo"
+                            src={
+                              productDetails.data.product.data.branchInfo
+                                ?.shop_info.shop_logo
+                            }
+                            className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
+                          />
                         </Link>
                       </div>
                       <div className="flex flex-col justify-center">
@@ -716,7 +717,9 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
                 <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
                   <div className="font-normal text-lg text-[#888888] leading-6">
-                    {productDetails.data.product.data.product_description}
+                    {HTMLReactParser(
+                      productDetails.data.product.data.product_description
+                    )}
                   </div>
                 </div>
                 <div className="mt-6">
