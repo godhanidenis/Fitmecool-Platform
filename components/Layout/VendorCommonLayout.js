@@ -24,12 +24,12 @@ const VendorCommonLayout = ({ children }) => {
       </div>
 
       <div className="flex flex-col md:flex-row min-h-screen sm:gap-10  font-Nova">
-        <div className="sm:w-[310px] w-full relative">
+        <div className="sm:w-[360px] w-full relative">
           <div className="">
             <VendorSidebar vendorShopDetails={vendorShopDetails} />
           </div>
         </div>
-        <div className="w-full lg:w-[70%] sm:w-[60%] sm:mt-6 sm:mr-5">
+        <div className="w-full lg:w-[71%] sm:w-[60%] sm:mt-6 sm:mr-5">
           {children}
         </div>
       </div>

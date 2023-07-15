@@ -9,6 +9,13 @@ import {
   InputLabel,
   NativeSelect,
   Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import Image from "next/image";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -45,6 +52,8 @@ import { withAuth } from "../../../../components/core/PrivateRouteForVendor";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VenderProductTable from "../../../../components/Layout/VenderProductTable";
 
 const style = {
   position: "absolute",
@@ -71,6 +80,18 @@ const colorsList = [
   "green",
   "white",
   "black",
+];
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];
 
 const ShopDetailsPage = () => {
@@ -108,7 +129,7 @@ const ShopDetailsPage = () => {
   const { productsCount, productsData } = useSelector(
     (state) => state.products
   );
-
+  console.log("productsData", productsData);
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
@@ -557,7 +578,7 @@ const ShopDetailsPage = () => {
     <>
       <div className="">
         <div className="flex flex-col mt-2">
-          <div className="flex w-[95%] mx-auto flex-row-reverse py-2">
+          <div className="flex w-[95%] ml-auto flex-row-reverse py-2">
             <button
               // onClick={() => setProductListingModalOpen(true)}
               onClick={() =>
@@ -573,29 +594,16 @@ const ShopDetailsPage = () => {
           </div>
 
           <div className="rounded-lg pt-4">
-            <div className="w-[95%] mx-auto">
+            <div className="w-[95%] ml-auto">
               <UpperFilter
                 setProductPageSkip={setProductPageSkip}
                 forShopPage={true}
                 showDrawerFilter={true}
                 isVendor={true}
+                hideGridAndLine={true}
               />
 
-              {/* <p className="font-bold text-2xl text-colorBlack">
-                  Special Products
-                </p> */}
-              {/* <InfiniteScroll
-                  className="!overflow-hidden p-0.5"
-                  dataLength={productsData.length}
-                  next={() => setProductPageSkip(productPageSkip + 6)}
-                  hasMore={productsData.length < productsCount}
-                  loader={
-                    <div className="text-center">
-                      <CircularProgress />
-                    </div>
-                  }
-                > */}
-              <div
+              {/* <div
                 className={`${
                   productsFiltersReducer?.productLayout === "list"
                     ? ""
@@ -613,6 +621,14 @@ const ShopDetailsPage = () => {
                       setEditProductId={setEditProductId}
                     />
                   ))}
+              </div> */}
+
+              <div className="mt-8">
+                <VenderProductTable
+                  productsData={productsData}
+                  setProductPageSkip={setProductPageSkip}
+                  getAllProducts={getAllProducts}
+                />
               </div>
 
               {productsCount > 6 && (

@@ -16,11 +16,12 @@ import {
   Checkbox,
   TextField,
   CircularProgress,
+  FormControl,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
 import AddIcon from "@mui/icons-material/Add";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   CustomAuthModal,
   CustomTextField,
@@ -36,6 +37,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
+import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 
 const subBranchStyle = {
   position: "absolute",
@@ -138,6 +140,25 @@ const ShopPage = () => {
       setValue("manager_user_email", "");
       setValue("manager_user_contact", "");
     }
+  }, [getValues, sameAsOwner, setValue, currentStep]);
+
+  const [subBranchButtonShow, setSubBranchButtonShow] = useState(false);
+
+  const getAllValues = () => {
+    if (
+      getValues("manager_first_name") === "" ||
+      getValues("manager_last_name") === "" ||
+      getValues("manager_user_email") === "" ||
+      getValues("manager_user_contact") === ""
+    ) {
+      setSubBranchButtonShow(false);
+    } else {
+      setSubBranchButtonShow(true);
+    }
+  };
+
+  useEffect(() => {
+    getAllValues();
   }, [getValues, sameAsOwner, setValue, currentStep]);
 
   const onShopLogoPreviewImage = (e) => {
@@ -518,7 +539,7 @@ const ShopPage = () => {
                   <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px]  border-colorGreen"></span>
                 )}
 
-                {currentStep === 2 ? (
+                {currentStep === 3 ? (
                   <>
                     <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
                     <span className="sm:h-8 sm:w-8 h-4 w-4  rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
@@ -593,11 +614,14 @@ const ShopPage = () => {
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
-                          label=" First Name"
+                          label="First Name"
                           type="text"
                           id="fName"
+                          name="first_name"
                           isRequired={true}
                           placeholder="Your first name"
+                          fieldValue={getValues("first_name")}
+                          fieldError={errors?.first_name}
                           formValue={{
                             ...register("first_name", {
                               required: "First name is required",
@@ -614,11 +638,14 @@ const ShopPage = () => {
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
-                          label="  Last Name"
+                          label="Last Name"
                           type="text"
                           id="lName"
+                          name="last_name"
                           isRequired={true}
                           placeholder="Your last name"
+                          fieldValue={getValues("last_name")}
+                          fieldError={errors?.last_name}
                           formValue={{
                             ...register("last_name", {
                               required: "Last name is required",
@@ -636,11 +663,14 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label=" E-Mail"
+                        label="E-Mail"
                         type="email"
                         id="email"
+                        name="user_email"
                         isRequired={true}
                         placeholder="yourmail@gmail.com"
+                        fieldValue={getValues("user_email")}
+                        fieldError={errors?.user_email}
                         formValue={{
                           ...register("user_email", {
                             required: "Email is required",
@@ -663,11 +693,14 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label=" Phone Number"
+                        label="Phone Number"
                         type="text"
                         id="phone"
+                        name="user_contact"
                         isRequired={true}
                         placeholder="Your phone number"
+                        fieldValue={getValues("user_contact")}
+                        fieldError={errors?.user_contact}
                         formValue={{
                           ...register("user_contact", {
                             required: "Contact number is required",
@@ -710,7 +743,8 @@ const ShopPage = () => {
                   >
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label=" Shop Name"
+                        name="shop_name"
+                        label="Shop Name"
                         type="text"
                         id="shopName"
                         isRequired={true}
@@ -733,6 +767,7 @@ const ShopPage = () => {
                       <>
                         <div className="w-full relative">
                           <CustomTextFieldVendor
+                            name="shop_email"
                             label="Shop Email"
                             type="email"
                             id="shopEmail"
@@ -760,7 +795,8 @@ const ShopPage = () => {
                         </div>
                         <div className="w-full relative">
                           <CustomTextFieldVendor
-                            label=" Personal Website Link"
+                            name="personal_website"
+                            label="Personal Website Link"
                             type="text"
                             id="personalWebLink1"
                             isRequired={false}
@@ -782,7 +818,8 @@ const ShopPage = () => {
                         <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
                           <div className="w-1/2 relative max-md:w-full">
                             <CustomTextFieldVendor
-                              label="  Fackbook Link"
+                              name="facebook_link"
+                              label="Fackbook Link"
                               type="text"
                               id="fbLink"
                               isRequired={false}
@@ -803,6 +840,7 @@ const ShopPage = () => {
                           </div>
                           <div className="w-1/2 relative max-md:w-full">
                             <CustomTextFieldVendor
+                              name="instagram_link"
                               label=" Instagram Link"
                               type="text"
                               id="igLink"
@@ -866,26 +904,14 @@ const ShopPage = () => {
                         <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
                           {hours?.map((day, index) => (
                             <div className="relative" key={index}>
-                              <label
-                                htmlFor="sunday"
-                                className="absolute sm:-top-4 -top-3 left-5 px-2 bg-white font-semibold sm:text-lg text-sm"
-                              >
-                                {day["key"]}
-                              </label>
                               {day["value"]?.map((time, index) => (
-                                <input
+                                <TimeCustomTextField
                                   key={index}
                                   type="text"
-                                  id="sunday"
+                                  id={index}
+                                  variant="outlined"
+                                  label={day["key"]}
                                   value={time}
-                                  className={`w-full px-7 sm:py-5 py-3 text-sm sm:text-lg rounded-xl border border-gray-200 outline-none ${
-                                    time === "Closed"
-                                      ? "text-red-600"
-                                      : time === "Open 24 hours"
-                                      ? "text-green-600"
-                                      : ""
-                                  }`}
-                                  readOnly
                                 />
                               ))}
                             </div>
@@ -1209,6 +1235,7 @@ const ShopPage = () => {
                   >
                     <div className="w-full relative">
                       <CustomTextFieldVendor
+                        name="address"
                         label="Address"
                         type="text"
                         id="address"
@@ -1231,6 +1258,7 @@ const ShopPage = () => {
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
+                          name="city"
                           label=" City"
                           type="text"
                           id="city"
@@ -1252,6 +1280,7 @@ const ShopPage = () => {
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
+                          name="pin_code"
                           label=" Pincode"
                           type="number"
                           id="pincode"
@@ -1392,19 +1421,32 @@ const ShopPage = () => {
 
                     <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                       <div className="sm:w-1/2 relative w-full">
-                        <CustomTextFieldVendor
-                          label="First Name"
-                          type="text"
-                          id="managerfName"
-                          isRequired={true}
-                          placeholder="Manager first name"
-                          disabled={sameAsOwner === "True"}
-                          formValue={{
-                            ...register("manager_first_name", {
-                              required: "Manager FirstName is required",
-                            }),
-                          }}
-                        />
+                        <FormControl fullWidth>
+                          <Controller
+                            name="manager_first_name"
+                            control={control}
+                            defaultValue="" // Set the initial value here
+                            render={({ field }) => (
+                              <>
+                                <TextField
+                                  {...field}
+                                  label="First Name"
+                                  type="text"
+                                  id="managerfName"
+                                  isRequired={true}
+                                  placeholder="Manager first name"
+                                  disabled={sameAsOwner === "True"}
+                                  {...register("manager_first_name", {
+                                    required: "Manager FirstName is required",
+                                    onChange: () => {
+                                      getAllValues();
+                                    },
+                                  })}
+                                />
+                              </>
+                            )}
+                          />
+                        </FormControl>
                         {errors.manager_first_name && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
@@ -1414,19 +1456,32 @@ const ShopPage = () => {
                         )}
                       </div>
                       <div className="sm:w-1/2 relative w-full">
-                        <CustomTextFieldVendor
-                          label=" Last Name"
-                          type="text"
-                          id="mangerlName"
-                          isRequired={true}
-                          placeholder="Manager last name"
-                          disabled={sameAsOwner === "True"}
-                          formValue={{
-                            ...register("manager_last_name", {
-                              required: "Manager LastName is required",
-                            }),
-                          }}
-                        />
+                        <FormControl fullWidth>
+                          <Controller
+                            name="manager_last_name"
+                            control={control}
+                            defaultValue="" // Set the initial value here
+                            render={({ field }) => (
+                              <>
+                                <TextField
+                                  {...field}
+                                  label=" Last Name"
+                                  type="text"
+                                  id="mangerlName"
+                                  isRequired={true}
+                                  placeholder="Manager last name"
+                                  disabled={sameAsOwner === "True"}
+                                  {...register("manager_last_name", {
+                                    required: "Manager LastName is required",
+                                    onChange: () => {
+                                      getAllValues();
+                                    },
+                                  })}
+                                />
+                              </>
+                            )}
+                          />
+                        </FormControl>
                         {errors.manager_last_name && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
@@ -1437,25 +1492,38 @@ const ShopPage = () => {
                       </div>
                     </div>
                     <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        label=" E-Mail"
-                        type="email"
-                        id="managerEmail"
-                        isRequired={true}
-                        placeholder="Manager email address"
-                        disabled={sameAsOwner === "True"}
-                        formValue={{
-                          ...register("manager_user_email", {
-                            required: "Manager Email is required",
+                      <FormControl fullWidth>
+                        <Controller
+                          name="manager_user_email"
+                          control={control}
+                          defaultValue="" // Set the initial value here
+                          render={({ field }) => (
+                            <>
+                              <TextField
+                                {...field}
+                                label=" E-Mail"
+                                type="email"
+                                id="managerEmail"
+                                isRequired={true}
+                                placeholder="Manager email address"
+                                disabled={sameAsOwner === "True"}
+                                {...register("manager_user_email", {
+                                  required: "Manager Email is required",
 
-                            pattern: {
-                              value:
-                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                              message: "Please enter a valid email",
-                            },
-                          }),
-                        }}
-                      />
+                                  pattern: {
+                                    value:
+                                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                    message: "Please enter a valid email",
+                                  },
+                                  onChange: () => {
+                                    getAllValues();
+                                  },
+                                })}
+                              />
+                            </>
+                          )}
+                        />
+                      </FormControl>
                       {errors.manager_user_email && (
                         <div className="mt-2">
                           <span style={{ color: "red" }}>
@@ -1465,23 +1533,37 @@ const ShopPage = () => {
                       )}
                     </div>
                     <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        label="Phone Number"
-                        type="number"
-                        id="managerPhone"
-                        isRequired={true}
-                        placeholder="Manager phone number"
-                        disabled={sameAsOwner === "True"}
-                        formValue={{
-                          ...register("manager_user_contact", {
-                            required: "Manager Contact Number is required",
-                            pattern: {
-                              value: /^[0-9]{10}$/,
-                              message: "Please enter a valid number",
-                            },
-                          }),
-                        }}
-                      />
+                      <FormControl fullWidth>
+                        <Controller
+                          name="manager_user_contact"
+                          control={control}
+                          defaultValue="" // Set the initial value here
+                          render={({ field }) => (
+                            <>
+                              <TextField
+                                {...field}
+                                label="Phone Number"
+                                type="number"
+                                id="managerPhone"
+                                isRequired={true}
+                                placeholder="Manager phone number"
+                                disabled={sameAsOwner === "True"}
+                                {...register("manager_user_contact", {
+                                  required:
+                                    "Manager Contact Number is required",
+                                  pattern: {
+                                    value: /^[0-9]{10}$/,
+                                    message: "Please enter a valid number",
+                                  },
+                                  onChange: () => {
+                                    getAllValues();
+                                  },
+                                })}
+                              />
+                            </>
+                          )}
+                        />
+                      </FormControl>
                       {errors.manager_user_contact && (
                         <div className="mt-2">
                           <span style={{ color: "red" }}>
@@ -1495,9 +1577,9 @@ const ShopPage = () => {
                     <div className="my-10">
                       <button
                         onClick={() => setSubBranchModalOpen(true)}
-                        disabled={!isValid}
+                        disabled={!subBranchButtonShow}
                         className={`${
-                          !isValid ? "opacity-50" : "opacity-100"
+                          !subBranchButtonShow ? "opacity-50" : "opacity-100"
                         } cursor-pointer flex items-center uppercase border-2  sm:px-8 sm:py-3 sm:text-base px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen`}
                       >
                         Sub Branch
@@ -1829,7 +1911,7 @@ const SubBranchModal = ({
     setSubManagerAddress("");
     setSubManagerCity("");
     setSubManagerPinCode("");
-    setSubManagerFirstName();
+    setSubManagerFirstName("");
     setSubManagerLastName("");
     setSubManagerEmail("");
     setManagerValue("");
@@ -1872,20 +1954,20 @@ const SubBranchModal = ({
               />
             </div>
 
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
-              <div className="container bg-colorWhite rounded-lg my-5 sm:my-10 p-5 space-y-5">
-                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-450px)] overflow-auto">
+              <div className="bg-colorWhite rounded-lg my-5 p-5 space-y-5">
+                {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Branches
-                </h3>
+                </h3> */}
                 <form>
                   <div className="flex flex-col space-y-3">
-                    <p className="mt-2 container flex items-center text-colorBlack text-lg">
+                    {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
                       Sub Branch
-                    </p>
+                    </p> */}
                     <div className="flex items-center justify-center container gap-20">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Address"
                             variant="standard"
@@ -1906,7 +1988,7 @@ const SubBranchModal = ({
                     <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="City"
                             variant="standard"
@@ -1924,7 +2006,7 @@ const SubBranchModal = ({
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="PinCode"
                             variant="standard"
@@ -1945,11 +2027,11 @@ const SubBranchModal = ({
 
                     <div className="flex justify-center items-center">
                       <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        <span className="font-semibold text-lg text-[#11142D] mt-5">
+                        {/* <span className="font-semibold text-lg text-[#11142D] mt-5">
                           Manager:
-                        </span>
+                        </span> */}
 
-                        <CustomTextField
+                        <CustomTextFieldVendor
                           label="Manager"
                           variant="standard"
                           select
@@ -1966,17 +2048,17 @@ const SubBranchModal = ({
                               {man}
                             </MenuItem>
                           ))}
-                        </CustomTextField>
+                        </CustomTextFieldVendor>
                       </div>
                     </div>
 
                     <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                      {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                         Name:
-                      </p>
+                      </p> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager First Name"
                             variant="standard"
@@ -1998,7 +2080,7 @@ const SubBranchModal = ({
                       </div>
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager Last Name"
                             variant="standard"
@@ -2021,12 +2103,12 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                         Email:
-                      </p>
+                      </p> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager Email Address"
                             variant="standard"
@@ -2050,12 +2132,12 @@ const SubBranchModal = ({
                     </div>
 
                     <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
                         Phone:
-                      </p>
+                      </p> */}
                       <div className="w-full flex flex-col gap-2">
                         <Box sx={{ display: "flex" }}>
-                          <CustomTextField
+                          <CustomTextFieldVendor
                             id="input-with-sx"
                             label="Manager Phone Number"
                             variant="standard"
@@ -2093,14 +2175,14 @@ const SubBranchModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize text-colorGreen hover:bg-white bg-white border border-colorGreen hover:border-colorGreen py-2 px-5"
+                className="rounded-xl capitalize !text-colorGreen hover:!bg-white !bg-white border !border-colorGreen hover:!border-colorGreen py-2 px-5"
                 onClick={handleSubBranchModalClose}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorGreen hover:bg-colorGreen py-2 px-5"
+                className="rounded-xl capitalize !text-colorWhite !bg-colorGreen hover:!bg-colorGreen py-2 px-5"
                 onClick={subBranchSubmit}
               >
                 {subBranchEdit?.id ? "Update" : "Save"}
@@ -2134,10 +2216,10 @@ const HoursModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-[80%]">
+        <Box sx={style} className="!w-[90%] lg:!w-[80%] xl:!w-[50%]">
           <div className="sm:p-5 lg:p-5 p-1">
             <div className="flex justify-between items-center">
-              <div className="sm:text-2xl text-[16px] font-bold">Hours</div>
+              <div className="sm:text-[28px] text-[16px] font-bold">Hours</div>
               <span>
                 <CloseIcon
                   className="text-gray-500 !text-xl sm:!text-3xl"
@@ -2146,15 +2228,15 @@ const HoursModal = ({
                 />
               </span>
             </div>
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
-              <div className="grid grid-cols-1 gap-y-5 my-5 xl:my-14 lg:my-10 sm:my-7 ">
+            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-400px)] overflow-auto">
+              <div className="grid grid-cols-1 gap-y-5 my-2">
                 {hours?.map((day, index) => (
                   <div
                     key={index}
                     className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
                   >
                     <div className="flex xl:gap-32  items-center mt-1 sm:mt-0">
-                      <div className="sm:text-2xl text-base font-semibold">
+                      <div className="sm:text-xl text-sm font-semibold">
                         {day["key"]}
                       </div>
                     </div>
@@ -2171,17 +2253,18 @@ const HoursModal = ({
                                 : time === "Open 24 hours"
                                 ? "text-green-600"
                                 : ""
-                            } font-semibold text-2xl`}
+                            } font-semibold text-xl`}
                           >
                             {time}
                           </p>
                         ) : (
-                          <div className="flex lg:gap-4 gap-2 lg:flex-row flex-col">
+                          <div className="flex lg:gap-4 gap-2 sm:flex-row flex-col">
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
-                                Start with
-                              </span>
-                              <input
+                              <TimeCustomTextField
+                                type="time"
+                                id={index}
+                                variant="outlined"
+                                label="Start with"
                                 value={
                                   time?.split(" - ")[0]?.split(" ")[1] === "PM"
                                     ? String(
@@ -2199,18 +2282,14 @@ const HoursModal = ({
                                         ?.split(":")[1]
                                     : time?.split(" - ")[0]?.split(" ")[0]
                                 }
-                                type="time"
-                                readOnly
-                                id="saturday"
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                             <div className="relative">
-                              <span className="absolute top-1 sm:text-xs text-[10px] font-semibold sm:left-10 left-5">
-                                End with
-                              </span>
-                              <input
+                              <TimeCustomTextField
                                 type="time"
+                                id={index}
+                                variant="outlined"
+                                label="End with"
                                 value={
                                   time?.split(" - ")[1]?.split(" ")[1] === "PM"
                                     ? String(
@@ -2228,9 +2307,6 @@ const HoursModal = ({
                                         ?.split(":")[1]
                                     : time?.split(" - ")[1]?.split(" ")[0]
                                 }
-                                id="saturday"
-                                readOnly
-                                className="lg:px-7 lg:pt-4 sm:px-3 pb-1 px-1 pt-3 sm:text-xl text-base font-semibold rounded-lg border border-gray-200 focus:border-black outline-none"
                               />
                             </div>
                           </div>
@@ -2255,7 +2331,7 @@ const HoursModal = ({
                   </div>
                 ))}
               </div>
-              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 lg:mt-20 mt-10">
+              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 mt-8">
                 <button
                   onClick={() => {
                     setDaysTimeModalOpen(true);
@@ -2548,6 +2624,14 @@ const DaysTimeModal = ({
     setCloseTime();
   };
 
+  const DisableButton = () => {
+    if ((startTime && closeTime) === undefined && !open24Hours && !closed) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <CustomAuthModal
@@ -2649,20 +2733,18 @@ const DaysTimeModal = ({
             <div className="container mt-5 flex items-center justify-end gap-5">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize font-semibold hover:bg-white bg-white text-colorGreen border-2 border-colorGreen hover:border-colorGreen py-2 px-5"
+                className="rounded-xl capitalize font-semibold hover:!bg-white !bg-white !text-colorGreen border-2 !border-colorGreen hover:!border-colorGreen py-2 px-5"
                 onClick={handleCloseDaysTimeModal}
               >
                 Cancel
               </Button>
               <Button
                 variant="contained"
-                className="rounded-xl capitalize font-semibold text-white bg-colorGreen hover:bg-colorGreen border-2 border-colorGreen py-2 px-5"
+                className={`rounded-xl capitalize font-semibold !text-white ${
+                  !DisableButton() && "!bg-colorGreen"
+                } hover:!bg-colorGreen border-2 !border-colorGreen py-2 px-5`}
                 onClick={saveDaysTimeData}
-                disabled={
-                  (startTime && closeTime) === undefined &&
-                  !open24Hours &&
-                  !closed
-                }
+                disabled={DisableButton()}
               >
                 Save
               </Button>

@@ -53,7 +53,7 @@ const VendorSidebar = ({ vendorShopDetails }) => {
   return (
     <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center">
       <div className="flex justify-center">
-        <div className="w-[182px] h-[182px] mb-10 sm:mt-10 rounded-full">
+        <div className="w-[150px] h-[150px] mb-10 sm:mt-10 rounded-full">
           <img
             src={vendorShopDetails?.shop_logo}
             className="object-cover rounded-full w-full h-full"
