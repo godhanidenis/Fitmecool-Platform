@@ -49,7 +49,7 @@ const LandingPage = () => {
       loadProductsStart({
         pageData: {
           skip: productPageSkip,
-          limit: 6,
+          limit: 12,
         },
         filter: {
           category_id:
@@ -72,7 +72,7 @@ const LandingPage = () => {
       loadShopsStart({
         pageData: {
           skip: shopPageSkip,
-          limit: 6,
+          limit: 12,
         },
         area: shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
         sort: shopsFiltersReducer.sortFilters.sortType.selectedValue,
@@ -160,12 +160,12 @@ const LandingPage = () => {
                     </p>
                     <Pagination
                       color="primary"
-                      count={Math.ceil(productsCount / 6)}
+                      count={Math.ceil(productsCount / 10)}
                       page={
-                        (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                        (productPageSkip === 0 && 1) || productPageSkip / 10 + 1
                       }
                       onChange={(e, p) => {
-                        setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                        setProductPageSkip((p === 1 && 0) || (p - 1) * 10);
                       }}
                     />
                   </div>
@@ -191,10 +191,10 @@ const LandingPage = () => {
                     </p>
                     <Pagination
                       color="primary"
-                      count={Math.ceil(shopsCount / 6)}
-                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
+                      count={Math.ceil(shopsCount / 12)}
+                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 12 + 1}
                       onChange={(e, p) => {
-                        setShopPageSkip((p === 1 && 0) || (p - 1) * 6);
+                        setShopPageSkip((p === 1 && 0) || (p - 1) * 12);
                       }}
                     />
                   </div>

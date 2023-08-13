@@ -1,3 +1,4 @@
+import { Divider } from "@mui/material";
 import { useState } from "react";
 import Switch from "react-switch";
 
@@ -12,10 +13,10 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
   return (
     <>
       <div className="items-center">
-        <div className="bg-colorPrimary py-2 px-4">
-          <span className="text-white text-[22px]">Filters</span>
+        <div className="py-2 px-4">
+          <span className="text-black text-[22px] font-bold">Filters</span>
         </div>
-
+        <Divider/>
         {!productByShop && (
           <div className="flex items-center gap-2 mt-6 w-full px-6">
             <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800 w-full">

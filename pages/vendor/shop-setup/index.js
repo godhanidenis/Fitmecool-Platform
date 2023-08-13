@@ -12,7 +12,6 @@ import {
   MenuItem,
   Divider,
   Button,
-  IconButton,
   Checkbox,
   TextField,
   CircularProgress,
@@ -20,14 +19,11 @@ import {
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
-import AddIcon from "@mui/icons-material/Add";
 import { Controller, useForm } from "react-hook-form";
 import {
   CustomAuthModal,
   CustomTextField,
 } from "../../../components/core/CustomMUIComponents";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
@@ -38,6 +34,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import Image from "next/image";
 
 const subBranchStyle = {
   position: "absolute",
@@ -65,6 +64,102 @@ const style = {
   width: "80%",
 };
 
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 2,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 2,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
+
+const TrendingCustomLeftArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        left: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "28px",
+        height: "28px",
+        borderRadius: "50%",
+        marginLeft: "16px",
+        marginBottom: "9.5%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(135deg)",
+          cursor: "pointer",
+          position: "relative",
+          right: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
+const TrendingCustomRightArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        right: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "28px",
+        height: "28px",
+        borderRadius: "50%",
+        marginRight: "16px",
+        marginBottom: "9.5%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(-45deg)",
+          cursor: "pointer",
+          position: "relative",
+          left: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
 const ShopPage = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
   const dispatch = useDispatch();
@@ -72,12 +167,13 @@ const ShopPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("Shop");
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
 
   const [mainBranch, setMainBranch] = useState("Show");
+  const [subBranchSec, setsubBranchSec] = useState("Show");
   const [managerDetails, setManagerDetails] = useState("Show");
 
   const [shopLogo, setShopLogo] = useState("");
@@ -95,8 +191,38 @@ const ShopPage = () => {
 
   const [sameAsOwner, setSameAsOwner] = useState("False");
   const [individual, setIndividual] = useState(false);
-  const [subBranchModalOpen, setSubBranchModalOpen] = useState(false);
-  const [subBranch, setSubBranch] = useState([]);
+  const [subBranch, setSubBranch] = useState([
+    {
+      id: 1,
+      subManagerAddress: "godhanidenis@gmail.com",
+      subManagerCity: "surat",
+      subManagerPinCode: "520147",
+      subManagerFirstName: "Denis",
+      subManagerLastName: "Godhani",
+      subManagerEmail: "godhanidenis@gmail.com",
+      subManagerPhone: "9537256159",
+    },
+    {
+      id: 2,
+      subManagerAddress: "godhanidenis@gmail.com",
+      subManagerCity: "surat",
+      subManagerPinCode: "520147",
+      subManagerFirstName: "Denis",
+      subManagerLastName: "Godhani",
+      subManagerEmail: "godhanidenis@gmail.com",
+      subManagerPhone: "9537256159",
+    },
+    {
+      id: 3,
+      subManagerAddress: "godhanidenis@gmail.com",
+      subManagerCity: "surat",
+      subManagerPinCode: "520147",
+      subManagerFirstName: "Denis",
+      subManagerLastName: "Godhani",
+      subManagerEmail: "godhanidenis@gmail.com",
+      subManagerPhone: "9537256159",
+    },
+  ]);
   const [subBranchEdit, setSubBranchEdit] = useState();
 
   const [hoursModalOpen, setHoursModalOpen] = useState(false);
@@ -115,6 +241,10 @@ const ShopPage = () => {
     { key: "Friday", value: ["09:00 AM - 08:00 PM"] },
     { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
   ]);
+
+  useEffect(() => {
+    console.log("subBranch :", subBranch);
+  }, [subBranch]);
 
   const {
     register,
@@ -159,6 +289,7 @@ const ShopPage = () => {
 
   useEffect(() => {
     getAllValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues, sameAsOwner, setValue, currentStep]);
 
   const onShopLogoPreviewImage = (e) => {
@@ -249,6 +380,9 @@ const ShopPage = () => {
   };
   const handleManagerDetails = (option) => {
     setManagerDetails(option);
+  };
+  const handleSubBranchDetails = (option) => {
+    setsubBranchSec(option);
   };
 
   const returnSubBranchData = (val) => {
@@ -461,12 +595,13 @@ const ShopPage = () => {
     <>
       <div className="w-full">
         <div className="sm:h-[683px] h-[452px] relative">
-          <img
+          <Image
             src="https://thumbs.dreamstime.com/b/clothes-hangers-colorful-clothes-women-shop-summer-sale-73852501.jpg"
-            className="w-full h-full"
+            layout="fill"
+            objectFit="contain"
             alt=""
           />
-          <div class="absolute inset-0 bg-black mix-blend-darken opacity-80"></div>
+          <div className="absolute inset-0 bg-black mix-blend-darken opacity-80"></div>
         </div>
         <div className="relative -mt-[37rem] container">
           <div className="text-gray-400 sm:text-5xl text-3xl flex  items-center flex-col gap-4">
@@ -498,7 +633,7 @@ const ShopPage = () => {
               Individual
             </button>
           </div>
-          <div className="w-[90%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
+          <div className="w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
             <div className="">
               <div className="flex justify-evenly sm:mb-10 mb-3">
                 <div className="font-semibold sm:text-2xl text-sm">Details</div>
@@ -590,7 +725,7 @@ const ShopPage = () => {
             {currentStep === 1 && (
               <>
                 <div className="sm:mx-10 mx-3">
-                  <div className="flex my-10">
+                  <div className="flex my-10 mb-5">
                     {ownerDetails === "Show" ? (
                       <KeyboardArrowUpIcon
                         onClick={() => handleOwnerDetails("Hide")}
@@ -607,14 +742,14 @@ const ShopPage = () => {
                     </div>
                   </div>
                   <div
-                    className={`space-y-10 ${
+                    className={`space-y-5 ${
                       ownerDetails === "Hide" && "hidden"
                     }`}
                   >
-                    <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                    <div className="w-full flex sm:flex-row sm:gap-2 flex-col gap-4">
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
-                          label="First Name"
+                          label="First Name*"
                           type="text"
                           id="fName"
                           name="first_name"
@@ -638,7 +773,7 @@ const ShopPage = () => {
                       </div>
                       <div className="sm:w-1/2 relative w-full">
                         <CustomTextFieldVendor
-                          label="Last Name"
+                          label="Last Name*"
                           type="text"
                           id="lName"
                           name="last_name"
@@ -663,7 +798,7 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label="E-Mail"
+                        label="Email Address"
                         type="email"
                         id="email"
                         name="user_email"
@@ -673,8 +808,6 @@ const ShopPage = () => {
                         fieldError={errors?.user_email}
                         formValue={{
                           ...register("user_email", {
-                            required: "Email is required",
-
                             pattern: {
                               value:
                                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -693,7 +826,7 @@ const ShopPage = () => {
                     </div>
                     <div className="w-full relative">
                       <CustomTextFieldVendor
-                        label="Phone Number"
+                        label="Phone Number*"
                         type="text"
                         id="phone"
                         name="user_contact"
@@ -703,10 +836,10 @@ const ShopPage = () => {
                         fieldError={errors?.user_contact}
                         formValue={{
                           ...register("user_contact", {
-                            required: "Contact number is required",
+                            required: "Phone number is required",
                             pattern: {
                               value: /^[0-9]{10}$/,
-                              message: "Please enter a valid mobile number",
+                              message: "Please enter a valid phone Number",
                             },
                           }),
                         }}
@@ -720,7 +853,7 @@ const ShopPage = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex my-10">
+                  <div className="flex my-10 mb-5">
                     {shopDetails === "Show" ? (
                       <KeyboardArrowUpIcon
                         onClick={() => handleShopDetails("Hide")}
@@ -737,14 +870,14 @@ const ShopPage = () => {
                     </div>
                   </div>
                   <div
-                    className={`space-y-10 ${
+                    className={`space-y-5 ${
                       shopDetails === "Hide" && "hidden"
                     }`}
                   >
                     <div className="w-full relative">
                       <CustomTextFieldVendor
                         name="shop_name"
-                        label="Shop Name"
+                        label="Shop Name*"
                         type="text"
                         id="shopName"
                         isRequired={true}
@@ -775,8 +908,6 @@ const ShopPage = () => {
                             placeholder="Your shop email"
                             formValue={{
                               ...register("shop_email", {
-                                required: "Shop email is required",
-
                                 pattern: {
                                   value:
                                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -866,7 +997,7 @@ const ShopPage = () => {
                   </div>
                   {!individual && (
                     <>
-                      <div className="flex justify-between items-center my-10">
+                      <div className="flex justify-between items-center my-10 mb-8">
                         <div className="flex">
                           {shopTimeDetails === "Show" ? (
                             <KeyboardArrowUpIcon
@@ -897,7 +1028,7 @@ const ShopPage = () => {
                         </div>
                       </div>
                       <div
-                        className={`space-y-10 ${
+                        className={`space-y-5 ${
                           shopTimeDetails === "Hide" && "hidden"
                         }`}
                       >
@@ -920,6 +1051,7 @@ const ShopPage = () => {
                       </div>
                     </>
                   )}
+                  <Divider className="mt-10" />
 
                   <ActionButtons
                     currentStep={currentStep}
@@ -959,244 +1091,286 @@ const ShopPage = () => {
 
             {currentStep === 2 && (
               <>
-                <div className="sm:mx-10 mx-3">
-                  <div className="grid grid-cols-3 gap-10 my-10">
-                    <div className="flex flex-col items-center justify-center col-span-3">
-                      <div
-                        className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
-                        onClick={() => handleBrowseClick(0)}
-                      >
-                        {shopLogo !== "" ? (
-                          <div className="sm:w-[300px]  sm:h-[300px] h-[250px] w-[250px]">
-                            <img
-                              src={shopLogo}
-                              alt="Uploaded Image"
-                              className="object-cover h-full w-full rounded-full"
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex flex-col gap-4">
-                            <span className="flex justify-center">
-                              <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                            </span>
-                            <div className="flex flex-col gap-1">
-                              <p className="sm:text-xl text-sm font-bold text-gray-400">
-                                Click to upload{" "}
-                                <span className="text-colorGreen">logo</span>
-                              </p>
-                              <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                No Size Limit
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        <input
-                          id="file-input-0"
-                          type="file"
-                          accept="image/*,video/*"
-                          className="hidden"
-                          {...register("shopLogo", {
-                            required:
-                              shopLogo === ""
-                                ? "ShopLogo is required *"
-                                : false,
-                            onChange: (e) => {
-                              if (e.target.files && e.target.files.length > 0) {
-                                onShopLogoPreviewImage(e);
-                              }
-                            },
-                          })}
-                        />
-                      </div>
-                      {errors.shopLogo && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.shopLogo?.message}
-                          </span>
+                <div className="sm:mx-10 mx-3 my-10 mb-0">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <div className="col-span-1">
+                      <div className="flex flex-col justify-center items-center border">
+                        <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
+                          Shop Logo
                         </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center col-span-3">
-                      <div
-                        className="sm:w-2/3 w-full cursor-pointer sm:h-[350px] h-[200px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                        onClick={() => handleBrowseClick(1)}
-                      >
-                        {shopBackground !== "" ? (
-                          <div className="w-full sm:h-[350px]  h-[200px]">
-                            <img
-                              src={shopBackground}
-                              alt="Uploaded Image"
-                              className="object-cover h-full w-full rounded-3xl"
-                            />
-                          </div>
-                        ) : (
-                          <div className="flex flex-col gap-4">
-                            <span className="flex justify-center">
-                              <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                            </span>
-                            <div className="flex flex-col gap-1">
-                              <p className="sm:text-2xl text-sm font-bold text-gray-400">
-                                <span className="text-colorGreen">
-                                  Click to Upload
-                                </span>{" "}
-                                Cover Image
-                              </p>
-                              <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                We Support JPG, PNG & No Size Limit
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        <input
-                          id="file-input-1"
-                          type="file"
-                          accept="image/*,video/*"
-                          className="hidden"
-                          {...register("shopBackground", {
-                            required:
-                              shopBackground === ""
-                                ? "ShopBackground is required *"
-                                : false,
-                            onChange: (e) => {
-                              if (e.target.files && e.target.files.length > 0) {
-                                onShopBackgroundPreviewImage(e);
-                              }
-                            },
-                          })}
-                        />
-                      </div>
-                      {errors.shopBackground && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.shopBackground?.message}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="col-span-3">
-                      <div className="sm:w-[85%] sm:mx-auto sm:text-xl text-lg font-semibold  mb-10 mx-2">
-                        Shop Images
-                      </div>
-                      <div className="sm:w-[85%] sm:mx-auto flex xl:gap-8 xl:flex-row flex-col gap-4">
-                        {["One", "Two", "Three"]?.map((item, index) => {
-                          return (
-                            <>
-                              <div
-                                key={index}
-                                className="w-full cursor-pointer sm:h-[344px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                                onClick={() =>
-                                  handleBrowseClickShopImages(
-                                    `shopImage${item}`,
-                                    index
-                                  )
-                                }
-                              >
-                                {shopImages[index] ? (
-                                  <div className="w-full sm:h-[344px] h-[344px]">
-                                    <img
-                                      src={shopImages[index] ?? ""}
-                                      alt="Uploaded Image"
-                                      className="object-cover h-full w-full rounded-3xl"
-                                    />
-                                  </div>
-                                ) : (
-                                  <div className="flex flex-col gap-4">
-                                    <span className="flex justify-center">
-                                      <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                                    </span>
-                                    <div className="flex flex-col gap-1">
-                                      <p className="sm:text-lg text-sm font-bold text-gray-400">
-                                        <span className="text-colorGreen">
-                                          Click to Upload{" "}
-                                        </span>
-                                        Front Image
-                                      </p>
-                                      <p className="text-xs text-gray-400 text-center">
-                                        We Support JPG, PNG & No Size Limit
-                                      </p>
-                                    </div>
-                                  </div>
-                                )}
-                                <input
-                                  id={`shopImage${item}`}
-                                  type="file"
-                                  accept="image/*,video/*"
-                                  className="hidden"
-                                  {...register("shopImages", {
-                                    required: !ShopImgError[index]
-                                      ? "Shop all images is required *"
-                                      : false,
-                                    onChange: (e) => {
-                                      createShopImagesChange(e, index);
-                                    },
-                                  })}
+                        <div className="p-6">
+                          <div
+                            className="w-[250px] h-[250px] border border-gray-200 hover:border-2 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
+                            onClick={() => handleBrowseClick(0)}
+                          >
+                            {shopLogo !== "" ? (
+                              <div className="w-full h-full relative rounded-full">
+                                <Image
+                                  src={shopLogo}
+                                  alt="Uploaded Image"
+                                  layout="fill"
+                                  objectFit="contain"
                                 />
                               </div>
-                            </>
-                          );
-                        })}
-                      </div>
-                      {errors.shopImages && (
-                        <div className="flex justify-center mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.shopImages?.message}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="w-full col-span-3">
-                      <div className="sm:w-2/3 sm:mx-auto sm:text-xl text-lg font-semibold  mb-10 mx-2">
-                        Shop Video
-                      </div>
-                      <div
-                        className="sm:w-2/3 w-full sm:mx-auto cursor-pointer sm:h-[350px] h-[200px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                        onClick={() => handleBrowseClick(5)}
-                      >
-                        {shopVideo !== "" ? (
-                          <div className="w-full sm:h-[350px]  h-[200px]">
-                            <video
-                              className="object-cover h-full w-full rounded-3xl"
-                              controls
-                            >
-                              <source src={shopVideo}></source>
-                            </video>
+                            ) : (
+                              <div className="flex flex-col gap-4">
+                                <span className="flex justify-center">
+                                  <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <p className="text-sm sm:text-lg text-gray-400">
+                                    Click to upload{" "}
+                                    <span className="text-colorGreen">
+                                      logo
+                                    </span>
+                                  </p>
+                                  <p className="sm:text-sm text-xs text-gray-400 text-center">
+                                    No Size Limit
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            <input
+                              id="file-input-0"
+                              type="file"
+                              accept="image/*,video/*"
+                              className="hidden"
+                              {...register("shopLogo", {
+                                required:
+                                  shopLogo === ""
+                                    ? "ShopLogo is required *"
+                                    : false,
+                                onChange: (e) => {
+                                  if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                  ) {
+                                    onShopLogoPreviewImage(e);
+                                  }
+                                },
+                              })}
+                            />
                           </div>
-                        ) : (
-                          <div className="flex flex-col gap-4">
-                            <span className="flex justify-center">
-                              <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                            </span>
-                            <div className="flex flex-col gap-1">
-                              <p className="sm:text-2xl text-sm font-bold text-gray-400">
-                                <span className="text-colorGreen">
-                                  Click to Upload
-                                </span>{" "}
-                                Shop Video
-                              </p>
-                              <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                No Size Limit
-                              </p>
+                          {errors.shopLogo && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.shopLogo?.message}
+                              </span>
                             </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-span-2">
+                      <div className="flex flex-col justify-center items-center border">
+                        <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
+                          Shop Cover Image
+                        </div>
+                        <div className="p-6 w-full flex justify-center">
+                          <div
+                            className="w-[80%] h-[250px] cursor-pointer col-span-3 border border-gray-200 hover:border-2 hover:border-colorGreen flex items-center justify-center  rounded-lg"
+                            onClick={() => handleBrowseClick(1)}
+                          >
+                            {shopBackground !== "" ? (
+                              <div className="w-full h-full relative">
+                                <Image
+                                  src={shopBackground}
+                                  alt="Uploaded Image"
+                                  layout="fill"
+                                  objectFit="contain"
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex flex-col gap-4">
+                                <span className="flex justify-center">
+                                  <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <p className="sm:text-xl text-sm text-gray-400">
+                                    <span className="text-colorGreen">
+                                      Click to Upload
+                                    </span>{" "}
+                                    Cover Image
+                                  </p>
+                                  <p className="sm:text-sm text-xs text-gray-400 text-center">
+                                    We Support JPG, PNG & No Size Limit
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            <input
+                              id="file-input-1"
+                              type="file"
+                              accept="image/*,video/*"
+                              className="hidden"
+                              {...register("shopBackground", {
+                                required:
+                                  shopBackground === ""
+                                    ? "ShopBackground is required *"
+                                    : false,
+                                onChange: (e) => {
+                                  if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                  ) {
+                                    onShopBackgroundPreviewImage(e);
+                                  }
+                                },
+                              })}
+                            />
                           </div>
-                        )}
-                        <input
-                          id="file-input-5"
-                          type="file"
-                          accept="image/*,video/*"
-                          className="hidden"
-                          controls
-                          onClick={(e) => (e.target.value = null)}
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              onShopVideoPreview(e);
-                            }
-                          }}
-                        />
+                          {errors.shopBackground && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.shopBackground?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div className="mt-10">
+                    <div className="flex flex-col border">
+                      <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 text-white">
+                        Shop Images
+                      </div>
+                      <div className="p-6">
+                        <div className="sm:mx-auto flex xl:gap-8 xl:flex-row flex-col gap-4">
+                          {["One", "Two", "Three", "Four"]?.map(
+                            (item, index) => {
+                              return (
+                                <>
+                                  <div
+                                    key={index}
+                                    className="w-full cursor-pointer h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-lg flex items-center justify-center"
+                                    onClick={() =>
+                                      handleBrowseClickShopImages(
+                                        `shopImage${item}`,
+                                        index
+                                      )
+                                    }
+                                  >
+                                    {shopImages[index] ? (
+                                      <div className="w-full h-full relative">
+                                        <Image
+                                          src={shopImages[index] ?? ""}
+                                          alt="Uploaded Image"
+                                          layout="fill"
+                                          objectFit="contain"
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="flex flex-col gap-4 text-center p-2">
+                                        <span className="flex justify-center">
+                                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                        </span>
+                                        <div className="flex flex-col gap-1 justify-center">
+                                          <p className="text-sm sm:text-base text-gray-400">
+                                            <span className="text-colorGreen">
+                                              Click to Upload{" "}
+                                            </span>
+                                            Front Image
+                                          </p>
+                                          <p className="text-xs text-gray-400 text-center">
+                                            We Support JPG, PNG & No Size Limit
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
+                                    <input
+                                      id={`shopImage${item}`}
+                                      type="file"
+                                      accept="image/*,video/*"
+                                      className="hidden"
+                                      {...register("shopImages", {
+                                        required: !ShopImgError[index]
+                                          ? "Shop all images is required *"
+                                          : false,
+                                        onChange: (e) => {
+                                          createShopImagesChange(e, index);
+                                        },
+                                      })}
+                                    />
+                                  </div>
+                                </>
+                              );
+                            }
+                          )}
+                        </div>
+                        {errors.shopImages && (
+                          <div className="flex justify-center mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.shopImages?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <div className="grid grid-cols-4">
+                      <div className="col-span-2">
+                        <div className="flex flex-col justify-center items-center border">
+                          <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 text-white">
+                            Shop Video
+                          </div>
+                          <div className="w-full p-6">
+                            <div
+                              className="w-full h-[250px] cursor-pointer border border-gray-200 hover:border-2 hover:border-colorGreen rounded-lg flex items-center justify-center"
+                              onClick={() => handleBrowseClick(5)}
+                            >
+                              {shopVideo !== "" ? (
+                                <div className="w-full h-full">
+                                  <video
+                                    className="object-cover h-full w-full"
+                                    controls
+                                  >
+                                    <source src={shopVideo}></source>
+                                  </video>
+                                </div>
+                              ) : (
+                                <div className="flex flex-col gap-4">
+                                  <span className="flex justify-center text-center">
+                                    <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                  </span>
+                                  <div className="flex flex-col gap-1">
+                                    <p className="sm:text-xl text-sm font-bold text-gray-400">
+                                      <span className="text-colorGreen">
+                                        Click to Upload
+                                      </span>{" "}
+                                      Shop Video
+                                    </p>
+                                    <p className="sm:text-sm text-xs text-gray-400 text-center">
+                                      No Size Limit
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              <input
+                                id="file-input-5"
+                                type="file"
+                                accept="image/*,video/*"
+                                className="hidden"
+                                controls
+                                onClick={(e) => (e.target.value = null)}
+                                onChange={(e) => {
+                                  if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                  ) {
+                                    onShopVideoPreview(e);
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <Divider className="mt-10" />
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1212,7 +1386,7 @@ const ShopPage = () => {
             {currentStep === 3 && (
               <>
                 <div className="sm:mx-10 mx-3">
-                  <div className="flex my-10">
+                  <div className="flex my-10 mb-5">
                     {mainBranch === "Show" ? (
                       <KeyboardArrowUpIcon
                         onClick={() => handleMainBranchDetails("Hide")}
@@ -1229,9 +1403,7 @@ const ShopPage = () => {
                     </div>
                   </div>
                   <div
-                    className={`space-y-10 ${
-                      mainBranch === "Hide" && "hidden"
-                    }`}
+                    className={`space-y-5 ${mainBranch === "Hide" && "hidden"}`}
                   >
                     <div className="w-full relative">
                       <CustomTextFieldVendor
@@ -1302,7 +1474,7 @@ const ShopPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex my-10">
+                  <div className="flex my-10 !mb-0">
                     {managerDetails === "Show" ? (
                       <KeyboardArrowUpIcon
                         onClick={() => handleManagerDetails("Hide")}
@@ -1315,111 +1487,116 @@ const ShopPage = () => {
                       />
                     )}
                     <div className="font-semibold sm:text-lg text-sm">
-                      Manager : Save As Owner
+                      Manager Details
                     </div>
                   </div>
                   <div
-                    className={`space-y-10 ${
+                    className={`space-y-5 ${
                       managerDetails === "Hide" && "hidden"
                     }`}
                   >
-                    <RadioGroup
-                      row
-                      name="row-radio-buttons-group"
-                      value={sameAsOwner}
-                      onChange={(e) => {
-                        if (e.target.value === "True") {
-                          setSameAsOwner("True");
-                        } else {
-                          setSameAsOwner("False");
-                        }
-                      }}
-                    >
-                      <div className="flex gap-4">
-                        <div className="flex items-center">
-                          <span className="hidden sm:inline">
-                            <Radio
-                              name="saveAsOwner"
-                              id="True"
-                              value="True"
-                              sx={{
-                                color: "rgba(21, 24, 39, 0.1)",
-                                "& .MuiSvgIcon-root": {
-                                  fontSize: 30,
-                                },
-                                "&.Mui-checked": {
-                                  color: "#29977E",
-                                },
-                              }}
-                            />
-                          </span>
-                          <span className="sm:hidden">
-                            <Radio
-                              name="saveAsOwner"
-                              id="True"
-                              value="True"
-                              sx={{
-                                color: "rgba(21, 24, 39, 0.1)",
-                                "& .MuiSvgIcon-root": {
-                                  fontSize: 20,
-                                },
-                                "&.Mui-checked": {
-                                  color: "#29977E",
-                                },
-                              }}
-                            />
-                          </span>
-                          <label
-                            htmlFor="True"
-                            className="sm:text-xl text-sm text-gray-400 font-semibold"
-                          >
-                            Yes
-                          </label>
-                        </div>
-                        <div className="flex items-center">
-                          <span className="hidden sm:inline">
-                            <Radio
-                              name="saveAsOwner"
-                              id="False"
-                              value="False"
-                              sx={{
-                                color: "rgba(21, 24, 39, 0.1)",
-                                "& .MuiSvgIcon-root": {
-                                  fontSize: 30,
-                                },
-                                "&.Mui-checked": {
-                                  color: "#29977E",
-                                },
-                              }}
-                            />
-                          </span>
-                          <span className="sm:hidden">
-                            <Radio
-                              name="saveAsOwner"
-                              id="False"
-                              value="False"
-                              sx={{
-                                color: "rgba(21, 24, 39, 0.1)",
-                                "& .MuiSvgIcon-root": {
-                                  fontSize: 20,
-                                },
-                                "&.Mui-checked": {
-                                  color: "#29977E",
-                                },
-                              }}
-                            />
-                          </span>
-                          <label
-                            htmlFor="False"
-                            className="sm:text-xl text-sm text-gray-400 font-semibold"
-                          >
-                            No
-                          </label>
-                        </div>
+                    <div className="flex items-center justify-end">
+                      <div className="font-semibold">
+                        Same As Owner&nbsp;:&nbsp;
                       </div>
-                    </RadioGroup>
+                      <RadioGroup
+                        row
+                        name="row-radio-buttons-group"
+                        value={sameAsOwner}
+                        onChange={(e) => {
+                          if (e.target.value === "True") {
+                            setSameAsOwner("True");
+                          } else {
+                            setSameAsOwner("False");
+                          }
+                        }}
+                      >
+                        <div className="flex gap-4">
+                          <div className="flex items-center">
+                            <span className="hidden sm:inline">
+                              <Radio
+                                name="saveAsOwner"
+                                id="True"
+                                value="True"
+                                sx={{
+                                  color: "rgba(21, 24, 39, 0.1)",
+                                  "& .MuiSvgIcon-root": {
+                                    fontSize: 24,
+                                  },
+                                  "&.Mui-checked": {
+                                    color: "#29977E",
+                                  },
+                                }}
+                              />
+                            </span>
+                            <span className="sm:hidden">
+                              <Radio
+                                name="saveAsOwner"
+                                id="True"
+                                value="True"
+                                sx={{
+                                  color: "rgba(21, 24, 39, 0.1)",
+                                  "& .MuiSvgIcon-root": {
+                                    fontSize: 16,
+                                  },
+                                  "&.Mui-checked": {
+                                    color: "#29977E",
+                                  },
+                                }}
+                              />
+                            </span>
+                            <label
+                              htmlFor="True"
+                              className="sm:text-xl text-sm text-gray-400"
+                            >
+                              Yes
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <span className="hidden sm:inline">
+                              <Radio
+                                name="saveAsOwner"
+                                id="False"
+                                value="False"
+                                sx={{
+                                  color: "rgba(21, 24, 39, 0.1)",
+                                  "& .MuiSvgIcon-root": {
+                                    fontSize: 24,
+                                  },
+                                  "&.Mui-checked": {
+                                    color: "#29977E",
+                                  },
+                                }}
+                              />
+                            </span>
+                            <span className="sm:hidden">
+                              <Radio
+                                name="saveAsOwner"
+                                id="False"
+                                value="False"
+                                sx={{
+                                  color: "rgba(21, 24, 39, 0.1)",
+                                  "& .MuiSvgIcon-root": {
+                                    fontSize: 16,
+                                  },
+                                  "&.Mui-checked": {
+                                    color: "#29977E",
+                                  },
+                                }}
+                              />
+                            </span>
+                            <label
+                              htmlFor="False"
+                              className="sm:text-xl text-sm text-gray-400"
+                            >
+                              No
+                            </label>
+                          </div>
+                        </div>
+                      </RadioGroup>
+                    </div>
 
-                    <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                    <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8 !mt-2">
                       <div className="sm:w-1/2 relative w-full">
                         <FormControl fullWidth>
                           <Controller
@@ -1575,105 +1752,152 @@ const ShopPage = () => {
                   </div>
                   {!individual && (
                     <div className="my-10">
-                      <button
-                        onClick={() => setSubBranchModalOpen(true)}
-                        disabled={!subBranchButtonShow}
-                        className={`${
-                          !subBranchButtonShow ? "opacity-50" : "opacity-100"
-                        } cursor-pointer flex items-center uppercase border-2  sm:px-8 sm:py-3 sm:text-base px-3 py-2 text-sm rounded-md font-semibold border-colorGreen text-colorGreen`}
-                      >
-                        Sub Branch
-                        <span className="hidden sm:inline">
-                          <AddIcon fontSize="medium" className="ml-2" />
-                        </span>
-                        <span className="sm:hidden">
-                          <AddIcon fontSize="small" className="ml-2" />
-                        </span>
-                      </button>
-                    </div>
-                  )}
+                      <div className="flex my-10 mb-5">
+                        {subBranchSec === "Show" ? (
+                          <KeyboardArrowUpIcon
+                            onClick={() => handleSubBranchDetails("Hide")}
+                            className="cursor-pointer"
+                          />
+                        ) : (
+                          <KeyboardArrowDownIcon
+                            onClick={() => handleSubBranchDetails("Show")}
+                            className="cursor-pointer"
+                          />
+                        )}
+                        <div className="font-semibold sm:text-lg text-sm">
+                          Sub Branch
+                        </div>
+                      </div>
 
-                  {subBranch?.length > 0 && (
-                    <div className="mb-10">
-                      <h3 className="text-colorPrimary text-lg font-semibold leading-8 my-5">
-                        Sub Branches
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                        {subBranch?.map((sub, index) => (
-                          <div
-                            className="bg-colorWhite rounded-xl flex flex-col gap-1"
-                            key={index}
-                          >
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
-                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                                Branch Address :{" "}
-                              </b>
-                              {sub.subManagerAddress}
-                            </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
-                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                                Branch City :{" "}
-                              </b>
-                              {sub.subManagerCity}
-                            </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
-                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                                Branch PinCode :{" "}
-                              </b>
-                              {sub.subManagerPinCode}
-                            </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
-                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                                Branch Manager Name :
-                              </b>
-                              {sub.subManagerFirstName +
-                                " " +
-                                sub.subManagerLastName}
-                            </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
-                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                                Branch Manager Email :
-                              </b>
-                              {sub.subManagerEmail}
-                            </p>
-                            <p className="text-sm sm:text-base lg:text-lg text-colorBlack flex justify-between">
-                              <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                                Branch Manager Phone Number :
-                              </b>
-                              {sub.subManagerPhone}
-                            </p>
+                      {subBranchSec === "Show" && (
+                        <>
+                          {subBranchSec?.length > 0 && (
+                            <div className="mb-10">
+                              <Carousel
+                                responsive={responsive}
+                                // showDots={true}
+                                arrows={true}
+                                removeArrowOnDeviceType={["mobile"]}
+                                customLeftArrow={
+                                  <TrendingCustomLeftArrow
+                                    onClick={TrendingCustomLeftArrow}
+                                  />
+                                }
+                                customRightArrow={
+                                  <TrendingCustomRightArrow
+                                    onClick={TrendingCustomRightArrow}
+                                  />
+                                }
+                                // dotListClass={"Landing_customDots"}
+                              >
+                                {subBranch?.map((sub, index) => (
+                                  <div
+                                    className="bg-colorWhite rounded-xl flex flex-col gap-1 border mr-5 p-5 pt-2"
+                                    key={index}
+                                  >
+                                    <div className="flex justify-end">
+                                      <div className="flex">
+                                        <span
+                                          className="text-[red] font-semibold mr-2"
+                                          onClick={() => {
+                                            setSubBranch(
+                                              subBranch.filter(
+                                                (itm) => itm.id !== sub.id
+                                              )
+                                            );
+                                          }}
+                                        >
+                                          Delete
+                                        </span>
+                                        <span
+                                          className="text-[blue] font-semibold"
+                                          onClick={() => {
+                                            setSubBranchEdit(sub);
+                                          }}
+                                        >
+                                          Edit
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
+                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                        Address :{" "}
+                                      </b>
+                                      {sub.subManagerAddress}
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
+                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                        City :{" "}
+                                      </b>
+                                      {sub.subManagerCity}
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
+                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                        Pincode :{" "}
+                                      </b>
+                                      {sub.subManagerPinCode}
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
+                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                        Manager Name :
+                                      </b>
+                                      {sub.subManagerFirstName +
+                                        " " +
+                                        sub.subManagerLastName}
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
+                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                        Manager Email :
+                                      </b>
+                                      {sub.subManagerEmail}
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
+                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                        Manager Phone Number :
+                                      </b>
+                                      {sub.subManagerPhone}
+                                    </p>
 
-                            <div className="container mt-5">
+                                    {/* <div className="container mt-5">
                               <Divider />
                             </div>
                             <div className="container mt-5 flex items-center justify-end gap-5">
                               <IconButton
                                 aria-label="delete"
                                 className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-red-600 hover:!bg-red-600"
-                                onClick={() => {
-                                  setSubBranch(
-                                    subBranch.filter((itm) => itm.id !== sub.id)
-                                  );
-                                }}
+                                
                               >
                                 <DeleteIcon className="!text-colorWhite" />
                               </IconButton>
                               <IconButton
                                 aria-label="delete"
                                 className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-colorStone hover:!bg-colorStone"
-                                onClick={() => {
-                                  setSubBranchModalOpen(true);
-                                  setSubBranchEdit(sub);
-                                }}
+                                
                               >
                                 <EditIcon className="!text-colorWhite" />
                               </IconButton>
+                            </div> */}
+                                  </div>
+                                ))}
+                              </Carousel>
+                              {/* </div> */}
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          )}
+
+                          <SubBranchModal
+                            subBranch={subBranch}
+                            setSubBranch={setSubBranch}
+                            setValue={setValue}
+                            getValues={getValues}
+                            subBranchEdit={subBranchEdit}
+                            setSubBranchEdit={setSubBranchEdit}
+                          />
+                        </>
+                      )}
                     </div>
                   )}
+
+                  <Divider className="mt-10" />
 
                   <ActionButtons
                     currentStep={currentStep}
@@ -1689,21 +1913,9 @@ const ShopPage = () => {
           </div>
         </div>
       </div>
-      <SubBranchModal
-        subBranchModalOpen={subBranchModalOpen}
-        setSubBranchModalOpen={setSubBranchModalOpen}
-        subBranch={subBranch}
-        setSubBranch={setSubBranch}
-        setValue={setValue}
-        getValues={getValues}
-        subBranchEdit={subBranchEdit}
-        setSubBranchEdit={setSubBranchEdit}
-      />
     </>
   );
 };
-
-export default withAuthWithoutShop(ShopPage);
 
 const ActionButtons = ({
   currentStep,
@@ -1714,7 +1926,7 @@ const ActionButtons = ({
   loading,
 }) => {
   return (
-    <div className="flex justify-end sm:gap-4 gap-2 mt-10">
+    <div className="flex justify-end sm:gap-4 gap-2 mt-8">
       <button
         onClick={() => {
           currentStep > 1 && setCurrentStep(currentStep - 1);
@@ -1741,8 +1953,6 @@ const ActionButtons = ({
 };
 
 const SubBranchModal = ({
-  subBranchModalOpen,
-  setSubBranchModalOpen,
   subBranch,
   setSubBranch,
   setValue,
@@ -1882,7 +2092,6 @@ const SubBranchModal = ({
             subManagerPhone,
           },
         ]);
-        handleSubBranchModalClose();
       } else {
         const editSelectedSubBranchIndex = subBranch.findIndex(
           (sub) => sub.id === subBranchEdit.id
@@ -1901,13 +2110,11 @@ const SubBranchModal = ({
           subManagerPhone,
         };
         setSubBranch(editSelectedSubBranch);
-        handleSubBranchModalClose();
       }
     }
   };
 
   const handleSubBranchModalClose = () => {
-    setSubBranchModalOpen(false);
     setSubManagerAddress("");
     setSubManagerCity("");
     setSubManagerPinCode("");
@@ -1931,266 +2138,253 @@ const SubBranchModal = ({
   };
   return (
     <>
-      <CustomAuthModal
-        open={subBranchModalOpen}
-        onClose={handleSubBranchModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      >
-        <Box sx={subBranchStyle} className="!w-[90%] lg:!w-1/2">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
-              </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
-            </div>
+      <Box>
+        <div>
+          {/* <div className="flex items-center">
+            <ArrowBackIcon
+              className="!text-black !cursor-pointer"
+              onClick={handleSubBranchModalClose}
+            />
+            <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+              {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
+            </p>
+            <CloseIcon
+              className="!text-black !ml-auto !cursor-pointer"
+              onClick={handleSubBranchModalClose}
+            />
+          </div> */}
 
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-450px)] overflow-auto">
-              <div className="bg-colorWhite rounded-lg my-5 p-5 space-y-5">
-                {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+          <div>
+            <div className="bg-colorWhite rounded-lg my-5 space-y-5">
+              {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
                   Branches
                 </h3> */}
-                <form>
-                  <div className="flex flex-col space-y-3">
-                    {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
+              <form>
+                <div className="flex flex-col space-y-3">
+                  {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
                       Sub Branch
                     </p> */}
-                    <div className="flex items-center justify-center container gap-20">
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Address"
-                            variant="standard"
-                            className="w-full"
-                            value={subManagerAddress}
-                            onChange={(e) => {
-                              setSubManagerAddress(e.target.value);
-                              error.subManagerAddressError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerAddressError || ""}
-                        </span>
-                      </div>
+                  <div className="flex items-center justify-center gap-20">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Address"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerAddress}
+                          onChange={(e) => {
+                            setSubManagerAddress(e.target.value);
+                            error.subManagerAddressError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerAddressError || ""}
+                      </span>
                     </div>
+                  </div>
 
-                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="City"
-                            variant="standard"
-                            className="w-full"
-                            value={subManagerCity}
-                            onChange={(e) => {
-                              setSubManagerCity(e.target.value);
-                              error.subManagerCityError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerCityError || ""}
-                        </span>
-                      </div>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="PinCode"
-                            variant="standard"
-                            className="w-full"
-                            type="number"
-                            value={subManagerPinCode}
-                            onChange={(e) => {
-                              setSubManagerPinCode(e.target.value);
-                              error.subManagerPinCodeError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPinCodeError || ""}
-                        </span>
-                      </div>
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-8 w-full justify-between items-center">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="City"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerCity}
+                          onChange={(e) => {
+                            setSubManagerCity(e.target.value);
+                            error.subManagerCityError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerCityError || ""}
+                      </span>
                     </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="PinCode"
+                          variant="standard"
+                          className="w-full"
+                          type="number"
+                          value={subManagerPinCode}
+                          onChange={(e) => {
+                            setSubManagerPinCode(e.target.value);
+                            error.subManagerPinCodeError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPinCodeError || ""}
+                      </span>
+                    </div>
+                  </div>
 
-                    <div className="flex justify-center items-center">
-                      <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        {/* <span className="font-semibold text-lg text-[#11142D] mt-5">
+                  <div className="flex justify-center items-center">
+                    <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
+                      {/* <span className="font-semibold text-lg text-[#11142D] mt-5">
                           Manager:
                         </span> */}
 
-                        <CustomTextFieldVendor
-                          label="Manager"
-                          variant="standard"
-                          select
-                          fullWidth
-                          value={managerValue}
-                          onChange={(e) => setManagerValue(e.target.value)}
-                        >
-                          <MenuItem value="">None</MenuItem>
-                          {[
-                            "Same as owner",
-                            "same as main branch manager",
-                          ]?.map((man) => (
+                      <CustomTextFieldVendor
+                        label="Manager"
+                        variant="standard"
+                        select
+                        fullWidth
+                        value={managerValue}
+                        onChange={(e) => setManagerValue(e.target.value)}
+                      >
+                        <MenuItem value="">None</MenuItem>
+                        {["Same as owner", "same as main branch manager"]?.map(
+                          (man) => (
                             <MenuItem value={man} key={man}>
                               {man}
                             </MenuItem>
-                          ))}
-                        </CustomTextFieldVendor>
-                      </div>
-                    </div>
-
-                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                        Name:
-                      </p> */}
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager First Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerFirstName}
-                            onChange={(e) => {
-                              setSubManagerFirstName(e.target.value);
-                              error.subManagerFirstNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerFirstNameError || ""}
-                        </span>
-                      </div>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager Last Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerLastName}
-                            onChange={(e) => {
-                              setSubManagerLastName(e.target.value);
-                              error.subManagerLastNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerLastNameError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Email:
-                      </p> */}
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager Email Address"
-                            variant="standard"
-                            className="w-full"
-                            type="email"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerEmail}
-                            onChange={(e) => {
-                              setSubManagerEmail(e.target.value);
-                              error.subManagerEmailError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerEmailError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Phone:
-                      </p> */}
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextFieldVendor
-                            id="input-with-sx"
-                            label="Manager Phone Number"
-                            variant="standard"
-                            className="w-full"
-                            type="number"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerPhone}
-                            onChange={(e) => {
-                              setSubManagerPhone(e.target.value);
-                              if (e.target.value.length != 10) {
-                                error.subManagerPhoneError =
-                                  "SubManagerPhone Number must be 10 numbers";
-                              } else {
-                                error.subManagerPhoneError = "";
-                              }
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPhoneError || ""}
-                        </span>
-                      </div>
+                          )
+                        )}
+                      </CustomTextFieldVendor>
                     </div>
                   </div>
-                </form>
-              </div>
-            </div>
 
-            <div className="container mt-5">
-              <Divider />
-            </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize !text-colorGreen hover:!bg-white !bg-white border !border-colorGreen hover:!border-colorGreen py-2 px-5"
-                onClick={handleSubBranchModalClose}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize !text-colorWhite !bg-colorGreen hover:!bg-colorGreen py-2 px-5"
-                onClick={subBranchSubmit}
-              >
-                {subBranchEdit?.id ? "Update" : "Save"}
-              </Button>
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-8 w-full justify-between items-center">
+                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                        Name:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager First Name"
+                          variant="standard"
+                          className="w-full"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerFirstName}
+                          onChange={(e) => {
+                            setSubManagerFirstName(e.target.value);
+                            error.subManagerFirstNameError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerFirstNameError || ""}
+                      </span>
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Last Name"
+                          variant="standard"
+                          className="w-full"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerLastName}
+                          onChange={(e) => {
+                            setSubManagerLastName(e.target.value);
+                            error.subManagerLastNameError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerLastNameError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-10 sm:gap-20">
+                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Email:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Email Address"
+                          variant="standard"
+                          className="w-full"
+                          type="email"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerEmail}
+                          onChange={(e) => {
+                            setSubManagerEmail(e.target.value);
+                            error.subManagerEmailError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerEmailError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-10 sm:gap-20">
+                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Phone:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Phone Number"
+                          variant="standard"
+                          className="w-full"
+                          type="number"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerPhone}
+                          onChange={(e) => {
+                            setSubManagerPhone(e.target.value);
+                            if (e.target.value.length != 10) {
+                              error.subManagerPhoneError =
+                                "SubManagerPhone Number must be 10 numbers";
+                            } else {
+                              error.subManagerPhoneError = "";
+                            }
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPhoneError || ""}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-        </Box>
-      </CustomAuthModal>
+          <div className="mt-5 flex items-center justify-end sm:gap-4 gap-2">
+            <Button
+              variant="outlined"
+              className="font-semibold bg-[#FAFCFC] border border-[#e5e7eb] hover:border-[#e5e7eb] hover:border text-inherit hover:bg-[#FAFCFC]"
+              onClick={handleSubBranchModalClose}
+            >
+              Reset
+            </Button>
+            <Button
+              variant="contained"
+              className="font-semibold text-white bg-colorGreen hover:bg-colorGreen border-0 hover:border-0"
+              onClick={subBranchSubmit}
+            >
+              {subBranchEdit?.id ? "Update" : "Add"}
+            </Button>
+          </div>
+        </div>
+      </Box>
     </>
   );
 };
@@ -2217,9 +2411,11 @@ const HoursModal = ({
         className="animate__animated animate__slideInDown"
       >
         <Box sx={style} className="!w-[90%] lg:!w-[80%] xl:!w-[50%]">
-          <div className="sm:p-5 lg:p-5 p-1">
+          <div className="sm:p-5 p-1 sm:pb-0">
             <div className="flex justify-between items-center">
-              <div className="sm:text-[28px] text-[16px] font-bold">Hours</div>
+              <div className="sm:text-[28px] text-[16px] font-bold">
+                Set Hours
+              </div>
               <span>
                 <CloseIcon
                   className="text-gray-500 !text-xl sm:!text-3xl"
@@ -2228,7 +2424,7 @@ const HoursModal = ({
                 />
               </span>
             </div>
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-400px)] overflow-auto">
+            <div className="sm:h-[calc(100vh-300px)] overflow-auto">
               <div className="grid grid-cols-1 gap-y-5 my-2">
                 {hours?.map((day, index) => (
                   <div
@@ -2236,7 +2432,7 @@ const HoursModal = ({
                     className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
                   >
                     <div className="flex xl:gap-32  items-center mt-1 sm:mt-0">
-                      <div className="sm:text-xl text-sm font-semibold">
+                      <div className="uppercase sm:text-base text-sm font-semibold">
                         {day["key"]}
                       </div>
                     </div>
@@ -2247,13 +2443,13 @@ const HoursModal = ({
                       >
                         {time === "Closed" || time === "Open 24 hours" ? (
                           <p
-                            className={`${
+                            className={`uppercase ${
                               time === "Closed"
                                 ? "text-red-600"
                                 : time === "Open 24 hours"
                                 ? "text-green-600"
                                 : ""
-                            } font-semibold text-xl`}
+                            } text-base`}
                           >
                             {time}
                           </p>
@@ -2317,22 +2513,21 @@ const HoursModal = ({
                             setDaysTimeModalOpen(true);
                             setSelectedDay(day["key"] + " - " + time);
                           }}
-                          className="border mr-2 sm:mr-0 border-gray-200 rounded-full text-gray-400 hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen"
+                          className="border mr-2 sm:mr-0 border-gray-200 rounded-full text-gray-400 hover:text-white hover:bg-colorGreen hover:border-colorGreen cursor-pointer"
                         >
-                          <div className="hidden sm:block cursor-pointer">
-                            <EditIcon className="m-1 sm:m-3" />
-                          </div>
-                          <div className="sm:hidden cursor-pointer">
-                            <EditIcon fontSize="small" className="m-1 sm:m-3" />
-                          </div>
+                          <EditIcon fontSize="small" className="m-2" />
                         </span>
                       </div>
                     ))}
                   </div>
                 ))}
               </div>
-              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 mt-8">
-                <button
+            </div>
+
+            <div className="flex justify-between mt-5 lg:gap-6 gap-4">
+              <div className="flex">
+                <div
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
@@ -2346,17 +2541,13 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
                 >
-                  <span className="hidden sm:block">
-                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                  </span>
-                  <span className="sm:hidden">
-                    <EditIcon className="-ml-1" fontSize="small" />
+                  <span>
+                    <EditIcon fontSize="small" className="" />
                   </span>
                   Edit all hours
-                </button>
-                <button
+                </div>
+                <div
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
@@ -2369,17 +2560,14 @@ const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
                 >
-                  <span className="hidden sm:block">
-                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                  </span>
-                  <span className="sm:hidden">
-                    <EditIcon className="-ml-1" fontSize="small" />
+                  <span className="">
+                    <EditIcon fontSize="small" className="" />
                   </span>
                   Edit Mon to Sat
-                </button>
-                <button
+                </div>
+                <div
                   onClick={() => {
                     setDaysTimeModalOpen(true);
                     setSelectedDay(
@@ -2389,32 +2577,32 @@ const HoursModal = ({
                           .value
                     );
                   }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
                 >
-                  <span className="hidden sm:block">
-                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                  </span>
-                  <span className="sm:hidden">
-                    <EditIcon className="-ml-1" fontSize="small" />
+                  <span className="">
+                    <EditIcon fontSize="small" className="" />
                   </span>
                   Edit Sunday
-                </button>
+                </div>
               </div>
-            </div>
-
-            <div className="flex justify-end mt-5 lg:gap-6 gap-4">
-              <button
-                onClick={() => setHoursModalOpen(false)}
-                className="uppercase font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm py-1 px-3 rounded-[4px] lg:rounded-md border-2 border-colorGreen"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setHoursModalOpen(false)}
-                className="uppercase font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm px-3 py-1 rounded-[4px] lg:rounded-md bg-colorGreen"
-              >
-                Save
-              </button>
+              <div>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setHoursModalOpen(false)}
+                  className="font-semibold mr-4 bg-[#FAFCFC] border border-[#e5e7eb] hover:border-[#e5e7eb] hover:border text-inherit hover:bg-[#FAFCFC]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setHoursModalOpen(false)}
+                  className="font-semibold text-white bg-colorGreen hover:bg-colorGreen border-0 hover:border-0"
+                >
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
         </Box>
@@ -2642,13 +2830,25 @@ const DaysTimeModal = ({
         className="animate__animated animate__slideInDown"
       >
         <Box sx={style} className="!w-[80%] lg:!w-[40%]">
-          <div className="p-5">
-            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
+          <div className="p-5 pb-0">
+            {/* <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
               Select days & time
-            </p>
+            </p> */}
+            <div className="flex justify-between items-center">
+              <div className="sm:text-[22px] text-[16px] font-bold">
+                Select days & time
+              </div>
+              <span>
+                <CloseIcon
+                  className="text-gray-500 !text-xl sm:!text-3xl"
+                  fontSize="large"
+                  onClick={() => handleCloseDaysTimeModal(false)}
+                />
+              </span>
+            </div>
 
             <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
-              <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
+              <div className="mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
                 {[
                   "Sunday",
                   "Monday",
@@ -2659,14 +2859,16 @@ const DaysTimeModal = ({
                   "Saturday",
                 ].map((itm, index) => (
                   <div
-                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] ${
-                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
+                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] cursor-pointer ${
+                      selectedDay?.split(" - ")[0] === itm &&
+                      "bg-colorGreen text-white"
                     } ${
-                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
+                      selectedWeek?.find((day) => day === itm) &&
+                      "bg-colorGreen text-white"
                     } ${
                       selectedAllHours?.find((day) => day === itm) &&
-                      "bg-[#bdbbbb]"
-                    }  hover:bg-[#bdbbbb] cursor-pointer`}
+                      "bg-colorGreen text-white"
+                    }  hover:bg-[#bdbbbb]`}
                     key={itm}
                   >
                     {itm.charAt(0)}
@@ -2674,7 +2876,7 @@ const DaysTimeModal = ({
                 ))}
               </div>
 
-              <div className="container mt-5">
+              <div className="mt-5">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -2706,7 +2908,7 @@ const DaysTimeModal = ({
                 />
               </div>
               {!(closed || open24Hours) && (
-                <div className="container mt-5 flex flex-col sm:flex-row sm:items-center items-start gap-10">
+                <div className=" mt-5 flex flex-col sm:flex-row sm:items-center items-start gap-10">
                   <TextField
                     label="Open Time"
                     type="time"
@@ -2727,22 +2929,23 @@ const DaysTimeModal = ({
                 </div>
               )}
             </div>
-            <div className="container mt-5">
+            <div className=" mt-5">
               <Divider />
             </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
+            <div className="mt-4 flex items-center justify-end">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize font-semibold hover:!bg-white !bg-white !text-colorGreen border-2 !border-colorGreen hover:!border-colorGreen py-2 px-5"
+                size="large"
+                className="font-semibold mr-4 bg-[#FAFCFC] border border-[#e5e7eb] hover:border-[#e5e7eb] hover:border text-inherit hover:bg-[#FAFCFC]"
                 onClick={handleCloseDaysTimeModal}
               >
                 Cancel
               </Button>
               <Button
-                variant="contained"
-                className={`rounded-xl capitalize font-semibold !text-white ${
+                size="large"
+                className={` font-semibold !text-white ${
                   !DisableButton() && "!bg-colorGreen"
-                } hover:!bg-colorGreen border-2 !border-colorGreen py-2 px-5`}
+                } hover:!bg-colorGreen !border-colorGreen`}
                 onClick={saveDaysTimeData}
                 disabled={DisableButton()}
               >
@@ -2755,3 +2958,5 @@ const DaysTimeModal = ({
     </>
   );
 };
+
+export default withAuthWithoutShop(ShopPage);

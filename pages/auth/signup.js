@@ -92,8 +92,8 @@ const Signup = () => {
 
   return (
     <div className="bg-background w-full">
-      <div className="bg-white flex w-full p-5 sm:p-10 sm:gap-10 min-h-[100vh] overflow-auto">
-        <div className="md:w-[50%] sm:w-full flex flex-col">
+      <div className="bg-white flex w-full sm:gap-10 min-h-[100vh] overflow-auto">
+        <div className="md:w-[50%] sm:w-full flex flex-col p-5">
           <div className="text-3xl  font-bold max-[600px]:text-xl text-colorPrimary flex items-center gap-4">
             <ArrowBackIcon
               onClick={() => Router.push("/auth/user-type")}
@@ -304,7 +304,7 @@ const Signup = () => {
             </p>
           </div>
         </div>
-        <div className="hidden md:block md:w-[50%] auth-cover rounded-3xl"></div>
+        <div className="hidden md:block md:w-[50%] auth-cover"></div>
       </div>
     </div>
   );

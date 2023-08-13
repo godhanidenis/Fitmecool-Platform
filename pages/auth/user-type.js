@@ -35,19 +35,18 @@ const UserType = () => {
 
   return (
     <div className="bg-background w-full">
-      <div className="bg-white flex w-full min-h-[100vh] overflow-auto p-10 gap-10">
-        <div className="md:w-[50%] sm:w-full flex flex-col">
+      <div className="bg-white flex w-full min-h-[100vh] overflow-auto gap-10">
+        <div className="md:w-[50%] sm:w-full flex flex-col p-10">
           <div onClick={() => Router.push("/")} className="cursor-pointer">
             <h2 className="text-3xl font-bold text-colorPrimary uppercase cursor-pointer">
               <span className="text-4xl">R</span>entbless
             </h2>
           </div>
-          <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
-            Join Over Business
+          <div className="text-2xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
+            How you would like to join us ?
           </div>
-          <p className="text-xl mt-4 text-[#15182766] max-[600px]:text-sm font-semibold">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
+          <p className="text-base mt-2 text-[#15182766] max-[600px]:text-sm font-semibold">
+          Unlock Fashion Possibilities – Where Customers and Shop Owners Connect, on StyleSwap, Your Trusted Clothing Rental Platform!
           </p>
           <div className="flex my-8 gap-6 max-[380px]:flex-col">
             <div
@@ -75,7 +74,7 @@ const UserType = () => {
                 Customer
               </div>
               <div className="text-sm text-[#15182766] my-1 max-[480px]:text-[10px]">
-                Sign up As a Customer!
+                Sign up As a Customer
               </div>
             </div>
             <div
@@ -102,7 +101,7 @@ const UserType = () => {
                 Business
               </div>
               <div className="text-sm text-[#15182766] my-1 max-[480px]:text-[10px]">
-                Sign up As a Business!
+                Sign up As a Business
               </div>
             </div>
           </div>
@@ -140,7 +139,7 @@ const UserType = () => {
             </p>
           </div>
         </div>
-        <div className="hidden md:block md:w-[50%] auth-cover rounded-3xl"></div>
+        <div className="hidden md:block md:w-[50%] auth-cover"></div>
       </div>
     </div>
   );
