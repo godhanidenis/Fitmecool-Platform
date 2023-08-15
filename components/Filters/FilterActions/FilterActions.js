@@ -13,12 +13,12 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
   return (
     <>
       <div className="items-center">
-        <div className="py-2 px-4">
+        <div className="pt-5 pb-2 px-10">
           <span className="text-black text-[22px] font-bold">Filters</span>
         </div>
-        <Divider/>
+        <Divider className="mx-6" />
         {!productByShop && (
-          <div className="flex items-center gap-2 mt-6 w-full px-6">
+          <div className="flex items-center gap-2 mt-6 w-full px-10">
             <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800 w-full">
               <input
                 id="Toggle4"

@@ -40,7 +40,7 @@ const initialState = {
     },
   },
   sortFilters: {
-    sortType: { selectedValue: "" },
+    sortType: { selectedValue: "new" },
   },
   productLayout: "grid",
   searchBarData: "",

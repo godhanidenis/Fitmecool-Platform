@@ -29,7 +29,7 @@ const initialState = {
     },
   },
   sortFilters: {
-    sortType: { selectedValue: "" },
+    sortType: { selectedValue: "new" },
   },
   shopLayout: "list",
 };

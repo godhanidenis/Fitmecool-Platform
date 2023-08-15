@@ -222,7 +222,7 @@ const Header = () => {
               </div>
             </Link>
             {userProfile.user_type !== "vendor" && (
-              <div className="headerLocationDiv ml-[24px]">
+              <div className="headerLocationDiv ml-2 sm:ml-6">
                 <FormControl
                   variant="standard"
                   sx={{ minWidth: 110, borderBottom: "1px solid gray" }}

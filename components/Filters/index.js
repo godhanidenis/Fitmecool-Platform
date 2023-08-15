@@ -24,7 +24,7 @@ const Filter = ({
       {/* <Divider /> */}
 
       {!byShop ? (
-        <div className="px-4">
+        <div className="px-10">
           <ProductCategoriesFilter setProductPageSkip={setProductPageSkip} />
           {!productByShop && (
             <ProductByShopFilter setProductPageSkip={setProductPageSkip} />
@@ -32,7 +32,7 @@ const Filter = ({
           <ProductColorFilter setProductPageSkip={setProductPageSkip} />
         </div>
       ) : (
-        <div className="px-4">
+        <div className="px-10">
           <ShopByLocation setShopPageSkip={setShopPageSkip} />
           <ShopRatingsFilter setShopPageSkip={setShopPageSkip} />
         </div>

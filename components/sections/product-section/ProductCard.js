@@ -461,38 +461,50 @@ const ProductCard = ({
           >
             {productsFiltersReducer.productLayout === "grid" && (
               <div>
-                <p
-                  className="oneLineAfterThreeDots font-semibold text-black sm:text-base text-[10px] mt-4"
-                  title={product.product_name}
-                >
-                  {product.product_name}
-                </p>
-              </div>
-            )}
-            <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
-              <div className="flex justify-center items-center">
-                <img
-                  alt="Shop Logo"
-                  src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
-                  className={`rounded-[50%] ${
-                    productsFiltersReducer.productLayout === "list"
-                      ? "w-11 h-11"
-                      : "sm:w-6 sm:h-6 w-4 h-4"
-                  }`}
-                />
-              </div>
-              <div className="flex flex-col justify-center">
-                <Link href={`/shop/${shopId}`}>
+                <Link href={`/product/${product.id}`} passHref>
                   <a
                     target={`${
                       themeLayout === "webScreen" ? "_blank" : "_self"
                     }`}
+                    rel="noopener noreferrer"
+                  >
+                    <span className="oneLineAfterThreeDots font-semibold text-black text-base mt-4">
+                      {product.product_name}
+                    </span>
+                  </a>
+                </Link>
+              </div>
+            )}
+            <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
+              <div className="flex justify-center items-center">
+                <div
+                  className={`relative ${
+                    productsFiltersReducer.productLayout === "list"
+                      ? "w-11 h-11"
+                      : "sm:w-6 sm:h-6 w-4 h-4"
+                  }`}
+                >
+                  <Image
+                    alt="shop_logo_img"
+                    src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
+                    layout="fill"
+                    className="rounded-[50%]"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col justify-center">
+                <Link href={`/shop/${shopId}`} passHref>
+                  <a
+                    target={`${
+                      themeLayout === "webScreen" ? "_blank" : "_self"
+                    }`}
+                    rel="noopener noreferrer"
                   >
                     <span
                       className={`text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary  ${
                         productsFiltersReducer.productLayout === "list"
                           ? "text-xl"
-                          : "text-[8px] sm:text-sm "
+                          : "text-xs sm:text-sm"
                       }`}
                     >
                       {product.branchInfo?.shop_info?.shop_name}
@@ -504,25 +516,30 @@ const ProductCard = ({
             {productsFiltersReducer.productLayout === "list" && (
               <>
                 <div className="mt-4">
-                  <p
-                    className="oneLineAfterThreeDots font-semibold text-[#565f66] text-base mt-2"
-                    title={product.product_name}
-                  >
-                    {product.product_name}
-                  </p>
-                  <p
-                    className="text-[#565f66] text-base mt-2"
-                    title={HTMLReactParser(product.product_description)}
-                  >
-                    {HTMLReactParser(product.product_description)}
-                  </p>
-                  <Link href={`/product/${product.id}`}>
+                  <Link href={`/product/${product.id}`} passHref>
                     <a
                       target={`${
                         themeLayout === "webScreen" ? "_blank" : "_self"
                       }`}
+                      rel="noopener noreferrer"
                     >
-                      <button className="text-colorWhite text-base px-4 py-2 my-2 md:mt-6 mr-2 md:w-1/2 w-[50%] xl:w-1/2 bg-colorPrimary rounded-md whitespace-nowrap">
+                      <span className="oneLineAfterThreeDots font-semibold text-[#565f66] text-base mt-2">
+                        {product.product_name}
+                      </span>
+                    </a>
+                  </Link>
+
+                  <span className="text-[#565f66] text-base mt-2">
+                    {HTMLReactParser(product.product_description)}
+                  </span>
+                  <Link href={`/product/${product.id}`} passHref>
+                    <a
+                      target={`${
+                        themeLayout === "webScreen" ? "_blank" : "_self"
+                      }`}
+                      rel="noopener noreferrer"
+                    >
+                      <button className="hidden sm:display text-colorWhite text-base px-4 py-2 my-2 md:mt-6 mr-2 md:w-1/2 w-[50%] xl:w-1/2 bg-colorPrimary rounded-md whitespace-nowrap">
                         See Details
                       </button>
                     </a>
