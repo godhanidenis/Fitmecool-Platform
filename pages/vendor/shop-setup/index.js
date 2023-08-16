@@ -3,6 +3,7 @@ import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVen
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -16,6 +17,7 @@ import {
   TextField,
   CircularProgress,
   FormControl,
+  IconButton,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -167,7 +169,7 @@ const ShopPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("Shop");
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
@@ -728,7 +730,7 @@ const ShopPage = () => {
 
             {currentStep === 1 && (
               <>
-                <div className="md:mx-10 mt-10">
+                <div className="md:mx-10 mt-8">
                   <div className="border mt-5">
                     <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
                       <div className="uppercase font-semibold sm:text-lg text-sm text-white">
@@ -955,7 +957,7 @@ const ShopPage = () => {
                               </div>
                             )}
                           </div>
-                          <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
+                          <div className="w-full flex gap-4 max-md:flex-col max-md:gap-5">
                             <div className="w-1/2 relative max-md:w-full">
                               <CustomTextFieldVendor
                                 name="facebook_link"
@@ -1108,16 +1110,16 @@ const ShopPage = () => {
 
             {currentStep === 2 && (
               <>
-                <div className="sm:mx-10 mt-10">
+                <div className="sm:mx-10 mt-8">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <div className="col-span-1">
+                    <div className="col-span-3 sm:col-span-1">
                       <div className="flex flex-col justify-center items-center border">
                         <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
                           Shop Logo
                         </div>
                         <div className="p-6">
                           <div
-                            className="w-[250px] h-[250px] border border-gray-200 hover:border-2 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
+                            className="w-[220px] h-[220px] sm:w-[250px] sm:h-[250px] border border-gray-200 hover:border-2 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
                             onClick={() => handleBrowseClick(0)}
                           >
                             {shopLogo !== "" ? (
@@ -1135,7 +1137,7 @@ const ShopPage = () => {
                                   <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                 </span>
                                 <div className="flex flex-col gap-1">
-                                  <p className="text-sm sm:text-lg text-gray-400">
+                                  <p className="text-base sm:text-lg text-gray-400">
                                     Click to upload{" "}
                                     <span className="text-colorGreen">
                                       logo
@@ -1176,14 +1178,14 @@ const ShopPage = () => {
                       </div>
                     </div>
 
-                    <div className="col-span-2">
+                    <div className="col-span-3 sm:col-span-2">
                       <div className="flex flex-col justify-center items-center border">
                         <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
                           Shop Cover Image
                         </div>
                         <div className="p-6 w-full flex justify-center">
                           <div
-                            className="w-[80%] h-[250px] cursor-pointer col-span-3 border border-gray-200 hover:border-2 hover:border-colorGreen flex items-center justify-center  rounded-lg"
+                            className="w-[100%] sm:w-[80%] h-[250px] cursor-pointer col-span-3 border border-gray-200 hover:border-2 hover:border-colorGreen flex items-center justify-center  rounded-lg"
                             onClick={() => handleBrowseClick(1)}
                           >
                             {shopBackground !== "" ? (
@@ -1201,7 +1203,7 @@ const ShopPage = () => {
                                   <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                 </span>
                                 <div className="flex flex-col gap-1">
-                                  <p className="sm:text-xl text-sm text-gray-400">
+                                  <p className="sm:text-xl text-base text-gray-400">
                                     <span className="text-colorGreen">
                                       Click to Upload
                                     </span>{" "}
@@ -1278,7 +1280,7 @@ const ShopPage = () => {
                                           <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                         </span>
                                         <div className="flex flex-col gap-1 justify-center">
-                                          <p className="text-sm sm:text-base text-colorGreen">
+                                          <p className="text-base sm:text-base text-colorGreen">
                                             <span className="text-gray-400">
                                               Click to Upload{" "}
                                             </span>
@@ -1319,7 +1321,7 @@ const ShopPage = () => {
                   </div>
                   <div className="mt-10">
                     <div className="grid grid-cols-4">
-                      <div className="col-span-2">
+                      <div className="col-span-4 sm:col-span-2">
                         <div className="flex flex-col justify-center items-center border">
                           <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
                             Shop Video
@@ -1344,7 +1346,7 @@ const ShopPage = () => {
                                     <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                   </span>
                                   <div className="flex flex-col gap-1">
-                                    <p className="sm:text-xl text-sm text-gray-400">
+                                    <p className="sm:text-xl text-base text-gray-400">
                                       <span className="text-colorGreen">
                                         Click to Upload
                                       </span>{" "}
@@ -1390,7 +1392,7 @@ const ShopPage = () => {
 
             {currentStep === 3 && (
               <>
-                <div className="sm:mx-10 mt-10">
+                <div className="mt-8 sm:mx-10">
                   {/* Main Branch */}
                   <div className="border mt-5">
                     <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
@@ -1436,7 +1438,7 @@ const ShopPage = () => {
                           </div>
                         )}
                       </div>
-                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-5">
                         <div className="sm:w-1/2 relative w-full">
                           <CustomTextFieldVendor
                             name="city"
@@ -1509,7 +1511,7 @@ const ShopPage = () => {
                       }`}
                     >
                       <div className="flex items-center justify-start">
-                        <div className="uppercase font-semibold ">
+                        <div className="uppercase font-semibold text-xs md:text-base whitespace-nowrap">
                           Same As Owner&nbsp;:&nbsp;
                         </div>
                         <RadioGroup
@@ -1609,7 +1611,7 @@ const ShopPage = () => {
                         </RadioGroup>
                       </div>
 
-                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8 !mt-2">
+                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-5 !mt-2">
                         <div className="sm:w-1/2 relative w-full">
                           <FormControl fullWidth>
                             <Controller
@@ -1812,9 +1814,10 @@ const ShopPage = () => {
                                     key={index}
                                   >
                                     <div className="flex justify-end">
-                                      <div className="flex">
-                                        <span
-                                          className="text-[red] font-semibold mr-2"
+                                      <div className="flex gap-2">
+                                        <IconButton
+                                          aria-label="delete"
+                                          className="!rounded-md !capitalize !text-colorBlack !p-1 !bg-red-600 hover:!bg-red-600"
                                           onClick={() => {
                                             setSubBranch(
                                               subBranch.filter(
@@ -1823,76 +1826,75 @@ const ShopPage = () => {
                                             );
                                           }}
                                         >
-                                          Delete
-                                        </span>
-                                        <span
-                                          className="text-[blue] font-semibold"
+                                          <DeleteIcon
+                                            className="!text-colorWhite"
+                                            fontSize="small"
+                                          />
+                                        </IconButton>
+                                        <IconButton
+                                          aria-label="delete"
+                                          className="!rounded-md !capitalize !text-colorBlack !p-1 !bg-colorStone hover:!bg-colorStone"
                                           onClick={() => {
                                             setSubBranchEdit(sub);
                                           }}
                                         >
-                                          Edit
-                                        </span>
+                                          <EditIcon
+                                            className="!text-colorWhite"
+                                            fontSize="small"
+                                          />
+                                        </IconButton>
                                       </div>
                                     </div>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
-                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
                                         Address :{" "}
                                       </b>
-                                      {sub.subManagerAddress}
+                                      <span className="break-all">
+                                        {sub.subManagerAddress}
+                                      </span>
                                     </p>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
-                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
                                         City :{" "}
                                       </b>
-                                      {sub.subManagerCity}
+                                      <span className="break-all">
+                                        {sub.subManagerCity}
+                                      </span>
                                     </p>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
-                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
                                         Pincode :{" "}
                                       </b>
-                                      {sub.subManagerPinCode}
+                                      <span className="break-all">
+                                        {sub.subManagerPinCode}
+                                      </span>
                                     </p>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
-                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base">
                                         Manager Name :
                                       </b>
-                                      {sub.subManagerFirstName +
-                                        " " +
-                                        sub.subManagerLastName}
+                                      <span className="break-all">
+                                        {sub.subManagerFirstName +
+                                          " " +
+                                          sub.subManagerLastName}
+                                      </span>
                                     </p>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
-                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base">
                                         Manager Email :
                                       </b>
-                                      {sub.subManagerEmail}
+                                      <span className="break-all">
+                                        {sub.subManagerEmail}
+                                      </span>
                                     </p>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack flex justify-between">
-                                      <b className="mr-2 text-sm sm:text-base lg:text-base">
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base">
                                         Manager Phone Number :
                                       </b>
-                                      {sub.subManagerPhone}
+                                      <span className="break-all">
+                                        {sub.subManagerPhone}
+                                      </span>
                                     </p>
-
-                                    {/* <div className="container mt-5">
-                              <Divider />
-                            </div>
-                            <div className="container mt-5 flex items-center justify-end gap-5">
-                              <IconButton
-                                aria-label="delete"
-                                className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-red-600 hover:!bg-red-600"
-                                
-                              >
-                                <DeleteIcon className="!text-colorWhite" />
-                              </IconButton>
-                              <IconButton
-                                aria-label="delete"
-                                className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-colorStone hover:!bg-colorStone"
-                                
-                              >
-                                <EditIcon className="!text-colorWhite" />
-                              </IconButton>
-                            </div> */}
                                   </div>
                                 ))}
                               </Carousel>
@@ -2202,7 +2204,7 @@ const SubBranchModal = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-8 w-full justify-between items-center">
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-2.5 w-full justify-between items-center">
                     <div className="w-full flex flex-col gap-2">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextFieldVendor
@@ -2268,7 +2270,7 @@ const SubBranchModal = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-8 w-full justify-between items-center">
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-2.5 w-full justify-between items-center">
                     {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
                         Name:
                       </p> */}
