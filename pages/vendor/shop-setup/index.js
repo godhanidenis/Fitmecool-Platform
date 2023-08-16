@@ -1391,235 +1391,320 @@ const ShopPage = () => {
             {currentStep === 3 && (
               <>
                 <div className="sm:mx-10 mt-10">
-                  <div className="flex my-10 mb-5">
-                    {mainBranch === "Show" ? (
-                      <KeyboardArrowUpIcon
-                        onClick={() => handleMainBranchDetails("Hide")}
-                        className="cursor-pointer"
-                      />
-                    ) : (
-                      <KeyboardArrowDownIcon
-                        onClick={() => handleMainBranchDetails("Show")}
-                        className="cursor-pointer"
-                      />
-                    )}
-                    <div className="font-semibold sm:text-lg text-sm">
-                      Main Branch
-                    </div>
-                  </div>
-                  <div
-                    className={`space-y-5 ${mainBranch === "Hide" && "hidden"}`}
-                  >
-                    <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        name="address"
-                        label="Address"
-                        type="text"
-                        id="address"
-                        isRequired={true}
-                        placeholder="Your address"
-                        formValue={{
-                          ...register("address", {
-                            required: "Address is required",
-                          }),
-                        }}
-                      />
-                      {errors.address && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.address?.message}
-                          </span>
-                        </div>
+                  {/* Main Branch */}
+                  <div className="border mt-5">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Main Branch
+                      </div>
+                      {mainBranch === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleMainBranchDetails("Hide")}
+                          className="text-white cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleMainBranchDetails("Show")}
+                          className="text-white cursor-pointer"
+                        />
                       )}
                     </div>
-                    <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
-                      <div className="sm:w-1/2 relative w-full">
+                    <div
+                      className={`space-y-5 p-4 md:p-10 ${
+                        mainBranch === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="w-full relative">
                         <CustomTextFieldVendor
-                          name="city"
-                          label=" City"
+                          name="address"
+                          label="Address"
                           type="text"
-                          id="city"
+                          id="address"
                           isRequired={true}
-                          placeholder="Your city"
+                          placeholder="Your address"
                           formValue={{
-                            ...register("city", {
-                              required: "City is required",
+                            ...register("address", {
+                              required: "Address is required",
                             }),
                           }}
                         />
-                        {errors.city && (
+                        {errors.address && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
-                              {errors.city?.message}
+                              {errors.address?.message}
                             </span>
                           </div>
                         )}
                       </div>
-                      <div className="sm:w-1/2 relative w-full">
-                        <CustomTextFieldVendor
-                          name="pin_code"
-                          label=" Pincode"
-                          type="number"
-                          id="pincode"
-                          isRequired={true}
-                          placeholder="Your pincode"
-                          formValue={{
-                            ...register("pin_code", {
-                              required: "PinCode is required",
-                            }),
-                          }}
-                        />
-                        {errors.pin_code && (
-                          <div className="mt-2">
-                            <span style={{ color: "red" }}>
-                              {errors.pin_code?.message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex my-10 !mb-0">
-                    {managerDetails === "Show" ? (
-                      <KeyboardArrowUpIcon
-                        onClick={() => handleManagerDetails("Hide")}
-                        className="cursor-pointer"
-                      />
-                    ) : (
-                      <KeyboardArrowDownIcon
-                        onClick={() => handleManagerDetails("Show")}
-                        className="cursor-pointer"
-                      />
-                    )}
-                    <div className="font-semibold sm:text-lg text-sm">
-                      Manager Details
-                    </div>
-                  </div>
-                  <div
-                    className={`space-y-5 ${
-                      managerDetails === "Hide" && "hidden"
-                    }`}
-                  >
-                    <div className="flex items-center justify-end">
-                      <div className="font-semibold">
-                        Same As Owner&nbsp;:&nbsp;
-                      </div>
-                      <RadioGroup
-                        row
-                        name="row-radio-buttons-group"
-                        value={sameAsOwner}
-                        onChange={(e) => {
-                          if (e.target.value === "True") {
-                            setSameAsOwner("True");
-                          } else {
-                            setSameAsOwner("False");
-                          }
-                        }}
-                      >
-                        <div className="flex gap-4">
-                          <div className="flex items-center">
-                            <span className="hidden sm:inline">
-                              <Radio
-                                name="saveAsOwner"
-                                id="True"
-                                value="True"
-                                sx={{
-                                  color: "rgba(21, 24, 39, 0.1)",
-                                  "& .MuiSvgIcon-root": {
-                                    fontSize: 24,
-                                  },
-                                  "&.Mui-checked": {
-                                    color: "#29977E",
-                                  },
-                                }}
-                              />
-                            </span>
-                            <span className="sm:hidden">
-                              <Radio
-                                name="saveAsOwner"
-                                id="True"
-                                value="True"
-                                sx={{
-                                  color: "rgba(21, 24, 39, 0.1)",
-                                  "& .MuiSvgIcon-root": {
-                                    fontSize: 16,
-                                  },
-                                  "&.Mui-checked": {
-                                    color: "#29977E",
-                                  },
-                                }}
-                              />
-                            </span>
-                            <label
-                              htmlFor="True"
-                              className="sm:text-xl text-sm text-gray-400"
-                            >
-                              Yes
-                            </label>
-                          </div>
-                          <div className="flex items-center">
-                            <span className="hidden sm:inline">
-                              <Radio
-                                name="saveAsOwner"
-                                id="False"
-                                value="False"
-                                sx={{
-                                  color: "rgba(21, 24, 39, 0.1)",
-                                  "& .MuiSvgIcon-root": {
-                                    fontSize: 24,
-                                  },
-                                  "&.Mui-checked": {
-                                    color: "#29977E",
-                                  },
-                                }}
-                              />
-                            </span>
-                            <span className="sm:hidden">
-                              <Radio
-                                name="saveAsOwner"
-                                id="False"
-                                value="False"
-                                sx={{
-                                  color: "rgba(21, 24, 39, 0.1)",
-                                  "& .MuiSvgIcon-root": {
-                                    fontSize: 16,
-                                  },
-                                  "&.Mui-checked": {
-                                    color: "#29977E",
-                                  },
-                                }}
-                              />
-                            </span>
-                            <label
-                              htmlFor="False"
-                              className="sm:text-xl text-sm text-gray-400"
-                            >
-                              No
-                            </label>
-                          </div>
+                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            name="city"
+                            label=" City"
+                            type="text"
+                            id="city"
+                            isRequired={true}
+                            placeholder="Your city"
+                            formValue={{
+                              ...register("city", {
+                                required: "City is required",
+                              }),
+                            }}
+                          />
+                          {errors.city && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.city?.message}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      </RadioGroup>
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            name="pin_code"
+                            label=" Pincode"
+                            type="number"
+                            id="pincode"
+                            isRequired={true}
+                            placeholder="Your pincode"
+                            formValue={{
+                              ...register("pin_code", {
+                                required: "PinCode is required",
+                              }),
+                            }}
+                          />
+                          {errors.pin_code && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.pin_code?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
+                  </div>
 
-                    <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8 !mt-2">
-                      <div className="sm:w-1/2 relative w-full">
+                  {/* Manager Details */}
+                  <div className="border mt-5">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Manager Details
+                      </div>
+                      {managerDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleManagerDetails("Hide")}
+                          className="text-white cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleManagerDetails("Show")}
+                          className="text-white cursor-pointer"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className={`space-y-5 p-4 pt-2 md:p-10 md:pt-4 ${
+                        managerDetails === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="flex items-center justify-start">
+                        <div className="uppercase font-semibold ">
+                          Same As Owner&nbsp;:&nbsp;
+                        </div>
+                        <RadioGroup
+                          row
+                          name="row-radio-buttons-group"
+                          value={sameAsOwner}
+                          onChange={(e) => {
+                            if (e.target.value === "True") {
+                              setSameAsOwner("True");
+                            } else {
+                              setSameAsOwner("False");
+                            }
+                          }}
+                        >
+                          <div className="flex gap-2">
+                            <div className="flex items-center">
+                              <span className="hidden sm:inline">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="True"
+                                  value="True"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 24,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <span className="sm:hidden">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="True"
+                                  value="True"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 16,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <label
+                                htmlFor="True"
+                                className="sm:text-xl text-sm text-gray-400"
+                              >
+                                Yes
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="hidden sm:inline">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="False"
+                                  value="False"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 24,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <span className="sm:hidden">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="False"
+                                  value="False"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 16,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <label
+                                htmlFor="False"
+                                className="sm:text-xl text-sm text-gray-400"
+                              >
+                                No
+                              </label>
+                            </div>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8 !mt-2">
+                        <div className="sm:w-1/2 relative w-full">
+                          <FormControl fullWidth>
+                            <Controller
+                              name="manager_first_name"
+                              control={control}
+                              defaultValue="" // Set the initial value here
+                              render={({ field }) => (
+                                <>
+                                  <TextField
+                                    {...field}
+                                    label="First Name"
+                                    type="text"
+                                    id="managerfName"
+                                    isRequired={true}
+                                    placeholder="Manager first name"
+                                    disabled={sameAsOwner === "True"}
+                                    {...register("manager_first_name", {
+                                      required: "Manager FirstName is required",
+                                      onChange: () => {
+                                        getAllValues();
+                                      },
+                                    })}
+                                  />
+                                </>
+                              )}
+                            />
+                          </FormControl>
+                          {errors.manager_first_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.manager_first_name?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="sm:w-1/2 relative w-full">
+                          <FormControl fullWidth>
+                            <Controller
+                              name="manager_last_name"
+                              control={control}
+                              defaultValue="" // Set the initial value here
+                              render={({ field }) => (
+                                <>
+                                  <TextField
+                                    {...field}
+                                    label=" Last Name"
+                                    type="text"
+                                    id="mangerlName"
+                                    isRequired={true}
+                                    placeholder="Manager last name"
+                                    disabled={sameAsOwner === "True"}
+                                    {...register("manager_last_name", {
+                                      required: "Manager LastName is required",
+                                      onChange: () => {
+                                        getAllValues();
+                                      },
+                                    })}
+                                  />
+                                </>
+                              )}
+                            />
+                          </FormControl>
+                          {errors.manager_last_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.manager_last_name?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full relative">
                         <FormControl fullWidth>
                           <Controller
-                            name="manager_first_name"
+                            name="manager_user_email"
                             control={control}
                             defaultValue="" // Set the initial value here
                             render={({ field }) => (
                               <>
                                 <TextField
                                   {...field}
-                                  label="First Name"
-                                  type="text"
-                                  id="managerfName"
+                                  label=" E-Mail"
+                                  type="email"
+                                  id="managerEmail"
                                   isRequired={true}
-                                  placeholder="Manager first name"
+                                  placeholder="Manager email address"
                                   disabled={sameAsOwner === "True"}
-                                  {...register("manager_first_name", {
-                                    required: "Manager FirstName is required",
+                                  {...register("manager_user_email", {
+                                    required: "Manager Email is required",
+
+                                    pattern: {
+                                      value:
+                                        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                      message: "Please enter a valid email",
+                                    },
                                     onChange: () => {
                                       getAllValues();
                                     },
@@ -1629,32 +1714,37 @@ const ShopPage = () => {
                             )}
                           />
                         </FormControl>
-                        {errors.manager_first_name && (
+                        {errors.manager_user_email && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
-                              {errors.manager_first_name?.message}
+                              {errors.manager_user_email?.message}
                             </span>
                           </div>
                         )}
                       </div>
-                      <div className="sm:w-1/2 relative w-full">
+                      <div className="w-full relative">
                         <FormControl fullWidth>
                           <Controller
-                            name="manager_last_name"
+                            name="manager_user_contact"
                             control={control}
                             defaultValue="" // Set the initial value here
                             render={({ field }) => (
                               <>
                                 <TextField
                                   {...field}
-                                  label=" Last Name"
-                                  type="text"
-                                  id="mangerlName"
+                                  label="Phone Number"
+                                  type="number"
+                                  id="managerPhone"
                                   isRequired={true}
-                                  placeholder="Manager last name"
+                                  placeholder="Manager phone number"
                                   disabled={sameAsOwner === "True"}
-                                  {...register("manager_last_name", {
-                                    required: "Manager LastName is required",
+                                  {...register("manager_user_contact", {
+                                    required:
+                                      "Manager Contact Number is required",
+                                    pattern: {
+                                      value: /^[0-9]{10}$/,
+                                      message: "Please enter a valid number",
+                                    },
                                     onChange: () => {
                                       getAllValues();
                                     },
@@ -1664,120 +1754,41 @@ const ShopPage = () => {
                             )}
                           />
                         </FormControl>
-                        {errors.manager_last_name && (
+                        {errors.manager_user_contact && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
-                              {errors.manager_last_name?.message}
+                              {errors.manager_user_contact?.message}
                             </span>
                           </div>
                         )}
                       </div>
                     </div>
-                    <div className="w-full relative">
-                      <FormControl fullWidth>
-                        <Controller
-                          name="manager_user_email"
-                          control={control}
-                          defaultValue="" // Set the initial value here
-                          render={({ field }) => (
-                            <>
-                              <TextField
-                                {...field}
-                                label=" E-Mail"
-                                type="email"
-                                id="managerEmail"
-                                isRequired={true}
-                                placeholder="Manager email address"
-                                disabled={sameAsOwner === "True"}
-                                {...register("manager_user_email", {
-                                  required: "Manager Email is required",
-
-                                  pattern: {
-                                    value:
-                                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                    message: "Please enter a valid email",
-                                  },
-                                  onChange: () => {
-                                    getAllValues();
-                                  },
-                                })}
-                              />
-                            </>
-                          )}
-                        />
-                      </FormControl>
-                      {errors.manager_user_email && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.manager_user_email?.message}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="w-full relative">
-                      <FormControl fullWidth>
-                        <Controller
-                          name="manager_user_contact"
-                          control={control}
-                          defaultValue="" // Set the initial value here
-                          render={({ field }) => (
-                            <>
-                              <TextField
-                                {...field}
-                                label="Phone Number"
-                                type="number"
-                                id="managerPhone"
-                                isRequired={true}
-                                placeholder="Manager phone number"
-                                disabled={sameAsOwner === "True"}
-                                {...register("manager_user_contact", {
-                                  required:
-                                    "Manager Contact Number is required",
-                                  pattern: {
-                                    value: /^[0-9]{10}$/,
-                                    message: "Please enter a valid number",
-                                  },
-                                  onChange: () => {
-                                    getAllValues();
-                                  },
-                                })}
-                              />
-                            </>
-                          )}
-                        />
-                      </FormControl>
-                      {errors.manager_user_contact && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.manager_user_contact?.message}
-                          </span>
-                        </div>
-                      )}
-                    </div>
                   </div>
+
+                  {/* Sub Branch */}
                   {!individual && (
-                    <div className="my-10">
-                      <div className="flex my-10 mb-5">
+                    <div className="border mt-5">
+                      <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                        <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                          Sub Branch
+                        </div>
                         {subBranchSec === "Show" ? (
                           <KeyboardArrowUpIcon
                             onClick={() => handleSubBranchDetails("Hide")}
-                            className="cursor-pointer"
+                            className="text-white cursor-pointer"
                           />
                         ) : (
                           <KeyboardArrowDownIcon
                             onClick={() => handleSubBranchDetails("Show")}
-                            className="cursor-pointer"
+                            className="text-white cursor-pointer"
                           />
                         )}
-                        <div className="font-semibold sm:text-lg text-sm">
-                          Sub Branch
-                        </div>
                       </div>
 
                       {subBranchSec === "Show" && (
                         <>
                           {subBranchSec?.length > 0 && (
-                            <div className="mb-10">
+                            <div className="p-4 pt-2 pb-0 md:p-10 md:pt-4 md:pb-0">
                               <Carousel
                                 responsive={responsive}
                                 // showDots={true}
@@ -1888,15 +1899,16 @@ const ShopPage = () => {
                               {/* </div> */}
                             </div>
                           )}
-
-                          <SubBranchModal
-                            subBranch={subBranch}
-                            setSubBranch={setSubBranch}
-                            setValue={setValue}
-                            getValues={getValues}
-                            subBranchEdit={subBranchEdit}
-                            setSubBranchEdit={setSubBranchEdit}
-                          />
+                          <div className="p-4 pt-2 pb-2 md:p-10 md:pt-4 md:pb-4">
+                            <SubBranchModal
+                              subBranch={subBranch}
+                              setSubBranch={setSubBranch}
+                              setValue={setValue}
+                              getValues={getValues}
+                              subBranchEdit={subBranchEdit}
+                              setSubBranchEdit={setSubBranchEdit}
+                            />
+                          </div>
                         </>
                       )}
                     </div>
@@ -2595,7 +2607,7 @@ const HoursModal = ({
                   variant="outlined"
                   size="large"
                   onClick={() => setHoursModalOpen(false)}
-                  className="font-semibold mr-4 bg-[#FAFCFC] border border-[#e5e7eb] hover:border-[#e5e7eb] hover:border text-inherit hover:bg-[#FAFCFC]"
+                  className="!font-semibold !mr-4 !bg-[#FAFCFC] !border !border-[#e5e7eb] hover:!border-[#e5e7eb] hover:!border !text-inherit hover:!bg-[#FAFCFC]"
                 >
                   Cancel
                 </Button>
@@ -2603,7 +2615,7 @@ const HoursModal = ({
                   variant="outlined"
                   size="large"
                   onClick={() => setHoursModalOpen(false)}
-                  className="font-semibold text-white bg-colorGreen hover:bg-colorGreen border-0 hover:border-0"
+                  className="!font-semibold !text-white !bg-colorGreen hover:!bg-colorGreen !border-0 hover:!border-0"
                 >
                   Save
                 </Button>
@@ -2895,6 +2907,7 @@ const DaysTimeModal = ({
                     />
                   }
                   label="Open 24 Hours"
+                  className="uppercase"
                 />
 
                 <FormControlLabel
@@ -2910,6 +2923,7 @@ const DaysTimeModal = ({
                     />
                   }
                   label="Closed"
+                  className="uppercase"
                 />
               </div>
               {!(closed || open24Hours) && (
@@ -2941,16 +2955,14 @@ const DaysTimeModal = ({
               <Button
                 variant="outlined"
                 size="large"
-                className="font-semibold mr-4 bg-[#FAFCFC] border border-[#e5e7eb] hover:border-[#e5e7eb] hover:border text-inherit hover:bg-[#FAFCFC]"
+                className="!font-semibold !mr-4 !bg-[#FAFCFC] !border !border-[#e5e7eb] hover:!border-[#e5e7eb] hover:!border !text-inherit hover:!bg-[#FAFCFC]"
                 onClick={handleCloseDaysTimeModal}
               >
                 Cancel
               </Button>
               <Button
                 size="large"
-                className={` font-semibold !text-white ${
-                  !DisableButton() && "!bg-colorGreen"
-                } hover:!bg-colorGreen !border-colorGreen`}
+                className={`!font-semibold !text-white !bg-colorGreen hover:!bg-colorGreen !border-colorGreen`}
                 onClick={saveDaysTimeData}
                 disabled={DisableButton()}
               >
