@@ -1150,10 +1150,10 @@ const ShopPage = () => {
                               accept="image/*,video/*"
                               className="hidden"
                               {...register("shopLogo", {
-                                required:
-                                  shopLogo === ""
-                                    ? "ShopLogo is required *"
-                                    : false,
+                                // required:
+                                //   shopLogo === ""
+                                //     ? "ShopLogo is required *"
+                                //     : false,
                                 onChange: (e) => {
                                   if (
                                     e.target.files &&
@@ -1216,10 +1216,10 @@ const ShopPage = () => {
                               accept="image/*,video/*"
                               className="hidden"
                               {...register("shopBackground", {
-                                required:
-                                  shopBackground === ""
-                                    ? "ShopBackground is required *"
-                                    : false,
+                                // required:
+                                //   shopBackground === ""
+                                //     ? "ShopBackground is required *"
+                                //     : false,
                                 onChange: (e) => {
                                   if (
                                     e.target.files &&
@@ -1293,9 +1293,9 @@ const ShopPage = () => {
                                       accept="image/*,video/*"
                                       className="hidden"
                                       {...register("shopImages", {
-                                        required: !ShopImgError[index]
-                                          ? "Shop all images is required *"
-                                          : false,
+                                        // required: !ShopImgError[index]
+                                        //   ? "Shop all images is required *"
+                                        //   : false,
                                         onChange: (e) => {
                                           createShopImagesChange(e, index);
                                         },
