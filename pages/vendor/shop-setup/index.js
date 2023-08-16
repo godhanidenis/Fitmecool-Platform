@@ -167,7 +167,7 @@ const ShopPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("Shop");
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
@@ -422,9 +422,11 @@ const ShopPage = () => {
                         shop_cover_image:
                           backgroundResponse.data.data.singleUpload,
                         shop_images:
-                          imagesResponse.data.data.multipleUpload.map((itm) => {
-                            return { links: itm };
-                          }),
+                          imagesResponse.data.data.multipleUpload?.map(
+                            (itm) => {
+                              return { links: itm };
+                            }
+                          ),
                         shop_video: videoResponse.data.data.singleUpload,
 
                         form_steps: "3",
@@ -633,19 +635,21 @@ const ShopPage = () => {
               Individual
             </button>
           </div>
-          <div className="w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
-            <div className="">
-              <div className="flex justify-evenly sm:mb-10 mb-3">
-                <div className="font-semibold sm:text-2xl text-sm">Details</div>
+          <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
+            <div className="md:mx-10">
+              <div className="flex justify-evenly mb-3 sm:mb-5">
+                <div className="uppercase font-semibold text-sm sm:text-xl">
+                  Details
+                </div>
                 <div
-                  className={`sm:text-2xl text-sm ${
+                  className={`uppercase text-sm sm:text-xl ${
                     currentStep >= 2 ? "font-semibold" : "text-gray-400"
                   }`}
                 >
                   Photos
                 </div>
                 <div
-                  className={`sm:text-2xl text-sm ${
+                  className={`uppercase text-sm sm:text-xl ${
                     currentStep >= 3 ? "font-semibold" : "text-gray-400"
                   }`}
                 >
@@ -700,7 +704,7 @@ const ShopPage = () => {
                 ) : (
                   <>
                     <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
-                    <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-gray-200 text-center sm:pt-1 sm:text-sm text-[10px]">
+                    <span className="flex justify-center items-center sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
                       2
                     </span>
                   </>
@@ -713,7 +717,7 @@ const ShopPage = () => {
                 ) : (
                   <>
                     <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
-                    <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-gray-200 text-center sm:pt-1  sm:text-sm text-[10px]">
+                    <span className="flex justify-center items-center  sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
                       3
                     </span>
                   </>
@@ -724,335 +728,348 @@ const ShopPage = () => {
 
             {currentStep === 1 && (
               <>
-                <div className="sm:mx-10 mx-3">
-                  <div className="flex my-10 mb-5">
-                    {ownerDetails === "Show" ? (
-                      <KeyboardArrowUpIcon
-                        onClick={() => handleOwnerDetails("Hide")}
-                        className="cursor-pointer"
-                      />
-                    ) : (
-                      <KeyboardArrowDownIcon
-                        onClick={() => handleOwnerDetails("Show")}
-                        className="cursor-pointer"
-                      />
-                    )}
-                    <div className="uppercase font-semibold sm:text-lg text-sm">
-                      Owner Details
+                <div className="md:mx-10 mt-10">
+                  <div className="border mt-5">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Owner Details
+                      </div>
+                      {ownerDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          className="text-white cursor-pointer"
+                          onClick={() => handleOwnerDetails("Hide")}
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          className="text-white cursor-pointer"
+                          onClick={() => handleOwnerDetails("Show")}
+                        />
+                      )}
                     </div>
-                  </div>
-                  <div
-                    className={`space-y-5 ${
-                      ownerDetails === "Hide" && "hidden"
-                    }`}
-                  >
-                    <div className="w-full flex sm:flex-row sm:gap-2 flex-col gap-4">
-                      <div className="sm:w-1/2 relative w-full">
+                    <div
+                      className={`space-y-5 p-4 md:p-10 ${
+                        ownerDetails === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="w-full flex sm:flex-row sm:gap-2 flex-col gap-4">
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            label="First Name*"
+                            type="text"
+                            id="fName"
+                            name="first_name"
+                            isRequired={true}
+                            placeholder="Your first name"
+                            fieldValue={getValues("first_name")}
+                            fieldError={errors?.first_name}
+                            formValue={{
+                              ...register("first_name", {
+                                required: "*First name is required",
+                              }),
+                            }}
+                          />
+                          {errors.first_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.first_name?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            label="Last Name*"
+                            type="text"
+                            id="lName"
+                            name="last_name"
+                            isRequired={true}
+                            placeholder="Your last name"
+                            fieldValue={getValues("last_name")}
+                            fieldError={errors?.last_name}
+                            formValue={{
+                              ...register("last_name", {
+                                required: "*Last name is required",
+                              }),
+                            }}
+                          />
+                          {errors.last_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.last_name?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full relative">
                         <CustomTextFieldVendor
-                          label="First Name*"
-                          type="text"
-                          id="fName"
-                          name="first_name"
+                          label="Email Address"
+                          type="email"
+                          id="email"
+                          name="user_email"
                           isRequired={true}
-                          placeholder="Your first name"
-                          fieldValue={getValues("first_name")}
-                          fieldError={errors?.first_name}
+                          placeholder="yourmail@gmail.com"
+                          fieldValue={getValues("user_email")}
+                          fieldError={errors?.user_email}
                           formValue={{
-                            ...register("first_name", {
-                              required: "First name is required",
+                            ...register("user_email", {
+                              pattern: {
+                                value:
+                                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                message: "*Please enter a valid email",
+                              },
                             }),
                           }}
                         />
-                        {errors.first_name && (
+                        {errors.user_email && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
-                              {errors.first_name?.message}
+                              {errors.user_email?.message}
                             </span>
                           </div>
                         )}
                       </div>
-                      <div className="sm:w-1/2 relative w-full">
+                      <div className="w-full relative">
                         <CustomTextFieldVendor
-                          label="Last Name*"
+                          label="Phone Number*"
                           type="text"
-                          id="lName"
-                          name="last_name"
+                          id="phone"
+                          name="user_contact"
                           isRequired={true}
-                          placeholder="Your last name"
-                          fieldValue={getValues("last_name")}
-                          fieldError={errors?.last_name}
+                          placeholder="Your phone number"
+                          fieldValue={getValues("user_contact")}
+                          fieldError={errors?.user_contact}
                           formValue={{
-                            ...register("last_name", {
-                              required: "Last name is required",
+                            ...register("user_contact", {
+                              required: "*Phone number is required",
+                              pattern: {
+                                value: /^[0-9]{10}$/,
+                                message: "*Please enter a valid phone Number",
+                              },
                             }),
                           }}
                         />
-                        {errors.last_name && (
+                        {errors.user_contact && (
                           <div className="mt-2">
                             <span style={{ color: "red" }}>
-                              {errors.last_name?.message}
+                              {errors.user_contact?.message}
                             </span>
                           </div>
                         )}
                       </div>
                     </div>
-                    <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        label="Email Address"
-                        type="email"
-                        id="email"
-                        name="user_email"
-                        isRequired={true}
-                        placeholder="yourmail@gmail.com"
-                        fieldValue={getValues("user_email")}
-                        fieldError={errors?.user_email}
-                        formValue={{
-                          ...register("user_email", {
-                            pattern: {
-                              value:
-                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                              message: "Please enter a valid email",
-                            },
-                          }),
-                        }}
-                      />
-                      {errors.user_email && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.user_email?.message}
-                          </span>
-                        </div>
+                  </div>
+
+                  {/* Shop info */}
+                  <div className="border mt-10">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Shop info
+                      </div>
+                      {shopDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleShopDetails("Hide")}
+                          className="text-white cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleShopDetails("Show")}
+                          className="text-white cursor-pointer"
+                        />
                       )}
                     </div>
-                    <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        label="Phone Number*"
-                        type="text"
-                        id="phone"
-                        name="user_contact"
-                        isRequired={true}
-                        placeholder="Your phone number"
-                        fieldValue={getValues("user_contact")}
-                        fieldError={errors?.user_contact}
-                        formValue={{
-                          ...register("user_contact", {
-                            required: "Phone number is required",
-                            pattern: {
-                              value: /^[0-9]{10}$/,
-                              message: "Please enter a valid phone Number",
-                            },
-                          }),
-                        }}
-                      />
-                      {errors.user_contact && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.user_contact?.message}
-                          </span>
-                        </div>
+                    <div
+                      className={`space-y-5 p-4 md:p-10 ${
+                        shopDetails === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="w-full relative">
+                        <CustomTextFieldVendor
+                          name="shop_name"
+                          label="Shop Name*"
+                          type="text"
+                          id="shopName"
+                          isRequired={true}
+                          placeholder="Your shop name"
+                          formValue={{
+                            ...register("shop_name", {
+                              required: "*Shop name is required",
+                            }),
+                          }}
+                        />
+                        {errors.shop_name && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.shop_name?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {!individual && (
+                        <>
+                          <div className="w-full relative">
+                            <CustomTextFieldVendor
+                              name="shop_email"
+                              label="Shop Email"
+                              type="email"
+                              id="shopEmail"
+                              isRequired={true}
+                              placeholder="Your shop email"
+                              formValue={{
+                                ...register("shop_email", {
+                                  pattern: {
+                                    value:
+                                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                    message: "*Please enter a valid email",
+                                  },
+                                }),
+                              }}
+                            />
+                            {errors.shop_email && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.shop_email?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="w-full relative">
+                            <CustomTextFieldVendor
+                              name="personal_website"
+                              label="Personal Website Link"
+                              type="text"
+                              id="personalWebLink1"
+                              isRequired={false}
+                              placeholder="Personal Website Link"
+                              formValue={{
+                                ...register("personal_website", {
+                                  // required: "Personal Website is required",
+                                }),
+                              }}
+                            />
+                            {errors.personal_website && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.personal_website?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
+                            <div className="w-1/2 relative max-md:w-full">
+                              <CustomTextFieldVendor
+                                name="facebook_link"
+                                label="Fackbook Link"
+                                type="text"
+                                id="fbLink"
+                                isRequired={false}
+                                placeholder="Your facebook link"
+                                formValue={{
+                                  ...register("facebook_link", {
+                                    // required: "Facebook Link is required",
+                                  }),
+                                }}
+                              />
+                              {errors.facebook_link && (
+                                <div className="mt-2">
+                                  <span style={{ color: "red" }}>
+                                    {errors.facebook_link?.message}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="w-1/2 relative max-md:w-full">
+                              <CustomTextFieldVendor
+                                name="instagram_link"
+                                label=" Instagram Link"
+                                type="text"
+                                id="igLink"
+                                isRequired={false}
+                                placeholder="Your instagram link"
+                                formValue={{
+                                  ...register("instagram_link", {
+                                    // required: "Instagram Link is required",
+                                  }),
+                                }}
+                              />
+                              {errors.instagram_link && (
+                                <div className="mt-2">
+                                  <span style={{ color: "red" }}>
+                                    {errors.instagram_link?.message}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </>
                       )}
                     </div>
                   </div>
-                  <div className="flex my-10 mb-5">
-                    {shopDetails === "Show" ? (
-                      <KeyboardArrowUpIcon
-                        onClick={() => handleShopDetails("Hide")}
-                        className="cursor-pointer"
-                      />
-                    ) : (
-                      <KeyboardArrowDownIcon
-                        onClick={() => handleShopDetails("Show")}
-                        className="cursor-pointer"
-                      />
-                    )}
-                    <div className="uppercase font-semibold sm:text-lg text-sm">
-                      Shop info
-                    </div>
-                  </div>
-                  <div
-                    className={`space-y-5 ${
-                      shopDetails === "Hide" && "hidden"
-                    }`}
-                  >
-                    <div className="w-full relative">
-                      <CustomTextFieldVendor
-                        name="shop_name"
-                        label="Shop Name*"
-                        type="text"
-                        id="shopName"
-                        isRequired={true}
-                        placeholder="Your shop name"
-                        formValue={{
-                          ...register("shop_name", {
-                            required: "Shop name is required",
-                          }),
-                        }}
-                      />
-                      {errors.shop_name && (
-                        <div className="mt-2">
-                          <span style={{ color: "red" }}>
-                            {errors.shop_name?.message}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+
+                  {/* Shop Open/Close Time */}
+
+                  <div className="border mt-10">
                     {!individual && (
                       <>
-                        <div className="w-full relative">
-                          <CustomTextFieldVendor
-                            name="shop_email"
-                            label="Shop Email"
-                            type="email"
-                            id="shopEmail"
-                            isRequired={true}
-                            placeholder="Your shop email"
-                            formValue={{
-                              ...register("shop_email", {
-                                pattern: {
-                                  value:
-                                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                  message: "Please enter a valid email",
-                                },
-                              }),
-                            }}
-                          />
-                          {errors.shop_email && (
-                            <div className="mt-2">
-                              <span style={{ color: "red" }}>
-                                {errors.shop_email?.message}
-                              </span>
+                        <div className="flex justify-between items-center px-3 md:px-5 py-2 bg-colorPrimary">
+                          <div className="flex">
+                            <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                              Shop Open/Close Time
                             </div>
-                          )}
-                        </div>
-                        <div className="w-full relative">
-                          <CustomTextFieldVendor
-                            name="personal_website"
-                            label="Personal Website Link"
-                            type="text"
-                            id="personalWebLink1"
-                            isRequired={false}
-                            placeholder="Personal Website Link"
-                            formValue={{
-                              ...register("personal_website", {
-                                // required: "Personal Website is required",
-                              }),
-                            }}
-                          />
-                          {errors.personal_website && (
-                            <div className="mt-2">
-                              <span style={{ color: "red" }}>
-                                {errors.personal_website?.message}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="w-full flex gap-4 max-md:flex-col max-md:gap-8">
-                          <div className="w-1/2 relative max-md:w-full">
-                            <CustomTextFieldVendor
-                              name="facebook_link"
-                              label="Fackbook Link"
-                              type="text"
-                              id="fbLink"
-                              isRequired={false}
-                              placeholder="Your facebook link"
-                              formValue={{
-                                ...register("facebook_link", {
-                                  // required: "Facebook Link is required",
-                                }),
-                              }}
-                            />
-                            {errors.facebook_link && (
-                              <div className="mt-2">
-                                <span style={{ color: "red" }}>
-                                  {errors.facebook_link?.message}
-                                </span>
+                          </div>
+                          <div className="flex">
+                            <div
+                              className="flex gap-2 mr-4 items-center cursor-pointer"
+                              onClick={() => setHoursModalOpen(true)}
+                            >
+                              <EditIcon
+                                fontSize="small"
+                                className="text-white"
+                              />
+                              <div className="text-white sm:text-lg text-sm">
+                                Edit
                               </div>
+                            </div>
+                            {shopTimeDetails === "Show" ? (
+                              <KeyboardArrowUpIcon
+                                onClick={() => handleShopTimeDetails("Hide")}
+                                className="text-white cursor-pointer"
+                              />
+                            ) : (
+                              <KeyboardArrowDownIcon
+                                onClick={() => handleShopTimeDetails("Show")}
+                                className="text-white cursor-pointer"
+                              />
                             )}
                           </div>
-                          <div className="w-1/2 relative max-md:w-full">
-                            <CustomTextFieldVendor
-                              name="instagram_link"
-                              label=" Instagram Link"
-                              type="text"
-                              id="igLink"
-                              isRequired={false}
-                              placeholder="Your instagram link"
-                              formValue={{
-                                ...register("instagram_link", {
-                                  // required: "Instagram Link is required",
-                                }),
-                              }}
-                            />
-                            {errors.instagram_link && (
-                              <div className="mt-2">
-                                <span style={{ color: "red" }}>
-                                  {errors.instagram_link?.message}
-                                </span>
+                        </div>
+                        <div
+                          className={`space-y-5 p-4 md:p-10 ${
+                            shopTimeDetails === "Hide" && "hidden"
+                          }`}
+                        >
+                          <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
+                            {hours?.map((day, index) => (
+                              <div className="relative" key={index}>
+                                {day["value"]?.map((time, index) => (
+                                  <TimeCustomTextField
+                                    key={index}
+                                    type="text"
+                                    id={index}
+                                    variant="outlined"
+                                    label={day["key"]}
+                                    value={time}
+                                  />
+                                ))}
                               </div>
-                            )}
+                            ))}
                           </div>
                         </div>
                       </>
                     )}
                   </div>
-                  {!individual && (
-                    <>
-                      <div className="flex justify-between items-center my-10 mb-8">
-                        <div className="flex">
-                          {shopTimeDetails === "Show" ? (
-                            <KeyboardArrowUpIcon
-                              onClick={() => handleShopTimeDetails("Hide")}
-                              className="cursor-pointer"
-                            />
-                          ) : (
-                            <KeyboardArrowDownIcon
-                              onClick={() => handleShopTimeDetails("Show")}
-                              className="cursor-pointer"
-                            />
-                          )}
-                          <div className="uppercase font-semibold sm:text-lg text-sm">
-                            Shop Open/Close Time
-                          </div>
-                        </div>
-                        <div
-                          className="flex gap-2 mr-4 items-center cursor-pointer"
-                          onClick={() => setHoursModalOpen(true)}
-                        >
-                          <EditIcon
-                            fontSize="small"
-                            className="text-gray-400"
-                          />
-                          <div className="text-gray-400 sm:text-lg text-sm">
-                            Edit
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`space-y-5 ${
-                          shopTimeDetails === "Hide" && "hidden"
-                        }`}
-                      >
-                        <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
-                          {hours?.map((day, index) => (
-                            <div className="relative" key={index}>
-                              {day["value"]?.map((time, index) => (
-                                <TimeCustomTextField
-                                  key={index}
-                                  type="text"
-                                  id={index}
-                                  variant="outlined"
-                                  label={day["key"]}
-                                  value={time}
-                                />
-                              ))}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  <Divider className="mt-10" />
 
+                  <Divider className="mt-10" />
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1091,7 +1108,7 @@ const ShopPage = () => {
 
             {currentStep === 2 && (
               <>
-                <div className="sm:mx-10 mx-3 my-10 mb-0">
+                <div className="sm:mx-10 mt-10">
                   <div className="grid grid-cols-3 items-center gap-4">
                     <div className="col-span-1">
                       <div className="flex flex-col justify-center items-center border">
@@ -1123,9 +1140,6 @@ const ShopPage = () => {
                                     <span className="text-colorGreen">
                                       logo
                                     </span>
-                                  </p>
-                                  <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                    No Size Limit
                                   </p>
                                 </div>
                               </div>
@@ -1193,9 +1207,6 @@ const ShopPage = () => {
                                     </span>{" "}
                                     Cover Image
                                   </p>
-                                  <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                    We Support JPG, PNG & No Size Limit
-                                  </p>
                                 </div>
                               </div>
                             )}
@@ -1233,7 +1244,7 @@ const ShopPage = () => {
                   </div>
                   <div className="mt-10">
                     <div className="flex flex-col border">
-                      <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 text-white">
+                      <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
                         Shop Images
                       </div>
                       <div className="p-6">
@@ -1267,14 +1278,11 @@ const ShopPage = () => {
                                           <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                         </span>
                                         <div className="flex flex-col gap-1 justify-center">
-                                          <p className="text-sm sm:text-base text-gray-400">
-                                            <span className="text-colorGreen">
+                                          <p className="text-sm sm:text-base text-colorGreen">
+                                            <span className="text-gray-400">
                                               Click to Upload{" "}
                                             </span>
-                                            Front Image
-                                          </p>
-                                          <p className="text-xs text-gray-400 text-center">
-                                            We Support JPG, PNG & No Size Limit
+                                            Product Image
                                           </p>
                                         </div>
                                       </div>
@@ -1313,7 +1321,7 @@ const ShopPage = () => {
                     <div className="grid grid-cols-4">
                       <div className="col-span-2">
                         <div className="flex flex-col justify-center items-center border">
-                          <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 text-white">
+                          <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
                             Shop Video
                           </div>
                           <div className="w-full p-6">
@@ -1336,14 +1344,11 @@ const ShopPage = () => {
                                     <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                   </span>
                                   <div className="flex flex-col gap-1">
-                                    <p className="sm:text-xl text-sm font-bold text-gray-400">
+                                    <p className="sm:text-xl text-sm text-gray-400">
                                       <span className="text-colorGreen">
                                         Click to Upload
                                       </span>{" "}
                                       Shop Video
-                                    </p>
-                                    <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                      No Size Limit
                                     </p>
                                   </div>
                                 </div>
@@ -1385,7 +1390,7 @@ const ShopPage = () => {
 
             {currentStep === 3 && (
               <>
-                <div className="sm:mx-10 mx-3">
+                <div className="sm:mx-10 mt-10">
                   <div className="flex my-10 mb-5">
                     {mainBranch === "Show" ? (
                       <KeyboardArrowUpIcon
@@ -2436,7 +2441,7 @@ const HoursModal = ({
                         {day["key"]}
                       </div>
                     </div>
-                    {day["value"].map((time, index) => (
+                    {day["value"]?.map((time, index) => (
                       <div
                         key={index}
                         className="flex gap-2 sm:gap-4 sm:items-center items-start sm:mr-20"
@@ -2679,7 +2684,7 @@ const DaysTimeModal = ({
     }
 
     if ((closed || open24Hours) && selectedWeek) {
-      hours.map((itm) =>
+      hours?.map((itm) =>
         selectedWeek?.map((day) => {
           if (day === itm.key) {
             return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
@@ -2691,7 +2696,7 @@ const DaysTimeModal = ({
     }
 
     if ((closed || open24Hours) && selectedAllHours) {
-      hours.map((itm) =>
+      hours?.map((itm) =>
         selectedAllHours?.map((day) => {
           if (day === itm.key) {
             return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
@@ -2703,7 +2708,7 @@ const DaysTimeModal = ({
     }
 
     if (hours && !closed && !open24Hours && selectedWeek) {
-      hours.map((itm) =>
+      hours?.map((itm) =>
         selectedWeek?.map((day) => {
           if (day === itm.key) {
             return (itm.value = [
@@ -2734,7 +2739,7 @@ const DaysTimeModal = ({
     }
 
     if (hours && !closed && !open24Hours && selectedAllHours) {
-      hours.map((itm) =>
+      hours?.map((itm) =>
         selectedAllHours?.map((day) => {
           if (day === itm.key) {
             return (itm.value = [
@@ -2857,7 +2862,7 @@ const DaysTimeModal = ({
                   "Thursday",
                   "Friday",
                   "Saturday",
-                ].map((itm, index) => (
+                ]?.map((itm, index) => (
                   <div
                     className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] cursor-pointer ${
                       selectedDay?.split(" - ")[0] === itm &&

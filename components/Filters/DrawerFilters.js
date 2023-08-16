@@ -34,7 +34,7 @@ const DrawerFilters = ({
         <Fab
           color="primary"
           aria-label="add"
-          className="bottom-6 right-6 fixed bg-colorPrimary lg:hidden"
+          className="!bottom-6 !right-6 !fixed !bg-colorPrimary display !lg:hidden"
           onClick={toggleFilterMenu}
         >
           <FilterAltIcon />
