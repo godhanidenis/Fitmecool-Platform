@@ -170,25 +170,22 @@ const ShopDetail = ({ shopDetails }) => {
             scrollRef={myDivRef}
           />
         </div>
-        <div className="py-4">
-          <div className="container">
-            <UpperFilter
-              setProductPageSkip={setProductPageSkip}
-              forShopPage={true}
-              showDrawerFilter={true}
-              showOnlyShopDetailPage={true}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-8 container">
-          <div className="lg:col-span-2 hidden lg:block p-8 pt-4 bg-white shadow-xl">
+
+        <div className="grid grid-cols-8 container py-3 gap-6">
+          <div className="lg:col-span-2 hidden lg:block bg-white shadow-xl">
             <Filter
               productByShop={true}
               setProductPageSkip={setProductPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 sm:p-6 sm:!pr-0">
-            <div className="w-[100%]">
+          <div className="col-span-8 lg:col-span-6">
+            <div className="py-3">
+              <UpperFilter
+                setProductPageSkip={setProductPageSkip}
+                showOnlyShopDetailPage={true}
+              />
+            </div>
+            <div className="w-full">
               <div
                 className={`${
                   productsFiltersReducer.productLayout === "list"

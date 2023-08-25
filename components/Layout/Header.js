@@ -38,7 +38,10 @@ import {
   loadUserProfileStart,
   userLogout,
 } from "../../redux/ducks/userProfile";
-import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
+import {
+  changeAppliedProductsFilters,
+  changeProductsSearchBarData,
+} from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
@@ -459,6 +462,15 @@ export const UserProfile = ({ setAccessToken }) => {
     dispatch(userLogout());
     setAccessToken("");
     handleProfileClose();
+    userProfile.user_type === "vendor" &&
+      dispatch(
+        changeAppliedProductsFilters({
+          key: "shopId",
+          value: {
+            selectedValue: [],
+          },
+        })
+      );
     Router.push("/");
 
     toast.success("Logout Successfully", {

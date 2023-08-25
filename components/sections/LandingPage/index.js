@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loadMoreProductsStart,
-  loadProductsStart,
-} from "../../../redux/ducks/product";
+import { loadProductsStart } from "../../../redux/ducks/product";
 import UpperFilter from "../../Filters/UpperFilter/UpperFilter";
 import ProductCard from "../product-section/ProductCard";
-import { loadMoreShopsStart, loadShopsStart } from "../../../redux/ducks/shop";
+import { loadShopsStart } from "../../../redux/ducks/shop";
 import ShopCard from "../shop-section/ShopCard";
 import Filter from "../../Filters";
-import { Fab, Pagination } from "@mui/material";
+import { Pagination } from "@mui/material";
 import Image from "next/image";
-import AddIcon from "@mui/icons-material/Add";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -116,19 +111,8 @@ const LandingPage = () => {
         />
       </div>
       <div>
-        <div className="container py-3 bg-[#FAFCFC]">
-          <div>
-            <UpperFilter
-              byShop={byShop}
-              setByShop={setByShop}
-              setProductPageSkip={setProductPageSkip}
-              setShopPageSkip={setShopPageSkip}
-              showDrawerFilter={true}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-8 container mb-4 font-Nova">
-          <div className="lg:col-span-2 hidden lg:block bg-white  shadow-xl">
+        <div className="grid grid-cols-8 container mb-4 font-Nova py-3 gap-6">
+          <div className="lg:col-span-2 hidden lg:block bg-white shadow-xl">
             <Filter
               byShop={byShop}
               setByShop={setByShop}
@@ -136,8 +120,17 @@ const LandingPage = () => {
               setShopPageSkip={setShopPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC] !pt-0 !pr-0">
-            <div className="container !w-[100%]">
+
+          <div className="col-span-8 lg:col-span-6 px-0 bg-[#FAFCFC]">
+            <div className="py-3">
+              <UpperFilter
+                byShop={byShop}
+                setByShop={setByShop}
+                setProductPageSkip={setProductPageSkip}
+                setShopPageSkip={setShopPageSkip}
+              />
+            </div>
+            <div className="w-full">
               {!byShop ? (
                 <>
                   <div
@@ -205,20 +198,6 @@ const LandingPage = () => {
                       />
                     </div>
                   )}
-                  {/* {shopsCount > 6 && (
-                  <div className="flex items-center justify-center py-10">
-                    <Pagination
-                      count={Math.ceil(shopsCount / 6)}
-                      color="primary"
-                      variant="outlined"
-                      shape="rounded"
-                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
-                      onChange={(e, p) => {
-                        setShopPageSkip((p === 1 && 0) || (p - 1) * 6);
-                      }}
-                    />
-                  </div>
-                )} */}
                 </>
               )}
             </div>

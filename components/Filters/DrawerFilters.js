@@ -3,6 +3,7 @@ import { useState } from "react";
 import Filter from "./index";
 import CloseIcon from "@mui/icons-material/Close";
 import { Fab } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const DrawerFilters = ({
   setProductPageSkip,
@@ -17,29 +18,22 @@ const DrawerFilters = ({
   };
 
   const userType = localStorage.getItem("user_type");
+  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   return (
     <>
-      {/* <button
-        onClick={toggleFilterMenu}
-        className={
-          userType === "vendor"
-            ? "flex items-center px-2 py-1 text-colorBlack"
-            : " flex items-center px-2 py-1 text-colorBlack"
-        }
-      >
-        <FilterAltIcon />
-      </button> */}
-      {!filterOpen && (
+      {((userType === "vendor" && !filterOpen) ||
+        (themeLayout === "mobileScreen" && !filterOpen)) && (
         <Fab
           color="primary"
           aria-label="add"
-          className="!bottom-6 !right-6 !fixed !bg-colorPrimary display !lg:hidden"
+          className="!bottom-6 !right-6 !fixed !bg-colorPrimary !lg:hidden"
           onClick={toggleFilterMenu}
         >
           <FilterAltIcon />
         </Fab>
       )}
+
       <div
         className={`p-4 py-4 lg:w-1/3 w-10/12 lg:${
           userType === "vendor" ? "block" : "hidden"

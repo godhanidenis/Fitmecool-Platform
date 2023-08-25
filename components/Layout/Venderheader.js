@@ -27,7 +27,7 @@ const Venderheader = () => {
     ) {
       setValue(2);
     }
-  }, [router.pathname]);
+  }, [router.pathname, vendorShopDetails?.id]);
 
   console.log("value", value);
   return (

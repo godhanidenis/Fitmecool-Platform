@@ -4,7 +4,6 @@ import ProductByShopFilter from "./ProductFilters/ProductByShopFilter";
 import ProductColorFilter from "./ProductFilters/ProductColorFilter";
 import ShopRatingsFilter from "./ShopFilters/ShopRatingsFilter";
 import ProductCategoriesFilter from "./ProductFilters/ProductCategoriesFilter";
-import { Divider } from "@mui/material";
 
 const Filter = ({
   byShop,
@@ -20,8 +19,6 @@ const Filter = ({
         setByShop={setByShop}
         productByShop={productByShop}
       />
-
-      {/* <Divider /> */}
 
       {!byShop ? (
         <div className="px-10">

@@ -60,35 +60,57 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
               <CommonSearchField
                 value={colorSearchValue}
                 onChange={(e) => setColorSearchValue(e.target.value)}
+                selectedFilterLength={
+                  productsFiltersReducer.appliedProductsFilters.productColor
+                    .selectedValue.length
+                }
+                clearDispatched={() =>
+                  dispatch(
+                    changeAppliedProductsFilters({
+                      key: "productColor",
+                      value: {
+                        selectedValue: [],
+                      },
+                    })
+                  )
+                }
               />
-              {(colorSearchValue !== ""
-                ? colorShowMore
-                  ? colorsList
-                      ?.filter((i) =>
+              <div
+                className={`flex flex-col overflow-auto ${
+                  !colorShowMore && "max-h-[252px]"
+                }`}
+              >
+                {(colorSearchValue
+                  ? colorShowMore
+                    ? colorsList
+                        ?.filter((i) =>
+                          i
+                            .toLowerCase()
+                            .includes(colorSearchValue.toLowerCase())
+                        )
+                        .slice(0, 3)
+                    : colorsList?.filter((i) =>
                         i.toLowerCase().includes(colorSearchValue.toLowerCase())
                       )
-                      .slice(0, 3)
-                  : colorsList?.filter((i) =>
-                      i.toLowerCase().includes(colorSearchValue.toLowerCase())
-                    )
-                : colorShowMore
-                ? colorsList.slice(0, 3)
-                : colorsList
-              )?.map((item) => (
-                <StyledFormLabelCheckBox
-                  key={item}
-                  value={item}
-                  label={capitalize(item)}
-                  control={
-                    <Checkbox
-                      checked={productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.includes(
-                        item
-                      )}
-                      onChange={handleCheckboxChange}
-                    />
-                  }
-                />
-              ))}
+                  : colorShowMore
+                  ? colorsList.slice(0, 3)
+                  : colorsList
+                )?.map((item) => (
+                  <StyledFormLabelCheckBox
+                    key={item}
+                    value={item}
+                    label={capitalize(item)}
+                    control={
+                      <Checkbox
+                        checked={productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.includes(
+                          item
+                        )}
+                        onChange={handleCheckboxChange}
+                      />
+                    }
+                  />
+                ))}
+              </div>
 
               {colorsList?.filter((i) =>
                 i.toLowerCase().includes(colorSearchValue.toLowerCase())

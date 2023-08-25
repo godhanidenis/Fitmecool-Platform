@@ -92,49 +92,64 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                 <CommonSearchField
                   value={menSearchValue}
                   onChange={(e) => setMenSearchValue(e.target.value)}
+                  selectedFilterLength={
+                    productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+                      .map((itm) => categories.find((i) => i.id === itm))
+                      .filter((ele) => ele.category_type === "Men").length
+                  }
+                  clearDispatched={() => setMenSelectedData([])}
                 />
-                {(menSearchValue !== ""
-                  ? menCatShowMore
-                    ? menCategoryLabel
-                        ?.filter((i) =>
+                <div
+                  className={`flex flex-col overflow-auto ${
+                    !menCatShowMore && !menSearchValue && "max-h-[252px]"
+                  }`}
+                >
+                  {(menSearchValue
+                    ? menCatShowMore
+                      ? menCategoryLabel
+                          ?.filter((i) =>
+                            i
+                              .toLowerCase()
+                              .includes(menSearchValue.toLowerCase())
+                          )
+                          .slice(0, 3)
+                      : menCategoryLabel?.filter((i) =>
                           i.toLowerCase().includes(menSearchValue.toLowerCase())
                         )
-                        .slice(0, 3)
-                    : menCategoryLabel?.filter((i) =>
-                        i.toLowerCase().includes(menSearchValue.toLowerCase())
-                      )
-                  : menCatShowMore
-                  ? menCategoryLabel.slice(0, 3)
-                  : menCategoryLabel
-                ).map((itm) => (
-                  <StyledFormLabelCheckBox
-                    key={itm}
-                    value={itm}
-                    control={
-                      <Checkbox
-                        checked={selectedMenCat.includes(itm)}
-                        onChange={(event) => {
-                          const updatedSelection = selectedMenCat.includes(itm)
-                            ? selectedMenCat.filter((cat) => cat !== itm)
-                            : [...selectedMenCat, itm];
-                          setSelectedMenCat(updatedSelection);
-                          setProductPageSkip(0);
-                          setAbc(true);
-                          setMenSelectedData(
-                            updatedSelection.map(
-                              (item) =>
-                                categories.find(
-                                  (ele) => ele.category_name === item
-                                )?.id
+                    : menCatShowMore
+                    ? menCategoryLabel.slice(0, 3)
+                    : menCategoryLabel
+                  ).map((itm) => (
+                    <StyledFormLabelCheckBox
+                      key={itm}
+                      value={itm}
+                      control={
+                        <Checkbox
+                          checked={selectedMenCat.includes(itm)}
+                          onChange={(event) => {
+                            const updatedSelection = selectedMenCat.includes(
+                              itm
                             )
-                          );
-                        }}
-                      />
-                    }
-                    label={itm}
-                  />
-                ))}
-
+                              ? selectedMenCat.filter((cat) => cat !== itm)
+                              : [...selectedMenCat, itm];
+                            setSelectedMenCat(updatedSelection);
+                            setProductPageSkip(0);
+                            setAbc(true);
+                            setMenSelectedData(
+                              updatedSelection.map(
+                                (item) =>
+                                  categories.find(
+                                    (ele) => ele.category_name === item
+                                  )?.id
+                              )
+                            );
+                          }}
+                        />
+                      }
+                      label={itm}
+                    />
+                  ))}
+                </div>
                 {menCategoryLabel?.filter((i) =>
                   i.toLowerCase().includes(menSearchValue.toLowerCase())
                 ).length > 3 && (
@@ -149,7 +164,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
         }
       />
 
-      <Divider sx={{margin:"12px"}}/>
+      <Divider sx={{ margin: "12px" }} />
 
       <CardInteractive
         cardTitle="WOMEN"
@@ -160,52 +175,66 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                 <CommonSearchField
                   value={womenSearchValue}
                   onChange={(e) => setWomenSearchValue(e.target.value)}
+                  selectedFilterLength={
+                    productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+                      .map((itm) => categories.find((i) => i.id === itm))
+                      .filter((ele) => ele.category_type === "Women").length
+                  }
+                  clearDispatched={() => setWomenSelectedData([])}
                 />
-                {(womenSearchValue !== ""
-                  ? womenCatShowMore
-                    ? womenCategoryLabel
-                        ?.filter((i) =>
+                <div
+                  className={`flex flex-col overflow-auto ${
+                    !womenCatShowMore && !womenSearchValue && "max-h-[252px]"
+                  }`}
+                >
+                  {(womenSearchValue
+                    ? womenCatShowMore
+                      ? womenCategoryLabel
+                          ?.filter((i) =>
+                            i
+                              .toLowerCase()
+                              .includes(womenSearchValue.toLowerCase())
+                          )
+                          .slice(0, 3)
+                      : womenCategoryLabel?.filter((i) =>
                           i
                             .toLowerCase()
                             .includes(womenSearchValue.toLowerCase())
                         )
-                        .slice(0, 3)
-                    : womenCategoryLabel?.filter((i) =>
-                        i.toLowerCase().includes(womenSearchValue.toLowerCase())
-                      )
-                  : womenCatShowMore
-                  ? womenCategoryLabel.slice(0, 3)
-                  : womenCategoryLabel
-                ).map((itm) => (
-                  <StyledFormLabelCheckBox
-                    key={itm}
-                    value={itm}
-                    control={
-                      <Checkbox
-                        checked={selectedWomenCat.includes(itm)}
-                        onChange={(event) => {
-                          const updatedSelection = selectedWomenCat.includes(
-                            itm
-                          )
-                            ? selectedWomenCat.filter((cat) => cat !== itm)
-                            : [...selectedWomenCat, itm];
-                          setSelectedWomenCat(updatedSelection);
-                          setProductPageSkip(0);
-                          setAbc(true);
-                          setWomenSelectedData(
-                            updatedSelection.map(
-                              (item) =>
-                                categories.find(
-                                  (ele) => ele.category_name === item
-                                )?.id
+                    : womenCatShowMore
+                    ? womenCategoryLabel.slice(0, 3)
+                    : womenCategoryLabel
+                  ).map((itm) => (
+                    <StyledFormLabelCheckBox
+                      key={itm}
+                      value={itm}
+                      control={
+                        <Checkbox
+                          checked={selectedWomenCat.includes(itm)}
+                          onChange={(event) => {
+                            const updatedSelection = selectedWomenCat.includes(
+                              itm
                             )
-                          );
-                        }}
-                      />
-                    }
-                    label={itm}
-                  />
-                ))}
+                              ? selectedWomenCat.filter((cat) => cat !== itm)
+                              : [...selectedWomenCat, itm];
+                            setSelectedWomenCat(updatedSelection);
+                            setProductPageSkip(0);
+                            setAbc(true);
+                            setWomenSelectedData(
+                              updatedSelection.map(
+                                (item) =>
+                                  categories.find(
+                                    (ele) => ele.category_name === item
+                                  )?.id
+                              )
+                            );
+                          }}
+                        />
+                      }
+                      label={itm}
+                    />
+                  ))}
+                </div>
                 {womenCategoryLabel?.filter((i) =>
                   i.toLowerCase().includes(womenSearchValue.toLowerCase())
                 ).length > 3 && (
@@ -220,8 +249,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
         }
       />
 
-      <Divider sx={{margin:"12px"}}/>
-
+      <Divider sx={{ margin: "12px" }} />
     </>
   );
 };
