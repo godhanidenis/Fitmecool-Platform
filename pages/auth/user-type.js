@@ -45,8 +45,9 @@ const UserType = () => {
           <div className="text-2xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
             How you would like to join us ?
           </div>
-          <p className="text-base mt-2 text-[#15182766] max-[600px]:text-sm font-semibold">
-          Unlock Fashion Possibilities – Where Customers and Shop Owners Connect, on StyleSwap, Your Trusted Clothing Rental Platform!
+          <p className="text-xl mt-4 text-gray-400 max-[600px]:text-sm">
+            Unlock Fashion Possibilities – Where Customers and Shop Owners
+            Connect, on StyleSwap, Your Trusted Clothing Rental Platform!
           </p>
           <div className="flex my-8 gap-6 max-[380px]:flex-col">
             <div

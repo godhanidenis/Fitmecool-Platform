@@ -93,22 +93,22 @@ const Signup = () => {
   return (
     <div className="bg-background w-full">
       <div className="bg-white flex w-full sm:gap-10 min-h-[100vh] overflow-auto">
-        <div className="md:w-[50%] sm:w-full flex flex-col p-5">
-          <div className="text-3xl  font-bold max-[600px]:text-xl text-colorPrimary flex items-center gap-4">
+        <div className="md:w-[50%] sm:w-full flex flex-col p-6 sm:p-10">
+          <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
             <ArrowBackIcon
               onClick={() => Router.push("/auth/user-type")}
-              className="cursor-pointer"
+              className="cursor-pointer text-3xl"
             />
             <div className="">
-              <h2 className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary uppercase">
+              <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
                 <span className="sm:text-4xl text-[24px]">R</span>entbless
               </h2>
             </div>
           </div>
-          <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
+          <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
             Create an account
           </div>
-          <p className="text-xl mt-4 text-gray-400 max-[600px]:text-sm">
+          <p className="sm:text-xl mt-2 text-gray-400 text-sm">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
           </p>
@@ -121,7 +121,7 @@ const Signup = () => {
             Continue to Facebook
           </button>
           <p className="my-2 flex justify-center font-semibold text-colorPrimary">
-            Or
+            OR
           </p>
           <form onReset={reset}>
             <div className="space-y-3 max-h-[400px] min-h-[200px] h-auto overflow-auto">
