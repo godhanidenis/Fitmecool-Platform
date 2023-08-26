@@ -70,6 +70,9 @@ const ProductDetail = ({ productDetails }) => {
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
 
+  const [ReadMore, setReadMore] = useState(false);
+
+
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
@@ -94,6 +97,17 @@ const ProductDetail = ({ productDetails }) => {
   const handleTooltipOpen = () => {
     setOpenToolTip(!OpenToolTip);
   };
+
+  const handleReadMore = () => {
+    setReadMore(!ReadMore);
+  };
+
+  const parsedContent = HTMLReactParser(productDetails.data.product.data?.product_description);
+  console.log('typeof', parsedContent)
+
+  const truncatedText = parsedContent[1]?.props?.children + '... ';
+
+
 
   useEffect(() => {
     setIsHydrated(true);
@@ -182,7 +196,7 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      <div className="bg-colorWhite font-Nova">
+      <div className="bg-colorWhite font-Nova container">
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]  container ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
@@ -353,124 +367,21 @@ const ProductDetail = ({ productDetails }) => {
       </div>
 
       <div className="bg-[#FAFCFC] font-Nova">
-        <div className="!w-[100%] container">
-          <div className="grid grid-cols-2 p-2 gap-8">
-            <div className="col-span-2 lg:col-span-1 hidden sm:flex">
-              <div className="grid grid-cols-4">
-                <div className="col-span-1">
-                  <div className="p-2 pt-0">{items}</div>
-                </div>
-                <div className="col-span-3">
-                  <div className="border-2 flex justify-center items-center bg-colorWhite h-[600px] rounded-2xl">
-                    <CustomReactImageMagnify large={images} preview={images} />
+        <div className="container">
+          <div className="!w-[100%] ">
+            <div className="grid grid-cols-2 p-2 gap-8">
+              <div className="col-span-2 lg:col-span-1 hidden sm:flex">
+                <div className="grid grid-cols-4">
+                  <div className="col-span-1">
+                    <div className="p-2 pt-0">{items}</div>
                   </div>
-                  <div className="flex flex-wrap items-center justify-between mt-4">
-                    <div className="w-[30%]">
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          textTransform: "none",
-                          width: "100%",
-                          color: "rgba(21, 24, 39, 0.4)",
-                          border: "1px solid rgba(21, 24, 39, 0.4)",
-                          borderRadius: "10px",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          fontWeight: 600,
-                          fontSize: "18px",
-                        }}
-                        onClick={() => {
-                          if (isAuthenticate) {
-                            productLike({
-                              productInfo: {
-                                product_id: productDetails.data.product.data.id,
-                                user_id: userProfile.id,
-                              },
-                            }).then(
-                              (res) => {
-                                dispatch(
-                                  !productLikeByUser
-                                    ? productLikeToggle({
-                                      productInfo: {
-                                        key: "like",
-                                        value: res.data.productLike.data,
-                                      },
-                                    })
-                                    : productLikeToggle({
-                                      productInfo: {
-                                        key: "disLike",
-                                        value:
-                                          productDetails.data.product.data.id,
-                                      },
-                                    })
-                                );
-                                toast.success(res.data.productLike.message, {
-                                  theme: "colored",
-                                });
-                              },
-                              (error) => {
-                                toast.error(error.message, {
-                                  theme: "colored",
-                                });
-                              }
-                            );
-                          } else {
-                            Router.push("/auth/user-type");
-                          }
-                        }}
-                      >
-                        <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />{" "}
-                        &nbsp; Like
-                      </Button>
+                  <div className="col-span-3">
+                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[600px] rounded-2xl">
+                      <CustomReactImageMagnify large={images} preview={images} />
                     </div>
-                    <div
-                      className="w-[30%]"
-                      onMouseLeave={() => setOpenToolTip(false)}
-                    >
-                      <HtmlTooltip
-                        title={
-                          <React.Fragment>
-                            <div className="flex">
-                              <div className="p-2 rounded-lg cursor-pointer">
-                                <FacebookShareButton
-                                  windowWidth={900}
-                                  windowHeight={900}
-                                  url={pageShareURL}
-                                >
-                                  <Image
-                                    src={facebookIcon ?? ""}
-                                    alt="facebookIcon"
-                                  />
-                                </FacebookShareButton>
-                              </div>
-                              <div className="p-2 rounded-lg cursor-pointer">
-                                <WhatsappShareButton
-                                  windowWidth={900}
-                                  windowHeight={900}
-                                  url={pageShareURL}
-                                >
-                                  <WhatsappIcon size={25} round={true} />
-                                </WhatsappShareButton>
-                              </div>
-                              <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                                <EmailShareButton
-                                  subject="Product Detail Page"
-                                  windowWidth={900}
-                                  windowHeight={900}
-                                  url={pageShareURL}
-                                >
-                                  <Image
-                                    src={googleIcon ?? ""}
-                                    alt="googleIcon"
-                                  />
-                                </EmailShareButton>
-                              </div>
-                            </div>
-                          </React.Fragment>
-                        }
-                      >
+                    <div className="flex flex-wrap items-center justify-between mt-4">
+                      <div className="w-[30%]">
                         <Button
-                          onClick={handleTooltipOpen}
                           variant="outlined"
                           sx={{
                             textTransform: "none",
@@ -483,298 +394,417 @@ const ProductDetail = ({ productDetails }) => {
                             fontWeight: 600,
                             fontSize: "18px",
                           }}
-                        >
-                          <Image
-                            src={
-                              FileUploadOutlinedIcon ?? FileUploadOutlinedIcon
+                          onClick={() => {
+                            if (isAuthenticate) {
+                              productLike({
+                                productInfo: {
+                                  product_id: productDetails.data.product.data.id,
+                                  user_id: userProfile.id,
+                                },
+                              }).then(
+                                (res) => {
+                                  dispatch(
+                                    !productLikeByUser
+                                      ? productLikeToggle({
+                                        productInfo: {
+                                          key: "like",
+                                          value: res.data.productLike.data,
+                                        },
+                                      })
+                                      : productLikeToggle({
+                                        productInfo: {
+                                          key: "disLike",
+                                          value:
+                                            productDetails.data.product.data.id,
+                                        },
+                                      })
+                                  );
+                                  toast.success(res.data.productLike.message, {
+                                    theme: "colored",
+                                  });
+                                },
+                                (error) => {
+                                  toast.error(error.message, {
+                                    theme: "colored",
+                                  });
+                                }
+                              );
+                            } else {
+                              Router.push("/auth/user-type");
                             }
-                            alt=""
-                          />{" "}
-                          &nbsp; Share
+                          }}
+                        >
+                          <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />{" "}
+                          &nbsp; Like
                         </Button>
-                      </HtmlTooltip>
-                    </div>
-                    <div className="w-[30%]">
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          textTransform: "none",
-                          width: "100%",
-                          color: "#f34747",
-                          border: "1px solid #f34747",
-                          borderRadius: "10px",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          fontWeight: 600,
-                          fontSize: "18px",
-                        }}
+                      </div>
+                      <div
+                        className="w-[30%]"
+                        onMouseLeave={() => setOpenToolTip(false)}
                       >
-                        <ReportGmailerrorredOutlinedIcon className="!text-[#f34747]" />{" "}
-                        &nbsp;Report
-                      </Button>
+                        <HtmlTooltip
+                          title={
+                            <React.Fragment>
+                              <div className="flex">
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <FacebookShareButton
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <Image
+                                      src={facebookIcon ?? ""}
+                                      alt="facebookIcon"
+                                    />
+                                  </FacebookShareButton>
+                                </div>
+                                <div className="p-2 rounded-lg cursor-pointer">
+                                  <WhatsappShareButton
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <WhatsappIcon size={25} round={true} />
+                                  </WhatsappShareButton>
+                                </div>
+                                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                  <EmailShareButton
+                                    subject="Product Detail Page"
+                                    windowWidth={900}
+                                    windowHeight={900}
+                                    url={pageShareURL}
+                                  >
+                                    <Image
+                                      src={googleIcon ?? ""}
+                                      alt="googleIcon"
+                                    />
+                                  </EmailShareButton>
+                                </div>
+                              </div>
+                            </React.Fragment>
+                          }
+                        >
+                          <Button
+                            onClick={handleTooltipOpen}
+                            variant="outlined"
+                            sx={{
+                              textTransform: "none",
+                              width: "100%",
+                              color: "rgba(21, 24, 39, 0.4)",
+                              border: "1px solid rgba(21, 24, 39, 0.4)",
+                              borderRadius: "10px",
+                              paddingTop: "12px",
+                              paddingBottom: "12px",
+                              fontWeight: 600,
+                              fontSize: "18px",
+                            }}
+                          >
+                            <Image
+                              src={
+                                FileUploadOutlinedIcon ?? FileUploadOutlinedIcon
+                              }
+                              alt=""
+                            />{" "}
+                            &nbsp; Share
+                          </Button>
+                        </HtmlTooltip>
+                      </div>
+                      <div className="w-[30%]">
+                        <Button
+                          variant="outlined"
+                          sx={{
+                            textTransform: "none",
+                            width: "100%",
+                            color: "#f34747",
+                            border: "1px solid #f34747",
+                            borderRadius: "10px",
+                            paddingTop: "12px",
+                            paddingBottom: "12px",
+                            fontWeight: 600,
+                            fontSize: "18px",
+                          }}
+                        >
+                          <ReportGmailerrorredOutlinedIcon className="!text-[#f34747]" />{" "}
+                          &nbsp;Report
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-span-2 lg:col-span-1">
-              <Box className="!hidden lg:!block">
-                <div className="bg-colorPrimary p-3 rounded-[8px]">
-                  <div className="flex items-center justify-between w-full gap-4">
-                    <div className="flex justify-start items-center gap-1 sm:gap-4">
-                      <div className="flex justify-center items-center">
-                        <Link
-                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                        >
-                          <img
-                            alt="Shop Logo"
-                            src={
-                              productDetails.data.product.data.branchInfo
-                                ?.shop_info.shop_logo
-                            }
-                            className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
-                          />
-                        </Link>
-                      </div>
-                      <div className="flex flex-col justify-center">
-                        <Link
-                          href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                        >
-                          <a
-                            target={`${themeLayout === "webScreen" ? "_blank" : "_self"
-                              }`}
+              <div className="col-span-2 lg:col-span-1">
+                <Box className="!hidden lg:!block">
+                  <div className="bg-colorPrimary p-3 rounded-[8px]">
+                    <div className="flex items-center justify-between w-full gap-4">
+                      <div className="flex justify-start items-center gap-1 sm:gap-4">
+                        <div className="flex justify-center items-center">
+                          <Link
+                            href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                           >
-                            <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer  hover:text-colorGreen">
+                            <img
+                              alt="Shop Logo"
+                              src={
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_info.shop_logo
+                              }
+                              className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
+                            />
+                          </Link>
+                        </div>
+                        <div className="flex flex-col justify-center">
+                          <Link
+                            href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+                          >
+                            <a
+                              target={`${themeLayout === "webScreen" ? "_blank" : "_self"
+                                }`}
+                            >
+                              <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer  hover:text-colorGreen">
+                                {
+                                  productDetails.data.product.data.branchInfo
+                                    ?.shop_info.shop_name
+                                }
+                              </p>
+                            </a>
+                          </Link>
+                          <p className="text-[#888888] text-xs sm:text-sm font-normal">
+                            25 days ago
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <Rating
+                          name="text-feedback"
+                          value={Math.round(
+                            productDetails.data.product.data.branchInfo?.shop_info
+                              .shop_rating
+                          )}
+                          readOnly
+                          emptyIcon={<StarIcon fontSize="inherit" />}
+                        />
+                        <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
+                          <div className="flex items-center">
+                            <LocationOnIcon fontSize="small" className="!mr-1" />
+                            <span>
                               {
                                 productDetails.data.product.data.branchInfo
-                                  ?.shop_info.shop_name
+                                  ?.branch_address
                               }
-                            </p>
-                          </a>
-                        </Link>
-                        <p className="text-[#888888] text-xs sm:text-sm font-normal">
-                          25 days ago
+                            </span>
+                          </div>
                         </p>
                       </div>
-                    </div>
-                    <div className="flex flex-col">
-                      <Rating
-                        name="text-feedback"
-                        value={Math.round(
-                          productDetails.data.product.data.branchInfo?.shop_info
-                            .shop_rating
-                        )}
-                        readOnly
-                        emptyIcon={<StarIcon fontSize="inherit" />}
-                      />
-                      <p className="oneLineAfterThreeDots text-[#878A99] font-normal text-[13px] flex items-center">
-                        <div className="flex items-center">
-                          <LocationOnIcon fontSize="small" className="!mr-1" />
-                          <span>
-                            {
-                              productDetails.data.product.data.branchInfo
-                                ?.branch_address
+
+                      <div className="flex items-center md:justify-end">
+                        <Button
+                          variant="outlined"
+                          sx={{
+                            textTransform: "none",
+                            color: "white",
+                            border: "1px solid white",
+                            paddingLeft: "14px",
+                            width: "96px",
+                            height: "36px",
+                            fontSize: "18px",
+                            fontWeight: 400,
+                            borderRadius: "8px",
+                          }}
+                          onClick={() => {
+                            if (isAuthenticate) {
+                              shopFollow({
+                                shopInfo: {
+                                  shop_id:
+                                    productDetails.data.product.data.branchInfo
+                                      ?.shop_id,
+                                  user_id: userProfile.id,
+                                },
+                              }).then(
+                                (res) => {
+                                  dispatch(
+                                    !shopFollowByUser
+                                      ? shopFollowToggle({
+                                        shopInfo: {
+                                          key: "follow",
+                                          value: res.data.shopFollower.data,
+                                        },
+                                      })
+                                      : shopFollowToggle({
+                                        shopInfo: {
+                                          key: "unFollow",
+                                          value:
+                                            productDetails.data.product.data
+                                              .branchInfo?.shop_id,
+                                        },
+                                      })
+                                  );
+                                  toast.success(res.data.shopFollower.message, {
+                                    theme: "colored",
+                                  });
+                                },
+                                (error) => {
+                                  toast.error(error.message, {
+                                    theme: "colored",
+                                  });
+                                }
+                              );
+                            } else {
+                              Router.push("/auth/user-type");
                             }
-                          </span>
-                        </div>
-                      </p>
-                    </div>
-
-                    <div className="flex items-center md:justify-end">
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          textTransform: "none",
-                          color: "white",
-                          border: "1px solid white",
-                          paddingLeft: "14px",
-                          width: "96px",
-                          height: "36px",
-                          fontSize: "18px",
-                          fontWeight: 400,
-                          borderRadius: "8px",
-                        }}
-                        onClick={() => {
-                          if (isAuthenticate) {
-                            shopFollow({
-                              shopInfo: {
-                                shop_id:
-                                  productDetails.data.product.data.branchInfo
-                                    ?.shop_id,
-                                user_id: userProfile.id,
-                              },
-                            }).then(
-                              (res) => {
-                                dispatch(
-                                  !shopFollowByUser
-                                    ? shopFollowToggle({
-                                      shopInfo: {
-                                        key: "follow",
-                                        value: res.data.shopFollower.data,
-                                      },
-                                    })
-                                    : shopFollowToggle({
-                                      shopInfo: {
-                                        key: "unFollow",
-                                        value:
-                                          productDetails.data.product.data
-                                            .branchInfo?.shop_id,
-                                      },
-                                    })
-                                );
-                                toast.success(res.data.shopFollower.message, {
-                                  theme: "colored",
-                                });
-                              },
-                              (error) => {
-                                toast.error(error.message, {
-                                  theme: "colored",
-                                });
-                              }
-                            );
-                          } else {
-                            Router.push("/auth/user-type");
-                          }
-                        }}
-                      >
-                        {shopFollowByUser ? (
-                          "Unfollow"
-                        ) : (
-                          <>
-                            <div className="flex items-center">
-                              <AddIcon className="w-[25px] h-[25px] text-white" />
-                              <div className="pt-[2px] text-white">Follow</div>
-                            </div>
-                          </>
-                        )}
-                      </Button>
+                          }}
+                        >
+                          {shopFollowByUser ? (
+                            "Unfollow"
+                          ) : (
+                            <>
+                              <div className="flex items-center">
+                                <AddIcon className="w-[25px] h-[25px] text-white" />
+                                <div className="pt-[2px] text-white">Follow</div>
+                              </div>
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Box>
-              <div className="mt-5">
-                <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                  <span className="font-semibold text-[30px] text-colorGreen leading-9">
-                    {productDetails.data.product.data.product_name}
-                  </span>
-                  <button
-                    className={`w-10 h-10 rounded-full transition-colors bg-[#ffffff] duration-300`}
-                    onClick={() => {
-                      if (isAuthenticate) {
-                        productLike({
-                          productInfo: {
-                            product_id: productDetails.data.product.data.id,
-                            user_id: userProfile.id,
-                          },
-                        }).then(
-                          (res) => {
-                            dispatch(
-                              !productLikeByUser
-                                ? productLikeToggle({
-                                  productInfo: {
-                                    key: "like",
-                                    value: res.data.productLike.data,
-                                  },
-                                })
-                                : productLikeToggle({
-                                  productInfo: {
-                                    key: "disLike",
-                                    value:
-                                      productDetails.data.product.data.id,
-                                  },
-                                })
-                            );
-                            toast.success(res.data.productLike.message, {
-                              theme: "colored",
-                            });
-                          },
-                          (error) => {
-                            toast.error(error.message, { theme: "colored" });
-                          }
-                        );
-                      } else {
-                        Router.push("/auth/user-type");
-                      }
-                    }}
-                  >
-                    {!productLikeByUser ? (
-                      <FavoriteBorderIcon
-                        fontSize="large"
-                        className="text-[#151827]"
-                      />
-                    ) : (
-                      "❤️"
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">
-                  About
-                </div>
-                <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                  <div className="font-normal text-lg text-[#888888] leading-6">
-                    {HTMLReactParser(
-                      productDetails.data.product.data.product_description
-                    )}
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <p className="font-semibold text-[22px] text-colorBlack ">
-                    Item Details
-                  </p>
-                  <div className="flex items-center">
-                    <span className="text-sm">Category :</span>
-                    <span className="text-sm font-semibold mr-2 text-colorBlack ml-[9px]">
-                      {
-                        productDetails.data.product.data.categoryInfo
-                          ?.category_name
-                      }
+                </Box>
+                <div className="mt-5">
+                  <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
+                    <span className="font-semibold text-[30px] text-colorGreen leading-9">
+                      {productDetails.data.product.data.product_name}
                     </span>
-                  </div>
-                  <div className="flex mt-1 items-center">
-                    <span className="text-sm">Color :</span>
-                    <span
-                      className={`rounded-[50%] w-3 h-3 ml-[9px]`}
-                      style={{
-                        backgroundColor:
-                          productDetails.data.product.data.product_color,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4 sm:gap-0 mt-10 items-center justify-between">
-                <div className="w-[100%] md:w-[48%]">
-                  <a
-                    href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
-                    target="_blank"
-                    className="w-full"
-                    rel="noreferrer"
-                  >
                     <button
-                      className="bg-colorGreen text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
-                  font-semibold font-display focus:outline-none focus:shadow-outline 
-                  shadow-lg flex items-center justify-center gap-3"
+                      className={`w-10 h-10 rounded-full transition-colors bg-[#ffffff] duration-300`}
+                      onClick={() => {
+                        if (isAuthenticate) {
+                          productLike({
+                            productInfo: {
+                              product_id: productDetails.data.product.data.id,
+                              user_id: userProfile.id,
+                            },
+                          }).then(
+                            (res) => {
+                              dispatch(
+                                !productLikeByUser
+                                  ? productLikeToggle({
+                                    productInfo: {
+                                      key: "like",
+                                      value: res.data.productLike.data,
+                                    },
+                                  })
+                                  : productLikeToggle({
+                                    productInfo: {
+                                      key: "disLike",
+                                      value:
+                                        productDetails.data.product.data.id,
+                                    },
+                                  })
+                              );
+                              toast.success(res.data.productLike.message, {
+                                theme: "colored",
+                              });
+                            },
+                            (error) => {
+                              toast.error(error.message, { theme: "colored" });
+                            }
+                          );
+                        } else {
+                          Router.push("/auth/user-type");
+                        }
+                      }}
                     >
-                      <WhatsAppIcon className="!text-white w-[35px] h-[35px]" />
-                      Send Message
+                      {!productLikeByUser ? (
+                        <FavoriteBorderIcon
+                          fontSize="large"
+                          className="text-[#151827]"
+                        />
+                      ) : (
+                        "❤️"
+                      )}
                     </button>
-                  </a>
+                  </div>
                 </div>
 
-                <div className="w-[100%] md:w-[48%]">
-                  <button
-                    className="bg-[#E8EBEA] text-[#31333E] text-[24px] py-[28px] w-full rounded-xl tracking-wide
+                <div className="mt-3">
+                  <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">
+                    About
+                  </div>
+                  <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
+                    <div className="font-normal text-lg text-[#888888] leading-6">
+                      <div>
+                        {parsedContent.length < 600 && typeof parsedContent === "string" ? parsedContent : (!ReadMore && parsedContent[1] ?
+                          <div>
+                            {truncatedText}
+                            <span className="hover:text-black cursor-pointer" onClick={handleReadMore}>read more</span>
+                          </div>
+                          : parsedContent[1] ?
+                            <div>
+                              {parsedContent}
+                              <span className="hover:text-black cursor-pointer flex justify-end" onClick={handleReadMore}>read less</span>
+                            </div> :
+                            <div>
+                              {parsedContent}
+                            </div>
+                        )
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <p className="font-semibold text-[22px] text-colorBlack ">
+                      Item Details
+                    </p>
+                    <div className="flex items-center">
+                      <span className="text-sm">Category :</span>
+                      <span className="text-sm font-semibold mr-2 text-colorBlack ml-[9px]">
+                        {
+                          productDetails.data.product.data.categoryInfo
+                            ?.category_name
+                        }
+                      </span>
+                    </div>
+                    <div className="flex mt-1 items-center">
+                      <span className="text-sm">Color :</span>
+                      <span
+                        className={`rounded-[50%] w-3 h-3 ml-[9px]`}
+                        style={{
+                          backgroundColor:
+                            productDetails.data.product.data.product_color,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-4 sm:gap-0 mt-10 items-center justify-between">
+                  <div className="w-[100%] md:w-[48%]">
+                    <a
+                      href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
+                      target="_blank"
+                      className="w-full"
+                      rel="noreferrer"
+                    >
+                      <button
+                        className="bg-colorGreen text-white text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
-                    onClick={() => setOpenContactInfo(!openContactInfo)}
-                  >
-                    <PersonOutlineIcon className="!text-black w-[35px] h-[35 px]" />
-                    {openContactInfo ? "Hide Contact" : "Show Contact"}
-                  </button>
+                      >
+                        <WhatsAppIcon className="!text-white w-[35px] h-[35px]" />
+                        Send Message
+                      </button>
+                    </a>
+                  </div>
+
+                  <div className="w-[100%] md:w-[48%]">
+                    <button
+                      className="bg-[#E8EBEA] text-[#31333E] text-[24px] py-[28px] w-full rounded-xl tracking-wide
+                  font-semibold font-display focus:outline-none focus:shadow-outline 
+                  shadow-lg flex items-center justify-center gap-3"
+                      onClick={() => setOpenContactInfo(!openContactInfo)}
+                    >
+                      <PersonOutlineIcon className="!text-black w-[35px] h-[35 px]" />
+                      {openContactInfo ? "Hide Contact" : "Show Contact"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
