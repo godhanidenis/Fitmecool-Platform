@@ -29,7 +29,6 @@ const VendorBranchTable = ({
                   "Branch Name",
                   "Manager Name",
                   "Phone Number",
-                  "Product Name",
                   "Branch Address",
                   "City",
                   "Action",
