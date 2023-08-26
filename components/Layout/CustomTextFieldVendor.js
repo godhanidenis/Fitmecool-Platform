@@ -25,7 +25,6 @@ const CustomTextFieldVendor = ({
         InputLabelProps={{
           shrink: !!fieldValue || fieldError,
         }}
-        // size="small"
       />
     </>
   );

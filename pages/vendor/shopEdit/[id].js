@@ -48,6 +48,7 @@ import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetai
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 import VendorBranchTable from "../../../components/Layout/VendorBranchTable";
 import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
+import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
 
 const style = {
   position: "absolute",
@@ -1449,32 +1450,41 @@ const ShopEdit = () => {
           <TabPanel value={value} index={4}>
             <div className="container rounded-lg mt-10">
               <div className="grid grid-cols-3 gap-10 my-10">
-                <div className="col-span-3 lg:flex justify-center gap-3">
+                <div className="col-span-3 lg:flex justify-center gap-10">
                   <div className="flex flex-col items-center justify-center">
                     <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
                       Logo
                     </div>
-                    <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 hover:border-4 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center">
-                      <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
-                        <EditIcon
-                          sx={{
-                            "@media (max-width: 768px)": {
-                              fontSize: 16,
-                            },
-                          }}
-                          onClick={() => {
-                            document.getElementById("shopLogo").click();
-                          }}
-                        />
-                      </span>
+                    <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 cursor-pointer rounded-full flex items-center justify-center">
                       {shopLogo !== "" ? (
-                        <div className="sm:w-[210px]   sm:h-[210px] h-[130px] w-[130px]">
-                          <img
-                            src={shopLogo}
-                            alt="Uploaded Image"
-                            className="object-cover h-full w-full rounded-full"
+                        shopLogo ? (
+                          <>
+                            <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                              <EditIcon
+                                sx={{
+                                  "@media (max-width: 768px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                                onClick={() => {
+                                  document.getElementById("shopLogo").click();
+                                }}
+                              />
+                            </span>
+                            <div className="sm:w-[210px] sm:h-[210px] h-[130px] w-[130px]">
+                              <img
+                                src={shopLogo}
+                                alt="Uploaded Image"
+                                className="object-cover h-full w-full rounded-full"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <ImageLoadingSkeleton
+                            className="rounded-full"
+                            variant="circular"
                           />
-                        </div>
+                        )
                       ) : (
                         <div className="flex flex-col gap-4">
                           <span className="flex justify-center">
@@ -1521,27 +1531,35 @@ const ShopEdit = () => {
                     <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
                       Cover Image
                     </div>
-                    <div className="sm:w-2/3 w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center">
-                      <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
-                        <EditIcon
-                          sx={{
-                            "@media (max-width: 768px)": {
-                              fontSize: 16,
-                            },
-                          }}
-                          onClick={() =>
-                            document.getElementById("shopBackground").click()
-                          }
-                        />
-                      </span>
+                    <div className="sm:w-2/3 lg:w-[290px] w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 rounded-3xl flex items-center justify-center">
                       {shopBackground !== "" ? (
-                        <div className="w-full  sm:h-[290px]  h-[180px]">
-                          <img
-                            src={shopBackground}
-                            alt="Uploaded Image"
-                            className="object-cover h-full w-full rounded-3xl"
-                          />
-                        </div>
+                        shopBackground ? (
+                          <>
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                              <EditIcon
+                                sx={{
+                                  "@media (max-width: 768px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                                onClick={() =>
+                                  document
+                                    .getElementById("shopBackground")
+                                    .click()
+                                }
+                              />
+                            </span>
+                            <div className="w-full sm:h-[290px] h-[180px]">
+                              <img
+                                src={shopBackground}
+                                alt="Uploaded Image"
+                                className="object-cover h-full w-full rounded-3xl"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <ImageLoadingSkeleton className="rounded-3xl" />
+                        )
                       ) : (
                         <div className="flex flex-col gap-4">
                           <span className="flex justify-center">
@@ -1597,72 +1615,86 @@ const ShopEdit = () => {
                     </span>
                   </div>
                   <div className="flex xl:gap-8 xl:flex-row flex-col gap-4">
-                    {shopImages?.map((image, index) => {
-                      return (
-                        <>
-                          <div
-                            key={index}
-                            className="w-full  cursor-pointer relative sm:h-[290px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                          >
-                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50">
-                              <EditIcon
-                                sx={{
-                                  "@media (max-width: 768px)": {
-                                    fontSize: 16,
-                                  },
-                                }}
-                                onClick={() => (
-                                  setShopEditImg(image?.links),
-                                  document.getElementById("shopEditId").click()
+                    {shopImages?.length > 0
+                      ? shopImages?.map((image, index) => {
+                          return (
+                            <>
+                              <div
+                                key={index}
+                                className="w-full cursor-pointer relative sm:h-[290px] h-[344px] border border-gray-200 rounded-3xl flex items-center justify-center"
+                              >
+                                {shopImages[index] ? (
+                                  <>
+                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50">
+                                      <EditIcon
+                                        sx={{
+                                          "@media (max-width: 768px)": {
+                                            fontSize: 16,
+                                          },
+                                        }}
+                                        onClick={() => (
+                                          setShopEditImg(image?.links),
+                                          document
+                                            .getElementById("shopEditId")
+                                            .click()
+                                        )}
+                                      />
+                                    </span>
+
+                                    <div className="w-full relative sm:h-[290px] h-[344px]">
+                                      <img
+                                        src={image?.links}
+                                        alt="Uploaded Image"
+                                        className="object-cover h-full w-full rounded-3xl"
+                                      />
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="flex flex-col gap-4">
+                                    <span className="flex justify-center">
+                                      <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                    </span>
+                                    <div className="flex flex-col gap-1">
+                                      <p className="sm:text-lg text-sm font-bold text-gray-400">
+                                        <span className="text-colorGreen">
+                                          Click to Upload{" "}
+                                        </span>
+                                        Front Image
+                                      </p>
+                                      <p className="text-xs text-gray-400 text-center">
+                                        We Support JPG, PNG & No Size Limit
+                                      </p>
+                                    </div>
+                                  </div>
                                 )}
-                              />
-                            </span>
-                            {shopImages?.length > 0 && shopImages[index] ? (
-                              <div className="w-full relative sm:h-[290px]  h-[344px]">
-                                <img
-                                  src={image?.links ?? ""}
-                                  alt="Uploaded Image"
-                                  className="object-cover h-full w-full rounded-3xl"
+                                <input
+                                  id="shopEditId"
+                                  type="file"
+                                  accept="image/*"
+                                  multiple
+                                  className="hidden"
+                                  {...shopLayoutRegister("shopImages", {
+                                    required:
+                                      shopImages?.length === 0
+                                        ? "Shop Image is required"
+                                        : false,
+                                    onChange: (e) => {
+                                      updateShopImagesChange(e);
+                                    },
+                                  })}
                                 />
                               </div>
-                            ) : (
-                              <div className="flex flex-col gap-4">
-                                <span className="flex justify-center">
-                                  <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                                </span>
-                                <div className="flex flex-col gap-1">
-                                  <p className="sm:text-lg text-sm font-bold text-gray-400">
-                                    <span className="text-colorGreen">
-                                      Click to Upload{" "}
-                                    </span>
-                                    Front Image
-                                  </p>
-                                  <p className="text-xs text-gray-400 text-center">
-                                    We Support JPG, PNG & No Size Limit
-                                  </p>
-                                </div>
-                              </div>
-                            )}
-                            <input
-                              id="shopEditId"
-                              type="file"
-                              accept="image/*"
-                              multiple
-                              className="hidden"
-                              {...shopLayoutRegister("shopImages", {
-                                required:
-                                  shopImages?.length === 0
-                                    ? "Shop Image is required"
-                                    : false,
-                                onChange: (e) => {
-                                  updateShopImagesChange(e);
-                                },
-                              })}
-                            />
+                            </>
+                          );
+                        })
+                      : [0, 1, 2].map((itm) => (
+                          <div
+                            key={itm}
+                            className="w-full relative sm:h-[290px] h-[344px]"
+                          >
+                            <ImageLoadingSkeleton className="rounded-3xl" />
                           </div>
-                        </>
-                      );
-                    })}
+                        ))}
                   </div>
                   <div className="mt-2">
                     {shopLayoutErrors.shopImages && (
@@ -1677,41 +1709,50 @@ const ShopEdit = () => {
                     Shop Video
                   </div>
                   <div
-                    className="sm:w-2/3 w-full sm:mx-auto cursor-pointer  sm:h-[290px] h-[180px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+                    className="sm:w-2/3 w-full sm:mx-auto cursor-pointer  sm:h-[290px] h-[180px]  border border-gray-200 rounded-3xl flex items-center justify-center"
                     onClick={() => {
                       shopVideo == "" &&
                         document.getElementById("shopVideoId").click();
                     }}
                   >
                     {shopVideo !== "" ? (
-                      <div className="w-full sm:h-[290px] relative  h-[180px]">
-                        <video
-                          autoPlay
-                          className="object-cover h-full w-full rounded-3xl"
-                          controls
-                          src={shopVideo}
-                        ></video>
-                        <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
-                          <EditIcon
-                            onClick={() => {
-                              document.getElementById("shopVideoId").click();
-                            }}
-                            sx={{
-                              "@media (max-width: 768px)": {
-                                fontSize: 16,
-                              },
-                            }}
-                          />
-                        </span>
-                        <span
-                          onClick={() => {
-                            setShopVideo("");
-                            setUploadShopVideo("");
-                          }}
-                          className="absolute right-4 top-[70px] border border-[#D63848] rounded-full p-2 bg-[#D63848]"
-                        >
-                          <DeleteIcon style={{ color: "white" }} />
-                        </span>
+                      <div className="w-full sm:h-[290px] relative h-[180px]">
+                        {shopVideo ? (
+                          <>
+                            <video
+                              autoPlay
+                              className="object-cover h-full w-full rounded-3xl"
+                              controls
+                              src={shopVideo}
+                            ></video>
+
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                              <EditIcon
+                                onClick={() => {
+                                  document
+                                    .getElementById("shopVideoId")
+                                    .click();
+                                }}
+                                sx={{
+                                  "@media (max-width: 768px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                              />
+                            </span>
+                            <span
+                              onClick={() => {
+                                setShopVideo("");
+                                setUploadShopVideo("");
+                              }}
+                              className="absolute right-4 top-[70px] border border-[#D63848] rounded-full p-2 bg-[#D63848]"
+                            >
+                              <DeleteIcon style={{ color: "white" }} />
+                            </span>
+                          </>
+                        ) : (
+                          <ImageLoadingSkeleton className="rounded-3xl" />
+                        )}
                       </div>
                     ) : (
                       <div className="flex flex-col gap-4">
@@ -2507,7 +2548,7 @@ const AddEditSubBranch = ({
               theme: "colored",
             });
             getAllSubBranchList();
-            handleSubBranchModalClose();
+            handleSubBranchSectionClose();
           },
           (error) => {
             toast.error(error.message, { theme: "colored" });
@@ -2533,7 +2574,7 @@ const AddEditSubBranch = ({
               theme: "colored",
             });
             getAllSubBranchList();
-            handleSubBranchModalClose();
+            handleSubBranchSectionClose();
           },
           (error) => {
             toast.error(error.message, { theme: "colored" });
@@ -2543,7 +2584,7 @@ const AddEditSubBranch = ({
     }
   };
 
-  const handleSubBranchModalClose = () => {
+  const handleSubBranchSectionClose = () => {
     setAddEditSubBranchShow(false);
     setSubManagerAddress("");
     setSubManagerCity("");
@@ -2566,13 +2607,14 @@ const AddEditSubBranch = ({
     error.subManagerCityError = "";
     error.subManagerPinCodeError = "";
   };
+
   return (
     <Box className="!w-[100%]">
       <div className="py-5">
         <div className="flex items-center">
           <ArrowBackIcon
             className="!text-black !cursor-pointer"
-            onClick={handleSubBranchModalClose}
+            onClick={handleSubBranchSectionClose}
           />
           <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
             Back To All Branches
@@ -2781,7 +2823,7 @@ const AddEditSubBranch = ({
           <Button
             variant="outlined"
             className="rounded-xl capitalize !text-colorBlack py-2 px-5"
-            onClick={handleSubBranchModalClose}
+            onClick={handleSubBranchSectionClose}
           >
             Cancel
           </Button>

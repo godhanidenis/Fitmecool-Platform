@@ -6,19 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
-
-const colorsList = [
-  "red",
-  "pink",
-  "yellow",
-  "wine",
-  "purple",
-  "blue",
-  "orange",
-  "green",
-  "white",
-  "black",
-];
+import { colorsList } from "../../../utils/common";
 
 const ProductColorFilter = ({ setProductPageSkip }) => {
   const dispatch = useDispatch();

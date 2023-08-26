@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,6 +22,7 @@ import googleIcon from "../../../assets/googleIcon.svg";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
 const TrendingCustomLeftArrow = ({ onClick }) => {
   return (
@@ -146,8 +148,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
     product.product_image.back,
     product.product_image.side,
   ].map((itm) => {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
+    return itm ? (
       <img
         style={{
           width: "100%",
@@ -161,6 +162,11 @@ const ProductCard = ({ product, onlyCarousal }) => {
         alt={product.name}
         className={`${onlyCarousal ? "" : "rounded-t-xl"} object-cover`}
         key={itm}
+      />
+    ) : (
+      <ImageLoadingSkeleton
+        className={`${onlyCarousal ? "" : "rounded-t-xl"}`}
+        height={onlyCarousal ? 400 : themeLayout === "mobileScreen" ? 250 : 300}
       />
     );
   });
