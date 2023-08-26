@@ -25,7 +25,7 @@ const Branches = ({ shopDetails, shopId }) => {
 
   return (
     <>
-      <div className="sm:mt-[97px] mt-[43px] sm:mx-[80px] font-Nova">
+      <div className="sm:mt-[97px] mt-[43px] container  font-Nova">
         <div className="flex items-center mb-[64px]">
           <div className="w-[44px] h-[39px] sm:mr-[30px]">
             <ArrowBackIcon
