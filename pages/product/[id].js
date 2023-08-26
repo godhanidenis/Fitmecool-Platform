@@ -183,7 +183,7 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <div className="bg-colorWhite font-Nova">
-        <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[96px] ">
+        <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]  container ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               <div className="text-colorGreen font-semibold">Product</div>
@@ -229,9 +229,8 @@ const ProductDetail = ({ productDetails }) => {
                   href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                 >
                   <a
-                    target={`${
-                      themeLayout === "webScreen" ? "_blank" : "_self"
-                    }`}
+                    target={`${themeLayout === "webScreen" ? "_blank" : "_self"
+                      }`}
                   >
                     <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
                       {
@@ -300,19 +299,19 @@ const ProductDetail = ({ productDetails }) => {
                         dispatch(
                           !shopFollowByUser
                             ? shopFollowToggle({
-                                shopInfo: {
-                                  key: "follow",
-                                  value: res.data.shopFollower.data,
-                                },
-                              })
+                              shopInfo: {
+                                key: "follow",
+                                value: res.data.shopFollower.data,
+                              },
+                            })
                             : shopFollowToggle({
-                                shopInfo: {
-                                  key: "unFollow",
-                                  value:
-                                    productDetails.data.product.data.branchInfo
-                                      ?.shop_id,
-                                },
-                              })
+                              shopInfo: {
+                                key: "unFollow",
+                                value:
+                                  productDetails.data.product.data.branchInfo
+                                    ?.shop_id,
+                              },
+                            })
                         );
                         toast.success(res.data.shopFollower.message, {
                           theme: "colored",
@@ -354,7 +353,7 @@ const ProductDetail = ({ productDetails }) => {
       </div>
 
       <div className="bg-[#FAFCFC] font-Nova">
-        <div className="!w-[100%] sm:px-[80px] px-[10px]">
+        <div className="!w-[100%] container">
           <div className="grid grid-cols-2 p-2 gap-8">
             <div className="col-span-2 lg:col-span-1 hidden sm:flex">
               <div className="grid grid-cols-4">
@@ -392,18 +391,18 @@ const ProductDetail = ({ productDetails }) => {
                                 dispatch(
                                   !productLikeByUser
                                     ? productLikeToggle({
-                                        productInfo: {
-                                          key: "like",
-                                          value: res.data.productLike.data,
-                                        },
-                                      })
+                                      productInfo: {
+                                        key: "like",
+                                        value: res.data.productLike.data,
+                                      },
+                                    })
                                     : productLikeToggle({
-                                        productInfo: {
-                                          key: "disLike",
-                                          value:
-                                            productDetails.data.product.data.id,
-                                        },
-                                      })
+                                      productInfo: {
+                                        key: "disLike",
+                                        value:
+                                          productDetails.data.product.data.id,
+                                      },
+                                    })
                                 );
                                 toast.success(res.data.productLike.message, {
                                   theme: "colored",
@@ -542,9 +541,8 @@ const ProductDetail = ({ productDetails }) => {
                           href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                         >
                           <a
-                            target={`${
-                              themeLayout === "webScreen" ? "_blank" : "_self"
-                            }`}
+                            target={`${themeLayout === "webScreen" ? "_blank" : "_self"
+                              }`}
                           >
                             <p className="oneLineAfterThreeDots text-white text-sm sm:text-base font-semibold cursor-pointer  hover:text-colorGreen">
                               {
@@ -610,19 +608,19 @@ const ProductDetail = ({ productDetails }) => {
                                 dispatch(
                                   !shopFollowByUser
                                     ? shopFollowToggle({
-                                        shopInfo: {
-                                          key: "follow",
-                                          value: res.data.shopFollower.data,
-                                        },
-                                      })
+                                      shopInfo: {
+                                        key: "follow",
+                                        value: res.data.shopFollower.data,
+                                      },
+                                    })
                                     : shopFollowToggle({
-                                        shopInfo: {
-                                          key: "unFollow",
-                                          value:
-                                            productDetails.data.product.data
-                                              .branchInfo?.shop_id,
-                                        },
-                                      })
+                                      shopInfo: {
+                                        key: "unFollow",
+                                        value:
+                                          productDetails.data.product.data
+                                            .branchInfo?.shop_id,
+                                      },
+                                    })
                                 );
                                 toast.success(res.data.shopFollower.message, {
                                   theme: "colored",
@@ -673,18 +671,18 @@ const ProductDetail = ({ productDetails }) => {
                             dispatch(
                               !productLikeByUser
                                 ? productLikeToggle({
-                                    productInfo: {
-                                      key: "like",
-                                      value: res.data.productLike.data,
-                                    },
-                                  })
+                                  productInfo: {
+                                    key: "like",
+                                    value: res.data.productLike.data,
+                                  },
+                                })
                                 : productLikeToggle({
-                                    productInfo: {
-                                      key: "disLike",
-                                      value:
-                                        productDetails.data.product.data.id,
-                                    },
-                                  })
+                                  productInfo: {
+                                    key: "disLike",
+                                    value:
+                                      productDetails.data.product.data.id,
+                                  },
+                                })
                             );
                             toast.success(res.data.productLike.message, {
                               theme: "colored",
@@ -761,7 +759,7 @@ const ProductDetail = ({ productDetails }) => {
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                     >
-                      <WhatsAppIcon className="!text-white w-[48px] h-[48px]" />
+                      <WhatsAppIcon className="!text-white w-[35px] h-[35px]" />
                       Send Message
                     </button>
                   </a>
@@ -774,7 +772,7 @@ const ProductDetail = ({ productDetails }) => {
                   shadow-lg flex items-center justify-center gap-3"
                     onClick={() => setOpenContactInfo(!openContactInfo)}
                   >
-                    <PersonOutlineIcon className="!text-black w-[48px] h-[48px]" />
+                    <PersonOutlineIcon className="!text-black w-[35px] h-[35 px]" />
                     {openContactInfo ? "Hide Contact" : "Show Contact"}
                   </button>
                 </div>
@@ -790,15 +788,14 @@ const ProductDetail = ({ productDetails }) => {
 
             {productDetails.data.product.related &&
               productDetails.data.product.related.length >
-                (isScreenWide ? 5 : 4) && (
+              (isScreenWide ? 5 : 4) && (
                 <div className="rounded-2xl border border-[#15182766] text-[#15182766] py-2 px-2 sm:px-4 flex items-center justify-center">
                   <Link
                     href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                   >
                     <a
-                      target={`${
-                        themeLayout === "webScreen" ? "_blank" : "_self"
-                      }`}
+                      target={`${themeLayout === "webScreen" ? "_blank" : "_self"
+                        }`}
                     >
                       View More
                     </a>
@@ -808,9 +805,8 @@ const ProductDetail = ({ productDetails }) => {
           </div>
 
           <div
-            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
-              isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
-            } gap-4 sm:gap-8 place-items-center mt-4`}
+            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
+              } gap-4 sm:gap-8 place-items-center mt-4`}
           >
             {productDetails.data.product.related &&
               productDetails.data.product.related

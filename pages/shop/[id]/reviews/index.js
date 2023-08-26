@@ -81,7 +81,7 @@ const Reviews = ({ shopDetails }) => {
   return (
     <>
       <div className="pb-20 md:pb-28 font-Nova">
-        <div className="w-[44px] h-[39px] mt-2 ml-[3%]">
+        <div className="container  w-[44px] h-[39px] mt-2 ml-[3%]">
           <ArrowBackIcon
             onClick={() => BackToGo()}
             className="w-[44px] h-[39px] mr-[30px] cursor-pointer"
@@ -175,9 +175,8 @@ const Reviews = ({ shopDetails }) => {
               <div className="flex justify-end gap-6 mt-5">
                 <button
                   disabled={submitButtonDisable}
-                  className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${
-                    submitButtonDisable && "opacity-50 cursor-not-allowed"
-                  }`}
+                  className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${submitButtonDisable && "opacity-50 cursor-not-allowed"
+                    }`}
                   onClick={() => {
                     if (isAuthenticate) {
                       if (stars > 0 && message !== "") {
