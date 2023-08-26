@@ -47,7 +47,7 @@ const DrawerFilters = ({
           </button>
         </div>
         <div className="h-[90%] pb-10 overflow-y-scroll">
-          <div className=" max-w-md mx-auto">
+          <div className="max-w-md mx-auto">
             {userType === "vendor" || showOnlyShopDetailPage === true ? (
               <Filter
                 productByShop={true}
@@ -67,7 +67,7 @@ const DrawerFilters = ({
       {filterOpen && (
         <div
           onClick={toggleFilterMenu}
-          className="fixed w-screen h-screen left-0 top-0 z-40 bg-colorPrimary opacity-20 lg:hidden"
+          className="fixed w-screen h-screen left-0 top-0 z-40 bg-colorPrimary opacity-20"
         ></div>
       )}
     </>

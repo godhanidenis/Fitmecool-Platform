@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import {
   Box,
   Button,
@@ -15,16 +14,13 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeAppliedProductsFilters,
-  changeProductsLayout,
   changeSortProductsFilters,
 } from "../../../redux/ducks/productsFilters";
 import {
   changeAppliedShopsFilters,
-  changeShopsLayout,
   changeSortShopsFilters,
 } from "../../../redux/ducks/shopsFilters";
 import DrawerFilters from "../DrawerFilters";
-import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
@@ -34,7 +30,6 @@ const UpperFilter = ({
   setProductPageSkip,
   setShopPageSkip,
   showOnlyShopDetailPage,
-  hideGridAndLine,
 }) => {
   const [selectedProductFilters, setSelectedProductFilters] = useState([]);
   const [selectedShopFilters, setSelectedShopFilters] = useState([]);
@@ -60,13 +55,20 @@ const UpperFilter = ({
   const { categories } = useSelector((state) => state.categories);
   const { areaLists } = useSelector((state) => state.areaLists);
 
+  const { themeLayout } = useSelector((state) => state.themeLayout);
+
   useEffect(() => {
     setSelectedProductFilters([
       ...selectedCategories,
-      ...selectedShops,
+      ...(showOnlyShopDetailPage ? [] : selectedShops),
       ...selectedColors,
     ]);
-  }, [selectedCategories, selectedColors, selectedShops]);
+  }, [
+    selectedCategories,
+    selectedColors,
+    selectedShops,
+    showOnlyShopDetailPage,
+  ]);
 
   useEffect(() => {
     setSelectedShopFilters([...selectedLocations, ...selectedRatings]);
@@ -190,7 +192,7 @@ const UpperFilter = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full border-b pb-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <span className="text-[#979ca0] text-base">
@@ -287,73 +289,21 @@ const UpperFilter = ({
             setProductPageSkip={setProductPageSkip}
             showOnlyShopDetailPage={showOnlyShopDetailPage}
           />
-
-          {!hideGridAndLine && (
-            <div className="flex">
-              <div
-                className={`${
-                  !byShop && productsFiltersReducer.productLayout === "grid"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } ${
-                  byShop && shopsFiltersReducer.shopLayout === "grid"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } cursor-pointer`}
-                onClick={() =>
-                  !byShop
-                    ? dispatch(
-                        changeProductsLayout({
-                          key: "productLayout",
-                          value: "grid",
-                        })
-                      )
-                    : dispatch(
-                        changeShopsLayout({
-                          key: "shopLayout",
-                          value: "grid",
-                        })
-                      )
-                }
-              >
-                <GridViewOutlinedIcon fontSize="medium" />
-              </div>
-
-              <div
-                className={`${
-                  !byShop && productsFiltersReducer.productLayout === "list"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } ${
-                  byShop && shopsFiltersReducer.shopLayout === "list"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } cursor-pointer ml-1`}
-                onClick={() =>
-                  !byShop
-                    ? dispatch(
-                        changeProductsLayout({
-                          key: "productLayout",
-                          value: "list",
-                        })
-                      )
-                    : dispatch(
-                        changeShopsLayout({
-                          key: "shopLayout",
-                          value: "list",
-                        })
-                      )
-                }
-              >
-                <SegmentOutlinedIcon fontSize="medium" />
-              </div>
-            </div>
-          )}
         </div>
       </div>
       {(byShop ? selectedShopFilters : selectedProductFilters).length > 0 && (
-        <div className="w-full flex gap-10 my-2 capitalize justify-between">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div
+          className={`w-full flex gap-10 my-2 capitalize justify-between ${
+            themeLayout === "mobileScreen" && "items-center"
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2 ${
+              themeLayout === "mobileScreen"
+                ? "overflow-x-auto hide-scrollbar"
+                : "flex-wrap"
+            }`}
+          >
             {(byShop ? selectedShopFilters : selectedProductFilters).map(
               (itm, index) => (
                 <SelectedFilterBadge
@@ -382,7 +332,11 @@ const UpperFilter = ({
                   )
                 );
               } else {
-                ["categoryId", "productColor", "shopId"].map((itm) =>
+                [
+                  "categoryId",
+                  "productColor",
+                  ...(showOnlyShopDetailPage ? [] : ["shopId"]),
+                ].map((itm) =>
                   dispatch(
                     changeAppliedProductsFilters({
                       key: itm,
@@ -412,7 +366,6 @@ const SelectedFilterBadge = ({
   shopsFiltersReducer,
   dispatch,
 }) => {
-  console.log("itm", itm);
   const handleDeleteFilterBadge = () => {
     if (byShop) {
       dispatch(

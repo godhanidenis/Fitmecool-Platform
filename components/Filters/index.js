@@ -21,7 +21,7 @@ const Filter = ({
       />
 
       {!byShop ? (
-        <div className="px-10">
+        <div className="px-5 sm:px-10">
           <ProductCategoriesFilter setProductPageSkip={setProductPageSkip} />
           {!productByShop && (
             <ProductByShopFilter setProductPageSkip={setProductPageSkip} />

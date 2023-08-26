@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pagination } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
 import { changeAppliedProductsFilters } from "../../../../redux/ducks/productsFilters";
@@ -17,7 +17,7 @@ const ShopDetailsPage = () => {
   const { id } = router.query;
 
   const dispatch = useDispatch();
-  const { productsCount, productsData } = useSelector(
+  const { productsCount, productsData, loading } = useSelector(
     (state) => state.products
   );
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
@@ -105,31 +105,58 @@ const ShopDetailsPage = () => {
         <div className="pt-4">
           <UpperFilter
             setProductPageSkip={setProductPageSkip}
-            hideGridAndLine={true}
+            showOnlyShopDetailPage={true}
           />
 
-          <div className="mt-8">
-            <VenderProductTable
-              productsData={productsData}
-              setProductPageSkip={setProductPageSkip}
-              getAllProducts={getAllProducts}
-            />
-          </div>
+          <div
+            className={`w-full relative ${
+              loading && productsData?.length === 0 && "h-screen"
+            }`}
+          >
+            <div
+              className={`mt-8 ${
+                productsData?.length > 0 && loading
+                  ? "opacity-50"
+                  : "opacity-100"
+              }`}
+            >
+              {productsData.length > 0 ? (
+                <VenderProductTable
+                  productsData={productsData}
+                  setProductPageSkip={setProductPageSkip}
+                  getAllProducts={getAllProducts}
+                />
+              ) : (
+                !loading && (
+                  <span className="flex items-center justify-center">
+                    No products found!
+                  </span>
+                )
+              )}
 
-          {productsCount > 6 && (
-            <div className="flex items-center justify-center py-10">
-              <Pagination
-                count={Math.ceil(productsCount / 6)}
-                color="primary"
-                variant="outlined"
-                shape="rounded"
-                page={(productPageSkip === 0 && 1) || productPageSkip / 6 + 1}
-                onChange={(e, p) => {
-                  setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                }}
-              />
+              {productsCount > 6 && (
+                <div className="flex items-center justify-center py-10">
+                  <Pagination
+                    count={Math.ceil(productsCount / 6)}
+                    color="primary"
+                    variant="outlined"
+                    shape="rounded"
+                    page={
+                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
+                    }
+                    onChange={(e, p) => {
+                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                    }}
+                  />
+                </div>
+              )}
             </div>
-          )}
+            {loading && (
+              <div className="absolute top-1/2 left-1/2">
+                <CircularProgress color="secondary" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

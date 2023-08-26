@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
 import {
   Avatar,
-  Button,
   LinearProgress,
   Pagination,
   Rating,
@@ -31,9 +30,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import Router, { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
-import FbIcon from "../../../assets/fbIconShop.svg";
-import TwiterIcon from "../../../assets/twiterIconShop.svg";
-import Image from "next/image";
 
 const ShopDetail = ({ shopDetails }) => {
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
@@ -66,7 +62,6 @@ const ShopDetail = ({ shopDetails }) => {
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
-  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -185,39 +180,60 @@ const ShopDetail = ({ shopDetails }) => {
                 showOnlyShopDetailPage={true}
               />
             </div>
-            <div className="w-full">
+
+            <div
+              className={`w-full relative ${
+                loading && productsData?.length === 0 && "h-screen"
+              }`}
+            >
               <div
                 className={`${
-                  productsFiltersReducer.productLayout === "list"
-                    ? "flex flex-col gap-5"
-                    : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
+                  productsData?.length > 0 && loading
+                    ? "opacity-50"
+                    : "opacity-100"
                 }`}
               >
-                {productsData &&
-                  productsData?.map((product) => (
-                    <ProductCard product={product} key={product.id} />
-                  ))}
+                {productsData?.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10">
+                      {productsData?.map((product) => (
+                        <ProductCard product={product} key={product.id} />
+                      ))}
+                    </div>
+                    {productsCount > 6 && (
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
+                        <p className="text-sm leading-[150%] text-[#15182766]">
+                          Showing {productPageSkip + 1} -{" "}
+                          {productsCount < (productPageSkip + 1) * productsLimit
+                            ? productsCount
+                            : (productPageSkip + 1) * productsLimit}{" "}
+                          of {productsCount} results
+                        </p>
+                        <Pagination
+                          color="primary"
+                          count={Math.ceil(productsCount / 6)}
+                          page={
+                            (productPageSkip === 0 && 1) ||
+                            productPageSkip / 6 + 1
+                          }
+                          onChange={(e, p) => {
+                            setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
+                          }}
+                        />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  !loading && (
+                    <span className="flex items-center justify-center mt-10">
+                      No products found!
+                    </span>
+                  )
+                )}
               </div>
-
-              {productsCount > 6 && (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
-                  <p className="text-sm leading-[150%] text-[#15182766]">
-                    Showing {productPageSkip + 1} -{" "}
-                    {productsCount < (productPageSkip + 1) * productsLimit
-                      ? productsCount
-                      : (productPageSkip + 1) * productsLimit}{" "}
-                    of {productsCount} results
-                  </p>
-                  <Pagination
-                    color="primary"
-                    count={Math.ceil(productsCount / 6)}
-                    page={
-                      (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
-                    }
-                    onChange={(e, p) => {
-                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                    }}
-                  />
+              {loading && (
+                <div className="absolute top-1/2 left-1/2">
+                  <CircularProgress color="secondary" />
                 </div>
               )}
             </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -15,7 +16,6 @@ import {
 import {
   a11yProps,
   CustomAuthModal,
-  CustomTextField,
   CustomVenderShopTab,
   TabPanel,
 } from "../../../components/core/CustomMUIComponents";
@@ -24,8 +24,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm } from "react-hook-form";
 import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
@@ -38,13 +36,10 @@ import {
 import { deleteBranch, updateBranch } from "../../../graphql/mutations/branch";
 import { createBranch } from "../../../graphql/mutations/branch";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
-import Image from "next/image";
 import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -52,6 +47,7 @@ import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVen
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 import VendorBranchTable from "../../../components/Layout/VendorBranchTable";
+import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
 
 const style = {
   position: "absolute",
@@ -142,7 +138,7 @@ const ShopEdit = () => {
   const [deleteBranchId, setDeleteBranchId] = useState();
   const [editSubBranchId, setEditSubBranchId] = useState();
 
-  const [subBranchModalOpen, setSubBranchModalOpen] = useState(false);
+  const [addEditSubBranchShow, setAddEditSubBranchShow] = useState(false);
 
   const [shopLogo, setShopLogo] = useState("");
   const [uploadShopLogo, setUploadShopLogo] = useState("");
@@ -157,8 +153,6 @@ const ShopEdit = () => {
   const [ShopEditImg, setShopEditImg] = useState("");
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
-
-  console.log("shopVideoshopVideo", uploadShopVideo);
 
   const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
   const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
@@ -177,12 +171,6 @@ const ShopEdit = () => {
   const handleManagerDetails = (option) => {
     setManagerDetails(option);
   };
-  const handleBranchDetails = (id) => {
-    setBranchDetails((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id] || false,
-    }));
-  };
 
   if (Object.keys(branchDetails).length === 0) {
     subBranchList.forEach((item) => {
@@ -198,10 +186,9 @@ const ShopEdit = () => {
 
   useEffect(() => {
     ownerInfoReset();
-  }, [value]);
+  }, [ownerInfoReset, value]);
 
   const srcToFile = async (src, fileName, mimeType) => {
-    console.log("src, fileName, mimeType :", src, fileName, mimeType);
     const res = await fetch(src, {
       mode: "no-cors",
     });
@@ -256,7 +243,6 @@ const ShopEdit = () => {
   };
 
   const onShopVideoPreview = (e) => {
-    // setShopVideo("");
     const reader = new FileReader();
     if (e.target.files && e.target.files.length > 0) {
       setUploadShopVideo(e.target.files[0]);
@@ -295,10 +281,6 @@ const ShopEdit = () => {
         ownerInfoGetValue("user_contact")
       );
     } else {
-      // mainBranchInfoSetValue("manager_first_name", "");
-      // mainBranchInfoSetValue("manager_last_name", "");
-      // mainBranchInfoSetValue("manager_user_email", "");
-      // mainBranchInfoSetValue("manager_user_contact", "");
       const mainBranches = vendorShopDetails?.branch_info?.find(
         (itm) => itm.branch_type === "main"
       );
@@ -322,7 +304,12 @@ const ShopEdit = () => {
       mainBranchInfoSetValue("city", mainBranches?.branch_city);
       mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
     }
-  }, [sameAsOwner, mainBranchInfoSetValue, ownerInfoGetValue]);
+  }, [
+    sameAsOwner,
+    mainBranchInfoSetValue,
+    ownerInfoGetValue,
+    vendorShopDetails?.branch_info,
+  ]);
 
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
@@ -384,11 +371,6 @@ const ShopEdit = () => {
       }
 
       setShopBackground(vendorShopDetails?.shop_cover_image);
-
-      console.log(
-        "uploadShopImages---------------",
-        vendorShopDetails?.shop_images
-      );
 
       vendorShopDetails?.shop_images?.map((img) => {
         img?.links &&
@@ -501,7 +483,7 @@ const ShopEdit = () => {
 
   useEffect(() => {
     setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
-  }, [getUploadShopImages?.length]);
+  }, [getUploadShopImages, getUploadShopImages.length]);
 
   const ownerInfoOnSubmit = (data) => {
     console.log("data", data);
@@ -1422,7 +1404,7 @@ const ShopEdit = () => {
             {!individual && (
               <div className="flex justify-end mt-10">
                 <button
-                  onClick={() => setSubBranchModalOpen(true)}
+                  onClick={() => setAddEditSubBranchShow(true)}
                   className="flex items-center opacity-100
                    cursor-pointer uppercase border-2  lg:px-8 lg:py-3 sm:px-6 sm:py-2 px-3 py-2 sm:text-lg text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
                 >
@@ -1437,10 +1419,10 @@ const ShopEdit = () => {
               </div>
             )}
 
-            {subBranchModalOpen ? (
-              <SubBranchModal
-                subBranchModalOpen={subBranchModalOpen}
-                setSubBranchModalOpen={setSubBranchModalOpen}
+            {addEditSubBranchShow ? (
+              <AddEditSubBranch
+                addEditSubBranchShow={addEditSubBranchShow}
+                setAddEditSubBranchShow={setAddEditSubBranchShow}
                 getAllSubBranchList={getAllSubBranchList}
                 ShopId={userProfile?.userCreatedShopId}
                 editSubBranchId={editSubBranchId}
@@ -1454,7 +1436,7 @@ const ShopEdit = () => {
                   <VendorBranchTable
                     subBranchList={subBranchList}
                     getAllSubBranchList={getAllSubBranchList}
-                    setSubBranchModalOpen={setSubBranchModalOpen}
+                    setAddEditSubBranchShow={setAddEditSubBranchShow}
                     setEditSubBranchId={setEditSubBranchId}
                     setBranchDeleteModalOpen={setBranchDeleteModalOpen}
                     setDeleteBranchId={setDeleteBranchId}
@@ -1462,141 +1444,6 @@ const ShopEdit = () => {
                 </div>
               </>
             )}
-
-            {/* {subBranchList?.length > 0 && (
-              <div className="w-full">
-                {subBranchList?.map((sub, index) => (
-                  <>
-                    <div
-                      key={index}
-                      style={{
-                        borderRadius: branchDetails[sub.id]
-                          ? "16px 16px 0px 0px"
-                          : "16px",
-                      }}
-                      className="sm:mt-10 mt-5 w-full flex justify-between bg-[#F3F6F6] items-center"
-                    >
-                      <div
-                        onClick={() => handleBranchDetails(sub.id)}
-                        className="sm:text-base text-xs font-semibold text-black py-6 pl-6 cursor-pointer"
-                      >
-                        {branchDetails[sub.id] ? (
-                          <KeyboardArrowUpIcon className="cursor-pointer" />
-                        ) : (
-                          <KeyboardArrowDownIcon className="cursor-pointer" />
-                        )}
-                        {"   "}
-                        Branch {index + 1}
-                      </div>
-                      <div className="flex gap-4 pr-6">
-                        <span className="bg-[#D63848]  text-white rounded-full lg:p-2 px-2 py-1">
-                          <DeleteOutlineOutlinedIcon
-                            sx={{
-                              "@media (max-width: 768px)": {
-                                fontSize: 16,
-                              },
-                            }}
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setBranchDeleteModalOpen(true);
-                              setDeleteBranchId(sub.id);
-                            }}
-                          />
-                        </span>
-                        <span className="bg-[#151827]  text-white rounded-full lg:p-2 px-2 py-1">
-                          <EditOutlinedIcon
-                            sx={{
-                              "@media (max-width: 768px)": {
-                                fontSize: 16,
-                              },
-                            }}
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setSubBranchModalOpen(true);
-                              setEditSubBranchId(sub.id);
-                            }}
-                          />
-                        </span>
-                      </div>
-                    </div>
-
-                    <div
-                      style={{ border: "2px solid #F3F6F6" }}
-                      className={` grid lg:grid-cols-2 grid-cols-1 gap-y-6 mb-16 py-6 ${
-                        !branchDetails[sub.id] && "hidden"
-                      }`}
-                    >
-                      <div
-                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
-                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
-                      >
-                        <p className="sm:text-[16px] text-[12px] text-gray-400 font-semibold">
-                          Branch Address
-                        </p>
-                        <p className="sm:text-[16px] text-[12px] font-semibold text-black">
-                          {sub.branch_address}
-                        </p>
-                      </div>
-                      <div
-                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
-                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
-                      >
-                        <p className="sm:text-[16px] text-[12px] text-gray-400 font-semibold">
-                          Branch City
-                        </p>
-                        <p className="sm:text-[16px] text-[12px] font-semibold text-black">
-                          {sub.branch_city}
-                        </p>
-                      </div>
-                      <div
-                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
-                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
-                      >
-                        <p className="sm:text-[16px] text-[12px] text-gray-400 font-semibold">
-                          Branch pincode
-                        </p>
-                        <p className="sm:text-[16px] text-[12px] font-semibold text-black">
-                          {sub.branch_pinCode}
-                        </p>
-                      </div>
-                      <div
-                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
-                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
-                      >
-                        <p className="sm:text-[16px] text-[12px] text-gray-400 font-semibold">
-                          Branch Manager Name
-                        </p>
-                        <p className="sm:text-[16px] text-[12px] font-semibold text-black">
-                          {sub.manager_name}
-                        </p>
-                      </div>
-                      <div
-                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
-                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
-                      >
-                        <p className="sm:text-[16px] text-[12px] text-gray-400 font-semibold">
-                          Branch Manager Email
-                        </p>
-                        <p className="sm:text-[16px] text-[12px] font-semibold text-black">
-                          {sub.manager_email}
-                        </p>
-                      </div>
-                      <div
-                        style={{ boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)" }}
-                        className="flex flex-col gap-2 rounded-2xl p-4 mx-6"
-                      >
-                        <p className="sm:text-[16px] text-[12px] text-gray-400 font-semibold">
-                          Branch Manager Phone Number
-                        </p>
-                        <p className="sm:text-[16px] text-[12px] font-semibold text-black">
-                          {sub.manager_contact}
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                ))}
-              </div>
-            )} */}
           </TabPanel>
 
           <TabPanel value={value} index={4}>
@@ -1927,68 +1774,27 @@ const ShopEdit = () => {
           </TabPanel>
         </div>
       </div>
-      {/* <SubBranchModal
-        subBranchModalOpen={subBranchModalOpen}
-        setSubBranchModalOpen={setSubBranchModalOpen}
-        getAllSubBranchList={getAllSubBranchList}
-        ShopId={userProfile?.userCreatedShopId}
-        editSubBranchId={editSubBranchId}
-        setEditSubBranchId={setEditSubBranchId}
-        mainBranchInfoGetValue={mainBranchInfoGetValue}
-        ownerInfoGetValue={ownerInfoGetValue}
-      /> */}
 
-      <CustomAuthModal
-        open={branchDeleteModalOpen}
-        onClose={() => setBranchDeleteModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2">
-          <div className="p-5">
-            <div className="flex items-center">
-              <p className="flex items-center text-colorBlack text-xl font-semibold">
-                Confirmation Modal
-              </p>
-            </div>
-
-            <div className="p-5 text-colorBlack text-lg font-normal">
-              Are you sure delete this branch <b>{deleteBranchId}</b>.
-            </div>
-
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
-                onClick={() => setBranchDeleteModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"
-                onClick={() => {
-                  deleteBranch({ id: deleteBranchId }).then(
-                    (res) => {
-                      toast.success(res.data.deleteBranch, {
-                        theme: "colored",
-                      });
-                      getAllSubBranchList();
-                    },
-                    (error) => {
-                      toast.error(error.message, { theme: "colored" });
-                    }
-                  );
-                  setBranchDeleteModalOpen(false);
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
+      <ConfirmationModal
+        type="branch"
+        deleteModalOpen={branchDeleteModalOpen}
+        setDeleteModalOpen={setBranchDeleteModalOpen}
+        deleteId={deleteBranchId}
+        onClickItemDelete={() => {
+          deleteBranch({ id: deleteBranchId }).then(
+            (res) => {
+              toast.success(res.data.deleteBranch, {
+                theme: "colored",
+              });
+              getAllSubBranchList();
+            },
+            (error) => {
+              toast.error(error.message, { theme: "colored" });
+            }
+          );
+          setBranchDeleteModalOpen(false);
+        }}
+      />
     </>
   );
 };
@@ -2000,11 +1806,8 @@ const HoursModal = ({
   setHoursModalOpen,
   setDaysTimeModalOpen,
   hours,
-  selectedDay,
   setSelectedDay,
   setSelectedWeek,
-  selectedWeek,
-  selectedAllHours,
   setSelectedAllHours,
 }) => {
   return (
@@ -2222,6 +2025,7 @@ const HoursModal = ({
     </>
   );
 };
+
 const DaysTimeModal = ({
   daysTimeModalOpen,
   setDaysTimeModalOpen,
@@ -2555,9 +2359,8 @@ const DaysTimeModal = ({
   );
 };
 
-const SubBranchModal = ({
-  subBranchModalOpen,
-  setSubBranchModalOpen,
+const AddEditSubBranch = ({
+  setAddEditSubBranchShow,
   getAllSubBranchList,
   ShopId,
   editSubBranchId,
@@ -2741,7 +2544,7 @@ const SubBranchModal = ({
   };
 
   const handleSubBranchModalClose = () => {
-    setSubBranchModalOpen(false);
+    setAddEditSubBranchShow(false);
     setSubManagerAddress("");
     setSubManagerCity("");
     setSubManagerPinCode("");
@@ -2764,269 +2567,233 @@ const SubBranchModal = ({
     error.subManagerPinCodeError = "";
   };
   return (
-    <>
-      {/* <CustomAuthModal
-        open={subBranchModalOpen}
-        onClose={handleSubBranchModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      > */}
-      <Box className="!w-[100%]">
-        <div className="py-5">
-          <div className="flex items-center">
-            <ArrowBackIcon
-              className="!text-black !cursor-pointer"
-              onClick={handleSubBranchModalClose}
-            />
-            <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-              Back To All Branches
+    <Box className="!w-[100%]">
+      <div className="py-5">
+        <div className="flex items-center">
+          <ArrowBackIcon
+            className="!text-black !cursor-pointer"
+            onClick={handleSubBranchModalClose}
+          />
+          <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+            Back To All Branches
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <div className="sm:ml-14 rounded-lg">
+            <p className="flex items-center text-colorBlack text-xl mb-5 font-semibold">
+              {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
             </p>
-            {/* <CloseIcon
-              className="!text-black !ml-auto !cursor-pointer"
-              onClick={handleSubBranchModalClose}
-            /> */}
-          </div>
-
-          <div className="mt-6">
-            <div className="sm:ml-14 rounded-lg">
-              {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                  Branches
-                </h3> */}
-              <p className="flex items-center text-colorBlack text-xl mb-5 font-semibold">
-                {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
-              </p>
-              <form>
-                <div className="flex flex-col space-y-3">
-                  {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
-                      Sub Branch
-                    </p> */}
-                  <div className="flex items-center justify-center">
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="Address"
-                          variant="standard"
-                          className="w-full"
-                          value={subManagerAddress}
-                          onChange={(e) => {
-                            setSubManagerAddress(e.target.value);
-                            error.subManagerAddressError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerAddressError || ""}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row mt-4 sm:gap-20 w-full justify-between items-center">
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="City"
-                          variant="standard"
-                          className="w-full"
-                          value={subManagerCity}
-                          onChange={(e) => {
-                            setSubManagerCity(e.target.value);
-                            error.subManagerCityError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerCityError || ""}
-                      </span>
-                    </div>
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="PinCode"
-                          variant="standard"
-                          className="w-full"
-                          type="number"
-                          value={subManagerPinCode}
-                          onChange={(e) => {
-                            setSubManagerPinCode(e.target.value);
-                            error.subManagerPinCodeError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerPinCodeError || ""}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center items-center">
-                    <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
-                      {/* <span className="font-semibold text-lg text-[#11142D] mt-5 hidden sm:flex">
-                          Manager:
-                        </span> */}
-
+            <form>
+              <div className="flex flex-col space-y-3">
+                <div className="flex items-center justify-center">
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
                       <CustomTextFieldVendor
-                        label="Manager"
+                        id="input-with-sx"
+                        label="Address"
                         variant="standard"
-                        select
-                        fullWidth
-                        value={managerValue}
-                        onChange={(e) => setManagerValue(e.target.value)}
-                      >
-                        <MenuItem value="">None</MenuItem>
-                        {["Same as owner", "same as main branch manager"].map(
-                          (man) => (
-                            <MenuItem value={man} key={man}>
-                              {man}
-                            </MenuItem>
-                          )
-                        )}
-                      </CustomTextFieldVendor>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:gap-20 w-full justify-between items-center !mt-5">
-                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                        Name:
-                      </p> */}
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="Manager First Name"
-                          variant="standard"
-                          className="w-full"
-                          disabled={
-                            managerValue === "Same as owner" ||
-                            managerValue === "same as main branch manager"
-                          }
-                          value={subManagerFirstName}
-                          onChange={(e) => {
-                            setSubManagerFirstName(e.target.value);
-                            error.subManagerFirstNameError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerFirstNameError || ""}
-                      </span>
-                    </div>
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="Manager Last Name"
-                          variant="standard"
-                          className="w-full"
-                          disabled={
-                            managerValue === "Same as owner" ||
-                            managerValue === "same as main branch manager"
-                          }
-                          value={subManagerLastName}
-                          onChange={(e) => {
-                            setSubManagerLastName(e.target.value);
-                            error.subManagerLastNameError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerLastNameError || ""}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Email:
-                      </p> */}
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="Manager Email Address"
-                          variant="standard"
-                          className="w-full"
-                          type="email"
-                          disabled={
-                            managerValue === "Same as owner" ||
-                            managerValue === "same as main branch manager"
-                          }
-                          value={subManagerEmail}
-                          onChange={(e) => {
-                            setSubManagerEmail(e.target.value);
-                            error.subManagerEmailError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerEmailError || ""}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Phone:
-                      </p> */}
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="Manager Phone Number"
-                          variant="standard"
-                          className="w-full"
-                          type="number"
-                          disabled={
-                            managerValue === "Same as owner" ||
-                            managerValue === "same as main branch manager"
-                          }
-                          value={subManagerPhone}
-                          onChange={(e) => {
-                            setSubManagerPhone(e.target.value);
-                            if (e.target.value.length != 10) {
-                              error.subManagerPhoneError =
-                                "SubManagerPhone Number must be 10 numbers";
-                            } else {
-                              error.subManagerPhoneError = "";
-                            }
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerPhoneError || ""}
-                      </span>
-                    </div>
+                        className="w-full"
+                        value={subManagerAddress}
+                        onChange={(e) => {
+                          setSubManagerAddress(e.target.value);
+                          error.subManagerAddressError = "";
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerAddressError || ""}
+                    </span>
                   </div>
                 </div>
-              </form>
-            </div>
-          </div>
 
-          {/* <div className="container mt-5">
-            <Divider />
-          </div> */}
-          <div className="mt-2 flex items-center justify-end gap-5">
-            <Button
-              variant="outlined"
-              className="rounded-xl capitalize !text-colorBlack py-2 px-5"
-              onClick={handleSubBranchModalClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              className="rounded-xl capitalize !text-colorWhite !bg-colorGreen py-2 px-5"
-              onClick={subBranchSubmit}
-            >
-              {editSubBranchId === undefined ? "Save" : "Update"}
-            </Button>
+                <div className="flex flex-col sm:flex-row mt-4 sm:gap-20 w-full justify-between items-center">
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextFieldVendor
+                        id="input-with-sx"
+                        label="City"
+                        variant="standard"
+                        className="w-full"
+                        value={subManagerCity}
+                        onChange={(e) => {
+                          setSubManagerCity(e.target.value);
+                          error.subManagerCityError = "";
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerCityError || ""}
+                    </span>
+                  </div>
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextFieldVendor
+                        id="input-with-sx"
+                        label="PinCode"
+                        variant="standard"
+                        className="w-full"
+                        type="number"
+                        value={subManagerPinCode}
+                        onChange={(e) => {
+                          setSubManagerPinCode(e.target.value);
+                          error.subManagerPinCodeError = "";
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerPinCodeError || ""}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-center items-center">
+                  <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
+                    <CustomTextFieldVendor
+                      label="Manager"
+                      variant="standard"
+                      select
+                      fullWidth
+                      value={managerValue}
+                      onChange={(e) => setManagerValue(e.target.value)}
+                    >
+                      <MenuItem value="">None</MenuItem>
+                      {["Same as owner", "same as main branch manager"].map(
+                        (man) => (
+                          <MenuItem value={man} key={man}>
+                            {man}
+                          </MenuItem>
+                        )
+                      )}
+                    </CustomTextFieldVendor>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:gap-20 w-full justify-between items-center !mt-5">
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextFieldVendor
+                        id="input-with-sx"
+                        label="Manager First Name"
+                        variant="standard"
+                        className="w-full"
+                        disabled={
+                          managerValue === "Same as owner" ||
+                          managerValue === "same as main branch manager"
+                        }
+                        value={subManagerFirstName}
+                        onChange={(e) => {
+                          setSubManagerFirstName(e.target.value);
+                          error.subManagerFirstNameError = "";
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerFirstNameError || ""}
+                    </span>
+                  </div>
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextFieldVendor
+                        id="input-with-sx"
+                        label="Manager Last Name"
+                        variant="standard"
+                        className="w-full"
+                        disabled={
+                          managerValue === "Same as owner" ||
+                          managerValue === "same as main branch manager"
+                        }
+                        value={subManagerLastName}
+                        onChange={(e) => {
+                          setSubManagerLastName(e.target.value);
+                          error.subManagerLastNameError = "";
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerLastNameError || ""}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center gap-10 sm:gap-20">
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextFieldVendor
+                        id="input-with-sx"
+                        label="Manager Email Address"
+                        variant="standard"
+                        className="w-full"
+                        type="email"
+                        disabled={
+                          managerValue === "Same as owner" ||
+                          managerValue === "same as main branch manager"
+                        }
+                        value={subManagerEmail}
+                        onChange={(e) => {
+                          setSubManagerEmail(e.target.value);
+                          error.subManagerEmailError = "";
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerEmailError || ""}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center gap-10 sm:gap-20">
+                  <div className="w-full flex flex-col gap-2">
+                    <Box sx={{ display: "flex" }}>
+                      <CustomTextFieldVendor
+                        id="input-with-sx"
+                        label="Manager Phone Number"
+                        variant="standard"
+                        className="w-full"
+                        type="number"
+                        disabled={
+                          managerValue === "Same as owner" ||
+                          managerValue === "same as main branch manager"
+                        }
+                        value={subManagerPhone}
+                        onChange={(e) => {
+                          setSubManagerPhone(e.target.value);
+                          if (e.target.value.length != 10) {
+                            error.subManagerPhoneError =
+                              "SubManagerPhone Number must be 10 numbers";
+                          } else {
+                            error.subManagerPhoneError = "";
+                          }
+                        }}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerPhoneError || ""}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-      </Box>
-      {/* </CustomAuthModal> */}
-    </>
+
+        <div className="mt-2 flex items-center justify-end gap-5">
+          <Button
+            variant="outlined"
+            className="rounded-xl capitalize !text-colorBlack py-2 px-5"
+            onClick={handleSubBranchModalClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            className="rounded-xl capitalize !text-colorWhite !bg-colorGreen py-2 px-5"
+            onClick={subBranchSubmit}
+          >
+            {editSubBranchId === undefined ? "Save" : "Update"}
+          </Button>
+        </div>
+      </div>
+    </Box>
   );
 };

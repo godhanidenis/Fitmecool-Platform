@@ -60,3 +60,8 @@ h6 {
   -webkit-box-orient: vertical !important;
   -webkit-line-clamp: 1 !important;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}

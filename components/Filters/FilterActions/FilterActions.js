@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react";
 import { Divider, Stack, Switch } from "@mui/material";
-import { useState } from "react";
 
 const FilterActions = ({ byShop, setByShop, productByShop }) => {
   const [checked, setChecked] = useState(byShop);
@@ -9,9 +9,13 @@ const FilterActions = ({ byShop, setByShop, productByShop }) => {
     setByShop(event.target.checked);
   };
 
+  useEffect(() => {
+    setChecked(byShop);
+  }, [byShop]);
+
   return (
     <div>
-      <div className="pt-5 pb-2 px-10 flex items-center justify-between w-full">
+      <div className="pt-5 pb-2 px-5 sm:px-10 flex items-center justify-between w-full">
         <span className="text-black text-[22px] font-bold">Filters</span>
         {!productByShop && (
           <Stack direction="row" alignItems="center">

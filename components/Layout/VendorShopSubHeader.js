@@ -28,7 +28,7 @@ const VendorShopSubHeader = () => {
     ) {
       setSelectedValue("Products");
     }
-  }, [router.pathname]);
+  }, [router.pathname, vendorShopDetails?.id]);
 
   return (
     <div className="w-full font-Nova flex items-center py-4 pl-4 bg-[#FAFCFC] sm:hidden">

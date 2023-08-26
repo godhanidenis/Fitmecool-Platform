@@ -102,8 +102,6 @@ const TrendingCustomRightArrow = ({ onClick }) => {
 };
 
 const ShopCard = ({ shop }) => {
-  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
-
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const items = shop.shop_images.map((itm) => {
@@ -112,14 +110,7 @@ const ShopCard = ({ shop }) => {
       <img
         style={{
           width: "100%",
-          height:
-            shopsFiltersReducer.shopLayout === "list"
-              ? themeLayout === "mobileScreen"
-                ? 250
-                : 300
-              : themeLayout === "mobileScreen"
-              ? 250
-              : 300,
+          height: themeLayout === "mobileScreen" ? 250 : 300,
         }}
         src={itm?.links ?? ""}
         alt={shop.name}
@@ -198,26 +189,24 @@ const ShopCard = ({ shop }) => {
                     )
                   : shop?.branch_info[0]?.branch_address}
               </p>
-              {shopsFiltersReducer.shopLayout === "list" && (
-                <span className="text-[14px] font-normal flex items-center mt-2 text-colorBlack">
-                  {`${shop?.shopFollowerCount} Followers`}
-                </span>
-              )}
-            </div>
-          </div>
-          {shopsFiltersReducer.shopLayout === "list" && (
-            <div className="flex items-center mt-2 flex-wrap gap-2">
-              <div className="p-1 flex items-center gap-1">
-                <StarIcon fontSize="small" className="!text-yellow-400" />
-                <p className="text-colorBlack text-[14px] font-normal">
-                  {shop.shop_rating}
-                </p>
-              </div>
-              <span className="text-[14px] font-normal text-[gray]">
-                ({shop.shopReviewCount})
+
+              <span className="text-[14px] font-normal flex items-center mt-2 text-colorBlack">
+                {`${shop?.shopFollowerCount} Followers`}
               </span>
             </div>
-          )}
+          </div>
+
+          <div className="flex items-center mt-2 flex-wrap gap-2">
+            <div className="p-1 flex items-center gap-1">
+              <StarIcon fontSize="small" className="!text-yellow-400" />
+              <p className="text-colorBlack text-[14px] font-normal">
+                {shop.shop_rating}
+              </p>
+            </div>
+            <span className="text-[14px] font-normal text-[gray]">
+              ({shop.shopReviewCount})
+            </span>
+          </div>
         </div>
       </div>
     </div>
