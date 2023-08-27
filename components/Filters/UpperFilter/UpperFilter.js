@@ -293,7 +293,7 @@ const UpperFilter = ({
       </div>
       {(byShop ? selectedShopFilters : selectedProductFilters).length > 0 && (
         <div
-          className={`w-full flex gap-10 my-2 capitalize justify-between ${
+          className={`w-full flex gap-5 sm:gap-10 my-2 capitalize justify-between ${
             themeLayout === "mobileScreen" && "items-center"
           }`}
         >
