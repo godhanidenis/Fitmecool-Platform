@@ -114,16 +114,16 @@ const ShopCard = ({ shop }) => {
         }}
         src={itm?.links ?? ""}
         alt={shop.name}
-        className="rounded-t-xl object-cover"
+        className="object-cover"
         key={itm}
       />
     );
   });
 
   return (
-    <div className="bg-white rounded-lg ">
+    <div className="bg-white shadow-xl h-full">
       <div className="">
-        <div className="my-[5px] cursor-pointer product-parent-div">
+        <div className="cursor-pointer product-parent-div">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
               <Carousel

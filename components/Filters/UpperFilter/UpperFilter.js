@@ -192,7 +192,7 @@ const UpperFilter = ({
   };
 
   return (
-    <div className="w-full border-b pb-2">
+    <div className="w-full border-b">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <span className="text-[#979ca0] text-base">
@@ -204,7 +204,7 @@ const UpperFilter = ({
         </div>
 
         <div className="flex gap-2 items-center">
-          <div className="flex items-center">
+          <div className="flex items-center mb-1">
             <Button
               onClick={(event) => {
                 setSortByAnchor(event.currentTarget);
@@ -318,7 +318,7 @@ const UpperFilter = ({
             )}
           </div>
           <span
-            className="underline cursor-pointer text-colorGreen whitespace-nowrap"
+            className="underline cursor-pointer text-colorGreen whitespace-nowrap mr-2"
             onClick={() => {
               if (byShop) {
                 ["locations", "stars"].map((itm) =>

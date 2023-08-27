@@ -159,7 +159,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
         }}
         src={itm ?? ""}
         alt={product.name}
-        className={`${onlyCarousal ? "" : "rounded-t-xl"} object-cover`}
+        className={`object-cover`}
         key={itm}
       />
     );
@@ -187,7 +187,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
 
   return (
     <>
-      <div className="shadow-xl flex flex-col">
+      <div className="shadow-xl flex flex-col rounded-lg">
         <div className="cursor-pointer product-parent-div">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">

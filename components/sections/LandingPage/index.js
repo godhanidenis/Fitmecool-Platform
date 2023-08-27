@@ -111,8 +111,8 @@ const LandingPage = () => {
         />
       </div>
       <div>
-        <div className="grid grid-cols-8 container mb-4 font-Nova py-3 gap-6">
-          <div className="lg:col-span-2 hidden lg:block bg-white shadow-xl">
+        <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
+          <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
             <Filter
               byShop={byShop}
               setByShop={setByShop}
@@ -121,8 +121,8 @@ const LandingPage = () => {
             />
           </div>
 
-          <div className="col-span-8 lg:col-span-6 px-0 bg-[#FAFCFC]">
-            <div className="py-3">
+          <div className="col-span-12 lg:col-span-9 px-4 bg-white shadow-xl">
+            <div className="mt-1 px-1">
               <UpperFilter
                 byShop={byShop}
                 setByShop={setByShop}
@@ -130,7 +130,7 @@ const LandingPage = () => {
                 setShopPageSkip={setShopPageSkip}
               />
             </div>
-            <div className="w-full">
+            <div className="w-full mt-4 mb-4">
               {!byShop ? (
                 <div
                   className={`relative ${
@@ -146,21 +146,21 @@ const LandingPage = () => {
                   >
                     {productsData?.length > 0 ? (
                       <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
                           {productsData?.map((product) => (
                             <ProductCard product={product} key={product.id} />
                           ))}
                         </div>
                         {productsCount > 6 && (
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
-                            <p className="text-sm leading-[150%] text-[#15182766]">
+                          <div className="flex justify-center py-4 sm:py-8">
+                            {/* <p className="text-sm leading-[150%] text-[#15182766]">
                               Showing {productPageSkip + 1} -{" "}
                               {productsCount <
                               (productPageSkip + 1) * productsLimit
                                 ? productsCount
                                 : (productPageSkip + 1) * productsLimit}{" "}
                               of {productsCount} results
-                            </p>
+                            </p> */}
                             <Pagination
                               color="primary"
                               count={Math.ceil(productsCount / 10)}
@@ -206,21 +206,21 @@ const LandingPage = () => {
                   >
                     {shopsData?.length > 0 ? (
                       <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 place-items-center mb-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 place-items-center">
                           {shopsData.map((shop) => (
                             <ShopCard key={shop.id} shop={shop} />
                           ))}
                         </div>
 
                         {shopsCount > 6 && (
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
-                            <p className="text-sm leading-[150%] text-[#15182766]">
+                          <div className="flex justify-center py-4 sm:py-8">
+                            {/* <p className="text-sm leading-[150%] text-[#15182766]">
                               Showing {shopPageSkip + 1} -{" "}
                               {shopsCount < (shopPageSkip + 1) * shopsLimit
                                 ? shopsCount
                                 : (shopPageSkip + 1) * shopsLimit}{" "}
                               of {shopsCount} results
-                            </p>
+                            </p> */}
                             <Pagination
                               color="primary"
                               count={Math.ceil(shopsCount / 12)}
