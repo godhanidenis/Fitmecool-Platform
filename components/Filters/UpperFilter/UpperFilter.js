@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
+  Chip,
   Divider,
   FormControl,
   FormControlLabel,
@@ -13,29 +13,34 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  changeProductsLayout,
+  changeAppliedProductsFilters,
   changeSortProductsFilters,
 } from "../../../redux/ducks/productsFilters";
 import {
-  changeShopsLayout,
+  changeAppliedShopsFilters,
   changeSortShopsFilters,
 } from "../../../redux/ducks/shopsFilters";
 import DrawerFilters from "../DrawerFilters";
-import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import ListIcon from "@mui/icons-material/List";
-import WindowIcon from "@mui/icons-material/Window";
+
 const UpperFilter = ({
   byShop,
   setByShop,
   setProductPageSkip,
-  showDrawerFilter,
   setShopPageSkip,
   showOnlyShopDetailPage,
-  isVendor,
-  hideGridAndLine,
 }) => {
+  const [selectedProductFilters, setSelectedProductFilters] = useState([]);
+  const [selectedShopFilters, setSelectedShopFilters] = useState([]);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedShops, setSelectedShops] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+
+  const [selectedLocations, setSelectedLocations] = useState([]);
+  const [selectedRatings, setSelectedRatings] = useState([]);
+
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
 
@@ -46,7 +51,115 @@ const UpperFilter = ({
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
 
   const { productsCount } = useSelector((state) => state.products);
-  const { shopsCount } = useSelector((state) => state.shops);
+  const { allShopsLists, shopsCount } = useSelector((state) => state.shops);
+  const { categories } = useSelector((state) => state.categories);
+  const { areaLists } = useSelector((state) => state.areaLists);
+
+  const { themeLayout } = useSelector((state) => state.themeLayout);
+
+  useEffect(() => {
+    setSelectedProductFilters([
+      ...selectedCategories,
+      ...(showOnlyShopDetailPage ? [] : selectedShops),
+      ...selectedColors,
+    ]);
+  }, [
+    selectedCategories,
+    selectedColors,
+    selectedShops,
+    showOnlyShopDetailPage,
+  ]);
+
+  useEffect(() => {
+    setSelectedShopFilters([...selectedLocations, ...selectedRatings]);
+  }, [selectedLocations, selectedRatings]);
+
+  useEffect(() => {
+    const selectedCategoryIds =
+      productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue;
+
+    const selectedCategories = categories.filter((category) =>
+      selectedCategoryIds.includes(category.id)
+    );
+
+    const mappedCategories = selectedCategories.map((category) => ({
+      type: "categoryId",
+      label: category.category_name,
+      value: category.id,
+    }));
+
+    setSelectedCategories(mappedCategories);
+  }, [
+    categories,
+    productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue,
+  ]);
+
+  useEffect(() => {
+    const selectedShopIds =
+      productsFiltersReducer.appliedProductsFilters.shopId.selectedValue;
+
+    const selectedShopsData = allShopsLists?.data.filter((shop) =>
+      selectedShopIds.includes(shop.id)
+    );
+
+    const mappedShops = selectedShopsData.map((shop) => ({
+      type: "shopId",
+      label: shop.shop_name,
+      value: shop.id,
+    }));
+
+    setSelectedShops(mappedShops);
+  }, [
+    productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+    allShopsLists?.data,
+  ]);
+
+  useEffect(() => {
+    setSelectedColors(
+      productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.map(
+        (color) => ({
+          type: "productColor",
+          label: color,
+          value: color,
+        })
+      )
+    );
+  }, [
+    productsFiltersReducer.appliedProductsFilters.productColor.selectedValue,
+  ]);
+
+  useEffect(() => {
+    const selectedLocationPins =
+      shopsFiltersReducer.appliedShopsFilters.locations.selectedValue;
+
+    const selectedLocations = areaLists.filter((area) =>
+      selectedLocationPins.includes(area.pin)
+    );
+
+    const mappedLocations = selectedLocations.map((location) => ({
+      type: "locations",
+      label: location.area,
+      value: location.pin,
+    }));
+
+    setSelectedLocations(mappedLocations);
+  }, [
+    areaLists,
+    shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
+  ]);
+
+  useEffect(() => {
+    shopsFiltersReducer.appliedShopsFilters.stars.selectedValue &&
+    shopsFiltersReducer.appliedShopsFilters.stars.selectedValue !== "0"
+      ? setSelectedRatings([
+          {
+            type: "stars",
+            label: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
+            value: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
+          },
+        ])
+      : setSelectedRatings([]);
+  }, [shopsFiltersReducer.appliedShopsFilters.stars.selectedValue]);
 
   const handleChangeSortType = (event, newValue) => {
     setProductPageSkip(0);
@@ -71,9 +184,7 @@ const UpperFilter = ({
   };
 
   const GetSortByName = (value) => {
-    if (value === "") {
-      return "Default";
-    } else if (value === "new") {
+    if (value === "new") {
       return "Latest";
     } else if (value === "old") {
       return "Oldest";
@@ -81,36 +192,9 @@ const UpperFilter = ({
   };
 
   return (
-    <div
-      className={`justify-between flex ${
-        !isVendor
-          ? "sm:grid flex-col-reverse grid-cols-8"
-          : "lg:flex-row flex-col-reverse gap-4"
-      }`}
-    >
-      <div
-        className={`hidden sm:flex items-center  ${
-          !isVendor ? "sm:col-span-2 mt-5 sm:mt-0" : ""
-        }`}
-      >
-        {/* <span className="text-[#979ca0] text-base">
-          <span className="text-black font-bold text-[16px]">
-            {byShop ? "Shops" : "Products"}&nbsp;
-          </span>
-          ({byShop ? shopsCount : productsCount} items)
-        </span> */}
-      </div>
-
-      <div
-        className={`flex items-center sm:pl-6 ${
-          !isVendor
-            ? "w-full justify-between gap-2 sm:col-span-6"
-            : "justify-between"
-        }`}
-      >
-        <div
-          className={`flex items-center  ${!isVendor ? "sm:col-span-2" : ""}`}
-        >
+    <div className="w-full border-b">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
           <span className="text-[#979ca0] text-base">
             <span className="text-black font-bold text-[16px]">
               {byShop ? "Shops" : "Products"}&nbsp;
@@ -119,9 +203,8 @@ const UpperFilter = ({
           </span>
         </div>
 
-        <div className={`flex gap-2 items-center`}>
-          <div className={`flex items-center`}>
-            {/* <p className="text-black text-[16px] font-bold">Sort By :</p> */}
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center mb-1">
             <Button
               onClick={(event) => {
                 setSortByAnchor(event.currentTarget);
@@ -175,130 +258,148 @@ const UpperFilter = ({
                     }
                     onChange={handleChangeSortType}
                   >
-                    {/* <FormControlLabel
-                      value=""
-                      control={<Radio className="text-colorPrimary" />}
-                      label={
-                        <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                          Default
-                        </Typography>
-                      }
-                    /> */}
-                    <FormControlLabel
-                      value="new"
-                      control={<Radio className="text-colorPrimary" />}
-                      label={
-                        <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                          Latest
-                        </Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="old"
-                      control={<Radio className="text-colorPrimary" />}
-                      label={
-                        <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                          Oldest
-                        </Typography>
-                      }
-                    />
+                    {[
+                      { label: "Latest", value: "new" },
+                      { label: "Oldest", value: "old" },
+                    ]?.map((item, index) => (
+                      <FormControlLabel
+                        key={index}
+                        value={item.value}
+                        control={<Radio className="text-colorPrimary" />}
+                        label={
+                          <Typography
+                            sx={{ fontWeight: 500, fontSize: "16px" }}
+                          >
+                            {item.label}
+                          </Typography>
+                        }
+                      />
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <Divider />
               </Box>
             </Popover>
           </div>
-          {showDrawerFilter && (
-            <DrawerFilters
-              byShop={byShop}
-              setByShop={setByShop}
-              setShopPageSkip={setShopPageSkip}
-              setProductPageSkip={setProductPageSkip}
-              showOnlyShopDetailPage={showOnlyShopDetailPage}
-            />
-          )}
 
-          {hideGridAndLine ? (
-            ""
-          ) : (
-            <div className="flex">
-              <div
-                className={`${
-                  !byShop && productsFiltersReducer.productLayout === "grid"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } ${
-                  byShop && shopsFiltersReducer.shopLayout === "grid"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } cursor-pointer`}
-                onClick={() =>
-                  !byShop
-                    ? dispatch(
-                        changeProductsLayout({
-                          key: "productLayout",
-                          value: "grid",
-                        })
-                      )
-                    : dispatch(
-                        changeShopsLayout({
-                          key: "shopLayout",
-                          value: "grid",
-                        })
-                      )
-                }
-                // style={{
-                //   boxShadow:
-                //     ((!byShop &&
-                //       productsFiltersReducer.productLayout === "grid") ||
-                //       (byShop && shopsFiltersReducer.shopLayout === "grid")) &&
-                //     "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-                // }}
-              >
-                <GridViewOutlinedIcon fontSize="medium" />
-              </div>
-
-              <div
-                className={`${
-                  !byShop && productsFiltersReducer.productLayout === "list"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } ${
-                  byShop && shopsFiltersReducer.shopLayout === "list"
-                    ? "!text-colorGreen"
-                    : "text-[#878A99]"
-                } cursor-pointer ml-1`}
-                onClick={() =>
-                  !byShop
-                    ? dispatch(
-                        changeProductsLayout({
-                          key: "productLayout",
-                          value: "list",
-                        })
-                      )
-                    : dispatch(
-                        changeShopsLayout({
-                          key: "shopLayout",
-                          value: "list",
-                        })
-                      )
-                }
-                // style={{
-                //   boxShadow:
-                //     ((!byShop &&
-                //       productsFiltersReducer.productLayout === "list") ||
-                //       (byShop && shopsFiltersReducer.shopLayout === "list")) &&
-                //     "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-                // }}
-              >
-                <SegmentOutlinedIcon fontSize="medium" />
-              </div>
-            </div>
-          )}
+          <DrawerFilters
+            byShop={byShop}
+            setByShop={setByShop}
+            setShopPageSkip={setShopPageSkip}
+            setProductPageSkip={setProductPageSkip}
+            showOnlyShopDetailPage={showOnlyShopDetailPage}
+          />
         </div>
       </div>
+      {(byShop ? selectedShopFilters : selectedProductFilters).length > 0 && (
+        <div
+          className={`w-full flex gap-5 sm:gap-10 my-2 capitalize justify-between ${
+            themeLayout === "mobileScreen" && "items-center"
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2 ${
+              themeLayout === "mobileScreen"
+                ? "overflow-x-auto hide-scrollbar"
+                : "flex-wrap"
+            }`}
+          >
+            {(byShop ? selectedShopFilters : selectedProductFilters).map(
+              (itm, index) => (
+                <SelectedFilterBadge
+                  key={index}
+                  itm={itm}
+                  byShop={byShop}
+                  productsFiltersReducer={productsFiltersReducer}
+                  shopsFiltersReducer={shopsFiltersReducer}
+                  dispatch={dispatch}
+                />
+              )
+            )}
+          </div>
+          <span
+            className="underline cursor-pointer text-colorGreen whitespace-nowrap mr-2"
+            onClick={() => {
+              if (byShop) {
+                ["locations", "stars"].map((itm) =>
+                  dispatch(
+                    changeAppliedShopsFilters({
+                      key: itm,
+                      value: {
+                        selectedValue: itm === "stars" ? "0" : [],
+                      },
+                    })
+                  )
+                );
+              } else {
+                [
+                  "categoryId",
+                  "productColor",
+                  ...(showOnlyShopDetailPage ? [] : ["shopId"]),
+                ].map((itm) =>
+                  dispatch(
+                    changeAppliedProductsFilters({
+                      key: itm,
+                      value: {
+                        selectedValue: [],
+                      },
+                    })
+                  )
+                );
+              }
+            }}
+          >
+            Clear All
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
 export default UpperFilter;
+
+const SelectedFilterBadge = ({
+  itm,
+  byShop,
+  productsFiltersReducer,
+  shopsFiltersReducer,
+  dispatch,
+}) => {
+  const handleDeleteFilterBadge = () => {
+    if (byShop) {
+      dispatch(
+        changeAppliedShopsFilters({
+          key: itm.type,
+          value: {
+            selectedValue:
+              itm.type === "stars"
+                ? "0"
+                : shopsFiltersReducer.appliedShopsFilters[
+                    itm.type
+                  ].selectedValue.filter((item) => item !== itm.value),
+          },
+        })
+      );
+    } else {
+      dispatch(
+        changeAppliedProductsFilters({
+          key: itm.type,
+          value: {
+            selectedValue: productsFiltersReducer.appliedProductsFilters[
+              itm.type
+            ].selectedValue.filter((item) => item !== itm.value),
+          },
+        })
+      );
+    }
+  };
+
+  return (
+    <Chip
+      color="secondary"
+      label={itm.label}
+      onDelete={handleDeleteFilterBadge}
+    />
+  );
+};

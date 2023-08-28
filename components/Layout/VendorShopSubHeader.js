@@ -28,33 +28,38 @@ const VendorShopSubHeader = () => {
     ) {
       setSelectedValue("Products");
     }
-  }, [router.pathname]);
+  }, [router.pathname, vendorShopDetails?.id]);
+
+  const vendorSubHeaderTabs = [
+    {
+      label: "Dashboard",
+      icon: <DashboardIcon className="mr-4" />,
+      path: "/vendor/dashboard",
+    },
+    {
+      label: "Shop",
+      icon: <StoreIcon className="mr-4" />,
+      path: `/vendor/shopEdit/${vendorShopDetails?.id}`,
+    },
+    {
+      label: "Products",
+      icon: <ProductionQuantityLimitsIcon className="mr-4" />,
+      path: `/vendor/shop/${vendorShopDetails?.id}`,
+    },
+  ];
 
   return (
     <div className="w-full font-Nova flex items-center py-4 pl-4 bg-[#FAFCFC] sm:hidden">
-      {["Dashboard", "Shop", "Products"].map((item, index) => (
+      {vendorSubHeaderTabs.map((tab, index) => (
         <p
           key={index}
-          onClick={() => {
-            item === "Dashboard" && router.push("/vendor/dashboard");
-            item === "Shop" &&
-              router.push(`/vendor/shopEdit/${vendorShopDetails?.id}`);
-            item === "Products" &&
-              router.push(`/vendor/shop/${vendorShopDetails?.id}`);
-          }}
+          onClick={() => router.push(tab.path)}
           className={`font-semibold sm:pb-10 text-base mr-4 ${
-            selectedValue === item ? "text-[#29977E]" : "text-[#151827]"
+            selectedValue === tab.label ? "text-[#29977E]" : "text-[#151827]"
           }  cursor-pointer uppercase`}
         >
-          {item === "Dashboard" ? (
-            <DashboardIcon fontSize="small" className="mr-2" />
-          ) : item === "Shop" ? (
-            <StoreIcon fontSize="small" className="mr-2" />
-          ) : (
-            <ProductionQuantityLimitsIcon fontSize="small" className="mr-2" />
-          )}
-
-          {item}
+          {tab.icon}
+          {tab.label}
         </p>
       ))}
     </div>

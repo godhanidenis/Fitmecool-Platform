@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {
   Button,
-  Divider,
   Grid,
   Tooltip,
   tooltipClasses,
@@ -26,10 +25,9 @@ import googleIcon from "../../../assets/googleIcon.svg";
 import {
   EmailShareButton,
   FacebookShareButton,
-  WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
-import AddIcon from "@mui/icons-material/Add";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fbfbfb",
@@ -101,9 +99,9 @@ const ShopHeaderSection = ({
   return (
     <>
       <div className="flex justify-center font-Nova">
-        <div className="grid-cols-12 mt-[-50px] container bg-[#151827]">
+        <div className="grid-cols-12 mt-[-100px] container bg-[#151827] rounded-lg shadow-xl">
           <div className="col-span-12 pl-[4%] pr-[4%]">
-            <div className="flex flex-col	sm:flex-row	">
+            <div className="flex flex-col	sm:flex-row">
               <div className="mt-[-45px] flex justify-center">
                 <Image
                   src={shopDetails?.shop_logo ?? ""}
@@ -115,28 +113,42 @@ const ShopHeaderSection = ({
                 />
               </div>
               <div className="flex flex-col w-full sm:ml-[2%]">
-                <div className="sm:flex justify-between flex-nowrap">
+                <div className="flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-3">
-                    <div className="oneLineAfterThreeDots font-semibold text-[30px] text-[#FFFFFF]">
+                    <div className="font-semibold text-[30px] text-[#FFFFFF] line-clamp-1">
                       {shopDetails.shop_name}
                     </div>
-                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[18px] font-normal ">
-                      {"Let's be Effortlessly Cool: Embrace Your Signature Style with Us"}
+                    <div className="text-[#FFFFFF] text-[18px] font-normal ">
+                      {
+                        "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
+                      }
                     </div>
-                    <span className="sm:pb-[55px] pb-[30px] text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
+                    <span className="text-[#878A99] text-[16px] font-normal flex">
                       <LocationOnIcon
                         fontSize="small"
-                        className="-ml-1 !mr-1 text-[red]"
+                        className="-ml-1 !mr-1 text-[red] mb-1"
                       />
-                      {shopDetails.branch_info.map(
-                        (itm) =>
-                          itm.branch_type === "main" && itm.branch_address
-                      )}
+                      <span className="line-clamp-1">
+                        {shopDetails.branch_info.map(
+                          (itm) =>
+                            itm.branch_type === "main" && itm.branch_address
+                        )}
+                      </span>
                     </span>
+                    <a
+                      target="_blank"
+                      href={`/shop/${shopDetails?.id}/branches`}
+                      rel="noreferrer"
+                      className="pb-2 sm:pb-10 mt-2"
+                    >
+                      <Typography className="text-colorGreen underline">
+                        See Branches
+                      </Typography>
+                    </a>
                   </div>
-                  <div className="flex sm:mt-6 items-start">
+                  <div className="mt-2 sm:mt-5">
                     <Button
-                      className="border !border-[#FFFFFF] w-[120px] rounded-[8px]"
+                      className="rounded-[8px] bg-colorGreen hover:bg-colorGreen"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -184,30 +196,15 @@ const ShopHeaderSection = ({
                         ) : (
                           <>
                             <div className="flex items-center">
-                              <AddIcon className="w-[22px] h-[22px]" />
-                              <div className="pt-[2px]">Follow</div>
+                              <PersonAddIcon sx={{ color: "#ffffff" }} />
+                              <div className="hidden sm:block pt-[2px] ml-2">
+                                Follow
+                              </div>
                             </div>
                           </>
                         )}
                       </Typography>
                     </Button>
-                    <div className="ml-[24px]">
-                      <a
-                        target="_blank"
-                        href={`/shop/${shopDetails?.id}/branches`}
-                        rel="noreferrer"
-                      >
-                        <Button
-                          variant="contained"
-                          className={`!bg-colorGreen !hover:bg-colorGreen !flex !items-center !justify-center capitalize`}
-                          // onClick={() =>
-                          //   Router.push(`/shop/${shopDetails?.id}/branches`)
-                          // }
-                        >
-                          <Typography color="#FFFFFF">See Branches</Typography>
-                        </Button>
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -217,32 +214,32 @@ const ShopHeaderSection = ({
           <div className="mt-[24px] sm:mt-0 relative">
             <Grid container>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <ProductionQuantityLimitsIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[10px] sm:text-[16px]">Products</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
+                    <p className="text-[#FFFFFF] text-[20px] sm:text-[32px] pt-1 sm:pt-0 font-medium ml-0 sm:ml-6">
                       {totalProducts}
                     </p>
                   </div>
                 </Item>
               </Grid>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <PeopleAltIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[9px] sm:text-[16px]">Followers</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
+                    <p className="text-[#FFFFFF] text-[20px] sm:text-[32px] pt-1 sm:pt-0 font-medium ml-0 sm:ml-6">
                       {totalFollowers}
                     </p>
                   </div>
@@ -255,16 +252,16 @@ const ShopHeaderSection = ({
                 sm={3}
                 onClick={handleClick}
               >
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <RateReviewIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
-                      <p className="text-[10px] sm:text-[16px]">Review </p>
+                      <p className="text-[10px] sm:text-[16px]">Review</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
+                    <p className="text-[#FFFFFF] text-[20px] sm:text-[32px] pt-1 sm:pt-0 font-medium ml-0 sm:ml-6">
                       {totalReview}
                     </p>
                   </div>
@@ -276,16 +273,16 @@ const ShopHeaderSection = ({
                 sm={3}
                 onMouseLeave={() => setOpenToolTip(false)}
               >
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="lg:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <ShareIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[10px] sm:text-[16px]">Share</p>
                     </div>
-                    <div className="flex pt-[12px] sm:pt-0 ml-6 items-center">
+                    <div className="flex pt-2 sm:pt-0 ml-0 sm:ml-6 gap-1 sm:gap-0 items-center">
                       <div className="lg:p-2 rounded-lg cursor-pointer">
                         <FacebookShareButton
                           windowWidth={900}
@@ -322,46 +319,6 @@ const ShopHeaderSection = ({
                     </div>
                   </div>
                 </Item>
-                {/* <HtmlTooltip
-                  title={
-                    <React.Fragment>
-                      <div className="flex">
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                          </FacebookShareButton>
-                        </div>
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            <WhatsappIcon size={25} round={true} />
-                          </WhatsappShareButton>
-                        </div>
-                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                          <EmailShareButton
-                            subject="Shop Detail"
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image src={googleIcon ?? ""} alt="googleIcon" />
-                          </EmailShareButton>
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  }
-                >
-                  <Item
-                    onClick={() => setOpenToolTip(!OpenToolTip)}
-                    className="!bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
-                  >
-                    <div className="flex items-center justify-between w-[100%]">
-                      <div className="flex items-center">
-                        <ShareIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
-                        <p className="sm:py-[10px] py-[20px] text-[10px] sm:text-[16px]">Share </p>
-                      </div>
-                    </div>
-                  </Item>
-                </HtmlTooltip> */}
               </Grid>
             </Grid>
           </div>

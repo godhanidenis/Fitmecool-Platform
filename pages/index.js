@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { loadCategoriesStart } from "../redux/ducks/categories";
 import { loadAreaListsStart } from "../redux/ducks/areaLists";
 import { withoutAuth } from "../components/core/PrivateRouteForVendor";
+import { loadAllShopsListsStart } from "../redux/ducks/shop";
 
 const Home = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -17,6 +18,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(loadCategoriesStart());
     dispatch(loadAreaListsStart());
+    dispatch(loadAllShopsListsStart());
   }, [dispatch]);
 
   if (!isHydrated) {

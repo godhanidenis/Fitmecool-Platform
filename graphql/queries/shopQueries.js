@@ -1,6 +1,21 @@
 import { gql } from "@apollo/client";
 import client from "../apollo-client";
 
+export const getAllShopsList = async () => {
+  const results = await client.query({
+    query: gql`
+      query GetAllShops {
+        getAllShops {
+          id
+          shop_name
+        }
+      }
+    `,
+  });
+
+  return results;
+};
+
 export const getShops = async (payload) => {
   const results = await client.query({
     query: gql`

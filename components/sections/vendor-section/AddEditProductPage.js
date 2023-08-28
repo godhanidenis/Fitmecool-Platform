@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,8 +9,6 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-
-import VendorShopSubHeader from "../../Layout/VendorShopSubHeader";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
 import { getBranchLists } from "../../../graphql/queries/branchListsQueries";
 import {
@@ -24,16 +23,14 @@ import {
   CircularProgress,
   FormControl,
   InputLabel,
-  MenuItem,
-  NativeSelect,
   Select,
   styled,
 } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
-// import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 import dynamic from "next/dynamic";
+import { colorsList } from "../../../utils/common";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -41,7 +38,6 @@ const SunEditor = dynamic(() => import("suneditor-react"), {
 
 const NativeSelectInput = styled(Select)(({ theme }) => ({
   "& .MuiInputBase-input": {
-    // Custom styles for the select input
     color: "#1518278F",
     marginLeft: 10,
   },
@@ -75,20 +71,7 @@ const AddEditProductPage = () => {
   const { categories } = useSelector((state) => state.categories);
   const [productAllMediaImages, setProductAllMediaImages] = useState([]);
   const [productAllMediaVideo, setProductAllMediaVideo] = useState();
-  const colorsList = [
-    "red",
-    "pink",
-    "yellow",
-    "wine",
-    "purple",
-    "blue",
-    "orange",
-    "green",
-    "white",
-    "black",
-  ];
 
-  const onError = (errors) => console.log("Errors Occurred !! :", errors);
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [isHydrated, setIsHydrated] = useState(false);
   const [editorDescriptionContent, setEditorDescriptionContent] = useState("");
@@ -138,9 +121,11 @@ const AddEditProductPage = () => {
     setUploadProductVideo();
     setEditProductId();
   };
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
   useEffect(() => {
     getBranchLists().then((res) => {
       const branches = res.data.branchList.filter(
@@ -165,10 +150,6 @@ const AddEditProductPage = () => {
         console.log("res:::", res.data.product.data);
 
         setValue("product_name", res?.data?.product?.data?.product_name);
-        // setValue(
-        //   "product_description",
-        //   res?.data?.product?.data?.product_description
-        // );
         setEditorDescriptionContent(
           res?.data?.product?.data?.product_description
         );
@@ -446,12 +427,13 @@ const AddEditProductPage = () => {
     }
   };
 
+  const onError = (errors) => console.log("Errors Occurred !! :", errors);
+
   if (!isHydrated) {
     return null;
   }
   return (
     <div>
-      <VendorShopSubHeader />
       <div className="container sm:p-0 sm:py-10 p-6">
         <div className="font-semibold text-black flex items-center gap-2">
           <span>
@@ -498,35 +480,12 @@ const AddEditProductPage = () => {
                 )}
               </div>
             </div>
-            {/* <div className="w-full relative">
-              <CustomTextFieldVendor
-                label="Description"
-                type="text"
-                id="pdescription"
-                isRequired={false}
-                placeholder="Product Description"
-                fieldValue={getValues("product_description")}
-                fieldError={errors?.product_description}
-                formValue={{
-                  ...register("product_description", {
-                    required: "Product Description is required",
-                  }),
-                }}
-              />
-              <div className="mt-2">
-                {errors.product_description && (
-                  <span style={{ color: "red" }} className="-mb-6">
-                    {errors.product_description?.message}
-                  </span>
-                )}
-              </div>
-            </div> */}
             <div className="w-full relative">
               <FormControl fullWidth>
                 <Controller
                   name="product_color"
                   control={control}
-                  defaultValue="" // Set the initial value here
+                  defaultValue=""
                   render={({ field }) => (
                     <>
                       <InputLabel id="color-id">Product Color</InputLabel>
@@ -570,7 +529,7 @@ const AddEditProductPage = () => {
                 <Controller
                   name="product_type"
                   control={control}
-                  defaultValue="" // Set the initial value here
+                  defaultValue=""
                   render={({ field }) => (
                     <>
                       <InputLabel id="product-Type-id">product Type</InputLabel>
@@ -618,7 +577,7 @@ const AddEditProductPage = () => {
                   <Controller
                     name="product_category"
                     control={control}
-                    defaultValue="" // Set the initial value here
+                    defaultValue=""
                     render={({ field }) => (
                       <>
                         <InputLabel id="Category-id">Category</InputLabel>
@@ -668,7 +627,7 @@ const AddEditProductPage = () => {
                 <Controller
                   name="product_branch"
                   control={control}
-                  defaultValue="" // Set the initial value here
+                  defaultValue=""
                   render={({ field }) => (
                     <>
                       <InputLabel id="Branch-id">Branch</InputLabel>
@@ -719,12 +678,6 @@ const AddEditProductPage = () => {
               }}
               setContents={editorDescriptionContent}
               onChange={handleEditorChange}
-              // {...register("product_description", {
-              //   required: "Product description is required",
-              // })}
-              // onChange={(content) => {
-              //   setValue("product_description", content);
-              // }}
               height={productType ? "340px" : "245px"}
             />
             <div className="mt-2">
@@ -868,7 +821,7 @@ const AddEditProductPage = () => {
                   <div className="flex flex-col gap-1">
                     <p className="sm:text-2xl text-sm font-bold text-gray-400">
                       <span className="text-colorGreen">Click to Upload</span>{" "}
-                      Shop Video
+                      Product Video
                     </p>
                     <p className="sm:text-sm text-xs text-gray-400 text-center">
                       No Size Limit
@@ -899,11 +852,6 @@ const AddEditProductPage = () => {
               </span>
             )}
           </div>
-          {/* <div className="w-full">
-            <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black ">
-              Product Video
-            </div>
-          </div> */}
         </div>
         <div className="flex justify-end sm:gap-4 gap-2 mt-16">
           <button
@@ -915,7 +863,7 @@ const AddEditProductPage = () => {
             Cancel
           </button>
           <button
-            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2"
+            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
             type="submit"
             onClick={handleSubmit(onSubmit, onError)}
             onReset={reset}

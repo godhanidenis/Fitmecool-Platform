@@ -13,7 +13,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 
 const VendorBranchTable = ({
   subBranchList,
-  setSubBranchModalOpen,
+  setAddEditSubBranchShow,
   setEditSubBranchId,
   setBranchDeleteModalOpen,
   setDeleteBranchId,
@@ -25,24 +25,18 @@ const VendorBranchTable = ({
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">
-                  <b>Branch Name</b>
-                </TableCell>
-                <TableCell align="left">
-                  <b>Manager Name</b>
-                </TableCell>
-                <TableCell align="left">
-                  <b>Phone Number</b>
-                </TableCell>
-                <TableCell align="left">
-                  <b>Branch Address</b>
-                </TableCell>
-                <TableCell align="left">
-                  <b>City</b>
-                </TableCell>
-                <TableCell align="left">
-                  <b>Action</b>
-                </TableCell>
+                {[
+                  "Branch Name",
+                  "Manager Name",
+                  "Phone Number",
+                  "Branch Address",
+                  "City",
+                  "Action",
+                ].map((itm, index) => (
+                  <TableCell align="left" key={index}>
+                    <b>{itm}</b>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -69,7 +63,7 @@ const VendorBranchTable = ({
                           }}
                           className="cursor-pointer"
                           onClick={() => {
-                            setSubBranchModalOpen(true);
+                            setAddEditSubBranchShow(true);
                             setEditSubBranchId(item?.id);
                           }}
                         />

@@ -8,7 +8,7 @@ import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const ProductByShopFilter = ({ setProductPageSkip }) => {
-  const { shopsData } = useSelector((state) => state.shops);
+  const { allShopsLists } = useSelector((state) => state.shops);
 
   const [selectedData, setSelectedData] = useState([]);
 
@@ -52,46 +52,68 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
               <CommonSearchField
                 value={shopSearchValue}
                 onChange={(e) => setShopSearchValue(e.target.value)}
+                selectedFilterLength={
+                  productsFiltersReducer.appliedProductsFilters.shopId
+                    .selectedValue.length
+                }
+                clearDispatched={() =>
+                  dispatch(
+                    changeAppliedProductsFilters({
+                      key: "shopId",
+                      value: {
+                        selectedValue: [],
+                      },
+                    })
+                  )
+                }
               />
               <FormGroup>
-                {(shopSearchValue !== ""
-                  ? shopShowMore
-                    ? shopsData
-                        ?.filter((i) =>
+                <div
+                  className={`flex flex-col overflow-auto ${
+                    !shopShowMore && !shopSearchValue && "max-h-[252px]"
+                  }`}
+                >
+                  {(shopSearchValue
+                    ? shopShowMore
+                      ? allShopsLists?.data
+                          ?.filter((i) =>
+                            i?.shop_name
+                              .toLowerCase()
+                              .includes(shopSearchValue.toLowerCase())
+                          )
+                          .slice(0, 3)
+                      : allShopsLists?.data?.filter((i) =>
                           i?.shop_name
                             .toLowerCase()
                             .includes(shopSearchValue.toLowerCase())
                         )
-                        .slice(0, 3)
-                    : shopsData?.filter((i) =>
-                        i?.shop_name
-                          .toLowerCase()
-                          .includes(shopSearchValue.toLowerCase())
-                      )
-                  : shopShowMore
-                  ? shopsData.slice(0, 3)
-                  : shopsData
-                )?.map((itm) => (
-                  <StyledFormLabelCheckBox
-                    key={itm.shop_name}
-                    value={itm.shop_name}
-                    control={
-                      <Checkbox
-                        checked={selectedData.includes(itm.id)}
-                        onChange={(event) => {
-                          const updatedSelection = selectedData.includes(itm.id)
-                            ? selectedData.filter((id) => id !== itm.id)
-                            : [...selectedData, itm.id];
-                          setSelectedData(updatedSelection);
-                          setProductPageSkip(0);
-                          setAbc(true);
-                        }}
-                      />
-                    }
-                    label={itm.shop_name}
-                  />
-                ))}
-                {shopsData?.filter((i) =>
+                    : shopShowMore
+                    ? allShopsLists?.data.slice(0, 3)
+                    : allShopsLists?.data
+                  )?.map((itm) => (
+                    <StyledFormLabelCheckBox
+                      key={itm.shop_name}
+                      value={itm.shop_name}
+                      control={
+                        <Checkbox
+                          checked={selectedData.includes(itm.id)}
+                          onChange={(event) => {
+                            const updatedSelection = selectedData.includes(
+                              itm.id
+                            )
+                              ? selectedData.filter((id) => id !== itm.id)
+                              : [...selectedData, itm.id];
+                            setSelectedData(updatedSelection);
+                            setProductPageSkip(0);
+                            setAbc(true);
+                          }}
+                        />
+                      }
+                      label={itm.shop_name}
+                    />
+                  ))}
+                </div>
+                {allShopsLists?.data?.filter((i) =>
                   i?.shop_name
                     .toLowerCase()
                     .includes(shopSearchValue.toLowerCase())
@@ -106,7 +128,7 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
           </>
         }
       />
-      <Divider sx={{margin:"12px"}}/>
+      <Divider sx={{ margin: "12px" }} />
     </>
   );
 };

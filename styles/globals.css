@@ -25,6 +25,10 @@ h6 {
   @apply w-[90%] max-w-[1246px] 2xl:max-w-[1536px] mx-auto;
 }
 
+.container-full {
+  @apply w-[100%] max-w-[100%] 2xl:w-[90%] 2xl:max-w-[1536px] mx-auto;
+}
+
 .MuiStepLabel-label.Mui-completed {
   color: #95539b;
   font-weight: 600;
@@ -53,10 +57,7 @@ h6 {
   border-radius: 5px;
 }
 
-.oneLineAfterThreeDots {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 1 !important;
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }

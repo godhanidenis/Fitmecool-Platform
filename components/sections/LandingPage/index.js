@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loadMoreProductsStart,
-  loadProductsStart,
-} from "../../../redux/ducks/product";
+import { loadProductsStart } from "../../../redux/ducks/product";
 import UpperFilter from "../../Filters/UpperFilter/UpperFilter";
 import ProductCard from "../product-section/ProductCard";
-import { loadMoreShopsStart, loadShopsStart } from "../../../redux/ducks/shop";
+import { loadShopsStart } from "../../../redux/ducks/shop";
 import ShopCard from "../shop-section/ShopCard";
 import Filter from "../../Filters";
-import { Fab, Pagination } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import Image from "next/image";
-import AddIcon from "@mui/icons-material/Add";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -116,19 +111,8 @@ const LandingPage = () => {
         />
       </div>
       <div>
-        <div className="container py-3 bg-[#FAFCFC]">
-          <div>
-            <UpperFilter
-              byShop={byShop}
-              setByShop={setByShop}
-              setProductPageSkip={setProductPageSkip}
-              setShopPageSkip={setShopPageSkip}
-              showDrawerFilter={true}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-8 container mb-4 font-Nova">
-          <div className="lg:col-span-2 hidden lg:block bg-white  shadow-xl">
+        <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
+          <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
             <Filter
               byShop={byShop}
               setByShop={setByShop}
@@ -136,90 +120,120 @@ const LandingPage = () => {
               setShopPageSkip={setShopPageSkip}
             />
           </div>
-          <div className="col-span-8 lg:col-span-6 px-0 sm:p-6 bg-[#FAFCFC] !pt-0 !pr-0">
-            <div className="container !w-[100%]">
+
+          <div className="col-span-12 lg:col-span-9 px-4 bg-white shadow-xl">
+            <div className="mt-1 px-1">
+              <UpperFilter
+                byShop={byShop}
+                setByShop={setByShop}
+                setProductPageSkip={setProductPageSkip}
+                setShopPageSkip={setShopPageSkip}
+              />
+            </div>
+            <div className="w-full mt-4 mb-4">
               {!byShop ? (
-                <>
+                <div
+                  className={`relative ${
+                    loading && productsData?.length === 0 && "h-screen"
+                  }`}
+                >
                   <div
                     className={`${
-                      productsFiltersReducer.productLayout === "list"
-                        ? "flex flex-col gap-5"
-                        : "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 place-items-center mb-10"
+                      productsData?.length > 0 && loading
+                        ? "opacity-50"
+                        : "opacity-100"
                     }`}
                   >
-                    {productsData &&
-                      productsData?.map((product) => (
-                        <ProductCard product={product} key={product.id} />
-                      ))}
+                    {productsData?.length > 0 ? (
+                      <>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
+                          {productsData?.map((product) => (
+                            <ProductCard product={product} key={product.id} />
+                          ))}
+                        </div>
+                        {productsCount > 6 && (
+                          <div className="flex justify-center py-4 sm:py-8">
+                            <Pagination
+                              color="primary"
+                              count={Math.ceil(productsCount / 10)}
+                              page={
+                                (productPageSkip === 0 && 1) ||
+                                productPageSkip / 10 + 1
+                              }
+                              onChange={(e, p) => {
+                                setProductPageSkip(
+                                  (p === 1 && 0) || (p - 1) * 10
+                                );
+                              }}
+                            />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      !loading && (
+                        <span className="flex items-center justify-center mt-10">
+                          No products found!
+                        </span>
+                      )
+                    )}
                   </div>
-                  {productsCount > 6 && (
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
-                      <p className="text-sm leading-[150%] text-[#15182766]">
-                        Showing {productPageSkip + 1} -{" "}
-                        {productsCount < (productPageSkip + 1) * productsLimit
-                          ? productsCount
-                          : (productPageSkip + 1) * productsLimit}{" "}
-                        of {productsCount} results
-                      </p>
-                      <Pagination
-                        color="primary"
-                        count={Math.ceil(productsCount / 10)}
-                        page={
-                          (productPageSkip === 0 && 1) ||
-                          productPageSkip / 10 + 1
-                        }
-                        onChange={(e, p) => {
-                          setProductPageSkip((p === 1 && 0) || (p - 1) * 10);
-                        }}
-                      />
+                  {loading && (
+                    <div className="absolute top-1/2 left-1/2">
+                      <CircularProgress color="secondary" />
                     </div>
                   )}
-                </>
+                </div>
               ) : (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 place-items-center mb-10">
-                    {shopsData &&
-                      shopsData.map((shop) => (
-                        <ShopCard key={shop.id} shop={shop} />
-                      ))}
-                  </div>
+                <div
+                  className={`relative ${
+                    shopLoading && shopsData?.length === 0 && "h-screen"
+                  }`}
+                >
+                  <div
+                    className={`${
+                      shopsData?.length > 0 && shopLoading
+                        ? "opacity-50"
+                        : "opacity-100"
+                    }`}
+                  >
+                    {shopsData?.length > 0 ? (
+                      <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 place-items-center">
+                          {shopsData.map((shop) => (
+                            <ShopCard key={shop.id} shop={shop} />
+                          ))}
+                        </div>
 
-                  {shopsCount > 6 && (
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 sm:py-8">
-                      <p className="text-sm leading-[150%] text-[#15182766]">
-                        Showing {shopPageSkip + 1} -{" "}
-                        {shopsCount < (shopPageSkip + 1) * shopsLimit
-                          ? shopsCount
-                          : (shopPageSkip + 1) * shopsLimit}{" "}
-                        of {shopsCount} results
-                      </p>
-                      <Pagination
-                        color="primary"
-                        count={Math.ceil(shopsCount / 12)}
-                        page={
-                          (shopPageSkip === 0 && 1) || shopPageSkip / 12 + 1
-                        }
-                        onChange={(e, p) => {
-                          setShopPageSkip((p === 1 && 0) || (p - 1) * 12);
-                        }}
-                      />
+                        {shopsCount > 6 && (
+                          <div className="flex justify-center py-4 sm:py-8">
+                            <Pagination
+                              color="primary"
+                              count={Math.ceil(shopsCount / 12)}
+                              page={
+                                (shopPageSkip === 0 && 1) ||
+                                shopPageSkip / 12 + 1
+                              }
+                              onChange={(e, p) => {
+                                setShopPageSkip((p === 1 && 0) || (p - 1) * 12);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      !shopLoading && (
+                        <span className="flex items-center justify-center mt-10">
+                          No shop found!
+                        </span>
+                      )
+                    )}
+                  </div>
+                  {shopLoading && (
+                    <div className="absolute top-1/2 left-1/2">
+                      <CircularProgress color="secondary" />
                     </div>
                   )}
-                  {/* {shopsCount > 6 && (
-                  <div className="flex items-center justify-center py-10">
-                    <Pagination
-                      count={Math.ceil(shopsCount / 6)}
-                      color="primary"
-                      variant="outlined"
-                      shape="rounded"
-                      page={(shopPageSkip === 0 && 1) || shopPageSkip / 6 + 1}
-                      onChange={(e, p) => {
-                        setShopPageSkip((p === 1 && 0) || (p - 1) * 6);
-                      }}
-                    />
-                  </div>
-                )} */}
-                </>
+                </div>
               )}
             </div>
           </div>
