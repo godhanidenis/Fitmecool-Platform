@@ -160,12 +160,11 @@ const ProductCard = ({ product, onlyCarousal }) => {
         }}
         src={itm ?? ""}
         alt={product.name}
-        className={`object-cover`}
+        className="object-cover"
         key={itm}
       />
     ) : (
       <ImageLoadingSkeleton
-        className={`${onlyCarousal ? "" : "rounded-t-xl"}`}
         height={onlyCarousal ? 400 : themeLayout === "mobileScreen" ? 250 : 300}
       />
     );
@@ -356,7 +355,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                   target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
                   rel="noopener noreferrer"
                 >
-                  <span className="oneLineAfterThreeDots font-semibold text-black text-base mt-4">
+                  <span className="line-clamp-1 font-semibold text-black text-base mt-4">
                     {product.product_name}
                   </span>
                 </a>
@@ -382,7 +381,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     }`}
                     rel="noopener noreferrer"
                   >
-                    <span className="text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
+                    <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
                       {product.branchInfo?.shop_info?.shop_name}
                     </span>
                   </a>

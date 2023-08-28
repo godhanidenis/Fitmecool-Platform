@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -106,7 +107,6 @@ const ShopCard = ({ shop }) => {
 
   const items = shop.shop_images.map((itm) => {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         style={{
           width: "100%",

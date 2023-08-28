@@ -8,7 +8,7 @@ import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 
 const ProductByShopFilter = ({ setProductPageSkip }) => {
-  const { shopsData } = useSelector((state) => state.shops);
+  const { allShopsLists } = useSelector((state) => state.shops);
 
   const [selectedData, setSelectedData] = useState([]);
 
@@ -75,21 +75,21 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
                 >
                   {(shopSearchValue
                     ? shopShowMore
-                      ? shopsData
+                      ? allShopsLists?.data
                           ?.filter((i) =>
                             i?.shop_name
                               .toLowerCase()
                               .includes(shopSearchValue.toLowerCase())
                           )
                           .slice(0, 3)
-                      : shopsData?.filter((i) =>
+                      : allShopsLists?.data?.filter((i) =>
                           i?.shop_name
                             .toLowerCase()
                             .includes(shopSearchValue.toLowerCase())
                         )
                     : shopShowMore
-                    ? shopsData.slice(0, 3)
-                    : shopsData
+                    ? allShopsLists?.data.slice(0, 3)
+                    : allShopsLists?.data
                   )?.map((itm) => (
                     <StyledFormLabelCheckBox
                       key={itm.shop_name}
@@ -113,7 +113,7 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
                     />
                   ))}
                 </div>
-                {shopsData?.filter((i) =>
+                {allShopsLists?.data?.filter((i) =>
                   i?.shop_name
                     .toLowerCase()
                     .includes(shopSearchValue.toLowerCase())

@@ -169,7 +169,7 @@ const ShopPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("Shop");
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
@@ -193,38 +193,7 @@ const ShopPage = () => {
 
   const [sameAsOwner, setSameAsOwner] = useState("False");
   const [individual, setIndividual] = useState(false);
-  const [subBranch, setSubBranch] = useState([
-    {
-      id: 1,
-      subManagerAddress: "godhanidenis@gmail.com",
-      subManagerCity: "surat",
-      subManagerPinCode: "520147",
-      subManagerFirstName: "Denis",
-      subManagerLastName: "Godhani",
-      subManagerEmail: "godhanidenis@gmail.com",
-      subManagerPhone: "9537256159",
-    },
-    {
-      id: 2,
-      subManagerAddress: "godhanidenis@gmail.com",
-      subManagerCity: "surat",
-      subManagerPinCode: "520147",
-      subManagerFirstName: "Denis",
-      subManagerLastName: "Godhani",
-      subManagerEmail: "godhanidenis@gmail.com",
-      subManagerPhone: "9537256159",
-    },
-    {
-      id: 3,
-      subManagerAddress: "godhanidenis@gmail.com",
-      subManagerCity: "surat",
-      subManagerPinCode: "520147",
-      subManagerFirstName: "Denis",
-      subManagerLastName: "Godhani",
-      subManagerEmail: "godhanidenis@gmail.com",
-      subManagerPhone: "9537256159",
-    },
-  ]);
+  const [subBranch, setSubBranch] = useState([]);
   const [subBranchEdit, setSubBranchEdit] = useState();
 
   const [hoursModalOpen, setHoursModalOpen] = useState(false);
@@ -1955,7 +1924,7 @@ const ActionButtons = ({
         Back
       </button>
       <button
-        className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-lg rounded-[4px] text-sm px-8 py-2"
+        className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-lg rounded-[4px] text-sm px-8 py-2 flex items-center"
         onClick={handleSubmit(onSubmit, onError)}
       >
         {loading && (

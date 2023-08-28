@@ -863,7 +863,7 @@ const AddEditProductPage = () => {
             Cancel
           </button>
           <button
-            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2"
+            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
             type="submit"
             onClick={handleSubmit(onSubmit, onError)}
             onReset={reset}

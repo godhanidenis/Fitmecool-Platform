@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {
   Button,
-  Divider,
   Grid,
   Tooltip,
   tooltipClasses,
@@ -26,10 +25,8 @@ import googleIcon from "../../../assets/googleIcon.svg";
 import {
   EmailShareButton,
   FacebookShareButton,
-  WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
-import AddIcon from "@mui/icons-material/Add";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -118,7 +115,7 @@ const ShopHeaderSection = ({
               <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-3">
-                    <div className="font-semibold text-[30px] text-[#FFFFFF]">
+                    <div className="font-semibold text-[30px] text-[#FFFFFF] line-clamp-1">
                       {shopDetails.shop_name}
                     </div>
                     <div className="text-[#FFFFFF] text-[18px] font-normal ">
@@ -126,12 +123,12 @@ const ShopHeaderSection = ({
                         "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
                       }
                     </div>
-                    <span className="text-[#878A99] text-[16px] font-normal">
+                    <span className="text-[#878A99] text-[16px] font-normal flex">
                       <LocationOnIcon
                         fontSize="small"
                         className="-ml-1 !mr-1 text-[red] mb-1"
                       />
-                      <span>
+                      <span className="line-clamp-1">
                         {shopDetails.branch_info.map(
                           (itm) =>
                             itm.branch_type === "main" && itm.branch_address
@@ -147,15 +144,6 @@ const ShopHeaderSection = ({
                       <Typography className="text-colorGreen underline">
                         See Branches
                       </Typography>
-                      {/* <Button
-                        variant="contained"
-                        className={`!bg-colorGreen !hover:bg-colorGreen !flex !items-center !justify-center capitalize`}
-                        // onClick={() =>
-                        //   Router.push(`/shop/${shopDetails?.id}/branches`)
-                        // }
-                      >
-                        
-                      </Button> */}
                     </a>
                   </div>
                   <div className="mt-2 sm:mt-5">
@@ -331,46 +319,6 @@ const ShopHeaderSection = ({
                     </div>
                   </div>
                 </Item>
-                {/* <HtmlTooltip
-                  title={
-                    <React.Fragment>
-                      <div className="flex">
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                          </FacebookShareButton>
-                        </div>
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            <WhatsappIcon size={25} round={true} />
-                          </WhatsappShareButton>
-                        </div>
-                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                          <EmailShareButton
-                            subject="Shop Detail"
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image src={googleIcon ?? ""} alt="googleIcon" />
-                          </EmailShareButton>
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  }
-                >
-                  <Item
-                    onClick={() => setOpenToolTip(!OpenToolTip)}
-                    className="!bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
-                  >
-                    <div className="flex items-center justify-between w-[100%]">
-                      <div className="flex items-center">
-                        <ShareIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
-                        <p className="sm:py-[10px] py-[20px] text-[10px] sm:text-[16px]">Share </p>
-                      </div>
-                    </div>
-                  </Item>
-                </HtmlTooltip> */}
               </Grid>
             </Grid>
           </div>

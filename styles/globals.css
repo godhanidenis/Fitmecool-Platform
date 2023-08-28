@@ -57,14 +57,6 @@ h6 {
   border-radius: 5px;
 }
 
-.oneLineAfterThreeDots {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 1 !important;
-}
-
 .hide-scrollbar::-webkit-scrollbar {
   width: 0px;
   height: 0px;

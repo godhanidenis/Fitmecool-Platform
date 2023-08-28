@@ -51,7 +51,7 @@ const UpperFilter = ({
   const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
 
   const { productsCount } = useSelector((state) => state.products);
-  const { shopsData, shopsCount } = useSelector((state) => state.shops);
+  const { allShopsLists, shopsCount } = useSelector((state) => state.shops);
   const { categories } = useSelector((state) => state.categories);
   const { areaLists } = useSelector((state) => state.areaLists);
 
@@ -98,7 +98,7 @@ const UpperFilter = ({
     const selectedShopIds =
       productsFiltersReducer.appliedProductsFilters.shopId.selectedValue;
 
-    const selectedShopsData = shopsData.filter((shop) =>
+    const selectedShopsData = allShopsLists?.data.filter((shop) =>
       selectedShopIds.includes(shop.id)
     );
 
@@ -111,7 +111,7 @@ const UpperFilter = ({
     setSelectedShops(mappedShops);
   }, [
     productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-    shopsData,
+    allShopsLists?.data,
   ]);
 
   useEffect(() => {

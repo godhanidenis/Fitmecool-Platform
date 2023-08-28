@@ -2,9 +2,9 @@ export const LOAD_SHOP_START = "LOAD_SHOP_START";
 export const LOAD_SHOP_SUCCESS = "LOAD_SHOP_SUCCESS";
 export const LOAD_SHOP_ERROR = "LOAD_SHOP_ERROR";
 
-export const LOAD_MORE_SHOP_START = "LOAD_MORE_SHOP_START";
-export const LOAD_MORE_SHOP_SUCCESS = "LOAD_MORE_SHOP_SUCCESS";
-export const LOAD_MORE_SHOP_ERROR = "LOAD_MORE_SHOP_ERROR";
+export const LOAD_ALL_SHOP_START = "LOAD_ALL_SHOP_START";
+export const LOAD_All_SHOP_SUCCESS = "LOAD_All_SHOP_SUCCESS";
+export const LOAD_ALL_SHOP_ERROR = "LOAD_ALL_SHOP_ERROR";
 
 export const loadShopsStart = (shop) => ({
   type: LOAD_SHOP_START,
@@ -21,18 +21,17 @@ export const loadShopsError = (error) => ({
   payload: error,
 });
 
-export const loadMoreShopsStart = (shop) => ({
-  type: LOAD_MORE_SHOP_START,
-  payload: shop,
+export const loadAllShopsListsStart = () => ({
+  type: LOAD_ALL_SHOP_START,
 });
 
-export const loadMoreShopsSuccess = (shops) => ({
-  type: LOAD_MORE_SHOP_SUCCESS,
+export const loadAllShopsListsSuccess = (shops) => ({
+  type: LOAD_All_SHOP_SUCCESS,
   payload: shops,
 });
 
-export const loadMoreShopsError = (error) => ({
-  type: LOAD_MORE_SHOP_ERROR,
+export const loadAllShopsListsError = (error) => ({
+  type: LOAD_ALL_SHOP_ERROR,
   payload: error,
 });
 
@@ -43,15 +42,28 @@ const initialState = {
   shopsData: [],
   loading: false,
   error: "",
+
+  allShopsLists: {
+    data: [],
+    loading: false,
+    error: "",
+  },
 };
 
 const shopsReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_SHOP_START:
-    case LOAD_MORE_SHOP_START:
       return {
         ...state,
         loading: true,
+      };
+    case LOAD_ALL_SHOP_START:
+      return {
+        ...state,
+        allShopsLists: {
+          ...state.allShopsLists,
+          loading: true,
+        },
       };
 
     case LOAD_SHOP_SUCCESS:
@@ -64,25 +76,32 @@ const shopsReducer = (state = initialState, action) => {
         shopsData: action.payload.data,
       };
 
-    case LOAD_MORE_SHOP_SUCCESS:
-      const tempShop = [...state.shopsData, ...action.payload.data];
-
+    case LOAD_All_SHOP_SUCCESS:
       return {
         ...state,
-        loading: false,
-        shopsLimit: action.payload.limit,
-        shopsCount: action.payload.count,
-        numOfPages: action.payload.noOfPages,
-        shopsData: tempShop,
+        allShopsLists: {
+          ...state.allShopsLists,
+          loading: false,
+          data: action.payload,
+        },
       };
 
     case LOAD_SHOP_ERROR:
-    case LOAD_MORE_SHOP_ERROR:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
+    case LOAD_ALL_SHOP_ERROR:
+      return {
+        ...state,
+        allShopsLists: {
+          ...state.allShopsLists,
+          loading: false,
+          error: action.payload,
+        },
+      };
+
     default:
       return state;
   }

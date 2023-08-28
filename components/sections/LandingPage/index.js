@@ -153,14 +153,6 @@ const LandingPage = () => {
                         </div>
                         {productsCount > 6 && (
                           <div className="flex justify-center py-4 sm:py-8">
-                            {/* <p className="text-sm leading-[150%] text-[#15182766]">
-                              Showing {productPageSkip + 1} -{" "}
-                              {productsCount <
-                              (productPageSkip + 1) * productsLimit
-                                ? productsCount
-                                : (productPageSkip + 1) * productsLimit}{" "}
-                              of {productsCount} results
-                            </p> */}
                             <Pagination
                               color="primary"
                               count={Math.ceil(productsCount / 10)}
@@ -214,13 +206,6 @@ const LandingPage = () => {
 
                         {shopsCount > 6 && (
                           <div className="flex justify-center py-4 sm:py-8">
-                            {/* <p className="text-sm leading-[150%] text-[#15182766]">
-                              Showing {shopPageSkip + 1} -{" "}
-                              {shopsCount < (shopPageSkip + 1) * shopsLimit
-                                ? shopsCount
-                                : (shopPageSkip + 1) * shopsLimit}{" "}
-                              of {shopsCount} results
-                            </p> */}
                             <Pagination
                               color="primary"
                               count={Math.ceil(shopsCount / 12)}
