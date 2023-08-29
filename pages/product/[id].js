@@ -102,17 +102,6 @@ const ProductDetail = ({ productDetails }) => {
   };
 
   const productDescription = productDetails.data.product.data?.product_description;
-  const parsedContent = HTMLReactParser(productDetails.data.product.data?.product_description);
-  console.log('typeof', parsedContent)
-
-  // const truncatedText = parsedContent[1]?.props?.children + '... ';
-  const truncatedText0 = parsedContent[0];
-  const truncatedText1 = parsedContent[1]?.props?.children + '... ';
-  const dot = "...";
-  const truncatedText1Main = truncatedText1;
-
-  console.log('typeof first', truncatedText1Main)
-
 
   useEffect(() => {
     setIsHydrated(true);
@@ -735,23 +724,21 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
                     <div className="font-normal text-lg text-[#888888] leading-6">
-                      <div>
-                        {productDescription.length < 600 && typeof parsedContent === "string" ? parsedContent : (!ReadMore && parsedContent[1] ?
-                          <div>
-                            {truncatedText0}{truncatedText1}
-                            <span className="hover:text-black cursor-pointer" onClick={handleReadMore}>read more</span>
-                          </div>
-                          : parsedContent[1] ?
-                            <div>
-                              {parsedContent}
-                              <span className="hover:text-black cursor-pointer flex justify-end" onClick={handleReadMore}>read less</span>
-                            </div> :
-                            <div>
-                              {parsedContent}
-                            </div>
-                        )
-                        }
-                      </div>
+                      {
+                        productDescription.length > 250 ? (
+                          !ReadMore ?
+                            <div className="hover:text-black cursor-pointer" onClick={handleReadMore} dangerouslySetInnerHTML={{ __html: productDescription.slice(0, 250) + '... read more' }} />
+                            : <>
+                              <div dangerouslySetInnerHTML={{ __html: productDescription }} />
+                              <div className="flex justify-end">
+                                <span className="hover:text-black cursor-pointer" onClick={handleReadMore}>
+                                  read less
+                                </span>
+                              </div>
+                            </>
+                        ) :
+                          <div dangerouslySetInnerHTML={{ __html: productDescription }} />
+                      }
                     </div>
                   </div>
                   <div className="mt-6">
