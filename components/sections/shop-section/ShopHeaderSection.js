@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import {
-  Button,
-  Grid,
-  Tooltip,
-  tooltipClasses,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
@@ -28,6 +22,7 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fbfbfb",
@@ -50,38 +45,17 @@ const ShopHeaderSection = ({
 
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
 
-  const [OpenToolTip, setOpenToolTip] = useState(false);
-
   const router = useRouter();
 
   const dispatch = useDispatch();
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
-  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const handleClick = () => {
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#ffffff",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)",
-      top: 0,
-    },
-    [theme.breakpoints.down("sm")]: {
-      [`& .${tooltipClasses.tooltip}`]: {
-        marginTop: "2px !important",
-        padding: "5px 0px !important",
-      },
-    },
-  }));
   useEffect(() => {
     if (!isAuthenticate) {
       setShopFollowByUser(false);
@@ -103,14 +77,26 @@ const ShopHeaderSection = ({
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row">
               <div className="mt-[-45px] flex justify-center">
-                <Image
-                  src={shopDetails?.shop_logo ?? ""}
-                  alt="shop logo"
-                  layout="fixed"
-                  width={150}
-                  height={150}
-                  className="rounded-[50%]"
-                />
+                {shopDetails?.shop_logo ? (
+                  <Image
+                    src={shopDetails?.shop_logo ?? ""}
+                    alt="shop logo"
+                    layout="fixed"
+                    width={150}
+                    height={150}
+                    className="rounded-[50%]"
+                  />
+                ) : (
+                  <ImageLoadingSkeleton
+                    className="rounded-[50%]"
+                    variant="circular"
+                    width={150}
+                    height={150}
+                    sx={{
+                      backgroundColor: "#F3F6F6",
+                    }}
+                  />
+                )}
               </div>
               <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="flex justify-between flex-nowrap">
@@ -267,12 +253,7 @@ const ShopHeaderSection = ({
                   </div>
                 </Item>
               </Grid>
-              <Grid
-                item
-                xs={3}
-                sm={3}
-                onMouseLeave={() => setOpenToolTip(false)}
-              >
+              <Grid item xs={3} sm={3}>
                 <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="lg:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">

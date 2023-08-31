@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -143,13 +142,19 @@ const ProductCard = ({ product, onlyCarousal }) => {
       : setProductLikeByUser(false);
   }, [isAuthenticate, product.id, userProfile]);
 
+  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
+
+  const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
+
   const items = [
     product.product_image.front,
     product.product_image.back,
     product.product_image.side,
-  ].map((itm) => {
-    return itm ? (
-      <img
+  ].map((itm, index) => {
+    return (
+      <div
+        className="relative"
+        key={index}
         style={{
           width: "100%",
           height: onlyCarousal
@@ -158,17 +163,23 @@ const ProductCard = ({ product, onlyCarousal }) => {
             ? 250
             : 300,
         }}
-        src={itm ?? ""}
-        alt={product.name}
-        className="object-cover"
-        key={itm}
-      />
-    ) : (
-      <ImageLoadingSkeleton
-        height={onlyCarousal ? 400 : themeLayout === "mobileScreen" ? 250 : 300}
-      />
+      >
+        {!isProductImagesLoaded && (
+          <ImageLoadingSkeleton className="object-cover" />
+        )}
+        <Image
+          src={itm ?? ""}
+          alt={product?.product_name}
+          className={`object-cover absolute top-0 left-0 ${
+            isProductImagesLoaded ? "opacity-100" : "opacity-0"
+          }`}
+          onLoad={() => setProductImagesLoaded(true)}
+          layout="fill"
+        />
+      </div>
     );
   });
+
   const shopId = product.branchInfo?.shop_id;
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
@@ -365,11 +376,20 @@ const ProductCard = ({ product, onlyCarousal }) => {
             <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
               <div className="flex justify-center items-center">
                 <div className="relative sm:w-6 sm:h-6 w-4 h-4">
+                  {!isShopLogoLoaded && (
+                    <ImageLoadingSkeleton
+                      className="rounded-[50%]"
+                      variant="circular"
+                    />
+                  )}
                   <Image
-                    alt="shop_logo_img"
+                    alt="Shop Logo"
                     src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
                     layout="fill"
-                    className="rounded-[50%]"
+                    className={`rounded-[50%] absolute top-0 left-0 ${
+                      isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                    }`}
+                    onLoad={() => setIsShopLogoLoaded(true)}
                   />
                 </div>
               </div>

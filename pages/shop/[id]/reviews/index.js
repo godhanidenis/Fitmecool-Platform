@@ -81,11 +81,12 @@ const Reviews = ({ shopDetails }) => {
   return (
     <>
       <div className="pb-20 md:pb-28 font-Nova">
-        <div className="container  w-[44px] h-[39px] mt-2 ml-[3%]">
+        <div className="container w-[44px] h-[39px] mt-2 ml-[3%] flex items-center">
           <ArrowBackIcon
             onClick={() => BackToGo()}
-            className="w-[44px] h-[39px] mr-[30px] cursor-pointer"
+            className="w-[44px] h-[39px] cursor-pointer"
           />
+          <span className="font-semibold ml-2">Back To Shop</span>
         </div>
         <div className="bg-[#FFFFFF] sm:mt-5 py-6 xl:px-20 shadow-md shadow-[#18172505]">
           <div className="md:flex gap-7 container">

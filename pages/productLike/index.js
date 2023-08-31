@@ -36,7 +36,7 @@ const ProductLikePage = () => {
             Your wishlist is empty!!
           </h1>
           <p>
-            Save your favourite items so you <br /> don&apos;t lose sight of
+            Save your favorite items so you <br /> don&apos;t lose sight of
             them.
           </p>
           <button
