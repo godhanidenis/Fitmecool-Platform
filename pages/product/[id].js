@@ -50,6 +50,7 @@ import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
 import HTMLReactParser from "html-react-parser";
+import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 
 const ContactStyle = {
   position: "absolute",
@@ -133,7 +134,6 @@ const ProductDetail = ({ productDetails }) => {
     dispatch(loadAreaListsStart());
   }, [dispatch]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const photos = [
     productDetails.data.product.data.product_image?.front,
     productDetails.data.product.data.product_image?.back,
@@ -146,6 +146,7 @@ const ProductDetail = ({ productDetails }) => {
 
   useEffect(() => {
     setImages(photos[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const selectImage = (img, i) => {
@@ -155,21 +156,21 @@ const ProductDetail = ({ productDetails }) => {
   const items = photos?.map((itm, i) => {
     return (
       <div
-        className="mx-auto mb-[24px]"
+        className="mx-auto mb-[24px] relative"
         onMouseEnter={() => selectImage(itm, i)}
         key={i}
         onClick={() => selectImage(itm, i)}
       >
-        <img
-          src={itm}
-          alt="Product Images"
-          width={250}
-          height={300}
-          style={
-            images === itm ? { border: "2px solid #29977E" } : { border: "0" }
-          }
-          className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
-        />
+        {itm ? (
+          <img
+            src={itm}
+            alt="Product Images"
+            style={{ border: images === itm ? "2px solid #29977E" : 0 }}
+            className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
+          />
+        ) : (
+          <ImageLoadingSkeleton className="rounded-[16px] !w-[129px] !h-[146px]" />
+        )}
       </div>
     );
   });
@@ -215,13 +216,25 @@ const ProductDetail = ({ productDetails }) => {
                 <Link
                   href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                 >
-                  <Avatar
-                    className="!w-12 !h-12 cursor-pointer"
-                    src={
-                      productDetails.data.product.data.branchInfo?.shop_info
-                        .shop_logo
-                    }
-                  />
+                  {productDetails.data.product.data.branchInfo?.shop_info
+                    .shop_logo ? (
+                    <Avatar
+                      alt="Shop Logo"
+                      className="!w-12 !h-12 cursor-pointer"
+                      src={
+                        productDetails.data.product.data.branchInfo?.shop_info
+                          .shop_logo
+                      }
+                    />
+                  ) : (
+                    <ImageLoadingSkeleton
+                      variant="circular"
+                      className="!w-12 !h-12"
+                      sx={{
+                        backgroundColor: "#F3F6F6",
+                      }}
+                    />
+                  )}
                 </Link>
               </div>
               <div className="flex flex-col justify-center ">
@@ -527,14 +540,25 @@ const ProductDetail = ({ productDetails }) => {
                         <Link
                           href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                         >
-                          <img
-                            alt="Shop Logo"
-                            src={
-                              productDetails.data.product.data.branchInfo
-                                ?.shop_info.shop_logo
-                            }
-                            className="rounded-[50%] w-[50px] h-[50px] object-cover cursor-pointer"
-                          />
+                          {productDetails.data.product.data.branchInfo
+                            ?.shop_info.shop_logo ? (
+                            <Avatar
+                              alt="Shop Logo"
+                              src={
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_info.shop_logo
+                              }
+                              className="w-[50px] h-[50px] object-cover cursor-pointer"
+                            />
+                          ) : (
+                            <ImageLoadingSkeleton
+                              variant="circular"
+                              className="!w-[50px] !h-[50px]"
+                              sx={{
+                                backgroundColor: "#F3F6F6",
+                              }}
+                            />
+                          )}
                         </Link>
                       </div>
                       <div className="flex flex-col justify-center">

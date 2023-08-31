@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
+import ImageLoadingSkeleton from "../Modal/ImageLoadingSkeleton";
 
-const CustomReactImageMagnify = (props) => {
+const CustomReactImageMagnify = ({ large, preview }) => {
   const [imageHover, setImageHover] = useState(false);
 
   useEffect(() => {
@@ -10,14 +11,14 @@ const CustomReactImageMagnify = (props) => {
     elem.addEventListener("mousemove", (event) => {
       let bounds = elem.getBoundingClientRect();
 
-      let xposition = event.clientX - bounds.left;
-      let yposition = event.clientY - bounds.top;
+      let xPosition = event.clientX - bounds.left;
+      let yPosition = event.clientY - bounds.top;
 
-      let xpercent = Math.round(100 / (bounds.width / xposition));
-      let ypercent = Math.round(100 / (bounds.height / yposition));
+      let xPercent = Math.round(100 / (bounds.width / xPosition));
+      let yPercent = Math.round(100 / (bounds.height / yPosition));
 
       document.querySelector(".zoom-box").style.backgroundPosition =
-        xpercent + "% " + ypercent + "%";
+        xPercent + "% " + yPercent + "%";
     });
   }, []);
 
@@ -27,7 +28,7 @@ const CustomReactImageMagnify = (props) => {
   };
 
   let divShow = {
-    backgroundImage: `url(${props.large})`,
+    backgroundImage: `url(${large})`,
   };
 
   let divHide = {
@@ -36,13 +37,19 @@ const CustomReactImageMagnify = (props) => {
   return (
     <>
       <div className="image-preview">
-        <img
-          id="preview"
-          src={props.preview}
-          onMouseEnter={loadImage}
-          onMouseLeave={() => setImageHover(false)}
-          alt=""
-        />
+        {preview ? (
+          <img
+            id="preview"
+            src={preview}
+            onMouseEnter={loadImage}
+            onMouseLeave={() => setImageHover(false)}
+            alt=""
+          />
+        ) : (
+          <div className="w-full h-full" id="preview">
+            <ImageLoadingSkeleton className="rounded-xl" />
+          </div>
+        )}
         {imageHover ? (
           <div style={divShow} className="zoom-box"></div>
         ) : (

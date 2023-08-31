@@ -121,6 +121,9 @@ const responsive = {
 const ProductCard = ({ product, onlyCarousal }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
+  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
+  const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
+
   const dispatch = useDispatch();
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
@@ -141,10 +144,6 @@ const ProductCard = ({ product, onlyCarousal }) => {
       ? setProductLikeByUser(true)
       : setProductLikeByUser(false);
   }, [isAuthenticate, product.id, userProfile]);
-
-  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
-
-  const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
 
   const items = [
     product.product_image.front,
