@@ -6,7 +6,7 @@ const ImageLoadingSkeleton = ({ className, variant, ...otherProps }) => {
     <Skeleton
       animation="wave"
       variant={variant ?? "rectangular"}
-      className={`object-cover h-full w-full ${className}`}
+      className={`!object-cover !h-full !w-full !${className}`}
       {...otherProps}
     />
   );
