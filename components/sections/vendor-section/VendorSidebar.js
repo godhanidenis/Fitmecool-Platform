@@ -56,7 +56,7 @@ const VendorSidebar = ({ vendorShopDetails }) => {
             <Avatar
               src={vendorShopDetails?.shop_logo}
               alt="Shop Logo"
-              className="object-cover rounded-full !w-full !h-full"
+              className="!object-cover !w-full !h-full"
             />
           ) : (
             <ImageLoadingSkeleton className="rounded-full" variant="circular" />

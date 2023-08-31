@@ -220,7 +220,7 @@ const ProductDetail = ({ productDetails }) => {
                     .shop_logo ? (
                     <Avatar
                       alt="Shop Logo"
-                      className="!w-12 !h-12 cursor-pointer"
+                      className="!w-12 !h-12 !cursor-pointer"
                       src={
                         productDetails.data.product.data.branchInfo?.shop_info
                           .shop_logo
@@ -548,7 +548,7 @@ const ProductDetail = ({ productDetails }) => {
                                 productDetails.data.product.data.branchInfo
                                   ?.shop_info.shop_logo
                               }
-                              className="w-[50px] h-[50px] object-cover cursor-pointer"
+                              className="!w-[50px] !h-[50px] !object-cover !cursor-pointer"
                             />
                           ) : (
                             <ImageLoadingSkeleton
