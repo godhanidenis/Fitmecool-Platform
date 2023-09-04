@@ -20,6 +20,9 @@ const ShopDetailsPage = () => {
   const { productsCount, productsData, loading } = useSelector(
     (state) => state.products
   );
+
+  const productIdData = productsData.filter(data => data?.branchInfo?.shop_id === id);
+
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const productsFiltersReducer = useSelector(
@@ -109,32 +112,30 @@ const ShopDetailsPage = () => {
           />
 
           <div
-            className={`w-full relative ${
-              loading && productsData?.length === 0 && "h-screen"
-            }`}
+            className={`w-full relative ${loading && productsData?.length === 0 && "h-screen"
+              }`}
           >
             <div
-              className={`mt-8 ${
-                productsData?.length > 0 && loading
-                  ? "opacity-50"
-                  : "opacity-100"
-              }`}
+              className={`mt-8 ${productsData?.length > 0 && loading
+                ? "opacity-50"
+                : "opacity-100"
+                }`}
             >
-              {productsData.length > 0 ? (
+              {id === vendorShopDetails?.id && productsData.length > 0 ? (
                 <VenderProductTable
-                  productsData={productsData}
+                  productsData={productIdData}
                   setProductPageSkip={setProductPageSkip}
                   getAllProducts={getAllProducts}
                 />
               ) : (
-                !loading && (
+                !loading && productsData.length === 0 && (
                   <span className="flex items-center justify-center">
                     No products found!
                   </span>
                 )
               )}
 
-              {productsCount > 6 && (
+              {id === vendorShopDetails?.id && productsCount > 6 && (
                 <div className="flex items-center justify-center py-10">
                   <Pagination
                     count={Math.ceil(productsCount / 6)}

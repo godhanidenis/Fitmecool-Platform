@@ -727,11 +727,11 @@ const ProductDetail = ({ productDetails }) => {
                       {
                         productDescription.length > 250 ? (
                           !ReadMore ?
-                            <div className="hover:text-black cursor-pointer" onClick={handleReadMore} dangerouslySetInnerHTML={{ __html: productDescription.slice(0, 250) + '... read more' }} />
+                            <div onClick={handleReadMore} dangerouslySetInnerHTML={{ __html: productDescription.slice(0, 250) + '... <span  style="cursor: pointer;  color: black;">read more</span>' }} />
                             : <>
                               <div dangerouslySetInnerHTML={{ __html: productDescription }} />
                               <div className="flex justify-end">
-                                <span className="hover:text-black cursor-pointer" onClick={handleReadMore}>
+                                <span className="text-black cursor-pointer" onClick={handleReadMore}>
                                   read less
                                 </span>
                               </div>

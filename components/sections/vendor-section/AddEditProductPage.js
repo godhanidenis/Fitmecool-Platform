@@ -274,40 +274,7 @@ const AddEditProductPage = () => {
         MultipleImageUploadFile(uploadProductImages).then((res) => {
           uploadProductVideo !== undefined
             ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-                createProduct({
-                  productInfo: {
-                    branch_id: data.product_branch,
-                    category_id: data.product_category,
-                    product_color: data.product_color,
-                    product_description: editorDescriptionContent,
-                    product_name: data.product_name,
-                    product_type: data.product_type,
-                    product_image: {
-                      front: res.data.data.multipleUpload[0],
-                      back: res.data.data.multipleUpload[1],
-                      side: res.data.data.multipleUpload[2],
-                    },
-                    product_video: videoResponse.data.data.singleUpload,
-                  },
-                }).then(
-                  (res) => {
-                    console.log("res:::", res);
-                    toast.success(res.data.createProduct.message, {
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    handleProductListingModalClose();
-                    router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                    // setProductPageSkip(0);
-                    // getAllProducts();
-                  },
-                  (error) => {
-                    setLoading(false);
-                    toast.error(error.message, { theme: "colored" });
-                  }
-                );
-              })
-            : createProduct({
+              createProduct({
                 productInfo: {
                   branch_id: data.product_branch,
                   category_id: data.product_category,
@@ -320,6 +287,7 @@ const AddEditProductPage = () => {
                     back: res.data.data.multipleUpload[1],
                     side: res.data.data.multipleUpload[2],
                   },
+                  product_video: videoResponse.data.data.singleUpload,
                 },
               }).then(
                 (res) => {
@@ -338,6 +306,38 @@ const AddEditProductPage = () => {
                   toast.error(error.message, { theme: "colored" });
                 }
               );
+            })
+            : createProduct({
+              productInfo: {
+                branch_id: data.product_branch,
+                category_id: data.product_category,
+                product_color: data.product_color,
+                product_description: editorDescriptionContent,
+                product_name: data.product_name,
+                product_type: data.product_type,
+                product_image: {
+                  front: res.data.data.multipleUpload[0],
+                  back: res.data.data.multipleUpload[1],
+                  side: res.data.data.multipleUpload[2],
+                },
+              },
+            }).then(
+              (res) => {
+                console.log("res:::", res);
+                toast.success(res.data.createProduct.message, {
+                  theme: "colored",
+                });
+                setLoading(false);
+                handleProductListingModalClose();
+                router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
+                // setProductPageSkip(0);
+                // getAllProducts();
+              },
+              (error) => {
+                setLoading(false);
+                toast.error(error.message, { theme: "colored" });
+              }
+            );
         });
       } else {
         productAllMediaImages.map((img) =>
@@ -356,41 +356,7 @@ const AddEditProductPage = () => {
         MultipleImageUploadFile(uploadProductImages).then((res) => {
           uploadProductVideo !== undefined
             ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-                updateProduct({
-                  id: editProductId,
-                  productInfo: {
-                    branch_id: data.product_branch,
-                    category_id: data.product_category,
-                    product_color: data.product_color,
-                    product_description: editorDescriptionContent,
-                    product_name: data.product_name,
-                    product_type: data.product_type,
-                    product_image: {
-                      front: res.data.data.multipleUpload[0],
-                      back: res.data.data.multipleUpload[1],
-                      side: res.data.data.multipleUpload[2],
-                    },
-                    product_video: videoResponse.data.data.singleUpload,
-                  },
-                }).then(
-                  (res) => {
-                    console.log("res:::", res);
-                    toast.success(res.data.updateProduct.message, {
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    handleProductListingModalClose();
-                    router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                    // setProductPageSkip(0);
-                    // getAllProducts();
-                  },
-                  (error) => {
-                    setLoading(false);
-                    toast.error(error.message, { theme: "colored" });
-                  }
-                );
-              })
-            : updateProduct({
+              updateProduct({
                 id: editProductId,
                 productInfo: {
                   branch_id: data.product_branch,
@@ -404,6 +370,7 @@ const AddEditProductPage = () => {
                     back: res.data.data.multipleUpload[1],
                     side: res.data.data.multipleUpload[2],
                   },
+                  product_video: videoResponse.data.data.singleUpload,
                 },
               }).then(
                 (res) => {
@@ -422,6 +389,39 @@ const AddEditProductPage = () => {
                   toast.error(error.message, { theme: "colored" });
                 }
               );
+            })
+            : updateProduct({
+              id: editProductId,
+              productInfo: {
+                branch_id: data.product_branch,
+                category_id: data.product_category,
+                product_color: data.product_color,
+                product_description: editorDescriptionContent,
+                product_name: data.product_name,
+                product_type: data.product_type,
+                product_image: {
+                  front: res.data.data.multipleUpload[0],
+                  back: res.data.data.multipleUpload[1],
+                  side: res.data.data.multipleUpload[2],
+                },
+              },
+            }).then(
+              (res) => {
+                console.log("res:::", res);
+                toast.success(res.data.updateProduct.message, {
+                  theme: "colored",
+                });
+                setLoading(false);
+                handleProductListingModalClose();
+                router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
+                // setProductPageSkip(0);
+                // getAllProducts();
+              },
+              (error) => {
+                setLoading(false);
+                toast.error(error.message, { theme: "colored" });
+              }
+            );
         });
       }
     }
@@ -746,8 +746,8 @@ const AddEditProductPage = () => {
                               {item === "One"
                                 ? "Front Image"
                                 : item === "Two"
-                                ? "Back Image"
-                                : "Side Image"}
+                                  ? "Back Image"
+                                  : "Side Image"}
                             </p>
                             <p className="text-xs text-gray-400 text-center">
                               We Support JPG, PNG & No Size Limit
