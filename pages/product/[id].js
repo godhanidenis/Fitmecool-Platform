@@ -838,7 +838,7 @@ const ProductDetail = ({ productDetails }) => {
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
                       >
-                        <WhatsAppIcon className="!text-white w-[35px] h-[35px]" />
+                        <WhatsAppIcon className="!text-white !w-[35px] !h-[35px]" />
                         Send Message
                       </button>
                     </a>
@@ -851,7 +851,7 @@ const ProductDetail = ({ productDetails }) => {
                   shadow-lg flex items-center justify-center gap-3"
                       onClick={() => setOpenContactInfo(!openContactInfo)}
                     >
-                      <PersonOutlineIcon className="!text-black w-[35px] h-[35px]" />
+                      <PersonOutlineIcon className="!text-black !w-[35px] !h-[35px]" />
                       {openContactInfo ? "Hide Contact" : "Show Contact"}
                     </button>
                   </div>
