@@ -1,11 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
 import Carousel from "react-multi-carousel";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
 const responsive = {
   superLargeDesktop: {
@@ -105,18 +105,33 @@ const TrendingCustomRightArrow = ({ onClick }) => {
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
-  const items = shop.shop_images.map((itm) => {
+  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
+  const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
+
+  const items = shop.shop_images.map((itm, index) => {
     return (
-      <img
+      <div
+        className="relative"
+        key={index}
         style={{
           width: "100%",
           height: themeLayout === "mobileScreen" ? 250 : 300,
         }}
-        src={itm?.links ?? ""}
-        alt={shop.name}
-        className="object-cover"
-        key={itm}
-      />
+      >
+        {!isShopImagesLoaded && (
+          <ImageLoadingSkeleton className="object-cover" />
+        )}
+
+        <Image
+          src={itm?.links ?? ""}
+          alt={shop?.shop_name}
+          className={`object-cover absolute top-0 left-0 ${
+            isShopImagesLoaded ? "opacity-100" : "opacity-0"
+          }`}
+          onLoad={() => setShopImagesLoaded(true)}
+          layout="fill"
+        />
+      </div>
     );
   });
 
@@ -163,13 +178,23 @@ const ShopCard = ({ shop }) => {
         >
           <div className="flex gap-2 justify-start">
             <div className="flex justify-center items-center">
-              <Image
-                alt="Shop Logo"
-                src={shop?.shop_logo ?? ""}
-                width={50}
-                height={50}
-                className="rounded-[50%]"
-              />
+              <div className="flex justify-center items-center relative w-[50px] h-[50px]">
+                {!isShopLogoLoaded && (
+                  <ImageLoadingSkeleton
+                    className="rounded-[50%]"
+                    variant="circular"
+                  />
+                )}
+                <Image
+                  alt="Shop Logo"
+                  src={shop?.shop_logo ?? ""}
+                  layout="fill"
+                  className={`rounded-[50%] absolute top-0 left-0 ${
+                    isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                  }`}
+                  onLoad={() => setIsShopLogoLoaded(true)}
+                />
+              </div>
             </div>
             <div className="flex flex-col align-baseline">
               <Link href={`/shop/${shop.id}`}>

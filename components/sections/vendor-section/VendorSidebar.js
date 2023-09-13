@@ -49,14 +49,14 @@ const VendorSidebar = ({ vendorShopDetails }) => {
   ];
 
   return (
-    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center">
+    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center hidden sm:block">
       <div className="flex justify-center">
         <div className="w-[150px] h-[150px] mb-10 sm:mt-10 rounded-full">
           {vendorShopDetails?.shop_logo ? (
             <Avatar
               src={vendorShopDetails?.shop_logo}
               alt="Shop Logo"
-              className="object-cover rounded-full w-full h-full"
+              className="!object-cover !w-full !h-full"
             />
           ) : (
             <ImageLoadingSkeleton className="rounded-full" variant="circular" />

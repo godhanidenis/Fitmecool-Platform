@@ -6,6 +6,7 @@ import { getShopDetails } from "../../../../graphql/queries/shopQueries";
 import SeeBranchDropDown from "../../../../components/Filters/CardInteractive/SeeBranchDropDown";
 import { useRouter } from "next/router";
 import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
+import ImageLoadingSkeleton from "../../../../components/Modal/ImageLoadingSkeleton";
 
 const Branches = ({ shopDetails, shopId }) => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Branches = ({ shopDetails, shopId }) => {
   return (
     <>
       <div className="container font-Nova">
-        <div className="flex items-centertext-primary mt-6 mb-6">
+        <div className="flex items-center mt-6 mb-6">
           <ArrowBackIcon
             onClick={() => BackToGo()}
             className="cursor-pointer"
@@ -36,14 +37,26 @@ const Branches = ({ shopDetails, shopId }) => {
         <div className="bg-white shadow-xl rounded-lg pb-4 mb-8">
           <div className="flex flex-col sm:flex-row items-center p-8 pt-6 bg-colorPrimary rounded-t-xl">
             <div className="flex justify-center">
-              <Image
-                src={shopDetails?.data?.shop?.shop_logo ?? ""}
-                alt="shop logo"
-                layout="fixed"
-                width={150}
-                height={150}
-                className="rounded-[50%]"
-              />
+              {shopDetails?.data?.shop?.shop_logo ? (
+                <Image
+                  src={shopDetails?.data?.shop?.shop_logo ?? ""}
+                  alt="shop logo"
+                  layout="fixed"
+                  width={150}
+                  height={150}
+                  className="rounded-[50%]"
+                />
+              ) : (
+                <ImageLoadingSkeleton
+                  className="rounded-[50%]"
+                  variant="circular"
+                  width={150}
+                  height={150}
+                  sx={{
+                    backgroundColor: "dimgray",
+                  }}
+                />
+              )}
             </div>
             <div className="sm:ml-[24px] flex flex-col items-center sm:items-start">
               <span className="sm:text-[32px] text-[30px] font-semibold text-white">

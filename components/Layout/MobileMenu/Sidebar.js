@@ -23,6 +23,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import ProfileIcon from "../../../assets/profile.png";
+import VendorShopSubHeader from "../VendorShopSubHeader";
 
 const Sidebar = ({
   className = "",
@@ -244,10 +245,15 @@ const Sidebar = ({
 
         {userProfile.user_type === "vendor" &&
           Router.pathname !== "/vendor/shop-setup" && (
-            <VendorSidebar
-              vendorShopDetails={vendorShopDetails}
-              handleMobileSidebarClick={handleMobileSidebarClick}
-            />
+            <>
+              {/* <VendorSidebar
+                vendorShopDetails={vendorShopDetails}
+                handleMobileSidebarClick={handleMobileSidebarClick}
+              /> */}
+              <VendorShopSubHeader
+                handleMobileSidebarClick={handleMobileSidebarClick}
+              />
+            </>
           )}
 
         {accessToken && (

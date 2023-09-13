@@ -53,7 +53,6 @@ import InputLabel from "@mui/material/InputLabel";
 import LocationIcon from "../../assets/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
-import Venderheader from "./Venderheader";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -194,10 +193,7 @@ const Header = () => {
       />
       <header
         className={`${
-          userProfile.user_type === "vendor" &&
-          router.pathname === "/vendor/shop-setup"
-            ? "py-4"
-            : "py-4 sm:py-0"
+          userProfile.user_type === "vendor" ? "py-4" : "py-4 sm:py-0"
         } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         }  transition-all duration-500`}
@@ -212,7 +208,15 @@ const Header = () => {
                 onClick={handleMobileSidebarClick}
               />
             )}
-
+            {userProfile.user_type === "vendor" &&
+              router.pathname !== "/vendor/shop-setup" && (
+                <MenuIcon
+                  sx={{ color: "white" }}
+                  fontSize="large"
+                  className="lg:!hidden"
+                  onClick={handleMobileSidebarClick}
+                />
+              )}
             <Link
               href={`${
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
@@ -261,12 +265,6 @@ const Header = () => {
               <SubHeader />
             </div>
           )}
-          {userProfile.user_type === "vendor" &&
-            router.pathname !== "/vendor/shop-setup" && (
-              <div className="font-Nova">
-                <Venderheader />
-              </div>
-            )}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
               {userProfile.user_type !== "vendor" && (
@@ -534,7 +532,7 @@ export const UserProfile = ({ setAccessToken }) => {
               <ClickAwayListener onClickAway={handleProfileClose}>
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
-                    <Avatar className="mb-2 !w-14 !h-14">
+                    <Avatar className="!mb-2 !w-14 !h-14">
                       <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
                     </Avatar>
                     <b>
