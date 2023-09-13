@@ -84,7 +84,7 @@ const Reviews = ({ shopDetails }) => {
         <div className="container w-[44px] h-[39px] mt-2 ml-[3%] flex items-center">
           <ArrowBackIcon
             onClick={() => BackToGo()}
-            className="w-[44px] h-[39px] cursor-pointer"
+            className="cursor-pointer"
           />
           <span className="font-semibold ml-2">Back To Shop</span>
         </div>
@@ -176,8 +176,9 @@ const Reviews = ({ shopDetails }) => {
               <div className="flex justify-end gap-6 mt-5">
                 <button
                   disabled={submitButtonDisable}
-                  className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${submitButtonDisable && "opacity-50 cursor-not-allowed"
-                    }`}
+                  className={`bg-colorGreen rounded-[8px] text-white p-2 text-base font-semibold sm:px-[40px] px-[30px] py-[14px] sm:py-[16px] flex items-center justify-center ${
+                    submitButtonDisable && "opacity-50 cursor-not-allowed"
+                  }`}
                   onClick={() => {
                     if (isAuthenticate) {
                       if (stars > 0 && message !== "") {

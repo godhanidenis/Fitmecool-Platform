@@ -21,7 +21,9 @@ const ShopDetailsPage = () => {
     (state) => state.products
   );
 
-  const productIdData = productsData.filter(data => data?.branchInfo?.shop_id === id);
+  const productIdData = productsData.filter(
+    (data) => data?.branchInfo?.shop_id === id
+  );
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
@@ -84,6 +86,14 @@ const ShopDetailsPage = () => {
     productPageSkip,
   ]);
 
+  useEffect(() => {
+    if (id && vendorShopDetails?.id) {
+      if (id !== vendorShopDetails?.id) {
+        router.push("/vendor/dashboard");
+      }
+    }
+  }, [id, router, vendorShopDetails?.id]);
+
   if (!isHydrated) {
     return null;
   }
@@ -112,30 +122,33 @@ const ShopDetailsPage = () => {
           />
 
           <div
-            className={`w-full relative ${loading && productsData?.length === 0 && "h-screen"
-              }`}
+            className={`w-full relative ${
+              loading && productsData?.length === 0 && "h-screen"
+            }`}
           >
             <div
-              className={`mt-8 ${productsData?.length > 0 && loading
-                ? "opacity-50"
-                : "opacity-100"
-                }`}
+              className={`mt-8 ${
+                productsData?.length > 0 && loading
+                  ? "opacity-50"
+                  : "opacity-100"
+              }`}
             >
-              {id === vendorShopDetails?.id && productsData.length > 0 ? (
+              {productsData.length > 0 ? (
                 <VenderProductTable
                   productsData={productIdData}
                   setProductPageSkip={setProductPageSkip}
                   getAllProducts={getAllProducts}
                 />
               ) : (
-                !loading && productsData.length === 0 && (
+                !loading &&
+                productsData.length === 0 && (
                   <span className="flex items-center justify-center">
                     No products found!
                   </span>
                 )
               )}
 
-              {id === vendorShopDetails?.id && productsCount > 6 && (
+              {productsCount > 6 && (
                 <div className="flex items-center justify-center py-10">
                   <Pagination
                     count={Math.ceil(productsCount / 6)}
