@@ -40,14 +40,17 @@ export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   },
 }));
 
-export const CustomTab = styled(Tabs)(({ theme }) => ({
+export const CustomTab = styled(Tabs)(({ theme, hometab }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "#FFFFFF",
+    color: hometab ? "#000" : "#FFFFFF",
     fontWeight: 600,
-    fontSize: "14px",
+    fontSize: hometab ? "32px" : "14px",
     paddingTop: "32px",
     paddingBottom: "32px",
+    paddingRight: hometab && "200px",
+    paddingLeft: hometab && "200px",
+    borderBottom: hometab && "5px solid #0000000a",
   },
   [`& .MuiTab-root:hover`]: {
     color: "#29977E !important",
@@ -57,7 +60,7 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
-    fontSize: "16px",
+    fontSize: hometab ? "32px" : "16px",
     color: "#29977E !important",
   },
   [`& .MuiTabs-indicator`]: {

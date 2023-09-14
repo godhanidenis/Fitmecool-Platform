@@ -146,9 +146,9 @@ const ProductCard = ({ product, onlyCarousal }) => {
   }, [isAuthenticate, product.id, userProfile]);
 
   const items = [
-    product.product_image.front,
-    product.product_image.back,
-    product.product_image.side,
+    product?.product_image?.front,
+    product?.product_image?.back,
+    product?.product_image?.side,
   ].map((itm, index) => {
     return (
       <div
