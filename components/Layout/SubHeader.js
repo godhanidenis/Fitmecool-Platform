@@ -3,6 +3,7 @@ import { Divider, Paper, Popper, Tab } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { CustomTab, TabPanel } from "../core/CustomMUIComponents";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
+import { useRouter } from "next/router";
 
 const SubHeader = () => {
   const [value, setValue] = useState(0);
@@ -12,8 +13,10 @@ const SubHeader = () => {
   const [menCategory, setMenCategory] = useState([]);
   const [womenCategory, setWomenCategory] = useState([]);
 
-  const { categories } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  const { categories } = useSelector((state) => state.categories);
   const productsFiltersReducer = useSelector(
     (state) => state.productsFiltersReducer
   );
@@ -43,6 +46,46 @@ const SubHeader = () => {
 
   const equalsCheck = (a, b) => {
     return JSON.stringify(a) === JSON.stringify(b);
+  };
+
+  const generateCategoryComponent = (category) => {
+    return (
+      <p
+        key={category.id}
+        className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
+          category.id
+        )}`}
+        onClick={() => {
+          ["productColor", "shopId", "categoryId"].map((itm) =>
+            dispatch(
+              changeAppliedProductsFilters({
+                key: itm,
+                value: {
+                  selectedValue:
+                    itm === "categoryId"
+                      ? equalsCheck(
+                          productsFiltersReducer.appliedProductsFilters
+                            .categoryId.selectedValue,
+                          [category.id]
+                        )
+                        ? []
+                        : [category.id]
+                      : [],
+                },
+              })
+            )
+          );
+
+          if (router.pathname === "/") {
+            handleMenuClose();
+          } else {
+            router.push("/");
+          }
+        }}
+      >
+        {category.category_name}
+      </p>
+    );
   };
 
   return (
@@ -81,34 +124,7 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {menCategory.map((itm, index) => {
                         if (index <= menCategory.length / 2 - (0.5 || 1)) {
-                          return (
-                            <p
-                              key={itm.id}
-                              className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
-                                itm.id
-                              )}`}
-                              onClick={() => {
-                                dispatch(
-                                  changeAppliedProductsFilters({
-                                    key: "categoryId",
-                                    value: {
-                                      selectedValue: equalsCheck(
-                                        productsFiltersReducer
-                                          .appliedProductsFilters.categoryId
-                                          .selectedValue,
-                                        [itm.id]
-                                      )
-                                        ? []
-                                        : [itm.id],
-                                    },
-                                  })
-                                );
-                                handleMenuClose();
-                              }}
-                            >
-                              {itm.category_name}
-                            </p>
-                          );
+                          return generateCategoryComponent(itm);
                         }
                         return "";
                       })}
@@ -117,34 +133,7 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {menCategory.map((itm, index) => {
                         if (index > menCategory.length / 2 - (0.5 || 1)) {
-                          return (
-                            <p
-                              key={itm.id}
-                              className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
-                                itm.id
-                              )}`}
-                              onClick={() => {
-                                dispatch(
-                                  changeAppliedProductsFilters({
-                                    key: "categoryId",
-                                    value: {
-                                      selectedValue: equalsCheck(
-                                        productsFiltersReducer
-                                          .appliedProductsFilters.categoryId
-                                          .selectedValue,
-                                        [itm.id]
-                                      )
-                                        ? []
-                                        : [itm.id],
-                                    },
-                                  })
-                                );
-                                handleMenuClose();
-                              }}
-                            >
-                              {itm.category_name}
-                            </p>
-                          );
+                          return generateCategoryComponent(itm);
                         }
                         return "";
                       })}
@@ -164,34 +153,7 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {womenCategory.map((itm, index) => {
                         if (index <= womenCategory.length / 2 - (0.5 || 1)) {
-                          return (
-                            <p
-                              key={itm.id}
-                              className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
-                                itm.id
-                              )}`}
-                              onClick={() => {
-                                dispatch(
-                                  changeAppliedProductsFilters({
-                                    key: "categoryId",
-                                    value: {
-                                      selectedValue: equalsCheck(
-                                        productsFiltersReducer
-                                          .appliedProductsFilters.categoryId
-                                          .selectedValue,
-                                        [itm.id]
-                                      )
-                                        ? []
-                                        : [itm.id],
-                                    },
-                                  })
-                                );
-                                handleMenuClose();
-                              }}
-                            >
-                              {itm.category_name}
-                            </p>
-                          );
+                          return generateCategoryComponent(itm);
                         }
                         return "";
                       })}
@@ -200,34 +162,7 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {womenCategory.map((itm, index) => {
                         if (index > womenCategory.length / 2 - (0.5 || 1)) {
-                          return (
-                            <p
-                              key={itm.id}
-                              className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
-                                itm.id
-                              )}`}
-                              onClick={() => {
-                                dispatch(
-                                  changeAppliedProductsFilters({
-                                    key: "categoryId",
-                                    value: {
-                                      selectedValue: equalsCheck(
-                                        productsFiltersReducer
-                                          .appliedProductsFilters.categoryId
-                                          .selectedValue,
-                                        [itm.id]
-                                      )
-                                        ? []
-                                        : [itm.id],
-                                    },
-                                  })
-                                );
-                                handleMenuClose();
-                              }}
-                            >
-                              {itm.category_name}
-                            </p>
-                          );
+                          return generateCategoryComponent(itm);
                         }
                         return "";
                       })}
