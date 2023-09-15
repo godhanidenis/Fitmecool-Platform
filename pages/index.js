@@ -5,6 +5,7 @@ import { loadCategoriesStart } from "../redux/ducks/categories";
 import { loadAreaListsStart } from "../redux/ducks/areaLists";
 import { withoutAuth } from "../components/core/PrivateRouteForVendor";
 import { loadAllShopsListsStart } from "../redux/ducks/shop";
+import HomePage from "../components/sections/HomePage";
 
 const Home = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -26,7 +27,8 @@ const Home = () => {
   }
   return (
     <>
-      <LandingPage />
+      {/* <LandingPage /> */}
+      <HomePage />
     </>
   );
 };
