@@ -12,10 +12,6 @@ const Branches = ({ shopDetails, shopId }) => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const BackToGo = () => {
-    router.push(`/shop/${shopId}`);
-  };
-
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -29,7 +25,7 @@ const Branches = ({ shopDetails, shopId }) => {
       <div className="container font-Nova">
         <div className="flex items-center mt-6 mb-6">
           <ArrowBackIcon
-            onClick={() => BackToGo()}
+            onClick={() => router.push(`/shop/${shopId}`)}
             className="cursor-pointer"
           />
           <span className="font-semibold ml-2">Back To Shop</span>

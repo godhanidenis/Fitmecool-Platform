@@ -6,8 +6,9 @@ import { changeAppliedShopsFilters } from "../../../redux/ducks/shopsFilters";
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
+import { changeShopPage } from "../../../redux/ducks/shop";
 
-const ShopByLocation = ({ setShopPageSkip }) => {
+const ShopByLocation = () => {
   const { areaLists } = useSelector((state) => state.areaLists);
 
   const [selectedData, setSelectedData] = useState([]);
@@ -19,7 +20,9 @@ const ShopByLocation = ({ setShopPageSkip }) => {
   const [locationShowMore, setLocationShowMore] = useState(true);
 
   const dispatch = useDispatch();
-  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
+  const { appliedShopsFilters } = useSelector(
+    (state) => state.shopsFiltersReducer
+  );
 
   useEffect(() => {
     abc &&
@@ -34,11 +37,9 @@ const ShopByLocation = ({ setShopPageSkip }) => {
   }, [abc, dispatch, selectedData]);
 
   useEffect(() => {
-    shopsFiltersReducer.appliedShopsFilters &&
-      setSelectedData(
-        shopsFiltersReducer.appliedShopsFilters.locations.selectedValue
-      );
-  }, [shopsFiltersReducer.appliedShopsFilters, areaLists]);
+    appliedShopsFilters &&
+      setSelectedData(appliedShopsFilters.locations.selectedValue);
+  }, [appliedShopsFilters, areaLists]);
 
   return (
     <>
@@ -52,8 +53,7 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                   value={locationSearchValue}
                   onChange={(e) => setLocationSearchValue(e.target.value)}
                   selectedFilterLength={
-                    shopsFiltersReducer.appliedShopsFilters.locations
-                      .selectedValue.length
+                    appliedShopsFilters.locations.selectedValue.length
                   }
                   clearDispatched={() =>
                     dispatch(
@@ -103,7 +103,7 @@ const ShopByLocation = ({ setShopPageSkip }) => {
                               : [...selectedData, itm.pin];
 
                             setSelectedData(updatedSelection);
-                            setShopPageSkip(0);
+                            dispatch(changeShopPage(0));
                             setAbc(true);
                           }}
                         />

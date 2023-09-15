@@ -46,10 +46,6 @@ const Reviews = ({ shopDetails }) => {
   const [submitButtonDisable, setSubmitButtonDisable] = useState(false);
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
 
-  const BackToGo = () => {
-    router.push(`/shop/${router?.query?.id}`);
-  };
-
   const getAllReviews = () => {
     getShopReviews({ id: router.query.id }).then((res) =>
       setShopReviews(res.data.shopReview)
@@ -60,6 +56,7 @@ const Reviews = ({ shopDetails }) => {
     if (router.query.id) {
       getAllReviews();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   useEffect(() => {
@@ -83,7 +80,7 @@ const Reviews = ({ shopDetails }) => {
       <div className="pb-20 md:pb-28 font-Nova">
         <div className="container w-[44px] h-[39px] mt-2 ml-[3%] flex items-center">
           <ArrowBackIcon
-            onClick={() => BackToGo()}
+            onClick={() => router.push(`/shop/${router?.query?.id}`)}
             className="cursor-pointer"
           />
           <span className="font-semibold ml-2">Back To Shop</span>

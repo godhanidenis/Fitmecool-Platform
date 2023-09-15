@@ -6,6 +6,8 @@ export const LOAD_ALL_SHOP_START = "LOAD_ALL_SHOP_START";
 export const LOAD_All_SHOP_SUCCESS = "LOAD_All_SHOP_SUCCESS";
 export const LOAD_ALL_SHOP_ERROR = "LOAD_ALL_SHOP_ERROR";
 
+export const CHANGE_SHOP_PAGE = "CHANGE_SHOP_PAGE";
+
 export const loadShopsStart = (shop) => ({
   type: LOAD_SHOP_START,
   payload: shop,
@@ -35,10 +37,16 @@ export const loadAllShopsListsError = (error) => ({
   payload: error,
 });
 
+export const changeShopPage = (pageSkip) => ({
+  type: CHANGE_SHOP_PAGE,
+  payload: pageSkip,
+});
+
 const initialState = {
   shopsLimit: 0,
   shopsCount: 0,
   numOfPages: 0,
+  shopPageSkip: 0,
   shopsData: [],
   loading: false,
   error: "",
@@ -100,6 +108,12 @@ const shopsReducer = (state = initialState, action) => {
           loading: false,
           error: action.payload,
         },
+      };
+
+    case CHANGE_SHOP_PAGE:
+      return {
+        ...state,
+        shopPageSkip: action.payload,
       };
 
     default:

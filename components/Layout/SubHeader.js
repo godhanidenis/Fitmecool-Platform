@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { CustomTab, TabPanel } from "../core/CustomMUIComponents";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
+import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import { changeProductPage } from "../../redux/ducks/product";
 
 const SubHeader = () => {
   const [value, setValue] = useState(0);
@@ -15,9 +17,11 @@ const SubHeader = () => {
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
+  const { allShopsLists } = useSelector((state) => state.shops);
   const { categories } = useSelector((state) => state.categories);
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -26,9 +30,9 @@ const SubHeader = () => {
     setWomenCategory(categories.filter((itm) => itm.category_type === "Women"));
   }, [categories]);
 
-  const setActiveLink = (id) => {
-    return productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue.map(
-      (itm) => (itm === id ? "!text-colorGreen" : "")
+  const setActiveLink = (filterType, id) => {
+    return appliedProductsFilters[filterType].selectedValue.map((itm) =>
+      itm === id ? "!text-colorGreen" : ""
     );
   };
 
@@ -48,45 +52,47 @@ const SubHeader = () => {
     return JSON.stringify(a) === JSON.stringify(b);
   };
 
-  const generateCategoryComponent = (category) => {
-    return (
-      <p
-        key={category.id}
-        className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
-          category.id
-        )}`}
-        onClick={() => {
-          ["productColor", "shopId", "categoryId"].map((itm) =>
-            dispatch(
-              changeAppliedProductsFilters({
-                key: itm,
-                value: {
-                  selectedValue:
-                    itm === "categoryId"
-                      ? equalsCheck(
-                          productsFiltersReducer.appliedProductsFilters
-                            .categoryId.selectedValue,
-                          [category.id]
-                        )
-                        ? []
-                        : [category.id]
-                      : [],
-                },
-              })
-            )
-          );
+  const generateQuickFilterComponent = (filterType, item) => (
+    <p
+      key={item.id}
+      className={`p-1 font-semibold text-[#1518278f] hover:text-colorGreen cursor-pointer ${setActiveLink(
+        filterType,
+        item.id
+      )}`}
+      onClick={() => {
+        ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+          dispatch(
+            changeAppliedProductsFilters({
+              key: itm,
+              value: {
+                selectedValue:
+                  itm === filterType
+                    ? equalsCheck(
+                        appliedProductsFilters[filterType].selectedValue,
+                        [item.id]
+                      )
+                      ? []
+                      : [item.id]
+                    : itm === "searchBarData"
+                    ? ""
+                    : [],
+              },
+            })
+          )
+        );
+        dispatch(changeProductPage(0));
+        byShop && dispatch(changeByShopFilters(false));
 
-          if (router.pathname === "/") {
-            handleMenuClose();
-          } else {
-            router.push("/");
-          }
-        }}
-      >
-        {category.category_name}
-      </p>
-    );
-  };
+        if (router.pathname === "/") {
+          handleMenuClose();
+        } else {
+          router.push("/");
+        }
+      }}
+    >
+      {filterType === "shopId" ? item.shop_name : item.category_name}
+    </p>
+  );
 
   return (
     <div className="sm:flex hidden items-center">
@@ -96,7 +102,7 @@ const SubHeader = () => {
         onClick={() => setOpen(!open)}
       >
         <CustomTab value={value}>
-          {["MEN’S", "WOMEN’S"].map((item, index) => (
+          {["men's", "women's", "shops"].map((item, index) => (
             <Tab
               key={index}
               onMouseEnter={handleMenuOpen.bind(this, index)}
@@ -104,6 +110,7 @@ const SubHeader = () => {
               label={item}
               aria-owns={open ? "menu-list-grow" : undefined}
               aria-haspopup={"true"}
+              className="!uppercase"
             />
           ))}
         </CustomTab>
@@ -124,7 +131,10 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {menCategory.map((itm, index) => {
                         if (index <= menCategory.length / 2 - (0.5 || 1)) {
-                          return generateCategoryComponent(itm);
+                          return generateQuickFilterComponent(
+                            "categoryId",
+                            itm
+                          );
                         }
                         return "";
                       })}
@@ -133,7 +143,10 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {menCategory.map((itm, index) => {
                         if (index > menCategory.length / 2 - (0.5 || 1)) {
-                          return generateCategoryComponent(itm);
+                          return generateQuickFilterComponent(
+                            "categoryId",
+                            itm
+                          );
                         }
                         return "";
                       })}
@@ -153,7 +166,10 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {womenCategory.map((itm, index) => {
                         if (index <= womenCategory.length / 2 - (0.5 || 1)) {
-                          return generateCategoryComponent(itm);
+                          return generateQuickFilterComponent(
+                            "categoryId",
+                            itm
+                          );
                         }
                         return "";
                       })}
@@ -162,7 +178,45 @@ const SubHeader = () => {
                     <div className="col-span-4 p-1">
                       {womenCategory.map((itm, index) => {
                         if (index > womenCategory.length / 2 - (0.5 || 1)) {
-                          return generateCategoryComponent(itm);
+                          return generateQuickFilterComponent(
+                            "categoryId",
+                            itm
+                          );
+                        }
+                        return "";
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabPanel>
+
+            <TabPanel value={value} index={2} className="p-6">
+              <div
+                className="flex justify-between gap-5"
+                onMouseLeave={handleMenuClose.bind(this)}
+              >
+                <div>
+                  <div className="grid grid-cols-9 gap-10">
+                    <div className="col-span-4 p-1">
+                      {allShopsLists?.data?.map((itm, index) => {
+                        if (
+                          index <=
+                          allShopsLists?.data?.length / 2 - (0.5 || 1)
+                        ) {
+                          return generateQuickFilterComponent("shopId", itm);
+                        }
+                        return "";
+                      })}
+                    </div>
+                    <Divider orientation="vertical" variant="middle" flexItem />
+                    <div className="col-span-4 p-1">
+                      {allShopsLists?.data?.map((itm, index) => {
+                        if (
+                          index >
+                          allShopsLists?.data?.length / 2 - (0.5 || 1)
+                        ) {
+                          return generateQuickFilterComponent("shopId", itm);
                         }
                         return "";
                       })}

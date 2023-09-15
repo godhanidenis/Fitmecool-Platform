@@ -3,10 +3,15 @@ import TextField from "@mui/material/TextField";
 import {
   Box,
   Checkbox,
+  Dialog,
   FormControlLabel,
+  LinearProgress,
   Modal,
+  Paper,
+  Select,
   Tabs,
   Typography,
+  linearProgressClasses,
 } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -210,6 +215,58 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
     },
     ".MuiCheckbox-root.Mui-checked": {
       color: "#29977E",
+    },
+  })
+);
+
+export const SearchCustomDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialog-backdrop": {
+    backgroundColor: "#CAA9CD !important",
+  },
+  "& .MuiDialog-paper": {
+    top: "0",
+    position: "absolute",
+    maxHeight: "50vh",
+    height: "50vh",
+    width: "100vw",
+    maxWidth: "100%",
+    margin: "0px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+export const LocationSelect = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "white !important",
+  },
+  "& .MuiSelect-icon": {
+    color: "white !important",
+  },
+}));
+
+export const ShopHeaderItem = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fbfbfb",
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  boxShadow: "none",
+}));
+
+export const CustomBorderLinearProgress = styled(LinearProgress)(
+  ({ theme }) => ({
+    height: 12,
+    borderRadius: "12px",
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "rgba(24, 23, 37, 0.1)",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      backgroundColor: "rgba(21, 24, 39, 0.4)",
     },
   })
 );

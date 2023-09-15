@@ -25,18 +25,19 @@ import { shopReview } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import { loadCategoriesStart } from "../../../redux/ducks/categories";
 import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
-import { loadProductsStart } from "../../../redux/ducks/product";
+import { changeProductPage, loadProductsStart } from "../../../redux/ducks/product";
 import CircularProgress from "@mui/material/CircularProgress";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import Router, { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
+import { loadAllShopsListsStart } from "../../../redux/ducks/shop";
+import { CustomBorderLinearProgress } from "../../../components/core/CustomMUIComponents";
 
 const ShopDetail = ({ shopDetails }) => {
   const [loadingSubmitReview, setLoadingSubmitReview] = useState(false);
   const [submitButtonDisable, setSubmitButtonDisable] = useState(false);
   const [stars, setStars] = useState(0);
   const [message, setMessage] = useState("");
-  const [productPageSkip, setProductPageSkip] = useState(0);
   const [shopReviews, setShopReviews] = useState([]);
   const [avgShopRating, setAvgShopRating] = useState(0);
   const [totalFollowers, setTotalFollowers] = useState(0);
@@ -51,6 +52,7 @@ const ShopDetail = ({ shopDetails }) => {
     productsLimit,
     productsCount,
     numOfPages,
+    productPageSkip,
     productsData,
     loading,
     error,
@@ -59,7 +61,7 @@ const ShopDetail = ({ shopDetails }) => {
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -75,17 +77,12 @@ const ShopDetail = ({ shopDetails }) => {
           limit: 6,
         },
         filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
+          category_id: appliedProductsFilters.categoryId.selectedValue,
+          product_color: appliedProductsFilters.productColor.selectedValue,
         },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
+        shopId: appliedProductsFilters.shopId.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
+        search: appliedProductsFilters.searchBarData.selectedValue,
       })
     );
   };
@@ -132,19 +129,14 @@ const ShopDetail = ({ shopDetails }) => {
   useEffect(() => {
     getAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    productsFiltersReducer.appliedProductsFilters,
-    productsFiltersReducer.sortFilters,
-    productsFiltersReducer.searchBarData,
-    productPageSkip,
-  ]);
+  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
   useEffect(() => {
     getAllReviews();
     getAllFollowers();
     dispatch(loadCategoriesStart());
     dispatch(loadAreaListsStart());
+    dispatch(loadAllShopsListsStart());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -168,17 +160,11 @@ const ShopDetail = ({ shopDetails }) => {
 
         <div className="grid grid-cols-8 container-full 2xl:container pt-4 gap-2">
           <div className="lg:col-span-2 hidden lg:block bg-white shadow-xl">
-            <Filter
-              productByShop={true}
-              setProductPageSkip={setProductPageSkip}
-            />
+            <Filter productByShop={true} />
           </div>
           <div className="col-span-8 lg:col-span-6 bg-white shadow-xl px-4">
             <div className="mt-1 px-1">
-              <UpperFilter
-                setProductPageSkip={setProductPageSkip}
-                showOnlyShopDetailPage={true}
-              />
+              <UpperFilter showOnlyShopDetailPage={true} />
             </div>
 
             <div
@@ -202,13 +188,6 @@ const ShopDetail = ({ shopDetails }) => {
                     </div>
                     {productsCount > 6 && (
                       <div className="flex justify-center py-4 sm:py-8">
-                        {/* <p className="text-sm leading-[150%] text-[#15182766]">
-                          Showing {productPageSkip + 1} -{" "}
-                          {productsCount < (productPageSkip + 1) * productsLimit
-                            ? productsCount
-                            : (productPageSkip + 1) * productsLimit}{" "}
-                          of {productsCount} results
-                        </p> */}
                         <Pagination
                           color="primary"
                           count={Math.ceil(productsCount / 6)}
@@ -216,9 +195,11 @@ const ShopDetail = ({ shopDetails }) => {
                             (productPageSkip === 0 && 1) ||
                             productPageSkip / 6 + 1
                           }
-                          onChange={(e, p) => {
-                            setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                          }}
+                          onChange={(e, p) =>
+                            dispatch(
+                              changeProductPage((p === 1 && 0) || (p - 1) * 6)
+                            )
+                          }
                         />
                       </div>
                     )}
@@ -390,7 +371,7 @@ const ShopDetail = ({ shopDetails }) => {
               {shopReviews?.length > 6 && (
                 <div className="mt-[80px] flex justify-center">
                   <a
-                    target="_blank"
+                    target="_self"
                     href={`/shop/${shopDetails?.data?.shop?.id}/reviews`}
                     rel="noreferrer"
                   >
@@ -421,17 +402,6 @@ export async function getServerSideProps(context) {
     throw error;
   }
 }
-
-const CustomBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 12,
-  borderRadius: "12px",
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: "rgba(24, 23, 37, 0.1)",
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    backgroundColor: "rgba(21, 24, 39, 0.4)",
-  },
-}));
 
 const ShopCommentsSection = ({ review }) => {
   return (

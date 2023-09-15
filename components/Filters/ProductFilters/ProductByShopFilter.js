@@ -6,8 +6,9 @@ import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilte
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
+import { changeProductPage } from "../../../redux/ducks/product";
 
-const ProductByShopFilter = ({ setProductPageSkip }) => {
+const ProductByShopFilter = () => {
   const { allShopsLists } = useSelector((state) => state.shops);
 
   const [selectedData, setSelectedData] = useState([]);
@@ -19,7 +20,7 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
   const [shopShowMore, setShopShowMore] = useState(true);
 
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -36,11 +37,9 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
   }, [abc, dispatch, selectedData]);
 
   useEffect(() => {
-    productsFiltersReducer.appliedProductsFilters &&
-      setSelectedData(
-        productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
-      );
-  }, [productsFiltersReducer.appliedProductsFilters]);
+    appliedProductsFilters &&
+      setSelectedData(appliedProductsFilters.shopId.selectedValue);
+  }, [appliedProductsFilters]);
 
   return (
     <>
@@ -53,8 +52,7 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
                 value={shopSearchValue}
                 onChange={(e) => setShopSearchValue(e.target.value)}
                 selectedFilterLength={
-                  productsFiltersReducer.appliedProductsFilters.shopId
-                    .selectedValue.length
+                  appliedProductsFilters.shopId.selectedValue.length
                 }
                 clearDispatched={() =>
                   dispatch(
@@ -104,7 +102,7 @@ const ProductByShopFilter = ({ setProductPageSkip }) => {
                               ? selectedData.filter((id) => id !== itm.id)
                               : [...selectedData, itm.id];
                             setSelectedData(updatedSelection);
-                            setProductPageSkip(0);
+                            dispatch(changeProductPage(0));
                             setAbc(true);
                           }}
                         />
