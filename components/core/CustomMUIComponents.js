@@ -273,3 +273,10 @@ export const CustomBorderLinearProgress = styled(LinearProgress)(
     },
   })
 );
+
+export const NativeSelectInput = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "#1518278F",
+    marginLeft: 10,
+  },
+}));

@@ -259,6 +259,8 @@ export const getShopReviews = async (payload) => {
           flag
           user_name
           user_type
+          createdAt
+          updatedAt
         }
       }
     `,

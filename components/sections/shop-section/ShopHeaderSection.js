@@ -111,20 +111,19 @@ const ShopHeaderSection = ({
                         )}
                       </span>
                     </span>
-                    <a
-                      target="_self"
-                      href={`/shop/${shopDetails?.id}/branches`}
-                      rel="noreferrer"
-                      className="pb-2 sm:pb-10 mt-2"
+
+                    <Typography
+                      className="text-colorGreen underline pb-2 sm:pb-10 mt-2 cursor-pointer"
+                      onClick={() =>
+                        router.push(`/shop/${shopDetails?.id}/branches`)
+                      }
                     >
-                      <Typography className="text-colorGreen underline">
-                        See Branches
-                      </Typography>
-                    </a>
+                      See Branches
+                    </Typography>
                   </div>
                   <div className="mt-2 sm:mt-5">
                     <Button
-                      className="rounded-[8px] bg-colorGreen hover:bg-colorGreen"
+                      className="rounded-lg bg-colorGreen hover:bg-colorGreen"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -164,22 +163,18 @@ const ShopHeaderSection = ({
                         }
                       }}
                     >
-                      <Typography
-                        sx={{ textTransform: "none", color: "#FFFFFF" }}
-                      >
+                      <div className="text-colorWhite normal-case">
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
-                          <>
-                            <div className="flex items-center">
-                              <PersonAddIcon sx={{ color: "#ffffff" }} />
-                              <div className="hidden sm:block pt-[2px] ml-2">
-                                Follow
-                              </div>
+                          <div className="flex items-center">
+                            <PersonAddIcon sx={{ color: "#ffffff" }} />
+                            <div className="hidden sm:block pt-[2px] ml-2">
+                              Follow
                             </div>
-                          </>
+                          </div>
                         )}
-                      </Typography>
+                      </div>
                     </Button>
                   </div>
                 </div>

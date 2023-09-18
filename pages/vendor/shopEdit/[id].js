@@ -43,12 +43,12 @@ import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TbPhotoPlus } from "react-icons/tb";
-import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 import VendorBranchTable from "../../../components/Layout/VendorBranchTable";
 import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
 import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
+import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 
 const style = {
   position: "absolute",
