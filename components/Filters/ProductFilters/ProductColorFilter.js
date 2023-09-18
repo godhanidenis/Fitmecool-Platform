@@ -7,10 +7,11 @@ import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 import { colorsList } from "../../../utils/common";
+import { changeProductPage } from "../../../redux/ducks/product";
 
-const ProductColorFilter = ({ setProductPageSkip }) => {
+const ProductColorFilter = () => {
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
   const [colorSearchValue, setColorSearchValue] = useState("");
@@ -19,18 +20,14 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
-    setProductPageSkip(0);
+    dispatch(changeProductPage(0));
     dispatch(
       changeAppliedProductsFilters({
         key: "productColor",
         value: {
           selectedValue: checked
-            ? [
-                ...productsFiltersReducer.appliedProductsFilters.productColor
-                  .selectedValue,
-                value,
-              ]
-            : productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.filter(
+            ? [...appliedProductsFilters.productColor.selectedValue, value]
+            : appliedProductsFilters.productColor.selectedValue.filter(
                 (item) => item !== value
               ),
         },
@@ -49,8 +46,7 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
                 value={colorSearchValue}
                 onChange={(e) => setColorSearchValue(e.target.value)}
                 selectedFilterLength={
-                  productsFiltersReducer.appliedProductsFilters.productColor
-                    .selectedValue.length
+                  appliedProductsFilters.productColor.selectedValue.length
                 }
                 clearDispatched={() =>
                   dispatch(
@@ -90,7 +86,7 @@ const ProductColorFilter = ({ setProductPageSkip }) => {
                     label={capitalize(item)}
                     control={
                       <Checkbox
-                        checked={productsFiltersReducer.appliedProductsFilters.productColor.selectedValue.includes(
+                        checked={appliedProductsFilters.productColor.selectedValue.includes(
                           item
                         )}
                         onChange={handleCheckboxChange}

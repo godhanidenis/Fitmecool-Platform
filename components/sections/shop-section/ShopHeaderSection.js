@@ -8,8 +8,6 @@ import { toast } from "react-toastify";
 import { shopFollow } from "../../../graphql/mutations/shops";
 import { useDispatch, useSelector } from "react-redux";
 import Router, { useRouter } from "next/router";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -23,15 +21,7 @@ import {
 } from "react-share";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fbfbfb",
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  boxShadow: "none",
-}));
+import { ShopHeaderItem } from "../../core/CustomMUIComponents";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -121,20 +111,19 @@ const ShopHeaderSection = ({
                         )}
                       </span>
                     </span>
-                    <a
-                      target="_blank"
-                      href={`/shop/${shopDetails?.id}/branches`}
-                      rel="noreferrer"
-                      className="pb-2 sm:pb-10 mt-2"
+
+                    <Typography
+                      className="text-colorGreen underline pb-2 sm:pb-10 mt-2 cursor-pointer"
+                      onClick={() =>
+                        router.push(`/shop/${shopDetails?.id}/branches`)
+                      }
                     >
-                      <Typography className="text-colorGreen underline">
-                        See Branches
-                      </Typography>
-                    </a>
+                      See Branches
+                    </Typography>
                   </div>
                   <div className="mt-2 sm:mt-5">
                     <Button
-                      className="rounded-[8px] bg-colorGreen hover:bg-colorGreen"
+                      className="rounded-lg bg-colorGreen hover:bg-colorGreen"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -174,22 +163,18 @@ const ShopHeaderSection = ({
                         }
                       }}
                     >
-                      <Typography
-                        sx={{ textTransform: "none", color: "#FFFFFF" }}
-                      >
+                      <div className="text-colorWhite normal-case">
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
-                          <>
-                            <div className="flex items-center">
-                              <PersonAddIcon sx={{ color: "#ffffff" }} />
-                              <div className="hidden sm:block pt-[2px] ml-2">
-                                Follow
-                              </div>
+                          <div className="flex items-center">
+                            <PersonAddIcon sx={{ color: "#ffffff" }} />
+                            <div className="hidden sm:block pt-[2px] ml-2">
+                              Follow
                             </div>
-                          </>
+                          </div>
                         )}
-                      </Typography>
+                      </div>
                     </Button>
                   </div>
                 </div>
@@ -200,7 +185,7 @@ const ShopHeaderSection = ({
           <div className="mt-[24px] sm:mt-0 relative">
             <Grid container>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <ProductionQuantityLimitsIcon
@@ -213,10 +198,10 @@ const ShopHeaderSection = ({
                       {totalProducts}
                     </p>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <PeopleAltIcon
@@ -229,7 +214,7 @@ const ShopHeaderSection = ({
                       {totalFollowers}
                     </p>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
               <Grid
                 sx={{ borderRight: 1 }}
@@ -238,7 +223,7 @@ const ShopHeaderSection = ({
                 sm={3}
                 onClick={handleClick}
               >
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <RateReviewIcon
@@ -251,10 +236,10 @@ const ShopHeaderSection = ({
                       {totalReview}
                     </p>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
               <Grid item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="lg:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <ShareIcon
@@ -299,7 +284,7 @@ const ShopHeaderSection = ({
                       </div>
                     </div>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
             </Grid>
           </div>

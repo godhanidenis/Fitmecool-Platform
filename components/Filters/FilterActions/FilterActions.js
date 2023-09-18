@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { Divider, Stack, Switch } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 
-const FilterActions = ({ byShop, setByShop, productByShop }) => {
+const FilterActions = ({ productByShop }) => {
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
+
   const [checked, setChecked] = useState(byShop);
+
+  const dispatch = useDispatch();
 
   const switchHandler = (event) => {
     setChecked(event.target.checked);
-    setByShop(event.target.checked);
+    dispatch(changeByShopFilters(event.target.checked));
   };
 
   useEffect(() => {

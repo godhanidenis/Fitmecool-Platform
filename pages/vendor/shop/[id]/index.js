@@ -4,25 +4,32 @@ import { useDispatch, useSelector } from "react-redux";
 import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
 import { changeAppliedProductsFilters } from "../../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
-import { loadProductsStart } from "../../../../redux/ducks/product";
+import {
+  changeProductPage,
+  loadProductsStart,
+} from "../../../../redux/ducks/product";
 import { withAuth } from "../../../../components/core/PrivateRouteForVendor";
 import AddIcon from "@mui/icons-material/Add";
 import VenderProductTable from "../../../../components/Layout/VenderProductTable";
 
 const ShopDetailsPage = () => {
-  const [productPageSkip, setProductPageSkip] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
 
   const dispatch = useDispatch();
-  const { productsCount, productsData, loading } = useSelector(
+  const { productsCount, productPageSkip, productsData, loading } = useSelector(
     (state) => state.products
   );
+
+  const productIdData = productsData.filter(
+    (data) => data?.branchInfo?.shop_id === id
+  );
+
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -38,17 +45,12 @@ const ShopDetailsPage = () => {
           limit: 6,
         },
         filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
+          category_id: appliedProductsFilters.categoryId.selectedValue,
+          product_color: appliedProductsFilters.productColor.selectedValue,
         },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
+        shopId: appliedProductsFilters.shopId.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
+        search: appliedProductsFilters.searchBarData.selectedValue,
       })
     );
   };
@@ -66,20 +68,19 @@ const ShopDetailsPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (
-      productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
-        .length > 0
-    ) {
+    if (appliedProductsFilters.shopId.selectedValue.length > 0) {
       getAllProducts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    productsFiltersReducer.appliedProductsFilters,
-    productsFiltersReducer.sortFilters,
-    productsFiltersReducer.searchBarData,
-    productPageSkip,
-  ]);
+  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
+
+  useEffect(() => {
+    if (id && vendorShopDetails?.id) {
+      if (id !== vendorShopDetails?.id) {
+        router.push("/vendor/dashboard");
+      }
+    }
+  }, [id, router, vendorShopDetails?.id]);
 
   if (!isHydrated) {
     return null;
@@ -102,11 +103,8 @@ const ShopDetailsPage = () => {
           </button>
         </div>
 
-        <div className="">
-          <UpperFilter
-            setProductPageSkip={setProductPageSkip}
-            showOnlyShopDetailPage={true}
-          />
+        <div className="pt-4">
+          <UpperFilter showOnlyShopDetailPage={true} />
 
           <div
             className={`w-full relative ${
@@ -122,12 +120,12 @@ const ShopDetailsPage = () => {
             >
               {productsData.length > 0 ? (
                 <VenderProductTable
-                  productsData={productsData}
-                  setProductPageSkip={setProductPageSkip}
+                  productsData={productIdData}
                   getAllProducts={getAllProducts}
                 />
               ) : (
-                !loading && (
+                !loading &&
+                productsData.length === 0 && (
                   <span className="flex items-center justify-center">
                     No products found!
                   </span>
@@ -144,9 +142,9 @@ const ShopDetailsPage = () => {
                     page={
                       (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
                     }
-                    onChange={(e, p) => {
-                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                    }}
+                    onChange={(e, p) =>
+                      dispatch(changeProductPage((p === 1 && 0) || (p - 1) * 6))
+                    }
                   />
                 </div>
               )}

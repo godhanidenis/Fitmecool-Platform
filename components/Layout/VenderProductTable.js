@@ -12,7 +12,7 @@ import {
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { deleteProduct } from "../../graphql/mutations/products";
@@ -21,6 +21,7 @@ import HTMLReactParser from "html-react-parser";
 import ConfirmationModal from "../Modal/ConfirmationModal";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";
+import { changeProductPage } from "../../redux/ducks/product";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -42,16 +43,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const VenderProductTable = ({
-  productsData,
-  setProductPageSkip,
-  getAllProducts,
-}) => {
+const VenderProductTable = ({ productsData, getAllProducts }) => {
   const router = useRouter();
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState();
 
+  const dispatch = useDispatch();
   return (
     <>
       <div>
@@ -156,7 +154,7 @@ const VenderProductTable = ({
                 toast.success(res.data.deleteProduct, {
                   theme: "colored",
                 });
-                setProductPageSkip(0);
+                dispatch(changeProductPage(0));
                 getAllProducts();
               },
               (error) => {

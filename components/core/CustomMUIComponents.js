@@ -3,10 +3,15 @@ import TextField from "@mui/material/TextField";
 import {
   Box,
   Checkbox,
+  Dialog,
   FormControlLabel,
+  LinearProgress,
   Modal,
+  Paper,
+  Select,
   Tabs,
   Typography,
+  linearProgressClasses,
 } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -40,14 +45,17 @@ export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   },
 }));
 
-export const CustomTab = styled(Tabs)(({ theme }) => ({
+export const CustomTab = styled(Tabs)(({ theme, hometab }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "#FFFFFF",
+    color: hometab ? "#000" : "#FFFFFF",
     fontWeight: 600,
-    fontSize: "14px",
+    fontSize: hometab ? "32px" : "14px",
     paddingTop: "32px",
     paddingBottom: "32px",
+    paddingRight: hometab && "200px",
+    paddingLeft: hometab && "200px",
+    borderBottom: hometab && "5px solid #0000000a",
   },
   [`& .MuiTab-root:hover`]: {
     color: "#29977E !important",
@@ -57,7 +65,7 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
-    fontSize: "16px",
+    fontSize: hometab ? "32px" : "16px",
     color: "#29977E !important",
   },
   [`& .MuiTabs-indicator`]: {
@@ -217,3 +225,62 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
     },
   })
 );
+
+export const SearchCustomDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialog-backdrop": {
+    backgroundColor: "#CAA9CD !important",
+  },
+  "& .MuiDialog-paper": {
+    top: "0",
+    position: "absolute",
+    maxHeight: "50vh",
+    height: "50vh",
+    width: "100vw",
+    maxWidth: "100%",
+    margin: "0px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+export const LocationSelect = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "white !important",
+  },
+  "& .MuiSelect-icon": {
+    color: "white !important",
+  },
+}));
+
+export const ShopHeaderItem = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fbfbfb",
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  boxShadow: "none",
+}));
+
+export const CustomBorderLinearProgress = styled(LinearProgress)(
+  ({ theme }) => ({
+    height: 12,
+    borderRadius: "12px",
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "rgba(24, 23, 37, 0.1)",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      backgroundColor: "rgba(21, 24, 39, 0.4)",
+    },
+  })
+);
+
+export const NativeSelectInput = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "#1518278F",
+    marginLeft: 10,
+  },
+}));

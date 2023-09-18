@@ -28,22 +28,16 @@ import {
   styled,
 } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
-import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
+import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
 import "suneditor/dist/css/suneditor.min.css";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../utils/common";
 import Image from "next/image";
+import { NativeSelectInput } from "../../core/CustomMUIComponents";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
 });
-
-const NativeSelectInput = styled(Select)(({ theme }) => ({
-  "& .MuiInputBase-input": {
-    color: "#1518278F",
-    marginLeft: 10,
-  },
-}));
 
 const AddEditProductPage = () => {
   const {
@@ -300,8 +294,6 @@ const AddEditProductPage = () => {
                     setLoading(false);
                     handleProductListingModalClose();
                     router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                    // setProductPageSkip(0);
-                    // getAllProducts();
                   },
                   (error) => {
                     setLoading(false);
@@ -332,8 +324,6 @@ const AddEditProductPage = () => {
                   setLoading(false);
                   handleProductListingModalClose();
                   router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                  // setProductPageSkip(0);
-                  // getAllProducts();
                 },
                 (error) => {
                   setLoading(false);
@@ -383,8 +373,6 @@ const AddEditProductPage = () => {
                     setLoading(false);
                     handleProductListingModalClose();
                     router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                    // setProductPageSkip(0);
-                    // getAllProducts();
                   },
                   (error) => {
                     setLoading(false);
@@ -416,8 +404,6 @@ const AddEditProductPage = () => {
                   setLoading(false);
                   handleProductListingModalClose();
                   router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                  // setProductPageSkip(0);
-                  // getAllProducts();
                 },
                 (error) => {
                   setLoading(false);

@@ -7,8 +7,9 @@ import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilte
 import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
+import { changeProductPage } from "../../../redux/ducks/product";
 
-const ProductCategoriesFilter = ({ setProductPageSkip }) => {
+const ProductCategoriesFilter = () => {
   const { categories } = useSelector((state) => state.categories);
 
   const [menCategoryLabel, setMenCategoryLabel] = useState([]);
@@ -31,7 +32,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
   const [womenCatShowMore, setWomenCatShowMore] = useState(true);
 
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -52,21 +53,21 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
   }, [abc, categoryId, dispatch]);
 
   useEffect(() => {
-    productsFiltersReducer.appliedProductsFilters &&
+    appliedProductsFilters &&
       setSelectedMenCat(
-        productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+        appliedProductsFilters.categoryId.selectedValue
           .map((itm) => categories.find((i) => i.id === itm))
           .filter((ele) => ele.category_type === "Men")
           .map((i) => i.category_name)
       );
 
     setSelectedWomenCat(
-      productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+      appliedProductsFilters.categoryId.selectedValue
         .map((itm) => categories.find((i) => i.id === itm))
         .filter((ele) => ele.category_type === "Women")
         .map((i) => i.category_name)
     );
-  }, [categories, productsFiltersReducer.appliedProductsFilters]);
+  }, [categories, appliedProductsFilters]);
 
   useEffect(() => {
     setMenCategoryLabel(
@@ -93,7 +94,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                   value={menSearchValue}
                   onChange={(e) => setMenSearchValue(e.target.value)}
                   selectedFilterLength={
-                    productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+                    appliedProductsFilters.categoryId.selectedValue
                       .map((itm) => categories.find((i) => i.id === itm))
                       .filter((ele) => ele.category_type === "Men").length
                   }
@@ -133,7 +134,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                               ? selectedMenCat.filter((cat) => cat !== itm)
                               : [...selectedMenCat, itm];
                             setSelectedMenCat(updatedSelection);
-                            setProductPageSkip(0);
+                            dispatch(changeProductPage(0));
                             setAbc(true);
                             setMenSelectedData(
                               updatedSelection.map(
@@ -176,7 +177,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                   value={womenSearchValue}
                   onChange={(e) => setWomenSearchValue(e.target.value)}
                   selectedFilterLength={
-                    productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+                    appliedProductsFilters.categoryId.selectedValue
                       .map((itm) => categories.find((i) => i.id === itm))
                       .filter((ele) => ele.category_type === "Women").length
                   }
@@ -218,7 +219,7 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
                               ? selectedWomenCat.filter((cat) => cat !== itm)
                               : [...selectedWomenCat, itm];
                             setSelectedWomenCat(updatedSelection);
-                            setProductPageSkip(0);
+                            dispatch(changeProductPage(0));
                             setAbc(true);
                             setWomenSelectedData(
                               updatedSelection.map(

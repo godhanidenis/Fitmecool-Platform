@@ -6,6 +6,7 @@ import ProductCard from "../../components/sections/product-section/ProductCard";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import EmptyCart from "../../assets/images/empty_page_img.svg";
 import Router from "next/router";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const ProductLikePage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -47,20 +48,34 @@ const ProductLikePage = () => {
           </button>
         </div>
       ) : (
-        <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto my-10">
-          <p className="text-colorBlack font-semibold text-xl">
-            Liked Products
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 sm:gap-10 place-items-center mb-10">
-            {userProfile.product_like_list &&
-              userProfile.product_like_list?.map((product) => (
-                <Link href={`/product/${product.id}`} passHref key={product.id}>
-                  <ProductCard product={product} key={product.id} />
-                </Link>
-              ))}
+        <>
+          <div className="w-[95%] mx-auto h-[39px] mt-2 flex items-center">
+            <ArrowBackIcon
+              onClick={() => Router.push("/")}
+              className="cursor-pointer"
+            />
+            <span className="font-semibold ml-2">Back</span>
           </div>
-        </div>
+
+          <div className="bg-[#F5F5F5] p-5 w-[95%] mx-auto mt-2 mb-10">
+            <p className="text-colorBlack font-semibold text-xl">
+              Liked Products
+            </p>
+
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 sm:gap-10 place-items-center mb-10">
+              {userProfile.product_like_list &&
+                userProfile.product_like_list?.map((product) => (
+                  <Link
+                    href={`/product/${product.id}`}
+                    passHref
+                    key={product.id}
+                  >
+                    <ProductCard product={product} key={product.id} />
+                  </Link>
+                ))}
+            </div>
+          </div>
+        </>
       )}
     </>
   );

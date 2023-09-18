@@ -2,46 +2,39 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-
 import SearchIcon from "@mui/icons-material/Search";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
 import ProfileIcon from "../../assets/profile.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
+  Badge,
   ClickAwayListener,
+  DialogContent,
+  DialogTitle,
   Divider,
+  FormControl,
   Grid,
   Grow,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   MenuItem,
   MenuList,
+  OutlinedInput,
   Paper,
   Popper,
-  Select,
 } from "@mui/material";
 import {
   loadUserProfileStart,
   userLogout,
 } from "../../redux/ducks/userProfile";
-import {
-  changeAppliedProductsFilters,
-  changeProductsSearchBarData,
-} from "../../redux/ducks/productsFilters";
+import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
@@ -49,73 +42,15 @@ import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
-import InputLabel from "@mui/material/InputLabel";
 import LocationIcon from "../../assets/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialog-backdrop": {
-    backgroundColor: "#CAA9CD !important",
-  },
-  "& .MuiDialog-paper": {
-    top: "0",
-    position: "absolute",
-    maxHeight: "50vh",
-    height: "50vh",
-    width: "100vw",
-    maxWidth: "100%",
-    margin: "0px",
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-const StyledSelect = styled(Select)`
-  & .MuiInputBase-input {
-    color: white;
-  }
-
-  & .MuiSelect-icon {
-    color: white;
-  }
-  & .MuiInputLabel-root {
-    color: white;
-  }
-`;
-
-function BootstrapDialogTitle(props) {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-}
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
+import {
+  LocationSelect,
+  SearchCustomDialog,
+} from "../core/CustomMUIComponents";
+import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import { changeProductPage } from "../../redux/ducks/product";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
@@ -123,10 +58,18 @@ const Header = () => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [selectedLocation, setSelectedLocation] = useState("");
+
   const dispatch = useDispatch();
 
   const isScreenWide = useResizeScreenLayout();
   const router = useRouter();
+
+  const { areaLists } = useSelector((state) => state.areaLists);
+  const { userProfile } = useSelector((state) => state.userProfile);
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
+
+  const [openSearchDialog, setOpenSearchDialog] = useState(false);
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -139,28 +82,12 @@ const Header = () => {
   const handleMobileSidebarClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  const [selectedLocation, setSelectedLocation] = useState("");
-
-  const { areaLists } = useSelector((state) => state.areaLists);
-  const { userProfile } = useSelector((state) => state.userProfile);
-  const [openModel, setOpenModel] = React.useState(false);
-  const productsFiltersReducer = useSelector(
-    (state) => state.productsFiltersReducer
-  );
-
-  const handleChangeLocation = (event) => {
-    setSelectedLocation(event.target.value);
-  };
 
   useEffect(() => {
     dispatch(loadCategoriesStart());
     dispatch(loadAreaListsStart());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-
-  useEffect(() => {
-    setSearchBarValue(productsFiltersReducer.searchBarData);
-  }, [productsFiltersReducer.searchBarData]);
 
   useEffect(() => {
     const getAccessToken = localStorage.getItem("token");
@@ -171,12 +98,34 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
-  const handleClickOpen = () => {
-    setOpenModel(true);
+  const handleSearchDialogClose = () => {
+    setSearchBarValue("");
+    setOpenSearchDialog(false);
   };
 
-  const handleClose = () => {
-    setOpenModel(false);
+  const handleSearch = (searchData) => {
+    ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+      dispatch(
+        changeAppliedProductsFilters({
+          key: itm,
+          value: {
+            selectedValue:
+              itm === "searchBarData"
+                ? searchData
+                  ? searchData
+                  : searchBarValue
+                : [],
+          },
+        })
+      )
+    );
+
+    dispatch(changeProductPage(0));
+    byShop && dispatch(changeByShopFilters(false));
+
+    handleSearchDialogClose();
+
+    router.pathname !== "/" && router.push("/");
   };
 
   const scrollDirection = useScrollDirection();
@@ -196,7 +145,7 @@ const Header = () => {
           userProfile.user_type === "vendor" ? "py-4" : "py-4 sm:py-0"
         } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
-        }  transition-all duration-500`}
+        } transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
@@ -243,11 +192,13 @@ const Header = () => {
                       Location
                     </span>
                   </InputLabel>
-                  <StyledSelect
+                  <LocationSelect
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
-                    onChange={handleChangeLocation}
+                    onChange={(event) =>
+                      setSelectedLocation(event.target.value)
+                    }
                     label="Location"
                   >
                     {areaLists?.map((location, index) => (
@@ -255,7 +206,7 @@ const Header = () => {
                         {location?.area}
                       </MenuItem>
                     ))}
-                  </StyledSelect>
+                  </LocationSelect>
                 </FormControl>
               </div>
             )}
@@ -273,7 +224,7 @@ const Header = () => {
                     <SearchIcon
                       sx={{ color: "white" }}
                       fontSize="large"
-                      onClick={handleClickOpen}
+                      onClick={() => setOpenSearchDialog(true)}
                     />
                   </li>
                   <li className="hidden lg:block">
@@ -322,91 +273,81 @@ const Header = () => {
         </div>
       </header>
 
-      {openModel && (
-        <div
-          style={{
-            background: "#95539B",
-            position: "fixed",
-            display: "block",
-            width: "100%",
-            height: "100%",
-            opacity: ".4",
-            zIndex: 2,
-            cursor: "pointer",
-          }}
-        >
-          <BootstrapDialog
-            onClose={handleClose}
-            aria-labelledby="customized-dialog-title"
-            open={openModel}
+      {openSearchDialog && (
+        <div className="bg-colorPrimary fixed block w-full h-full opacity-50 z-[2] cursor-pointer">
+          <SearchCustomDialog
+            open={openSearchDialog}
+            onClose={handleSearchDialogClose}
           >
-            <BootstrapDialogTitle
-              id="customized-dialog-title"
-              onClose={handleClose}
-            >
-              <div className="flex justify-center cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
+            <DialogTitle m={0} p={2} display="flex">
+              <div className="w-full flex items-center justify-center cursor-pointer">
+                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
                   <span className="text-4xl">R</span>entbless
                 </h2>
               </div>
-            </BootstrapDialogTitle>
+
+              <IconButton onClick={handleSearchDialogClose}>
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
             <DialogContent dividers className="flex justify-center p-0">
-              <Grid
-                container
-                direction="column"
-                justifyContent="start"
-                alignItems="center"
-              >
-                <Grid item xs={6}>
-                  <FormControl
-                    sx={{
-                      width: 500,
-                      background: "white",
-                      borderRadius: "5px",
-                    }}
-                    variant="outlined"
+              <Grid container justifyContent="center">
+                <Grid item xs={4}>
+                  <OutlinedInput
+                    placeholder="What are you looking for?"
                     size="small"
-                  >
-                    <OutlinedInput
-                      placeholder="What are you looking for?"
-                      value={searchBarValue}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          dispatch(
-                            changeProductsSearchBarData({
-                              key: "searchBarData",
-                              value: searchBarValue,
-                            })
-                          );
-                        }
-                      }}
-                      onChange={(e) => {
-                        setSearchBarValue(e.currentTarget.value);
-                      }}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onClick={() =>
-                              dispatch(
-                                changeProductsSearchBarData({
-                                  key: "searchBarData",
-                                  value: searchBarValue,
-                                })
-                              )
-                            }
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
+                    fullWidth
+                    value={searchBarValue}
+                    onKeyDown={(e) =>
+                      searchBarValue !== "" &&
+                      e.key === "Enter" &&
+                      handleSearch()
+                    }
+                    onChange={(e) => setSearchBarValue(e.currentTarget.value)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={() =>
+                            searchBarValue !== "" && handleSearch()
+                          }
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <div className="mt-10">
+                    <p className="text-lg text-colorPrimary font-Nova font-medium">
+                      Popular Searches
+                    </p>
+
+                    <div className="flex items-center flex-wrap gap-4 my-5">
+                      {[
+                        "kurta",
+                        "choli",
+                        "sherwani",
+                        "suit",
+                        "sider's choli",
+                        "jodhpuri",
+                        "black art",
+                        "Pretty Marsidise",
+                      ].map((itm, index) => (
+                        <p
+                          className="px-5 py-2 border rounded-3xl cursor-pointer capitalize text-colorPrimary hover:text-colorGreen hover:border-colorGreen"
+                          key={index}
+                          onClick={() => handleSearch(itm)}
+                        >
+                          {itm}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
                 </Grid>
               </Grid>
             </DialogContent>
-          </BootstrapDialog>
+          </SearchCustomDialog>
         </div>
       )}
     </>

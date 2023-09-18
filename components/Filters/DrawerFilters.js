@@ -5,13 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Fab } from "@mui/material";
 import { useSelector } from "react-redux";
 
-const DrawerFilters = ({
-  setProductPageSkip,
-  setByShop,
-  byShop,
-  setShopPageSkip,
-  showOnlyShopDetailPage,
-}) => {
+const DrawerFilters = ({ showOnlyShopDetailPage }) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const toggleFilterMenu = () => {
     setFilterOpen(!filterOpen);
@@ -48,19 +42,13 @@ const DrawerFilters = ({
         </div>
         <div className="h-[90%] pb-10 overflow-y-scroll">
           <div className="max-w-md mx-auto">
-            {userType === "vendor" || showOnlyShopDetailPage === true ? (
-              <Filter
-                productByShop={true}
-                setProductPageSkip={setProductPageSkip}
-              />
-            ) : (
-              <Filter
-                byShop={byShop}
-                setByShop={setByShop}
-                setProductPageSkip={setProductPageSkip}
-                setShopPageSkip={setShopPageSkip}
-              />
-            )}
+            <Filter
+              productByShop={
+                userType === "vendor" || showOnlyShopDetailPage === true
+                  ? true
+                  : false
+              }
+            />
           </div>
         </div>
       </div>

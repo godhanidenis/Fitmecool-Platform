@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { loadProductsStart } from "../../../redux/ducks/product";
+import {
+  changeProductPage,
+  loadProductsStart,
+} from "../../../redux/ducks/product";
 import UpperFilter from "../../Filters/UpperFilter/UpperFilter";
 import ProductCard from "../product-section/ProductCard";
-import { loadShopsStart } from "../../../redux/ducks/shop";
+import { changeShopPage, loadShopsStart } from "../../../redux/ducks/shop";
 import ShopCard from "../shop-section/ShopCard";
 import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
@@ -17,6 +20,7 @@ const LandingPage = () => {
     productsLimit,
     productsCount,
     numOfPages,
+    productPageSkip,
     productsData,
     loading,
     error,
@@ -26,40 +30,35 @@ const LandingPage = () => {
     shopsLimit,
     shopsCount,
     numOfPages: shopNumOfPages,
+    shopPageSkip,
     shopsData,
     loading: shopLoading,
     error: shopError,
   } = useSelector((state) => state.shops);
 
-  const [byShop, setByShop] = useState(false);
-
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
-  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
-
-  const [productPageSkip, setProductPageSkip] = useState(0);
-  const [shopPageSkip, setShopPageSkip] = useState(0);
+  const {
+    appliedShopsFilters,
+    sortFilters: shopSortFilters,
+    byShop,
+  } = useSelector((state) => state.shopsFiltersReducer);
 
   const getAllProducts = () => {
     dispatch(
       loadProductsStart({
         pageData: {
           skip: productPageSkip,
-          limit: 12,
+          limit: 10,
         },
         filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
+          category_id: appliedProductsFilters.categoryId.selectedValue,
+          product_color: appliedProductsFilters.productColor.selectedValue,
         },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
+        shopId: appliedProductsFilters.shopId.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
+        search: appliedProductsFilters.searchBarData.selectedValue,
       })
     );
   };
@@ -69,11 +68,11 @@ const LandingPage = () => {
       loadShopsStart({
         pageData: {
           skip: shopPageSkip,
-          limit: 12,
+          limit: 10,
         },
-        area: shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
-        sort: shopsFiltersReducer.sortFilters.sortType.selectedValue,
-        stars: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
+        area: appliedShopsFilters.locations.selectedValue,
+        sort: shopSortFilters.sortType.selectedValue,
+        stars: appliedShopsFilters.stars.selectedValue,
       })
     );
   };
@@ -81,23 +80,12 @@ const LandingPage = () => {
   useEffect(() => {
     getAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    productsFiltersReducer.appliedProductsFilters,
-    productsFiltersReducer.sortFilters,
-    productsFiltersReducer.searchBarData,
-    productPageSkip,
-  ]);
+  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
   useEffect(() => {
     getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    shopsFiltersReducer.appliedShopsFilters,
-    shopsFiltersReducer.sortFilters,
-    shopPageSkip,
-  ]);
+  }, [dispatch, appliedShopsFilters, shopSortFilters, shopPageSkip]);
 
   return (
     <>
@@ -113,22 +101,12 @@ const LandingPage = () => {
       <div>
         <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
           <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
-            <Filter
-              byShop={byShop}
-              setByShop={setByShop}
-              setProductPageSkip={setProductPageSkip}
-              setShopPageSkip={setShopPageSkip}
-            />
+            <Filter />
           </div>
 
           <div className="col-span-12 lg:col-span-9 px-4 bg-white shadow-xl">
             <div className="mt-1 px-1">
-              <UpperFilter
-                byShop={byShop}
-                setByShop={setByShop}
-                setProductPageSkip={setProductPageSkip}
-                setShopPageSkip={setShopPageSkip}
-              />
+              <UpperFilter />
             </div>
             <div className="w-full mt-4 mb-4">
               {!byShop ? (
@@ -160,11 +138,13 @@ const LandingPage = () => {
                                 (productPageSkip === 0 && 1) ||
                                 productPageSkip / 10 + 1
                               }
-                              onChange={(e, p) => {
-                                setProductPageSkip(
-                                  (p === 1 && 0) || (p - 1) * 10
-                                );
-                              }}
+                              onChange={(e, p) =>
+                                dispatch(
+                                  changeProductPage(
+                                    (p === 1 && 0) || (p - 1) * 10
+                                  )
+                                )
+                              }
                             />
                           </div>
                         )}
@@ -208,14 +188,16 @@ const LandingPage = () => {
                           <div className="flex justify-center py-4 sm:py-8">
                             <Pagination
                               color="primary"
-                              count={Math.ceil(shopsCount / 12)}
+                              count={Math.ceil(shopsCount / 10)}
                               page={
                                 (shopPageSkip === 0 && 1) ||
-                                shopPageSkip / 12 + 1
+                                shopPageSkip / 10 + 1
                               }
-                              onChange={(e, p) => {
-                                setShopPageSkip((p === 1 && 0) || (p - 1) * 12);
-                              }}
+                              onChange={(e, p) =>
+                                dispatch(
+                                  changeShopPage((p === 1 && 0) || (p - 1) * 10)
+                                )
+                              }
                             />
                           </div>
                         )}

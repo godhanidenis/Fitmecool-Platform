@@ -3,6 +3,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
 import Router from "next/router";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -36,11 +37,17 @@ const UserType = () => {
   return (
     <div className="bg-background w-full">
       <div className="bg-white flex w-full min-h-[100vh] overflow-auto gap-10">
-        <div className="md:w-[50%] sm:w-full flex flex-col p-10">
-          <div onClick={() => Router.push("/")} className="cursor-pointer">
-            <h2 className="text-3xl font-bold text-colorPrimary uppercase cursor-pointer">
-              <span className="text-4xl">R</span>entbless
-            </h2>
+        <div className="md:w-[50%] sm:w-full flex flex-col p-6 sm:p-10">
+          <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
+            <ArrowBackIcon
+              onClick={() => Router.push("/")}
+              className="cursor-pointer text-3xl"
+            />
+            <div className="">
+              <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
+                <span className="sm:text-4xl text-[24px]">R</span>entbless
+              </h2>
+            </div>
           </div>
           <div className="text-2xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
             How you would like to join us ?

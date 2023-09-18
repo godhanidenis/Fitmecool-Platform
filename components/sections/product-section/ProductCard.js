@@ -124,6 +124,11 @@ const ProductCard = ({ product, onlyCarousal }) => {
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
 
+  const [OpenToolTip, setOpenToolTip] = useState(false);
+
+  const shopId = product.branchInfo?.shop_id;
+  const pageShareURL = window.location.href;
+
   const dispatch = useDispatch();
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
@@ -145,7 +150,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
       : setProductLikeByUser(false);
   }, [isAuthenticate, product.id, userProfile]);
 
-  const items = [
+  const productImages = [
     product.product_image.front,
     product.product_image.back,
     product.product_image.side,
@@ -179,11 +184,6 @@ const ProductCard = ({ product, onlyCarousal }) => {
     );
   });
 
-  const shopId = product.branchInfo?.shop_id;
-
-  const [OpenToolTip, setOpenToolTip] = useState(false);
-  const pageShareURL = window.location.href;
-
   const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -195,10 +195,6 @@ const ProductCard = ({ product, onlyCarousal }) => {
       boxShadow: "0 0 10px rgba(0,0,0,.1)",
     },
   }));
-
-  const handleTooltipOpen = () => {
-    setOpenToolTip(!OpenToolTip);
-  };
 
   return (
     <>
@@ -221,7 +217,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                 }
                 dotListClass={"Landing_customDots"}
               >
-                {items}
+                {productImages}
               </Carousel>
             </div>
           </div>
@@ -317,7 +313,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                   }
                 >
                   <button
-                    onClick={handleTooltipOpen}
+                    onClick={() => setOpenToolTip(!OpenToolTip)}
                     className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
                     style={{
                       backdropFilter: "blur(20px)",

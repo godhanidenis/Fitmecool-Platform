@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from "react";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-
 import {
   Avatar,
-  FormControl,
   IconButton,
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  changeAppliedProductsFilters,
-  changeProductsSearchBarData,
-} from "../../../redux/ducks/productsFilters";
+import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import SidebarCategoryFilter from "./SidebarCategoryFilter";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import Router from "next/router";
-import VendorSidebar from "../../sections/vendor-section/VendorSidebar";
+import Router, { useRouter } from "next/router";
 import { userLogout } from "../../../redux/ducks/userProfile";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import ProfileIcon from "../../../assets/profile.png";
 import VendorShopSubHeader from "../VendorShopSubHeader";
+import { changeProductPage } from "../../../redux/ducks/product";
+import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 
 const Sidebar = ({
   className = "",
@@ -36,32 +32,90 @@ const Sidebar = ({
 
   const [menCategory, setMenCategory] = useState([]);
   const [womenCategory, setWomenCategory] = useState([]);
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
   const { categories } = useSelector((state) => state.categories);
   const { userProfile } = useSelector((state) => state.userProfile);
-  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+  const { allShopsLists } = useSelector((state) => state.shops);
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     setMenCategory(categories.filter((itm) => itm.category_type === "Men"));
     setWomenCategory(categories.filter((itm) => itm.category_type === "Women"));
   }, [categories]);
 
-  useEffect(() => {
-    setSearchBarValue(productsFiltersReducer.searchBarData);
-  }, [productsFiltersReducer.searchBarData]);
   const setActiveLink = (id) => {
-    return productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue.map(
-      (itm) => (itm === id ? "!font-semibold" : "")
+    return appliedProductsFilters.categoryId.selectedValue.map((itm) =>
+      itm === id ? "!font-semibold" : ""
     );
   };
 
   const equalsCheck = (a, b) => {
     return JSON.stringify(a) === JSON.stringify(b);
   };
+
+  const handleSearch = () => {
+    ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+      dispatch(
+        changeAppliedProductsFilters({
+          key: itm,
+          value: {
+            selectedValue: itm === "searchBarData" ? searchBarValue : [],
+          },
+        })
+      )
+    );
+    dispatch(changeProductPage(0));
+    byShop && dispatch(changeByShopFilters(false));
+
+    handleMobileSidebarClick();
+    setSearchBarValue("");
+    router.pathname !== "/" && router.push("/");
+  };
+
+  const generateQuickFilterComponent = (filterType, item) => (
+    <p
+      key={item.id}
+      className={`text-colorBlack p-1 hover:font-semibold ${setActiveLink(
+        filterType,
+        item.id
+      )}`}
+      onClick={() => {
+        ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+          dispatch(
+            changeAppliedProductsFilters({
+              key: itm,
+              value: {
+                selectedValue:
+                  itm === filterType
+                    ? equalsCheck(
+                        appliedProductsFilters[filterType].selectedValue,
+                        [item.id]
+                      )
+                      ? []
+                      : [item.id]
+                    : itm === "searchBarData"
+                    ? ""
+                    : [],
+              },
+            })
+          )
+        );
+        dispatch(changeProductPage(0));
+        byShop && dispatch(changeByShopFilters(false));
+
+        handleMobileSidebarClick();
+
+        router.pathname !== "/" && router.push("/");
+      }}
+    >
+      {filterType === "shopId" ? item.shop_name : item.category_name}
+    </p>
+  );
 
   return (
     <>
@@ -104,52 +158,26 @@ const Sidebar = ({
         {userProfile.user_type !== "vendor" && (
           <ul className="flex flex-col pb-5">
             <li className="px-8 py-4 border-b">
-              <FormControl
-                sx={{
-                  background: "white",
-                  borderRadius: "5px",
-                  width: "100%",
-                }}
-                variant="outlined"
+              <OutlinedInput
+                placeholder="What are you looking for?"
                 size="small"
-              >
-                <OutlinedInput
-                  placeholder="What are you looking for?"
-                  value={searchBarValue}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      dispatch(
-                        changeProductsSearchBarData({
-                          key: "searchBarData",
-                          value: searchBarValue,
-                        })
-                      );
-                      handleMobileSidebarClick();
-                    }
-                  }}
-                  onChange={(e) => {
-                    setSearchBarValue(e.currentTarget.value);
-                  }}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        onClick={() => {
-                          dispatch(
-                            changeProductsSearchBarData({
-                              key: "searchBarData",
-                              value: searchBarValue,
-                            })
-                          );
-                          handleMobileSidebarClick();
-                        }}
-                      >
-                        <SearchIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
+                fullWidth
+                value={searchBarValue}
+                onKeyDown={(e) =>
+                  searchBarValue !== "" && e.key === "Enter" && handleSearch()
+                }
+                onChange={(e) => setSearchBarValue(e.currentTarget.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={() => searchBarValue !== "" && handleSearch()}
+                    >
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
             </li>
             <li className="px-8 py-4 border-b">
               <p
@@ -169,76 +197,31 @@ const Sidebar = ({
               <p className="text-lg text-[#4a4a4a] font-semibold">
                 Products Categories
               </p>
-
-              <SidebarCategoryFilter
-                title="Men's Category"
-                bottomComponent={
-                  <>
-                    {menCategory?.map((itm, index) => (
-                      <p
-                        key={itm.id}
-                        className={`text-colorBlack p-1 hover:font-semibold ${setActiveLink(
-                          itm.id
-                        )}`}
-                        onClick={() => {
-                          dispatch(
-                            changeAppliedProductsFilters({
-                              key: "categoryId",
-                              value: {
-                                selectedValue: equalsCheck(
-                                  productsFiltersReducer.appliedProductsFilters
-                                    .categoryId.selectedValue,
-                                  [itm.id]
-                                )
-                                  ? []
-                                  : [itm.id],
-                              },
-                            })
-                          );
-                          handleMobileSidebarClick();
-                        }}
-                      >
-                        {itm.category_name}
-                      </p>
-                    ))}
-                  </>
-                }
-              />
-
-              <SidebarCategoryFilter
-                title="Women's Category"
-                bottomComponent={
-                  <>
-                    {womenCategory?.map((itm, index) => (
-                      <p
-                        key={itm.id}
-                        className={`text-colorBlack p-1 hover:font-semibold ${setActiveLink(
-                          itm.id
-                        )}`}
-                        onClick={() => {
-                          dispatch(
-                            changeAppliedProductsFilters({
-                              key: "categoryId",
-                              value: {
-                                selectedValue: equalsCheck(
-                                  productsFiltersReducer.appliedProductsFilters
-                                    .categoryId.selectedValue,
-                                  [itm.id]
-                                )
-                                  ? []
-                                  : [itm.id],
-                              },
-                            })
-                          );
-                          handleMobileSidebarClick();
-                        }}
-                      >
-                        {itm.category_name}
-                      </p>
-                    ))}
-                  </>
-                }
-              />
+              {[
+                {
+                  label: "Men's category",
+                  value: menCategory,
+                  filterType: "categoryId",
+                },
+                {
+                  label: "Women's category",
+                  value: womenCategory,
+                  filterType: "categoryId",
+                },
+                {
+                  label: "Shops",
+                  value: allShopsLists?.data,
+                  filterType: "shopId",
+                },
+              ].map((category, index) => (
+                <SidebarCategoryFilter
+                  key={index}
+                  title={category.label}
+                  bottomComponent={category.value?.map((itm) =>
+                    generateQuickFilterComponent(category.filterType, itm)
+                  )}
+                />
+              ))}
             </li>
           </ul>
         )}
@@ -246,10 +229,6 @@ const Sidebar = ({
         {userProfile.user_type === "vendor" &&
           Router.pathname !== "/vendor/shop-setup" && (
             <>
-              {/* <VendorSidebar
-                vendorShopDetails={vendorShopDetails}
-                handleMobileSidebarClick={handleMobileSidebarClick}
-              /> */}
               <VendorShopSubHeader
                 handleMobileSidebarClick={handleMobileSidebarClick}
               />
