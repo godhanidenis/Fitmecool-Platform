@@ -59,7 +59,7 @@ const ShopDashboard = () => {
 
   return (
     <div className="min-h-screen font-Nova">
-      <div className="flex sm:flex-row flex-col flex-wrap items-center lg:gap-8 gap-4 mt-8">
+      <div className="flex sm:flex-row flex-col flex-wrap items-center lg:gap-8 gap-4">
         {dashboardCards.map((card, index) => (
           <div
             key={index}

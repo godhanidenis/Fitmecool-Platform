@@ -751,8 +751,8 @@ const ProductDetail = ({ productDetails }) => {
                     Item Details
                   </p>
                   <div className="flex items-center">
-                    <span className="text-sm">Category :</span>
-                    <span className="text-sm font-semibold mr-2 text-colorBlack ml-[9px]">
+                    <span className="text-md">Category :</span>
+                    <span className="text-md font-semibold mr-2 text-colorBlack ml-[9px]">
                       {
                         productDetails.data.product.data.categoryInfo
                           ?.category_name
@@ -760,9 +760,9 @@ const ProductDetail = ({ productDetails }) => {
                     </span>
                   </div>
                   <div className="flex mt-1 items-center">
-                    <span className="text-sm">Color :</span>
+                    <span className="text-md">Color :</span>
                     <span
-                      className={`rounded-[50%] w-3 h-3 ml-[9px]`}
+                      className={`text-md rounded-[50%] w-3 h-3 ml-[9px]`}
                       style={{
                         backgroundColor:
                           productDetails.data.product.data.product_color,
@@ -808,8 +808,8 @@ const ProductDetail = ({ productDetails }) => {
         </div>
         <div className="pb-8 pt-4 mt-4 sm:px-[80px] px-[10px] bg-[#E8EBEA] text-[#31333E]">
           <div className="flex items-center justify-between">
-            <p className="text-colorBlack font-semibold text-xl flex items-center">
-              SIMILAR PRODUCTS
+            <p className="text-colorBlack font-semibold text-2xl flex items-center">
+              Similar Products
             </p>
 
             {productDetails.data.product.related &&

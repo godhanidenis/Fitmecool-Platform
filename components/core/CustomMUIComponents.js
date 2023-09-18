@@ -69,12 +69,10 @@ export const CustomTab = styled(Tabs)(({ theme }) => ({
 export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "rgba(21, 24, 39, 0.56)",
+    color: "#fff",
     fontWeight: 600,
     fontSize: "16px",
     lineHeight: "16px",
-    paddingX: "20px",
-    paddingY: "16px",
     marginRight: "16px",
 
     [theme.breakpoints.down("sm")]: {
@@ -84,11 +82,17 @@ export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
     },
   },
 
+  [`& .MuiTabScrollButton-root`]: {
+    color: "yellow",
+  },
+
   [`& .Mui-selected`]: {
-    backgroundColor: "#151827",
-    borderRadius: "500px",
-    color: "#FFF !important",
+    backgroundColor: "#FFF",
+    borderRadius: "10px",
+    color: "#151827 !important",
     fontWeight: 500,
+    margin: "10px",
+    padding: "0px 10px",
   },
   [`& .MuiTabs-indicator`]: {
     display: "none",
@@ -206,7 +210,7 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
       lineHeight: "14px",
     },
     ".MuiCheckbox-root": {
-      color: "#000000",
+      color: "#31333e66",
     },
     ".MuiCheckbox-root.Mui-checked": {
       color: "#29977E",

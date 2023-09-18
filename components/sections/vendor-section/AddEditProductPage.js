@@ -21,6 +21,7 @@ import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
 import {
   capitalize,
   CircularProgress,
+  Divider,
   FormControl,
   InputLabel,
   Select,
@@ -31,6 +32,7 @@ import CustomTextFieldVendor from "../../Layout/CustomTextFieldVendor";
 import "suneditor/dist/css/suneditor.min.css";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../utils/common";
+import Image from "next/image";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -434,8 +436,8 @@ const AddEditProductPage = () => {
   }
   return (
     <div>
-      <div className="container sm:p-0 sm:py-10 p-6">
-        <div className="font-semibold text-black flex items-center gap-2">
+      <div className="container sm:p-0 sm:py-6 p-6">
+        <div className="font-semibold text-black flex items-center gap-2 mx-2">
           <span>
             <ArrowBackIcon
               sx={{
@@ -450,162 +452,70 @@ const AddEditProductPage = () => {
               }
             />
           </span>
-          <span className="sm:text-2xl text-xl">
+          <span className="text-xl">
             {" "}
             {editProductId === undefined ? "Add" : "Update"} Product
           </span>
         </div>
-        <div className="sm:flex justify-between">
-          <div className={`sm:w-[50%] space-y-10 my-10 sm:mx-5`}>
-            <div className="w-full relative">
-              <CustomTextFieldVendor
-                label="Name"
-                type="text"
-                id="pname"
-                isRequired={false}
-                placeholder="Product Name"
-                fieldValue={getValues("product_name")}
-                fieldError={errors?.product_name}
-                formValue={{
-                  ...register("product_name", {
-                    required: "Product Name is required",
-                  }),
-                }}
-              />
-              <div className="mt-2">
-                {errors.product_name && (
-                  <span style={{ color: "red" }} className="-mb-6">
-                    {errors.product_name?.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="w-full relative">
-              <FormControl fullWidth>
-                <Controller
-                  name="product_color"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <InputLabel id="color-id">Product Color</InputLabel>
-                      <NativeSelectInput
-                        {...field}
-                        native
-                        labelId="color-id"
-                        id=""
-                        label="Product Color"
-                        {...register("product_color", {
-                          required: "Product Color is required",
-                        })}
-                      >
-                        <option value="">
-                          <em></em>
-                        </option>
-                        {colorsList?.map((color, index) => {
-                          return (
-                            <option key={index} value={color}>
-                              {" "}
-                              {capitalize(color)}
-                            </option>
-                          );
-                        })}
-                      </NativeSelectInput>
-                    </>
-                  )}
+        <div className="my-5 mt-8">
+          <div className="sm:text-lg text-sm font-semibold  mb-3 mt-5 sm:mx-6 text-black ">
+            Product Details
+          </div>
+          <div className="sm:flex justify-between">
+            <div className={`sm:w-[50%] space-y-6 sm:mx-6`}>
+              <div className="w-full relative">
+                <CustomTextFieldVendor
+                  label="Name*"
+                  type="text"
+                  id="pname"
+                  isRequired={false}
+                  placeholder="Product Name"
+                  fieldValue={getValues("product_name")}
+                  fieldError={errors?.product_name}
+                  formValue={{
+                    ...register("product_name", {
+                      required: "Product Name is required",
+                    }),
+                  }}
                 />
-              </FormControl>
-
-              <div className="mt-2">
-                {errors.product_color && (
-                  <span style={{ color: "red" }} className="-mb-6">
-                    {errors.product_color?.message}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="w-full relative">
-              <FormControl fullWidth>
-                <Controller
-                  name="product_type"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <InputLabel id="product-Type-id">product Type</InputLabel>
-                      <NativeSelectInput
-                        {...field}
-                        native
-                        labelId="product-Type-id"
-                        id=""
-                        label="product Type"
-                        {...register("product_type", {
-                          required: "product Type is required",
-                          onChange: (e) => {
-                            setProductType(e.target.value);
-                          },
-                        })}
-                      >
-                        <option value="">
-                          <em></em>
-                        </option>
-                        {["Men", "Women"].map((type, index) => {
-                          return (
-                            <option key={index} value={type}>
-                              {" "}
-                              {capitalize(type)}
-                            </option>
-                          );
-                        })}
-                      </NativeSelectInput>
-                    </>
+                <div className="mt-2">
+                  {errors.product_name && (
+                    <span style={{ color: "red" }} className="-mb-6">
+                      {errors.product_name?.message}
+                    </span>
                   )}
-                />
-              </FormControl>
-
-              <div className="mt-2">
-                {errors.product_type && (
-                  <span style={{ color: "red" }} className="-mb-6">
-                    {errors.product_type?.message}
-                  </span>
-                )}
+                </div>
               </div>
-            </div>
-            {productType && (
               <div className="w-full relative">
                 <FormControl fullWidth>
                   <Controller
-                    name="product_category"
+                    name="product_color"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                       <>
-                        <InputLabel id="Category-id">Category</InputLabel>
+                        <InputLabel id="color-id">Product Color*</InputLabel>
                         <NativeSelectInput
                           {...field}
                           native
-                          labelId="Category-id"
+                          labelId="color-id"
                           id=""
-                          label="Category"
-                          {...register("product_category", {
-                            required: "product Category is required",
+                          label="Product Color"
+                          {...register("product_color", {
+                            required: "Product Color is required",
                           })}
                         >
                           <option value="">
                             <em></em>
                           </option>
-                          {productType === "Men" &&
-                            menCategoryLabel.map((cat) => (
-                              <option key={cat.id} value={cat.id}>
-                                {cat.category_name}
+                          {colorsList?.map((color, index) => {
+                            return (
+                              <option key={index} value={color}>
+                                {" "}
+                                {capitalize(color)}
                               </option>
-                            ))}
-                          {productType === "Women" &&
-                            womenCategoryLabel.map((cat) => (
-                              <option key={cat.id} value={cat.id}>
-                                {cat.category_name}
-                              </option>
-                            ))}
+                            );
+                          })}
                         </NativeSelectInput>
                       </>
                     )}
@@ -613,171 +523,294 @@ const AddEditProductPage = () => {
                 </FormControl>
 
                 <div className="mt-2">
-                  {errors.product_category && (
+                  {errors.product_color && (
                     <span style={{ color: "red" }} className="-mb-6">
-                      {errors.product_category?.message}
+                      {errors.product_color?.message}
                     </span>
                   )}
                 </div>
               </div>
-            )}
-
-            <div className="w-full relative">
-              <FormControl fullWidth>
-                <Controller
-                  name="product_branch"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <InputLabel id="Branch-id">Branch</InputLabel>
-                      <NativeSelectInput
-                        {...field}
-                        native
-                        labelId="Branch-id"
-                        id=""
-                        label="Branch"
-                        {...register("product_branch", {
-                          required: "product Branch is required",
-                        })}
-                      >
-                        <option value="">
-                          <em></em>
-                        </option>
-                        {branchList.map((branch) => (
-                          <option key={branch.id} value={branch.id}>
-                            {branch.branch_address +
-                              " " +
-                              "(" +
-                              branch.branch_type +
-                              ")"}
+              <div className="w-full relative">
+                <FormControl fullWidth>
+                  <Controller
+                    name="product_type"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <InputLabel id="product-Type-id">
+                          Product Type*
+                        </InputLabel>
+                        <NativeSelectInput
+                          {...field}
+                          native
+                          labelId="product-Type-id"
+                          id=""
+                          label="product Type"
+                          {...register("product_type", {
+                            required: "product Type is required",
+                            onChange: (e) => {
+                              setProductType(e.target.value);
+                            },
+                          })}
+                        >
+                          <option value="">
+                            <em></em>
                           </option>
-                        ))}
-                      </NativeSelectInput>
-                    </>
+                          {["Men", "Women"].map((type, index) => {
+                            return (
+                              <option key={index} value={type}>
+                                {" "}
+                                {capitalize(type)}
+                              </option>
+                            );
+                          })}
+                        </NativeSelectInput>
+                      </>
+                    )}
+                  />
+                </FormControl>
+
+                <div className="mt-2">
+                  {errors.product_type && (
+                    <span style={{ color: "red" }} className="-mb-6">
+                      {errors.product_type?.message}
+                    </span>
                   )}
-                />
-              </FormControl>
+                </div>
+              </div>
+              {productType && (
+                <div className="w-full relative">
+                  <FormControl fullWidth>
+                    <Controller
+                      name="product_category"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <InputLabel id="Category-id">
+                            Select Category*
+                          </InputLabel>
+                          <NativeSelectInput
+                            {...field}
+                            native
+                            labelId="Category-id"
+                            id=""
+                            label="Category"
+                            {...register("product_category", {
+                              required: "product Category is required",
+                            })}
+                          >
+                            <option value="">
+                              <em></em>
+                            </option>
+                            {productType === "Men" &&
+                              menCategoryLabel.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                  {cat.category_name}
+                                </option>
+                              ))}
+                            {productType === "Women" &&
+                              womenCategoryLabel.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                  {cat.category_name}
+                                </option>
+                              ))}
+                          </NativeSelectInput>
+                        </>
+                      )}
+                    />
+                  </FormControl>
+
+                  <div className="mt-2">
+                    {errors.product_category && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_category?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="w-full relative">
+                <FormControl fullWidth>
+                  <Controller
+                    name="product_branch"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <InputLabel id="Branch-id">Select Branch*</InputLabel>
+                        <NativeSelectInput
+                          {...field}
+                          native
+                          labelId="Branch-id"
+                          id=""
+                          label="Branch"
+                          {...register("product_branch", {
+                            required: "product Branch is required",
+                          })}
+                        >
+                          <option value="">
+                            <em></em>
+                          </option>
+                          {branchList.map((branch) => (
+                            <option key={branch.id} value={branch.id}>
+                              {branch.branch_address +
+                                " " +
+                                "(" +
+                                branch.branch_type +
+                                ")"}
+                            </option>
+                          ))}
+                        </NativeSelectInput>
+                      </>
+                    )}
+                  />
+                </FormControl>
+                <div className="mt-2">
+                  {errors.product_branch && (
+                    <span style={{ color: "red" }} className="-mb-6">
+                      {errors.product_branch?.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="sm:w-[50%]">
+              <p className="text-lg font-medium pb-2 -mt-1 font-Nova">
+                Description*
+              </p>
+              <SunEditor
+                setOptions={{
+                  buttonList: [
+                    ["undo", "redo"],
+                    ["bold", "underline", "italic"],
+                  ],
+                }}
+                setContents={editorDescriptionContent}
+                onChange={handleEditorChange}
+                height={productType ? "280px" : "200px"}
+              />
               <div className="mt-2">
-                {errors.product_branch && (
+                {errorDescription && (
                   <span style={{ color: "red" }} className="-mb-6">
-                    {errors.product_branch?.message}
+                    {errorDescription}
                   </span>
                 )}
               </div>
             </div>
           </div>
-          <div className="sm:w-[50%] my-10">
-            <p className="text-lg font-medium pb-2 font-Nova">Description</p>
-            <SunEditor
-              setOptions={{
-                buttonList: [
-                  ["undo", "redo"],
-                  ["bold", "underline", "italic"],
-                ],
-              }}
-              setContents={editorDescriptionContent}
-              onChange={handleEditorChange}
-              height={productType ? "340px" : "245px"}
-            />
-            <div className="mt-2">
-              {errorDescription && (
-                <span style={{ color: "red" }} className="-mb-6">
-                  {errorDescription}
-                </span>
-              )}
-            </div>
-          </div>
         </div>
-        <div className="gap-10 my-10 sm:ml-5">
-          <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black ">
-            Product Images And Video
-          </div>
-          <div className="w-full lg:flex gap-8">
-            <div className="lg:w-[65%] w-full flex lg:gap-8 lg:flex-row flex-col gap-4">
-              {["One", "Two", "Three"]?.map((item, index) => {
-                return (
-                  <>
-                    <div
-                      key={index}
-                      className="w-full sm:w-2/3  cursor-pointer  sm:h-[344px] h-[344px] border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
-                      onClick={() => {
-                        productImages[index] === undefined
-                          ? (setSelectImgIndex(index),
-                            document
-                              .getElementById(`productImage${item}`)
-                              .click())
-                          : "";
-                      }}
-                    >
-                      {productImages[index] ? (
-                        <div className="w-full relative sm:h-[344px]  h-[344px]">
-                          <img
-                            src={productImages[index] ?? ""}
-                            alt="Uploaded Image"
-                            className="object-cover h-full w-full rounded-3xl"
-                          />
-                          <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50">
-                            <EditIcon
-                              sx={{
-                                "@media (max-width: 768px)": {
-                                  fontSize: 16,
-                                },
-                              }}
-                              onClick={() => {
-                                setSelectImgIndex(index),
-                                  document
-                                    .getElementById(`productImage${item}`)
-                                    .click();
-                              }}
-                            />
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col gap-4 px-3 py-3">
-                          <span className="flex justify-center">
-                            <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                          </span>
-                          <div className="flex flex-col gap-1">
-                            <p className="sm:text-lg text-sm font-bold text-gray-400">
-                              <span className="text-colorGreen">
-                                Click to Upload{" "}
-                              </span>
-                              {item === "One"
-                                ? "Front Image"
-                                : item === "Two"
-                                ? "Back Image"
-                                : "Side Image"}
-                            </p>
-                            <p className="text-xs text-gray-400 text-center">
-                              We Support JPG, PNG & No Size Limit
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      <input
-                        id={`productImage${item}`}
-                        name="productImages"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        {...register("productImages", {
-                          required: !ProductImgError[index]
-                            ? "Product All Image is required"
-                            : false,
-                          onChange: (e) => {
-                            createProductImagesChange(e);
-                          },
-                        })}
-                      />
-                    </div>
-                  </>
-                );
-              })}
+        <div className="sm:mx-6">
+          <div>
+            <div className="sm:text-lg text-sm font-semibold mt-6 mb-3 text-black ">
+              Upload Product Images*
+              <span className="text-[#31333e66] ml-1">
+                (Front, Back & Side)
+              </span>
             </div>
-
+            <div className="w-full lg:flex gap-8">
+              <div className="lg:w-[60%] w-full flex lg:gap-8 lg:flex-row flex-col gap-4">
+                {["One", "Two", "Three"]?.map((item, index) => {
+                  return (
+                    <>
+                      <div
+                        key={index}
+                        className="w-full sm:w-2/3  cursor-pointer  sm:h-[320px] h-[320px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center"
+                        onClick={() => {
+                          productImages[index] === undefined
+                            ? (setSelectImgIndex(index),
+                              document
+                                .getElementById(`productImage${item}`)
+                                .click())
+                            : "";
+                        }}
+                      >
+                        {productImages[index] ? (
+                          <div className="w-full relative sm:h-[320px]  h-[320px]">
+                            <img
+                              src={productImages[index] ?? ""}
+                              alt="Uploaded Image"
+                              className="object-cover h-full w-full rounded-xl"
+                            />
+                            {/* <Image
+                              // className="object-cover"
+                              // objectFit="cover"
+                              // objectPosition="center top"
+                              src={productImages[index] ?? ""}
+                              width={"100%"}
+                              height={"100%"}
+                              alt="Product Image"
+                            /> */}
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
+                              <EditIcon
+                                sx={{
+                                  fontSize: 18,
+                                  "@media (max-width: 648px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                                onClick={() => {
+                                  setSelectImgIndex(index),
+                                    document
+                                      .getElementById(`productImage${item}`)
+                                      .click();
+                                }}
+                              />
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-4 px-3 py-3">
+                            <span className="flex justify-center">
+                              <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                            </span>
+                            <div className="flex flex-col gap-1">
+                              <p className="sm:text-base  font-semibold text-sm text-gray-400 text-center">
+                                <span className="text-colorGreen">
+                                  Click to Upload{" "}
+                                </span>
+                                {item === "One"
+                                  ? "Front Image"
+                                  : item === "Two"
+                                  ? "Back Image"
+                                  : "Side Image"}
+                              </p>
+                              <p className="sm:text-sm text-xs text-gray-400 text-center">
+                                We Support JPG & PNG
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        <input
+                          id={`productImage${item}`}
+                          name="productImages"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          {...register("productImages", {
+                            required: !ProductImgError[index]
+                              ? "Product All Image is required"
+                              : false,
+                            onChange: (e) => {
+                              createProductImagesChange(e);
+                            },
+                          })}
+                        />
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="sm:text-lg text-sm font-semibold mb-3 mt-6 text-black ">
+              Upload Product Video{" "}
+              <span className="text-[#31333e66]">( Optional )</span>
+            </div>
             <div
-              className="lg:w-[35%] mt-4 lg:mt-0 w-full cursor-pointer  sm:h-[350px] h-[214px]  border border-gray-200 hover:border-4 hover:border-colorGreen rounded-3xl flex items-center justify-center"
+              className="lg:w-[30%] mt-4 lg:mt-0 w-full cursor-pointer  sm:h-[300px] h-[214px]  border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center"
               onClick={() => {
                 productVideo == "" &&
                   document.getElementById("productVideoId").click();
@@ -819,12 +852,12 @@ const AddEditProductPage = () => {
                     <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                   </span>
                   <div className="flex flex-col gap-1">
-                    <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                    <p className="sm:text-base font-semibold text-sm text-gray-400">
                       <span className="text-colorGreen">Click to Upload</span>{" "}
                       Product Video
                     </p>
                     <p className="sm:text-sm text-xs text-gray-400 text-center">
-                      No Size Limit
+                      We Support .mp3
                     </p>
                   </div>
                 </div>
@@ -853,9 +886,10 @@ const AddEditProductPage = () => {
             )}
           </div>
         </div>
-        <div className="flex justify-end sm:gap-4 gap-2 mt-16">
+        <Divider className="mt-5 mb-5 sm:mx-6" />
+        <div className="flex justify-end sm:gap-4 gap-2 mb-8">
           <button
-            className="bg-white rounded-[4px] sm:py-3 sm:px-12 font-semibold sm:text-xl text-sm px-8 py-2 border"
+            className="bg-white rounded-[4px] sm:py-2 sm:px-4 font-semibold sm:text-xl text-sm px-8 py-2 border"
             onClick={() =>
               router.push(`/vendor/shop/${vendorShopDetails?.id}/`)
             }
@@ -863,7 +897,7 @@ const AddEditProductPage = () => {
             Cancel
           </button>
           <button
-            className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
+            className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
             type="submit"
             onClick={handleSubmit(onSubmit, onError)}
             onReset={reset}
