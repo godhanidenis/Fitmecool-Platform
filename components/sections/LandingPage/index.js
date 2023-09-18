@@ -180,7 +180,7 @@ const LandingPage = () => {
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        <div className="p-0 sm-p-0 2xl:p-5">
+        <div className="p-0 sm-p-0 2xl:p-5 pt-[16px]">
           <MenCollection />
         </div>
       </div>
@@ -193,7 +193,7 @@ const LandingPage = () => {
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        <div className="p-0 sm-p-0 2xl:p-5">
+        <div className="p-0 sm-p-0 2xl:p-5 pt-[16px]">
           <WomenCollection />
         </div>
       </div>

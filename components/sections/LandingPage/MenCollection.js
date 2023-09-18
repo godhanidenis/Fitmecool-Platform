@@ -181,7 +181,7 @@ const MenCollection = () => {
         </div>
 
         <button
-          className="text-[#29977E] font-semibold text-[12px] sm:text-[12px] md:text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 md:pt-0 lg:pt-4 2xl:pt-2  pb-2 md:pb-5 lg:pb-5 2xl:pb-8"
+          className="text-[#29977E] font-semibold text-[12px] sm:text-[12px] md:text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 md:pt-0 lg:pt-2 2xl:pt-2  pb-2 md:pb-0 lg:pb-5 2xl:pb-8"
           onClick={() => router.push("/home")}
         >
           View All
