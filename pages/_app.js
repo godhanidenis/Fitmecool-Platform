@@ -4,8 +4,7 @@ import "../styles/globals.css";
 import "../styles/auth.css";
 import "../styles/product.css";
 import "animate.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "react-multi-carousel/lib/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import store from "../redux/store";

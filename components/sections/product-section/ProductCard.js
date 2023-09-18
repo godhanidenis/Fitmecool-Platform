@@ -19,7 +19,6 @@ import { styled } from "@mui/material/styles";
 import facebookIcon from "../../../assets/facebook.png";
 import googleIcon from "../../../assets/googleIcon.svg";
 import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
@@ -118,7 +117,7 @@ const responsive = {
   },
 };
 
-const ProductCard = ({ product, onlyCarousal }) => {
+const ProductCard = ({ product, onlyCarousal, landingPage }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
@@ -170,8 +169,8 @@ const ProductCard = ({ product, onlyCarousal }) => {
           src={itm ?? ""}
           alt={product?.product_name}
           className={`object-cover absolute top-0 left-0 ${
-            isProductImagesLoaded ? "opacity-100" : "opacity-0"
-          }`}
+            landingPage ? "rounded-t-lg" : ""
+          }  ${isProductImagesLoaded ? "opacity-100" : "opacity-0"}`}
           onLoad={() => setProductImagesLoaded(true)}
           layout="fill"
         />
@@ -202,7 +201,9 @@ const ProductCard = ({ product, onlyCarousal }) => {
 
   return (
     <>
-      <div className="shadow-xl flex flex-col rounded-lg">
+      <div
+        className={`${landingPage ? "" : "shadow-xl"} flex flex-col rounded-lg`}
+      >
         <div className="cursor-pointer product-parent-div">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
@@ -358,7 +359,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
         </div>
 
         {!onlyCarousal && (
-          <div className="pl-3 bg-[#FFFFFF]">
+          <div className={`${landingPage ? "" : "bg-[#FFFFFF]"} pl-3`}>
             <div>
               <Link href={`/product/${product.id}`} passHref>
                 <a

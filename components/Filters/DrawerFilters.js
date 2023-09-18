@@ -1,5 +1,5 @@
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Filter from "./index";
 import CloseIcon from "@mui/icons-material/Close";
 import { Fab } from "@mui/material";
@@ -13,13 +13,15 @@ const DrawerFilters = ({
   showOnlyShopDetailPage,
 }) => {
   const [filterOpen, setFilterOpen] = useState(false);
+  const [userType, setUserType] = useState("");
   const toggleFilterMenu = () => {
     setFilterOpen(!filterOpen);
   };
 
-  const userType = localStorage.getItem("user_type");
   const { themeLayout } = useSelector((state) => state.themeLayout);
-
+  useEffect(() => {
+    setUserType(localStorage.getItem("user_type"));
+  }, []);
   return (
     <>
       {((userType === "vendor" && !filterOpen) ||

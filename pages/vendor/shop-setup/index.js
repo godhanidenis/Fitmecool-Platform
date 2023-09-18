@@ -37,7 +37,6 @@ import { useRouter } from "next/router";
 import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
 import Image from "next/image";
 
 const subBranchStyle = {

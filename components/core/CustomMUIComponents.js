@@ -34,38 +34,90 @@ export const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
+export const CustomIconTextField = styled(TextField)(({ theme }) => ({
+  [`& .MuiOutlinedInput-root`]: {
+    color: "#919EAB",
+    borderRadius: "3px",
+    border: "1.8px solid #919EAB",
+    fontSize: "16px",
+    lineHeight: "15px",
+    height: "33px",
+    alignItems: "center",
+    padding: "15px",
+    paddingBottom: "20px",
+    paddingTop: "20px",
+    [theme.breakpoints.down("sm")]: {
+      // Add your styles for the 'sm' breakpoint and up here
+      fontSize: "10px",
+      gap: "5px",
+      paddingBottom: "12px",
+      paddingTop: "12px",
+    },
+  },
+  [`& .MuiInput-root:after`]: {
+    border: 0,
+  },
+}));
+
 export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   [`& .MuiBackdrop-root`]: {
     backgroundColor: "transparent !important",
   },
 }));
 
-export const CustomTab = styled(Tabs)(({ theme, hometab }) => ({
+export const CustomTab = styled(Tabs)(({ theme, hometab, collection }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: hometab ? "#000" : "#FFFFFF",
+    color: hometab ? "#000" : collection ? "#31333e93" : "#FFFFFF",
     fontWeight: 600,
-    fontSize: hometab ? "32px" : "14px",
+    fontSize: hometab ? "32px" : collection ? "18px" : "14px",
     paddingTop: "32px",
-    paddingBottom: "32px",
+    paddingBottom: collection ? "10px" : "32px",
     paddingRight: hometab && "200px",
     paddingLeft: hometab && "200px",
     borderBottom: hometab && "5px solid #0000000a",
+    [theme.breakpoints.down("md")]: {
+      padding: hometab && "10px",
+      paddingRight: hometab && "50px",
+      paddingLeft: hometab && "50px",
+      fontSize: hometab && "22px",
+      borderBottom: hometab && "3px solid #0000000a",
+      paddingTop: collection && "16px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: hometab && "10px",
+      paddingRight: hometab && "50px",
+      paddingLeft: hometab && "50px",
+      fontSize: (hometab || collection) && "12px",
+      borderBottom: hometab && "2px solid #0000000a",
+    },
   },
   [`& .MuiTab-root:hover`]: {
-    color: "#29977E !important",
+    color: collection ? "black !important" : "#29977E !important",
   },
   [`& .Mui-selected:hover`]: {
-    color: "#29977E !important",
+    color: collection ? "black !important" : "#29977E !important",
   },
   [`& .Mui-selected`]: {
     fontWeight: 600,
-    fontSize: hometab ? "32px" : "16px",
-    color: "#29977E !important",
+    fontSize: hometab ? "32px" : collection ? "18px" : "16px",
+    color: collection ? "black !important" : "#29977E !important",
+    [theme.breakpoints.down("md")]: {
+      fontSize: hometab && "22px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: (hometab || collection) && "12px",
+    },
   },
   [`& .MuiTabs-indicator`]: {
-    backgroundColor: "#29977E !important",
-    height: "5px",
+    backgroundColor: collection ? "black !important" : "#29977E !important",
+    height: collection ? "2px" : "5px",
+    [theme.breakpoints.down("md")]: {
+      height: hometab && "3px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      height: hometab && "2px",
+    },
   },
 }));
 

@@ -27,35 +27,3 @@
   transform: translate(-50%, -50%);
 }
 
-.slick-prev:before,
-.slick-next:before {
-  color: gray !important;
-}
-
-.slick-initialized .slick-slide > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.slick-prev {
-  left: 4px !important;
-  z-index: 1 !important;
-}
-
-.slick-next {
-  right: 4px !important;
-  z-index: 1 !important;
-}
-
-.BrainhubCarouselItem {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.oneItemStart {
-  .slick-slider .slick-track,
-  .slick-slider .slick-list {
-    display: initial;
-  }
-}

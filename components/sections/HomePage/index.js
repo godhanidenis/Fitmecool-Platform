@@ -1,170 +1,246 @@
-import React, { useState, useEffect } from "react";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-import bannerImg1 from "../../../assets/banner/Product IMg.svg";
-import bannerImg2 from "../../../assets/banner/top images.svg";
+import React, { useEffect, useState } from "react";
+
+import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { loadProductsStart } from "../../../redux/ducks/product";
+import UpperFilter from "../../Filters/UpperFilter/UpperFilter";
+import ProductCard from "../product-section/ProductCard";
+import { loadShopsStart } from "../../../redux/ducks/shop";
+import ShopCard from "../shop-section/ShopCard";
+import Filter from "../../Filters";
+import { CircularProgress, Pagination } from "@mui/material";
 import Image from "next/image";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { CustomTab, TabPanel, a11yProps } from "../../core/CustomMUIComponents";
-import { Tab } from "@mui/material";
-import Customer from "./Customer";
-import Vendor from "./Vendor";
-import MensCollection from "./MensCollection";
 
-const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-};
+const HomePage = () => {
+  const dispatch = useDispatch();
+  const {
+    productsLimit,
+    productsCount,
+    numOfPages,
+    productsData,
+    loading,
+    error,
+  } = useSelector((state) => state.products);
 
-const Index = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [value, setValue] = useState(0);
+  const {
+    shopsLimit,
+    shopsCount,
+    numOfPages: shopNumOfPages,
+    shopsData,
+    loading: shopLoading,
+    error: shopError,
+  } = useSelector((state) => state.shops);
 
-  const carouselItems = [
-    { imageSrc: bannerImg1, des: "bannerImg1" },
-    { imageSrc: bannerImg2, des: "bannerImg2" },
-    { imageSrc: bannerImg1, des: "bannerImg3" },
-    { imageSrc: bannerImg2, des: "bannerImg4" },
-    // Add more items as needed
-  ];
+  const [byShop, setByShop] = useState(false);
 
-  const CustomDot = ({ onClick, active }) => {
-    return (
-      <li className="" onClick={() => onClick()}>
-        <FiberManualRecordIcon
-          className={`${
-            active ? "!text-[#31333E]" : "!text-[#31333e33]"
-          } !w-3 !h-3 !mx-1 !cursor-pointer`}
-          fontSize="small"
-        />
-      </li>
+  const productsFiltersReducer = useSelector(
+    (state) => state.productsFiltersReducer
+  );
+  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
+
+  const [productPageSkip, setProductPageSkip] = useState(0);
+  const [shopPageSkip, setShopPageSkip] = useState(0);
+
+  const getAllProducts = () => {
+    dispatch(
+      loadProductsStart({
+        pageData: {
+          skip: productPageSkip,
+          limit: 12,
+        },
+        filter: {
+          category_id:
+            productsFiltersReducer.appliedProductsFilters.categoryId
+              .selectedValue,
+          product_color:
+            productsFiltersReducer.appliedProductsFilters.productColor
+              .selectedValue,
+        },
+        shopId:
+          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
+        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
+        search: productsFiltersReducer.searchBarData,
+      })
     );
   };
 
+  const getAllShops = () => {
+    dispatch(
+      loadShopsStart({
+        pageData: {
+          skip: shopPageSkip,
+          limit: 12,
+        },
+        area: shopsFiltersReducer.appliedShopsFilters.locations.selectedValue,
+        sort: shopsFiltersReducer.sortFilters.sortType.selectedValue,
+        stars: shopsFiltersReducer.appliedShopsFilters.stars.selectedValue,
+      })
+    );
+  };
+
+  useEffect(() => {
+    getAllProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    dispatch,
+    productsFiltersReducer.appliedProductsFilters,
+    productsFiltersReducer.sortFilters,
+    productsFiltersReducer.searchBarData,
+    productPageSkip,
+  ]);
+
+  useEffect(() => {
+    getAllShops();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    dispatch,
+    shopsFiltersReducer.appliedShopsFilters,
+    shopsFiltersReducer.sortFilters,
+    shopPageSkip,
+  ]);
+
   return (
-    <div>
-      <Carousel
-        responsive={responsive}
-        arrows={false}
-        showDots
-        customDot={<CustomDot />}
-        customTransition="all .5s ease-in-out"
-        afterChange={(previousSlide, currentSlide) => {
-          setCurrentSlide(currentSlide);
-        }}
-        infinite
-        autoPlay
-        autoPlaySpeed={5000}
-      >
-        {carouselItems.map((item, index) => (
-          <div key={index} className="flex items-center w-full">
-            <div className="w-[61%] pb-5">
-              <Image
-                src={item.imageSrc}
-                alt=""
-                objectFit="cover"
-                width={1300}
-                height={438}
+    <>
+      <div className="w-100 h-[300px] relative">
+        <Image
+          src={LandingPageCoverImg}
+          alt=""
+          fill={true}
+          layout={"fill"}
+          objectFit={"cover"}
+        />
+      </div>
+      <div>
+        <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
+          <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
+            <Filter
+              byShop={byShop}
+              setByShop={setByShop}
+              setProductPageSkip={setProductPageSkip}
+              setShopPageSkip={setShopPageSkip}
+            />
+          </div>
+
+          <div className="col-span-12 lg:col-span-9 px-4 bg-white shadow-xl">
+            <div className="mt-1 px-1">
+              <UpperFilter
+                byShop={byShop}
+                setByShop={setByShop}
+                setProductPageSkip={setProductPageSkip}
+                setShopPageSkip={setShopPageSkip}
               />
             </div>
-            <div className="w-[39%] h-full flex items-center justify-center ">
-              <div className="flex flex-col gap-10">
-                <div className="flex flex-col gap-4">
-                  <h1 className="text-[#181725] text-[56px] font-extrabold">
-                    Men’s Blazer
-                  </h1>
-                  <p className="text-[40px] text-[#181725d5]">Under ₹699</p>
+            <div className="w-full mt-4 mb-4">
+              {!byShop ? (
+                <div
+                  className={`relative ${
+                    loading && productsData?.length === 0 && "h-screen"
+                  }`}
+                >
+                  <div
+                    className={`${
+                      productsData?.length > 0 && loading
+                        ? "opacity-50"
+                        : "opacity-100"
+                    }`}
+                  >
+                    {productsData?.length > 0 ? (
+                      <>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
+                          {productsData?.map((product) => (
+                            <ProductCard product={product} key={product.id} />
+                          ))}
+                        </div>
+                        {productsCount > 6 && (
+                          <div className="flex justify-center py-4 sm:py-8">
+                            <Pagination
+                              color="primary"
+                              count={Math.ceil(productsCount / 10)}
+                              page={
+                                (productPageSkip === 0 && 1) ||
+                                productPageSkip / 10 + 1
+                              }
+                              onChange={(e, p) => {
+                                setProductPageSkip(
+                                  (p === 1 && 0) || (p - 1) * 10
+                                );
+                              }}
+                            />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      !loading && (
+                        <span className="flex items-center justify-center mt-10">
+                          No products found!
+                        </span>
+                      )
+                    )}
+                  </div>
+                  {loading && (
+                    <div className="absolute top-1/2 left-1/2">
+                      <CircularProgress color="secondary" />
+                    </div>
+                  )}
                 </div>
-                <div className="text-[24px] text-[#31333e93]">+ Explore</div>
-              </div>
+              ) : (
+                <div
+                  className={`relative ${
+                    shopLoading && shopsData?.length === 0 && "h-screen"
+                  }`}
+                >
+                  <div
+                    className={`${
+                      shopsData?.length > 0 && shopLoading
+                        ? "opacity-50"
+                        : "opacity-100"
+                    }`}
+                  >
+                    {shopsData?.length > 0 ? (
+                      <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 place-items-center">
+                          {shopsData.map((shop) => (
+                            <ShopCard key={shop.id} shop={shop} />
+                          ))}
+                        </div>
+
+                        {shopsCount > 6 && (
+                          <div className="flex justify-center py-4 sm:py-8">
+                            <Pagination
+                              color="primary"
+                              count={Math.ceil(shopsCount / 12)}
+                              page={
+                                (shopPageSkip === 0 && 1) ||
+                                shopPageSkip / 12 + 1
+                              }
+                              onChange={(e, p) => {
+                                setShopPageSkip((p === 1 && 0) || (p - 1) * 12);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      !shopLoading && (
+                        <span className="flex items-center justify-center mt-10">
+                          No shop found!
+                        </span>
+                      )
+                    )}
+                  </div>
+                  {shopLoading && (
+                    <div className="absolute top-1/2 left-1/2">
+                      <CircularProgress color="secondary" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        ))}
-      </Carousel>
-      <div className="flex flex-col justify-center p-16">
-        <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[48px]">How It Works</h1>
-          <p className="text-[16px] text-[#31333e93]">
-            Lorem Ipsum is simply dummy text of the printing
-          </p>
-        </div>
-
-        <div className="w-full mx-auto flex items-center justify-center pb-6">
-          <CustomTab
-            variant="scrollable"
-            value={value}
-            onChange={(event, newValue) => setValue(newValue)}
-            hometab={true}
-          >
-            {["Customer", "Vendor"]?.map((item, index) => (
-              <Tab
-                key={index}
-                label={item}
-                {...a11yProps(index)}
-                className="whitespace-nowrap"
-              />
-            ))}
-          </CustomTab>
-        </div>
-        <div>
-          {["Customer", "Vendor"]?.map((item, index) => (
-            <React.Fragment key={index}>
-              {item === "Customer" && (
-                <TabPanel value={value} index={index} padding={3}>
-                  <Customer />
-                </TabPanel>
-              )}
-
-              {item === "Vendor" && (
-                <TabPanel value={value} index={index} padding={3}>
-                  <Vendor />
-                </TabPanel>
-              )}
-            </React.Fragment>
-          ))}
         </div>
       </div>
-      <div className="flex flex-col justify-center p-16 pt-0">
-        <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[48px]">
-            Men’s Collection
-          </h1>
-          <p className="text-[16px] text-[#31333e93]">
-            Browse through our dreamy catalog and enrobe your wishes.
-          </p>
-        </div>
-        <div className="p-0 sm-p-0 2xl:p-5">
-          <MensCollection />
-        </div>
-      </div>
-      <div className="flex flex-col justify-center p-16 pt-0">
-        <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[48px]">
-            Women’s Collection
-          </h1>
-          <p className="text-[16px] text-[#31333e93]">
-            Browse through our dreamy catalog and enrobe your wishes.
-          </p>
-        </div>
-        <div className="p-0 sm-p-0 2xl:p-5">
-          <MensCollection />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
-export default Index;
+export default HomePage;
