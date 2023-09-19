@@ -88,10 +88,10 @@ const SubHeader = () => {
         dispatch(changeProductPage(0));
         byShop && dispatch(changeByShopFilters(false));
 
-        if (router.pathname === "/") {
+        if (router.pathname === "/home") {
           handleMenuClose();
         } else {
-          router.push("/");
+          router.push("/home");
         }
       }}
     >

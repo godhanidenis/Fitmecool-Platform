@@ -74,7 +74,7 @@ const Sidebar = ({
 
     handleMobileSidebarClick();
     setSearchBarValue("");
-    router.pathname !== "/" && router.push("/");
+    router.pathname !== "/home" && router.push("/home");
   };
 
   const generateQuickFilterComponent = (filterType, item) => (
@@ -110,7 +110,7 @@ const Sidebar = ({
 
         handleMobileSidebarClick();
 
-        router.pathname !== "/" && router.push("/");
+        router.pathname !== "/home" && router.push("/home");
       }}
     >
       {filterType === "shopId" ? item.shop_name : item.category_name}

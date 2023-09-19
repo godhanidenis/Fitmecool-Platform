@@ -122,7 +122,7 @@ const Header = () => {
 
     handleSearchDialogClose();
 
-    router.pathname !== "/" && router.push("/");
+    router.pathname !== "/home" && router.push("/home");
   };
 
   const scrollDirection = useScrollDirection();

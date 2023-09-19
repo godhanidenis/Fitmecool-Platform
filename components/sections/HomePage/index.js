@@ -59,7 +59,9 @@ const HomePage = () => {
         shopId:
           productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
         sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
+        search:
+          productsFiltersReducer.appliedProductsFilters.searchBarData
+            .selectedValue,
       })
     );
   };
@@ -85,7 +87,6 @@ const HomePage = () => {
     dispatch,
     productsFiltersReducer.appliedProductsFilters,
     productsFiltersReducer.sortFilters,
-    productsFiltersReducer.searchBarData,
     productPageSkip,
   ]);
 

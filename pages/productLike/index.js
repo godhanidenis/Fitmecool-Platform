@@ -42,7 +42,7 @@ const ProductLikePage = () => {
           </p>
           <button
             className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap"
-            onClick={() => Router.push("/")}
+            onClick={() => Router.push("/home")}
           >
             Explore Now
           </button>
@@ -51,7 +51,7 @@ const ProductLikePage = () => {
         <>
           <div className="w-[95%] mx-auto h-[39px] mt-2 flex items-center">
             <ArrowBackIcon
-              onClick={() => Router.push("/")}
+              onClick={() => Router.push("/home")}
               className="cursor-pointer"
             />
             <span className="font-semibold ml-2">Back</span>
