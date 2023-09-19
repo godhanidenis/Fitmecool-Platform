@@ -85,32 +85,35 @@ const Sidebar = ({
         item.id
       )}`}
       onClick={() => {
-        ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
-          dispatch(
-            changeAppliedProductsFilters({
-              key: itm,
-              value: {
-                selectedValue:
-                  itm === filterType
-                    ? equalsCheck(
-                        appliedProductsFilters[filterType].selectedValue,
-                        [item.id]
-                      )
-                      ? []
-                      : [item.id]
-                    : itm === "searchBarData"
-                    ? ""
-                    : [],
-              },
-            })
-          )
-        );
-        dispatch(changeProductPage(0));
-        byShop && dispatch(changeByShopFilters(false));
+        if (filterType === "shopId") {
+          router.push(`/shop/${item.id}`);
+        } else {
+          ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+            dispatch(
+              changeAppliedProductsFilters({
+                key: itm,
+                value: {
+                  selectedValue:
+                    itm === filterType
+                      ? equalsCheck(
+                          appliedProductsFilters[filterType].selectedValue,
+                          [item.id]
+                        )
+                        ? []
+                        : [item.id]
+                      : itm === "searchBarData"
+                      ? ""
+                      : [],
+                },
+              })
+            )
+          );
+          dispatch(changeProductPage(0));
+          byShop && dispatch(changeByShopFilters(false));
 
+          router.pathname !== "/home" && router.push("/home");
+        }
         handleMobileSidebarClick();
-
-        router.pathname !== "/home" && router.push("/home");
       }}
     >
       {filterType === "shopId" ? item.shop_name : item.category_name}

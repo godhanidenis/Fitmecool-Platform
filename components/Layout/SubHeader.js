@@ -65,33 +65,36 @@ const SubHeader = () => {
         item.id
       )}`}
       onClick={() => {
-        ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
-          dispatch(
-            changeAppliedProductsFilters({
-              key: itm,
-              value: {
-                selectedValue:
-                  itm === filterType
-                    ? equalsCheck(
-                        appliedProductsFilters[filterType].selectedValue,
-                        [item.id]
-                      )
-                      ? []
-                      : [item.id]
-                    : itm === "searchBarData"
-                    ? ""
-                    : [],
-              },
-            })
-          )
-        );
-        dispatch(changeProductPage(0));
-        byShop && dispatch(changeByShopFilters(false));
-
-        if (router.pathname === "/home") {
-          handleMenuClose();
+        if (filterType === "shopId") {
+          window.open(`/shop/${item.id}`, "_blank");
         } else {
-          router.push("/home");
+          ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+            dispatch(
+              changeAppliedProductsFilters({
+                key: itm,
+                value: {
+                  selectedValue:
+                    itm === filterType
+                      ? equalsCheck(
+                          appliedProductsFilters[filterType].selectedValue,
+                          [item.id]
+                        )
+                        ? []
+                        : [item.id]
+                      : itm === "searchBarData"
+                      ? ""
+                      : [],
+                },
+              })
+            )
+          );
+          dispatch(changeProductPage(0));
+          byShop && dispatch(changeByShopFilters(false));
+          if (router.pathname === "/home") {
+            handleMenuClose();
+          } else {
+            router.push("/home");
+          }
         }
       }}
     >

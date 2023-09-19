@@ -225,19 +225,26 @@ const Header = () => {
                     />
                   </li>
                   <li className="hidden lg:block">
-                    <Link href={`/productLike`} passHref>
-                      <IconButton color="inherit">
-                        <Badge
-                          badgeContent={userProfile?.product_like_list?.length}
-                          color="error"
-                        >
-                          <FavoriteBorderOutlinedIcon
-                            sx={{ color: "white" }}
-                            fontSize="large"
-                          />
-                        </Badge>
-                      </IconButton>
-                    </Link>
+                    {/* <Link href={`/productLike`} passHref> */}
+                    <IconButton
+                      color="inherit"
+                      onClick={() =>
+                        router.push(
+                          accessToken ? "/productLike" : "/auth/user-type"
+                        )
+                      }
+                    >
+                      <Badge
+                        badgeContent={userProfile?.product_like_list?.length}
+                        color="error"
+                      >
+                        <FavoriteBorderOutlinedIcon
+                          sx={{ color: "white" }}
+                          fontSize="large"
+                        />
+                      </Badge>
+                    </IconButton>
+                    {/* </Link> */}
                   </li>
                 </>
               )}
