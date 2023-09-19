@@ -45,10 +45,7 @@ import SubHeader from "./SubHeader";
 import LocationIcon from "../../assets/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
-import {
-  LocationSelect,
-  SearchCustomDialog,
-} from "../core/CustomMUIComponents";
+import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
 
@@ -275,7 +272,7 @@ const Header = () => {
 
       {openSearchDialog && (
         <div className="bg-colorPrimary fixed block w-full h-full opacity-50 z-[2] cursor-pointer">
-          <SearchCustomDialog
+          <CustomDialog
             open={openSearchDialog}
             onClose={handleSearchDialogClose}
           >
@@ -347,7 +344,7 @@ const Header = () => {
                 </Grid>
               </Grid>
             </DialogContent>
-          </SearchCustomDialog>
+          </CustomDialog>
         </div>
       )}
     </>

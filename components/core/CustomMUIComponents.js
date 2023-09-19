@@ -226,7 +226,7 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
   })
 );
 
-export const SearchCustomDialog = styled(Dialog)(({ theme }) => ({
+export const CustomDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
@@ -234,11 +234,11 @@ export const SearchCustomDialog = styled(Dialog)(({ theme }) => ({
     backgroundColor: "#CAA9CD !important",
   },
   "& .MuiDialog-paper": {
-    top: "0",
+    top: 0,
     position: "absolute",
-    maxHeight: "50vh",
     height: "50vh",
     width: "100vw",
+    maxHeight: "100%",
     maxWidth: "100%",
     margin: "0px",
   },
