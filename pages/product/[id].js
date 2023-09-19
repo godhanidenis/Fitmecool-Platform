@@ -643,8 +643,8 @@ const ProductDetail = ({ productDetails }) => {
         </div>
         <div className="pb-8 pt-4 mt-4 sm:px-[80px] px-[10px] bg-[#E8EBEA] text-[#31333E]">
           <div className="flex items-center justify-between">
-            <p className="text-colorBlack font-semibold text-xl flex items-center">
-              SIMILAR PRODUCTS
+            <p className="text-colorBlack font-semibold text-2xl flex items-center">
+              Similar Products
             </p>
 
             {productDetails.data.product.related &&

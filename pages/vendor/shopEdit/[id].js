@@ -696,9 +696,9 @@ const ShopEdit = () => {
   return (
     <>
       <div className="min-h-screen">
-        <div className="sm:m-2 m-6">
-          <div className="py-2">
-            <Box>
+        <div className="">
+          <div className="">
+            <Box className="bg-colorPrimary rounded-xl">
               <CustomVenderShopTab
                 value={value}
                 onChange={handleChange}
@@ -725,7 +725,7 @@ const ShopEdit = () => {
           </div>
           <TabPanel value={value} index={0}>
             <div className="rounded-lg  mt-10">
-              <div className="flex flex-col space-y-10">
+              <div className="flex flex-col space-y-6">
                 <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                   <div className="sm:w-1/2 relative w-full">
                     <CustomTextFieldVendor
@@ -836,15 +836,14 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-center">
-                  <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                  <Box className="flex w-full sm:justify-end justify-center">
                     <button
                       type="submit"
                       onClick={ownerInfoHandleSubmit(
                         ownerInfoOnSubmit,
                         ownerInfoOError
                       )}
-                      className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                                     shadow-lg flex items-center justify-center"
+                      className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
                     >
                       {ownerLoading && (
                         <CircularProgress
@@ -863,7 +862,7 @@ const ShopEdit = () => {
 
           <TabPanel value={value} index={1}>
             <div className=" rounded-lg mt-10">
-              <div className="space-y-10">
+              <div className="space-y-6">
                 <div className="w-full relative">
                   <CustomTextFieldVendor
                     label="Shop Name"
@@ -1012,7 +1011,7 @@ const ShopEdit = () => {
                     </div>
                   </div>
                   <div
-                    className={`space-y-10 ${
+                    className={`space-y-6 ${
                       shopTimeDetails === "Hide" && "hidden"
                     }`}
                   >
@@ -1033,15 +1032,14 @@ const ShopEdit = () => {
                       ))}
                     </div>
                     <div className="flex items-center justify-center">
-                      <Box className="flex pt-2 my-4 w-full sm:justify-end justify-center">
+                      <Box className="flex w-full sm:justify-end justify-center mb-6">
                         <button
                           type="submit"
                           onClick={shopInfoHandleSubmit(
                             shopInfoOnSubmit,
                             shopInfoOError
                           )}
-                          className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                          shadow-lg flex items-center justify-center"
+                          className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
                         >
                           {shopLoading && (
                             <CircularProgress
@@ -1087,7 +1085,7 @@ const ShopEdit = () => {
 
           <TabPanel value={value} index={2}>
             <div className="rounded-lg mt-10">
-              <div className="space-y-10">
+              <div className="space-y-6">
                 <div className="w-full relative">
                   <CustomTextFieldVendor
                     label="Address"
@@ -1133,7 +1131,7 @@ const ShopEdit = () => {
                   </div>
                   <div className="sm:w-1/2 relative w-full">
                     <CustomTextFieldVendor
-                      label=" Pincode"
+                      label="Pincode"
                       type="number"
                       id="pincode"
                       isRequired={false}
@@ -1171,9 +1169,7 @@ const ShopEdit = () => {
                 </div>
               </div>
               <div
-                className={`space-y-10 ${
-                  managerDetails === "Hide" && "hidden"
-                }`}
+                className={`space-y-6 ${managerDetails === "Hide" && "hidden"}`}
               >
                 <RadioGroup
                   row
@@ -1377,15 +1373,14 @@ const ShopEdit = () => {
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <Box className="flex pt-2 mt-4 w-full sm:justify-end justify-center">
+                <Box className="flex w-full sm:justify-end justify-center mt-4">
                   <button
                     type="submit"
                     onClick={mainBranchInfoHandleSubmit(
                       mainBranchInfoOnSubmit,
                       mainBranchInfoOError
                     )}
-                    className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                          shadow-lg flex items-center justify-center"
+                    className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
                   >
                     {mainBranchLoading && (
                       <CircularProgress
@@ -1402,18 +1397,17 @@ const ShopEdit = () => {
           </TabPanel>
 
           <TabPanel value={value} index={3}>
-            {!individual && (
-              <div className="flex justify-end mt-10">
+            {!individual && !addEditSubBranchShow && (
+              <div className="flex justify-end mt-4">
                 <button
                   onClick={() => setAddEditSubBranchShow(true)}
-                  className="flex items-center opacity-100
-                   cursor-pointer uppercase border-2  lg:px-8 lg:py-3 sm:px-6 sm:py-2 px-3 py-2 sm:text-lg text-sm rounded-xl font-semibold border-colorGreen text-colorGreen"
+                  className="flex items-center text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
                 >
                   <span className="hidden sm:inline">
-                    <AddIcon fontSize="medium" className="mr-2" />
+                    <AddIcon fontSize="medium" className="mr-1 -mt-1" />
                   </span>
                   <span className="sm:hidden">
-                    <AddIcon fontSize="small" className="mr-2" />
+                    <AddIcon fontSize="small" className="mr-1 -mt-1" />
                   </span>
                   Sub Branch
                 </button>
@@ -1433,7 +1427,7 @@ const ShopEdit = () => {
               />
             ) : (
               <>
-                <div className="mt-8">
+                <div className="mt-4">
                   <VendorBranchTable
                     subBranchList={subBranchList}
                     getAllSubBranchList={getAllSubBranchList}
@@ -1453,7 +1447,7 @@ const ShopEdit = () => {
                 <div className="col-span-3 lg:flex justify-center gap-10">
                   <div className="flex flex-col items-center justify-center">
                     <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
-                      Logo
+                      Shop Logo
                     </div>
                     <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 cursor-pointer rounded-full flex items-center justify-center">
                       {shopLogo !== "" ? (
@@ -1529,7 +1523,7 @@ const ShopEdit = () => {
 
                   <div className="flex flex-col mt-4 items-center justify-center">
                     <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
-                      Cover Image
+                      Shop Cover Image
                     </div>
                     <div className="sm:w-2/3 lg:w-[290px] w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 rounded-3xl flex items-center justify-center">
                       {shopBackground !== "" ? (
@@ -1610,7 +1604,7 @@ const ShopEdit = () => {
                 <div className="col-span-3">
                   <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black flex justify-center">
                     Shop Images
-                    <span className="text-gray-400 ml-1">
+                    <span className="text-[#31333e66] ml-1">
                       (Front, Back & Side)
                     </span>
                   </div>
@@ -1790,15 +1784,14 @@ const ShopEdit = () => {
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <Box className="flex pt-2 my-4 w-full sm:justify-end justify-center">
+                <Box className="flex w-full sm:justify-end justify-center mb-6">
                   <button
                     type="submit"
                     onClick={shopLayoutHandleSubmit(
                       shopLayoutOnSubmit,
                       shopLayoutOnError
                     )}
-                    className="bg-colorGreen sm:text-lg text-sm  mr-1 text-white px-8 py-3 rounded-xl font-medium focus:outline-none focus:shadow-outline 
-                          shadow-lg flex items-center justify-center"
+                    className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
                   >
                     {shopLayoutLoading && (
                       <CircularProgress
@@ -2610,22 +2603,19 @@ const AddEditSubBranch = ({
 
   return (
     <Box className="!w-[100%]">
-      <div className="py-5">
+      <div className="pt-5">
         <div className="flex items-center">
           <ArrowBackIcon
             className="!text-black !cursor-pointer"
             onClick={handleSubBranchSectionClose}
           />
-          <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-            Back To All Branches
+          <p className="flex items-center text-colorBlack text-xl font-semibold ml-2">
+            {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
           </p>
         </div>
 
         <div className="mt-6">
-          <div className="sm:ml-14 rounded-lg">
-            <p className="flex items-center text-colorBlack text-xl mb-5 font-semibold">
-              {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
-            </p>
+          <div className="sm:ml-8 rounded-lg">
             <form>
               <div className="flex flex-col space-y-3">
                 <div className="flex items-center justify-center">
@@ -2649,7 +2639,7 @@ const AddEditSubBranch = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row mt-4 sm:gap-20 w-full justify-between items-center">
+                <div className="flex flex-col sm:flex-row mt-4 sm:gap-4 w-full justify-between items-center">
                   <div className="w-full flex flex-col gap-2">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextFieldVendor
@@ -2672,7 +2662,7 @@ const AddEditSubBranch = ({
                     <Box sx={{ display: "flex" }}>
                       <CustomTextFieldVendor
                         id="input-with-sx"
-                        label="PinCode"
+                        label="Pincode"
                         variant="standard"
                         className="w-full"
                         type="number"
@@ -2692,7 +2682,7 @@ const AddEditSubBranch = ({
                 <div className="flex justify-center items-center">
                   <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
                     <CustomTextFieldVendor
-                      label="Manager"
+                      label="Select Manager"
                       variant="standard"
                       select
                       fullWidth
@@ -2711,7 +2701,7 @@ const AddEditSubBranch = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:gap-20 w-full justify-between items-center !mt-5">
+                <div className="flex flex-col sm:flex-row sm:gap-4 w-full justify-between items-center !mt-5">
                   <div className="w-full flex flex-col gap-2">
                     <Box sx={{ display: "flex" }}>
                       <CustomTextFieldVendor
@@ -2819,21 +2809,19 @@ const AddEditSubBranch = ({
           </div>
         </div>
 
-        <div className="mt-2 flex items-center justify-end gap-5">
-          <Button
-            variant="outlined"
-            className="rounded-xl capitalize !text-colorBlack py-2 px-5"
+        <div className="mt-4 flex items-center justify-end gap-3">
+          <button
+            className="flex items-cente capitalize text-lg py-1 px-2 rounded-md border-2 text-black"
             onClick={handleSubBranchSectionClose}
           >
             Cancel
-          </Button>
-          <Button
-            variant="contained"
-            className="rounded-xl capitalize !text-colorWhite !bg-colorGreen py-2 px-5"
+          </button>
+          <button
+            className="flex items-cente capitalize text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
             onClick={subBranchSubmit}
           >
             {editSubBranchId === undefined ? "Save" : "Update"}
-          </Button>
+          </button>
         </div>
       </div>
     </Box>

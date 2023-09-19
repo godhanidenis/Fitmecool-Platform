@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
 import { changeAppliedProductsFilters } from "../../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
-import { changeProductPage, loadProductsStart } from "../../../../redux/ducks/product";
+import {
+  changeProductPage,
+  loadProductsStart,
+} from "../../../../redux/ducks/product";
 import { withAuth } from "../../../../components/core/PrivateRouteForVendor";
 import AddIcon from "@mui/icons-material/Add";
 import VenderProductTable from "../../../../components/Layout/VenderProductTable";
@@ -85,15 +88,15 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      <div className="flex flex-col mt-2 px-6 sm:px-0">
-        <div className="flex flex-row-reverse py-2">
+      <div className="flex flex-col px-6 sm:px-0">
+        <div className="flex flex-row-reverse mb-2">
           <button
             onClick={() =>
               router.push(
                 `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
               )
             }
-            className="flex items-center text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
+            className="flex items-cente text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
           >
             <AddIcon className="mr-2" />
             Add Products
@@ -109,7 +112,7 @@ const ShopDetailsPage = () => {
             }`}
           >
             <div
-              className={`mt-8 ${
+              className={`mt-4 ${
                 productsData?.length > 0 && loading
                   ? "opacity-50"
                   : "opacity-100"
@@ -140,9 +143,7 @@ const ShopDetailsPage = () => {
                       (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
                     }
                     onChange={(e, p) =>
-                      dispatch(
-                        changeProductPage((p === 1 && 0) || (p - 1) * 6)
-                      )
+                      dispatch(changeProductPage((p === 1 && 0) || (p - 1) * 6))
                     }
                   />
                 </div>

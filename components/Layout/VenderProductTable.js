@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  tableCellClasses,
 } from "@mui/material";
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,7 +19,29 @@ import { deleteProduct } from "../../graphql/mutations/products";
 import { toast } from "react-toastify";
 import HTMLReactParser from "html-react-parser";
 import ConfirmationModal from "../Modal/ConfirmationModal";
+import { styled } from "@mui/material/styles";
+import Image from "next/image";
 import { changeProductPage } from "../../redux/ducks/product";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#151827",
+    color: "white",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 const VenderProductTable = ({ productsData, getAllProducts }) => {
   const router = useRouter();
@@ -43,27 +66,28 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                   "Description",
                   "Action",
                 ].map((itm, index) => (
-                  <TableCell align="left" key={index}>
+                  <StyledTableCell align="left" key={index}>
                     <b>{itm}</b>
-                  </TableCell>
+                  </StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {productsData?.map((item, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
+                <StyledTableRow key={index}>
                   <TableCell align="left">{index + 1}</TableCell>
-                  <TableCell align="left">
-                    <img
-                      className="w-16 h-12 object-cover"
-                      src={item?.product_image?.front}
-                      alt="Product Image"
-                    />
+                  <TableCell>
+                    <div className="relative">
+                      <Image
+                        // className="object-cover"
+                        objectFit="cover"
+                        objectPosition="center top"
+                        src={item?.product_image?.front}
+                        width={"100%"}
+                        height={"100%"}
+                        alt="Product Image"
+                      />
+                    </div>
                   </TableCell>
                   <TableCell align="left">
                     {item?.branchInfo?.shop_info?.shop_name}
@@ -78,7 +102,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                   <TableCell align="left">
                     <div className="flex gap-2">
                       <button
-                        className={`sm:w-10 sm:h-10 w-8 h-8 rounded-full transition-colors bg-black text-white duration-300 hover:opacity-80 `}
+                        className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-black text-white duration-300 hover:opacity-80 `}
                         onClick={() => {
                           router?.push(
                             `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/${item?.id}`
@@ -87,7 +111,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                       >
                         <EditIcon
                           sx={{
-                            fontSize: 20,
+                            fontSize: 18,
                             "@media (max-width: 648px)": {
                               fontSize: 16,
                             },
@@ -95,7 +119,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                         />
                       </button>
                       <button
-                        className={`sm:w-10 sm:h-10 w-8 h-8 rounded-full transition-colors bg-[#D63848] duration-300 hover:opacity-80`}
+                        className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-[#D63848] duration-300 hover:opacity-80`}
                         onClick={() => {
                           setProductDeleteModalOpen(true);
                           setDeleteProductId(item?.id);
@@ -104,7 +128,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                         <DeleteIcon
                           className="!text-white"
                           sx={{
-                            fontSize: 20,
+                            fontSize: 18,
                             "@media (max-width: 648px)": {
                               fontSize: 16,
                             },
@@ -113,7 +137,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                       </button>
                     </div>
                   </TableCell>
-                </TableRow>
+                </StyledTableRow>
               ))}
             </TableBody>
           </Table>

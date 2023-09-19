@@ -29,7 +29,7 @@ const DrawerFilters = ({ showOnlyShopDetailPage }) => {
       )}
 
       <div
-        className={`p-4 py-4 lg:w-1/3 w-10/12 lg:${
+        className={`p-4 py-4 lg:w-3/12 w-10/12 lg:${
           userType === "vendor" ? "block" : "hidden"
         } fixed top-0 right-0 z-[1035] h-screen overflow-hidden shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] transition-transform duration-300 bg-colorWhite border-l ${
           !filterOpen ? "translate-x-full" : "-translate-x-0"
