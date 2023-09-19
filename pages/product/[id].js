@@ -29,7 +29,6 @@ import {
 } from "../../redux/ducks/userProfile";
 import { productLike } from "../../graphql/mutations/products";
 import Link from "next/link";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import FileUploadOutlinedIcon from "../../assets/shareIcon.svg";
 
@@ -49,7 +48,6 @@ import {
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
-import HTMLReactParser from "html-react-parser";
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 
 const ContactStyle = {
@@ -61,6 +59,7 @@ const ContactStyle = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  borderRadius: 4,
 };
 
 const ProductDetail = ({ productDetails }) => {
@@ -71,7 +70,7 @@ const ProductDetail = ({ productDetails }) => {
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
 
-  const [ReadMore, setReadMore] = useState(false);
+  const [readMore, setReadMore] = useState(false);
 
   const pageShareURL = window.location.href;
 
@@ -93,14 +92,6 @@ const ProductDetail = ({ productDetails }) => {
       boxShadow: "0 0 10px rgba(0,0,0,.1)",
     },
   }));
-
-  const handleTooltipOpen = () => {
-    setOpenToolTip(!OpenToolTip);
-  };
-
-  const handleReadMore = () => {
-    setReadMore(!ReadMore);
-  };
 
   const productDescription =
     productDetails.data.product.data?.product_description;
@@ -162,7 +153,7 @@ const ProductDetail = ({ productDetails }) => {
     setImages(img);
   };
 
-  const items = photos?.map((itm, i) => {
+  const productImages = photos?.map((itm, i) => {
     return (
       <div
         className="mx-auto mb-[24px] relative"
@@ -185,6 +176,185 @@ const ProductDetail = ({ productDetails }) => {
   });
 
   const isScreenWide = screeResizeForViewMoreItems();
+
+  const handleProductLike = () => {
+    if (isAuthenticate) {
+      productLike({
+        productInfo: {
+          product_id: productDetails.data.product.data.id,
+          user_id: userProfile.id,
+        },
+      }).then(
+        (res) => {
+          dispatch(
+            !productLikeByUser
+              ? productLikeToggle({
+                  productInfo: {
+                    key: "like",
+                    value: res.data.productLike.data,
+                  },
+                })
+              : productLikeToggle({
+                  productInfo: {
+                    key: "disLike",
+                    value: productDetails.data.product.data.id,
+                  },
+                })
+          );
+          toast.success(res.data.productLike.message, {
+            theme: "colored",
+          });
+        },
+        (error) => {
+          toast.error(error.message, {
+            theme: "colored",
+          });
+        }
+      );
+    } else {
+      Router.push("/auth/user-type");
+    }
+  };
+
+  const shopDetailHeader = () => (
+    <div className="flex items-center bg-colorPrimary p-3">
+      <div className="flex items-center justify-between w-full gap-3">
+        <div className="flex justify-start items-center gap-1 sm:gap-4">
+          <div className="flex justify-center items-center">
+            <Link
+              href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+            >
+              {productDetails.data.product.data.branchInfo?.shop_info
+                .shop_logo ? (
+                <Avatar
+                  alt="Shop Logo"
+                  className="!w-12 !h-12 !cursor-pointer"
+                  src={
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      .shop_logo
+                  }
+                />
+              ) : (
+                <ImageLoadingSkeleton
+                  variant="circular"
+                  className="!w-12 !h-12"
+                  sx={{
+                    backgroundColor: "#F3F6F6",
+                  }}
+                />
+              )}
+            </Link>
+          </div>
+          <div className="flex flex-col justify-center">
+            <Link
+              href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+            >
+              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+                <p className="line-clamp-1 text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
+                  {
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      .shop_name
+                  }
+                </p>
+              </a>
+            </Link>
+            <p className="text-[#888888] text-xs sm:text-sm font-normal">
+              25 days ago
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <Rating
+            name="text-feedback"
+            value={Math.round(
+              productDetails.data.product.data.branchInfo?.shop_info.shop_rating
+            )}
+            readOnly
+            emptyIcon={<StarIcon fontSize="small" sx={{ fontSize: "6px" }} />}
+          />
+          <div className="text-[#878A99] font-normal text-[13px] flex items-center">
+            <div className="flex items-center">
+              <LocationOnIcon fontSize="small" className="!mr-1" />
+              <span className="line-clamp-1">
+                {productDetails.data.product.data.branchInfo?.branch_address}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center md:justify-end">
+          <Button
+            variant="outlined"
+            sx={{
+              textTransform: "none",
+              color: "white",
+              border: "1px solid white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              px: 1,
+              height: "36px",
+              fontSize: "14px",
+              fontWeight: 400,
+              borderRadius: "8px",
+            }}
+            onClick={() => {
+              if (isAuthenticate) {
+                shopFollow({
+                  shopInfo: {
+                    shop_id:
+                      productDetails.data.product.data.branchInfo?.shop_id,
+                    user_id: userProfile.id,
+                  },
+                }).then(
+                  (res) => {
+                    dispatch(
+                      !shopFollowByUser
+                        ? shopFollowToggle({
+                            shopInfo: {
+                              key: "follow",
+                              value: res.data.shopFollower.data,
+                            },
+                          })
+                        : shopFollowToggle({
+                            shopInfo: {
+                              key: "unFollow",
+                              value:
+                                productDetails.data.product.data.branchInfo
+                                  ?.shop_id,
+                            },
+                          })
+                    );
+                    toast.success(res.data.shopFollower.message, {
+                      theme: "colored",
+                    });
+                  },
+                  (error) => {
+                    toast.error(error.message, {
+                      theme: "colored",
+                    });
+                  }
+                );
+              } else {
+                Router.push("/auth/user-type");
+              }
+            }}
+          >
+            {shopFollowByUser ? (
+              "Unfollow"
+            ) : (
+              <>
+                <div className="flex items-center justify-center">
+                  <AddIcon className="text-white" fontSize="small" />
+                  <div className="text-white">Follow</div>
+                </div>
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 
   if (!isHydrated) {
     return null;
@@ -217,155 +387,7 @@ const ProductDetail = ({ productDetails }) => {
         </div>
       </div>
 
-      <Box className="lg:!hidden font-Nova">
-        <div className="flex items-center bg-colorPrimary p-3">
-          <div className="flex items-center justify-between w-full gap-3">
-            <div className="flex justify-start items-center gap-1 sm:gap-4">
-              <div className="flex justify-center items-center">
-                <Link
-                  href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                >
-                  {productDetails.data.product.data.branchInfo?.shop_info
-                    .shop_logo ? (
-                    <Avatar
-                      alt="Shop Logo"
-                      className="!w-12 !h-12 !cursor-pointer"
-                      src={
-                        productDetails.data.product.data.branchInfo?.shop_info
-                          .shop_logo
-                      }
-                    />
-                  ) : (
-                    <ImageLoadingSkeleton
-                      variant="circular"
-                      className="!w-12 !h-12"
-                      sx={{
-                        backgroundColor: "#F3F6F6",
-                      }}
-                    />
-                  )}
-                </Link>
-              </div>
-              <div className="flex flex-col justify-center ">
-                <Link
-                  href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                >
-                  <a
-                    target={`${
-                      themeLayout === "webScreen" ? "_blank" : "_self"
-                    }`}
-                  >
-                    <p className="line-clamp-1 text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
-                      {
-                        productDetails.data.product.data.branchInfo?.shop_info
-                          .shop_name
-                      }
-                    </p>
-                  </a>
-                </Link>
-                <p className="text-[#888888] text-xs sm:text-sm font-normal">
-                  25 days ago
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <Rating
-                name="text-feedback"
-                value={Math.round(
-                  productDetails.data.product.data.branchInfo?.shop_info
-                    .shop_rating
-                )}
-                readOnly
-                emptyIcon={
-                  <StarIcon fontSize="small" sx={{ fontSize: "6px" }} />
-                }
-              />
-              <p className="text-[#878A99] font-normal text-[13px] flex items-center">
-                <div className="flex items-center">
-                  <LocationOnIcon fontSize="small" className="!mr-1" />
-                  <span className="line-clamp-1">
-                    {
-                      productDetails.data.product.data.branchInfo
-                        ?.branch_address
-                    }
-                  </span>
-                </div>
-              </p>
-            </div>
-
-            <div className="flex items-center md:justify-end">
-              <Button
-                variant="outlined"
-                sx={{
-                  textTransform: "none",
-                  color: "white",
-                  border: "1px solid white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  px: 1,
-                  height: "36px",
-                  fontSize: "14px",
-                  fontWeight: 400,
-                  borderRadius: "8px",
-                }}
-                onClick={() => {
-                  if (isAuthenticate) {
-                    shopFollow({
-                      shopInfo: {
-                        shop_id:
-                          productDetails.data.product.data.branchInfo?.shop_id,
-                        user_id: userProfile.id,
-                      },
-                    }).then(
-                      (res) => {
-                        dispatch(
-                          !shopFollowByUser
-                            ? shopFollowToggle({
-                                shopInfo: {
-                                  key: "follow",
-                                  value: res.data.shopFollower.data,
-                                },
-                              })
-                            : shopFollowToggle({
-                                shopInfo: {
-                                  key: "unFollow",
-                                  value:
-                                    productDetails.data.product.data.branchInfo
-                                      ?.shop_id,
-                                },
-                              })
-                        );
-                        toast.success(res.data.shopFollower.message, {
-                          theme: "colored",
-                        });
-                      },
-                      (error) => {
-                        toast.error(error.message, {
-                          theme: "colored",
-                        });
-                      }
-                    );
-                  } else {
-                    Router.push("/auth/user-type");
-                  }
-                }}
-              >
-                {shopFollowByUser ? (
-                  "Unfollow"
-                ) : (
-                  <>
-                    <div className="flex items-center justify-center">
-                      <AddIcon className="text-white" fontSize="small" />
-                      <div className="text-white">Follow</div>
-                    </div>
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Box>
+      <Box className="lg:!hidden font-Nova">{shopDetailHeader()}</Box>
       <div className="sm:hidden font-Nova">
         {productDetails && (
           <ProductCard
@@ -382,7 +404,7 @@ const ProductDetail = ({ productDetails }) => {
               <div className="col-span-2 lg:col-span-1 hidden sm:flex">
                 <div className="grid grid-cols-4">
                   <div className="col-span-1">
-                    <div className="p-2 pt-0">{items}</div>
+                    <div className="p-2 pt-0">{productImages}</div>
                   </div>
                   <div className="col-span-3">
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[600px] rounded-2xl">
@@ -398,7 +420,8 @@ const ProductDetail = ({ productDetails }) => {
                           sx={{
                             textTransform: "none",
                             width: "100%",
-                            color: "rgba(21, 24, 39, 0.4)",
+                            color:
+                              !productLikeByUser && "rgba(21, 24, 39, 0.4)",
                             border: "1px solid rgba(21, 24, 39, 0.4)",
                             borderRadius: "10px",
                             paddingTop: "12px",
@@ -406,49 +429,13 @@ const ProductDetail = ({ productDetails }) => {
                             fontWeight: 600,
                             fontSize: "18px",
                           }}
-                          onClick={() => {
-                            if (isAuthenticate) {
-                              productLike({
-                                productInfo: {
-                                  product_id:
-                                    productDetails.data.product.data.id,
-                                  user_id: userProfile.id,
-                                },
-                              }).then(
-                                (res) => {
-                                  dispatch(
-                                    !productLikeByUser
-                                      ? productLikeToggle({
-                                          productInfo: {
-                                            key: "like",
-                                            value: res.data.productLike.data,
-                                          },
-                                        })
-                                      : productLikeToggle({
-                                          productInfo: {
-                                            key: "disLike",
-                                            value:
-                                              productDetails.data.product.data
-                                                .id,
-                                          },
-                                        })
-                                  );
-                                  toast.success(res.data.productLike.message, {
-                                    theme: "colored",
-                                  });
-                                },
-                                (error) => {
-                                  toast.error(error.message, {
-                                    theme: "colored",
-                                  });
-                                }
-                              );
-                            } else {
-                              Router.push("/auth/user-type");
-                            }
-                          }}
+                          onClick={handleProductLike}
                         >
-                          <FavoriteBorderOutlinedIcon className="!text-[rgba(21, 24, 39, 0.4)]" />{" "}
+                          {!productLikeByUser ? (
+                            <FavoriteBorderIcon className="!text-[rgba(21, 24, 39, 0.4)]" />
+                          ) : (
+                            "❤️"
+                          )}
                           &nbsp; Like
                         </Button>
                       </div>
@@ -499,7 +486,7 @@ const ProductDetail = ({ productDetails }) => {
                           }
                         >
                           <Button
-                            onClick={handleTooltipOpen}
+                            onClick={() => setOpenToolTip(!OpenToolTip)}
                             variant="outlined"
                             sx={{
                               textTransform: "none",
@@ -548,158 +535,7 @@ const ProductDetail = ({ productDetails }) => {
               </div>
 
               <div className="col-span-2 lg:col-span-1">
-                <Box className="!hidden lg:!block">
-                  <div className="bg-colorPrimary p-3 rounded-[8px]">
-                    <div className="flex items-center justify-between w-full gap-4">
-                      <div className="flex justify-start items-center gap-1 sm:gap-4">
-                        <div className="flex justify-center items-center">
-                          <Link
-                            href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                          >
-                            {productDetails.data.product.data.branchInfo
-                              ?.shop_info.shop_logo ? (
-                              <Avatar
-                                alt="Shop Logo"
-                                src={
-                                  productDetails.data.product.data.branchInfo
-                                    ?.shop_info.shop_logo
-                                }
-                                className="!w-[50px] !h-[50px] !object-cover !cursor-pointer"
-                              />
-                            ) : (
-                              <ImageLoadingSkeleton
-                                variant="circular"
-                                className="!w-[50px] !h-[50px]"
-                                sx={{
-                                  backgroundColor: "#F3F6F6",
-                                }}
-                              />
-                            )}
-                          </Link>
-                        </div>
-
-                        <div className="flex flex-col justify-center">
-                          <Link
-                            href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-                          >
-                            <a
-                              target={`${
-                                themeLayout === "webScreen" ? "_blank" : "_self"
-                              }`}
-                            >
-                              <p className="line-clamp-1 text-white text-sm sm:text-base font-semibold cursor-pointer  hover:text-colorGreen">
-                                {
-                                  productDetails.data.product.data.branchInfo
-                                    ?.shop_info.shop_name
-                                }
-                              </p>
-                            </a>
-                          </Link>
-                          <p className="text-[#888888] text-xs sm:text-sm font-normal">
-                            25 days ago
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <Rating
-                          name="text-feedback"
-                          value={Math.round(
-                            productDetails.data.product.data.branchInfo
-                              ?.shop_info.shop_rating
-                          )}
-                          readOnly
-                          emptyIcon={<StarIcon fontSize="inherit" />}
-                        />
-                        <p className="text-[#878A99] font-normal text-[13px] flex items-center">
-                          <div className="flex items-center">
-                            <LocationOnIcon
-                              fontSize="small"
-                              className="!mr-1"
-                            />
-                            <span className="line-clamp-1">
-                              {
-                                productDetails.data.product.data.branchInfo
-                                  ?.branch_address
-                              }
-                            </span>
-                          </div>
-                        </p>
-                      </div>
-
-                      <div className="flex items-center md:justify-end">
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            textTransform: "none",
-                            color: "white",
-                            border: "1px solid white",
-                            paddingLeft: "14px",
-                            width: "96px",
-                            height: "36px",
-                            fontSize: "18px",
-                            fontWeight: 400,
-                            borderRadius: "8px",
-                          }}
-                          onClick={() => {
-                            if (isAuthenticate) {
-                              shopFollow({
-                                shopInfo: {
-                                  shop_id:
-                                    productDetails.data.product.data.branchInfo
-                                      ?.shop_id,
-                                  user_id: userProfile.id,
-                                },
-                              }).then(
-                                (res) => {
-                                  dispatch(
-                                    !shopFollowByUser
-                                      ? shopFollowToggle({
-                                          shopInfo: {
-                                            key: "follow",
-                                            value: res.data.shopFollower.data,
-                                          },
-                                        })
-                                      : shopFollowToggle({
-                                          shopInfo: {
-                                            key: "unFollow",
-                                            value:
-                                              productDetails.data.product.data
-                                                .branchInfo?.shop_id,
-                                          },
-                                        })
-                                  );
-                                  toast.success(res.data.shopFollower.message, {
-                                    theme: "colored",
-                                  });
-                                },
-                                (error) => {
-                                  toast.error(error.message, {
-                                    theme: "colored",
-                                  });
-                                }
-                              );
-                            } else {
-                              Router.push("/auth/user-type");
-                            }
-                          }}
-                        >
-                          {shopFollowByUser ? (
-                            "Unfollow"
-                          ) : (
-                            <>
-                              <div className="flex items-center">
-                                <AddIcon className="w-[25px] h-[25px] text-white" />
-                                <div className="pt-[2px] text-white">
-                                  Follow
-                                </div>
-                              </div>
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </Box>
+                <Box className="!hidden lg:!block">{shopDetailHeader()}</Box>
                 <div className="mt-5">
                   <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
                     <span className="font-semibold text-[30px] text-colorGreen leading-9">
@@ -707,43 +543,7 @@ const ProductDetail = ({ productDetails }) => {
                     </span>
                     <button
                       className={`w-10 h-10 rounded-full transition-colors bg-[#ffffff] duration-300`}
-                      onClick={() => {
-                        if (isAuthenticate) {
-                          productLike({
-                            productInfo: {
-                              product_id: productDetails.data.product.data.id,
-                              user_id: userProfile.id,
-                            },
-                          }).then(
-                            (res) => {
-                              dispatch(
-                                !productLikeByUser
-                                  ? productLikeToggle({
-                                      productInfo: {
-                                        key: "like",
-                                        value: res.data.productLike.data,
-                                      },
-                                    })
-                                  : productLikeToggle({
-                                      productInfo: {
-                                        key: "disLike",
-                                        value:
-                                          productDetails.data.product.data.id,
-                                      },
-                                    })
-                              );
-                              toast.success(res.data.productLike.message, {
-                                theme: "colored",
-                              });
-                            },
-                            (error) => {
-                              toast.error(error.message, { theme: "colored" });
-                            }
-                          );
-                        } else {
-                          Router.push("/auth/user-type");
-                        }
-                      }}
+                      onClick={handleProductLike}
                     >
                       {!productLikeByUser ? (
                         <FavoriteBorderIcon
@@ -763,39 +563,20 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
                     <div className="font-normal text-lg text-[#888888] leading-6">
-                      {productDescription.length > 250 ? (
-                        !ReadMore ? (
-                          <div
-                            onClick={handleReadMore}
-                            dangerouslySetInnerHTML={{
-                              __html:
-                                productDescription.slice(0, 250) +
-                                '... <span  style="cursor: pointer;  color: black;">read more</span>',
-                            }}
-                          />
-                        ) : (
-                          <>
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: productDescription,
-                              }}
-                            />
-                            <div className="flex justify-end">
-                              <span
-                                className="text-black cursor-pointer"
-                                onClick={handleReadMore}
-                              >
-                                read less
-                              </span>
-                            </div>
-                          </>
-                        )
-                      ) : (
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: productDescription,
-                          }}
-                        />
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: readMore
+                            ? productDescription
+                            : productDescription.slice(0, 250),
+                        }}
+                      />
+                      {productDescription.length > 250 && (
+                        <span
+                          onClick={() => setReadMore(!readMore)}
+                          className="cursor-pointer text-colorBlack"
+                        >
+                          {readMore ? "read less" : "read more"}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -862,8 +643,8 @@ const ProductDetail = ({ productDetails }) => {
         </div>
         <div className="pb-8 pt-4 mt-4 sm:px-[80px] px-[10px] bg-[#E8EBEA] text-[#31333E]">
           <div className="flex items-center justify-between">
-            <p className="text-colorBlack font-semibold text-xl flex items-center">
-              SIMILAR PRODUCTS
+            <p className="text-colorBlack font-semibold text-2xl flex items-center">
+              Similar Products
             </p>
 
             {productDetails.data.product.related &&
@@ -902,75 +683,81 @@ const ProductDetail = ({ productDetails }) => {
         </div>
       </div>
 
-      <Modal
-        open={openContactInfo}
-        onClose={handleCloseContactInfo}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={ContactStyle}>
-          <div className="flex justify-center items-center mt-3">
-            <div className="bg-colorWhite rounded-lg shadow-lg w-full sm:w-[80%] lg:w-auto mx-auto">
-              <div className="p-5 flex flex-col sm:flex-row gap-6 justify-start">
-                <div className="flex justify-center items-center">
-                  <img
-                    alt="Shop Logo"
-                    src={
-                      productDetails.data.product.data.branchInfo?.shop_info
-                        ?.shop_logo
-                    }
-                    width={60}
-                    height={40}
-                    className="rounded-[40%]"
-                  />
-                </div>
-                <div className="flex flex-col justify-center">
-                  <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                    {
-                      productDetails.data.product.data.branchInfo?.shop_info
-                        ?.shop_name
-                    }
-                  </p>
-                  <p className="text-[#888888] text-sm font-normal">
-                    {
-                      productDetails.data.product.data.branchInfo
-                        ?.branch_address
-                    }
-                  </p>
-                </div>
-              </div>
-              <Divider orientation="vertical" flexItem />
-              <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
-                <div className="flex justify-center items-center">
-                  <Avatar className=" !w-14 !h-14">
-                    <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
-                  </Avatar>
-                </div>
-                <div className="flex flex-col justify-center">
-                  <p className="text-[#000000] text-base font-semibold cursor-pointer">
-                    {productDetails.data.product.data.branchInfo?.manager_name}
-                  </p>
-                  <p className="text-colorBlack text-sm font-normal flex justify-end">
-                    - Manager
-                  </p>
-
-                  <p className="flex justify-center mt-1 text-[#000000] text-base font-semibold cursor-pointer">
-                    {
-                      productDetails.data.product.data.branchInfo
-                        ?.manager_contact
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Box>
-      </Modal>
+      <ContactDetailsModal
+        productDetails={productDetails}
+        openContactInfo={openContactInfo}
+        handleCloseContactInfo={handleCloseContactInfo}
+      />
     </>
   );
 };
 
 export default withoutAuth(ProductDetail);
+
+const ContactDetailsModal = ({
+  productDetails,
+  openContactInfo,
+  handleCloseContactInfo,
+}) => {
+  return (
+    <Modal
+      open={openContactInfo}
+      onClose={handleCloseContactInfo}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={ContactStyle}>
+        <div className="flex justify-center items-center">
+          <div className="bg-colorWhite rounded-lg container">
+            <div className="p-5 flex flex-col sm:flex-row gap-6 justify-start">
+              <div className="flex justify-center items-center">
+                <Avatar
+                  className="!w-16 !h-16"
+                  src={
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      ?.shop_logo ?? ""
+                  }
+                  alt="Shop Logo"
+                />
+              </div>
+              <div className="flex flex-col justify-center">
+                <p className="text-[#000000] text-base font-semibold cursor-pointer text-center sm:text-start">
+                  {
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      ?.shop_name
+                  }
+                </p>
+                <p className="text-[#888888] text-sm font-normal text-center sm:text-start">
+                  {productDetails.data.product.data.branchInfo?.branch_address}
+                </p>
+              </div>
+            </div>
+            <Divider />
+            <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
+              <div className="flex justify-center items-center">
+                <Avatar className="!w-14 !h-14">
+                  <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
+                </Avatar>
+              </div>
+              <div className="flex flex-col justify-center">
+                <p className="text-[#000000] text-base font-semibold cursor-pointer text-center sm:text-start">
+                  {productDetails.data.product.data.branchInfo?.manager_name}
+                </p>
+                <p className="text-colorBlack text-sm font-normal flex justify-center sm:justify-end">
+                  - Manager
+                </p>
+
+                <p className="flex justify-center sm:justify-start sm:text-start mt-1 text-[#000000] text-base font-semibold cursor-pointer">
+                  {productDetails.data.product.data.branchInfo?.manager_contact}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Box>
+    </Modal>
+  );
+};
 
 export async function getServerSideProps(context) {
   try {

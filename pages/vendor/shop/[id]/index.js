@@ -4,20 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
 import { changeAppliedProductsFilters } from "../../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
-import { loadProductsStart } from "../../../../redux/ducks/product";
+import {
+  changeProductPage,
+  loadProductsStart,
+} from "../../../../redux/ducks/product";
 import { withAuth } from "../../../../components/core/PrivateRouteForVendor";
 import AddIcon from "@mui/icons-material/Add";
 import VenderProductTable from "../../../../components/Layout/VenderProductTable";
 
 const ShopDetailsPage = () => {
-  const [productPageSkip, setProductPageSkip] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
 
   const dispatch = useDispatch();
-  const { productsCount, productsData, loading } = useSelector(
+  const { productsCount, productPageSkip, productsData, loading } = useSelector(
     (state) => state.products
   );
 
@@ -27,7 +29,7 @@ const ShopDetailsPage = () => {
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -43,17 +45,12 @@ const ShopDetailsPage = () => {
           limit: 6,
         },
         filter: {
-          category_id:
-            productsFiltersReducer.appliedProductsFilters.categoryId
-              .selectedValue,
-          product_color:
-            productsFiltersReducer.appliedProductsFilters.productColor
-              .selectedValue,
+          category_id: appliedProductsFilters.categoryId.selectedValue,
+          product_color: appliedProductsFilters.productColor.selectedValue,
         },
-        shopId:
-          productsFiltersReducer.appliedProductsFilters.shopId.selectedValue,
-        sort: productsFiltersReducer.sortFilters.sortType.selectedValue,
-        search: productsFiltersReducer.searchBarData,
+        shopId: appliedProductsFilters.shopId.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
+        search: appliedProductsFilters.searchBarData.selectedValue,
       })
     );
   };
@@ -71,20 +68,11 @@ const ShopDetailsPage = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (
-      productsFiltersReducer.appliedProductsFilters.shopId.selectedValue
-        .length > 0
-    ) {
+    if (appliedProductsFilters.shopId.selectedValue.length > 0) {
       getAllProducts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    dispatch,
-    productsFiltersReducer.appliedProductsFilters,
-    productsFiltersReducer.sortFilters,
-    productsFiltersReducer.searchBarData,
-    productPageSkip,
-  ]);
+  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
   useEffect(() => {
     if (id && vendorShopDetails?.id) {
@@ -100,15 +88,15 @@ const ShopDetailsPage = () => {
 
   return (
     <>
-      <div className="flex flex-col mt-2 px-6 sm:px-0">
-        <div className="flex flex-row-reverse py-2">
+      <div className="flex flex-col px-6 sm:px-0">
+        <div className="flex flex-row-reverse mb-2">
           <button
             onClick={() =>
               router.push(
                 `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
               )
             }
-            className="flex items-center text-colorGreen text-lg p-2 px-4 rounded-xl border-2 border-colorGreen"
+            className="flex items-cente text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
           >
             <AddIcon className="mr-2" />
             Add Products
@@ -116,10 +104,7 @@ const ShopDetailsPage = () => {
         </div>
 
         <div className="pt-4">
-          <UpperFilter
-            setProductPageSkip={setProductPageSkip}
-            showOnlyShopDetailPage={true}
-          />
+          <UpperFilter showOnlyShopDetailPage={true} />
 
           <div
             className={`w-full relative ${
@@ -127,7 +112,7 @@ const ShopDetailsPage = () => {
             }`}
           >
             <div
-              className={`mt-8 ${
+              className={`mt-4 ${
                 productsData?.length > 0 && loading
                   ? "opacity-50"
                   : "opacity-100"
@@ -136,7 +121,6 @@ const ShopDetailsPage = () => {
               {productsData.length > 0 ? (
                 <VenderProductTable
                   productsData={productIdData}
-                  setProductPageSkip={setProductPageSkip}
                   getAllProducts={getAllProducts}
                 />
               ) : (
@@ -158,9 +142,9 @@ const ShopDetailsPage = () => {
                     page={
                       (productPageSkip === 0 && 1) || productPageSkip / 6 + 1
                     }
-                    onChange={(e, p) => {
-                      setProductPageSkip((p === 1 && 0) || (p - 1) * 6);
-                    }}
+                    onChange={(e, p) =>
+                      dispatch(changeProductPage((p === 1 && 0) || (p - 1) * 6))
+                    }
                   />
                 </div>
               )}

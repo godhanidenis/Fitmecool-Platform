@@ -108,7 +108,7 @@ const ShopCard = ({ shop }) => {
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
 
-  const items = shop.shop_images.map((itm, index) => {
+  const shopImages = shop.shop_images.map((itm, index) => {
     return (
       <div
         className="relative"
@@ -155,7 +155,7 @@ const ShopCard = ({ shop }) => {
                 }
                 dotListClass={"Landing_customDots"}
               >
-                {items}
+                {shopImages}
               </Carousel>
             </div>
           </div>

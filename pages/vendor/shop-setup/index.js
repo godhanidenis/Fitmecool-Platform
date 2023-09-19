@@ -34,10 +34,10 @@ import { setShopRegisterId } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import CustomTextFieldVendor from "../../../components/Layout/CustomTextFieldVendor";
 import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
 import Carousel from "react-multi-carousel";
 import Image from "next/image";
+import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 
 const subBranchStyle = {
   position: "absolute",

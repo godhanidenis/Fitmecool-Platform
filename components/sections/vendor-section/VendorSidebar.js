@@ -49,9 +49,9 @@ const VendorSidebar = ({ vendorShopDetails }) => {
   ];
 
   return (
-    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center hidden sm:block">
+    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 hidden sm:flex flex-col items-center">
       <div className="flex justify-center">
-        <div className="w-[150px] h-[150px] mb-10 sm:mt-10 rounded-full">
+        <div className="w-[120px] h-[120px] mb-4 rounded-full">
           {vendorShopDetails?.shop_logo ? (
             <Avatar
               src={vendorShopDetails?.shop_logo}
@@ -64,16 +64,16 @@ const VendorSidebar = ({ vendorShopDetails }) => {
         </div>
       </div>
       <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
-        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-8 whitespace-nowrap w-full text-center">
+        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 whitespace-nowrap w-full text-center">
           {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
         </div>
-        <Divider className="w-full opacity-50 sm:mb-11" />
+        <Divider className="w-full opacity-50 sm:mb-6" />
         <div className="w-full font-Nova ml-[30%] hidden sm:block">
           {vendorSidebarTabs.map((tab, index) => (
             <p
               key={index}
               onClick={() => router.push(tab.path)}
-              className={`font-semibold pb-10 text-lg ${
+              className={`font-semibold pb-8 text-lg ${
                 selectedValue === tab.label
                   ? "text-[#29977E]"
                   : "text-[#151827]"

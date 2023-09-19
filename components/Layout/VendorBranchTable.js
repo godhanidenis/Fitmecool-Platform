@@ -54,9 +54,10 @@ const VendorBranchTable = ({
                   <TableCell align="left">{item?.branch_city}</TableCell>
                   <TableCell align="left">
                     <div className="flex gap-2">
-                      <span className="bg-[#151827]  text-white rounded-full lg:p-2 px-2 py-1">
+                      <span className="flex justify-center items-center bg-[#151827]  text-white rounded-full lg:p-2 px-2 py-1">
                         <EditOutlinedIcon
                           sx={{
+                            fontSize: 18,
                             "@media (max-width: 768px)": {
                               fontSize: 16,
                             },
@@ -68,9 +69,10 @@ const VendorBranchTable = ({
                           }}
                         />
                       </span>
-                      <span className="bg-[#D63848]  text-white rounded-full lg:p-2 px-2 py-1">
+                      <span className="flex justify-center items-center  bg-[#D63848]  text-white rounded-full lg:p-2 px-2 py-1">
                         <DeleteOutlineOutlinedIcon
                           sx={{
+                            fontSize: 18,
                             "@media (max-width: 768px)": {
                               fontSize: 16,
                             },
