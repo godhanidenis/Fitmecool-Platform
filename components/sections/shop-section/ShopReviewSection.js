@@ -2,10 +2,10 @@ import { CircularProgress, Rating, TextareaAutosize } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { CustomBorderLinearProgress } from "../../core/CustomMUIComponents";
 import { toast } from "react-toastify";
-import { Router, useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { shopReview } from "../../../graphql/mutations/shops";
 import { formatDate } from "../../../utils/common";
+import Router, { useRouter } from "next/router";
 
 const ShopReviewSection = ({ shopDetails, getAllReviews, shopReviews }) => {
   const [avgShopRating, setAvgShopRating] = useState(0);
