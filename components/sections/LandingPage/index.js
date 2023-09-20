@@ -118,17 +118,17 @@ const LandingPage = () => {
           </div>
         ))}
       </Carousel>
-      <div className="flex flex-col justify-center p-5 md:p-5 xl:p-16 2xl:p-16 pt-8">
+      <div className="flex flex-col justify-center mt-8">
         <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[22px] sm:text-[22px] md:text-[28px] 2xl:text-[48px]">
+          <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             How It Works
           </h1>
-          <p className="text-[11px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
+          <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
             Lorem Ipsum is simply dummy text of the printing
           </p>
         </div>
 
-        <div className="w-full mx-auto flex items-center justify-center pb-6">
+        <div className="w-full mx-auto flex items-center justify-center sm:mt-2 ">
           <CustomTab
             variant="scrollable"
             value={value}
@@ -148,156 +148,145 @@ const LandingPage = () => {
         <div>
           {["Customer", "Vendor"]?.map((item, index) => (
             <React.Fragment key={index}>
-              {item === "Customer" && (
-                <TabPanel
-                  value={value}
-                  index={index}
-                  className="p-0 sm:p-6 2xl:p-6"
-                >
-                  <Customer />
-                </TabPanel>
-              )}
-
-              {item === "Vendor" && (
-                <TabPanel
-                  value={value}
-                  index={index}
-                  className="p-0 sm:p-6 2xl:p-6"
-                >
-                  <Vendor />
-                </TabPanel>
-              )}
+              <TabPanel value={value} index={index} className="mt-6 mb-8">
+                {item === "Customer" ? <Customer /> : <Vendor />}
+              </TabPanel>
             </React.Fragment>
           ))}
         </div>
       </div>
-      <div className="flex flex-col justify-center p-5 md:p-5 xl:p-16 2xl:p-16 !pb-0 pt-3 md:pt-3 xl:pt-0 2xl:pt-0">
+      <div className="container flex flex-col justify-center">
         <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[22px] sm:text-[22px] md:text-[28px] 2xl:text-[48px]">
+          <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             Men’s Collection
           </h1>
-          <p className="text-[11px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
+          <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        <div className="p-0 sm-p-0 2xl:p-5 pt-[16px]">
+        <div className="mt-2 sm:mt-5">
           <MenCollection />
         </div>
       </div>
-      <div className="flex flex-col justify-center p-5 md:p-5 xl:p-16 2xl:p-16 !pb-0 pt-3 md:pt-3 xl:pt-0 2xl:pt-0">
+      <div className="container flex flex-col justify-center sm:-mt-4">
         <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[22px] sm:text-[22px] md:text-[28px] 2xl:text-[48px]">
+          <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             Women’s Collection
           </h1>
-          <p className="text-[11px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
+          <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        <div className="p-0 sm-p-0 2xl:p-5 pt-[16px]">
+        <div className="mt-5">
           <WomenCollection />
         </div>
       </div>
-      <div className="p-10 mb-16 bg-[#29977E0A] flex justify-between items-center sm:p-10 2xl:p-20 gap-1 sm:gap-5 2xl:gap-0">
-        <div className="w-full flex  justify-center">
-          <div className=" flex flex-col ">
-            <div className="flex flex-col pb-4 sm:pb-4 2xl:pb-9">
-              <p className="text-[10px] sm:text-[16px]  md:text-[23px] lg:text-[32px] 2xl:text-[48px] font-semibold text-[#29977E]">
-                Download Rentbless app
-              </p>
-              <p className="text-[8px] sm:text-[12px] md:text-[18px] lg:text-[22px] 2xl:text-[32px] text-[#18172593] flex flex-col">
-                <span className="m-0">Plan weddings, book vendors</span>
-                <span className="m-0">& explore curated ideas</span>
-              </p>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
-              <div className="flex flex-col gap-2">
-                <p className="text-[#181725]  text-[8px] sm:text-[12px] md:text-[17px] lg:text-[18px] 2xl:text-[24px]">
-                  You will receive an SMS with a link to download the App
+      <div className="bg-[#29977E0A] py-8">
+        <div className="container grid grid-cols-12">
+          <div className="w-full flex justify-start col-span-9 sm:col-span-10 lg:col-span-7 lg:col-start-2 items-start">
+            <div className=" flex flex-col">
+              <div className="flex flex-col pb-4 sm:pb-4 2xl:pb-9">
+                <p className="font-bold text-[20px] sm:text-[22px] md:text-[28px] 2xl:text-[36px] text-[#29977E]">
+                  Download Rentbless app
                 </p>
-                <CustomIconTextField
-                  className="w-[90%] sm:w-[90%] 2xl:w-[90%]"
-                  placeholder="Enter Mobile No."
-                  type="number"
-                  variant="outlined"
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <div>
-                          <Image
-                            src={bharat}
-                            alt="bharat"
-                            objectFit="cover"
-                            className="w-full h-auto md:w-28 md:h-18 2xl:w-28 2xl:h-18 "
-                          />
-                          <span className="ms-1 mx-2">+91</span>
-                        </div>
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    "& fieldset": { border: "none" },
-                  }}
-                  {...register("mobileNumber", {
-                    required: "Mobile number is required",
-                    onChange: (e) => {
-                      setInvalid(false);
-                      setSuccess(false);
-                    },
-                    pattern: {
-                      value: /^(\+\d{1,3}\s?)?\d{10}$/,
-                      message: "Please enter a valid mobile number",
-                    },
-                  })}
+                <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px]  text-[#181725] font-semibold text-[#18172593] flex flex-col">
+                  <span className="m-0">
+                    Plan weddings, book vendors & explore curated ideas
+                  </span>
+                </p>
+              </div>
+              <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
+                <div className="flex flex-col gap-2">
+                  <p className="text-[10px] sm:text-[12px] md:text-[17px] lg:text-[18px] 2xl:text-[16px]">
+                    You will receive an SMS with a link to download the App
+                  </p>
+                  <CustomIconTextField
+                    className="w-[95%] sm:w-[90%] 2xl:w-[90%]"
+                    placeholder="Enter Mobile No."
+                    type="number"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <div>
+                            <Image
+                              src={bharat}
+                              alt="bharat"
+                              objectFit="cover"
+                              className="w-full h-auto md:w-28 md:h-18 2xl:w-28 2xl:h-18 "
+                            />
+                            <span className="ms-1 mx-2">+91</span>
+                          </div>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      "& fieldset": { border: "none" },
+                    }}
+                    {...register("mobileNumber", {
+                      required: "Mobile number is required",
+                      onChange: (e) => {
+                        setInvalid(false);
+                        setSuccess(false);
+                      },
+                      pattern: {
+                        value: /^(\+\d{1,3}\s?)?\d{10}$/,
+                        message: "Please enter a valid mobile number",
+                      },
+                    })}
+                  />
+                  {errors?.mobileNumber && (
+                    <p className="text-red-600">
+                      {errors.mobileNumber.message}
+                    </p>
+                  )}
+                </div>
+                <div className="pt-3 sm:pt-6 2xl:pt-8 pb-5 sm:pb-10 2xl:pb-12">
+                  <button
+                    className="text-white p-3 px-4 rounded-full text-[12px] sm:text-[16px] 2xl:text-[16px] font-semibold bg-[#29977E] sm:px-4 2xl:px-16"
+                    type="submit"
+                  >
+                    Download App
+                  </button>
+                </div>
+              </form>
+              <div className="flex -ms-3">
+                <Image
+                  src={playStore}
+                  alt="playStore"
+                  objectFit="cover"
+                  className="cursor-pointer"
                 />
-                {errors?.mobileNumber && (
-                  <p className="text-red-600">{errors.mobileNumber.message}</p>
-                )}
+                <Image
+                  src={appStore}
+                  alt="appStore"
+                  objectFit="cover"
+                  className="cursor-pointer"
+                />
               </div>
-              <div className="pt-5 sm:pt-8 2xl:pt-10 pb-5 sm:pb-10 2xl:pb-12">
-                <button
-                  className="text-white p-3 px-4 rounded-full text-[10px] sm:text-[16px] 2xl:text-[16px] font-semibold bg-[#29977E] sm:px-4 2xl:px-16"
-                  type="submit"
-                >
-                  Download App
-                </button>
-              </div>
-            </form>
-            <div className="flex -ms-3">
-              <Image
-                src={playStore}
-                alt="playStore"
-                objectFit="cover"
-                className="cursor-pointer"
-              />
-              <Image
-                src={appStore}
-                alt="appStore"
-                objectFit="cover"
-                className="cursor-pointer"
-              />
             </div>
           </div>
-        </div>
-        <div className="w-full sm:w-full 2xl:w-full ps-0 sm:ps-0 2xl:ps-16 flex md:justify-end xl:justify-center 2xl:justify-center">
-          <Image
-            src={phone}
-            alt="phone"
-            objectFit="cover"
-            className="w-80 sm:w-80 2xl:w-full"
-          />
+          <div className="col-span-3 sm:col-span-2 lg:col-span-3 justify-center items-center">
+            <Image
+              src={phone}
+              alt="phone"
+              objectFit="cover"
+              // className="w-80 sm:w-80 2xl:w-full"
+            />
+          </div>
         </div>
       </div>
-      <div className="flex flex-col justify-center p-5 md:p-5 xl:p-16 2xl:p-16 pt-3 md:pt-3 xl:pt-0 2xl:pt-0">
+      <div className="container flex flex-col justify-center my-6">
         <div className="text-center">
-          <h1 className="text-[#181725] font-bold text-[22px] sm:text-[22px] md:text-[28px] 2xl:text-[48px]">
+          <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             Featured Vendors
           </h1>
-          <p className="text-[11px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
+          <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5  gap-4 sm:gap-4 place-items-center pt-10  pb-5 md:pb-20 2xl:pb-20 ">
+        <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5  gap-4 sm:gap-4 place-items-center pt-5 sm:pt-10 pb-5">
           {[1, 2, 3, 4, 5].map((id, index) => (
             <ShopCard key={index} />
           ))}
