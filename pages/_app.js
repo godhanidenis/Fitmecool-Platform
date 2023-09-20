@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Rentbless</title>
+        <title>Rentbless11111</title>
       </Head>
       <GoogleOAuthProvider clientId={appConfig.googleClientId}>
         <ThemeProvider theme={theme}>
