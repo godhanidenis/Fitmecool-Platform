@@ -100,18 +100,13 @@ const responsive = {
     slidesToSlide: 4,
   },
   tablet: {
-    breakpoint: { max: 1024, min: 768 }, // Example: New breakpoint for larger tablets
+    breakpoint: { max: 1024, min: 464 }, // Example: New breakpoint for larger tablets
     items: 3,
     slidesToSlide: 3,
   },
-  largeTablet: {
-    breakpoint: { max: 768, min: 464 }, // Example: Another new breakpoint for large tablets
-    items: 2,
-    slidesToSlide: 2,
-  },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 1,
+    items: 1.5,
     slidesToSlide: 1,
   },
 };
@@ -165,7 +160,7 @@ const WomenCollection = () => {
             variant="scrollable"
             value={value}
             onChange={(event, newValue) => setValue(newValue)}
-            collection={true}
+            collection="true"
           >
             {womenCategory.slice(0, 5)?.map((item, index) => (
               <Tab
@@ -180,7 +175,7 @@ const WomenCollection = () => {
         </div>
 
         <button
-          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-4 sm:pt-3"
+          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 pb-2 lg:pb-0 xl:pb-2 2xl:pb-0 "
           onClick={() => router.push("/home")}
         >
           View All
@@ -189,28 +184,36 @@ const WomenCollection = () => {
 
       {womenCategoryData && (
         <TabPanel value={value} index={value}>
-          <div className="w-full">
-            <Carousel
-              responsive={responsive}
-              customTransition="all .5s ease-in-out"
-              removeArrowOnDeviceType={["mobile"]}
-              arrows={true}
-              infinite
-              // autoPlay
-              // autoPlaySpeed={5000}
-              customLeftArrow={
-                <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-              }
-              customRightArrow={
-                <TrendingCustomRightArrow onClick={TrendingCustomRightArrow} />
-              }
-            >
-              {womenCategoryData?.map((product) => (
-                <div key={product.id} className={`pr-3 pb-8`}>
-                  <ProductCard product={product} landingPage={true} />
-                </div>
-              ))}
-            </Carousel>
+          <div className="w-full  h-[416px]">
+            {womenCategoryData.length > 0 ? (
+              <Carousel
+                responsive={responsive}
+                customTransition="all .5s ease-in-out"
+                removeArrowOnDeviceType={["mobile"]}
+                arrows={true}
+                infinite
+                // autoPlay
+                // autoPlaySpeed={5000}
+                customLeftArrow={
+                  <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
+                }
+                customRightArrow={
+                  <TrendingCustomRightArrow
+                    onClick={TrendingCustomRightArrow}
+                  />
+                }
+              >
+                {womenCategoryData?.map((product) => (
+                  <div key={product.id} className={`pr-3 pb-8`}>
+                    <ProductCard product={product} landingPage={true} />
+                  </div>
+                ))}
+              </Carousel>
+            ) : (
+              <div className="flex items-center justify-center  pb-8 h-full w-full">
+                No Product Found
+              </div>
+            )}
           </div>
         </TabPanel>
       )}

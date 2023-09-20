@@ -8,13 +8,15 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
-import { signIn } from "../../graphql/mutations/authMutations";
+import { googleSignIn, signIn } from "../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
 import {
   loadUserProfileStart,
   loginUserId,
 } from "../../redux/ducks/userProfile";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -46,6 +48,25 @@ const Login = () => {
     }
   }, []);
 
+  const handleAfterSignInResponse = (userId, token, message) => {
+    setLoading(false);
+    dispatch(loginUserId(userId));
+    dispatch(loadUserProfileStart({ id: userId }));
+    localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
+    toast.success(message, { theme: "colored" });
+    localStorage.removeItem("user_type_for_auth");
+    localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
+    setTimeout(() => {
+      Router.push(asVendor ? "/vendor/dashboard" : "/");
+    }, 1000);
+  };
+
+  const handleAfterSignInError = (message) => {
+    setLoading(false);
+    toast.error(message, { theme: "colored" });
+  };
+
   const onSubmit = (data) => {
     setLoading(true);
     signIn({
@@ -53,27 +74,54 @@ const Login = () => {
       password: data.password,
       type: asVendor ? "vendor" : "customer",
     }).then(
-      (res) => {
-        setLoading(false);
-        dispatch(loginUserId(res.data.signIn.user));
-        dispatch(loadUserProfileStart({ id: res.data.signIn.user }));
-        localStorage.setItem("token", res.data.signIn.token);
-        localStorage.setItem("userId", res.data.signIn.user);
-        toast.success(res.data.signIn.message, { theme: "colored" });
-        localStorage.removeItem("user_type_for_auth");
-        localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        setTimeout(() => {
-          Router.push(asVendor ? "/vendor/dashboard" : "/");
-        }, 1000);
-      },
-      (error) => {
-        setLoading(false);
-        toast.error(error.message, { theme: "colored" });
-      }
+      (res) =>
+        handleAfterSignInResponse(
+          res.data.signIn.user,
+          res.data.signIn.token,
+          res.data.signIn.message
+        ),
+      (error) => handleAfterSignInError(error.message)
     );
   };
 
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (codeResponse) => {
+      try {
+        const { access_token, token_type } = codeResponse;
+        const userInfoResponse = await axios.get(
+          `https://www.googleapis.com/oauth2/v2/userinfo`,
+          {
+            headers: {
+              Authorization: `${token_type} ${access_token}`,
+            },
+          }
+        );
+
+        const { email } = userInfoResponse.data;
+
+        googleSignIn({
+          username: email,
+          type: asVendor ? "vendor" : "customer",
+        }).then(
+          (res) =>
+            handleAfterSignInResponse(
+              res.data.googleSignIn.user,
+              res.data.googleSignIn.token,
+              res.data.googleSignIn.message
+            ),
+          (error) => handleAfterSignInError(error.message)
+        );
+      } catch (error) {
+        console.log("Error fetching user info:", error);
+        toast.error(error?.response?.data?.error?.message, {
+          theme: "colored",
+        });
+      }
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
 
   return (
     <div className="bg-background w-full">
@@ -97,10 +145,13 @@ const Login = () => {
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
           </p>
-          <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium">
+          <button
+            onClick={handleGoogleLogin}
+            className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
+          >
             <FcGoogle />
             Continue to Google
-          </button>{" "}
+          </button>
           <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
             <FaFacebook className="text-sky-700" />
             Continue to Facebook

@@ -40,10 +40,135 @@ const responsive = {
   },
 };
 
+const TrendingCustomLeftArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "white",
+        color: "black",
+        left: -12,
+        position: "absolute",
+        cursor: "pointer",
+        width: "40px",
+        height: "40px",
+        borderRadius: "50%",
+        marginLeft: "16px",
+        bottom: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "2px 2px 10px 0 rgba(0, 0, 0, 0.5)",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "12px",
+          height: "12px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(135deg)",
+          cursor: "pointer",
+          position: "relative",
+          right: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
+const TrendingCustomRightArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "white",
+        color: "black",
+        right: -12,
+        position: "absolute",
+        cursor: "pointer",
+        width: "40px",
+        height: "40px",
+        borderRadius: "50%",
+        marginRight: "16px",
+        bottom: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "-2px 4px 10px 0 rgba(0, 0, 0, 0.5)",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "12px",
+          height: "12px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(-45deg)",
+          cursor: "pointer",
+          position: "relative",
+          left: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
+const responsive1 = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 1600 },
+    items: 4.5,
+    slidesToSlide: 4,
+  },
+  desktop: {
+    breakpoint: { max: 1600, min: 1367 }, // Desktop screens
+    items: 3.5,
+    slidesToSlide: 3,
+  },
+  mediumDesktop: {
+    breakpoint: { max: 1366, min: 1280 }, // Medium-sized desktop screens
+    items: 3,
+    slidesToSlide: 3,
+  },
+  laptop: {
+    breakpoint: { max: 1279, min: 1024 }, // Laptop screens
+    items: 2.5,
+    slidesToSlide: 2,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 768 }, // Example: New breakpoint for larger tablets
+    items: 2.5,
+    slidesToSlide: 2,
+  },
+  largerMobile: {
+    breakpoint: { max: 767, min: 480 }, // Larger mobile devices
+    items: 2,
+    slidesToSlide: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1,
+  },
+};
+
 const LandingPage = () => {
   const [value, setValue] = useState(0);
   const [invalid, setInvalid] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState("");
+
+  const handleMobileNumberChange = (event) => {
+    // Remove any non-digit characters
+    const cleanedValue = event.target.value.replace(/\D/g, "");
+
+    // Limit the input to 10 characters
+    const limitedValue = cleanedValue.slice(0, 10);
+
+    setMobileNumber(limitedValue);
+  };
 
   const {
     register,
@@ -133,7 +258,7 @@ const LandingPage = () => {
             variant="scrollable"
             value={value}
             onChange={(event, newValue) => setValue(newValue)}
-            hometab={true}
+            hometab="true"
           >
             {["Customer", "Vendor"]?.map((item, index) => (
               <Tab
@@ -201,9 +326,9 @@ const LandingPage = () => {
                     You will receive an SMS with a link to download the App
                   </p>
                   <CustomIconTextField
-                    className="w-[95%] sm:w-[90%] 2xl:w-[90%]"
+                    className="w-[90%] sm:w-[90%] 2xl:w-[90%]"
                     placeholder="Enter Mobile No."
-                    type="number"
+                    type="text"
                     variant="outlined"
                     fullWidth
                     InputProps={{
@@ -215,6 +340,7 @@ const LandingPage = () => {
                               alt="bharat"
                               objectFit="cover"
                               className="w-full h-auto md:w-28 md:h-18 2xl:w-28 2xl:h-18 "
+                              priority
                             />
                             <span className="ms-1 mx-2">+91</span>
                           </div>
@@ -231,10 +357,12 @@ const LandingPage = () => {
                         setSuccess(false);
                       },
                       pattern: {
-                        value: /^(\+\d{1,3}\s?)?\d{10}$/,
-                        message: "Please enter a valid mobile number",
+                        value: /^\d{10}$/, // Ensure exactly 10 digits
+                        message: "Please enter a valid 10-digit mobile number",
                       },
                     })}
+                    value={mobileNumber}
+                    onChange={handleMobileNumberChange}
                   />
                   {errors?.mobileNumber && (
                     <p className="text-red-600">
@@ -286,10 +414,32 @@ const LandingPage = () => {
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5  gap-4 sm:gap-4 place-items-center pt-5 sm:pt-10 pb-5">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2   lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-4 sm:gap-4 xl:gap-24 2xl:gap-24 place-items-center pt-10  pb-5">
           {[1, 2, 3, 4, 5].map((id, index) => (
             <ShopCard key={index} />
           ))}
+        </div> */}
+        <div className="w-full place-items-center pt-5">
+          <Carousel
+            responsive={responsive1}
+            customTransition="all .5s ease-in-out"
+            // removeArrowOnDeviceType={["mobile"]}
+            arrows={true}
+            infinite
+            autoPlay
+            autoPlaySpeed={1000}
+            className="py-5"
+            customLeftArrow={
+              <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
+            }
+            customRightArrow={
+              <TrendingCustomRightArrow onClick={TrendingCustomRightArrow} />
+            }
+          >
+            {[1, 2, 3, 4, 5].map((id, index) => (
+              <ShopCard key={index} />
+            ))}
+          </Carousel>
         </div>
       </div>
     </div>

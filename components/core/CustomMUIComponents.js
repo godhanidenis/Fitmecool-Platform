@@ -81,10 +81,16 @@ export const CustomTab = styled(Tabs)(({ theme, hometab, collection }) => ({
     paddingRight: hometab && "16px",
     paddingLeft: hometab && "16px",
     borderBottom: hometab && "2px solid #0000000a",
+
+    [theme.breakpoints.down("lg")]: {
+      paddingTop: collection && "16px",
+      paddingBottom: collection && "16px",
+    },
     [theme.breakpoints.down("md")]: {
       fontSize: hometab && "18px",
       borderBottom: hometab && "3px solid #0000000a",
       paddingTop: collection && "16px",
+      paddingBottom: collection && "16px",
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: (hometab || collection) && "16px",
