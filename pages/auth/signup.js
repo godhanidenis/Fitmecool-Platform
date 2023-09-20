@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import { getGoogleUserInfo } from "../../services/googleUserInfo";
 
 const Signup = () => {
   const [asVendor, setAsVendor] = useState(false);
@@ -37,11 +37,9 @@ const Signup = () => {
   } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("user_type_for_auth") === "vendor") {
-      setAsVendor(true);
-    } else {
-      setAsVendor(false);
-    }
+    localStorage.getItem("user_type_for_auth") === "vendor"
+      ? setAsVendor(true)
+      : setAsVendor(false);
   }, []);
 
   useEffect(() => {
@@ -105,17 +103,11 @@ const Signup = () => {
   const handleGoogleSignUp = useGoogleLogin({
     onSuccess: async (codeResponse) => {
       try {
-        const { access_token, token_type } = codeResponse;
-        const userInfoResponse = await axios.get(
-          `https://www.googleapis.com/oauth2/v2/userinfo`,
-          {
-            headers: {
-              Authorization: `${token_type} ${access_token}`,
-            },
-          }
+        const { token_type, access_token } = codeResponse;
+        const { given_name, family_name, email } = await getGoogleUserInfo(
+          token_type,
+          access_token
         );
-
-        const { given_name, family_name, email } = userInfoResponse.data;
 
         googleSignUp({
           first_name: given_name,
@@ -154,7 +146,10 @@ const Signup = () => {
             </div>
           </div>
           <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
-            Create an account
+            Create an account{" "}
+            <span className="text-colorGreen">
+              As {asVendor ? "Vendor" : "Customer"}
+            </span>
           </div>
           <p className="sm:text-xl mt-2 text-gray-400 text-sm">
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -180,9 +175,9 @@ const Signup = () => {
                 <div className="w-full">
                   <input
                     type="text"
-                    placeholder="First Name"
+                    placeholder="First Name *"
                     {...register("first_name", {
-                      required: "FirstName is required",
+                      required: "First name is required",
                     })}
                     className="border focus:border-colorGreen focus:outline-none rounded-xl w-full focus:placeholder:text-colorGreen p-3"
                   />
@@ -197,9 +192,9 @@ const Signup = () => {
                 <div className="w-full">
                   <input
                     type="text"
-                    placeholder="Last Name"
+                    placeholder="Last Name *"
                     {...register("last_name", {
-                      required: "LastName is required",
+                      required: "Last name is required",
                     })}
                     className="border focus:border-colorGreen focus:outline-none rounded-xl w-full focus:placeholder:text-colorGreen p-3"
                   />
@@ -214,16 +209,16 @@ const Signup = () => {
               </div>
               <input
                 type="text"
-                placeholder="Connect Mobile Number"
+                placeholder="Connect Mobile Number *"
                 {...register("user_contact", {
-                  required: "Contact Number is required",
+                  required: "Contact number is required",
                   minLength: {
                     value: 10,
-                    message: "Contact Number must be 10 numbers",
+                    message: "Contact number must be 10 numbers",
                   },
                   maxLength: {
                     value: 10,
-                    message: "Contact Number must be 10 numbers",
+                    message: "Contact number must be 10 numbers",
                   },
                 })}
                 className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
@@ -239,7 +234,7 @@ const Signup = () => {
                 <>
                   <input
                     type="text"
-                    placeholder="Email Address"
+                    placeholder="Email Address *"
                     {...register("user_email", {
                       required: "Email is required",
 
@@ -265,7 +260,7 @@ const Signup = () => {
                 <div className="relative w-full">
                   <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Password"
+                    placeholder="Password *"
                     {...register("user_password", {
                       required: "Password is required",
                     })}
@@ -295,7 +290,7 @@ const Signup = () => {
                 <div className="relative w-full">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirmed Password"
+                    placeholder="Confirmed Password *"
                     {...register("confirm_password", {
                       validate: (value) => {
                         const { user_password } = getValues();
