@@ -16,7 +16,7 @@ import {
 } from "../../redux/ducks/userProfile";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import { getGoogleUserInfo } from "../../services/googleUserInfo";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -33,11 +33,9 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("user_type_for_auth") === "vendor") {
-      setAsVendor(true);
-    } else {
-      setAsVendor(false);
-    }
+    localStorage.getItem("user_type_for_auth") === "vendor"
+      ? setAsVendor(true)
+      : setAsVendor(false);
   }, []);
 
   useEffect(() => {
@@ -89,17 +87,8 @@ const Login = () => {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (codeResponse) => {
       try {
-        const { access_token, token_type } = codeResponse;
-        const userInfoResponse = await axios.get(
-          `https://www.googleapis.com/oauth2/v2/userinfo`,
-          {
-            headers: {
-              Authorization: `${token_type} ${access_token}`,
-            },
-          }
-        );
-
-        const { email } = userInfoResponse.data;
+        const { token_type, access_token } = codeResponse;
+        const { email } = await getGoogleUserInfo(token_type, access_token);
 
         googleSignIn({
           username: email,
@@ -139,7 +128,10 @@ const Login = () => {
             </div>
           </div>
           <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
-            Login As a {asVendor ? "Vendor" : "Customer"} !
+            Login{" "}
+            <span className="text-colorGreen">
+              As {asVendor ? "Vendor" : "Customer"}
+            </span>
           </div>
           <p className="text-sm sm:text-xl mt-2 text-gray-400">
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -163,7 +155,7 @@ const Login = () => {
             <input
               type="text"
               placeholder={
-                asVendor ? "Email Address or Contact Number" : "Contact Number"
+                asVendor ? "Email Address or Contact Number *" : "Contact Number *"
               }
               {...register("username", {
                 required: "Username is required",
@@ -178,7 +170,7 @@ const Login = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Password"
+                placeholder="Password *"
                 {...register("password", {
                   required: "Password is required",
                 })}

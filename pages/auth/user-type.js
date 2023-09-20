@@ -8,14 +8,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState(
+  const [selectedUserType, setSelectedUserType] = useState(
     typeof window !== "undefined" &&
-      (localStorage.getItem("user_type_for_auth")
-        ? localStorage.getItem("user_type_for_auth")
-        : "customer")
+      (localStorage.getItem("user_type_for_auth") ?? "customer")
   );
-  const handleDivClick = (option) => {
-    setSelectedOption(option);
+
+  const handleUserType = (option) => {
+    setSelectedUserType(option);
   };
 
   useEffect(() => {
@@ -59,22 +58,22 @@ const UserType = () => {
           <div className="flex my-8 gap-6 max-[380px]:flex-col">
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-                selectedOption === "customer" &&
+                selectedUserType === "customer" &&
                 "border-2 border-colorGreen rounded-2xl"
               }`}
-              onClick={() => handleDivClick("customer")}
+              onClick={() => handleUserType("customer")}
             >
               <div className="flex justify-between">
                 <GroupsIcon
                   className={`${
-                    selectedOption === "customer"
+                    selectedUserType === "customer"
                       ? "text-colorGreen"
                       : "text-colorPrimary"
                   }`}
                   fontSize="large"
                 />
 
-                {selectedOption === "customer" && (
+                {selectedUserType === "customer" && (
                   <CheckCircleIcon className="text-colorGreen" />
                 )}
               </div>
@@ -82,34 +81,34 @@ const UserType = () => {
                 Customer
               </div>
               <div className="text-sm text-[#15182766] my-1 max-[480px]:text-[10px]">
-                Sign up As a Customer
+                Continue As a Customer
               </div>
             </div>
             <div
               className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-                selectedOption === "vendor" &&
+                selectedUserType === "vendor" &&
                 "border-2 border-colorGreen rounded-2xl"
               }`}
-              onClick={() => handleDivClick("vendor")}
+              onClick={() => handleUserType("vendor")}
             >
               <div className="flex justify-between">
                 <SiHandshake
                   className={`${
-                    selectedOption === "vendor"
+                    selectedUserType === "vendor"
                       ? "text-colorGreen"
                       : "text-colorPrimary"
                   }`}
                   fontSize="25px"
                 />
-                {selectedOption === "vendor" && (
+                {selectedUserType === "vendor" && (
                   <CheckCircleIcon className="text-colorGreen" />
                 )}
               </div>
-              <div className="font-semibold mt-10 text-xl text-colorPrimary max-[600px]:text-lg max-[480px]:text-sm  max-[480px]:mt-5">
-                Business
+              <div className="font-semibold mt-10 text-xl text-colorPrimary max-[600px]:text-lg max-[480px]:text-sm max-[480px]:mt-5">
+                Vendor
               </div>
               <div className="text-sm text-[#15182766] my-1 max-[480px]:text-[10px]">
-                Sign up As a Business
+                Continue As a Vendor
               </div>
             </div>
           </div>
@@ -118,33 +117,15 @@ const UserType = () => {
 
           <div className="w-full">
             <button
-              className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+              className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm capitalize"
               onClick={() => {
-                localStorage.setItem(
-                  "user_type_for_auth",
-                  selectedOption === "vendor" ? "vendor" : "customer"
-                );
+                localStorage.setItem("user_type_for_auth", selectedUserType);
 
-                Router.push("/auth/signup");
+                Router.push("/auth/signin");
               }}
             >
-              Create Account
+              continue as {selectedUserType}
             </button>
-            <p className="text-base max-[480px]:text-xs text-[#15182766] mt-2 flex justify-center">
-              Already have an account?
-              <span
-                className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
-                onClick={() => {
-                  localStorage.setItem(
-                    "user_type_for_auth",
-                    selectedOption === "vendor" ? "vendor" : "customer"
-                  );
-                  Router.push("/auth/signin");
-                }}
-              >
-                Login
-              </span>
-            </p>
           </div>
         </div>
         <div className="hidden md:block md:w-[50%] auth-cover"></div>
