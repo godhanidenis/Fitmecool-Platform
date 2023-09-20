@@ -363,7 +363,7 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>{productDetails.data.product.data.product_name}</title>
         <meta
           property="og:title"
@@ -372,7 +372,7 @@ const ProductDetail = ({ productDetails }) => {
         <meta property="og:description" content={"Product Description"} />
         <meta property="og:image" content={photos[0]} />
         <meta property="og:url" content={window.location.href} />
-      </Head>
+      </Head> */}
       <div className="bg-colorWhite font-Nova container">
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
