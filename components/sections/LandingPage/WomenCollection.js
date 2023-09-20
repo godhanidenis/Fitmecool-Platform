@@ -159,15 +159,15 @@ const WomenCollection = () => {
 
   return (
     <>
-      <div className="flex justify-between gap-1 2xl:gap-5 items-center">
-        <div className="w-[70%] md:w-[80%] 2xl:w-[90%] mx-auto flex items-center justify-start ps-5 pb-1 md:pb-1 lg:pb-4 2xl:pb-6">
+      <div className="flex justify-between gap-1 2xl:gap-5 items-center  mb-6">
+        <div className="w-[70%] md:w-[80%] 2xl:w-[90%] mx-auto flex items-center justify-start">
           <CustomTab
             variant="scrollable"
             value={value}
             onChange={(event, newValue) => setValue(newValue)}
             collection={true}
           >
-            {womenCategory?.map((item, index) => (
+            {womenCategory.slice(0, 5)?.map((item, index) => (
               <Tab
                 key={item.id}
                 label={item?.category_name}
@@ -180,7 +180,7 @@ const WomenCollection = () => {
         </div>
 
         <button
-          className="text-[#29977E] font-semibold text-[12px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 md:pt-0 lg:pt-2 2xl:pt-2  pb-2 md:pb-0 lg:pb-5 2xl:pb-8"
+          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-4 sm:pt-3"
           onClick={() => router.push("/home")}
         >
           View All
@@ -188,7 +188,7 @@ const WomenCollection = () => {
       </div>
 
       {womenCategoryData && (
-        <TabPanel value={value} index={value} padding={3}>
+        <TabPanel value={value} index={value}>
           <div className="w-full">
             <Carousel
               responsive={responsive}
@@ -206,7 +206,7 @@ const WomenCollection = () => {
               }
             >
               {womenCategoryData?.map((product) => (
-                <div key={product.id} className="p-5">
+                <div key={product.id} className={`pr-3 pb-8`}>
                   <ProductCard product={product} landingPage={true} />
                 </div>
               ))}

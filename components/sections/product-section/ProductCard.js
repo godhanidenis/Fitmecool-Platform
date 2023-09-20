@@ -173,9 +173,9 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
         <Image
           src={itm ?? ""}
           alt={product?.product_name}
-          className={`object-cover absolute top-0 left-0 ${
-            landingPage ? "rounded-t-lg" : ""
-          }  ${isProductImagesLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`object-cover absolute top-0 left-0 rounded-t-lg ${
+            isProductImagesLoaded ? "opacity-100" : "opacity-0"
+          }`}
           onLoad={() => setProductImagesLoaded(true)}
           layout="fill"
         />
@@ -197,9 +197,7 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
 
   return (
     <>
-      <div
-        className={`${landingPage ? "" : "shadow-xl"} flex flex-col rounded-lg`}
-      >
+      <div className="shadow-xl flex flex-col rounded-lg">
         <div className="cursor-pointer product-parent-div">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
@@ -355,7 +353,7 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
         </div>
 
         {!onlyCarousal && (
-          <div className={`${landingPage ? "" : "bg-[#FFFFFF]"} pl-3`}>
+          <div className="bg-[#FFFFFF] pl-3">
             <div>
               <Link href={`/product/${product.id}`} passHref>
                 <a
