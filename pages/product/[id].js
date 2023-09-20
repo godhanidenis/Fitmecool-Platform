@@ -49,6 +49,7 @@ import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
+import Head from "next/head";
 
 const ContactStyle = {
   position: "absolute",
@@ -362,6 +363,21 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
+      <Head>
+        <title>{"Product Name"}</title>
+        <meta property="og:title" content={"Product Name"} />
+        <meta property="og:description" content={"Product Description"} />
+        <meta
+          property="og:image"
+          content={
+            "https://flyontech-rental-productt.s3.us-east-1.wasabisys.com/images/1695120844679.jpeg"
+          }
+        />
+        <meta
+          property="og:url"
+          content={"https://rentbless.com/product/64ec3d12bf89b16590f424e5/"}
+        />
+      </Head>
       <div className="bg-colorWhite font-Nova container">
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
@@ -609,7 +625,9 @@ const ProductDetail = ({ productDetails }) => {
                 <div className="flex flex-col md:flex-row gap-4 sm:gap-0 mt-10 items-center justify-between">
                   <div className="w-[100%] md:w-[48%]">
                     <a
-                      href={`https://api.whatsapp.com/send?phone=${productDetails.data.product.data.branchInfo?.manager_contact}`}
+                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                        "https://rentbless.com/product/64ec3d12bf89b16590f424e5/"
+                      )}`}
                       target="_blank"
                       className="w-full"
                       rel="noreferrer"
