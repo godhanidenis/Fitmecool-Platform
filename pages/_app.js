@@ -16,6 +16,8 @@ import { ToastContainer } from "react-toastify";
 import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import appConfig from "../config";
 
 const theme = createTheme({
   palette: {
@@ -39,24 +41,26 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Rentbless</title>
       </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <ToastContainer />
-        <Provider store={store}>
-          {!router.pathname.includes("/auth/") && <Header />}
+      <GoogleOAuthProvider clientId={appConfig.googleClientId}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ToastContainer />
+          <Provider store={store}>
+            {!router.pathname.includes("/auth/") && <Header />}
 
-          {router.pathname.includes("/vendor/") &&
-          router.pathname !== "/vendor/shop-setup" &&
-          !router.pathname.includes("/addEditProduct") ? (
-            <VendorCommonLayout>
+            {router.pathname.includes("/vendor/") &&
+            router.pathname !== "/vendor/shop-setup" &&
+            !router.pathname.includes("/addEditProduct") ? (
+              <VendorCommonLayout>
+                <Component {...pageProps} />
+              </VendorCommonLayout>
+            ) : (
               <Component {...pageProps} />
-            </VendorCommonLayout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-          {!router.pathname.includes("/auth/") && <Footer />}
-        </Provider>
-      </ThemeProvider>
+            )}
+            {!router.pathname.includes("/auth/") && <Footer />}
+          </Provider>
+        </ThemeProvider>
+      </GoogleOAuthProvider>
     </>
   );
 }

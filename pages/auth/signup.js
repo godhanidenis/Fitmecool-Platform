@@ -6,7 +6,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import Router from "next/router";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { signUp } from "../../graphql/mutations/authMutations";
+import { googleSignUp, signUp } from "../../graphql/mutations/authMutations";
 import {
   loadUserProfileStart,
   loginUserId,
@@ -14,6 +14,8 @@ import {
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const Signup = () => {
   const [asVendor, setAsVendor] = useState(false);
@@ -50,6 +52,25 @@ const Signup = () => {
     }
   }, []);
 
+  const handleAfterSignUpResponse = (userId, token, message) => {
+    setLoading(false);
+    dispatch(loginUserId(userId));
+    dispatch(loadUserProfileStart({ id: userId }));
+    localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
+    toast.success(message, { theme: "colored" });
+    localStorage.removeItem("user_type_for_auth");
+    localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
+    setTimeout(() => {
+      Router.push(asVendor ? "/vendor/dashboard" : "/");
+    }, 1000);
+  };
+
+  const handleAfterSignUpError = (message) => {
+    setLoading(false);
+    toast.error(message, { theme: "colored" });
+  };
+
   const onSubmit = (data) => {
     setLoading(true);
     signUp(
@@ -70,25 +91,52 @@ const Signup = () => {
             user_type: "customer",
           }
     ).then(
-      (res) => {
-        dispatch(loginUserId(res.data.signUp.user));
-        dispatch(loadUserProfileStart({ id: res.data.signUp.user }));
-        localStorage.setItem("token", res.data.signUp.token);
-        localStorage.setItem("userId", res.data.signUp.user);
-        toast.success(res.data.signUp.message, { theme: "colored" });
-        localStorage.removeItem("user_type_for_auth");
-        localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        setTimeout(() => {
-          Router.push(asVendor ? "/vendor/dashboard" : "/");
-        }, 1000);
-      },
-      (error) => {
-        setLoading(false);
-        toast.error(error.message, { theme: "colored" });
-      }
+      (res) =>
+        handleAfterSignUpResponse(
+          res.data.signUp.user,
+          res.data.signUp.token,
+          res.data.signUp.message
+        ),
+      (error) => handleAfterSignUpError(error.message)
     );
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+
+  const handleGoogleSignUp = useGoogleLogin({
+    onSuccess: async (codeResponse) => {
+      try {
+        const { access_token, token_type } = codeResponse;
+        const userInfoResponse = await axios.get(
+          `https://www.googleapis.com/oauth2/v2/userinfo`,
+          {
+            headers: {
+              Authorization: `${token_type} ${access_token}`,
+            },
+          }
+        );
+
+        const { given_name, family_name, email } = userInfoResponse.data;
+
+        googleSignUp({
+          first_name: given_name,
+          last_name: family_name,
+          user_type: asVendor ? "vendor" : "customer",
+          user_email: email,
+        }).then(
+          (res) =>
+            handleAfterSignUpResponse(
+              res.data.googleSignUp.user,
+              res.data.googleSignUp.token,
+              res.data.googleSignUp.message
+            ),
+          (error) => handleAfterSignUpError(error.message)
+        );
+      } catch (error) {
+        console.log("Error fetching user info:", error);
+      }
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
 
   return (
     <div className="bg-background w-full">
@@ -112,11 +160,14 @@ const Signup = () => {
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
           </p>
-          <button className="xl:text-lg sm:text-sm h-10 border w-full border-black text-colorPrimary rounded-xl mt-6 flex items-center justify-center gap-2 font-medium">
+          <button
+            onClick={handleGoogleSignUp}
+            className="xl:text-lg sm:text-sm h-10 border w-full border-black text-colorPrimary rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
+          >
             <FcGoogle />
             Continue to Google
-          </button>{" "}
-          <button className="xl:text-lg sm:text-sm h-10 border w-full  border-black text-colorPrimary rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
+          </button>
+          <button className="xl:text-lg sm:text-sm h-10 border w-full border-black text-colorPrimary rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
             <FaFacebook className="text-sky-700" />
             Continue to Facebook
           </button>
