@@ -39,19 +39,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>{"Product Name"}</title>
-        <meta property="og:title" content={"Product Name"} />
-        <meta property="og:description" content={"Product Description"} />
-        <meta
-          property="og:image"
-          content={
-            "https://flyontech-rental-productt.s3.us-east-1.wasabisys.com/images/1695120844679.jpeg"
-          }
-        />
-        <meta
-          property="og:url"
-          content={"https://rentbless.com/product/64ec3d12bf89b16590f424e5/"}
-        />
+        <title>Rentbless</title>
       </Head>
       <GoogleOAuthProvider clientId={appConfig.googleClientId}>
         <ThemeProvider theme={theme}>

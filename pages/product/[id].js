@@ -364,19 +364,14 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <Head>
-        <title>{"Product Name"}</title>
-        <meta property="og:title" content={"Product Name"} />
+        <title>{productDetails.data.product.data.product_name}</title>
+        <meta
+          property="og:title"
+          content={productDetails.data.product.data.product_name}
+        />
         <meta property="og:description" content={"Product Description"} />
-        <meta
-          property="og:image"
-          content={
-            "https://flyontech-rental-productt.s3.us-east-1.wasabisys.com/images/1695120844679.jpeg"
-          }
-        />
-        <meta
-          property="og:url"
-          content={"https://rentbless.com/product/64ec3d12bf89b16590f424e5/"}
-        />
+        <meta property="og:image" content={photos[0]} />
+        <meta property="og:url" content={window.location.href} />
       </Head>
       <div className="bg-colorWhite font-Nova container">
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
@@ -626,7 +621,7 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="w-[100%] md:w-[48%]">
                     <a
                       href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                        "https://rentbless.com/product/64ec3d12bf89b16590f424e5/"
+                        window.location.href
                       )}`}
                       target="_blank"
                       className="w-full"
