@@ -24,11 +24,7 @@ const Home = () => {
   if (!isHydrated) {
     return null;
   }
-  return (
-    <>
-      <LandingPage />
-    </>
-  );
+  return <LandingPage />;
 };
 
 export default withoutAuth(Home);
