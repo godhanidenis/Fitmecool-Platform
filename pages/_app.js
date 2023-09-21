@@ -61,8 +61,13 @@ function MyApp({ Component, pageProps }) {
           property="og:title"
           content={pageProps?.productDetails?.data?.product?.data?.product_name}
         />
-        <meta property="og:description" content={"Product Description"} />
-        {/* <meta property="og:image" content={photos[0]} /> */}
+        {/* <meta property="og:description" content={"Product Description"} /> */}
+        <meta
+          property="og:image"
+          content={
+            pageProps?.productDetails.data.product.data.product_image?.front
+          }
+        />
         <meta
           property="og:url"
           content={typeof window !== "undefined" ? window.location.href : ""}
