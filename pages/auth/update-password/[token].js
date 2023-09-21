@@ -1,28 +1,30 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import backIcon from "../../assets/svg/backIcon.svg";
+import { useEffect, useState } from "react";
+import backIcon from "../../../assets/svg/backIcon.svg";
 import Box from "@mui/material/Box";
-
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import InputAdornment from "@mui/material/InputAdornment";
-import { CustomTextField } from "../../components/core/CustomMUIComponents";
+import { CustomTextField } from "../../../components/core/CustomMUIComponents";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
 import { Alert, CircularProgress } from "@mui/material";
-import Router from "next/router";
+import { useRouter } from "next/router";
+import { resetPassword } from "../../../graphql/mutations/authMutations";
+import { withoutAuthForUserType } from "../../../components/core/PrivateRouteForAuth";
 
 const UpdatePassword = () => {
-  const router = useRouter();
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [invalid, setInvalid] = useState(false);
   const [success, setSuccess] = useState(false);
   const [alertMsg, setAlertMsg] = useState(false);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  const router = useRouter();
 
   const {
     register,
@@ -33,16 +35,36 @@ const UpdatePassword = () => {
     getValues,
   } = useForm();
 
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const onSubmit = async (data) => {
-    console.log("data", data);
+    setLoading(true);
+    resetPassword({
+      token: router.query.token,
+      userInfo: { user_password: data.password },
+    }).then(
+      (res) => {
+        setLoading(false);
+        setAlertMsg(res?.data?.resetPassword);
+        setSuccess(true);
+      },
+      (err) => {
+        setLoading(false);
+        setAlertMsg(err?.message);
+        setInvalid(true);
+      }
+    );
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
-    <div
-      className="grid grid-cols-12 justify-center items-center"
-      style={{ height: "100vh" }}
-    >
+    <div className="grid grid-cols-12 justify-center items-center h-screen">
       <div className="col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-3 xl:col-span-4"></div>
 
       <div className="block p-4 rounded-lg shadow-lg bg-white text-center col-span-10 sm:col-span-8 md:col-span-8 lg:col-span-6 xl:col-span-4">
@@ -79,7 +101,7 @@ const UpdatePassword = () => {
                 {success && (
                   <span
                     className="cursor-pointer text-[rgb(95, 33, 32)] ml-1 font-bold underline"
-                    onClick={() => Router.push("/auth/user-type")}
+                    onClick={() => router.push("/auth/user-type")}
                   >
                     Login
                   </span>
@@ -193,4 +215,4 @@ const UpdatePassword = () => {
     </div>
   );
 };
-export default UpdatePassword;
+export default withoutAuthForUserType(UpdatePassword);

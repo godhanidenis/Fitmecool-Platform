@@ -23,10 +23,6 @@ const ShopDetailsPage = () => {
     (state) => state.products
   );
 
-  const productIdData = productsData.filter(
-    (data) => data?.branchInfo?.shop_id === id
-  );
-
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const { appliedProductsFilters, sortFilters } = useSelector(
@@ -120,7 +116,7 @@ const ShopDetailsPage = () => {
             >
               {productsData.length > 0 ? (
                 <VenderProductTable
-                  productsData={productIdData}
+                  productsData={productsData}
                   getAllProducts={getAllProducts}
                 />
               ) : (

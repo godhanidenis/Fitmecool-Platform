@@ -17,11 +17,13 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
+import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [asVendor, setAsVendor] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -33,17 +35,13 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
-    localStorage.getItem("user_type_for_auth") === "vendor"
-      ? setAsVendor(true)
-      : setAsVendor(false);
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      Router.push(
-        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
-      );
-    }
+    localStorage.getItem("user_type_for_auth") === "vendor"
+      ? setAsVendor(true)
+      : setAsVendor(false);
   }, []);
 
   const handleAfterSignInResponse = (userId, token, message) => {
@@ -112,6 +110,10 @@ const Login = () => {
     onError: (error) => console.log("Login Failed:", error),
   });
 
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <div className="bg-background w-full">
       <div className="bg-white flex w-full sm:gap-10 min-h-[100vh] overflow-auto">
@@ -154,9 +156,7 @@ const Login = () => {
           <form onReset={reset}>
             <input
               type="text"
-              placeholder={
-                asVendor ? "Email Address or Contact Number *" : "Contact Number *"
-              }
+              placeholder="Email Address or Contact Number *"
               {...register("username", {
                 required: "Username is required",
               })}
@@ -236,4 +236,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withoutAuthAndUserType(Login);

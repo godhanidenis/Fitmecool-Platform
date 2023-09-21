@@ -258,6 +258,7 @@ export const getProductDetails = async (payload) => {
     variables: {
       productId: payload.id,
     },
+    fetchPolicy: "no-cache",
   });
   return result;
 };
