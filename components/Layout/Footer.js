@@ -10,6 +10,7 @@ import LocationIcon from "../../assets/LocationIcon.svg";
 import CalIcon from "../../assets/CalIcon.svg";
 import EmailIcon from "../../assets/EmailIcon.svg";
 import { useSelector } from "react-redux";
+import AppLogo from "../../assets/logo2.png";
 
 const socials = [
   {
@@ -45,16 +46,14 @@ const Footer = () => {
     <footer className="text-sm bg-colorPrimary text-colorWhite font-Nova relative">
       <div className="flex justify-between flex-wrap gap-4">
         <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row items-start justify-between gap-8 ml-[5.5%]">
-          <div className="flex flex-col sm:items-center md:items-start  max-w-[420px] ">
+          <div className="flex flex-col sm:items-center md:items-start  max-w-[420px] -mt-6">
             <Link
               href={`${
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
               }`}
             >
-              <div className="cursor-pointer mb-3">
-                <h2 className="sm:text-2xl text-[18px] font-semibold uppercase cursor-pointer text-colorWhite -mt-2">
-                  <span className="sm:text-4xl text-[24px]">R</span>entbless
-                </h2>
+              <div className="cursor-pointer mb-4">
+                <Image src={AppLogo} alt="logo2.png" width={150} height={50} />
               </div>
             </Link>
             <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px]">

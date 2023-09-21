@@ -48,6 +48,7 @@ import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
+import AppLogo from "../../assets/logo2.png";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
@@ -139,7 +140,7 @@ const Header = () => {
       />
       <header
         className={`${
-          userProfile.user_type === "vendor" ? "py-4" : "py-4 sm:py-0"
+          userProfile.user_type === "vendor" ? "py-0" : "py-4 sm:py-0"
         } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
@@ -168,10 +169,8 @@ const Header = () => {
                 userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
               }`}
             >
-              <div className="cursor-pointer">
-                <h2 className="sm:text-2xl text-[18px] font-semibold uppercase cursor-pointer text-colorWhite">
-                  <span className="sm:text-4xl text-[24px]">R</span>entbless
-                </h2>
+              <div className="cursor-pointer my-2">
+                <Image src={AppLogo} alt="logo2.png" width={150} height={50} />
               </div>
             </Link>
             {userProfile.user_type !== "vendor" && (
@@ -249,12 +248,12 @@ const Header = () => {
               <li>
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
-                    <p
+                    <button
                       onClick={() => Router.push("/auth/user-type")}
-                      className="underline hover:scale-105 hidden lg:block"
+                      className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-colorGreen"
                     >
-                      SingIn / SignUp
-                    </p>
+                      Login / Register
+                    </button>
 
                     <PersonAddAltIcon
                       sx={{ color: "white" }}

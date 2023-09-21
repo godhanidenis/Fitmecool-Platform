@@ -1525,7 +1525,7 @@ const ShopEdit = () => {
                     <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
                       Shop Cover Image
                     </div>
-                    <div className="sm:w-2/3 lg:w-[290px] w-full cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 rounded-3xl flex items-center justify-center">
+                    <div className="w-full sm:w-2/3 lg:w-[350px] cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 rounded-3xl flex items-center justify-center">
                       {shopBackground !== "" ? (
                         shopBackground ? (
                           <>
