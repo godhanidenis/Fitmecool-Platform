@@ -34,7 +34,6 @@ const theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }) {
-  console.log("pageProps:", pageProps);
   const router = useRouter();
 
   return (

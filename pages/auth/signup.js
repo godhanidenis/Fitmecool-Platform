@@ -16,6 +16,7 @@ import { CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
+import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
 
 const Signup = () => {
   const [asVendor, setAsVendor] = useState(false);
@@ -23,6 +24,7 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -37,17 +39,13 @@ const Signup = () => {
   } = useForm();
 
   useEffect(() => {
-    localStorage.getItem("user_type_for_auth") === "vendor"
-      ? setAsVendor(true)
-      : setAsVendor(false);
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      Router.push(
-        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
-      );
-    }
+    localStorage.getItem("user_type_for_auth") === "vendor"
+      ? setAsVendor(true)
+      : setAsVendor(false);
   }, []);
 
   const handleAfterSignUpResponse = (userId, token, message) => {
@@ -129,6 +127,10 @@ const Signup = () => {
     },
     onError: (error) => console.log("Login Failed:", error),
   });
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <div className="bg-background w-full">
@@ -356,4 +358,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default withoutAuthAndUserType(Signup);

@@ -4,6 +4,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
 import Router from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -16,14 +17,6 @@ const UserType = () => {
   const handleUserType = (option) => {
     setSelectedUserType(option);
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      Router.push(
-        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
-      );
-    }
-  }, []);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -134,4 +127,4 @@ const UserType = () => {
   );
 };
 
-export default UserType;
+export default withoutAuthForUserType(UserType);
