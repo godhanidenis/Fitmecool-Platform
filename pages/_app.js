@@ -39,7 +39,6 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const handleStorageChange = (e) => {
-      console.log("e.key :>> ", e.key);
       if (e.key === "token" || e.key === null) {
         router.reload();
       }
