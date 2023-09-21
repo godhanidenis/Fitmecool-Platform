@@ -65,7 +65,7 @@ function MyApp({ Component, pageProps }) {
         <meta
           property="og:image"
           content={
-            pageProps?.productDetails.data.product.data.product_image?.front
+            pageProps?.productDetails?.data?.product?.data?.product_image?.front
           }
         />
         <meta

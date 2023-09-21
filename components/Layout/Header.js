@@ -426,7 +426,8 @@ export const UserProfile = ({ setAccessToken }) => {
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
         <Avatar>
-          {userProfile?.first_name.charAt(0) + userProfile?.last_name.charAt(0)}
+          {userProfile?.first_name?.charAt(0) +
+            userProfile?.last_name?.charAt(0)}
           {/* <Image src={ProfileIcon ?? ""} alt="ProfileIcon" layout="fill" /> */}
         </Avatar>
         <span className="font-semibold hidden text-colorWhite sm:flex">
@@ -476,8 +477,8 @@ export const UserProfile = ({ setAccessToken }) => {
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
                     <Avatar className="!mb-2 !w-14 !h-14">
-                      {userProfile?.first_name.charAt(0) +
-                        userProfile?.last_name.charAt(0)}
+                      {userProfile?.first_name?.charAt(0) +
+                        userProfile?.last_name?.charAt(0)}
                       {/* <Image src={ProfileIcon ?? ""} alt="ProfileIcon" /> */}
                     </Avatar>
                     <b>
