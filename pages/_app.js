@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import appConfig from "../config";
+import { useEffect } from "react";
 
 const theme = createTheme({
   palette: {
@@ -35,6 +36,20 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === "token" || e.key === null) {
+        router.reload();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [router]);
 
   return (
     <>

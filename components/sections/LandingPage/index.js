@@ -10,7 +10,7 @@ import {
   TabPanel,
   a11yProps,
 } from "../../core/CustomMUIComponents";
-import { InputAdornment, Tab } from "@mui/material";
+import { CircularProgress, InputAdornment, Tab } from "@mui/material";
 import Customer from "./Customer";
 import Vendor from "./Vendor";
 import MenCollection from "./MenCollection";
@@ -21,6 +21,9 @@ import playStore from "../../../assets/playStore.png";
 import appStore from "../../../assets/appStore.png";
 import { useForm } from "react-hook-form";
 import ShopCard from "./ShopCard";
+import { loadShopsStart } from "../../../redux/ducks/shop";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const responsive = {
   desktop: {
@@ -119,46 +122,70 @@ const TrendingCustomRightArrow = ({ onClick }) => {
 const responsive1 = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 1600 },
-    items: 4.5,
-    slidesToSlide: 4,
+    items: 5,
+    slidesToSlide: 1,
   },
   desktop: {
     breakpoint: { max: 1600, min: 1367 }, // Desktop screens
-    items: 3.5,
-    slidesToSlide: 3,
+    items: 4,
+    slidesToSlide: 1,
   },
   mediumDesktop: {
     breakpoint: { max: 1366, min: 1280 }, // Medium-sized desktop screens
-    items: 3,
-    slidesToSlide: 3,
+    items: 4,
+    slidesToSlide: 1,
   },
   laptop: {
     breakpoint: { max: 1279, min: 1024 }, // Laptop screens
-    items: 2.5,
-    slidesToSlide: 2,
+    items: 3,
+    slidesToSlide: 1,
   },
   tablet: {
     breakpoint: { max: 1024, min: 768 }, // Example: New breakpoint for larger tablets
-    items: 2.5,
-    slidesToSlide: 2,
+    items: 3,
+    slidesToSlide: 1,
   },
   largerMobile: {
     breakpoint: { max: 767, min: 480 }, // Larger mobile devices
     items: 2,
-    slidesToSlide: 2,
+    slidesToSlide: 1,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 1,
+    items: 1.5,
     slidesToSlide: 1,
   },
 };
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
+
   const [value, setValue] = useState(0);
   const [invalid, setInvalid] = useState(false);
   const [success, setSuccess] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const {
+    shopsLimit,
+    shopsCount,
+    numOfPages: shopNumOfPages,
+    shopPageSkip,
+    shopsData,
+    loading: shopLoading,
+    error: shopError,
+  } = useSelector((state) => state.shops);
+
+  console.log("shopsData 123 :>> ", shopsData);
+
+  const { appliedProductsFilters, sortFilters } = useSelector(
+    (state) => state.productsFiltersReducer
+  );
+  const {
+    appliedShopsFilters,
+    sortFilters: shopSortFilter,
+    byShop,
+  } = useSelector((state) => state.shopsFiltersReducer);
 
   const handleMobileNumberChange = (event) => {
     // Remove any non-digit characters
@@ -201,6 +228,26 @@ const LandingPage = () => {
       </li>
     );
   };
+
+  const getAllShops = () => {
+    setLoading(true);
+    dispatch(
+      loadShopsStart({
+        pageData: {
+          skip: shopPageSkip,
+          limit: 10,
+        },
+        area: appliedShopsFilters.locations.selectedValue,
+        sort: shopSortFilter.sortType.selectedValue,
+        stars: appliedShopsFilters.stars.selectedValue,
+      })
+    );
+  };
+
+  useEffect(() => {
+    getAllShops();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, appliedShopsFilters, shopSortFilter, shopPageSkip]);
 
   return (
     <div>
@@ -414,20 +461,16 @@ const LandingPage = () => {
             Browse through our dreamy catalog and enrobe your wishes.
           </p>
         </div>
-        {/* <div className="grid grid-cols-1 sm:grid-cols-1  md:grid-cols-2   lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-4 sm:gap-4 xl:gap-24 2xl:gap-24 place-items-center pt-10  pb-5">
-          {[1, 2, 3, 4, 5].map((id, index) => (
-            <ShopCard key={index} />
-          ))}
-        </div> */}
-        <div className="w-full place-items-center pt-5">
+
+        <div className="w-full h-[384px] place-items-center pt-5">
           <Carousel
             responsive={responsive1}
             customTransition="all .5s ease-in-out"
-            // removeArrowOnDeviceType={["mobile"]}
+            removeArrowOnDeviceType={["mobile"]}
             arrows={true}
             infinite
             autoPlay
-            autoPlaySpeed={1000}
+            autoPlaySpeed={2000}
             className="py-5"
             customLeftArrow={
               <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
@@ -436,10 +479,17 @@ const LandingPage = () => {
               <TrendingCustomRightArrow onClick={TrendingCustomRightArrow} />
             }
           >
-            {[1, 2, 3, 4, 5].map((id, index) => (
-              <ShopCard key={index} />
+            {shopsData.map((shop) => (
+              <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
+                <ShopCard shop={shop} />
+              </div>
             ))}
           </Carousel>
+          {loading && shopsData.length === 0 && (
+            <div className="flex justify-center items-center h-full">
+              <CircularProgress color="secondary" />
+            </div>
+          )}
         </div>
       </div>
     </div>

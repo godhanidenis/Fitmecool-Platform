@@ -113,3 +113,32 @@ export const googleSignIn = async (payload) => {
   });
   return results;
 };
+
+export const forgotPassword = async (payload) => {
+  const results = await client.mutate({
+    mutation: gql`
+      mutation forgotPassword($userInfo: forgotPasswordInput) {
+        forgotPassword(userInfo: $userInfo)
+      }
+    `,
+    variables: {
+      userInfo: payload.userInfo,
+    },
+  });
+  return results;
+};
+
+export const resetPassword = async (payload) => {
+  const results = await client.mutate({
+    mutation: gql`
+      mutation resetPassword($token: String, $userInfo: resetPasswordInput) {
+        resetPassword(token: $token, userInfo: $userInfo)
+      }
+    `,
+    variables: {
+      token: payload.token,
+      userInfo: payload.userInfo,
+    },
+  });
+  return results;
+};

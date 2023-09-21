@@ -76,7 +76,7 @@ export const CustomTab = styled(Tabs)(({ theme, hometab, collection }) => ({
     color: hometab ? "#000" : collection ? "#31333e93" : "#FFFFFF",
     fontWeight: 600,
     fontSize: hometab ? "20px" : collection ? "18px" : "14px",
-    paddingTop: collection ? "" : "16px",
+    paddingTop: collection ? "0px" : "16px",
     paddingBottom: collection ? "0px" : "4px",
     paddingRight: hometab && "16px",
     paddingLeft: hometab && "16px",

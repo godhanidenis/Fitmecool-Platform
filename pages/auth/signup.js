@@ -108,8 +108,8 @@ const Signup = () => {
         );
 
         googleSignUp({
-          first_name: given_name,
-          last_name: family_name,
+          first_name: given_name || "",
+          last_name: family_name || "",
           user_type: asVendor ? "vendor" : "customer",
           user_email: email,
         }).then(

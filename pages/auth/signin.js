@@ -156,11 +156,7 @@ const Login = () => {
           <form onReset={reset}>
             <input
               type="text"
-              placeholder={
-                asVendor
-                  ? "Email Address or Contact Number *"
-                  : "Contact Number *"
-              }
+              placeholder="Email Address or Contact Number *"
               {...register("username", {
                 required: "Username is required",
               })}

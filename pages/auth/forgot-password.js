@@ -7,24 +7,50 @@ import { CustomTextField } from "../../components/core/CustomMUIComponents";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "@mui/material";
+import { forgotPassword } from "../../graphql/mutations/authMutations";
+import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [invalid, setInvalid] = useState(false);
   const [success, setSuccess] = useState(false);
   const [alertMsg, setAlertMsg] = useState(false);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+
   const onSubmit = async (data) => {
-    console.log("data", data);
+    setLoading(true);
+    forgotPassword({ userInfo: { user_email: data.email } }).then(
+      (res) => {
+        setLoading(false);
+        setAlertMsg(res?.data?.forgotPassword);
+        setSuccess(true);
+      },
+      (err) => {
+        setLoading(false);
+        setAlertMsg(err?.message);
+        setInvalid(true);
+      }
+    );
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <div
@@ -121,4 +147,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default withoutAuthForUserType(ForgotPassword);

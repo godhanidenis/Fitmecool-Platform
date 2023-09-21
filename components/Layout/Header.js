@@ -9,7 +9,7 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import CloseIcon from "@mui/icons-material/Close";
-import ProfileIcon from "../../assets/profile.png";
+// import ProfileIcon from "../../assets/profile.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
@@ -426,7 +426,8 @@ export const UserProfile = ({ setAccessToken }) => {
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
         <Avatar>
-          <Image src={ProfileIcon ?? ""} alt="ProfileIcon" layout="fill" />
+          {userProfile?.first_name.charAt(0) + userProfile?.last_name.charAt(0)}
+          {/* <Image src={ProfileIcon ?? ""} alt="ProfileIcon" layout="fill" /> */}
         </Avatar>
         <span className="font-semibold hidden text-colorWhite sm:flex">
           {userProfile?.first_name + " " + userProfile?.last_name}
@@ -475,7 +476,9 @@ export const UserProfile = ({ setAccessToken }) => {
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
                     <Avatar className="!mb-2 !w-14 !h-14">
-                      <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
+                      {userProfile?.first_name.charAt(0) +
+                        userProfile?.last_name.charAt(0)}
+                      {/* <Image src={ProfileIcon ?? ""} alt="ProfileIcon" /> */}
                     </Avatar>
                     <b>
                       {userProfile?.first_name + " " + userProfile?.last_name}
