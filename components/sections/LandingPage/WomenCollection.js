@@ -1,87 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Carousel from "react-multi-carousel";
 import ProductCard from "../product-section/ProductCard";
 import { CustomTab, TabPanel, a11yProps } from "../../core/CustomMUIComponents";
-import { Tab } from "@mui/material";
+import { CircularProgress, Tab } from "@mui/material";
 import { useSelector } from "react-redux";
 import { getProducts } from "../../../graphql/queries/productQueries";
 import { useRouter } from "next/router";
-
-const TrendingCustomLeftArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "white",
-        color: "black",
-        left: -12,
-        position: "absolute",
-        cursor: "pointer",
-        width: "40px",
-        height: "40px",
-        borderRadius: "50%",
-        marginLeft: "16px",
-        bottom: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "2px 2px 10px 0 rgba(0, 0, 0, 0.5)",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "12px",
-          height: "12px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(135deg)",
-          cursor: "pointer",
-          position: "relative",
-          right: "-2px",
-        }}
-      />
-    </div>
-  );
-};
-
-const TrendingCustomRightArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "white",
-        color: "black",
-        right: -12,
-        position: "absolute",
-        cursor: "pointer",
-        width: "40px",
-        height: "40px",
-        borderRadius: "50%",
-        marginRight: "16px",
-        bottom: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "-2px 4px 10px 0 rgba(0, 0, 0, 0.5)",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "12px",
-          height: "12px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(-45deg)",
-          cursor: "pointer",
-          position: "relative",
-          left: "-2px",
-        }}
-      />
-    </div>
-  );
-};
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const responsive = {
   superLargeDesktop: {
@@ -118,10 +44,27 @@ const WomenCollection = () => {
   const [value, setValue] = useState(0);
   const [womenCategoryId, setWomenCategoryId] = useState([]);
   const [womenCategoryData, setWomenCategoryData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
+  const carouselRef = useRef(null);
+
+  const nextSlide = () => {
+    if (carouselRef.current) {
+      carouselRef.current.next();
+    }
+  };
+
+  const prevSlide = () => {
+    if (carouselRef.current) {
+      carouselRef.current.previous();
+    }
+  };
+
   const getAllWomenProducts = () => {
+    setWomenCategoryData([]);
+    setLoading(true);
     getProducts({
       pageData: {
         skip: 0,
@@ -135,8 +78,14 @@ const WomenCollection = () => {
       sort: "new",
       search: "",
     }).then(
-      (res) => setWomenCategoryData(res?.data?.productList?.data),
-      (err) => console.log("error >> ", err)
+      (res) => {
+        setWomenCategoryData(res?.data?.productList?.data);
+        setLoading(false);
+      },
+      (err) => {
+        console.log("error >> ", err);
+        setLoading(false);
+      }
     );
   };
 
@@ -154,7 +103,7 @@ const WomenCollection = () => {
 
   return (
     <>
-      <div className="flex justify-between gap-1 2xl:gap-5 items-center  mb-6">
+      <div className="flex justify-between gap-1 2xl:gap-5 items-center">
         <div className="w-[70%] md:w-[80%] 2xl:w-[90%] mx-auto flex items-center justify-start">
           <CustomTab
             variant="scrollable"
@@ -175,48 +124,64 @@ const WomenCollection = () => {
         </div>
 
         <button
-          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 pb-2 lg:pb-0 xl:pb-2 2xl:pb-0 "
+          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 lg:pt-0  pb-2 lg:pb-0"
           onClick={() => router.push("/home")}
         >
           View All
         </button>
       </div>
-
-      {womenCategoryData && (
-        <TabPanel value={value} index={value}>
-          <div className="w-full  h-[416px]">
-            {womenCategoryData.length > 0 ? (
-              <Carousel
-                responsive={responsive}
-                customTransition="all .5s ease-in-out"
-                removeArrowOnDeviceType={["mobile"]}
-                arrows={true}
-                infinite
-                // autoPlay
-                // autoPlaySpeed={5000}
-                customLeftArrow={
-                  <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-                }
-                customRightArrow={
-                  <TrendingCustomRightArrow
-                    onClick={TrendingCustomRightArrow}
-                  />
-                }
-              >
-                {womenCategoryData?.map((product) => (
-                  <div key={product.id} className={`pr-3 pb-8`}>
-                    <ProductCard product={product} landingPage={true} />
-                  </div>
-                ))}
-              </Carousel>
-            ) : (
-              <div className="flex items-center justify-center  pb-8 h-full w-full">
-                No Product Found
-              </div>
-            )}
-          </div>
-        </TabPanel>
+      {womenCategoryData?.length > 0 ? (
+        <div className="p-5 flex gap-5">
+          <button
+            className="flex justify-center items-center p-2 border border-1 rounded-lg"
+            onClick={prevSlide}
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button
+            className="flex justify-center items-center p-2 border border-1 rounded-lg"
+            onClick={nextSlide}
+          >
+            <ChevronRightIcon />
+          </button>
+        </div>
+      ) : (
+        <div className="p-3"></div>
       )}
+
+      <TabPanel value={value} index={value}>
+        <div className="w-full  h-[416px]">
+          {!loading && womenCategoryData.length > 0 ? (
+            <Carousel
+              ref={carouselRef}
+              responsive={responsive}
+              customTransition="all .5s ease-in-out"
+              removeArrowOnDeviceType={["mobile"]}
+              arrows={true}
+              infinite
+              // autoPlay
+              // autoPlaySpeed={5000}
+            >
+              {womenCategoryData?.map((product) => (
+                <div key={product.id} className={`pr-3 pb-8`}>
+                  <ProductCard product={product} landingPage={true} />
+                </div>
+              ))}
+            </Carousel>
+          ) : !loading && womenCategoryData.length === 0 ? (
+            <div className="flex items-center justify-center  pb-8 h-full w-full">
+              No Product Found
+            </div>
+          ) : (
+            loading &&
+            womenCategoryData.length === 0 && (
+              <div className="flex justify-center items-center h-full">
+                <CircularProgress color="secondary" />
+              </div>
+            )
+          )}
+        </div>
+      </TabPanel>
     </>
   );
 };
