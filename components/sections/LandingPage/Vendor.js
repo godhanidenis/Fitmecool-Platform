@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import Store1 from "../../../assets/store 3.png";
-import Store2 from "../../../assets/store 4.png";
-import Store3 from "../../../assets/store 5.png";
+import Store1 from "../../../assets/img/store 3.png";
+import Store2 from "../../../assets/img/store 4.png";
+import Store3 from "../../../assets/img/store 5.png";
 
 const Vendor = () => {
   return (

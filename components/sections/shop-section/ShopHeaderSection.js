@@ -11,9 +11,9 @@ import Router, { useRouter } from "next/router";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import facebookIcon from "../../../assets/facebook.png";
-import whatsUpIcon from "../../../assets/wpToolTipIcon.svg";
-import googleIcon from "../../../assets/googleIcon.svg";
+import facebookIcon from "../../../assets/img//facebook.png";
+import whatsUpIcon from "../../../assets/svg/wpToolTipIcon.svg";
+import googleIcon from "../../../assets/svg/googleIcon.svg";
 import {
   EmailShareButton,
   FacebookShareButton,

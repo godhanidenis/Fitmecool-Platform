@@ -3,7 +3,7 @@
 } */
 
 .auth-cover {
-  background: url("../assets/images/loginPageImage.svg") no-repeat center center;
+  background: url("../assets/svg/loginPageImage.svg") no-repeat center center;
   background-size: cover !important;
 }
 

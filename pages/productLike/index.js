@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "../../components/sections/product-section/ProductCard";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
-import EmptyCart from "../../assets/images/empty_page_img.svg";
+import EmptyCart from "../../assets/svg/empty_page_img.svg";
 import Router from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 

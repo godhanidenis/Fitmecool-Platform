@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Carousel from "react-multi-carousel";
-import bannerImg1 from "../../../assets/banner/Product IMg.svg";
-import bannerImg2 from "../../../assets/banner/top images.svg";
+import bannerImg1 from "../../../assets/svg/Product IMg.svg";
+import bannerImg2 from "../../../assets/svg/top images.svg";
 import Image from "next/image";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
@@ -15,10 +15,10 @@ import Customer from "./Customer";
 import Vendor from "./Vendor";
 import MenCollection from "./MenCollection";
 import WomenCollection from "./WomenCollection";
-import phone from "../../../assets/iPhone 12 View.png";
-import bharat from "../../../assets/bharat.png";
-import playStore from "../../../assets/playStore.png";
-import appStore from "../../../assets/appStore.png";
+import phone from "../../../assets/img/iPhone 12 View.png";
+import bharat from "../../../assets/img/bharat.png";
+import playStore from "../../../assets/img/playStore.png";
+import appStore from "../../../assets/img/appStore.png";
 import { useForm } from "react-hook-form";
 import ShopCard from "./ShopCard";
 import { loadShopsStart } from "../../../redux/ducks/shop";

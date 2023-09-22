@@ -15,8 +15,6 @@ import Router, { useRouter } from "next/router";
 import { userLogout } from "../../../redux/ducks/userProfile";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { toast } from "react-toastify";
-import Image from "next/image";
-import ProfileIcon from "../../../assets/profile.png";
 import VendorShopSubHeader from "../VendorShopSubHeader";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
@@ -142,11 +140,8 @@ const Sidebar = ({
           ) : (
             <div className="flex gap-5 cursor-pointer">
               <Avatar sx={{ width: 56, height: 56 }}>
-                <Image
-                  src={ProfileIcon ?? ""}
-                  alt="ProfileIcon"
-                  layout="fill"
-                />
+                {userProfile?.first_name?.charAt(0) +
+                  userProfile?.last_name?.charAt(0)}
               </Avatar>
               <div className="flex flex-col justify-center">
                 <b>{userProfile?.first_name + " " + userProfile?.last_name}</b>

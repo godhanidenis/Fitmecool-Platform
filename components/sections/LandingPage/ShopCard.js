@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import IMG from "../../../assets/IMG.png";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
 import PersonIcon from "@mui/icons-material/Person";
 import Image from "next/image";
-import bannerImg1 from "../../../assets/banner/Product IMg.svg";
-
-import phone from "../../../assets/iPhone 12 View.png";
 import { useSelector } from "react-redux";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
-import { Link } from "@mui/material";
 import { useRouter } from "next/router";
 
 const ShopCard = ({ shop }) => {

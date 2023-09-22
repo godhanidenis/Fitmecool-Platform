@@ -1,16 +1,15 @@
 import Image from "next/image";
-
-import FacebookLogo from "../../assets/svg/FacebookLogo";
-import YoutubeLogo from "../../assets/svg/YoutubeLogo";
-import LinkedinLogo from "../../assets/svg/LinkedinLogo";
-import TwitterLogo from "../../assets/svg/TwitterLogo";
-import InstagramLogo from "../../assets/svg/InstagramLogo";
 import Link from "next/link";
-import LocationIcon from "../../assets/LocationIcon.svg";
-import CalIcon from "../../assets/CalIcon.svg";
-import EmailIcon from "../../assets/EmailIcon.svg";
+import FacebookLogo from "../../assets/svg/FooterSvg/FacebookLogo";
+import YoutubeLogo from "../../assets/svg/FooterSvg/YoutubeLogo";
+import LinkedinLogo from "../../assets/svg/FooterSvg/LinkedinLogo";
+import TwitterLogo from "../../assets/svg/FooterSvg/TwitterLogo";
+import InstagramLogo from "../../assets/svg/FooterSvg/InstagramLogo";
+import LocationIcon from "../../assets/svg/LocationIcon.svg";
+import CalIcon from "../../assets/svg/CalIcon.svg";
+import EmailIcon from "../../assets/svg/EmailIcon.svg";
 import { useSelector } from "react-redux";
-import AppLogo from "../../assets/logo2.png";
+import AppLogo from "../../assets/img/rentblessLogo.png";
 
 const socials = [
   {
@@ -21,22 +20,33 @@ const socials = [
   {
     id: 2,
     logo: <YoutubeLogo />,
-    link: "https://facebook.com/",
+    link: "https://youtube.com/",
   },
   {
     id: 3,
     logo: <TwitterLogo />,
-    link: "https://facebook.com/",
+    link: "https://twitter.com/",
   },
   {
     id: 4,
     logo: <LinkedinLogo />,
-    link: "https://facebook.com/",
+    link: "https://linkedin.com/",
   },
   {
     id: 5,
     logo: <InstagramLogo />,
-    link: "https://facebook.com/",
+    link: "https://instagram.com/",
+  },
+];
+
+const footerConstants = [
+  {
+    name: "Products",
+    data: ["Men's", "Women's", "kid's"],
+  },
+  {
+    name: "Brands",
+    data: ["FAQs", "How if Works", "About As"],
   },
 ];
 
@@ -53,7 +63,7 @@ const Footer = () => {
               }`}
             >
               <div className="cursor-pointer mb-4">
-                <Image src={AppLogo} alt="logo2.png" width={150} height={50} />
+                <Image src={AppLogo} alt="AppLogo" width={150} height={50} />
               </div>
             </Link>
             <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px]">
@@ -74,30 +84,23 @@ const Footer = () => {
             </ul>
           </div>
           <ul className="flex flex-wrap sm:gap-36 gap-28 ml-[16px] sm:ml-[80px]">
-            <li>
-              <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">
-                Products
-              </h4>
-              <ul className="flex flex-col items-start gap-3">
-                <li className="text-[18px] font-normal text-[#FAFCFC]">{`Men's`}</li>
-                <li className="text-[18px] font-normal text-[#FAFCFC]">{`Women's`}</li>
-                <li className="text-[18px] font-normal text-[#FAFCFC]">{`kid's`}</li>
-              </ul>
-            </li>
-            <li>
-              <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">
-                Brands
-              </h4>
-              <ul className="flex flex-col items-start gap-3">
-                <li className="text-[18px] font-normal text-[#FAFCFC]">FAQs</li>
-                <li className="text-[18px] font-normal text-[#FAFCFC]">
-                  How if Works
-                </li>
-                <li className="text-[18px] font-normal text-[#FAFCFC]">
-                  About As
-                </li>
-              </ul>
-            </li>
+            {footerConstants.map((footer, index) => (
+              <li key={index}>
+                <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">
+                  {footer.name}
+                </h4>
+                <ul className="flex flex-col items-start gap-3">
+                  {footer.data.map((itm, idx) => (
+                    <li
+                      key={idx}
+                      className="text-[18px] font-normal text-[#FAFCFC]"
+                    >
+                      {itm}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="sm:border-l border-[gray]">

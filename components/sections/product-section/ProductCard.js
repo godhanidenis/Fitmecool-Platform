@@ -16,8 +16,8 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import { styled } from "@mui/material/styles";
-import facebookIcon from "../../../assets/facebook.png";
-import googleIcon from "../../../assets/googleIcon.svg";
+import facebookIcon from "../../../assets/img/facebook.png";
+import googleIcon from "../../../assets/svg/googleIcon.svg";
 import Carousel from "react-multi-carousel";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";

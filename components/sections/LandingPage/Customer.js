@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
-import Store1 from "../../../assets/store 1.png";
-import Store2 from "../../../assets/store 2.png";
+import Store1 from "../../../assets/img/store 1.png";
+import Store2 from "../../../assets/img/store 2.png";
 
 const Customer = () => {
   return (

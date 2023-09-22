@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import LandingPageCoverImg from "../../../assets/LandingPageCoverImg.svg";
+import LandingPageCoverImg from "../../../assets/svg/LandingPageCoverImg.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeProductPage,

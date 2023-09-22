@@ -9,7 +9,6 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import CloseIcon from "@mui/icons-material/Close";
-// import ProfileIcon from "../../assets/profile.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
@@ -42,13 +41,13 @@ import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
-import LocationIcon from "../../assets/LocationIcon.svg";
+import LocationIcon from "../../assets/svg/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
-import AppLogo from "../../assets/logo2.png";
+import AppLogo from "../../assets/img/rentblessLogo.png";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
@@ -170,7 +169,7 @@ const Header = () => {
               }`}
             >
               <div className="cursor-pointer my-2">
-                <Image src={AppLogo} alt="logo2.png" width={150} height={50} />
+                <Image src={AppLogo} alt="AppLogo" width={150} height={50} />
               </div>
             </Link>
             {userProfile.user_type !== "vendor" && (
@@ -428,7 +427,6 @@ export const UserProfile = ({ setAccessToken }) => {
         <Avatar>
           {userProfile?.first_name?.charAt(0) +
             userProfile?.last_name?.charAt(0)}
-          {/* <Image src={ProfileIcon ?? ""} alt="ProfileIcon" layout="fill" /> */}
         </Avatar>
         <span className="font-semibold hidden text-colorWhite sm:flex">
           {userProfile?.first_name + " " + userProfile?.last_name}
@@ -479,7 +477,6 @@ export const UserProfile = ({ setAccessToken }) => {
                     <Avatar className="!mb-2 !w-14 !h-14">
                       {userProfile?.first_name?.charAt(0) +
                         userProfile?.last_name?.charAt(0)}
-                      {/* <Image src={ProfileIcon ?? ""} alt="ProfileIcon" /> */}
                     </Avatar>
                     <b>
                       {userProfile?.first_name + " " + userProfile?.last_name}

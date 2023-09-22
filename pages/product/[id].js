@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import facebookIcon from "../../assets/facebook.png";
-import googleIcon from "../../assets/googleIcon.svg";
+import facebookIcon from "../../assets/img/facebook.png";
+import googleIcon from "../../assets/svg/googleIcon.svg";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { getProductDetails } from "../../graphql/queries/productQueries";
-import ProfileIcon from "../../assets/profile.png";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ProductCard from "../../components/sections/product-section/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +29,7 @@ import {
 import { productLike } from "../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
-import FileUploadOutlinedIcon from "../../assets/shareIcon.svg";
+import FileUploadOutlinedIcon from "../../assets/svg/shareIcon.svg";
 
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
@@ -49,7 +48,6 @@ import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
-import Head from "next/head";
 
 const ContactStyle = {
   position: "absolute",
@@ -363,16 +361,6 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      {/* <Head>
-        <title>{productDetails.data.product.data.product_name}</title>
-        <meta
-          property="og:title"
-          content={productDetails.data.product.data.product_name}
-        />
-        <meta property="og:description" content={"Product Description"} />
-        <meta property="og:image" content={photos[0]} />
-        <meta property="og:url" content={window.location.href} />
-      </Head> */}
       <div className="bg-colorWhite font-Nova container">
         <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
@@ -512,11 +500,9 @@ const ProductDetail = ({ productDetails }) => {
                             }}
                           >
                             <Image
-                              src={
-                                FileUploadOutlinedIcon ?? FileUploadOutlinedIcon
-                              }
-                              alt=""
-                            />{" "}
+                              src={FileUploadOutlinedIcon ?? ""}
+                              alt="FileUpload"
+                            />
                             &nbsp; Share
                           </Button>
                         </HtmlTooltip>
@@ -748,8 +734,10 @@ const ContactDetailsModal = ({
             <Divider />
             <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
               <div className="flex justify-center items-center">
-                <Avatar className="!w-14 !h-14">
-                  <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
+                <Avatar className="!w-16 !h-16">
+                  {productDetails.data.product.data.branchInfo?.manager_name.charAt(
+                    0
+                  )}
                 </Avatar>
               </div>
               <div className="flex flex-col justify-center">

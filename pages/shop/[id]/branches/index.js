@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ShopLogo from "../../../../assets/login-cover.png";
 import Image from "next/image";
 import { getShopDetails } from "../../../../graphql/queries/shopQueries";
 import SeeBranchDropDown from "../../../../components/Filters/CardInteractive/SeeBranchDropDown";
