@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
-import bannerImg1 from "../../../assets/img/bannerImg1.png";
-import bannerImg2 from "../../../assets/img/bannerImg2.png";
 import Image from "next/image";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
@@ -15,14 +13,11 @@ import Customer from "./Customer";
 import Vendor from "./Vendor";
 import MenCollection from "./MenCollection";
 import WomenCollection from "./WomenCollection";
-import phone from "../../../assets/img/iPhone 12 View.png";
-import bharat from "../../../assets/img/bharat.png";
-import playStore from "../../../assets/img/playStore.png";
-import appStore from "../../../assets/img/appStore.png";
 import { useForm } from "react-hook-form";
 import ShopCard from "./ShopCard";
 import { loadShopsStart } from "../../../redux/ducks/shop";
 import { useDispatch, useSelector } from "react-redux";
+import { assets } from "../../../constants";
 
 const responsive = {
   desktop: {
@@ -160,39 +155,13 @@ const LandingPage = () => {
   const dispatch = useDispatch();
 
   const [value, setValue] = useState(0);
-  const [invalid, setInvalid] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const {
-    shopsLimit,
-    shopsCount,
-    numOfPages: shopNumOfPages,
-    shopPageSkip,
-    shopsData,
-    loading: shopLoading,
-    error: shopError,
-  } = useSelector((state) => state.shops);
+  const { shopPageSkip, shopsData } = useSelector((state) => state.shops);
 
-  const { appliedProductsFilters, sortFilters } = useSelector(
-    (state) => state.productsFiltersReducer
+  const { appliedShopsFilters, sortFilters } = useSelector(
+    (state) => state.shopsFiltersReducer
   );
-  const {
-    appliedShopsFilters,
-    sortFilters: shopSortFilter,
-    byShop,
-  } = useSelector((state) => state.shopsFiltersReducer);
-
-  const handleMobileNumberChange = (event) => {
-    // Remove any non-digit characters
-    const cleanedValue = event.target.value.replace(/\D/g, "");
-
-    // Limit the input to 10 characters
-    const limitedValue = cleanedValue.slice(0, 10);
-
-    setMobileNumber(limitedValue);
-  };
 
   const {
     register,
@@ -200,15 +169,15 @@ const LandingPage = () => {
     formState: { errors },
     reset,
   } = useForm();
+
   const onSubmit = async (data) => {
     console.log("data", data);
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
   const carouselItems = [
-    { imageSrc: bannerImg1, des: "bannerImg1" },
-    { imageSrc: bannerImg2, des: "bannerImg2" },
-    // Add more items as needed
+    { imageSrc: assets.bannerImg1, des: "bannerImg1" },
+    { imageSrc: assets.bannerImg2, des: "bannerImg2" },
   ];
 
   const CustomDot = ({ onClick, active }) => {
@@ -217,7 +186,7 @@ const LandingPage = () => {
         <FiberManualRecordIcon
           className={`${
             active ? "!text-[#31333E]" : "!text-[#31333e33]"
-          } !w-3 !h-3 !mx-1 !cursor-pointer`}
+          } !w-2 lg:!w-3 !h-2 lg:!h-3 !mx-1 !cursor-pointer`}
           fontSize="small"
         />
       </li>
@@ -233,7 +202,7 @@ const LandingPage = () => {
           limit: 10,
         },
         area: appliedShopsFilters.locations.selectedValue,
-        sort: shopSortFilter.sortType.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
         stars: appliedShopsFilters.stars.selectedValue,
       })
     );
@@ -242,7 +211,7 @@ const LandingPage = () => {
   useEffect(() => {
     getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedShopsFilters, shopSortFilter, shopPageSkip]);
+  }, [dispatch, appliedShopsFilters, sortFilters, shopPageSkip]);
 
   return (
     <>
@@ -255,17 +224,15 @@ const LandingPage = () => {
         infinite
         autoPlay
         autoPlaySpeed={3000}
+        className="!pb-8"
       >
         {carouselItems.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center w-full gap-1 h-[137px] md:h-[438px]"
-          >
-            <Image src={item.imageSrc} alt="" layout="fill" />
+          <div key={index} className="flex w-full h-[137px] md:h-[438px]">
+            <Image src={item.imageSrc} alt="banner" layout="fill" />
           </div>
         ))}
       </Carousel>
-      <div className="flex flex-col justify-center mt-8">
+      <div className="flex flex-col justify-center mt-1 md:mt-8">
         <div className="text-center">
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             How It Works
@@ -350,21 +317,20 @@ const LandingPage = () => {
                   <CustomIconTextField
                     className="w-[90%] sm:w-[90%] 2xl:w-[90%]"
                     placeholder="Enter Mobile No."
-                    type="text"
+                    type="number"
                     variant="outlined"
                     fullWidth
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <div>
+                          <div className="flex items-center gap-2">
                             <Image
-                              src={bharat}
-                              alt="bharat"
-                              objectFit="cover"
-                              className="w-full h-auto md:w-28 md:h-18 2xl:w-28 2xl:h-18 "
-                              priority
+                              src={assets.bharatFlag}
+                              alt="bharatFlag"
+                              width={36}
+                              height={24}
                             />
-                            <span className="ms-1 mx-2">+91</span>
+                            <span>+91</span>
                           </div>
                         </InputAdornment>
                       ),
@@ -374,17 +340,11 @@ const LandingPage = () => {
                     }}
                     {...register("mobileNumber", {
                       required: "Mobile number is required",
-                      onChange: (e) => {
-                        setInvalid(false);
-                        setSuccess(false);
-                      },
                       pattern: {
                         value: /^\d{10}$/, // Ensure exactly 10 digits
                         message: "Please enter a valid 10-digit mobile number",
                       },
                     })}
-                    value={mobileNumber}
-                    onChange={handleMobileNumberChange}
                   />
                   {errors?.mobileNumber && (
                     <p className="text-red-600">
@@ -403,14 +363,18 @@ const LandingPage = () => {
               </form>
               <div className="flex -ms-3">
                 <Image
-                  src={playStore}
+                  src={assets.playStore}
                   alt="playStore"
+                  width={175}
+                  height={62}
                   objectFit="cover"
                   className="cursor-pointer"
                 />
                 <Image
-                  src={appStore}
+                  src={assets.appStore}
                   alt="appStore"
+                  width={175}
+                  height={62}
                   objectFit="cover"
                   className="cursor-pointer"
                 />
@@ -419,10 +383,11 @@ const LandingPage = () => {
           </div>
           <div className="col-span-3 sm:col-span-2 lg:col-span-3 justify-center items-center">
             <Image
-              src={phone}
+              src={assets.phoneImage}
               alt="phone"
               objectFit="cover"
-              // className="w-80 sm:w-80 2xl:w-full"
+              width={235}
+              height={480}
             />
           </div>
         </div>

@@ -18,6 +18,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
 import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
+import AuthCoverHero from "../../components/DirectoryHero/AuthCoverHero";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -230,7 +231,7 @@ const Login = () => {
             </p>
           </div>
         </div>
-        <div className="hidden md:block md:w-[50%] auth-cover"></div>
+        <AuthCoverHero />
       </div>
     </div>
   );

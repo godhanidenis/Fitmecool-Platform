@@ -1,7 +1,6 @@
 import Head from "next/head";
 
 import "../styles/globals.css";
-import "../styles/auth.css";
 import "../styles/product.css";
 import "animate.css";
 import "react-multi-carousel/lib/styles.css";

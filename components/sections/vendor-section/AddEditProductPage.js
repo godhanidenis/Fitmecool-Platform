@@ -17,23 +17,19 @@ import {
 } from "../../../graphql/mutations/products";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
-
 import {
   capitalize,
   CircularProgress,
   Divider,
   FormControl,
   InputLabel,
-  Select,
-  styled,
 } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
 import "suneditor/dist/css/suneditor.min.css";
-import dynamic from "next/dynamic";
-import { colorsList } from "../../../utils/common";
-import Image from "next/image";
 import { NativeSelectInput } from "../../core/CustomMUIComponents";
+import dynamic from "next/dynamic";
+import { colorsList } from "../../../constants";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -720,15 +716,6 @@ const AddEditProductPage = () => {
                               alt="Uploaded Image"
                               className="object-cover h-full w-full rounded-xl"
                             />
-                            {/* <Image
-                              // className="object-cover"
-                              // objectFit="cover"
-                              // objectPosition="center top"
-                              src={productImages[index] ?? ""}
-                              width={"100%"}
-                              height={"100%"}
-                              alt="Product Image"
-                            /> */}
                             <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
                               <EditIcon
                                 sx={{

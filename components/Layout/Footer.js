@@ -1,90 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
-import FacebookLogo from "../../assets/svg/FooterSvg/FacebookLogo";
-import YoutubeLogo from "../../assets/svg/FooterSvg/YoutubeLogo";
-import LinkedinLogo from "../../assets/svg/FooterSvg/LinkedinLogo";
-import TwitterLogo from "../../assets/svg/FooterSvg/TwitterLogo";
-import InstagramLogo from "../../assets/svg/FooterSvg/InstagramLogo";
-import LocationIcon from "../../assets/svg/LocationIcon.svg";
-import CalIcon from "../../assets/svg/CalIcon.svg";
-import EmailIcon from "../../assets/svg/EmailIcon.svg";
-import { useSelector } from "react-redux";
-import AppLogo from "../../assets/img/rentblessLogo.png";
-
-const socials = [
-  {
-    id: 1,
-    logo: <FacebookLogo />,
-    link: "https://facebook.com/",
-  },
-  {
-    id: 2,
-    logo: <YoutubeLogo />,
-    link: "https://youtube.com/",
-  },
-  {
-    id: 3,
-    logo: <TwitterLogo />,
-    link: "https://twitter.com/",
-  },
-  {
-    id: 4,
-    logo: <LinkedinLogo />,
-    link: "https://linkedin.com/",
-  },
-  {
-    id: 5,
-    logo: <InstagramLogo />,
-    link: "https://instagram.com/",
-  },
-];
-
-const footerConstants = [
-  {
-    name: "Products",
-    data: ["Men's", "Women's", "kid's"],
-  },
-  {
-    name: "Brands",
-    data: ["FAQs", "How if Works", "About As"],
-  },
-];
+import { assets, footerData } from "../../constants";
+import AppLogo from "./AppLogo";
 
 const Footer = () => {
-  const { userProfile } = useSelector((state) => state.userProfile);
   return (
     <footer className="text-sm bg-colorPrimary text-colorWhite font-Nova relative">
-      <div className="flex justify-between flex-wrap gap-4">
-        <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row items-start justify-between gap-8 ml-[5.5%]">
-          <div className="flex flex-col sm:items-center md:items-start  max-w-[420px] -mt-6">
-            <Link
-              href={`${
-                userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
-              }`}
-            >
-              <div className="cursor-pointer mb-4">
-                <Image src={AppLogo} alt="AppLogo" width={150} height={50} />
-              </div>
-            </Link>
-            <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px]">
+      <div className="flex justify-between flex-wrap gap-10">
+        <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row flex-wrap items-start justify-between gap-8 ml-[5.5%]">
+          <div className="flex flex-col sm:items-center md:items-start max-w-[420px] -mt-6">
+            <AppLogo />
+            <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px] mt-2">
               Best information about the company gies here but now lorem ipsum
               is
             </div>
             <ul className="flex items-center">
-              {socials &&
-                socials.map((social) => (
-                  <Link key={social.id} href={social.link}>
-                    <a target="_blank">
-                      <li className="bg-[#FFFFFF] flex justify-center items-center rounded-[50%] w-[30px] h-[30px] footer-link mr-[12px]">
-                        <div className="w-4 h-4">{social.logo}</div>
-                      </li>
-                    </a>
-                  </Link>
-                ))}
+              {footerData.socialMediaList.map((social) => (
+                <Link key={social.id} href={social.link}>
+                  <a target="_blank">
+                    <li className="bg-[#FFFFFF] flex justify-center items-center rounded-[50%] w-[30px] h-[30px] mr-[12px]">
+                      <div className="w-4 h-4">{social.logo}</div>
+                    </li>
+                  </a>
+                </Link>
+              ))}
             </ul>
           </div>
           <ul className="flex flex-wrap sm:gap-36 gap-28 ml-[16px] sm:ml-[80px]">
-            {footerConstants.map((footer, index) => (
+            {footerData.dataList.map((footer, index) => (
               <li key={index}>
                 <h4 className="font-semibold text-[22px] mb-5 text-colorWhite">
                   {footer.name}
@@ -104,12 +47,17 @@ const Footer = () => {
           </ul>
         </div>
         <div className="sm:border-l border-[gray]">
-          <h4 className="w-[100vw] text-center sm:w-auto font-semibold text-[28px] sm:text-[32px] mb-5 text-[#FAFCFC] bg-colorGreen sm:py-[33px] py-[23px] sm:px-[75px] px-[57px]">
+          <h4 className="w-screen text-center md:w-auto font-semibold text-[28px] sm:text-[32px] mb-5 text-[#FAFCFC] bg-colorGreen sm:py-[33px] py-[23px] sm:px-[75px] px-[57px]">
             Get in Touch with Us
           </h4>
           <div className="flex flex-col items-start sm:ml-[80px] ml-[57px]">
             <div className="flex mb-[30px]">
-              <Image width={32} src={LocationIcon} alt="" />
+              <Image
+                src={assets.locationIcon}
+                width={32}
+                height={32}
+                alt="locationIcon"
+              />
               <div className="ml-[20px]">
                 <p className="text-[#FAFCFC] text-[18px] font-normal">
                   Address
@@ -121,7 +69,12 @@ const Footer = () => {
             </div>
 
             <div className="flex mb-[30px]">
-              <Image width={32} src={CalIcon} alt="" />
+              <Image
+                src={assets.callIcon}
+                width={32}
+                height={32}
+                alt="callIcon"
+              />
               <div className="ml-[20px]">
                 <p className="text-[#FAFCFC] text-[18px] font-normal">
                   Contact Number
@@ -132,7 +85,12 @@ const Footer = () => {
               </div>
             </div>
             <div className="flex mb-[25px] sm:mb-[64px]">
-              <Image width={32} src={EmailIcon} alt="" />
+              <Image
+                src={assets.emailIcon}
+                width={32}
+                height={32}
+                alt="emailIcon"
+              />
               <div className="ml-[20px]">
                 <p className="text-[#FAFCFC] text-[18px] font-normal">Email</p>
                 <p className="text-[#DEFFF8] text-[16px] font-normal">

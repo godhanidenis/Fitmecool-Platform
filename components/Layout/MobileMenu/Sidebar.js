@@ -140,8 +140,8 @@ const Sidebar = ({
           ) : (
             <div className="flex gap-5 cursor-pointer">
               <Avatar sx={{ width: 56, height: 56 }}>
-                {userProfile?.first_name?.charAt(0) +
-                  userProfile?.last_name?.charAt(0)}
+                {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
+                  String(userProfile?.last_name?.charAt(0).toUpperCase())}
               </Avatar>
               <div className="flex flex-col justify-center">
                 <b>{userProfile?.first_name + " " + userProfile?.last_name}</b>

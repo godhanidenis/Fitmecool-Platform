@@ -11,17 +11,16 @@ import Router, { useRouter } from "next/router";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import facebookIcon from "../../../assets/img//facebook.png";
-import whatsUpIcon from "../../../assets/svg/wpToolTipIcon.svg";
-import googleIcon from "../../../assets/svg/googleIcon.svg";
 import {
   EmailShareButton,
   FacebookShareButton,
+  WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { ShopHeaderItem } from "../../core/CustomMUIComponents";
+import { assets } from "../../../constants";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -255,21 +254,21 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                          <Image
+                            src={assets.facebookIcon}
+                            width={26}
+                            height={26}
+                            alt="facebookIcon"
+                          />
                         </FacebookShareButton>
                       </div>
-                      <div className="lg:p-2 rounded-lg cursor-pointer">
+                      <div className="lg:p-2 !rounded-lg cursor-pointer">
                         <WhatsappShareButton
                           windowWidth={900}
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <Image
-                            width={26}
-                            height={26}
-                            src={whatsUpIcon ?? ""}
-                            alt="whatsUpIcon"
-                          />
+                          <WhatsappIcon size={26} round={true} />
                         </WhatsappShareButton>
                       </div>
                       <div className="lg:p-2 mt-[2px] rounded-lg cursor-pointer">
@@ -279,7 +278,12 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <Image src={googleIcon ?? ""} alt="googleIcon" />
+                          <Image
+                            src={assets.googleIcon}
+                            width={26}
+                            height={26}
+                            alt="googleIcon"
+                          />
                         </EmailShareButton>
                       </div>
                     </div>

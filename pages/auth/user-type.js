@@ -5,6 +5,7 @@ import { SiHandshake } from "react-icons/si";
 import Router from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
+import AuthCoverHero from "../../components/DirectoryHero/AuthCoverHero";
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -121,7 +122,7 @@ const UserType = () => {
             </button>
           </div>
         </div>
-        <div className="hidden md:block md:w-[50%] auth-cover"></div>
+        <AuthCoverHero />
       </div>
     </div>
   );

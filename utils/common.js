@@ -1,16 +1,3 @@
-export const colorsList = [
-  "red",
-  "pink",
-  "yellow",
-  "wine",
-  "purple",
-  "blue",
-  "orange",
-  "green",
-  "white",
-  "black",
-];
-
 export function formatDate(inputDateStr) {
   const options = { year: "numeric", month: "short", day: "2-digit" };
   const date = new Date(inputDateStr);

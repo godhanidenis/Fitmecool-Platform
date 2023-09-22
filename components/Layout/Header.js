@@ -41,13 +41,13 @@ import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
-import LocationIcon from "../../assets/svg/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
-import AppLogo from "../../assets/img/rentblessLogo.png";
+import AppLogo from "./AppLogo";
+import { assets } from "../../constants";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
@@ -163,15 +163,7 @@ const Header = () => {
                   onClick={handleMobileSidebarClick}
                 />
               )}
-            <Link
-              href={`${
-                userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
-              }`}
-            >
-              <div className="cursor-pointer my-2">
-                <Image src={AppLogo} alt="AppLogo" width={150} height={50} />
-              </div>
-            </Link>
+            <AppLogo />
             {userProfile.user_type !== "vendor" && (
               <div className="headerLocationDiv ml-2 sm:ml-6">
                 <FormControl
@@ -182,7 +174,12 @@ const Header = () => {
                     id="demo-simple-select-standard-label"
                     className="!flex !items-center !gap-1"
                   >
-                    <Image width={20} height={20} src={LocationIcon} alt="" />
+                    <Image
+                      width={20}
+                      height={20}
+                      src={assets.locationIcon}
+                      alt="locationIcon"
+                    />
                     <span className="text-[#878A99] text-[14px] font-normal">
                       Location
                     </span>
@@ -425,8 +422,8 @@ export const UserProfile = ({ setAccessToken }) => {
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
         <Avatar>
-          {userProfile?.first_name?.charAt(0) +
-            userProfile?.last_name?.charAt(0)}
+          {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
+            String(userProfile?.last_name?.charAt(0).toUpperCase())}
         </Avatar>
         <span className="font-semibold hidden text-colorWhite sm:flex">
           {userProfile?.first_name + " " + userProfile?.last_name}
@@ -475,8 +472,10 @@ export const UserProfile = ({ setAccessToken }) => {
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
                     <Avatar className="!mb-2 !w-14 !h-14">
-                      {userProfile?.first_name?.charAt(0) +
-                        userProfile?.last_name?.charAt(0)}
+                      {String(userProfile?.first_name)
+                        ?.charAt(0)
+                        .toUpperCase() +
+                        String(userProfile?.last_name?.charAt(0).toUpperCase())}
                     </Avatar>
                     <b>
                       {userProfile?.first_name + " " + userProfile?.last_name}

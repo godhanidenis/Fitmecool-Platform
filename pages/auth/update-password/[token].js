@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import backIcon from "../../../assets/svg/backIcon.svg";
 import Box from "@mui/material/Box";
 import LockIcon from "@mui/icons-material/Lock";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -13,6 +12,7 @@ import { Alert, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import { resetPassword } from "../../../graphql/mutations/authMutations";
 import { withoutAuthForUserType } from "../../../components/core/PrivateRouteForAuth";
+import { assets } from "../../../constants";
 
 const UpdatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -71,8 +71,13 @@ const UpdatePassword = () => {
         <div className="grid grid-cols-3">
           <div className="text-start">
             <Link href="/">
-              <button className="text-white  focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
-                <Image src={backIcon ?? ""} alt="back" />
+              <button className="text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
+                <Image
+                  src={assets.backIcon}
+                  alt="back"
+                  width={15}
+                  height={15}
+                />
               </button>
             </Link>
           </div>

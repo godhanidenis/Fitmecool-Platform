@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
-import facebookIcon from "../../assets/img/facebook.png";
-import googleIcon from "../../assets/svg/googleIcon.svg";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -29,8 +27,6 @@ import {
 import { productLike } from "../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
-import FileUploadOutlinedIcon from "../../assets/svg/shareIcon.svg";
-
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
@@ -48,6 +44,7 @@ import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
+import { assets } from "../../constants";
 
 const ContactStyle = {
   position: "absolute",
@@ -453,7 +450,9 @@ const ProductDetail = ({ productDetails }) => {
                                     url={pageShareURL}
                                   >
                                     <Image
-                                      src={facebookIcon ?? ""}
+                                      src={assets.facebookIcon}
+                                      width={25}
+                                      height={25}
                                       alt="facebookIcon"
                                     />
                                   </FacebookShareButton>
@@ -475,7 +474,9 @@ const ProductDetail = ({ productDetails }) => {
                                     url={pageShareURL}
                                   >
                                     <Image
-                                      src={googleIcon ?? ""}
+                                      src={assets.googleIcon}
+                                      width={25}
+                                      height={25}
                                       alt="googleIcon"
                                     />
                                   </EmailShareButton>
@@ -500,8 +501,10 @@ const ProductDetail = ({ productDetails }) => {
                             }}
                           >
                             <Image
-                              src={FileUploadOutlinedIcon ?? ""}
-                              alt="FileUpload"
+                              src={assets.shareIcon}
+                              width={24}
+                              height={24}
+                              alt="shareIcon"
                             />
                             &nbsp; Share
                           </Button>
@@ -522,7 +525,7 @@ const ProductDetail = ({ productDetails }) => {
                             fontSize: "18px",
                           }}
                         >
-                          <ReportGmailerrorredOutlinedIcon className="!text-[#f34747]" />{" "}
+                          <ReportGmailerrorredOutlinedIcon className="!text-[#f34747]" />
                           &nbsp;Report
                         </Button>
                       </div>
@@ -698,6 +701,9 @@ const ContactDetailsModal = ({
   openContactInfo,
   handleCloseContactInfo,
 }) => {
+  const manager_name =
+    productDetails.data.product.data.branchInfo?.manager_name;
+
   return (
     <Modal
       open={openContactInfo}
@@ -735,14 +741,13 @@ const ContactDetailsModal = ({
             <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
               <div className="flex justify-center items-center">
                 <Avatar className="!w-16 !h-16">
-                  {productDetails.data.product.data.branchInfo?.manager_name.charAt(
-                    0
-                  )}
+                  {manager_name.split(" ")[0].charAt(0).toUpperCase() +
+                    manager_name.split(" ")[1].charAt(0).toUpperCase()}
                 </Avatar>
               </div>
               <div className="flex flex-col justify-center">
                 <p className="text-[#000000] text-base font-semibold cursor-pointer text-center sm:text-start">
-                  {productDetails.data.product.data.branchInfo?.manager_name}
+                  {manager_name}
                 </p>
                 <p className="text-colorBlack text-sm font-normal flex justify-center sm:justify-end">
                   - Manager

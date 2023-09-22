@@ -16,11 +16,10 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import { styled } from "@mui/material/styles";
-import facebookIcon from "../../../assets/img/facebook.png";
-import googleIcon from "../../../assets/svg/googleIcon.svg";
 import Carousel from "react-multi-carousel";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import { assets } from "../../../constants";
 
 const TrendingCustomLeftArrow = ({ onClick }) => {
   return (
@@ -283,8 +282,10 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                             url={pageShareURL}
                           >
                             <Image
-                              src={facebookIcon ?? ""}
+                              src={assets.facebookIcon}
                               alt="facebookIcon"
+                              width={25}
+                              height={25}
                             />
                           </FacebookShareButton>
                         </div>
@@ -304,7 +305,12 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                             windowHeight={900}
                             url={pageShareURL}
                           >
-                            <Image src={googleIcon ?? ""} alt="googleIcon" />
+                            <Image
+                              src={assets.googleIcon}
+                              width={25}
+                              height={25}
+                              alt="googleIcon"
+                            />
                           </EmailShareButton>
                         </div>
                       </div>
