@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
-import bannerImg1 from "../../../assets/banner/Product IMg.svg";
-import bannerImg2 from "../../../assets/banner/top images.svg";
+import bannerImg1 from "../../../assets/banner/bannerImg1.png";
+import bannerImg2 from "../../../assets/banner/bannerImg2.png";
 import Image from "next/image";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
@@ -23,7 +23,6 @@ import { useForm } from "react-hook-form";
 import ShopCard from "./ShopCard";
 import { loadShopsStart } from "../../../redux/ducks/shop";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 
 const responsive = {
   desktop: {
@@ -176,8 +175,6 @@ const LandingPage = () => {
     error: shopError,
   } = useSelector((state) => state.shops);
 
-  console.log("shopsData 123 :>> ", shopsData);
-
   const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
@@ -211,8 +208,6 @@ const LandingPage = () => {
   const carouselItems = [
     { imageSrc: bannerImg1, des: "bannerImg1" },
     { imageSrc: bannerImg2, des: "bannerImg2" },
-    { imageSrc: bannerImg1, des: "bannerImg3" },
-    { imageSrc: bannerImg2, des: "bannerImg4" },
     // Add more items as needed
   ];
 
@@ -250,7 +245,7 @@ const LandingPage = () => {
   }, [dispatch, appliedShopsFilters, shopSortFilter, shopPageSkip]);
 
   return (
-    <div>
+    <>
       <Carousel
         responsive={responsive}
         arrows={false}
@@ -262,31 +257,11 @@ const LandingPage = () => {
         autoPlaySpeed={3000}
       >
         {carouselItems.map((item, index) => (
-          <div key={index} className="flex items-center w-full gap-1">
-            <div className="w-full md:w-[80%] 2xl:w-[61%] pb-5">
-              <Image
-                src={item.imageSrc}
-                alt=""
-                objectFit="cover"
-                width={1300}
-                height={438}
-              />
-            </div>
-            <div className="w-[40%] md:w-[30%] 2xl:w-[39%] h-full flex items-start md:items-start 2xl:items-center justify-center ">
-              <div className="flex flex-col gap-0 md:gap-8 2xl:gap-10">
-                <div className="flex flex-col gap-0 md:gap-2 2xl:gap-4">
-                  <h1 className="text-[#181725] text-[15px] md:text-[28px] 2xl:text-[56px] font-extrabold">
-                    Men’s Blazer
-                  </h1>
-                  <p className="text-[12px] md:text-[22px] 2xl:text-[40px] text-[#181725d5]">
-                    Under ₹699
-                  </p>
-                </div>
-                <div className="text-[8px] md:text-[18px] 2xl:text-[24px] text-[#31333e93]">
-                  + Explore
-                </div>
-              </div>
-            </div>
+          <div
+            key={index}
+            className="flex items-center w-full gap-1 h-[137px] md:h-[438px]"
+          >
+            <Image src={item.imageSrc} alt="" layout="fill" />
           </div>
         ))}
       </Carousel>
@@ -492,7 +467,7 @@ const LandingPage = () => {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

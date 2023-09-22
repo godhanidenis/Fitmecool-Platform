@@ -70,61 +70,68 @@ export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   },
 }));
 
-export const CustomTab = styled(Tabs)(({ theme, hometab, collection }) => ({
-  [`& .MuiTab-root`]: {
-    textTransform: "none",
-    color: hometab ? "#000" : collection ? "#31333e93" : "#FFFFFF",
-    fontWeight: 600,
-    fontSize: hometab ? "20px" : collection ? "18px" : "14px",
-    paddingTop: collection ? "0px" : "16px",
-    paddingBottom: collection ? "0px" : "4px",
-    paddingRight: hometab && "16px",
-    paddingLeft: hometab && "16px",
-    borderBottom: hometab && "2px solid #0000000a",
-
-    [theme.breakpoints.down("lg")]: {
-      paddingTop: collection && "16px",
-      paddingBottom: collection && "16px",
-    },
-    [theme.breakpoints.down("md")]: {
-      fontSize: hometab && "18px",
+export const CustomTab = styled(Tabs)(
+  ({ theme, hometab, collection, subheader }) => ({
+    [`& .MuiTab-root`]: {
+      textTransform: "none",
+      color: hometab ? "#000" : collection ? "#31333e93" : "#FFFFFF",
+      fontWeight: 600,
+      fontSize: hometab ? "20px" : collection ? "18px" : "14px",
+      marginTop: subheader && "24px",
+      paddingTop: collection
+        ? "0px"
+        : hometab
+        ? "16px"
+        : subheader
+        ? "0px"
+        : "16px",
+      paddingBottom: collection ? "0px" : "4px",
+      paddingRight: hometab && "16px",
+      paddingLeft: hometab && "16px",
       borderBottom: hometab && "3px solid #0000000a",
-      paddingTop: collection && "16px",
-      paddingBottom: collection && "16px",
+
+      [theme.breakpoints.down("lg")]: {
+        paddingTop: collection && "16px",
+        paddingBottom: collection && "16px",
+      },
+      [theme.breakpoints.down("md")]: {
+        fontSize: hometab && "18px",
+        paddingTop: collection && "16px",
+        paddingBottom: collection && "16px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: (hometab || collection) && "16px",
+      },
     },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: (hometab || collection) && "16px",
-      borderBottom: hometab && "2px solid #0000000a",
+    [`& .MuiTab-root:hover`]: {
+      color: collection ? "black !important" : "#29977E !important",
     },
-  },
-  [`& .MuiTab-root:hover`]: {
-    color: collection ? "black !important" : "#29977E !important",
-  },
-  [`& .Mui-selected:hover`]: {
-    color: collection ? "black !important" : "#29977E !important",
-  },
-  [`& .Mui-selected`]: {
-    fontWeight: 600,
-    fontSize: hometab ? "20px" : collection ? "18px" : "16px",
-    color: collection ? "black !important" : "#29977E !important",
-    [theme.breakpoints.down("md")]: {
-      fontSize: hometab && "18px",
+    [`& .Mui-selected:hover`]: {
+      color: collection ? "black !important" : "#29977E !important",
     },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: (hometab || collection) && "16px",
+    [`& .Mui-selected`]: {
+      fontWeight: 600,
+      fontSize: hometab ? "20px" : collection ? "18px" : "16px",
+      color: collection ? "black !important" : "#29977E !important",
+      [theme.breakpoints.down("md")]: {
+        fontSize: hometab && "18px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: (hometab || collection) && "16px",
+      },
     },
-  },
-  [`& .MuiTabs-indicator`]: {
-    backgroundColor: collection ? "black !important" : "#29977E !important",
-    height: collection ? "3px" : "3px",
-    [theme.breakpoints.down("md")]: {
-      height: hometab && "3px",
+    [`& .MuiTabs-indicator`]: {
+      backgroundColor: collection ? "black !important" : "#29977E !important",
+      height: collection ? "3px" : "3px",
+      [theme.breakpoints.down("md")]: {
+        height: hometab && "3px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        height: hometab && "3px",
+      },
     },
-    [theme.breakpoints.down("sm")]: {
-      height: hometab && "3px",
-    },
-  },
-}));
+  })
+);
 
 export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
   [`& .MuiTab-root`]: {
