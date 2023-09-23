@@ -122,7 +122,7 @@ export const CustomTab = styled(Tabs)(
     },
     [`& .MuiTabs-indicator`]: {
       backgroundColor: collection ? "black !important" : "#29977E !important",
-      height: collection ? "3px" : "3px",
+      height: subheader ? "5px" : "3px",
       [theme.breakpoints.down("md")]: {
         height: hometab && "3px",
       },

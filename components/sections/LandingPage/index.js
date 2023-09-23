@@ -18,6 +18,11 @@ import ShopCard from "./ShopCard";
 import { loadShopsStart } from "../../../redux/ducks/shop";
 import { useDispatch, useSelector } from "react-redux";
 import { assets } from "../../../constants";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useRef } from "react";
+import { useRouter } from "next/router";
+import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 
 const responsive = {
   desktop: {
@@ -153,9 +158,23 @@ const responsive1 = {
 
 const LandingPage = () => {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  // const carouselRef = useRef(null);
+
+  // const nextSlide = () => {
+  //   if (carouselRef.current) {
+  //     carouselRef.current.next();
+  //   }
+  // };
+
+  // const prevSlide = () => {
+  //   if (carouselRef.current) {
+  //     carouselRef.current.previous();
+  //   }
+  // };
 
   const { shopPageSkip, shopsData } = useSelector((state) => state.shops);
 
@@ -402,22 +421,48 @@ const LandingPage = () => {
           </p>
         </div>
 
-        <div className="w-full h-[384px] place-items-center pt-5">
+        <div className="w-full h-[400px] place-items-center pt-5">
+          {/* <div className="px-5 flex gap-5">
+            <button
+              className="flex justify-center items-center p-2 border border-1 rounded-lg"
+              onClick={prevSlide}
+            >
+              <ChevronLeftIcon />
+            </button>
+            <button
+              className="flex justify-center items-center p-2 border border-1 rounded-lg"
+              onClick={nextSlide}
+            >
+              <ChevronRightIcon />
+            </button>
+          </div> */}
+          <div className="flex justify-end">
+            <button
+              className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
+              onClick={() => {
+                dispatch(changeByShopFilters(true));
+                router.push("/home");
+              }}
+            >
+              View All
+            </button>
+          </div>
           <Carousel
+            // ref={carouselRef}
             responsive={responsive1}
             customTransition="all .5s ease-in-out"
             removeArrowOnDeviceType={["mobile"]}
-            arrows={true}
+            arrows={false}
             infinite
             autoPlay
             autoPlaySpeed={2000}
             className="py-5"
-            customLeftArrow={
-              <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-            }
-            customRightArrow={
-              <TrendingCustomRightArrow onClick={TrendingCustomRightArrow} />
-            }
+            // customLeftArrow={
+            //   <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
+            // }
+            // customRightArrow={
+            //   <TrendingCustomRightArrow onClick={TrendingCustomRightArrow} />
+            // }
           >
             {shopsData.map((shop) => (
               <div key={shop.id} className={`pl-2 pr-3 pb-8`}>

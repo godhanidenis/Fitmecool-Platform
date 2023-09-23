@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -117,12 +117,15 @@ const responsive = {
 };
 
 const ProductCard = ({ product, onlyCarousal, landingPage }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(null);
+  const [autoplay, setAutoplay] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
-
   const [OpenToolTip, setOpenToolTip] = useState(false);
+
+  const carouselRef = useRef(null);
 
   const shopId = product.branchInfo?.shop_id;
   const pageShareURL = window.location.href;
@@ -165,12 +168,25 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
             ? 250
             : 300,
         }}
+        onMouseEnter={() => {
+          setAutoplay(true);
+          setCurrentImageIndex(null);
+        }}
+        onMouseLeave={() => {
+          setAutoplay(false);
+          setCurrentImageIndex(0);
+        }}
       >
         {!isProductImagesLoaded && (
           <ImageLoadingSkeleton className="object-cover" />
         )}
         <Image
-          src={itm ?? ""}
+          // src={itm ?? ""}
+          src={
+            currentImageIndex === null
+              ? itm
+              : currentImageIndex === 0 && product.product_image.front
+          }
           alt={product?.product_name}
           className={`object-cover absolute top-0 left-0 rounded-t-lg ${
             isProductImagesLoaded ? "opacity-100" : "opacity-0"
@@ -201,18 +217,21 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
               <Carousel
+                ref={carouselRef}
+                autoPlay={autoplay}
+                autoPlaySpeed={900}
                 infinite
-                arrows={onlyCarousal ? false : true}
+                arrows={false}
                 removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
-                customLeftArrow={
-                  <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-                }
-                customRightArrow={
-                  <TrendingCustomRightArrow
-                    onClick={TrendingCustomRightArrow}
-                  />
-                }
+                // customLeftArrow={
+                //   <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
+                // }
+                // customRightArrow={
+                //   <TrendingCustomRightArrow
+                //     onClick={TrendingCustomRightArrow}
+                //   />
+                // }
                 dotListClass={"Landing_customDots"}
               >
                 {productImages}
@@ -339,7 +358,7 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
             )}
           </div>
 
-          {!onlyCarousal && (
+          {/* {!onlyCarousal && (
             <>
               <div className="product-overlay">
                 <Link href={`/product/${product.id}`}>
@@ -355,60 +374,64 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                 </Link>
               </div>
             </>
-          )}
+          )} */}
         </div>
 
         {!onlyCarousal && (
-          <div className="bg-[#FFFFFF] pl-3">
-            <div>
-              <Link href={`/product/${product.id}`} passHref>
-                <a
-                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-                  rel="noopener noreferrer"
-                >
+          <Link
+            href={`/product/${product.id}`}
+            passHref
+            className="bg-[#FFFFFF]"
+          >
+            <a
+              target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+              rel="noopener noreferrer"
+            >
+              <div className=" pl-3">
+                <div>
                   <span className="line-clamp-1 font-semibold text-black text-base mt-4">
                     {product.product_name}
                   </span>
-                </a>
-              </Link>
-            </div>
+                </div>
 
-            <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
-              <div className="flex justify-center items-center">
-                <div className="relative sm:w-6 sm:h-6 w-4 h-4">
-                  {!isShopLogoLoaded && (
-                    <ImageLoadingSkeleton
-                      className="rounded-[50%]"
-                      variant="circular"
-                    />
-                  )}
-                  <Image
-                    alt="Shop Logo"
-                    src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
-                    layout="fill"
-                    className={`rounded-[50%] absolute top-0 left-0 ${
-                      isShopLogoLoaded ? "opacity-100" : "opacity-0"
-                    }`}
-                    onLoad={() => setIsShopLogoLoaded(true)}
-                  />
+                <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
+                  <div className="flex justify-center items-center">
+                    <div className="relative sm:w-6 sm:h-6 w-4 h-4">
+                      {!isShopLogoLoaded && (
+                        <ImageLoadingSkeleton
+                          className="rounded-[50%]"
+                          variant="circular"
+                        />
+                      )}
+                      <Image
+                        alt="Shop Logo"
+                        src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
+                        layout="fill"
+                        className={`rounded-[50%] absolute top-0 left-0 ${
+                          isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                        }`}
+                        onLoad={() => setIsShopLogoLoaded(true)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <Link href={`/shop/${shopId}`} passHref>
+                      <a
+                        target={`${
+                          themeLayout === "webScreen" ? "_blank" : "_self"
+                        }`}
+                        rel="noopener noreferrer"
+                      >
+                        <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
+                          {product.branchInfo?.shop_info?.shop_name}
+                        </span>
+                      </a>
+                    </Link>
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-col justify-center">
-                <Link href={`/shop/${shopId}`} passHref>
-                  <a
-                    target={`${
-                      themeLayout === "webScreen" ? "_blank" : "_self"
-                    }`}
-                    rel="noopener noreferrer"
-                  >
-                    <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
-                      {product.branchInfo?.shop_info?.shop_name}
-                    </span>
-                  </a>
-                </Link>
-              </div>
-            </div>
-          </div>
+            </a>
+          </Link>
         )}
       </div>
     </>

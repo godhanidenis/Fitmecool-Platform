@@ -123,7 +123,7 @@ const MenCollection = () => {
         </div>
 
         <button
-          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px] w-[30%] md:w-[20%] 2xl:w-[10%] pt-2 lg:pt-0  pb-2 lg:pb-0"
+          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
           onClick={() => router.push("/home")}
         >
           View All
