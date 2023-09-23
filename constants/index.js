@@ -1,9 +1,3 @@
-import FacebookLogo from "../assets/svg/FooterSvg/FacebookLogo";
-import InstagramLogo from "../assets/svg/FooterSvg/InstagramLogo";
-import LinkedinLogo from "../assets/svg/FooterSvg/LinkedinLogo";
-import TwitterLogo from "../assets/svg/FooterSvg/TwitterLogo";
-import YoutubeLogo from "../assets/svg/FooterSvg/YoutubeLogo";
-
 export const colorsList = [
   "red",
   "pink",
@@ -16,46 +10,6 @@ export const colorsList = [
   "white",
   "black",
 ];
-
-export const footerData = {
-  socialMediaList: [
-    {
-      id: 1,
-      logo: <FacebookLogo />,
-      link: "https://facebook.com/",
-    },
-    {
-      id: 2,
-      logo: <YoutubeLogo />,
-      link: "https://youtube.com/",
-    },
-    {
-      id: 3,
-      logo: <TwitterLogo />,
-      link: "https://twitter.com/",
-    },
-    {
-      id: 4,
-      logo: <LinkedinLogo />,
-      link: "https://linkedin.com/",
-    },
-    {
-      id: 5,
-      logo: <InstagramLogo />,
-      link: "https://instagram.com/",
-    },
-  ],
-  dataList: [
-    {
-      name: "Products",
-      data: ["Men's", "Women's", "kid's"],
-    },
-    {
-      name: "Brands",
-      data: ["FAQs", "How if Works", "About As"],
-    },
-  ],
-};
 
 export const assets = {
   appLogo:
@@ -102,4 +56,54 @@ export const assets = {
     "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/locationIcon.svg",
   shareIcon:
     "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/shareIcon.svg",
+  facebookLogo:
+    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/facebookLogo.svg",
+  instagramLogo:
+    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/instagramLogo.svg",
+  linkedinLogo:
+    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/linkedinLogo.svg",
+  twitterLogo:
+    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/twitterLogo.svg",
+  youtubeLogo:
+    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images/youtubeLogo.svg",
+};
+
+export const footerData = {
+  socialMediaList: [
+    {
+      id: 1,
+      logo: assets.facebookLogo,
+      link: "https://facebook.com/",
+    },
+    {
+      id: 2,
+      logo: assets.youtubeLogo,
+      link: "https://youtube.com/",
+    },
+    {
+      id: 3,
+      logo: assets.twitterLogo,
+      link: "https://twitter.com/",
+    },
+    {
+      id: 4,
+      logo: assets.linkedinLogo,
+      link: "https://linkedin.com/",
+    },
+    {
+      id: 5,
+      logo: assets.instagramLogo,
+      link: "https://instagram.com/",
+    },
+  ],
+  dataList: [
+    {
+      name: "Products",
+      data: ["Men's", "Women's", "kid's"],
+    },
+    {
+      name: "Brands",
+      data: ["FAQs", "How if Works", "About As"],
+    },
+  ],
 };

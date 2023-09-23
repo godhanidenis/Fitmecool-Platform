@@ -19,7 +19,14 @@ const Footer = () => {
                 <Link key={social.id} href={social.link}>
                   <a target="_blank">
                     <li className="bg-[#FFFFFF] flex justify-center items-center rounded-[50%] w-[30px] h-[30px] mr-[12px]">
-                      <div className="w-4 h-4">{social.logo}</div>
+                      <div className="w-4 h-4">
+                        <Image
+                          src={social.logo}
+                          width={16}
+                          height={16}
+                          alt="Socials Logo"
+                        />
+                      </div>
                     </li>
                   </a>
                 </Link>
