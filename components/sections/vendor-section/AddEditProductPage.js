@@ -26,7 +26,6 @@ import {
 } from "@mui/material";
 import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
-import "suneditor/dist/css/suneditor.min.css";
 import { NativeSelectInput } from "../../core/CustomMUIComponents";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../constants";

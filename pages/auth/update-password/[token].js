@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import LockIcon from "@mui/icons-material/Lock";
@@ -12,7 +11,7 @@ import { Alert, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import { resetPassword } from "../../../graphql/mutations/authMutations";
 import { withoutAuthForUserType } from "../../../components/core/PrivateRouteForAuth";
-import { assets } from "../../../constants";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const UpdatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -71,13 +70,8 @@ const UpdatePassword = () => {
         <div className="grid grid-cols-3">
           <div className="text-start">
             <Link href="/">
-              <button className="text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
-                <Image
-                  src={assets.backIcon}
-                  alt="back"
-                  width={15}
-                  height={15}
-                />
+              <button className="rounded-lg text-center p-2 flex items-center border">
+                <ArrowBackIosIcon className="!text-colorStone !w-4 !h-4 !ml-1" />
               </button>
             </Link>
           </div>

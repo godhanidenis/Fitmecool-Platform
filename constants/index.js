@@ -29,7 +29,6 @@ export const assets = {
   homeCoverImage: generateImageUrl("homeCoverImage", "png"),
   bharatFlag: generateImageUrl("bharatFlag", "png"),
   authCover: generateImageUrl("authCover", "png"),
-  backIcon: generateImageUrl("backIcon", "svg"),
   callIcon: generateImageUrl("callIcon", "svg"),
   emailIcon: generateImageUrl("emailIcon", "svg"),
   facebookIcon: generateImageUrl("facebookIcon", "svg"),

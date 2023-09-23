@@ -5,6 +5,7 @@ import "../styles/product.css";
 import "animate.css";
 import "react-multi-carousel/lib/styles.css";
 import "react-toastify/dist/ReactToastify.css";
+import "suneditor/dist/css/suneditor.min.css";
 
 import store from "../redux/store";
 import { Provider } from "react-redux";
@@ -18,6 +19,7 @@ import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import appConfig from "../config";
 import { useEffect } from "react";
+import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 
 const theme = createTheme({
   palette: {
@@ -85,6 +87,12 @@ function MyApp({ Component, pageProps }) {
               <VendorCommonLayout>
                 <Component {...pageProps} />
               </VendorCommonLayout>
+            ) : router.pathname === "/auth/user-type" ||
+              router.pathname === "/auth/signup" ||
+              router.pathname === "/auth/signin" ? (
+              <AuthCommonLayout>
+                <Component {...pageProps} />
+              </AuthCommonLayout>
             ) : (
               <Component {...pageProps} />
             )}

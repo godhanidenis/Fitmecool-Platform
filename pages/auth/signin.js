@@ -18,7 +18,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
 import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
-import AuthCoverHero from "../../components/DirectoryHero/AuthCoverHero";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -116,124 +115,117 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-background w-full">
-      <div className="bg-white flex w-full sm:gap-10 min-h-[100vh] overflow-auto">
-        <div className="md:w-[50%] sm:w-full flex flex-col p-6 sm:p-10">
-          <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
-            <ArrowBackIcon
-              onClick={() => Router.push("/auth/user-type")}
-              className="cursor-pointer text-3xl"
-            />
-            <div className="">
-              <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
-                <span className="sm:text-4xl text-[24px]">R</span>entbless
-              </h2>
-            </div>
-          </div>
-          <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
-            Login{" "}
-            <span className="text-colorGreen">
-              As {asVendor ? "Vendor" : "Customer"}
-            </span>
-          </div>
-          <p className="text-sm sm:text-xl mt-2 text-gray-400">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-          </p>
-          <button
-            onClick={handleGoogleLogin}
-            className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
-          >
-            <FcGoogle />
-            Continue to Google
-          </button>
-          <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
-            <FaFacebook className="text-sky-700" />
-            Continue to Facebook
-          </button>
-          <p className="my-2 flex justify-center font-semibold text-colorPrimary">
-            OR
-          </p>
-          <form onReset={reset}>
-            <input
-              type="text"
-              placeholder="Email Address or Contact Number *"
-              {...register("username", {
-                required: "Username is required",
-              })}
-              className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
-            />
-            {errors.username && (
-              <div className="mt-1 ml-1">
-                <span style={{ color: "red" }}>{errors.username?.message}</span>
-              </div>
-            )}
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password *"
-                {...register("password", {
-                  required: "Password is required",
-                })}
-                className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
-              />
-
-              {showPassword ? (
-                <VisibilityOutlinedIcon
-                  className="absolute top-5 right-5 text-gray-400 cursor-pointer"
-                  onClick={() => setShowPassword((show) => !show)}
-                />
-              ) : (
-                <VisibilityOffOutlinedIcon
-                  className="absolute top-5 right-5 text-gray-400 cursor-pointer"
-                  onClick={() => setShowPassword((show) => !show)}
-                />
-              )}
-
-              {errors.password && (
-                <div className="mt-1 ml-1">
-                  <span style={{ color: "red" }}>
-                    {errors.password?.message}
-                  </span>
-                </div>
-              )}
-            </div>
-            <Link href="/auth/forgot-password">
-              <p className="flex justify-end text-gray-400 cursor-pointer">
-                Forgot Password?
-              </p>
-            </Link>
-          </form>
-          <div className="flex-grow"></div>
-          <div className="w-full mt-5">
-            <button
-              type="submit"
-              onClick={handleSubmit(onSubmit, onError)}
-              className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
-            >
-              {loading && (
-                <CircularProgress
-                  size={20}
-                  color="primary"
-                  sx={{ color: "white", mr: 1 }}
-                />
-              )}{" "}
-              Sign In
-            </button>
-            <p className="text-base max-[480px]:text-xs text-gray-400 mt-2 flex justify-center">
-              Don&apos;t have an account?
-              <span
-                className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
-                onClick={() => Router.push("/auth/signup")}
-              >
-                Sign Up
-              </span>
-            </p>
-          </div>
+    <>
+      <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
+        <ArrowBackIcon
+          onClick={() => Router.push("/auth/user-type")}
+          className="cursor-pointer text-3xl"
+        />
+        <div className="">
+          <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
+            <span className="sm:text-4xl text-[24px]">R</span>entbless
+          </h2>
         </div>
-        <AuthCoverHero />
       </div>
-    </div>
+      <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
+        Login{" "}
+        <span className="text-colorGreen">
+          As {asVendor ? "Vendor" : "Customer"}
+        </span>
+      </div>
+      <p className="text-sm sm:text-xl mt-2 text-gray-400">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry.
+      </p>
+      <button
+        onClick={handleGoogleLogin}
+        className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
+      >
+        <FcGoogle />
+        Continue to Google
+      </button>
+      <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
+        <FaFacebook className="text-sky-700" />
+        Continue to Facebook
+      </button>
+      <p className="my-2 flex justify-center font-semibold text-colorPrimary">
+        OR
+      </p>
+      <form onReset={reset}>
+        <input
+          type="text"
+          placeholder="Email Address or Contact Number *"
+          {...register("username", {
+            required: "Username is required",
+          })}
+          className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
+        />
+        {errors.username && (
+          <div className="mt-1 ml-1">
+            <span style={{ color: "red" }}>{errors.username?.message}</span>
+          </div>
+        )}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password *"
+            {...register("password", {
+              required: "Password is required",
+            })}
+            className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
+          />
+
+          {showPassword ? (
+            <VisibilityOutlinedIcon
+              className="absolute top-5 right-5 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword((show) => !show)}
+            />
+          ) : (
+            <VisibilityOffOutlinedIcon
+              className="absolute top-5 right-5 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword((show) => !show)}
+            />
+          )}
+
+          {errors.password && (
+            <div className="mt-1 ml-1">
+              <span style={{ color: "red" }}>{errors.password?.message}</span>
+            </div>
+          )}
+        </div>
+        <Link href="/auth/forgot-password">
+          <p className="flex justify-end text-gray-400 cursor-pointer">
+            Forgot Password?
+          </p>
+        </Link>
+      </form>
+      <div className="flex-grow"></div>
+      <div className="w-full mt-5">
+        <button
+          type="submit"
+          onClick={handleSubmit(onSubmit, onError)}
+          className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+        >
+          {loading && (
+            <CircularProgress
+              size={20}
+              color="primary"
+              sx={{ color: "white", mr: 1 }}
+            />
+          )}{" "}
+          Sign In
+        </button>
+        <p className="text-base max-[480px]:text-xs text-gray-400 mt-2 flex justify-center">
+          Don&apos;t have an account?
+          <span
+            className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
+            onClick={() => Router.push("/auth/signup")}
+          >
+            Sign Up
+          </span>
+        </p>
+      </div>
+    </>
   );
 };
 
