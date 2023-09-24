@@ -22,7 +22,7 @@ const VendorCommonLayout = ({ children }) => {
           <VendorSidebar vendorShopDetails={vendorShopDetails} />
         </div>
       </div>
-      <div className="w-full lg:w-[73%] sm:w-[60%] sm:mt-6 sm:mr-5">
+      <div className="w-full lg:w-[73%] sm:w-[60%] sm:mt-6 px-4 py-4 sm:mr-5 sm:px-0 sm:py-0">
         {children}
       </div>
     </div>

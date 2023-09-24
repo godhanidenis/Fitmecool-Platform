@@ -38,6 +38,9 @@ import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField"
 import Carousel from "react-multi-carousel";
 import Image from "next/image";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
+import GroupsIcon from "@mui/icons-material/Groups";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { SiHandshake } from "react-icons/si";
 
 const subBranchStyle = {
   position: "absolute",
@@ -167,7 +170,7 @@ const ShopPage = () => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState("Shop");
+  const [selectedOption, setSelectedOption] = useState("Individual");
   const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
@@ -566,30 +569,101 @@ const ShopPage = () => {
   return (
     <>
       <div className="w-full">
-        <div className="sm:h-[683px] h-[452px] relative">
-          <Image
-            src="https://thumbs.dreamstime.com/b/clothes-hangers-colorful-clothes-women-shop-summer-sale-73852501.jpg"
-            layout="fill"
-            objectFit="contain"
-            alt=""
-          />
+        <div className="h-[452px] sm:h-[50vh] relative">
           <div className="absolute inset-0 bg-black mix-blend-darken opacity-80"></div>
         </div>
-        <div className="relative -mt-[37rem] container">
-          <div className="text-gray-400 sm:text-5xl text-3xl flex  items-center flex-col gap-4">
+        <div className="relative -mt-[calc(50vh-25px)] container">
+          <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
             <div>
-              <span className="text-white font-semibold">Selling</span> Only The
+              <span className="text-colorGreen font-semibold">Set Up</span> Your
             </div>
             <div>
-              Best Things{" "}
-              <span className="text-white font-semibold">Online</span>
+              Rental <span className="text-colorGreen font-semibold">Shop</span>
             </div>
           </div>
-          <div className="flex justify-center mt-16 gap-3">
+          <div className="flex justify-center mt-10">
+            <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
+              <div
+                className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                  selectedOption === "Individual"
+                    ? "border-2 border-yellow-500"
+                    : "border"
+                }`}
+                onClick={() => handleClickIndividual("Individual", false)}
+              >
+                <div className="flex justify-between">
+                  <div className="flex">
+                    <SiHandshake
+                      className={`${
+                        selectedOption === "Individual"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      }`}
+                      fontSize="25px"
+                    />
+                    <div
+                      className={`${
+                        selectedOption === "Individual"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                    >
+                      Individual
+                    </div>
+                  </div>
+                  <div>
+                    {selectedOption === "Individual" && (
+                      <CheckCircleIcon className="text-yellow-500" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                  selectedOption === "Shop"
+                    ? "border-2 border-yellow-500"
+                    : "border"
+                }`}
+                onClick={() => handleClickIndividual("Shop", false)}
+              >
+                <div className="flex justify-between">
+                  <div className="flex">
+                    <SiHandshake
+                      className={`${
+                        selectedOption === "Shop"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      }`}
+                      fontSize="25px"
+                    />
+                    <div
+                      className={`${
+                        selectedOption === "Shop"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                    >
+                      Shop
+                    </div>
+                  </div>
+                  <div>
+                    <CheckCircleIcon
+                      className={`${
+                        selectedOption === "Shop"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      }`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* <div className="flex justify-center mt-16 gap-3">
             <button
               className={`text-gray-400 sm:text-2xl sm:py-3  sm:px-14  py-2 text-lg px-8 ${
                 selectedOption === "Shop" &&
-                "bg-colorGreen rounded-md text-white"
+                "bg-colorGreen roundebbg-colorGreend-md text-white"
               }`}
               onClick={() => handleClickIndividual("Shop", false)}
             >
@@ -604,7 +678,7 @@ const ShopPage = () => {
             >
               Individual
             </button>
-          </div>
+          </div> */}
           <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
             <div className="md:mx-10">
               <div className="flex justify-evenly mb-3 sm:mb-5">

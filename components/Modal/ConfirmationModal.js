@@ -31,7 +31,7 @@ const ConfirmationModal = ({
       aria-describedby="modal-modal-description"
       className="animate__animated animate__slideInDown"
     >
-      <Box sx={style} className="!w-[90%] lg:!w-1/2">
+      <Box sx={style} className="!w-[90%] lg:!w-1/3">
         <div className="p-5">
           <div className="flex items-center">
             <p className="flex items-center text-colorBlack text-xl font-semibold">
@@ -40,20 +40,20 @@ const ConfirmationModal = ({
           </div>
 
           <div className="p-5 text-colorBlack text-lg font-normal">
-            Are you sure delete this {type} <b>{deleteId}</b>.
+            Are you sure you want to delete this {type} ?
           </div>
 
-          <div className="container mt-5 flex items-center justify-end gap-5">
+          <div className="container mt-5 flex items-center justify-end gap-3">
             <Button
               variant="outlined"
-              className="rounded-xl capitalize text-colorBlack py-2 px-5"
+              className="rounded-md capitalize text-colorBlack py-2 px-5"
               onClick={() => setDeleteModalOpen(false)}
             >
               Cancel
             </Button>
             <Button
               variant="contained"
-              className="rounded-xl capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"
+              className="rounded-md capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"
               onClick={onClickItemDelete}
             >
               Delete

@@ -160,7 +160,7 @@ const ShopEdit = () => {
 
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(4);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -695,10 +695,10 @@ const ShopEdit = () => {
   }
   return (
     <>
-      <div className="min-h-screen">
+      <div className="">
         <div className="">
           <div className="">
-            <Box className="bg-colorPrimary rounded-xl">
+            <Box className="bg-colorPrimary rounded-md">
               <CustomVenderShopTab
                 value={value}
                 onChange={handleChange}
@@ -1171,101 +1171,106 @@ const ShopEdit = () => {
               <div
                 className={`space-y-6 ${managerDetails === "Hide" && "hidden"}`}
               >
-                <RadioGroup
-                  row
-                  name="row-radio-buttons-group"
-                  value={sameAsOwner}
-                  onChange={(e) => {
-                    if (e.target.value === "True") {
-                      setSameAsOwner("True");
-                    } else {
-                      setSameAsOwner("False");
-                    }
-                  }}
-                >
-                  <div className="flex gap-4">
-                    <div className="flex items-center">
-                      <span className="hidden sm:inline">
-                        <Radio
-                          name="saveAsOwner"
-                          id="True"
-                          value="True"
-                          sx={{
-                            color: "rgba(21, 24, 39, 0.1)",
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 30,
-                            },
-                            "&.Mui-checked": {
-                              color: "#29977E",
-                            },
-                          }}
-                        />
-                      </span>
-                      <span className="sm:hidden">
-                        <Radio
-                          name="saveAsOwner"
-                          id="True"
-                          value="True"
-                          sx={{
-                            color: "rgba(21, 24, 39, 0.1)",
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 20,
-                            },
-                            "&.Mui-checked": {
-                              color: "#29977E",
-                            },
-                          }}
-                        />
-                      </span>
-                      <label
-                        htmlFor="True"
-                        className="sm:text-xl text-sm text-gray-400 font-semibold"
-                      >
-                        Yes
-                      </label>
+                <div className="flex items-center">
+                  <span className="uppercase font-semibold">
+                    Same As Owner:
+                  </span>
+                  <RadioGroup
+                    row
+                    name="row-radio-buttons-group"
+                    value={sameAsOwner}
+                    onChange={(e) => {
+                      if (e.target.value === "True") {
+                        setSameAsOwner("True");
+                      } else {
+                        setSameAsOwner("False");
+                      }
+                    }}
+                  >
+                    <div className="flex gap-4">
+                      <div className="flex items-center">
+                        <span className="hidden sm:inline">
+                          <Radio
+                            name="saveAsOwner"
+                            id="True"
+                            value="True"
+                            sx={{
+                              color: "rgba(21, 24, 39, 0.1)",
+                              "& .MuiSvgIcon-root": {
+                                fontSize: 30,
+                              },
+                              "&.Mui-checked": {
+                                color: "#29977E",
+                              },
+                            }}
+                          />
+                        </span>
+                        <span className="sm:hidden">
+                          <Radio
+                            name="saveAsOwner"
+                            id="True"
+                            value="True"
+                            sx={{
+                              color: "rgba(21, 24, 39, 0.1)",
+                              "& .MuiSvgIcon-root": {
+                                fontSize: 20,
+                              },
+                              "&.Mui-checked": {
+                                color: "#29977E",
+                              },
+                            }}
+                          />
+                        </span>
+                        <label
+                          htmlFor="True"
+                          className="sm:text-xl text-sm text-gray-400 font-semibold"
+                        >
+                          Yes
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="hidden sm:inline">
+                          <Radio
+                            name="saveAsOwner"
+                            id="False"
+                            value="False"
+                            sx={{
+                              color: "rgba(21, 24, 39, 0.1)",
+                              "& .MuiSvgIcon-root": {
+                                fontSize: 30,
+                              },
+                              "&.Mui-checked": {
+                                color: "#29977E",
+                              },
+                            }}
+                          />
+                        </span>
+                        <span className="sm:hidden">
+                          <Radio
+                            name="saveAsOwner"
+                            id="False"
+                            value="False"
+                            sx={{
+                              color: "rgba(21, 24, 39, 0.1)",
+                              "& .MuiSvgIcon-root": {
+                                fontSize: 20,
+                              },
+                              "&.Mui-checked": {
+                                color: "#29977E",
+                              },
+                            }}
+                          />
+                        </span>
+                        <label
+                          htmlFor="False"
+                          className="sm:text-xl text-sm text-gray-400 font-semibold"
+                        >
+                          No
+                        </label>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <span className="hidden sm:inline">
-                        <Radio
-                          name="saveAsOwner"
-                          id="False"
-                          value="False"
-                          sx={{
-                            color: "rgba(21, 24, 39, 0.1)",
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 30,
-                            },
-                            "&.Mui-checked": {
-                              color: "#29977E",
-                            },
-                          }}
-                        />
-                      </span>
-                      <span className="sm:hidden">
-                        <Radio
-                          name="saveAsOwner"
-                          id="False"
-                          value="False"
-                          sx={{
-                            color: "rgba(21, 24, 39, 0.1)",
-                            "& .MuiSvgIcon-root": {
-                              fontSize: 20,
-                            },
-                            "&.Mui-checked": {
-                              color: "#29977E",
-                            },
-                          }}
-                        />
-                      </span>
-                      <label
-                        htmlFor="False"
-                        className="sm:text-xl text-sm text-gray-400 font-semibold"
-                      >
-                        No
-                      </label>
-                    </div>
-                  </div>
-                </RadioGroup>
+                  </RadioGroup>
+                </div>
 
                 <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
                   <div className="sm:w-1/2 relative w-full">
@@ -1373,7 +1378,7 @@ const ShopEdit = () => {
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <Box className="flex w-full sm:justify-end justify-center mt-4">
+                <Box className="flex w-full sm:justify-end justify-center mt-4 mb-6">
                   <button
                     type="submit"
                     onClick={mainBranchInfoHandleSubmit(
@@ -1443,13 +1448,14 @@ const ShopEdit = () => {
 
           <TabPanel value={value} index={4}>
             <div className="container rounded-lg mt-10">
-              <div className="grid grid-cols-3 gap-10 my-10">
-                <div className="col-span-3 lg:flex justify-center gap-10">
+              <div className="grid grid-cols-3 gap-6 sm:gap-10 my-10">
+                <div className="col-span-3 lg:flex justify-center gap-10 items-start">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
+                    <div className="text-base sm:text-xl font-semibold mb-3 mx-2 text-black">
                       Shop Logo
+                      <span className="text-[#31333e66] ml-1">(Optional)</span>
                     </div>
-                    <div className="sm:w-[210px] relative sm:h-[210px] h-[130px] w-[130px] border border-gray-200 cursor-pointer rounded-full flex items-center justify-center">
+                    <div className="relative w-[150px] sm:w-[200px] h-[150px] sm:h-[200px]  border border-gray-200 cursor-pointer rounded-full flex items-center justify-center">
                       {shopLogo !== "" ? (
                         shopLogo ? (
                           <>
@@ -1465,7 +1471,7 @@ const ShopEdit = () => {
                                 }}
                               />
                             </span>
-                            <div className="sm:w-[210px] sm:h-[210px] h-[130px] w-[130px]">
+                            <div className="w-full h-full">
                               <img
                                 src={shopLogo}
                                 alt="Uploaded Image"
@@ -1521,11 +1527,12 @@ const ShopEdit = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col mt-4 items-center justify-center">
-                    <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black">
+                  <div className="flex flex-col mt-6 sm:mt-6 lg:mt-0 items-center justify-center">
+                    <div className="text-base sm:text-xl font-semibold mb-3 text-black">
                       Shop Cover Image
+                      <span className="text-[#31333e66] ml-1">(Optional)</span>
                     </div>
-                    <div className="w-full sm:w-2/3 lg:w-[350px] cursor-pointer relative sm:h-[290px] h-[180px] col-span-3 border border-gray-200 rounded-3xl flex items-center justify-center">
+                    <div className="w-full cursor-pointer relative h-[200px] sm:h-[300px] col-span-3 border border-gray-200 rounded-xl flex items-center justify-center">
                       {shopBackground !== "" ? (
                         shopBackground ? (
                           <>
@@ -1543,11 +1550,11 @@ const ShopEdit = () => {
                                 }
                               />
                             </span>
-                            <div className="w-full sm:h-[290px] h-[180px]">
+                            <div className="w-full h-full">
                               <img
                                 src={shopBackground}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-3xl"
+                                className="object-cover h-full w-full rounded-xl"
                               />
                             </div>
                           </>
@@ -1602,20 +1609,24 @@ const ShopEdit = () => {
                 </div>
 
                 <div className="col-span-3">
-                  <div className="sm:text-xl text-sm  font-semibold  mb-5 mx-2 text-black flex justify-center">
+                  <div className="text-base sm:text-xl font-semibold mb-3 text-black flex justify-center">
                     Shop Images
                     <span className="text-[#31333e66] ml-1">
-                      (Front, Back & Side)
+                      <span className="text-[#31333e66] ml-1">(Optional)</span>
                     </span>
                   </div>
-                  <div className="flex xl:gap-8 xl:flex-row flex-col gap-4">
+                  <div className="grid grid-cols-12 gap-6">
                     {shopImages?.length > 0
                       ? shopImages?.map((image, index) => {
                           return (
                             <>
                               <div
                                 key={index}
-                                className="w-full cursor-pointer relative sm:h-[290px] h-[344px] border border-gray-200 rounded-3xl flex items-center justify-center"
+                                className={`${
+                                  index === 0
+                                    ? "col-start-2 lg:col-start-3"
+                                    : "col-start-2"
+                                } col-span-10 sm:col-span-6 md:col-span-6 lg:col-span-3 w-full cursor-pointer relative h-[300px] sm:h-[300px] border border-gray-200 rounded-xl flex items-center justify-center`}
                               >
                                 {shopImages[index] ? (
                                   <>
@@ -1635,16 +1646,20 @@ const ShopEdit = () => {
                                       />
                                     </span>
 
-                                    <div className="w-full relative sm:h-[290px] h-[344px]">
+                                    <div className="w-full relative h-full">
                                       <img
                                         src={image?.links}
                                         alt="Uploaded Image"
-                                        className="object-cover h-full w-full rounded-3xl"
+                                        className="object-cover h-full w-full rounded-xl"
                                       />
                                     </div>
                                   </>
                                 ) : (
-                                  <div className="flex flex-col gap-4">
+                                  <div
+                                    className={`${
+                                      index === 0 ? "col-start-3" : ""
+                                    } col-span-3`}
+                                  >
                                     <span className="flex justify-center">
                                       <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                                     </span>
@@ -1699,23 +1714,24 @@ const ShopEdit = () => {
                   </div>
                 </div>
                 <div className="w-full col-span-3">
-                  <div className="sm:text-xl text-sm font-semibold  mb-5 mx-2 text-black flex justify-center">
+                  <div className="text-base sm:text-xl font-semibold mb-3 text-black flex justify-center">
                     Shop Video
+                    <span className="text-[#31333e66] ml-1">(Optional)</span>
                   </div>
                   <div
-                    className="sm:w-2/3 w-full sm:mx-auto cursor-pointer  sm:h-[290px] h-[180px]  border border-gray-200 rounded-3xl flex items-center justify-center"
+                    className="sm:w-2/3 w-full sm:mx-auto cursor-pointer h-[250px] sm:h-[300px] border border-gray-200 rounded-xl flex items-center justify-center"
                     onClick={() => {
                       shopVideo == "" &&
                         document.getElementById("shopVideoId").click();
                     }}
                   >
                     {shopVideo !== "" ? (
-                      <div className="w-full sm:h-[290px] relative h-[180px]">
+                      <div className="w-full h-full relative">
                         {shopVideo ? (
                           <>
                             <video
                               autoPlay
-                              className="object-cover h-full w-full rounded-3xl"
+                              className="object-cover h-full w-full rounded-xl"
                               controls
                               src={shopVideo}
                             ></video>
@@ -1739,7 +1755,7 @@ const ShopEdit = () => {
                                 setShopVideo("");
                                 setUploadShopVideo("");
                               }}
-                              className="absolute right-4 top-[70px] border border-[#D63848] rounded-full p-2 bg-[#D63848]"
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
                             >
                               <DeleteIcon style={{ color: "white" }} />
                             </span>

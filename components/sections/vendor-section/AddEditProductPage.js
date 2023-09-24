@@ -439,7 +439,7 @@ const AddEditProductPage = () => {
           </span>
         </div>
         <div className="my-5 mt-8">
-          <div className="sm:text-lg text-sm font-semibold  mb-3 mt-5 sm:mx-6 text-black ">
+          <div className="text-base sm:text-lg font-semibold  mb-3 mt-5 sm:mx-6 text-black ">
             Product Details
           </div>
           <div className="sm:flex justify-between">
@@ -685,99 +685,101 @@ const AddEditProductPage = () => {
         </div>
         <div className="sm:mx-6">
           <div>
-            <div className="sm:text-lg text-sm font-semibold mt-6 mb-3 text-black ">
-              Upload Product Images*
+            <div className="text-base sm:text-lg font-semibold mt-6 mb-3 text-black ">
+              Product Images*
               <span className="text-[#31333e66] ml-1">
                 (Front, Back & Side)
               </span>
             </div>
-            <div className="w-full lg:flex gap-8">
-              <div className="lg:w-[60%] w-full flex lg:gap-8 lg:flex-row flex-col gap-4">
-                {["One", "Two", "Three"]?.map((item, index) => {
-                  return (
-                    <>
-                      <div
-                        key={index}
-                        className="w-full sm:w-2/3  cursor-pointer  sm:h-[320px] h-[320px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center"
-                        onClick={() => {
-                          productImages[index] === undefined
-                            ? (setSelectImgIndex(index),
-                              document
-                                .getElementById(`productImage${item}`)
-                                .click())
-                            : "";
-                        }}
-                      >
-                        {productImages[index] ? (
-                          <div className="w-full relative sm:h-[320px]  h-[320px]">
-                            <img
-                              src={productImages[index] ?? ""}
-                              alt="Uploaded Image"
-                              className="object-cover h-full w-full rounded-xl"
+            <div className="grid grid-cols-12 gap-6">
+              {["One", "Two", "Three"]?.map((item, index) => {
+                return (
+                  <>
+                    <div
+                      key={index}
+                      className={`${
+                        index === 0
+                          ? "col-start-2 lg:col-start-1"
+                          : "col-start-2"
+                      } col-span-10 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3 2xl:col-span-2 w-full cursor-pointer h-[300px] sm:h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center`}
+                      onClick={() => {
+                        productImages[index] === undefined
+                          ? (setSelectImgIndex(index),
+                            document
+                              .getElementById(`productImage${item}`)
+                              .click())
+                          : "";
+                      }}
+                    >
+                      {productImages[index] ? (
+                        <div className="w-full relative h-full">
+                          <img
+                            src={productImages[index] ?? ""}
+                            alt="Uploaded Image"
+                            className="object-cover h-full w-full rounded-xl"
+                          />
+                          <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
+                            <EditIcon
+                              sx={{
+                                fontSize: 18,
+                                "@media (max-width: 648px)": {
+                                  fontSize: 16,
+                                },
+                              }}
+                              onClick={() => {
+                                setSelectImgIndex(index),
+                                  document
+                                    .getElementById(`productImage${item}`)
+                                    .click();
+                              }}
                             />
-                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
-                              <EditIcon
-                                sx={{
-                                  fontSize: 18,
-                                  "@media (max-width: 648px)": {
-                                    fontSize: 16,
-                                  },
-                                }}
-                                onClick={() => {
-                                  setSelectImgIndex(index),
-                                    document
-                                      .getElementById(`productImage${item}`)
-                                      .click();
-                                }}
-                              />
-                            </span>
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-4 px-3 py-3">
+                          <span className="flex justify-center">
+                            <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                          </span>
+                          <div className="flex flex-col gap-1">
+                            <p className="sm:text-base  font-semibold text-sm text-gray-400 text-center">
+                              <span className="text-colorGreen">
+                                Click to Upload{" "}
+                              </span>
+                              {item === "One"
+                                ? "Front Image"
+                                : item === "Two"
+                                ? "Back Image"
+                                : "Side Image"}
+                            </p>
+                            <p className="sm:text-sm text-xs text-gray-400 text-center">
+                              We Support JPG & PNG
+                            </p>
                           </div>
-                        ) : (
-                          <div className="flex flex-col gap-4 px-3 py-3">
-                            <span className="flex justify-center">
-                              <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                            </span>
-                            <div className="flex flex-col gap-1">
-                              <p className="sm:text-base  font-semibold text-sm text-gray-400 text-center">
-                                <span className="text-colorGreen">
-                                  Click to Upload{" "}
-                                </span>
-                                {item === "One"
-                                  ? "Front Image"
-                                  : item === "Two"
-                                  ? "Back Image"
-                                  : "Side Image"}
-                              </p>
-                              <p className="sm:text-sm text-xs text-gray-400 text-center">
-                                We Support JPG & PNG
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        <input
-                          id={`productImage${item}`}
-                          name="productImages"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          {...register("productImages", {
-                            required: !ProductImgError[index]
-                              ? "Product All Image is required"
-                              : false,
-                            onChange: (e) => {
-                              createProductImagesChange(e);
-                            },
-                          })}
-                        />
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
+                        </div>
+                      )}
+                      <input
+                        id={`productImage${item}`}
+                        name="productImages"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        {...register("productImages", {
+                          required: !ProductImgError[index]
+                            ? "Product All Image is required"
+                            : false,
+                          onChange: (e) => {
+                            createProductImagesChange(e);
+                          },
+                        })}
+                      />
+                    </div>
+                  </>
+                );
+              })}
             </div>
           </div>
           <div>
-            <div className="sm:text-lg text-sm font-semibold mb-3 mt-6 text-black ">
+            <div className="text-base sm:text-lg font-semibold mb-3 mt-6 text-black ">
               Upload Product Video{" "}
               <span className="text-[#31333e66]">( Optional )</span>
             </div>
@@ -813,7 +815,7 @@ const AddEditProductPage = () => {
                       setProductVideo("");
                       setUploadProductVideo("");
                     }}
-                    className="absolute right-4 top-[70px] border border-[#D63848] rounded-full p-2 bg-[#D63848]"
+                    className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
                   >
                     <DeleteIcon style={{ color: "white" }} />
                   </span>

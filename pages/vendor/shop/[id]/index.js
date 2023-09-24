@@ -99,7 +99,7 @@ const ShopDetailsPage = () => {
           </button>
         </div>
 
-        <div className="pt-4">
+        <div className="">
           <UpperFilter showOnlyShopDetailPage={true} />
 
           <div

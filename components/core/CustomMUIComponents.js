@@ -85,7 +85,7 @@ export const CustomTab = styled(Tabs)(
         : subheader
         ? "0px"
         : "16px",
-      paddingBottom: collection ? "0px" : "4px",
+      paddingBottom: collection ? "0px" : "24px",
       paddingRight: hometab && "16px",
       paddingLeft: hometab && "16px",
       borderBottom: hometab && "3px solid #0000000a",
@@ -140,12 +140,10 @@ export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
     fontWeight: 600,
     fontSize: "16px",
     lineHeight: "16px",
-    marginRight: "16px",
+    margin: "8px",
 
     [theme.breakpoints.down("sm")]: {
       fontSize: "14px",
-      paddingX: "16px",
-      paddingY: "12px",
     },
   },
 
@@ -155,11 +153,9 @@ export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
 
   [`& .Mui-selected`]: {
     backgroundColor: "#FFF",
-    borderRadius: "10px",
+    borderRadius: "4px",
     color: "#151827 !important",
     fontWeight: 500,
-    margin: "10px",
-    padding: "0px 10px",
   },
   [`& .MuiTabs-indicator`]: {
     display: "none",
@@ -339,7 +335,6 @@ export const CustomBorderLinearProgress = styled(LinearProgress)(
 
 export const NativeSelectInput = styled(Select)(({ theme }) => ({
   "& .MuiInputBase-input": {
-    color: "#1518278F",
     marginLeft: 10,
   },
 }));

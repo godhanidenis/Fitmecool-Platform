@@ -14,13 +14,13 @@ const Filter = ({ productByShop }) => {
       <FilterActions productByShop={productByShop} />
 
       {!byShop ? (
-        <div className="px-5 sm:px-8">
+        <div className="px-5 sm:px-12">
           <ProductCategoriesFilter />
           {!productByShop && <ProductByShopFilter />}
           <ProductColorFilter />
         </div>
       ) : (
-        <div className="px-8">
+        <div className="px-5 sm:px-12">
           <ShopByLocation />
           <ShopRatingsFilter />
         </div>

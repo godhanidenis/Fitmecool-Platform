@@ -119,7 +119,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                         />
                       </button>
                       <button
-                        className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-[#D63848] duration-300 hover:opacity-80`}
+                        className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-red-600 duration-300 hover:opacity-80`}
                         onClick={() => {
                           setProductDeleteModalOpen(true);
                           setDeleteProductId(item?.id);

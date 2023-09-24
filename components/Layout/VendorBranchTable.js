@@ -69,7 +69,7 @@ const VendorBranchTable = ({
                           }}
                         />
                       </span>
-                      <span className="flex justify-center items-center  bg-[#D63848]  text-white rounded-full lg:p-2 px-2 py-1">
+                      <span className="flex justify-center items-center  bg-red-600  text-white rounded-full lg:p-2 px-2 py-1">
                         <DeleteOutlineOutlinedIcon
                           sx={{
                             fontSize: 18,
