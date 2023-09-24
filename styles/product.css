@@ -4,9 +4,9 @@
   left: 0;
 }
 
-.product-overlay {
+/* .product-overlay { */
   /* position: absolute; */
-  top: 0;
+  /* top: 0;
   bottom: 0;
   left: 0;
   right: 0;
@@ -25,5 +25,18 @@
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}  */
+
+
+.image-container {
+  /* width: 300px; */
+  /* Adjust the width as needed */
+  transition: transform 0.3s ease;
+  /* Smooth transition for zoom effect */
 }
 
+/* Apply zoom when hovering over the image */
+.image-container:hover {
+  transform: scale(1.1);
+  /* You can adjust the scale factor for desired zoom level */
+}
