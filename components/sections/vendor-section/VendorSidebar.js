@@ -36,22 +36,22 @@ const VendorSidebar = ({ vendorShopDetails }) => {
   const vendorSidebarTabs = [
     {
       label: "Dashboard",
-      icon: <DashboardIcon className="mr-4" />,
+      icon: <DashboardIcon />,
       path: "/vendor/dashboard",
     },
     {
       label: "Shop",
-      icon: <StoreIcon className="mr-4" />,
+      icon: <StoreIcon />,
       path: `/vendor/shopEdit/${vendorShopDetails?.id}`,
     },
     {
       label: "Products",
-      icon: <ProductionQuantityLimitsIcon className="mr-4" />,
+      icon: <ProductionQuantityLimitsIcon />,
       path: `/vendor/shop/${vendorShopDetails?.id}`,
     },
     {
       label: "Subscription",
-      icon: <SubscriptionsIcon className="mr-4" />,
+      icon: <SubscriptionsIcon />,
       path: `/vendor/shop-subscription`,
     },
   ];
@@ -85,7 +85,7 @@ const VendorSidebar = ({ vendorShopDetails }) => {
                 selectedValue === tab.label
                   ? "text-[#29977E]"
                   : "text-[#151827]"
-              } cursor-pointer uppercase`}
+              } cursor-pointer uppercase flex items-center gap-4`}
             >
               {tab.icon}
               {tab.label}

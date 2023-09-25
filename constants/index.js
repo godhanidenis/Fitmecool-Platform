@@ -15,6 +15,7 @@ export const colorsList = [
 
 export const assets = {
   appLogo: generateImageUrl("rentblessLogo", "png"),
+  appBlackLogo: generateImageUrl("BlackLogo", "png"),
   emptyCart: generateImageUrl("empty_cart", "png"),
   appStore: generateImageUrl("appStore", "png"),
   playStore: generateImageUrl("playStore", "png"),

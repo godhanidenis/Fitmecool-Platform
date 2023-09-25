@@ -6,6 +6,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import ImageLoadingSkeleton from "../Modal/ImageLoadingSkeleton";
 import { Avatar, Divider, Skeleton } from "@mui/material";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 
 const VendorShopSubHeader = ({ handleMobileSidebarClick }) => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
@@ -22,6 +23,8 @@ const VendorShopSubHeader = ({ handleMobileSidebarClick }) => {
 
     if (router.pathname === "/vendor/dashboard") {
       setSelectedValue("Dashboard");
+    } else if (router.pathname === "/vendor/shop-subscription") {
+      setSelectedValue("Subscription");
     } else if (withoutLastChunk === "/vendor/shopEdit") {
       setSelectedValue("Shop");
     } else if (
@@ -32,24 +35,28 @@ const VendorShopSubHeader = ({ handleMobileSidebarClick }) => {
     }
   }, [router.pathname, vendorShopDetails?.id]);
 
-  const vendorSubHeaderTabs = [
+  const vendorSidebarTabs = [
     {
       label: "Dashboard",
-      icon: <DashboardIcon className="mr-4" />,
+      icon: <DashboardIcon />,
       path: "/vendor/dashboard",
     },
     {
       label: "Shop",
-      icon: <StoreIcon className="mr-4" />,
+      icon: <StoreIcon />,
       path: `/vendor/shopEdit/${vendorShopDetails?.id}`,
     },
     {
       label: "Products",
-      icon: <ProductionQuantityLimitsIcon className="mr-4" />,
+      icon: <ProductionQuantityLimitsIcon />,
       path: `/vendor/shop/${vendorShopDetails?.id}`,
     },
+    {
+      label: "Subscription",
+      icon: <SubscriptionsIcon />,
+      path: `/vendor/shop-subscription`,
+    },
   ];
-
   return (
     <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center ">
       <div className="flex justify-center">
@@ -71,18 +78,18 @@ const VendorShopSubHeader = ({ handleMobileSidebarClick }) => {
         </div>
         <Divider className="w-full opacity-50 sm:mb-11" />
         <div className="w-full font-Nova ml-[30%] mt-5 sm:hidden">
-          {vendorSubHeaderTabs.map((tab, index) => (
+          {vendorSidebarTabs.map((tab, index) => (
             <p
               key={index}
               onClick={() => {
                 handleMobileSidebarClick();
                 router.push(tab.path);
               }}
-              className={`font-semibold sm:pb-10 text-base mr-4 pb-6 ${
+              className={`font-semibold pb-8 text-lg ${
                 selectedValue === tab.label
                   ? "text-[#29977E]"
                   : "text-[#151827]"
-              }  cursor-pointer uppercase`}
+              } cursor-pointer uppercase flex items-center gap-4`}
             >
               {tab.icon}
               {tab.label}

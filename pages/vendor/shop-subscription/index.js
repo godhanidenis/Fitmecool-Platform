@@ -13,11 +13,13 @@ import {
 } from "../../../graphql/mutations/subscription";
 import { loadUserProfileStart } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
+import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { assets } from "../../../constants";
 
 const ShopSubscription = () => {
   const [checked, setChecked] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  //for deployed comment
   const [subscriptionAllPlans, setSubscriptionAllPlans] = useState({});
 
   const [currentPlan, setCurrentPlan] = useState();
@@ -60,6 +62,10 @@ const ShopSubscription = () => {
     }
   }, [currentPlan?.id, currentPlan?.plan_id, subscriptionAllPlans?.items]);
 
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const isSubscriptionExpired = (subscriptionDueDate) => {
     const currentDate = new Date();
     const dueDate = new Date(subscriptionDueDate);
@@ -75,8 +81,7 @@ const ShopSubscription = () => {
           subscription_id: subscriptionRes?.data?.buySubscription.id,
           name: plan?.item?.name,
           description: plan?.item?.description,
-          image:
-            "https://media.licdn.com/dms/image/C4D0BAQGlDTkE0BPXvw/company-logo_200_200/0/1639393777775?e=2147483647&v=beta&t=pu-oXJMsAa8-EY62pFVvrRR6T4cHEWzbbmxB-xBSj8k",
+          image: assets.appBlackLogo,
           handler: async function (response) {
             await paymentVerification({
               razorpaySubscriptionId: response.razorpay_subscription_id,
@@ -101,10 +106,10 @@ const ShopSubscription = () => {
             );
           },
           notes: {
-            address: "FlyOnTech Solutions",
+            address: "Rentbless",
           },
           theme: {
-            color: "#95539B",
+            color: "#151827",
           },
         };
 
@@ -165,103 +170,104 @@ const ShopSubscription = () => {
     });
   };
 
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
     <>
       <div className="flex items-center justify-center min-h-[95vh]">
         <div className="bg-white rounded p-10">
-          <h1 className="text-colorBlack text-center font-semibold text-2xl shadow-2xl">
+          <h1 className="text-colorBlack text-center font-semibold text-2xl">
             Choose your plan
           </h1>
           <p className="text-center text-colorStone mt-3">
             You will be charged for the plan after the admin approves your
             vendor account
           </p>
-          <div className="mt-5">
-            <SubscriptionPlanActions switchHandler={switchHandler} />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10 gap-5">
-            {(!checked
-              ? subscriptionAllPlans?.items?.filter(
-                  (itm) => itm.period === "weekly"
-                )
-              : subscriptionAllPlans?.items?.filter(
-                  (itm) => itm.period === "monthly"
-                )
-            )?.map((plan, index) => (
-              <div
-                key={index}
-                className="border rounded py-8 px-10 text-center cursor-pointer hover:scale-110"
-              >
-                <p className="text-xl font-medium text-colorBlack">
-                  {plan?.item?.name}
-                </p>
-                <p className="mt-4 text-gray-500">
-                  <span className="text-lg font-semibold text-colorBlack">
-                    ₹{plan?.item?.amount / 100}
-                  </span>{" "}
-                  /{" "}
-                  {(plan?.period === "weekly" && "week") ||
-                    (plan?.period === "monthly" && "month")}
-                </p>
-                {userProfile?.subscriptionStatus &&
-                currentPlan?.plan_id === plan?.id ? (
-                  <div className="mt-4">
-                    {isSubscriptionExpired(currentPlan?.current_end * 1000) ? (
-                      <button
-                        className="border border-colorPrimary text-colorPrimary py-2 px-3 mt-4 rounded-md"
-                        onClick={() => renewSubscriptionCheckoutHandler(plan)}
-                      >
-                        Renew Plan
-                      </button>
-                    ) : (
-                      <>
-                        <b>Current Plan</b>
-                        <p>
-                          Renews{" "}
-                          {new Date(
-                            currentPlan?.current_end * 1000
-                          ).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </p>
-                      </>
-                    )}
-                  </div>
-                ) : (
-                  <button
-                    className={`${
-                      currentPlan?.subscriptionPlan?.item?.amount / 100 >
-                        plan?.item?.amount / 100 &&
-                      "border border-colorPrimary text-colorPrimary"
-                    } ${
-                      (currentPlan?.subscriptionPlan?.item?.amount / 100 <
-                        plan?.item?.amount / 100 ||
-                        !currentPlan) &&
-                      "bg-colorPrimary text-white"
-                    } py-2 px-3 mt-4 rounded-md`}
-                    onClick={() => checkoutHandler(plan)}
-                  >
-                    {userProfile?.subscriptionStatus &&
-                      currentPlan?.subscriptionPlan?.item?.amount / 100 >
-                        plan?.item?.amount / 100 &&
-                      "Downgrade"}
-                    {userProfile?.subscriptionStatus &&
-                      currentPlan?.subscriptionPlan?.item?.amount / 100 <
-                        plan?.item?.amount / 100 &&
-                      "Upgrade"}
 
-                    {!userProfile?.subscriptionStatus &&
-                      !currentPlan &&
-                      "Choose"}
-                  </button>
-                )}
-                <p className="mt-4">
-                  <b>10</b> products
-                </p>
-              </div>
-            ))}
+          <SubscriptionPlanActions switchHandler={switchHandler} />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10 gap-5">
+            {subscriptionAllPlans?.items
+              ?.filter((itm) => itm.period === (checked ? "monthly" : "weekly"))
+              ?.map((plan, index) => (
+                <div
+                  key={index}
+                  className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg hover:scale-105 hover:duration-300"
+                >
+                  <p className="text-xl font-medium text-colorBlack">
+                    {plan?.item?.name}
+                  </p>
+                  <p className="mt-4 text-gray-500">
+                    <span className="text-lg font-semibold text-colorBlack">
+                      ₹{plan?.item?.amount / 100}
+                    </span>{" "}
+                    /{" "}
+                    {(plan?.period === "weekly" && "week") ||
+                      (plan?.period === "monthly" && "month")}
+                  </p>
+                  {userProfile?.subscriptionStatus &&
+                  currentPlan?.plan_id === plan?.id ? (
+                    <div className="mt-4">
+                      {isSubscriptionExpired(
+                        currentPlan?.current_end * 1000
+                      ) ? (
+                        <button
+                          className="border border-colorPrimary text-colorPrimary py-2 px-3 mt-4 rounded-md"
+                          onClick={() => renewSubscriptionCheckoutHandler(plan)}
+                        >
+                          Renew Plan
+                        </button>
+                      ) : (
+                        <>
+                          <b>Current Plan</b>
+                          <p>
+                            Renews{" "}
+                            {new Date(
+                              currentPlan?.current_end * 1000
+                            ).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  ) : (
+                    <button
+                      className={`${
+                        currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                          plan?.item?.amount / 100 &&
+                        "border border-colorPrimary text-colorPrimary"
+                      } ${
+                        (currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                          plan?.item?.amount / 100 ||
+                          !currentPlan) &&
+                        "bg-colorPrimary text-white"
+                      } py-2 px-3 mt-4 rounded-md`}
+                      onClick={() => checkoutHandler(plan)}
+                    >
+                      {userProfile?.subscriptionStatus &&
+                        currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                          plan?.item?.amount / 100 &&
+                        "Downgrade"}
+                      {userProfile?.subscriptionStatus &&
+                        currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                          plan?.item?.amount / 100 &&
+                        "Upgrade"}
+
+                      {!userProfile?.subscriptionStatus &&
+                        !currentPlan &&
+                        "Choose"}
+                    </button>
+                  )}
+                  <p className="mt-4">
+                    <b>10</b> products
+                  </p>
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -269,24 +275,23 @@ const ShopSubscription = () => {
   );
 };
 
-export default ShopSubscription;
+export default withAuth(ShopSubscription);
 
 const SubscriptionPlanActions = ({ switchHandler }) => {
   return (
     <>
-      <div className="flex justify-end gap-1 p-2 items-center">
-        <div className="flex items-center gap-2">
-          <label className="inline-flex border cursor-pointer dark:bg-white-300 dark:text-white-800">
+      <div className="flex justify-end items-center mt-5">
+        <div className="flex items-center">
+          <label className="flex items-center cursor-pointer">
             <input
-              id="Toggle4"
               type="checkbox"
               className="hidden peer"
               onChange={switchHandler}
             />
-            <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
+            <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-colorGrey text-white">
               Weekly
             </span>
-            <span className="px-4 py-1 dark:bg-white-300 peer-checked:bg-colorPrimary peer-checked:text-white ">
+            <span className="px-4 py-1 peer-checked:bg-colorPrimary bg-colorGrey peer-checked:text-white text-black">
               Monthly
             </span>
           </label>
