@@ -15,12 +15,14 @@ import { loadUserProfileStart } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import { assets } from "../../../constants";
+import { CircularProgress } from "@mui/material";
 
 const ShopSubscription = () => {
   const [checked, setChecked] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [subscriptionAllPlans, setSubscriptionAllPlans] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const [currentPlan, setCurrentPlan] = useState();
 
@@ -34,9 +36,14 @@ const ShopSubscription = () => {
   };
 
   useEffect(() => {
-    getAllSubscriptionPlans().then((res) => {
-      setSubscriptionAllPlans(res?.data?.getAllSubscriptionPlans);
-    });
+    setLoading(true);
+    getAllSubscriptionPlans().then(
+      (res) => {
+        setLoading(false);
+        setSubscriptionAllPlans(res?.data?.getAllSubscriptionPlans);
+      },
+      (error) => setLoading(false)
+    );
   }, []);
 
   useEffect(() => {
@@ -188,87 +195,97 @@ const ShopSubscription = () => {
 
           <SubscriptionPlanActions switchHandler={switchHandler} />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10 gap-5">
-            {subscriptionAllPlans?.items
-              ?.filter((itm) => itm.period === (checked ? "monthly" : "weekly"))
-              ?.map((plan, index) => (
-                <div
-                  key={index}
-                  className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg hover:scale-105 hover:duration-300"
-                >
-                  <p className="text-xl font-medium text-colorBlack">
-                    {plan?.item?.name}
-                  </p>
-                  <p className="mt-4 text-gray-500">
-                    <span className="text-lg font-semibold text-colorBlack">
-                      ₹{plan?.item?.amount / 100}
-                    </span>{" "}
-                    /{" "}
-                    {(plan?.period === "weekly" && "week") ||
-                      (plan?.period === "monthly" && "month")}
-                  </p>
-                  {userProfile?.subscriptionStatus &&
-                  currentPlan?.plan_id === plan?.id ? (
-                    <div className="mt-4">
-                      {isSubscriptionExpired(
-                        currentPlan?.current_end * 1000
-                      ) ? (
-                        <button
-                          className="border border-colorPrimary text-colorPrimary py-2 px-3 mt-4 rounded-md"
-                          onClick={() => renewSubscriptionCheckoutHandler(plan)}
-                        >
-                          Renew Plan
-                        </button>
-                      ) : (
-                        <>
-                          <b>Current Plan</b>
-                          <p>
-                            Renews{" "}
-                            {new Date(
-                              currentPlan?.current_end * 1000
-                            ).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  ) : (
-                    <button
-                      className={`${
-                        currentPlan?.subscriptionPlan?.item?.amount / 100 >
-                          plan?.item?.amount / 100 &&
-                        "border border-colorPrimary text-colorPrimary"
-                      } ${
-                        (currentPlan?.subscriptionPlan?.item?.amount / 100 <
-                          plan?.item?.amount / 100 ||
-                          !currentPlan) &&
-                        "bg-colorPrimary text-white"
-                      } py-2 px-3 mt-4 rounded-md`}
-                      onClick={() => checkoutHandler(plan)}
-                    >
-                      {userProfile?.subscriptionStatus &&
-                        currentPlan?.subscriptionPlan?.item?.amount / 100 >
-                          plan?.item?.amount / 100 &&
-                        "Downgrade"}
-                      {userProfile?.subscriptionStatus &&
-                        currentPlan?.subscriptionPlan?.item?.amount / 100 <
-                          plan?.item?.amount / 100 &&
-                        "Upgrade"}
+          {loading ? (
+            <div className="flex items-center justify-center pt-10 pb-5">
+              <CircularProgress color="secondary" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10 gap-5">
+              {subscriptionAllPlans?.items
+                ?.filter(
+                  (itm) => itm.period === (checked ? "monthly" : "weekly")
+                )
+                ?.map((plan, index) => (
+                  <div
+                    key={index}
+                    className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg hover:scale-105 hover:duration-300"
+                  >
+                    <p className="text-xl font-medium text-colorBlack">
+                      {plan?.item?.name}
+                    </p>
+                    <p className="mt-4 text-gray-500">
+                      <span className="text-lg font-semibold text-colorBlack">
+                        ₹{plan?.item?.amount / 100}
+                      </span>{" "}
+                      /{" "}
+                      {(plan?.period === "weekly" && "week") ||
+                        (plan?.period === "monthly" && "month")}
+                    </p>
+                    {userProfile?.subscriptionStatus &&
+                    currentPlan?.plan_id === plan?.id ? (
+                      <div className="mt-4">
+                        {isSubscriptionExpired(
+                          currentPlan?.current_end * 1000
+                        ) ? (
+                          <button
+                            className="border border-colorPrimary text-colorPrimary py-2 px-3 mt-4 rounded-md"
+                            onClick={() =>
+                              renewSubscriptionCheckoutHandler(plan)
+                            }
+                          >
+                            Renew Plan
+                          </button>
+                        ) : (
+                          <>
+                            <b>Current Plan</b>
+                            <p>
+                              Renews{" "}
+                              {new Date(
+                                currentPlan?.current_end * 1000
+                              ).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <button
+                        className={`${
+                          currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                            plan?.item?.amount / 100 &&
+                          "border border-colorPrimary text-colorPrimary"
+                        } ${
+                          (currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                            plan?.item?.amount / 100 ||
+                            !currentPlan) &&
+                          "bg-colorPrimary text-white"
+                        } py-2 px-3 mt-4 rounded-md`}
+                        onClick={() => checkoutHandler(plan)}
+                      >
+                        {userProfile?.subscriptionStatus &&
+                          currentPlan?.subscriptionPlan?.item?.amount / 100 >
+                            plan?.item?.amount / 100 &&
+                          "Downgrade"}
+                        {userProfile?.subscriptionStatus &&
+                          currentPlan?.subscriptionPlan?.item?.amount / 100 <
+                            plan?.item?.amount / 100 &&
+                          "Upgrade"}
 
-                      {!userProfile?.subscriptionStatus &&
-                        !currentPlan &&
-                        "Choose"}
-                    </button>
-                  )}
-                  <p className="mt-4">
-                    <b>10</b> products
-                  </p>
-                </div>
-              ))}
-          </div>
+                        {!userProfile?.subscriptionStatus &&
+                          !currentPlan &&
+                          "Choose"}
+                      </button>
+                    )}
+                    <p className="mt-4">
+                      <b>10</b> products
+                    </p>
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </>
