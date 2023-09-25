@@ -9,7 +9,12 @@ const ShopCommentsSection = ({ review }) => {
         <div className="col-span-12">
           <div className="flex gap-2">
             <div className="flex justify-center">
-              <Avatar sx={{ width: 56, height: 56 }} />
+              <Avatar className="!bg-colorGreen" sx={{ width: 56, height: 56 }}>
+                {review?.user_name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((user) => user.charAt(0).toUpperCase())}
+              </Avatar>
             </div>
             <div className="flex flex-col w-full">
               <div className="flex justify-between flex-wrap md:flex-nowrap ml-[2%]">

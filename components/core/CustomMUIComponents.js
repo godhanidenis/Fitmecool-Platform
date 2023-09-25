@@ -85,7 +85,7 @@ export const CustomTab = styled(Tabs)(
         : subheader
         ? "0px"
         : "16px",
-      paddingBottom: collection ? "0px" : "24px",
+      paddingBottom: collection ? "0px" : subheader && "24px",
       paddingRight: hometab && "16px",
       paddingLeft: hometab && "16px",
       borderBottom: hometab && "3px solid #0000000a",

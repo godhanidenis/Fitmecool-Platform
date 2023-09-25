@@ -15,11 +15,13 @@ import Footer from "../components/Layout/Footer";
 import { ToastContainer } from "react-toastify";
 import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
-import { CssBaseline } from "@mui/material/";
+import { CircularProgress, CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import appConfig from "../config";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
+import Image from "next/image";
+import { assets } from "../constants";
 
 const theme = createTheme({
   palette: {
@@ -37,6 +39,13 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1200);
+  }, []);
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -78,23 +87,44 @@ function MyApp({ Component, pageProps }) {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <ToastContainer />
+
           <Provider store={store}>
             {!router.pathname.includes("/auth/") && <Header />}
-
-            {router.pathname.includes("/vendor/") &&
-            router.pathname !== "/vendor/shop-setup" &&
-            !router.pathname.includes("/addEditProduct") ? (
-              <VendorCommonLayout>
-                <Component {...pageProps} />
-              </VendorCommonLayout>
-            ) : router.pathname === "/auth/user-type" ||
-              router.pathname === "/auth/signup" ||
-              router.pathname === "/auth/signin" ? (
-              <AuthCommonLayout>
-                <Component {...pageProps} />
-              </AuthCommonLayout>
+            {isLoading ? (
+              <div className="flex flex-col justify-center items-center h-screen bg-[#0000003b]">
+                <div className="flex flex-col justify-center items-center">
+                  <Image
+                    src={assets.appBlackLogo}
+                    alt="AppLogo"
+                    width={80}
+                    height={80}
+                    // className="animate__animated animate__bounce"
+                    className="animate-bounce "
+                  />
+                  <div className="text-[24px] font-bold text-black tracking-wider font-Nova ">
+                    R<span className="text-[20px]">entbless</span>
+                  </div>
+                </div>
+                {/* <CircularProgress color="secondary" /> */}
+              </div>
             ) : (
-              <Component {...pageProps} />
+              <div>
+                {router.pathname.includes("/vendor/") &&
+                router.pathname !== "/vendor/shop-setup" &&
+                !router.pathname.includes("/addEditProduct") ? (
+                  <VendorCommonLayout>
+                    <Component {...pageProps} />
+                  </VendorCommonLayout>
+                ) : router.pathname === "/auth/user-type" ||
+                  router.pathname === "/auth/signup" ||
+                  router.pathname === "/auth/signin" ? (
+                  <AuthCommonLayout>
+                    <Component {...pageProps} />
+                  </AuthCommonLayout>
+                ) : (
+                  <Component {...pageProps} />
+                )}
+              </div>
             )}
             {!router.pathname.includes("/auth/") && <Footer />}
           </Provider>
