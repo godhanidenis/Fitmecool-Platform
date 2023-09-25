@@ -1,100 +1,96 @@
-import React from "react";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
+/* eslint-disable @next/next/no-img-element */
+import React, { useEffect, useState } from "react";
+import { Avatar, Divider, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
-import { Avatar, Divider } from "@mui/material";
-import { useSelector } from "react-redux";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import StoreIcon from "@mui/icons-material/Store";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
-const VendorSidebar = ({ vendorShopDetails, handleMobileSidebarClick }) => {
+const VendorSidebar = ({ vendorShopDetails }) => {
   const router = useRouter();
 
-  const { themeLayout } = useSelector((state) => state.themeLayout);
+  const [selectedValue, setSelectedValue] = useState("");
 
-  const setActiveLink = (path) => {
+  useEffect(() => {
     const withoutLastChunk = router.pathname.slice(
       0,
       router.pathname.lastIndexOf("/")
     );
-    return router.pathname === path || withoutLastChunk === path
-      ? "!text-colorPrimary hover:!text-colorPrimary"
-      : "text-[#544E5D] hover:opacity-50";
-  };
+
+    if (router.pathname === "/vendor/dashboard") {
+      setSelectedValue("Dashboard");
+    } else if (router.pathname === "/vendor/shop-subscription") {
+      setSelectedValue("Subscription");
+    } else if (withoutLastChunk === "/vendor/shopEdit") {
+      setSelectedValue("Shop");
+    } else if (
+      withoutLastChunk === "/vendor/shop" ||
+      `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+    ) {
+      setSelectedValue("Products");
+    }
+  }, [router.pathname, vendorShopDetails?.id]);
+
+  const vendorSidebarTabs = [
+    {
+      label: "Dashboard",
+      icon: <DashboardIcon className="mr-4" />,
+      path: "/vendor/dashboard",
+    },
+    {
+      label: "Shop",
+      icon: <StoreIcon className="mr-4" />,
+      path: `/vendor/shopEdit/${vendorShopDetails?.id}`,
+    },
+    {
+      label: "Products",
+      icon: <ProductionQuantityLimitsIcon className="mr-4" />,
+      path: `/vendor/shop/${vendorShopDetails?.id}`,
+    },
+    {
+      label: "Subscription",
+      icon: <SubscriptionsIcon className="mr-4" />,
+      path: `/vendor/shop-subscription`,
+    },
+  ];
 
   return (
-    <div className="lg:bg-white flex flex-col lg:h-full">
-      <div className="flex flex-col items-center justify-center gap-3 my-10">
-        <Avatar
-          src={vendorShopDetails?.shop_logo}
-          alt="Shop Logo"
-          sx={{ width: 100, height: 100 }}
-        />
-
-        <p className="text-colorBlack font-semibold text-lg">
-          {vendorShopDetails?.shop_name}
-        </p>
+    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 hidden sm:flex flex-col items-center">
+      <div className="flex justify-center">
+        <div className="w-[120px] h-[120px] mb-4 rounded-full">
+          {vendorShopDetails?.shop_logo ? (
+            <Avatar
+              src={vendorShopDetails?.shop_logo}
+              alt="Shop Logo"
+              className="!object-cover !w-full !h-full"
+            />
+          ) : (
+            <ImageLoadingSkeleton className="rounded-full" variant="circular" />
+          )}
+        </div>
       </div>
-      <Divider className="w-full lg:w-[75%] mx-auto" />
-      <div className="flex justify-center flex-col w-[90%] lg:w-[75%] mx-auto my-5">
-        <div
-          className={`${setActiveLink(
-            "/vendor/dashboard"
-          )} text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          style={{ transition: "all 0.5s" }}
-          onClick={() => {
-            router.push("/vendor/dashboard");
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <DashboardIcon className="!mr-3" /> Dashboard
-          </p>
+      <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
+        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 whitespace-nowrap w-full text-center">
+          {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
         </div>
-
-        <div
-          className={`${setActiveLink(
-            "/vendor/shopEdit"
-          )} text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => {
-            router.push(`/vendor/shopEdit/${vendorShopDetails?.id}`);
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <Inventory2Icon className="!mr-3" />
-            Shop
-          </p>
-        </div>
-
-        <div
-          className={`${setActiveLink(
-            "/vendor/shop"
-          )}  text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => {
-            router.push(`/vendor/shop/${vendorShopDetails?.id}`);
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <ListAltIcon className="!mr-3" />
-            Products
-          </p>
-        </div>
-
-        <div
-          className={`${setActiveLink(
-            "/vendor/shop-subscription"
-          )}  text-[#0000007e] font-semibold p-4 hover:text-colorPrimary`}
-          onClick={() => {
-            router.push(`/vendor/shop-subscription/`);
-            themeLayout === "mobileScreen" && handleMobileSidebarClick();
-          }}
-        >
-          <p className="flex items-center cursor-pointer">
-            <SubscriptionsIcon className="!mr-3" />
-            Subscription
-          </p>
+        <Divider className="w-full opacity-50 sm:mb-6" />
+        <div className="w-full font-Nova ml-[30%] hidden sm:block">
+          {vendorSidebarTabs.map((tab, index) => (
+            <p
+              key={index}
+              onClick={() => router.push(tab.path)}
+              className={`font-semibold pb-8 text-lg ${
+                selectedValue === tab.label
+                  ? "text-[#29977E]"
+                  : "text-[#151827]"
+              } cursor-pointer uppercase`}
+            >
+              {tab.icon}
+              {tab.label}
+            </p>
+          ))}
         </div>
       </div>
     </div>

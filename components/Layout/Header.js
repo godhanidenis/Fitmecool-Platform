@@ -2,126 +2,72 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
-
 import SearchIcon from "@mui/icons-material/Search";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
-import AuthModal from "../core/AuthModal";
-import ProfileIcon from "../../assets/profile.png";
-import { AuthTypeModal } from "../core/Enum";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
-  Checkbox,
+  Badge,
   ClickAwayListener,
+  DialogContent,
+  DialogTitle,
   Divider,
+  FormControl,
   Grid,
   Grow,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   MenuItem,
   MenuList,
+  OutlinedInput,
   Paper,
   Popper,
-  Select,
 } from "@mui/material";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
   loadUserProfileStart,
   userLogout,
 } from "../../redux/ducks/userProfile";
-import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
+import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
 import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
+import SubHeader from "./SubHeader";
+import { loadAreaListsStart } from "../../redux/ducks/areaLists";
+import { loadCategoriesStart } from "../../redux/ducks/categories";
+import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
+import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import { changeProductPage } from "../../redux/ducks/product";
+import AppLogo from "./AppLogo";
+import { assets } from "../../constants";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialog-backdrop": {
-    backgroundColor: "#CAA9CD !important",
-  },
-  "& .MuiDialog-paper": {
-    // background:"#95539B",
-    // opacity:".5",
-    top: "0",
-    position: "absolute",
-    maxHeight: "50vh",
-    height: "50vh",
-    width: "100vw",
-    maxWidth: "100%",
-    margin: "0px",
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-function BootstrapDialogTitle(props) {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-}
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-const Header = ({ modalType }) => {
-  const [open, setOpen] = useState(false);
-  const [authTypeModal, setAuthTypeModal] = useState();
+const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [selectedLocation, setSelectedLocation] = useState("");
+
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const isScreenWide = useResizeScreenLayout();
+  const router = useRouter();
+
+  const { areaLists } = useSelector((state) => state.areaLists);
+  const { userProfile } = useSelector((state) => state.userProfile);
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
+
+  const [openSearchDialog, setOpenSearchDialog] = useState(false);
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -134,24 +80,12 @@ const Header = ({ modalType }) => {
   const handleMobileSidebarClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  const [selectedLocation, setSelectedLocation] = useState("");
-
-  const { areaLists } = useSelector((state) => state.areaLists);
-  const { userProfile } = useSelector((state) => state.userProfile);
-  const [openModel, setOpenModel] = React.useState(false);
-  const productsFiltersReducer = useSelector(
-    (state) => state.productsFiltersReducer
-  );
 
   useEffect(() => {
-    {
-      modalType === "signin" && setOpen(true), setAuthTypeModal("signin");
-    }
-  }, [modalType]);
-
-  useEffect(() => {
-    setSearchBarValue(productsFiltersReducer.searchBarData);
-  }, [productsFiltersReducer.searchBarData]);
+    dispatch(loadCategoriesStart());
+    dispatch(loadAreaListsStart());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   useEffect(() => {
     const getAccessToken = localStorage.getItem("token");
@@ -162,12 +96,34 @@ const Header = ({ modalType }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
-  const handleClickOpen = () => {
-    setOpenModel(true);
+  const handleSearchDialogClose = () => {
+    setSearchBarValue("");
+    setOpenSearchDialog(false);
   };
 
-  const handleClose = () => {
-    setOpenModel(false);
+  const handleSearch = (searchData) => {
+    ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+      dispatch(
+        changeAppliedProductsFilters({
+          key: itm,
+          value: {
+            selectedValue:
+              itm === "searchBarData"
+                ? searchData
+                  ? searchData
+                  : searchBarValue
+                : [],
+          },
+        })
+      )
+    );
+
+    dispatch(changeProductPage(0));
+    byShop && dispatch(changeByShopFilters(false));
+
+    handleSearchDialogClose();
+
+    router.pathname !== "/home" && router.push("/home");
   };
 
   const scrollDirection = useScrollDirection();
@@ -183,14 +139,24 @@ const Header = ({ modalType }) => {
         setAccessToken={setAccessToken}
       />
       <header
-        className={`py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky ${
+        className={`${
+          userProfile.user_type === "vendor" ? "py-0" : "py-4 sm:py-0"
+        } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
-            {router.pathname !== "/auth/login" &&
-              router.pathname !== "/auth/signup" && (
+            {userProfile.user_type !== "vendor" && (
+              <MenuIcon
+                sx={{ color: "white" }}
+                fontSize="large"
+                className="lg:!hidden"
+                onClick={handleMobileSidebarClick}
+              />
+            )}
+            {userProfile.user_type === "vendor" &&
+              router.pathname !== "/vendor/shop-setup" && (
                 <MenuIcon
                   sx={{ color: "white" }}
                   fontSize="large"
@@ -198,133 +164,99 @@ const Header = ({ modalType }) => {
                   onClick={handleMobileSidebarClick}
                 />
               )}
-            <Link
-              href={`${
-                userProfile?.user_type === "vendor" ? "/vendor/dashboard" : "/"
-              }`}
-            >
-              <div className="cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorWhite">
-                  <span className="text-4xl">R</span>entbless
-                  {/* <span className="text-4xl">B</span>ell */}
-                </h2>
-                {/* <Image src={HeaderLogo} alt="Rent bless Logo" layout="fill" /> */}
-              </div>
-            </Link>
-            {userProfile?.user_type !== "vendor" && (
-              <Autocomplete
-                className="hidden lg:flex"
-                size="small"
-                options={areaLists}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option.area}
-                sx={{
-                  width: 175,
-                  background: "white",
-                  borderRadius: "5px",
-                }}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
+            <AppLogo />
+            {userProfile.user_type !== "vendor" && (
+              <div className="headerLocationDiv ml-2 sm:ml-6">
+                <FormControl
+                  variant="standard"
+                  sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
+                >
+                  <InputLabel
+                    id="demo-simple-select-standard-label"
+                    className="!flex !items-center !gap-1"
+                  >
+                    <Image
+                      width={20}
+                      height={20}
+                      src={assets.locationIcon}
+                      alt="locationIcon"
                     />
-                    {option.area}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    placeholder="Location"
-                  />
-                )}
-              />
+                    <span className="text-[#878A99] text-[14px] font-normal">
+                      Location
+                    </span>
+                  </InputLabel>
+                  <LocationSelect
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={selectedLocation}
+                    onChange={(event) =>
+                      setSelectedLocation(event.target.value)
+                    }
+                    label="Location"
+                  >
+                    {areaLists?.map((location, index) => (
+                      <MenuItem value={location?.pin} key={index}>
+                        {location?.area}
+                      </MenuItem>
+                    ))}
+                  </LocationSelect>
+                </FormControl>
+              </div>
             )}
           </div>
-
+          {userProfile.user_type !== "vendor" && (
+            <div className="font-Nova">
+              <SubHeader />
+            </div>
+          )}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
-              {userProfile.user_type !== "vendor" &&
-                router.pathname !== "/auth/login" &&
-                router.pathname !== "/auth/signup" && (
-                  <li className="flex lg:hidden">
-                    <Select
-                      value={selectedLocation}
-                      displayEmpty
-                      onChange={(e) => setSelectedLocation(e.target.value)}
-                      sx={{
-                        boxShadow: "none",
-                        color: "white",
-                        ".MuiSvgIcon-root ": {
-                          fill: "white !important",
-                        },
-                        ".MuiOutlinedInput-input": { padding: 0 },
-                        ".MuiOutlinedInput-notchedOutline": { border: 0 },
-                        "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
-                        "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                          {
-                            border: 0,
-                          },
-                      }}
-                    >
-                      <MenuItem value="">City</MenuItem>
-                      {areaLists?.map((location, index) => (
-                        <MenuItem value={location?.pin} key={index}>
-                          {location?.area}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </li>
-                )}
               {userProfile.user_type !== "vendor" && (
                 <>
                   <li className="cursor-pointer hidden lg:block">
                     <SearchIcon
                       sx={{ color: "white" }}
                       fontSize="large"
-                      onClick={handleClickOpen}
+                      onClick={() => setOpenSearchDialog(true)}
                     />
                   </li>
                   <li className="hidden lg:block">
-                    <Link href={`/productLike`} passHref>
-                      <IconButton color="inherit">
-                        <Badge
-                          badgeContent={userProfile?.product_like_list?.length}
-                          color="error"
-                        >
-                          <FavoriteBorderOutlinedIcon
-                            sx={{ color: "white" }}
-                            fontSize="large"
-                          />
-                        </Badge>
-                      </IconButton>
-                    </Link>
+                    <IconButton
+                      color="inherit"
+                      onClick={() =>
+                        router.push(
+                          accessToken ? "/productLike" : "/auth/user-type"
+                        )
+                      }
+                    >
+                      <Badge
+                        badgeContent={userProfile?.product_like_list?.length}
+                        color="error"
+                      >
+                        <FavoriteBorderOutlinedIcon
+                          sx={{ color: "white" }}
+                          fontSize="large"
+                        />
+                      </Badge>
+                    </IconButton>
                   </li>
                 </>
               )}
               <li>
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
-                    <p
-                      onClick={() => {
-                        setOpen(true), setAuthTypeModal(AuthTypeModal.Signin);
-                      }}
-                      className="underline hover:scale-105 hidden lg:block"
+                    <button
+                      onClick={() => Router.push("/auth/user-type")}
+                      className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-colorGreen"
                     >
-                      SingIn / SignUp
-                    </p>
+                      Login / Register
+                    </button>
 
                     <PersonAddAltIcon
                       sx={{ color: "white" }}
                       fontSize="large"
                       className="lg:!hidden"
-                      onClick={() => Router.push("/auth/signin")}
+                      onClick={() => Router.push("/auth/user-type")}
                     />
                   </div>
                 )}
@@ -335,104 +267,85 @@ const Header = ({ modalType }) => {
                 )}
               </li>
             </ul>
-            <AuthModal
-              open={open}
-              handleClose={() => {
-                setOpen(false);
-              }}
-              authTypeModal={authTypeModal}
-              setAuthTypeModal={setAuthTypeModal}
-            />
           </div>
         </div>
       </header>
 
-      {openModel && (
-        <div
-          style={{
-            background: "#95539B",
-            position: "fixed",
-            display: "block",
-            width: "100%",
-            height: "100%",
-            opacity: ".4",
-            zIndex: 2,
-            cursor: "pointer",
-          }}
-        >
-          <BootstrapDialog
-            onClose={handleClose}
-            aria-labelledby="customized-dialog-title"
-            open={openModel}
+      {openSearchDialog && (
+        <div className="bg-colorPrimary fixed block w-full h-full opacity-50 z-[2] cursor-pointer">
+          <CustomDialog
+            open={openSearchDialog}
+            onClose={handleSearchDialogClose}
           >
-            <BootstrapDialogTitle
-              id="customized-dialog-title"
-              onClose={handleClose}
-            >
-              <div className="flex justify-center cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
+            <DialogTitle m={0} p={2} display="flex">
+              <div className="w-full flex items-center justify-center cursor-pointer">
+                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
                   <span className="text-4xl">R</span>entbless
-                  {/* <span className="text-4xl">B</span>ell */}
                 </h2>
               </div>
-            </BootstrapDialogTitle>
+
+              <IconButton onClick={handleSearchDialogClose}>
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
             <DialogContent dividers className="flex justify-center p-0">
-              <Grid
-                container
-                direction="column"
-                justifyContent="start"
-                alignItems="center"
-              >
-                <Grid item xs={6}>
-                  <FormControl
-                    sx={{
-                      width: 500,
-                      background: "white",
-                      borderRadius: "5px",
-                    }}
-                    variant="outlined"
+              <Grid container justifyContent="center">
+                <Grid item lg={4} xs={5}>
+                  <OutlinedInput
+                    placeholder="What are you looking for?"
                     size="small"
-                  >
-                    <OutlinedInput
-                      placeholder="What are you looking for?"
-                      value={searchBarValue}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          dispatch(
-                            changeProductsSearchBarData({
-                              key: "searchBarData",
-                              value: searchBarValue,
-                            })
-                          );
-                        }
-                      }}
-                      onChange={(e) => {
-                        setSearchBarValue(e.currentTarget.value);
-                      }}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onClick={() =>
-                              dispatch(
-                                changeProductsSearchBarData({
-                                  key: "searchBarData",
-                                  value: searchBarValue,
-                                })
-                              )
-                            }
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
+                    fullWidth
+                    value={searchBarValue}
+                    onKeyDown={(e) =>
+                      searchBarValue !== "" &&
+                      e.key === "Enter" &&
+                      handleSearch()
+                    }
+                    onChange={(e) => setSearchBarValue(e.currentTarget.value)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={() =>
+                            searchBarValue !== "" && handleSearch()
+                          }
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <div className="mt-10">
+                    <p className="text-lg text-colorPrimary font-Nova font-medium">
+                      Popular Searches
+                    </p>
+
+                    <div className="flex items-center flex-wrap gap-4 my-5">
+                      {[
+                        "kurta",
+                        "choli",
+                        "sherwani",
+                        "suit",
+                        "sider's choli",
+                        "jodhpuri",
+                        "black art",
+                        "Pretty Marsidise",
+                      ].map((itm, index) => (
+                        <p
+                          className="px-5 py-2 border rounded-3xl cursor-pointer capitalize text-colorPrimary hover:text-colorGreen hover:border-colorGreen"
+                          key={index}
+                          onClick={() => handleSearch(itm)}
+                        >
+                          {itm}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
                 </Grid>
               </Grid>
             </DialogContent>
-          </BootstrapDialog>
+          </CustomDialog>
         </div>
       )}
     </>
@@ -500,6 +413,15 @@ export const UserProfile = ({ setAccessToken }) => {
     dispatch(userLogout());
     setAccessToken("");
     handleProfileClose();
+    userProfile.user_type === "vendor" &&
+      dispatch(
+        changeAppliedProductsFilters({
+          key: "shopId",
+          value: {
+            selectedValue: [],
+          },
+        })
+      );
     Router.push("/");
 
     toast.success("Logout Successfully", {
@@ -515,7 +437,8 @@ export const UserProfile = ({ setAccessToken }) => {
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
         <Avatar>
-          <Image src={ProfileIcon ?? ""} alt="ProfileIcon" layout="fill" />
+          {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
+            String(userProfile?.last_name?.charAt(0).toUpperCase())}
         </Avatar>
         <span className="font-semibold hidden text-colorWhite sm:flex">
           {userProfile?.first_name + " " + userProfile?.last_name}
@@ -563,8 +486,11 @@ export const UserProfile = ({ setAccessToken }) => {
               <ClickAwayListener onClickAway={handleProfileClose}>
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
-                    <Avatar className="mb-2 !w-14 !h-14">
-                      <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
+                    <Avatar className="!mb-2 !w-14 !h-14">
+                      {String(userProfile?.first_name)
+                        ?.charAt(0)
+                        .toUpperCase() +
+                        String(userProfile?.last_name?.charAt(0).toUpperCase())}
                     </Avatar>
                     <b>
                       {userProfile?.first_name + " " + userProfile?.last_name}
@@ -577,11 +503,14 @@ export const UserProfile = ({ setAccessToken }) => {
                   <Divider />
 
                   {options.map((itm) => (
-                    <MenuItem key={itm.name} onClick={handleProfileClose}>
-                      <p
-                        className="flex items-center w-full text-center"
-                        onClick={itm.func}
-                      >
+                    <MenuItem
+                      key={itm.name}
+                      onClick={() => {
+                        handleProfileClose();
+                        itm.func();
+                      }}
+                    >
+                      <p className="flex items-center w-full text-center">
                         {itm.icon} <span className="ml-4"> {itm.name}</span>
                       </p>
                     </MenuItem>

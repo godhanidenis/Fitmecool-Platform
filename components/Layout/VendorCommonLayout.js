@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,21 +35,13 @@ const VendorCommonLayout = ({ children }) => {
   }, [dispatch, userProfile?.subscriptionId]);
 
   return (
-    <div className="grid grid-cols-12">
-      <div className="hidden lg:block lg:col-span-2">
-        <VendorSidebar vendorShopDetails={vendorShopDetails} />
+    <div className="flex flex-col md:flex-row min-h-screen sm:gap-10  font-Nova">
+      <div className="sm:w-[300px] w-full relative">
+        <div className="">
+          <VendorSidebar vendorShopDetails={vendorShopDetails} />
+        </div>
       </div>
-
-      <div className="col-span-12 lg:col-span-10">
-        {router.pathname !== "/vendor/shop-subscription" && (
-          <div className="w-full">
-            <img
-              src={vendorShopDetails?.shop_cover_image}
-              alt="shop cover image"
-              className="h-[222px] w-full"
-            />
-          </div>
-        )}
+      <div className="w-full lg:w-[73%] sm:w-[60%] sm:mt-6 px-4 py-4 sm:mr-5 sm:px-0 sm:py-0">
         {children}
       </div>
     </div>

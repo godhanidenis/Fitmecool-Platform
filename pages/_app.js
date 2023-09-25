@@ -1,12 +1,11 @@
 import Head from "next/head";
 
 import "../styles/globals.css";
-import "../styles/auth.css";
 import "../styles/product.css";
 import "animate.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "react-multi-carousel/lib/styles.css";
 import "react-toastify/dist/ReactToastify.css";
+import "suneditor/dist/css/suneditor.min.css";
 
 import store from "../redux/store";
 import { Provider } from "react-redux";
@@ -17,57 +16,92 @@ import { ToastContainer } from "react-toastify";
 import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
-import { useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import appConfig from "../config";
 import { useEffect } from "react";
+import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 import Script from "next/script";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#95539B",
+      main: "#151827",
+    },
+    secondary: {
+      main: "#29977E",
     },
     background: {
-      default: "#f1f3f6 !important",
+      default: "#FAFCFC !important",
     },
   },
 });
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const [modalType, setModalType] = useState("");
 
   useEffect(() => {
-    if (window.history.state === "signin") {
-      setModalType(window.history.state);
-    } else {
-      setModalType("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typeof window !== "undefined" && window.history.state]);
+    const handleStorageChange = (e) => {
+      if (e.key === "token" || e.key === null) {
+        router.reload();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [router]);
+
   return (
     <>
       <Head>
-        <title>Rentbless</title>
+        <title>
+          {pageProps?.productDetails?.data?.product?.data?.product_name}
+        </title>
+        <meta
+          property="og:title"
+          content={pageProps?.productDetails?.data?.product?.data?.product_name}
+        />
+        {/* <meta property="og:description" content={"Product Description"} /> */}
+        <meta
+          property="og:image"
+          content={
+            pageProps?.productDetails?.data?.product?.data?.product_image?.front
+          }
+        />
+        <meta
+          property="og:url"
+          content={typeof window !== "undefined" ? window.location.href : ""}
+        />
       </Head>
-
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
+      <GoogleOAuthProvider clientId={appConfig.googleClientId}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ToastContainer />
+          <Provider store={store}>
+            {!router.pathname.includes("/auth/") && <Header />}
 
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <ToastContainer />
-        <Provider store={store}>
-          <Header modalType={modalType} />
-          {router.pathname.includes("/vendor/") &&
-          router.pathname !== "/vendor/shop-setup" ? (
-            <VendorCommonLayout>
+            {router.pathname.includes("/vendor/") &&
+            router.pathname !== "/vendor/shop-setup" &&
+            !router.pathname.includes("/addEditProduct") ? (
+              <VendorCommonLayout>
+                <Component {...pageProps} />
+              </VendorCommonLayout>
+            ) : router.pathname === "/auth/user-type" ||
+              router.pathname === "/auth/signup" ||
+              router.pathname === "/auth/signin" ? (
+              <AuthCommonLayout>
+                <Component {...pageProps} />
+              </AuthCommonLayout>
+            ) : (
               <Component {...pageProps} />
-            </VendorCommonLayout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-          <Footer />
-        </Provider>
-      </ThemeProvider>
+            )}
+            {!router.pathname.includes("/auth/") && <Footer />}
+          </Provider>
+        </ThemeProvider>
+      </GoogleOAuthProvider>
     </>
   );
 }

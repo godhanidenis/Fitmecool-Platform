@@ -1,6 +1,18 @@
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { Box, Modal, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Dialog,
+  FormControlLabel,
+  LinearProgress,
+  Modal,
+  Paper,
+  Select,
+  Tabs,
+  Typography,
+  linearProgressClasses,
+} from "@mui/material";
 import PropTypes from "prop-types";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -27,27 +39,129 @@ export const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
+export const CustomIconTextField = styled(TextField)(({ theme }) => ({
+  [`& .MuiOutlinedInput-root`]: {
+    color: "#919EAB",
+    borderRadius: "3px",
+    border: "1.8px solid #919EAB",
+    fontSize: "16px",
+    lineHeight: "15px",
+    height: "33px",
+    alignItems: "center",
+    padding: "15px",
+    paddingBottom: "20px",
+    paddingTop: "20px",
+    [theme.breakpoints.down("sm")]: {
+      // Add your styles for the 'sm' breakpoint and up here
+      fontSize: "10px",
+      gap: "5px",
+      paddingBottom: "12px",
+      paddingTop: "12px",
+    },
+  },
+  [`& .MuiInput-root:after`]: {
+    border: 0,
+  },
+}));
+
 export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   [`& .MuiBackdrop-root`]: {
     backgroundColor: "transparent !important",
   },
 }));
 
-export const CustomTab = styled(Tabs)(({ theme }) => ({
+export const CustomTab = styled(Tabs)(
+  ({ theme, hometab, collection, subheader }) => ({
+    [`& .MuiTab-root`]: {
+      textTransform: "none",
+      color: hometab ? "#000" : collection ? "#31333e93" : "#FFFFFF",
+      fontWeight: 600,
+      fontSize: hometab ? "20px" : collection ? "18px" : "14px",
+      marginTop: subheader && "24px",
+      paddingTop: collection
+        ? "0px"
+        : hometab
+        ? "16px"
+        : subheader
+        ? "0px"
+        : "16px",
+      paddingBottom: collection ? "0px" : "24px",
+      paddingRight: hometab && "16px",
+      paddingLeft: hometab && "16px",
+      borderBottom: hometab && "3px solid #0000000a",
+
+      [theme.breakpoints.down("lg")]: {
+        paddingTop: collection && "16px",
+        paddingBottom: collection && "16px",
+      },
+      [theme.breakpoints.down("md")]: {
+        fontSize: hometab && "18px",
+        paddingTop: collection && "16px",
+        paddingBottom: collection && "16px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: (hometab || collection) && "16px",
+      },
+    },
+    [`& .MuiTab-root:hover`]: {
+      color: collection ? "black !important" : "#29977E !important",
+    },
+    [`& .Mui-selected:hover`]: {
+      color: collection ? "black !important" : "#29977E !important",
+    },
+    [`& .Mui-selected`]: {
+      fontWeight: 600,
+      fontSize: hometab ? "20px" : collection ? "18px" : "16px",
+      color: collection ? "black !important" : "#29977E !important",
+      [theme.breakpoints.down("md")]: {
+        fontSize: hometab && "18px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: (hometab || collection) && "16px",
+      },
+    },
+    [`& .MuiTabs-indicator`]: {
+      backgroundColor: collection ? "black !important" : "#29977E !important",
+      height: subheader ? "5px" : "3px",
+      [theme.breakpoints.down("md")]: {
+        height: hometab && "3px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        height: hometab && "3px",
+      },
+    },
+  })
+);
+
+export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "#757575",
-    fontWeight: 400,
-    fontSize: "15px",
+    color: "#fff",
+    fontWeight: 600,
+    fontSize: "16px",
+    lineHeight: "16px",
+    margin: "8px",
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "14px",
+    },
   },
+
+  [`& .MuiTabScrollButton-root`]: {
+    color: "yellow",
+  },
+
   [`& .Mui-selected`]: {
-    fontWeight: 700,
-    color: "#95539B !important",
+    backgroundColor: "#FFF",
+    borderRadius: "4px",
+    color: "#151827 !important",
+    fontWeight: 500,
   },
   [`& .MuiTabs-indicator`]: {
-    backgroundColor: "#95539B !important",
+    display: "none",
   },
 }));
+
 export function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -150,3 +264,77 @@ QontoStepIcon.propTypes = {
    */
   completed: PropTypes.bool,
 };
+
+export const StyledFormLabelCheckBox = styled(FormControlLabel)(
+  ({ theme, checked }) => ({
+    ".MuiFormControlLabel-label": {
+      color: `${checked ? "#29977E !important" : "#31333E"}`,
+      fontSize: "15px",
+      lineHeight: "14px",
+    },
+    ".MuiCheckbox-root": {
+      color: "#31333e66",
+    },
+    ".MuiCheckbox-root.Mui-checked": {
+      color: "#29977E",
+    },
+  })
+);
+
+export const CustomDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialog-backdrop": {
+    backgroundColor: "#CAA9CD !important",
+  },
+  "& .MuiDialog-paper": {
+    top: 0,
+    position: "absolute",
+    height: "50vh",
+    width: "100vw",
+    maxHeight: "100%",
+    maxWidth: "100%",
+    margin: "0px",
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+export const LocationSelect = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "white !important",
+  },
+  "& .MuiSelect-icon": {
+    color: "white !important",
+  },
+}));
+
+export const ShopHeaderItem = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fbfbfb",
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  boxShadow: "none",
+}));
+
+export const CustomBorderLinearProgress = styled(LinearProgress)(
+  ({ theme }) => ({
+    height: 12,
+    borderRadius: "12px",
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "rgba(24, 23, 37, 0.1)",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      backgroundColor: "rgba(21, 24, 39, 0.4)",
+    },
+  })
+);
+
+export const NativeSelectInput = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    marginLeft: 10,
+  },
+}));

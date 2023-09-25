@@ -1,49 +1,48 @@
 import React, { useEffect, useState } from "react";
+import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import {
-  Button,
-  Checkbox,
-  Divider,
+  Box,
   FormControlLabel,
-  IconButton,
-  MenuItem,
   Radio,
   RadioGroup,
-  Step,
-  StepLabel,
-  Stepper,
-  Switch,
+  MenuItem,
+  Divider,
+  Button,
+  Checkbox,
   TextField,
+  CircularProgress,
+  FormControl,
+  IconButton,
 } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
+import { TbPhotoPlus } from "react-icons/tb";
+import { Controller, useForm } from "react-hook-form";
 import {
   CustomAuthModal,
   CustomTextField,
-  QontoConnector,
-  QontoStepIcon,
 } from "../../../components/core/CustomMUIComponents";
-import { Box } from "@mui/system";
-import { useForm } from "react-hook-form";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import CloseIcon from "@mui/icons-material/Close";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditIcon from "@mui/icons-material/Edit";
-import Image from "next/image";
-import AddIcon from "@mui/icons-material/Add";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
 import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { shopRegistration } from "../../../graphql/mutations/shops";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import CircularProgress from "@mui/material/CircularProgress";
-import Router from "next/router";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { setShopRegisterId } from "../../../redux/ducks/userProfile";
-import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField";
+import Carousel from "react-multi-carousel";
+import Image from "next/image";
+import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
+import GroupsIcon from "@mui/icons-material/Groups";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { SiHandshake } from "react-icons/si";
 
-const shopRegistrationSteps = ["Details", "Photos", "Branches"];
-const style = {
+const subBranchStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -57,28 +56,130 @@ const style = {
   height: "auto",
 };
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 2,
+  outline: "none",
+  width: "80%",
+};
+
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 2,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 2,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
+
+const TrendingCustomLeftArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        left: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "28px",
+        height: "28px",
+        borderRadius: "50%",
+        marginLeft: "16px",
+        marginBottom: "9.5%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(135deg)",
+          cursor: "pointer",
+          position: "relative",
+          right: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
+const TrendingCustomRightArrow = ({ onClick }) => {
+  return (
+    <div
+      style={{
+        background: "black",
+        color: "white",
+        right: 0,
+        position: "absolute",
+        cursor: "pointer",
+        width: "28px",
+        height: "28px",
+        borderRadius: "50%",
+        marginRight: "16px",
+        marginBottom: "9.5%",
+        bottom: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={() => onClick()}
+    >
+      <i
+        style={{
+          border: "solid",
+          width: "10px",
+          height: "10px",
+          borderWidth: "0px 2px 2px 0px",
+          display: "inline-block",
+          transform: "rotate(-45deg)",
+          cursor: "pointer",
+          position: "relative",
+          left: "-2px",
+        }}
+      />
+    </div>
+  );
+};
+
 const ShopPage = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [completed, setCompleted] = useState([]);
-  const [hoursModalOpen, setHoursModalOpen] = useState(false);
-  const [daysTimeModalOpen, setDaysTimeModalOpen] = useState(false);
-  const [selectedDay, setSelectedDay] = useState();
-  const [selectedWeek, setSelectedWeek] = useState();
-  const [selectedAllHours, setSelectedAllHours] = useState();
+  const [selectedOption, setSelectedOption] = useState("Individual");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [ownerDetails, setOwnerDetails] = useState("Show");
+  const [shopDetails, setShopDetails] = useState("Show");
+  const [shopTimeDetails, setShopTimeDetails] = useState("Show");
 
-  const [subBranchModalOpen, setSubBranchModalOpen] = useState(false);
+  const [mainBranch, setMainBranch] = useState("Show");
+  const [subBranchSec, setsubBranchSec] = useState("Show");
+  const [managerDetails, setManagerDetails] = useState("Show");
 
-  const [hours, setHours] = useState([
-    { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Monday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Tuesday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Wednesday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Thursday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Friday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
-  ]);
   const [shopLogo, setShopLogo] = useState("");
   const [uploadShopLogo, setUploadShopLogo] = useState("");
 
@@ -92,22 +193,31 @@ const ShopPage = () => {
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
-  const [individual, setIndividual] = useState(false);
-
   const [sameAsOwner, setSameAsOwner] = useState("False");
+  const [individual, setIndividual] = useState(false);
+  const [subBranch, setSubBranch] = useState([]);
+  const [subBranchEdit, setSubBranchEdit] = useState();
 
+  const [hoursModalOpen, setHoursModalOpen] = useState(false);
+  const [daysTimeModalOpen, setDaysTimeModalOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState();
+  const [selectedWeek, setSelectedWeek] = useState();
+  const [selectedAllHours, setSelectedAllHours] = useState();
   const [loading, setLoading] = useState(false);
 
-  const [subBranch, setSubBranch] = useState([]);
-
-  const [subBranchEdit, setSubBranchEdit] = useState();
-  const dispatch = useDispatch();
-
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [hours, setHours] = useState([
+    { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Monday", value: ["09:00 AM - 10:00 PM"] },
+    { key: "Tuesday", value: ["07:00 AM - 08:00 PM"] },
+    { key: "Wednesday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Thursday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Friday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
+  ]);
 
   useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+    console.log("subBranch :", subBranch);
+  }, [subBranch]);
 
   const {
     register,
@@ -120,6 +230,7 @@ const ShopPage = () => {
     setError,
     control,
   } = useForm();
+
   useEffect(() => {
     if (sameAsOwner === "True") {
       setValue("manager_first_name", getValues("first_name"));
@@ -132,36 +243,119 @@ const ShopPage = () => {
       setValue("manager_user_email", "");
       setValue("manager_user_contact", "");
     }
-  }, [getValues, sameAsOwner, setValue, activeStep]);
+  }, [getValues, sameAsOwner, setValue, currentStep]);
 
-  const totalSteps = () => {
-    return shopRegistrationSteps.length;
+  const [subBranchButtonShow, setSubBranchButtonShow] = useState(false);
+
+  const getAllValues = () => {
+    if (
+      getValues("manager_first_name") === "" ||
+      getValues("manager_last_name") === "" ||
+      getValues("manager_user_email") === "" ||
+      getValues("manager_user_contact") === ""
+    ) {
+      setSubBranchButtonShow(false);
+    } else {
+      setSubBranchButtonShow(true);
+    }
   };
 
-  const completedSteps = () => {
-    return Object.keys(completed).length;
+  useEffect(() => {
+    getAllValues();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getValues, sameAsOwner, setValue, currentStep]);
+
+  const onShopLogoPreviewImage = (e) => {
+    const reader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      setUploadShopLogo(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
+      reader.addEventListener("load", (e) => {
+        setShopLogo(reader.result);
+      });
+    }
   };
 
-  const isLastStep = () => {
-    return activeStep === totalSteps() - 1;
+  const onShopBackgroundPreviewImage = (e) => {
+    const reader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      setUploadShopBackground(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
+      reader.addEventListener("load", (e) => {
+        setShopBackground(reader.result);
+      });
+    }
   };
 
-  const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
+  const [SelectImgIndex, setSelectImgIndex] = useState();
+
+  const handleBrowseClickShopImages = (boxId, index) => {
+    setSelectImgIndex(index);
+    document.getElementById(boxId).click();
   };
 
-  const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          shopRegistrationSteps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
+  const createShopImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    let resImgIndex = SelectImgIndex;
+
+    let uploadShopImagesData = uploadShopImages;
+    let shopImagesData = shopImages;
+
+    uploadShopImagesData[resImgIndex] = files[0];
+    setUploadShopImages(() => [...uploadShopImagesData]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        shopImagesData[resImgIndex] = reader.result;
+        setShopImages(() => [...shopImagesData]);
+      };
+    });
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  const onShopVideoPreview = (e) => {
+    const reader = new FileReader();
+    if (e.target.files && e.target.files.length > 0) {
+      setUploadShopVideo(e.target.files[0]);
+      reader.readAsDataURL(e.target.files[0]);
+      reader.addEventListener("load", (e) => {
+        setShopVideo(reader.result);
+      });
+    }
+  };
+
+  const handleOwnerDetails = (option) => {
+    setOwnerDetails(option);
+  };
+
+  const handleShopDetails = (option) => {
+    setShopDetails(option);
+  };
+
+  const handleShopTimeDetails = (option) => {
+    setShopTimeDetails(option);
+  };
+
+  const handleClickIndividual = (option, active) => {
+    setSelectedOption(option);
+    setIndividual(active);
+  };
+
+  const handleBrowseClick = (boxIndex) => {
+    document.getElementById(`file-input-${boxIndex}`).click();
+  };
+
+  const handleMainBranchDetails = (option) => {
+    setMainBranch(option);
+  };
+  const handleManagerDetails = (option) => {
+    setManagerDetails(option);
+  };
+  const handleSubBranchDetails = (option) => {
+    setsubBranchSec(option);
   };
 
   const returnSubBranchData = (val) => {
@@ -177,9 +371,10 @@ const ShopPage = () => {
   };
 
   const onSubmit = (data) => {
-    if (activeStep !== 2) {
-      handleNext();
+    if (currentStep !== 3) {
+      setCurrentStep(currentStep + 1);
     } else {
+      console.log("Data To be Submitted !!", data);
       setLoading(true);
       SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
         SingleImageUploadFile(uploadShopBackground).then(
@@ -200,9 +395,11 @@ const ShopPage = () => {
                         shop_cover_image:
                           backgroundResponse.data.data.singleUpload,
                         shop_images:
-                          imagesResponse.data.data.multipleUpload.map((itm) => {
-                            return { links: itm };
-                          }),
+                          imagesResponse.data.data.multipleUpload?.map(
+                            (itm) => {
+                              return { links: itm };
+                            }
+                          ),
                         shop_video: videoResponse.data.data.singleUpload,
 
                         form_steps: "3",
@@ -214,7 +411,7 @@ const ShopPage = () => {
                         shop_name: data.shop_name,
                         shop_email: data.shop_email,
                         shop_type: individual ? "individual" : "shop",
-                        shop_time: hours.map((day) => {
+                        shop_time: hours?.map((day) => {
                           return {
                             week: day["key"],
                             open_time:
@@ -250,11 +447,12 @@ const ShopPage = () => {
                           branch_type: "main",
                         },
                         ...(subBranch.length > 0
-                          ? subBranch.map(returnSubBranchData)
+                          ? subBranch?.map(returnSubBranchData)
                           : []),
                       ],
                     }).then(
                       (res) => {
+                        console.log("res:::", res);
                         dispatch(
                           setShopRegisterId(res.data.createShop.shopInfo.id)
                         );
@@ -263,7 +461,7 @@ const ShopPage = () => {
                         });
                         setLoading(false);
                         localStorage.setItem("userHaveAnyShop", "true");
-                        Router.push("/vendor/dashboard");
+                        router.push("/vendor/dashboard");
                       },
                       (error) => {
                         setLoading(false);
@@ -283,7 +481,7 @@ const ShopPage = () => {
                       shop_logo: logoResponse.data.data.singleUpload,
                       shop_cover_image:
                         backgroundResponse.data.data.singleUpload,
-                      shop_images: imagesResponse.data.data.multipleUpload.map(
+                      shop_images: imagesResponse.data.data.multipleUpload?.map(
                         (itm) => {
                           return { links: itm };
                         }
@@ -297,7 +495,7 @@ const ShopPage = () => {
                       shop_name: data.shop_name,
                       shop_email: data.shop_email,
                       shop_type: individual ? "individual" : "shop",
-                      shop_time: hours.map((day) => {
+                      shop_time: hours?.map((day) => {
                         return {
                           week: day["key"],
                           open_time:
@@ -330,11 +528,12 @@ const ShopPage = () => {
                         branch_type: "main",
                       },
                       ...(subBranch.length > 0
-                        ? subBranch.map(returnSubBranchData)
+                        ? subBranch?.map(returnSubBranchData)
                         : []),
                     ],
                   }).then(
                     (res) => {
+                      console.log("res:::", res);
                       dispatch(
                         setShopRegisterId(res.data.createShop.shopInfo.id)
                       );
@@ -343,7 +542,7 @@ const ShopPage = () => {
                       });
                       setLoading(false);
                       localStorage.setItem("userHaveAnyShop", "true");
-                      Router.push("/vendor/dashboard");
+                      router.push("/vendor/dashboard");
                     },
                     (error) => {
                       setLoading(false);
@@ -359,75 +558,9 @@ const ShopPage = () => {
 
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
-  const onShopLogoPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopLogo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopLogo(reader.result);
-      });
-    }
-  };
-
-  const onShopBackgroundPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopBackground(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopBackground(reader.result);
-      });
-    }
-  };
-
-  // const createShopImagesChange = (e) => {
-  //   const files = Array.from(e.target.files);
-  //   setShopImages([]);
-  //   setUploadShopImages([]);
-  //   files.forEach((file) => {
-  //     setUploadShopImages((old) => [...old, file]);
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onloadend = () => {
-  //       setShopImages((old) => [...old, reader.result]);
-  //     };
-  //   });
-  // };
-  const [SelectImgIndex, setSelectImgIndex] = useState();
-
-  const createShopImagesChange = (e) => {
-    const files = Array.from(e.target.files);
-    let resImgIndex = SelectImgIndex;
-
-    let uploadShopImagesData = uploadShopImages;
-    let shopImagesData = shopImages;
-
-    uploadShopImagesData[resImgIndex] = files[0];
-    setUploadShopImages(() => [...uploadShopImagesData]);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        shopImagesData[resImgIndex] = reader.result;
-        setShopImages(() => [...shopImagesData]);
-      };
-    });
-  };
-
-  const onShopVideoPreview = (e) => {
-    const reader = new FileReader();
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopVideo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopVideo(reader.result);
-      });
-    }
-  };
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   if (!isHydrated) {
     return null;
@@ -435,1785 +568,1452 @@ const ShopPage = () => {
 
   return (
     <>
-      <div className="">
-        <div className="container py-10">
-          <div className="flex justify-center">
-            <Stepper
-              alternativeLabel
-              activeStep={activeStep}
-              connector={<QontoConnector />}
-              className="md:w-[30%]"
-            >
-              {shopRegistrationSteps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={QontoStepIcon}>
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+      <div className="w-full">
+        <div className="h-[452px] sm:h-[50vh] relative">
+          <div className="absolute inset-0 bg-black mix-blend-darken opacity-80"></div>
+        </div>
+        <div className="relative -mt-[calc(50vh-25px)] container">
+          <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
+            <div>
+              <span className="text-colorGreen font-semibold">Set Up</span> Your
+            </div>
+            <div>
+              Rental <span className="text-colorGreen font-semibold">Shop</span>
+            </div>
           </div>
-
-          <>
-            {activeStep === 0 && (
-              <>
-                <div className="container p-5 !w-[70%] flex justify-end px-0">
-                  <div className="flex items-center gap-2">
-                    <label className="inline-flex border-2 cursor-pointer dark:bg-white-300 dark:text-white-800">
-                      <input
-                        id="Toggle4"
-                        type="checkbox"
-                        className="hidden peer"
-                        onChange={(e) => setIndividual(e.target.checked)}
-                      />
-                      <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-white text-white">
-                        SHOP
-                      </span>
-                      <span className="px-4 py-1 dark:bg-white-300 peer-checked:bg-colorPrimary peer-checked:text-white ">
-                        INDIVIDUAL
-                      </span>
-                    </label>
+          <div className="flex justify-center mt-10">
+            <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
+              <div
+                className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                  selectedOption === "Individual"
+                    ? "border-2 border-yellow-500"
+                    : "border"
+                }`}
+                onClick={() => handleClickIndividual("Individual", false)}
+              >
+                <div className="flex justify-between">
+                  <div className="flex">
+                    <SiHandshake
+                      className={`${
+                        selectedOption === "Individual"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      }`}
+                      fontSize="25px"
+                    />
+                    <div
+                      className={`${
+                        selectedOption === "Individual"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                    >
+                      Individual
+                    </div>
+                  </div>
+                  <div>
+                    {selectedOption === "Individual" && (
+                      <CheckCircleIcon className="text-yellow-500" />
+                    )}
                   </div>
                 </div>
-                <div className="container bg-colorWhite rounded-lg p-5 md:!w-[70%]">
-                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">
-                    OWNER DETAILS
-                  </h3>
-                  <form>
-                    <div className="flex flex-col space-y-3">
-                      <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-5 w-full justify-between items-center">
-                        {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">Name:</p> */}
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="First Name*"
-                              variant="standard"
-                              className="w-full"
-                              {...register("first_name", {
-                                required: "First name is required",
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.first_name && (
-                              <span style={{ color: "red" }} className="-mb-6">
+              </div>
+              <div
+                className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                  selectedOption === "Shop"
+                    ? "border-2 border-yellow-500"
+                    : "border"
+                }`}
+                onClick={() => handleClickIndividual("Shop", false)}
+              >
+                <div className="flex justify-between">
+                  <div className="flex">
+                    <SiHandshake
+                      className={`${
+                        selectedOption === "Shop"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      }`}
+                      fontSize="25px"
+                    />
+                    <div
+                      className={`${
+                        selectedOption === "Shop"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                    >
+                      Shop
+                    </div>
+                  </div>
+                  <div>
+                    <CheckCircleIcon
+                      className={`${
+                        selectedOption === "Shop"
+                          ? "text-yellow-500"
+                          : "text-white"
+                      }`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* <div className="flex justify-center mt-16 gap-3">
+            <button
+              className={`text-gray-400 sm:text-2xl sm:py-3  sm:px-14  py-2 text-lg px-8 ${
+                selectedOption === "Shop" &&
+                "bg-colorGreen roundebbg-colorGreend-md text-white"
+              }`}
+              onClick={() => handleClickIndividual("Shop", false)}
+            >
+              Shop
+            </button>
+            <button
+              className={`text-gray-400 sm:text-2xl sm:py-3  sm:px-14  py-2 text-lg px-8 ${
+                selectedOption === "Individual" &&
+                "bg-colorGreen rounded-md text-white"
+              }`}
+              onClick={() => handleClickIndividual("Individual", true)}
+            >
+              Individual
+            </button>
+          </div> */}
+          <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
+            <div className="md:mx-10">
+              <div className="flex justify-evenly mb-3 sm:mb-5">
+                <div className="uppercase font-semibold text-sm sm:text-xl">
+                  Details
+                </div>
+                <div
+                  className={`uppercase text-sm sm:text-xl ${
+                    currentStep >= 2 ? "font-semibold" : "text-gray-400"
+                  }`}
+                >
+                  Photos
+                </div>
+                <div
+                  className={`uppercase text-sm sm:text-xl ${
+                    currentStep >= 3 ? "font-semibold" : "text-gray-400"
+                  }`}
+                >
+                  Branches
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
+                {currentStep > 1 ? (
+                  <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen">
+                    <span className="hidden sm:inline">
+                      <DoneIcon
+                        className="text-colorGreen mb-2"
+                        fontSize="small"
+                      />
+                    </span>
+                    <span className="sm:hidden">
+                      <DoneIcon
+                        className="text-colorGreen sm:mb-2 mb-10"
+                        sx={{ fontSize: 10 }}
+                      />
+                    </span>
+                  </span>
+                ) : (
+                  <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px]  border-colorGreen"></span>
+                )}
+
+                {currentStep === 3 ? (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
+                    <span className="sm:h-8 sm:w-8 h-4 w-4  rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
+                  </>
+                ) : currentStep > 2 ? (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
+                    <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen">
+                      <span className="hidden sm:inline">
+                        <DoneIcon
+                          className="text-colorGreen mb-2"
+                          fontSize="small"
+                        />
+                      </span>
+                      <span className="sm:hidden">
+                        <DoneIcon
+                          className="text-colorGreen sm:mb-2 mb-10"
+                          sx={{ fontSize: 10 }}
+                        />
+                      </span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
+                    <span className="flex justify-center items-center sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
+                      2
+                    </span>
+                  </>
+                )}
+                {currentStep === 3 ? (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
+                    <span className="sm:h-8 sm:w-8 h-4 w-4  rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
+                  </>
+                ) : (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
+                    <span className="flex justify-center items-center  sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
+                      3
+                    </span>
+                  </>
+                )}
+                <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
+              </div>
+            </div>
+
+            {currentStep === 1 && (
+              <>
+                <div className="md:mx-10 mt-8">
+                  <div className="border mt-5">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Owner Details
+                      </div>
+                      {ownerDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          className="text-white cursor-pointer"
+                          onClick={() => handleOwnerDetails("Hide")}
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          className="text-white cursor-pointer"
+                          onClick={() => handleOwnerDetails("Show")}
+                        />
+                      )}
+                    </div>
+                    <div
+                      className={`space-y-5 p-4 md:p-10 ${
+                        ownerDetails === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="w-full flex sm:flex-row sm:gap-2 flex-col gap-4">
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            label="First Name*"
+                            type="text"
+                            id="fName"
+                            name="first_name"
+                            isRequired={true}
+                            placeholder="Your first name"
+                            fieldValue={getValues("first_name")}
+                            fieldError={errors?.first_name}
+                            formValue={{
+                              ...register("first_name", {
+                                required: "*First name is required",
+                              }),
+                            }}
+                          />
+                          {errors.first_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
                                 {errors.first_name?.message}
                               </span>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Last Name*"
-                              variant="standard"
-                              className="w-full"
-                              {...register("last_name", {
-                                required: "Last name is required",
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.last_name && (
-                              <span style={{ color: "red" }} className="-mb-6">
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            label="Last Name*"
+                            type="text"
+                            id="lName"
+                            name="last_name"
+                            isRequired={true}
+                            placeholder="Your last name"
+                            fieldValue={getValues("last_name")}
+                            fieldError={errors?.last_name}
+                            formValue={{
+                              ...register("last_name", {
+                                required: "*Last name is required",
+                              }),
+                            }}
+                          />
+                          {errors.last_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
                                 {errors.last_name?.message}
                               </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full relative">
+                        <CustomTextFieldVendor
+                          label="Email Address"
+                          type="email"
+                          id="email"
+                          name="user_email"
+                          isRequired={true}
+                          placeholder="yourmail@gmail.com"
+                          fieldValue={getValues("user_email")}
+                          fieldError={errors?.user_email}
+                          formValue={{
+                            ...register("user_email", {
+                              pattern: {
+                                value:
+                                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                message: "*Please enter a valid email",
+                              },
+                            }),
+                          }}
+                        />
+                        {errors.user_email && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.user_email?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="w-full relative">
+                        <CustomTextFieldVendor
+                          label="Phone Number*"
+                          type="text"
+                          id="phone"
+                          name="user_contact"
+                          isRequired={true}
+                          placeholder="Your phone number"
+                          fieldValue={getValues("user_contact")}
+                          fieldError={errors?.user_contact}
+                          formValue={{
+                            ...register("user_contact", {
+                              required: "*Phone number is required",
+                              pattern: {
+                                value: /^[0-9]{10}$/,
+                                message: "*Please enter a valid phone Number",
+                              },
+                            }),
+                          }}
+                        />
+                        {errors.user_contact && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.user_contact?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Shop info */}
+                  <div className="border mt-10">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Shop info
+                      </div>
+                      {shopDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleShopDetails("Hide")}
+                          className="text-white cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleShopDetails("Show")}
+                          className="text-white cursor-pointer"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className={`space-y-5 p-4 md:p-10 ${
+                        shopDetails === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="w-full relative">
+                        <CustomTextFieldVendor
+                          name="shop_name"
+                          label="Shop Name*"
+                          type="text"
+                          id="shopName"
+                          isRequired={true}
+                          placeholder="Your shop name"
+                          formValue={{
+                            ...register("shop_name", {
+                              required: "*Shop name is required",
+                            }),
+                          }}
+                        />
+                        {errors.shop_name && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.shop_name?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      {!individual && (
+                        <>
+                          <div className="w-full relative">
+                            <CustomTextFieldVendor
+                              name="shop_email"
+                              label="Shop Email"
+                              type="email"
+                              id="shopEmail"
+                              isRequired={true}
+                              placeholder="Your shop email"
+                              formValue={{
+                                ...register("shop_email", {
+                                  pattern: {
+                                    value:
+                                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                                    message: "*Please enter a valid email",
+                                  },
+                                }),
+                              }}
+                            />
+                            {errors.shop_email && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.shop_email?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="w-full relative">
+                            <CustomTextFieldVendor
+                              name="personal_website"
+                              label="Personal Website Link"
+                              type="text"
+                              id="personalWebLink1"
+                              isRequired={false}
+                              placeholder="Personal Website Link"
+                              formValue={{
+                                ...register("personal_website", {
+                                  // required: "Personal Website is required",
+                                }),
+                              }}
+                            />
+                            {errors.personal_website && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.personal_website?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="w-full flex gap-4 max-md:flex-col max-md:gap-5">
+                            <div className="w-1/2 relative max-md:w-full">
+                              <CustomTextFieldVendor
+                                name="facebook_link"
+                                label="Fackbook Link"
+                                type="text"
+                                id="fbLink"
+                                isRequired={false}
+                                placeholder="Your facebook link"
+                                formValue={{
+                                  ...register("facebook_link", {
+                                    // required: "Facebook Link is required",
+                                  }),
+                                }}
+                              />
+                              {errors.facebook_link && (
+                                <div className="mt-2">
+                                  <span style={{ color: "red" }}>
+                                    {errors.facebook_link?.message}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="w-1/2 relative max-md:w-full">
+                              <CustomTextFieldVendor
+                                name="instagram_link"
+                                label=" Instagram Link"
+                                type="text"
+                                id="igLink"
+                                isRequired={false}
+                                placeholder="Your instagram link"
+                                formValue={{
+                                  ...register("instagram_link", {
+                                    // required: "Instagram Link is required",
+                                  }),
+                                }}
+                              />
+                              {errors.instagram_link && (
+                                <div className="mt-2">
+                                  <span style={{ color: "red" }}>
+                                    {errors.instagram_link?.message}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Shop Open/Close Time */}
+
+                  <div className="border mt-10">
+                    {!individual && (
+                      <>
+                        <div className="flex justify-between items-center px-3 md:px-5 py-2 bg-colorPrimary">
+                          <div className="flex">
+                            <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                              Shop Open/Close Time
+                            </div>
+                          </div>
+                          <div className="flex">
+                            <div
+                              className="flex gap-2 mr-4 items-center cursor-pointer"
+                              onClick={() => setHoursModalOpen(true)}
+                            >
+                              <EditIcon
+                                fontSize="small"
+                                className="text-white"
+                              />
+                              <div className="text-white sm:text-lg text-sm">
+                                Edit
+                              </div>
+                            </div>
+                            {shopTimeDetails === "Show" ? (
+                              <KeyboardArrowUpIcon
+                                onClick={() => handleShopTimeDetails("Hide")}
+                                className="text-white cursor-pointer"
+                              />
+                            ) : (
+                              <KeyboardArrowDownIcon
+                                onClick={() => handleShopTimeDetails("Show")}
+                                className="text-white cursor-pointer"
+                              />
                             )}
                           </div>
                         </div>
-                      </div>
-
-                      <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                        {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                          Email:
-                        </p> */}
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Email Address*"
-                              variant="standard"
-                              className="w-full"
-                              {...register("user_email", {
-                                required: "Email is required",
-
-                                pattern: {
-                                  value:
-                                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                  message: "Please enter a valid email",
-                                },
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.user_email && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.user_email?.message}
-                              </span>
-                            )}
+                        <div
+                          className={`space-y-5 p-4 md:p-10 ${
+                            shopTimeDetails === "Hide" && "hidden"
+                          }`}
+                        >
+                          <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
+                            {hours?.map((day, index) => (
+                              <div className="relative" key={index}>
+                                {day["value"]?.map((time, index) => (
+                                  <TimeCustomTextField
+                                    key={index}
+                                    type="text"
+                                    id={index}
+                                    variant="outlined"
+                                    label={day["key"]}
+                                    value={time}
+                                  />
+                                ))}
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      </div>
+                      </>
+                    )}
+                  </div>
 
-                      <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                        {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                          Phone:
-                        </p> */}
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Phone Number*"
-                              variant="standard"
-                              className="w-full"
-                              type="number"
-                              {...register("user_contact", {
-                                required: "Contact number is required",
-                                minLength: {
-                                  value: 10,
-                                  message: "Contact Number must be 10 numbers",
-                                },
-                                maxLength: {
-                                  value: 10,
-                                  message: "Contact Number must be 10 numbers",
+                  <Divider className="mt-10" />
+                  <ActionButtons
+                    currentStep={currentStep}
+                    setCurrentStep={setCurrentStep}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                    onError={onError}
+                    loading={loading}
+                  />
+                </div>
+                <HoursModal
+                  hoursModalOpen={hoursModalOpen}
+                  setHoursModalOpen={setHoursModalOpen}
+                  setDaysTimeModalOpen={setDaysTimeModalOpen}
+                  hours={hours}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  setSelectedWeek={setSelectedWeek}
+                  selectedWeek={selectedWeek}
+                  selectedAllHours={selectedAllHours}
+                  setSelectedAllHours={setSelectedAllHours}
+                />
+                <DaysTimeModal
+                  daysTimeModalOpen={daysTimeModalOpen}
+                  setDaysTimeModalOpen={setDaysTimeModalOpen}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  hours={hours}
+                  setHours={setHours}
+                  setSelectedWeek={setSelectedWeek}
+                  selectedWeek={selectedWeek}
+                  selectedAllHours={selectedAllHours}
+                  setSelectedAllHours={setSelectedAllHours}
+                />
+              </>
+            )}
+
+            {currentStep === 2 && (
+              <>
+                <div className="sm:mx-10 mt-8">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <div className="col-span-3 sm:col-span-1">
+                      <div className="flex flex-col justify-center items-center border">
+                        <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
+                          Shop Logo
+                        </div>
+                        <div className="p-6">
+                          <div
+                            className="w-[220px] h-[220px] sm:w-[250px] sm:h-[250px] border border-gray-200 hover:border-2 cursor-pointer hover:border-colorGreen rounded-full flex items-center justify-center"
+                            onClick={() => handleBrowseClick(0)}
+                          >
+                            {shopLogo !== "" ? (
+                              <div className="w-full h-full relative rounded-full">
+                                <Image
+                                  src={shopLogo}
+                                  alt="Uploaded Image"
+                                  layout="fill"
+                                  objectFit="contain"
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex flex-col gap-4">
+                                <span className="flex justify-center">
+                                  <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <p className="text-base sm:text-lg text-gray-400">
+                                    Click to upload{" "}
+                                    <span className="text-colorGreen">
+                                      logo
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                            <input
+                              id="file-input-0"
+                              type="file"
+                              accept="image/*,video/*"
+                              className="hidden"
+                              {...register("shopLogo", {
+                                // required:
+                                //   shopLogo === ""
+                                //     ? "ShopLogo is required *"
+                                //     : false,
+                                onChange: (e) => {
+                                  if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                  ) {
+                                    onShopLogoPreviewImage(e);
+                                  }
                                 },
                               })}
                             />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.user_contact && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.user_contact?.message}
+                          </div>
+                          {errors.shopLogo && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.shopLogo?.message}
                               </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-span-3 sm:col-span-2">
+                      <div className="flex flex-col justify-center items-center border">
+                        <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
+                          Shop Cover Image
+                        </div>
+                        <div className="p-6 w-full flex justify-center">
+                          <div
+                            className="w-[100%] sm:w-[80%] h-[250px] cursor-pointer col-span-3 border border-gray-200 hover:border-2 hover:border-colorGreen flex items-center justify-center  rounded-lg"
+                            onClick={() => handleBrowseClick(1)}
+                          >
+                            {shopBackground !== "" ? (
+                              <div className="w-full h-full relative">
+                                <Image
+                                  src={shopBackground}
+                                  alt="Uploaded Image"
+                                  layout="fill"
+                                  objectFit="contain"
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex flex-col gap-4">
+                                <span className="flex justify-center">
+                                  <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <p className="sm:text-xl text-base text-gray-400">
+                                    <span className="text-colorGreen">
+                                      Click to Upload
+                                    </span>{" "}
+                                    Cover Image
+                                  </p>
+                                </div>
+                              </div>
                             )}
+                            <input
+                              id="file-input-1"
+                              type="file"
+                              accept="image/*,video/*"
+                              className="hidden"
+                              {...register("shopBackground", {
+                                // required:
+                                //   shopBackground === ""
+                                //     ? "ShopBackground is required *"
+                                //     : false,
+                                onChange: (e) => {
+                                  if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                  ) {
+                                    onShopBackgroundPreviewImage(e);
+                                  }
+                                },
+                              })}
+                            />
+                          </div>
+                          {errors.shopBackground && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.shopBackground?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <div className="flex flex-col border">
+                      <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
+                        Shop Images
+                      </div>
+                      <div className="p-6">
+                        <div className="sm:mx-auto flex xl:gap-8 xl:flex-row flex-col gap-4">
+                          {["One", "Two", "Three", "Four"]?.map(
+                            (item, index) => {
+                              return (
+                                <>
+                                  <div
+                                    key={index}
+                                    className="w-full cursor-pointer h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-lg flex items-center justify-center"
+                                    onClick={() =>
+                                      handleBrowseClickShopImages(
+                                        `shopImage${item}`,
+                                        index
+                                      )
+                                    }
+                                  >
+                                    {shopImages[index] ? (
+                                      <div className="w-full h-full relative">
+                                        <Image
+                                          src={shopImages[index] ?? ""}
+                                          alt="Uploaded Image"
+                                          layout="fill"
+                                          objectFit="contain"
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="flex flex-col gap-4 text-center p-2">
+                                        <span className="flex justify-center">
+                                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                        </span>
+                                        <div className="flex flex-col gap-1 justify-center">
+                                          <p className="text-base sm:text-base text-colorGreen">
+                                            <span className="text-gray-400">
+                                              Click to Upload{" "}
+                                            </span>
+                                            Product Image
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
+                                    <input
+                                      id={`shopImage${item}`}
+                                      type="file"
+                                      accept="image/*,video/*"
+                                      className="hidden"
+                                      {...register("shopImages", {
+                                        // required: !ShopImgError[index]
+                                        //   ? "Shop all images is required *"
+                                        //   : false,
+                                        onChange: (e) => {
+                                          createShopImagesChange(e, index);
+                                        },
+                                      })}
+                                    />
+                                  </div>
+                                </>
+                              );
+                            }
+                          )}
+                        </div>
+                        {errors.shopImages && (
+                          <div className="flex justify-center mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.shopImages?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <div className="grid grid-cols-4">
+                      <div className="col-span-4 sm:col-span-2">
+                        <div className="flex flex-col justify-center items-center border">
+                          <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
+                            Shop Video
+                          </div>
+                          <div className="w-full p-6">
+                            <div
+                              className="w-full h-[250px] cursor-pointer border border-gray-200 hover:border-2 hover:border-colorGreen rounded-lg flex items-center justify-center"
+                              onClick={() => handleBrowseClick(5)}
+                            >
+                              {shopVideo !== "" ? (
+                                <div className="w-full h-full">
+                                  <video
+                                    className="object-cover h-full w-full"
+                                    controls
+                                  >
+                                    <source src={shopVideo}></source>
+                                  </video>
+                                </div>
+                              ) : (
+                                <div className="flex flex-col gap-4">
+                                  <span className="flex justify-center text-center">
+                                    <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                  </span>
+                                  <div className="flex flex-col gap-1">
+                                    <p className="sm:text-xl text-base text-gray-400">
+                                      <span className="text-colorGreen">
+                                        Click to Upload
+                                      </span>{" "}
+                                      Shop Video
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              <input
+                                id="file-input-5"
+                                type="file"
+                                accept="image/*,video/*"
+                                className="hidden"
+                                controls
+                                onClick={(e) => (e.target.value = null)}
+                                onChange={(e) => {
+                                  if (
+                                    e.target.files &&
+                                    e.target.files.length > 0
+                                  ) {
+                                    onShopVideoPreview(e);
+                                  }
+                                }}
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </form>
+                  </div>
+                  <Divider className="mt-10" />
+                  <ActionButtons
+                    currentStep={currentStep}
+                    setCurrentStep={setCurrentStep}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                    onError={onError}
+                    loading={loading}
+                  />
                 </div>
-                <div className="container bg-colorWhite rounded-lg my-5 lg:my-5 p-5 md:!w-[70%]">
-                  <h3 className="container text-colorPrimary text-lg font-semibold leading-8">
-                    SHOP INFO
-                  </h3>
-                  <form>
-                    <div className="flex flex-col space-y-3">
-                      <div className="flex items-center justify-center container gap-20">
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Shop Name*"
-                              variant="standard"
-                              className="w-full"
-                              {...register("shop_name", {
-                                required: "Shop name is required",
-                              })}
-                            />
-                          </Box>
+              </>
+            )}
+
+            {currentStep === 3 && (
+              <>
+                <div className="mt-8 sm:mx-10">
+                  {/* Main Branch */}
+                  <div className="border mt-5">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Main Branch
+                      </div>
+                      {mainBranch === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleMainBranchDetails("Hide")}
+                          className="text-white cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleMainBranchDetails("Show")}
+                          className="text-white cursor-pointer"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className={`space-y-5 p-4 md:p-10 ${
+                        mainBranch === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="w-full relative">
+                        <CustomTextFieldVendor
+                          name="address"
+                          label="Address"
+                          type="text"
+                          id="address"
+                          isRequired={true}
+                          placeholder="Your address"
+                          formValue={{
+                            ...register("address", {
+                              required: "Address is required",
+                            }),
+                          }}
+                        />
+                        {errors.address && (
                           <div className="mt-2">
-                            {errors.shop_name && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.shop_name?.message}
-                              </span>
-                            )}
+                            <span style={{ color: "red" }}>
+                              {errors.address?.message}
+                            </span>
                           </div>
+                        )}
+                      </div>
+                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-5">
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            name="city"
+                            label=" City"
+                            type="text"
+                            id="city"
+                            isRequired={true}
+                            placeholder="Your city"
+                            formValue={{
+                              ...register("city", {
+                                required: "City is required",
+                              }),
+                            }}
+                          />
+                          {errors.city && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.city?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="sm:w-1/2 relative w-full">
+                          <CustomTextFieldVendor
+                            name="pin_code"
+                            label=" Pincode"
+                            type="number"
+                            id="pincode"
+                            isRequired={true}
+                            placeholder="Your pincode"
+                            formValue={{
+                              ...register("pin_code", {
+                                required: "PinCode is required",
+                              }),
+                            }}
+                          />
+                          {errors.pin_code && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.pin_code?.message}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </div>
+                    </div>
+                  </div>
 
-                      {!individual && (
-                        <>
-                          <div className="flex items-center justify-center container gap-20">
-                            <div className="w-full">
-                              <Box sx={{ display: "flex" }}>
-                                <CustomTextField
-                                  id="input-with-sx"
-                                  label="Shop Email"
-                                  variant="standard"
-                                  className="w-full"
-                                  {...register("shop_email", {
-                                    // required: "Shop email is required",
+                  {/* Manager Details */}
+                  <div className="border mt-5">
+                    <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                      <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                        Manager Details
+                      </div>
+                      {managerDetails === "Show" ? (
+                        <KeyboardArrowUpIcon
+                          onClick={() => handleManagerDetails("Hide")}
+                          className="text-white cursor-pointer"
+                        />
+                      ) : (
+                        <KeyboardArrowDownIcon
+                          onClick={() => handleManagerDetails("Show")}
+                          className="text-white cursor-pointer"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className={`space-y-5 p-4 pt-2 md:p-10 md:pt-4 ${
+                        managerDetails === "Hide" && "hidden"
+                      }`}
+                    >
+                      <div className="flex items-center justify-start">
+                        <div className="uppercase font-semibold text-xs md:text-base whitespace-nowrap">
+                          Same As Owner&nbsp;:&nbsp;
+                        </div>
+                        <RadioGroup
+                          row
+                          name="row-radio-buttons-group"
+                          value={sameAsOwner}
+                          onChange={(e) => {
+                            if (e.target.value === "True") {
+                              setSameAsOwner("True");
+                            } else {
+                              setSameAsOwner("False");
+                            }
+                          }}
+                        >
+                          <div className="flex gap-2">
+                            <div className="flex items-center">
+                              <span className="hidden sm:inline">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="True"
+                                  value="True"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 24,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <span className="sm:hidden">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="True"
+                                  value="True"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 16,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <label
+                                htmlFor="True"
+                                className="sm:text-xl text-sm text-gray-400"
+                              >
+                                Yes
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <span className="hidden sm:inline">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="False"
+                                  value="False"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 24,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <span className="sm:hidden">
+                                <Radio
+                                  name="saveAsOwner"
+                                  id="False"
+                                  value="False"
+                                  sx={{
+                                    color: "rgba(21, 24, 39, 0.1)",
+                                    "& .MuiSvgIcon-root": {
+                                      fontSize: 16,
+                                    },
+                                    "&.Mui-checked": {
+                                      color: "#29977E",
+                                    },
+                                  }}
+                                />
+                              </span>
+                              <label
+                                htmlFor="False"
+                                className="sm:text-xl text-sm text-gray-400"
+                              >
+                                No
+                              </label>
+                            </div>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-5 !mt-2">
+                        <div className="sm:w-1/2 relative w-full">
+                          <FormControl fullWidth>
+                            <Controller
+                              name="manager_first_name"
+                              control={control}
+                              defaultValue="" // Set the initial value here
+                              render={({ field }) => (
+                                <>
+                                  <TextField
+                                    {...field}
+                                    label="First Name"
+                                    type="text"
+                                    id="managerfName"
+                                    isRequired={true}
+                                    placeholder="Manager first name"
+                                    disabled={sameAsOwner === "True"}
+                                    {...register("manager_first_name", {
+                                      required: "Manager FirstName is required",
+                                      onChange: () => {
+                                        getAllValues();
+                                      },
+                                    })}
+                                  />
+                                </>
+                              )}
+                            />
+                          </FormControl>
+                          {errors.manager_first_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.manager_first_name?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="sm:w-1/2 relative w-full">
+                          <FormControl fullWidth>
+                            <Controller
+                              name="manager_last_name"
+                              control={control}
+                              defaultValue="" // Set the initial value here
+                              render={({ field }) => (
+                                <>
+                                  <TextField
+                                    {...field}
+                                    label=" Last Name"
+                                    type="text"
+                                    id="mangerlName"
+                                    isRequired={true}
+                                    placeholder="Manager last name"
+                                    disabled={sameAsOwner === "True"}
+                                    {...register("manager_last_name", {
+                                      required: "Manager LastName is required",
+                                      onChange: () => {
+                                        getAllValues();
+                                      },
+                                    })}
+                                  />
+                                </>
+                              )}
+                            />
+                          </FormControl>
+                          {errors.manager_last_name && (
+                            <div className="mt-2">
+                              <span style={{ color: "red" }}>
+                                {errors.manager_last_name?.message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-full relative">
+                        <FormControl fullWidth>
+                          <Controller
+                            name="manager_user_email"
+                            control={control}
+                            defaultValue="" // Set the initial value here
+                            render={({ field }) => (
+                              <>
+                                <TextField
+                                  {...field}
+                                  label=" E-Mail"
+                                  type="email"
+                                  id="managerEmail"
+                                  isRequired={true}
+                                  placeholder="Manager email address"
+                                  disabled={sameAsOwner === "True"}
+                                  {...register("manager_user_email", {
+                                    required: "Manager Email is required",
 
                                     pattern: {
                                       value:
                                         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                                       message: "Please enter a valid email",
                                     },
-                                  })}
-                                />
-                              </Box>
-                              <div className="mt-2">
-                                {errors.shop_email && (
-                                  <span
-                                    style={{ color: "red" }}
-                                    className="-mb-6"
-                                  >
-                                    {errors.shop_email?.message}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-center container gap-20">
-                            <div className="w-full">
-                              <Box sx={{ display: "flex" }}>
-                                <CustomTextField
-                                  id="input-with-sx"
-                                  label="Personal Website Link"
-                                  variant="standard"
-                                  className="w-full"
-                                  {...register("personal_website", {
-                                    // required: "Personal Website is required",
-                                  })}
-                                />
-                              </Box>
-                              <div className="mt-2">
-                                {errors.personal_website && (
-                                  <span
-                                    style={{ color: "red" }}
-                                    className="-mb-6"
-                                  >
-                                    {errors.personal_website?.message}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="container flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:gap-5 w-full justify-between items-center">
-                            <div className="w-full">
-                              <Box sx={{ display: "flex" }}>
-                                <CustomTextField
-                                  id="input-with-sx"
-                                  label="Facebook Link"
-                                  variant="standard"
-                                  className="w-full"
-                                  {...register("facebook_link", {
-                                    // required: "Facebook Link is required",
-                                  })}
-                                />
-                              </Box>
-                              <div className="mt-2">
-                                {errors.facebook_link && (
-                                  <span
-                                    style={{ color: "red" }}
-                                    className="-mb-6"
-                                  >
-                                    {errors.facebook_link?.message}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <div className="w-full">
-                              <Box sx={{ display: "flex" }}>
-                                <CustomTextField
-                                  id="input-with-sx"
-                                  label="Instagram Link"
-                                  variant="standard"
-                                  className="w-full"
-                                  {...register("instagram_link", {
-                                    // required: "Instagram Link is required",
-                                  })}
-                                />
-                              </Box>
-                              <div className="mt-2">
-                                {errors.instagram_link && (
-                                  <span
-                                    style={{ color: "red" }}
-                                    className="-mb-6"
-                                  >
-                                    {errors.instagram_link?.message}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="container flex gap-2 w-full flex-col">
-                            <p className="flex items-center text-colorBlack text-lg">
-                              Hours
-                            </p>
-                            <div
-                              className="w-full border border-colorBlack p-3 rounded-lg flex items-center justify-between cursor-pointer text-colorBlack text-sm sm:text-base font-semibold"
-                              onClick={() => {
-                                setHoursModalOpen(true);
-                              }}
-                            >
-                              <div>
-                                {hours.map((day, index) => (
-                                  <div
-                                    className="flex justify-between pb-2"
-                                    key={index}
-                                  >
-                                    <div className="pr-2">{day["key"]} :</div>
-                                    <div className="">
-                                      {day["value"]?.map((time, index) => (
-                                        <p
-                                          key={index}
-                                          className={
-                                            time === "Closed"
-                                              ? "text-red-600"
-                                              : time === "Open 24 hours"
-                                              ? "text-green-600"
-                                              : ""
-                                          }
-                                        >
-                                          {time}
-                                        </p>
-                                      ))}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                              <KeyboardArrowRightIcon />
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </form>
-                </div>
-              </>
-            )}
-            {activeStep === 1 && (
-              <>
-                <div className="flex flex-col sm:flex-row sm:gap-20 justify-center items-center container mt-10">
-                  <div>
-                    {/* <label className="flex justify-center items-center font-bold mb-3">Logo</label> */}
-                    <input
-                      type="file"
-                      id="shopLogo"
-                      name="shopLogo"
-                      hidden
-                      {...register("shopLogo", {
-                        required:
-                          shopLogo === "" ? "shopLogo is required" : false,
-                        onChange: (e) => {
-                          if (e.target.files && e.target.files.length > 0) {
-                            onShopLogoPreviewImage(e);
-                          }
-                        },
-                      })}
-                    />
-                    {shopLogo !== "" ? (
-                      <div>
-                        <Image
-                          src={shopLogo ?? ""}
-                          height="150px"
-                          alt="logoimg"
-                          width="150px"
-                          style={{ borderRadius: 100 }}
-                        />
-                        <div
-                          className="bg-gray-300 rounded-full flex justify-center items-center"
-                          style={{
-                            position: "relative",
-                            left: 100,
-                            bottom: 30,
-                            height: 30,
-                            width: 30,
-                            color: "#5cb85c",
-                          }}
-                        >
-                          <button onClick={() => {}}>
-                            <EditIcon
-                              style={{ color: "black" }}
-                              onClick={() => {
-                                document.getElementById("shopLogo").click();
-                              }}
-                            />
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        className="border rounded-full border-[cadetblue]"
-                        // style={{
-                        //   borderStyle: "dashed",
-                        //   border: "1px dashed #000000",
-                        // }}
-                      >
-                        {/* <button
-                          className="h-24 w-24  border-dashed border-colorSecondary flex justify-center items-center"
-                          onClick={() => {
-                            document.getElementById("shopLogo").click();
-                          }}
-                        >
-                          Upload
-                        </button> */}
-                        <div className="m-10">
-                          <div
-                            style={{ width: "inherit" }}
-                            className="mb-2 flex justify-center items-center"
-                          >
-                            <AddAPhotoIcon />
-                          </div>
-                          <div className="mb-3 px-[12px] text-sm font-emoji">
-                            <p>Upload Logo</p>
-                          </div>
-                          <div className="mb-2">
-                            <Button
-                              variant="contained"
-                              component="label"
-                              className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                              onClick={() => {
-                                document.getElementById("shopLogo").click();
-                              }}
-                            >
-                              Upload
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    <div className="mt-2">
-                      {errors.shopLogo && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {errors.shopLogo?.message}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    {/* <label className="flex justify-center items-center font-bold  mb-3">Background</label> */}
-
-                    <input
-                      type="file"
-                      id="shopBackground"
-                      name="shopBackground"
-                      hidden
-                      {...register("shopBackground", {
-                        required:
-                          shopBackground === ""
-                            ? "shopBackground is required"
-                            : false,
-                        onChange: (e) => {
-                          if (e.target.files && e.target.files.length > 0) {
-                            onShopBackgroundPreviewImage(e);
-                          }
-                        },
-                      })}
-                    />
-
-                    {shopBackground !== "" ? (
-                      <div>
-                        <Image
-                          src={shopBackground ?? ""}
-                          height="150px"
-                          alt="logoimg"
-                          width="200px"
-                        />
-                        <div
-                          className="bg-gray-300 rounded-full flex justify-center items-center"
-                          style={{
-                            position: "relative",
-                            left: 180,
-                            bottom: 30,
-                            height: 30,
-                            width: 30,
-                            color: "#5cb85c",
-                          }}
-                        >
-                          <EditIcon
-                            style={{ color: "black", cursor: "pointer" }}
-                            onClick={() =>
-                              document.getElementById("shopBackground").click()
-                            }
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div
-                        className="border border-[cadetblue] flex justify-center items-center"
-                        // style={{
-                        //   borderStyle: "dashed",
-                        //   border: "1px dashed #000000",
-                        // }}
-                      >
-                        {/* <button
-                          className="h-24 w-36  border-dashed border-colorSecondary flex justify-center items-center"
-                          onClick={() => {
-                            document.getElementById("shopBackground").click();
-                          }}
-                        >
-                          <AddIcon />
-                        </button> */}
-                        <div className="m-8">
-                          <div
-                            style={{ width: "inherit" }}
-                            className="mb-2 flex justify-center items-center"
-                          >
-                            <AddAPhotoIcon />
-                          </div>
-                          <div className="mb-3 px-[32px] text-sm font-emoji">
-                            <p>Upload Cover Image</p>
-                          </div>
-                          <div className="mb-2">
-                            <Button
-                              variant="contained"
-                              component="label"
-                              className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                              onClick={() => {
-                                document
-                                  .getElementById("shopBackground")
-                                  .click();
-                              }}
-                            >
-                              Upload
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    <div className="mt-2">
-                      {errors.shopBackground && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {errors.shopBackground?.message}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-5 items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">
-                    Shop Images
-                  </h4>
-
-                  {/* <div className="flex justify-center flex-col items-center">
-                    <div className="flex justify-center">
-                      <Button
-                        variant="contained"
-                        component="label"
-                        className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                      >
-                        Choose Shop Images
-                        <input
-                          type="file"
-                          hidden
-                          multiple
-                          accept="image/*"
-                          {...register("shopImages", {
-                            required: shopImages.length === 0 ? "Shop Image is required" : false,
-                            onChange: (e) => {
-                              createShopImagesChange(e);
-                            },
-                          })}
-                        />
-                      </Button>
-                    </div>
-                    <div className="mt-2">
-                      {errors.shopImages && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {errors.shopImages?.message}
-                        </span>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="flex justify-center mt-10">
-                    <div className="flex items-center flex-col w-full">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-10 place-items-center">
-                        {["One", "Two", "Three"]?.map((item, index) => {
-                          return (
-                            <>
-                              <div className="h-[100%]">
-                                <input
-                                  type="file"
-                                  id={`shopImage${item}`}
-                                  name="shopImages"
-                                  hidden
-                                  accept="image/*"
-                                  {...register("shopImages", {
-                                    required: !ShopImgError[index]
-                                      ? "Shop All Image is required"
-                                      : false,
-                                    onChange: (e) => {
-                                      createShopImagesChange(e);
+                                    onChange: () => {
+                                      getAllValues();
                                     },
                                   })}
                                 />
-
-                                {shopImages[index] ? (
-                                  <div>
-                                    <Image
-                                      src={shopImages[index] ?? ""}
-                                      height="210px"
-                                      alt="frontImg"
-                                      width="200px"
-                                    />
-                                    <div
-                                      className="bg-gray-300 rounded-full flex justify-center items-center"
-                                      style={{
-                                        position: "relative",
-                                        left: 180,
-                                        bottom: 30,
-                                        height: 30,
-                                        width: 30,
-                                        color: "#5cb85c",
-                                      }}
-                                    >
-                                      <EditIcon
-                                        style={{
-                                          color: "black",
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() => {
-                                          setSelectImgIndex(index),
-                                            document
-                                              .getElementById(
-                                                `shopImage${item}`
-                                              )
-                                              .click();
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="h-[82%] border border-[cadetblue] flex justify-center items-center">
-                                    <div
-                                      style={{
-                                        marginTop: "35%",
-                                        marginBottom: "35%",
-                                      }}
-                                      className="mx-8"
-                                    >
-                                      <div
-                                        style={{ width: "inherit" }}
-                                        className="mb-2 flex justify-center items-center"
-                                      >
-                                        <AddAPhotoIcon />
-                                      </div>
-                                      <div className="mb-3 text-sm font-emoji">
-                                        <p>
-                                          Upload{" "}
-                                          {item === "One"
-                                            ? "Front"
-                                            : item === "Two"
-                                            ? "Back"
-                                            : "Side"}{" "}
-                                          Image
-                                        </p>
-                                      </div>
-                                      <div className="mb-2">
-                                        <Button
-                                          variant="contained"
-                                          component="label"
-                                          className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                                          onClick={() => {
-                                            setSelectImgIndex(index),
-                                              document
-                                                .getElementById(
-                                                  `shopImage${item}`
-                                                )
-                                                .click();
-                                          }}
-                                        >
-                                          Upload
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </>
-                          );
-                        })}
+                              </>
+                            )}
+                          />
+                        </FormControl>
+                        {errors.manager_user_email && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.manager_user_email?.message}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                      <div className="">
-                        {errors.shopImages && (
-                          <span style={{ color: "red" }} className="-mb-6">
-                            {errors.shopImages?.message}
-                          </span>
+                      <div className="w-full relative">
+                        <FormControl fullWidth>
+                          <Controller
+                            name="manager_user_contact"
+                            control={control}
+                            defaultValue="" // Set the initial value here
+                            render={({ field }) => (
+                              <>
+                                <TextField
+                                  {...field}
+                                  label="Phone Number"
+                                  type="number"
+                                  id="managerPhone"
+                                  isRequired={true}
+                                  placeholder="Manager phone number"
+                                  disabled={sameAsOwner === "True"}
+                                  {...register("manager_user_contact", {
+                                    required:
+                                      "Manager Contact Number is required",
+                                    pattern: {
+                                      value: /^[0-9]{10}$/,
+                                      message: "Please enter a valid number",
+                                    },
+                                    onChange: () => {
+                                      getAllValues();
+                                    },
+                                  })}
+                                />
+                              </>
+                            )}
+                          />
+                        </FormControl>
+                        {errors.manager_user_contact && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.manager_user_contact?.message}
+                            </span>
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="my-5 items-center flex-col w-full container">
-                  <h4 className="font-bold mb-3 flex justify-center items-center">
-                    Shop Video
-                  </h4>
-
-                  {/* <div className="flex justify-center flex-col items-center">
-                    <div className="flex  justify-center">
-                      <Button
-                        variant="contained"
-                        disabled={shopVideo !== ""}
-                        component="label"
-                        className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                      >
-                        Choose Shop Video
-                        <input
-                          type="file"
-                          id="shopVideo"
-                          name="shopVideo"
-                          accept="video/*"
-                          hidden
-                          controls
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              onShopVideoPreview(e);
-                            }
-                          }}
-                        />
-                      </Button>
-                    </div>
-                  </div> */}
-
-                  {/* {shopVideo !== "" && ( */}
-                  <div className="flex  justify-center mt-10">
-                    <div className="flex flex-col w-full">
-                      <div className="grid grid-cols-1 place-items-center">
-                        <div>
-                          <input
-                            type="file"
-                            id="shopVideoId"
-                            name="shopVideo"
-                            accept="video/*"
-                            hidden
-                            controls
-                            onClick={(e) => (e.target.value = null)}
-                            onChange={(e) => {
-                              if (e.target.files && e.target.files.length > 0) {
-                                onShopVideoPreview(e);
-                              }
-                            }}
+                  {/* Sub Branch */}
+                  {!individual && (
+                    <div className="border mt-5">
+                      <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
+                        <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                          Sub Branch
+                        </div>
+                        {subBranchSec === "Show" ? (
+                          <KeyboardArrowUpIcon
+                            onClick={() => handleSubBranchDetails("Hide")}
+                            className="text-white cursor-pointer"
                           />
+                        ) : (
+                          <KeyboardArrowDownIcon
+                            onClick={() => handleSubBranchDetails("Show")}
+                            className="text-white cursor-pointer"
+                          />
+                        )}
+                      </div>
 
-                          {shopVideo !== "" ? (
-                            <div>
-                              <video
-                                autoPlay
-                                style={{ width: "350px", height: "250px" }}
-                                controls
-                                src={shopVideo}
-                              ></video>
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                                style={{
-                                  position: "relative",
-                                  right: 10,
-                                  bottom: 20,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <CancelIcon
-                                  style={{ color: "black" }}
-                                  onClick={() => {
-                                    setShopVideo("");
-                                    setUploadShopVideo("");
-                                  }}
-                                />
-                              </div>
-                              <div
-                                className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                                style={{
-                                  position: "relative",
-                                  left: 335,
-                                  bottom: 50,
-                                  height: 30,
-                                  width: 30,
-                                  color: "#5cb85c",
-                                }}
-                              >
-                                <button onClick={() => {}}>
-                                  <EditIcon
-                                    style={{ color: "black" }}
-                                    onClick={() => {
-                                      document
-                                        .getElementById("shopVideoId")
-                                        .click();
-                                    }}
+                      {subBranchSec === "Show" && (
+                        <>
+                          {subBranchSec?.length > 0 && (
+                            <div className="p-4 pt-2 pb-0 md:p-10 md:pt-4 md:pb-0">
+                              <Carousel
+                                responsive={responsive}
+                                // showDots={true}
+                                arrows={true}
+                                removeArrowOnDeviceType={["mobile"]}
+                                customLeftArrow={
+                                  <TrendingCustomLeftArrow
+                                    onClick={TrendingCustomLeftArrow}
                                   />
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="w-[350px] h-[200px] border border-[cadetblue] flex justify-center items-center">
-                              <div className="m-8">
-                                <div
-                                  style={{ width: "inherit" }}
-                                  className="mb-2 flex justify-center items-center"
-                                >
-                                  <AddAPhotoIcon />
-                                </div>
-                                <div className="mb-3 px-[32px] text-sm font-emoji">
-                                  <p>Upload Shop Video</p>
-                                </div>
-                                <div className="mb-2">
-                                  <Button
-                                    variant="contained"
-                                    component="label"
-                                    className="w-full !capitalize !bg-gray-500 !rounded-3xl"
-                                    onClick={() => {
-                                      document
-                                        .getElementById("shopVideoId")
-                                        .click();
-                                    }}
+                                }
+                                customRightArrow={
+                                  <TrendingCustomRightArrow
+                                    onClick={TrendingCustomRightArrow}
+                                  />
+                                }
+                                // dotListClass={"Landing_customDots"}
+                              >
+                                {subBranch?.map((sub, index) => (
+                                  <div
+                                    className="bg-colorWhite rounded-xl flex flex-col gap-1 border mr-5 p-5 pt-2"
+                                    key={index}
                                   >
-                                    Upload
-                                  </Button>
-                                </div>
-                              </div>
+                                    <div className="flex justify-end">
+                                      <div className="flex gap-2">
+                                        <IconButton
+                                          aria-label="delete"
+                                          className="!rounded-md !capitalize !text-colorBlack !p-1 !bg-red-600 hover:!bg-red-600"
+                                          onClick={() => {
+                                            setSubBranch(
+                                              subBranch.filter(
+                                                (itm) => itm.id !== sub.id
+                                              )
+                                            );
+                                          }}
+                                        >
+                                          <DeleteIcon
+                                            className="!text-colorWhite"
+                                            fontSize="small"
+                                          />
+                                        </IconButton>
+                                        <IconButton
+                                          aria-label="delete"
+                                          className="!rounded-md !capitalize !text-colorBlack !p-1 !bg-colorStone hover:!bg-colorStone"
+                                          onClick={() => {
+                                            setSubBranchEdit(sub);
+                                          }}
+                                        >
+                                          <EditIcon
+                                            className="!text-colorWhite"
+                                            fontSize="small"
+                                          />
+                                        </IconButton>
+                                      </div>
+                                    </div>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
+                                        Address :{" "}
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerAddress}
+                                      </span>
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
+                                        City :{" "}
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerCity}
+                                      </span>
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
+                                        Pincode :{" "}
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerPinCode}
+                                      </span>
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base">
+                                        Manager Name :
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerFirstName +
+                                          " " +
+                                          sub.subManagerLastName}
+                                      </span>
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base">
+                                        Manager Email :
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerEmail}
+                                      </span>
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base">
+                                        Manager Phone Number :
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerPhone}
+                                      </span>
+                                    </p>
+                                  </div>
+                                ))}
+                              </Carousel>
+                              {/* </div> */}
                             </div>
                           )}
-                        </div>
-                        {/* <div>
-                            <video
-                              autoPlay
-                              style={{ width: "350px", height: "250px" }}
-                              controls
-                              src={shopVideo}
-                            ></video>
-                            <div
-                              className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                              style={{
-                                position: "relative",
-                                right: 10,
-                                bottom: 20,
-                                height: 30,
-                                width: 30,
-                                color: "#5cb85c",
-                              }}
-                            >
-                              <CancelIcon
-                                style={{ color: "black" }}
-                                onClick={() => {
-                                  setShopVideo("");
-                                  setUploadShopVideo("");
-                                }}
-                              />
-                            </div>
-                            <div
-                              className="bg-gray-300 rounded-full flex justify-center items-center cursor-pointer"
-                              style={{
-                                position: "relative",
-                                left: 335,
-                                bottom: 50,
-                                height: 30,
-                                width: 30,
-                                color: "#5cb85c",
-                              }}
-                            >
-                              <button onClick={() => {}}>
-                                <EditIcon
-                                  style={{ color: "black" }}
-                                  onClick={() => {
-                                    document.getElementById("shopVideo").click();
-                                  }}
-                                />
-                              </button>
-                            </div>
-                          </div> */}
-                      </div>
-                    </div>
-                  </div>
-                  {/* )} */}
-                </div>
-              </>
-            )}
-            {activeStep === 2 && (
-              <>
-                <div className="container bg-colorWhite rounded-lg my-10 p-5 space-y-5 md:!w-[70%]">
-                  <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                    BRANCHES
-                  </h3>
-                  <form>
-                    <div className="flex flex-col space-y-3">
-                      <p className="mt-2 container flex items-center text-colorBlack text-sm font-semibold">
-                        MAIN BRANCH
-                      </p>
-                      <div className="flex items-center justify-center container gap-20">
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Address"
-                              variant="standard"
-                              className="w-full"
-                              {...register("address", {
-                                required: "Address is required",
-                              })}
+                          <div className="p-4 pt-2 pb-2 md:p-10 md:pt-4 md:pb-4">
+                            <SubBranchModal
+                              subBranch={subBranch}
+                              setSubBranch={setSubBranch}
+                              setValue={setValue}
+                              getValues={getValues}
+                              subBranchEdit={subBranchEdit}
+                              setSubBranchEdit={setSubBranchEdit}
                             />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.address && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.address?.message}
-                              </span>
-                            )}
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="container flex gap-10 sm:gap-5 w-full justify-between items-center">
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="City"
-                              variant="standard"
-                              className="w-full"
-                              {...register("city", {
-                                required: "City is required",
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.city && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.city?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="PinCode"
-                              variant="standard"
-                              className="w-full"
-                              type="number"
-                              {...register("pin_code", {
-                                required: "PinCode is required",
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.pin_code && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.pin_code?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex sm:justify-center">
-                        <div className="mb-4 mt-2 flex flex-col sm:flex-row sm:justify-between sm:items-center container">
-                          <span className="font-semibold text-lg text-[#11142D]">
-                            Manager : Save as owner
-                          </span>
-
-                          <RadioGroup
-                            row
-                            aria-labelledby="demo-form-control-label-placement"
-                            name="position"
-                            className="ml-20 sm:ml-0"
-                            value={sameAsOwner}
-                            onChange={(e) => {
-                              if (e.target.value === "True") {
-                                setSameAsOwner("True");
-                              } else {
-                                setSameAsOwner("False");
-                              }
-                            }}
-                          >
-                            <FormControlLabel
-                              value="True"
-                              label="Yes"
-                              control={<Radio />}
-                            />
-                            <FormControlLabel
-                              value="False"
-                              control={<Radio />}
-                              label="No"
-                            />
-                          </RadioGroup>
-                        </div>
-                      </div>
-
-                      <div className="container flex gap-10 sm:gap-20 w-full justify-between items-center">
-                        <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                          Name:
-                        </p>
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Manager First Name"
-                              variant="standard"
-                              className="w-full"
-                              disabled={sameAsOwner === "True"}
-                              {...register("manager_first_name", {
-                                required: "Manager FirstName is required",
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.manager_first_name && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.manager_first_name?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Manager Last Name"
-                              variant="standard"
-                              className="w-full"
-                              disabled={sameAsOwner === "True"}
-                              {...register("manager_last_name", {
-                                required: "Manager LastName is required",
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.manager_last_name && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.manager_last_name?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                        <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                          Email:
-                        </p>
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Manager Email Address"
-                              variant="standard"
-                              className="w-full"
-                              disabled={sameAsOwner === "True"}
-                              {...register("manager_user_email", {
-                                required: "Manager Email is required",
-
-                                pattern: {
-                                  value:
-                                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                                  message: "Please enter a valid email",
-                                },
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.manager_user_email && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.manager_user_email?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-center container gap-10 sm:gap-[4.5rem]">
-                        <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                          Phone:
-                        </p>
-                        <div className="w-full">
-                          <Box sx={{ display: "flex" }}>
-                            <CustomTextField
-                              id="input-with-sx"
-                              label="Manager Phone Number"
-                              variant="standard"
-                              className="w-full"
-                              disabled={sameAsOwner === "True"}
-                              type="number"
-                              {...register("manager_user_contact", {
-                                required: "Manager Contact Number is required",
-                                minLength: {
-                                  value: 10,
-                                  message:
-                                    "Manager Contact Number must be 10 numbers",
-                                },
-                                maxLength: {
-                                  value: 10,
-                                  message:
-                                    "Manager Contact Number must be 10 numbers",
-                                },
-                              })}
-                            />
-                          </Box>
-                          <div className="mt-2">
-                            {errors.manager_user_contact && (
-                              <span style={{ color: "red" }} className="-mb-6">
-                                {errors.manager_user_contact?.message}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {!individual && (
-                        <div className="container flex items-center !mt-10">
-                          <Button
-                            variant="contained"
-                            endIcon={<AddIcon />}
-                            className="!bg-colorPrimary"
-                            onClick={() => setSubBranchModalOpen(true)}
-                            disabled={!isValid}
-                          >
-                            Sub Branch
-                          </Button>
-                        </div>
+                        </>
                       )}
                     </div>
-                  </form>
+                  )}
+
+                  <Divider className="mt-10" />
+
+                  <ActionButtons
+                    currentStep={currentStep}
+                    setCurrentStep={setCurrentStep}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                    onError={onError}
+                    loading={loading}
+                  />
                 </div>
-                {subBranch.length > 0 && (
-                  <div className="mb-10">
-                    <h3 className="text-colorPrimary text-lg font-semibold leading-8 container my-5">
-                      Sub Branches
-                    </h3>
-
-                    <div className="container grid grid-cols-1 sm:grid-cols-2 gap-10">
-                      {subBranch.map((sub, index) => (
-                        <div
-                          className="bg-colorWhite p-5 rounded-xl flex flex-col gap-1"
-                          key={index}
-                        >
-                          <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                              Branch Address :{" "}
-                            </b>
-                            {sub.subManagerAddress}
-                          </p>
-                          <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                              Branch City :{" "}
-                            </b>
-                            {sub.subManagerCity}
-                          </p>
-                          <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                              Branch PinCode :{" "}
-                            </b>
-                            {sub.subManagerPinCode}
-                          </p>
-                          <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                              Branch Manager Name :
-                            </b>
-                            {sub.subManagerFirstName +
-                              " " +
-                              sub.subManagerLastName}
-                          </p>
-                          <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                              Branch Manager Email :
-                            </b>
-                            {sub.subManagerEmail}
-                          </p>
-                          <p className="text-sm sm:text-base lg:text-lg text-colorBlack">
-                            <b className="mr-2 text-sm sm:text-base lg:text-lg">
-                              Branch Manager Phone Number :
-                            </b>
-                            {sub.subManagerPhone}
-                          </p>
-
-                          <div className="container mt-5">
-                            <Divider />
-                          </div>
-                          <div className="container mt-5 flex items-center justify-end gap-5">
-                            <IconButton
-                              aria-label="delete"
-                              className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-red-600 hover:!bg-red-600"
-                              onClick={() => {
-                                setSubBranch(
-                                  subBranch.filter((itm) => itm.id !== sub.id)
-                                );
-                              }}
-                            >
-                              <DeleteIcon className="!text-colorWhite" />
-                            </IconButton>
-                            <IconButton
-                              aria-label="delete"
-                              className="!rounded-xl !capitalize !text-colorBlack !p-2 !bg-colorStone hover:!bg-colorStone"
-                              onClick={() => {
-                                setSubBranchModalOpen(true);
-                                setSubBranchEdit(sub);
-                              }}
-                            >
-                              <EditIcon className="!text-colorWhite" />
-                            </IconButton>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </>
             )}
-
-            <div className="flex justify-center">
-              <Box className="flex pt-2 !w-[70%] container justify-between">
-                <button
-                  type="submit"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={`text-[#544E5D] font-semibold mr-1 bg-[#F9F9FA] hover:bg-[#F9F9FA] px-9 py-3 rounded-xl focus:outline-none focus:shadow-outline ${
-                    activeStep === 0 && "cursor-not-allowed"
-                  }`}
-                >
-                  Back
-                </button>
-
-                <button
-                  type="submit"
-                  onClick={handleSubmit(onSubmit, onError)}
-                  // onClick={onSubmit}
-                  className="bg-colorPrimary hover:bg-colorPrimary mr-1 text-white px-9 py-3 rounded-xl font-semibold focus:outline-none focus:shadow-outline 
-                  shadow-lg flex items-center justify-center"
-                >
-                  {loading && (
-                    <CircularProgress
-                      size={20}
-                      color="primary"
-                      sx={{ color: "white", mr: 1 }}
-                    />
-                  )}
-                  {activeStep === 2 ? "Submit" : "Next"}
-                </button>
-              </Box>
-            </div>
-          </>
+          </div>
         </div>
       </div>
-      <HoursModal
-        hoursModalOpen={hoursModalOpen}
-        setHoursModalOpen={setHoursModalOpen}
-        setDaysTimeModalOpen={setDaysTimeModalOpen}
-        hours={hours}
-        selectedDay={selectedDay}
-        setSelectedDay={setSelectedDay}
-        setSelectedWeek={setSelectedWeek}
-        selectedWeek={selectedWeek}
-        selectedAllHours={selectedAllHours}
-        setSelectedAllHours={setSelectedAllHours}
-      />
-      <DaysTimeModal
-        daysTimeModalOpen={daysTimeModalOpen}
-        setDaysTimeModalOpen={setDaysTimeModalOpen}
-        selectedDay={selectedDay}
-        setSelectedDay={setSelectedDay}
-        hours={hours}
-        setHours={setHours}
-        setSelectedWeek={setSelectedWeek}
-        selectedWeek={selectedWeek}
-        selectedAllHours={selectedAllHours}
-        setSelectedAllHours={setSelectedAllHours}
-      />
-
-      <SubBranchModal
-        subBranchModalOpen={subBranchModalOpen}
-        setSubBranchModalOpen={setSubBranchModalOpen}
-        subBranch={subBranch}
-        setSubBranch={setSubBranch}
-        setValue={setValue}
-        getValues={getValues}
-        subBranchEdit={subBranchEdit}
-        setSubBranchEdit={setSubBranchEdit}
-      />
     </>
   );
 };
 
-export default withAuthWithoutShop(ShopPage);
-
-const HoursModal = ({
-  hoursModalOpen,
-  setHoursModalOpen,
-  setDaysTimeModalOpen,
-  hours,
-  selectedDay,
-  setSelectedDay,
-  setSelectedWeek,
-  selectedWeek,
-  selectedAllHours,
-  setSelectedAllHours,
+const ActionButtons = ({
+  currentStep,
+  setCurrentStep,
+  handleSubmit,
+  onSubmit,
+  onError,
+  loading,
 }) => {
   return (
-    <>
-      <CustomAuthModal
-        open={hoursModalOpen}
-        onClose={() => setHoursModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
+    <div className="flex justify-end sm:gap-4 gap-2 mt-8">
+      <button
+        onClick={() => {
+          currentStep > 1 && setCurrentStep(currentStep - 1);
+        }}
+        className="bg-[#FAFCFC] sm:py-3 sm:px-12 font-semibold sm:text-lg text-sm px-8 py-2 rounded-[4px] border"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={() => setHoursModalOpen(false)}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                Hours
-              </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={() => setHoursModalOpen(false)}
-              />
-            </div>
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-350px)] overflow-auto">
-              <div className="flex flex-col gap-2 mt-10 container">
-                {hours.map((day, index) => (
-                  <div
-                    className="flex items-center justify-between text-colorBlack text-sm sm:text-base"
-                    key={index}
-                  >
-                    <p>{day["key"]}</p>
-
-                    <div className="flex flex-col">
-                      {day["value"].map((time, index) => (
-                        <div className="flex items-center gap-5" key={index}>
-                          <p
-                            className={
-                              time === "Closed"
-                                ? "text-red-600"
-                                : time === "Open 24 hours"
-                                ? "text-green-600"
-                                : ""
-                            }
-                          >
-                            {time}
-                          </p>
-                          <div
-                            className="p-2 border rounded-full cursor-pointer hover:bg-[#bdbbbb]"
-                            onClick={() => {
-                              setDaysTimeModalOpen(true);
-                              setSelectedDay(day["key"] + " - " + time);
-                            }}
-                          >
-                            <EditIcon />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-10 container flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-10">
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className="rounded-xl capitalize text-colorBlack"
-                  onClick={() => {
-                    setDaysTimeModalOpen(true);
-
-                    setSelectedAllHours([
-                      "Sunday",
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ]);
-                  }}
-                >
-                  Edit All Hours
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className="rounded-xl capitalize text-colorBlack"
-                  onClick={() => {
-                    setDaysTimeModalOpen(true);
-
-                    setSelectedWeek([
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ]);
-                  }}
-                >
-                  Edit Mon - Sat
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className="rounded-xl capitalize text-colorBlack"
-                  onClick={() => {
-                    setDaysTimeModalOpen(true);
-                    setSelectedDay(
-                      "Sunday" +
-                        " - " +
-                        hours[hours.findIndex((item) => item.key === "Sunday")]
-                          .value
-                    );
-                  }}
-                >
-                  Edit Sunday
-                </Button>
-              </div>
-            </div>
-            <div className="container mt-5">
-              <Divider />
-            </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
-                onClick={() => setHoursModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
-                onClick={() => setHoursModalOpen(false)}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
-    </>
-  );
-};
-
-const DaysTimeModal = ({
-  daysTimeModalOpen,
-  setDaysTimeModalOpen,
-  selectedDay,
-  setSelectedDay,
-  hours,
-  setHours,
-  setSelectedWeek,
-  selectedWeek,
-  selectedAllHours,
-  setSelectedAllHours,
-}) => {
-  const [startTime, setStartTime] = useState();
-  const [closeTime, setCloseTime] = useState();
-  const [closed, setClosed] = useState(false);
-  const [open24Hours, setOpen24Hours] = useState(false);
-
-  useEffect(() => {
-    setStartTime(
-      selectedDay?.split(" - ")[1]?.split(" ")[1] === "PM"
-        ? String(
-            Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) +
-              12
-          ) +
-            ":" +
-            selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[1]
-        : selectedDay?.split(" - ")[1]?.split(" ")[0]
-    );
-
-    setCloseTime(
-      selectedDay?.split(" - ")[2]?.split(" ")[1] === "PM"
-        ? String(
-            Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) +
-              12
-          ) +
-            ":" +
-            selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[1]
-        : selectedDay?.split(" - ")[2]?.split(" ")[0]
-    );
-  }, [selectedDay]);
-
-  useEffect(() => {
-    if (selectedDay?.split(" - ")[1] === "Closed") {
-      setClosed(true);
-    } else {
-      setClosed(false);
-    }
-
-    if (selectedDay?.split(" - ")[1] === "Open 24 hours") {
-      setOpen24Hours(true);
-    } else {
-      setOpen24Hours(false);
-    }
-  }, [selectedDay]);
-
-  const saveDaysTimeData = () => {
-    if ((closed || open24Hours) && selectedDay) {
-      const index = hours.findIndex(
-        (item) => item.key === selectedDay?.split(" - ")[0]
-      );
-      if (hours[index]?.value) {
-        hours[index].value = open24Hours ? ["Open 24 hours"] : ["Closed"];
-        setHours(hours);
-      }
-      handleCloseDaysTimeModal();
-    }
-
-    if ((closed || open24Hours) && selectedWeek) {
-      hours.map((itm) =>
-        selectedWeek?.map((day) => {
-          if (day === itm.key) {
-            return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
-          }
-          return itm;
-        })
-      );
-      handleCloseDaysTimeModal();
-    }
-
-    if ((closed || open24Hours) && selectedAllHours) {
-      hours.map((itm) =>
-        selectedAllHours?.map((day) => {
-          if (day === itm.key) {
-            return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
-          }
-          return itm;
-        })
-      );
-      handleCloseDaysTimeModal();
-    }
-
-    if (hours && !closed && !open24Hours && selectedWeek) {
-      hours.map((itm) =>
-        selectedWeek?.map((day) => {
-          if (day === itm.key) {
-            return (itm.value = [
-              `${
-                startTime?.split(":")[0] > 12
-                  ? startTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    startTime?.split(":")[1] +
-                    " PM"
-                  : startTime + " AM"
-              }  - ${
-                closeTime?.split(":")[0] > 12
-                  ? closeTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    closeTime?.split(":")[1] +
-                    " PM"
-                  : closeTime + " AM"
-              } `,
-            ]);
-          }
-          return itm;
-        })
-      );
-
-      handleCloseDaysTimeModal();
-    }
-
-    if (hours && !closed && !open24Hours && selectedAllHours) {
-      hours.map((itm) =>
-        selectedAllHours?.map((day) => {
-          if (day === itm.key) {
-            return (itm.value = [
-              `${
-                startTime?.split(":")[0] > 12
-                  ? startTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    startTime?.split(":")[1] +
-                    " PM"
-                  : startTime + " AM"
-              }  - ${
-                closeTime?.split(":")[0] > 12
-                  ? closeTime?.split(":")[0] -
-                    12 +
-                    ":" +
-                    closeTime?.split(":")[1] +
-                    " PM"
-                  : closeTime + " AM"
-              } `,
-            ]);
-          }
-          return itm;
-        })
-      );
-
-      handleCloseDaysTimeModal();
-    }
-
-    if (
-      hours &&
-      !closed &&
-      !open24Hours &&
-      selectedWeek === undefined &&
-      selectedAllHours === undefined
-    ) {
-      const index = hours.findIndex(
-        (item) => item.key === selectedDay?.split(" - ")[0]
-      );
-      if (hours[index]?.value && startTime && closeTime) {
-        hours[index].value = [
-          `${
-            startTime.split(":")[0] > 12
-              ? startTime.split(":")[0] -
-                12 +
-                ":" +
-                startTime.split(":")[1] +
-                " PM"
-              : startTime + " AM"
-          }  - ${
-            closeTime.split(":")[0] > 12
-              ? closeTime.split(":")[0] -
-                12 +
-                ":" +
-                closeTime.split(":")[1] +
-                " PM"
-              : closeTime + " AM"
-          } `,
-        ];
-        setHours(hours);
-      }
-
-      handleCloseDaysTimeModal();
-    }
-  };
-
-  const handleCloseDaysTimeModal = () => {
-    setDaysTimeModalOpen(false);
-    setSelectedWeek();
-    setSelectedDay();
-    setSelectedAllHours();
-    setClosed(false);
-    setOpen24Hours(false);
-    setStartTime();
-    setCloseTime();
-  };
-
-  return (
-    <>
-      <CustomAuthModal
-        open={daysTimeModalOpen}
-        onClose={handleCloseDaysTimeModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
+        Back
+      </button>
+      <button
+        className="sm:py-3 sm:px-12 bg-colorGreen sm:rounded-md text-white sm:text-lg rounded-[4px] text-sm px-8 py-2 flex items-center"
+        onClick={handleSubmit(onSubmit, onError)}
       >
-        <Box sx={style} className="!w-[80%] lg:!w-[40%]">
-          <div className="p-5">
-            <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
-              Select days & time
-            </p>
-
-            <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
-              <div className="container mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
-                {[
-                  "Sunday",
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                ].map((itm) => (
-                  <div
-                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] ${
-                      selectedDay?.split(" - ")[0] === itm && "bg-[#bdbbbb]"
-                    } ${
-                      selectedWeek?.find((day) => day === itm) && "bg-[#bdbbbb]"
-                    } ${
-                      selectedAllHours?.find((day) => day === itm) &&
-                      "bg-[#bdbbbb]"
-                    }  hover:bg-[#bdbbbb] cursor-pointer`}
-                    key={itm}
-                  >
-                    {itm.charAt(0)}
-                  </div>
-                ))}
-              </div>
-
-              <div className="container mt-5">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={open24Hours}
-                      onChange={(e) => {
-                        setOpen24Hours(e.target.checked);
-                        if (closed) {
-                          setClosed(!e.target.checked);
-                        }
-                      }}
-                    />
-                  }
-                  label="Open 24 Hours"
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={closed}
-                      onChange={(e) => {
-                        setClosed(e.target.checked);
-                        if (open24Hours) {
-                          setOpen24Hours(!e.target.checked);
-                        }
-                      }}
-                    />
-                  }
-                  label="Closed"
-                />
-              </div>
-              {!(closed || open24Hours) && (
-                <div className="container mt-5 flex items-center gap-10">
-                  <TextField
-                    label="Open Time"
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => {
-                      setStartTime(e.target.value);
-                    }}
-                  />
-
-                  <TextField
-                    label="Close Time"
-                    type="time"
-                    value={closeTime}
-                    onChange={(e) => {
-                      setCloseTime(e.target.value);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-            <div className="container mt-5">
-              <Divider />
-            </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
-              <Button
-                variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
-                onClick={handleCloseDaysTimeModal}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
-                onClick={saveDaysTimeData}
-                disabled={
-                  (startTime && closeTime) === undefined &&
-                  !open24Hours &&
-                  !closed
-                }
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
-    </>
+        {loading && (
+          <CircularProgress
+            size={20}
+            color="primary"
+            sx={{ color: "white", mr: 1 }}
+          />
+        )}
+        {currentStep === 3 ? "Submit" : "Next"}
+      </button>
+    </div>
   );
 };
 
 const SubBranchModal = ({
-  subBranchModalOpen,
-  setSubBranchModalOpen,
   subBranch,
   setSubBranch,
   setValue,
@@ -2353,7 +2153,6 @@ const SubBranchModal = ({
             subManagerPhone,
           },
         ]);
-        handleSubBranchModalClose();
       } else {
         const editSelectedSubBranchIndex = subBranch.findIndex(
           (sub) => sub.id === subBranchEdit.id
@@ -2372,17 +2171,15 @@ const SubBranchModal = ({
           subManagerPhone,
         };
         setSubBranch(editSelectedSubBranch);
-        handleSubBranchModalClose();
       }
     }
   };
 
   const handleSubBranchModalClose = () => {
-    setSubBranchModalOpen(false);
     setSubManagerAddress("");
     setSubManagerCity("");
     setSubManagerPinCode("");
-    setSubManagerFirstName();
+    setSubManagerFirstName("");
     setSubManagerLastName("");
     setSubManagerEmail("");
     setManagerValue("");
@@ -2402,260 +2199,818 @@ const SubBranchModal = ({
   };
   return (
     <>
+      <Box>
+        <div>
+          {/* <div className="flex items-center">
+            <ArrowBackIcon
+              className="!text-black !cursor-pointer"
+              onClick={handleSubBranchModalClose}
+            />
+            <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
+              {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
+            </p>
+            <CloseIcon
+              className="!text-black !ml-auto !cursor-pointer"
+              onClick={handleSubBranchModalClose}
+            />
+          </div> */}
+
+          <div>
+            <div className="bg-colorWhite rounded-lg my-5 space-y-5">
+              {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
+                  Branches
+                </h3> */}
+              <form>
+                <div className="flex flex-col space-y-3">
+                  {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
+                      Sub Branch
+                    </p> */}
+                  <div className="flex items-center justify-center gap-20">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Address"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerAddress}
+                          onChange={(e) => {
+                            setSubManagerAddress(e.target.value);
+                            error.subManagerAddressError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerAddressError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-2.5 w-full justify-between items-center">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="City"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerCity}
+                          onChange={(e) => {
+                            setSubManagerCity(e.target.value);
+                            error.subManagerCityError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerCityError || ""}
+                      </span>
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="PinCode"
+                          variant="standard"
+                          className="w-full"
+                          type="number"
+                          value={subManagerPinCode}
+                          onChange={(e) => {
+                            setSubManagerPinCode(e.target.value);
+                            error.subManagerPinCodeError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPinCodeError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center items-center">
+                    <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
+                      {/* <span className="font-semibold text-lg text-[#11142D] mt-5">
+                          Manager:
+                        </span> */}
+
+                      <CustomTextFieldVendor
+                        label="Manager"
+                        variant="standard"
+                        select
+                        fullWidth
+                        value={managerValue}
+                        onChange={(e) => setManagerValue(e.target.value)}
+                      >
+                        <MenuItem value="">None</MenuItem>
+                        {["Same as owner", "same as main branch manager"]?.map(
+                          (man) => (
+                            <MenuItem value={man} key={man}>
+                              {man}
+                            </MenuItem>
+                          )
+                        )}
+                      </CustomTextFieldVendor>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:gap-4 gap-2.5 w-full justify-between items-center">
+                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
+                        Name:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager First Name"
+                          variant="standard"
+                          className="w-full"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerFirstName}
+                          onChange={(e) => {
+                            setSubManagerFirstName(e.target.value);
+                            error.subManagerFirstNameError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerFirstNameError || ""}
+                      </span>
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Last Name"
+                          variant="standard"
+                          className="w-full"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerLastName}
+                          onChange={(e) => {
+                            setSubManagerLastName(e.target.value);
+                            error.subManagerLastNameError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerLastNameError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-10 sm:gap-20">
+                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Email:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Email Address"
+                          variant="standard"
+                          className="w-full"
+                          type="email"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerEmail}
+                          onChange={(e) => {
+                            setSubManagerEmail(e.target.value);
+                            error.subManagerEmailError = "";
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerEmailError || ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-10 sm:gap-20">
+                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
+                        Phone:
+                      </p> */}
+                    <div className="w-full flex flex-col gap-2">
+                      <Box sx={{ display: "flex" }}>
+                        <CustomTextFieldVendor
+                          id="input-with-sx"
+                          label="Manager Phone Number"
+                          variant="standard"
+                          className="w-full"
+                          type="number"
+                          disabled={
+                            managerValue === "Same as owner" ||
+                            managerValue === "same as main branch manager"
+                          }
+                          value={subManagerPhone}
+                          onChange={(e) => {
+                            setSubManagerPhone(e.target.value);
+                            if (e.target.value.length != 10) {
+                              error.subManagerPhoneError =
+                                "SubManagerPhone Number must be 10 numbers";
+                            } else {
+                              error.subManagerPhoneError = "";
+                            }
+                          }}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPhoneError || ""}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div className="mt-5 flex items-center justify-end sm:gap-4 gap-2">
+            <Button
+              variant="outlined"
+              className="font-semibold bg-[#FAFCFC] border border-[#e5e7eb] hover:border-[#e5e7eb] hover:border text-inherit hover:bg-[#FAFCFC]"
+              onClick={handleSubBranchModalClose}
+            >
+              Reset
+            </Button>
+            <Button
+              variant="contained"
+              className="font-semibold text-white bg-colorGreen hover:bg-colorGreen border-0 hover:border-0"
+              onClick={subBranchSubmit}
+            >
+              {subBranchEdit?.id ? "Update" : "Add"}
+            </Button>
+          </div>
+        </div>
+      </Box>
+    </>
+  );
+};
+
+const HoursModal = ({
+  hoursModalOpen,
+  setHoursModalOpen,
+  setDaysTimeModalOpen,
+  hours,
+  selectedDay,
+  setSelectedDay,
+  setSelectedWeek,
+  selectedWeek,
+  selectedAllHours,
+  setSelectedAllHours,
+}) => {
+  return (
+    <>
       <CustomAuthModal
-        open={subBranchModalOpen}
-        onClose={handleSubBranchModalClose}
+        open={hoursModalOpen}
+        onClose={() => setHoursModalOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-1/2">
-          <div className="p-5">
-            <div className="flex items-center">
-              <ArrowBackIcon
-                className="!text-black !cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
-              <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-                {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
-              </p>
-              <CloseIcon
-                className="!text-black !ml-auto !cursor-pointer"
-                onClick={handleSubBranchModalClose}
-              />
+        <Box sx={style} className="!w-[90%] lg:!w-[80%] xl:!w-[50%]">
+          <div className="sm:p-5 p-1 sm:pb-0">
+            <div className="flex justify-between items-center">
+              <div className="sm:text-[28px] text-[16px] font-bold">
+                Set Hours
+              </div>
+              <span>
+                <CloseIcon
+                  className="text-gray-500 !text-xl sm:!text-3xl"
+                  fontSize="large"
+                  onClick={() => setHoursModalOpen(false)}
+                />
+              </span>
             </div>
-
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-335px)] overflow-auto">
-              <div className="container bg-colorWhite rounded-lg my-5 sm:my-10 p-5 space-y-5">
-                <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                  Branches
-                </h3>
-                <form>
-                  <div className="flex flex-col space-y-3">
-                    <p className="mt-2 container flex items-center text-colorBlack text-lg">
-                      Sub Branch
-                    </p>
-                    <div className="flex items-center justify-center container gap-20">
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="Address"
-                            variant="standard"
-                            className="w-full"
-                            value={subManagerAddress}
-                            onChange={(e) => {
-                              setSubManagerAddress(e.target.value);
-                              error.subManagerAddressError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerAddressError || ""}
-                        </span>
+            <div className="sm:h-[calc(100vh-300px)] overflow-auto">
+              <div className="grid grid-cols-1 gap-y-5 my-2">
+                {hours?.map((day, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
+                  >
+                    <div className="flex xl:gap-32  items-center mt-1 sm:mt-0">
+                      <div className="uppercase sm:text-base text-sm font-semibold">
+                        {day["key"]}
                       </div>
                     </div>
+                    {day["value"]?.map((time, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-2 sm:gap-4 sm:items-center items-start sm:mr-20"
+                      >
+                        {time === "Closed" || time === "Open 24 hours" ? (
+                          <p
+                            className={`uppercase ${
+                              time === "Closed"
+                                ? "text-red-600"
+                                : time === "Open 24 hours"
+                                ? "text-green-600"
+                                : ""
+                            } text-base`}
+                          >
+                            {time}
+                          </p>
+                        ) : (
+                          <div className="flex lg:gap-4 gap-2 sm:flex-row flex-col">
+                            <div className="relative">
+                              <TimeCustomTextField
+                                type="time"
+                                id={index}
+                                variant="outlined"
+                                label="Start with"
+                                value={
+                                  time?.split(" - ")[0]?.split(" ")[1] === "PM"
+                                    ? String(
+                                        Number(
+                                          time
+                                            ?.split(" - ")[1]
+                                            ?.split(" ")[0]
+                                            ?.split(":")[0]
+                                        ) + 12
+                                      ) +
+                                      ":" +
+                                      time
+                                        ?.split(" - ")[0]
+                                        ?.split(" ")[0]
+                                        ?.split(":")[1]
+                                    : time?.split(" - ")[0]?.split(" ")[0]
+                                }
+                              />
+                            </div>
+                            <div className="relative">
+                              <TimeCustomTextField
+                                type="time"
+                                id={index}
+                                variant="outlined"
+                                label="End with"
+                                value={
+                                  time?.split(" - ")[1]?.split(" ")[1] === "PM"
+                                    ? String(
+                                        Number(
+                                          time
+                                            ?.split(" - ")[1]
+                                            ?.split(" ")[0]
+                                            ?.split(":")[0]
+                                        ) + 12
+                                      ) +
+                                      ":" +
+                                      time
+                                        ?.split(" - ")[1]
+                                        ?.split(" ")[0]
+                                        ?.split(":")[1]
+                                    : time?.split(" - ")[1]?.split(" ")[0]
+                                }
+                              />
+                            </div>
+                          </div>
+                        )}
 
-                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="City"
-                            variant="standard"
-                            className="w-full"
-                            value={subManagerCity}
-                            onChange={(e) => {
-                              setSubManagerCity(e.target.value);
-                              error.subManagerCityError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerCityError || ""}
-                        </span>
-                      </div>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="PinCode"
-                            variant="standard"
-                            className="w-full"
-                            type="number"
-                            value={subManagerPinCode}
-                            onChange={(e) => {
-                              setSubManagerPinCode(e.target.value);
-                              error.subManagerPinCodeError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPinCodeError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-center items-center">
-                      <div className="flex justify-between items-center container gap-5 sm:gap-10">
-                        <span className="font-semibold text-lg text-[#11142D] mt-5">
-                          Manager:
-                        </span>
-
-                        <CustomTextField
-                          label="Manager"
-                          variant="standard"
-                          select
-                          fullWidth
-                          value={managerValue}
-                          onChange={(e) => setManagerValue(e.target.value)}
+                        <span
+                          onClick={() => {
+                            setDaysTimeModalOpen(true);
+                            setSelectedDay(day["key"] + " - " + time);
+                          }}
+                          className="border mr-2 sm:mr-0 border-gray-200 rounded-full text-gray-400 hover:text-white hover:bg-colorGreen hover:border-colorGreen cursor-pointer"
                         >
-                          <MenuItem value="">None</MenuItem>
-                          {["Same as owner", "same as main branch manager"].map(
-                            (man) => (
-                              <MenuItem value={man} key={man}>
-                                {man}
-                              </MenuItem>
-                            )
-                          )}
-                        </CustomTextField>
-                      </div>
-                    </div>
-
-                    <div className="container flex flex-col sm:flex-row space-y-3 sm:gap-20 w-full justify-between items-center">
-                      <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                        Name:
-                      </p>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="Manager First Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerFirstName}
-                            onChange={(e) => {
-                              setSubManagerFirstName(e.target.value);
-                              error.subManagerFirstNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerFirstNameError || ""}
+                          <EditIcon fontSize="small" className="m-2" />
                         </span>
                       </div>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="Manager Last Name"
-                            variant="standard"
-                            className="w-full"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerLastName}
-                            onChange={(e) => {
-                              setSubManagerLastName(e.target.value);
-                              error.subManagerLastNameError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerLastNameError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Email:
-                      </p>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="Manager Email Address"
-                            variant="standard"
-                            className="w-full"
-                            type="email"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerEmail}
-                            onChange={(e) => {
-                              setSubManagerEmail(e.target.value);
-                              error.subManagerEmailError = "";
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerEmailError || ""}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-center container gap-10 sm:gap-20">
-                      <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Phone:
-                      </p>
-                      <div className="w-full flex flex-col gap-2">
-                        <Box sx={{ display: "flex" }}>
-                          <CustomTextField
-                            id="input-with-sx"
-                            label="Manager Phone Number"
-                            variant="standard"
-                            className="w-full"
-                            type="number"
-                            disabled={
-                              managerValue === "Same as owner" ||
-                              managerValue === "same as main branch manager"
-                            }
-                            value={subManagerPhone}
-                            onChange={(e) => {
-                              setSubManagerPhone(e.target.value);
-                              if (e.target.value.length != 10) {
-                                error.subManagerPhoneError =
-                                  "SubManagerPhone Number must be 10 numbers";
-                              } else {
-                                error.subManagerPhoneError = "";
-                              }
-                            }}
-                          />
-                        </Box>
-                        <span style={{ color: "red" }}>
-                          {error.subManagerPhoneError || ""}
-                        </span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                </form>
+                ))}
               </div>
             </div>
 
-            <div className="container mt-5">
+            <div className="flex justify-between mt-5 lg:gap-6 gap-4">
+              <div className="flex">
+                <div
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+
+                    setSelectedAllHours([
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
+                  }}
+                >
+                  <span>
+                    <EditIcon fontSize="small" className="" />
+                  </span>
+                  Edit all hours
+                </div>
+                <div
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+
+                    setSelectedWeek([
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ]);
+                  }}
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
+                >
+                  <span className="">
+                    <EditIcon fontSize="small" className="" />
+                  </span>
+                  Edit Mon to Sat
+                </div>
+                <div
+                  onClick={() => {
+                    setDaysTimeModalOpen(true);
+                    setSelectedDay(
+                      "Sunday" +
+                        " - " +
+                        hours[hours.findIndex((item) => item.key === "Sunday")]
+                          .value
+                    );
+                  }}
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
+                >
+                  <span className="">
+                    <EditIcon fontSize="small" className="" />
+                  </span>
+                  Edit Sunday
+                </div>
+              </div>
+              <div>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setHoursModalOpen(false)}
+                  className="!font-semibold !mr-4 !bg-[#FAFCFC] !border !border-[#e5e7eb] hover:!border-[#e5e7eb] hover:!border !text-inherit hover:!bg-[#FAFCFC]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => setHoursModalOpen(false)}
+                  className="!font-semibold !text-white !bg-colorGreen hover:!bg-colorGreen !border-0 hover:!border-0"
+                >
+                  Save
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Box>
+      </CustomAuthModal>
+    </>
+  );
+};
+
+const DaysTimeModal = ({
+  daysTimeModalOpen,
+  setDaysTimeModalOpen,
+  selectedDay,
+  setSelectedDay,
+  hours,
+  setHours,
+  setSelectedWeek,
+  selectedWeek,
+  selectedAllHours,
+  setSelectedAllHours,
+}) => {
+  const [startTime, setStartTime] = useState();
+  const [closeTime, setCloseTime] = useState();
+  const [closed, setClosed] = useState(false);
+  const [open24Hours, setOpen24Hours] = useState(false);
+
+  useEffect(() => {
+    setStartTime(
+      selectedDay?.split(" - ")[1]?.split(" ")[1] === "PM"
+        ? String(
+            Number(selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[0]) +
+              12
+          ) +
+            ":" +
+            selectedDay?.split(" - ")[1]?.split(" ")[0]?.split(":")[1]
+        : selectedDay?.split(" - ")[1]?.split(" ")[0]
+    );
+
+    setCloseTime(
+      selectedDay?.split(" - ")[2]?.split(" ")[1] === "PM"
+        ? String(
+            Number(selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[0]) +
+              12
+          ) +
+            ":" +
+            selectedDay?.split(" - ")[2]?.split(" ")[0]?.split(":")[1]
+        : selectedDay?.split(" - ")[2]?.split(" ")[0]
+    );
+  }, [selectedDay]);
+
+  useEffect(() => {
+    if (selectedDay?.split(" - ")[1] === "Closed") {
+      setClosed(true);
+    } else {
+      setClosed(false);
+    }
+
+    if (selectedDay?.split(" - ")[1] === "Open 24 hours") {
+      setOpen24Hours(true);
+    } else {
+      setOpen24Hours(false);
+    }
+  }, [selectedDay]);
+
+  const saveDaysTimeData = () => {
+    if ((closed || open24Hours) && selectedDay) {
+      const index = hours.findIndex(
+        (item) => item.key === selectedDay?.split(" - ")[0]
+      );
+      if (hours[index]?.value) {
+        hours[index].value = open24Hours ? ["Open 24 hours"] : ["Closed"];
+        setHours(hours);
+      }
+      handleCloseDaysTimeModal();
+    }
+
+    if ((closed || open24Hours) && selectedWeek) {
+      hours?.map((itm) =>
+        selectedWeek?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
+          }
+          return itm;
+        })
+      );
+      handleCloseDaysTimeModal();
+    }
+
+    if ((closed || open24Hours) && selectedAllHours) {
+      hours?.map((itm) =>
+        selectedAllHours?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = open24Hours ? ["Open 24 hours"] : ["Closed"]);
+          }
+          return itm;
+        })
+      );
+      handleCloseDaysTimeModal();
+    }
+
+    if (hours && !closed && !open24Hours && selectedWeek) {
+      hours?.map((itm) =>
+        selectedWeek?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = [
+              `${
+                startTime?.split(":")[0] > 12
+                  ? startTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    startTime?.split(":")[1] +
+                    " PM"
+                  : startTime + " AM"
+              }  - ${
+                closeTime?.split(":")[0] > 12
+                  ? closeTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    closeTime?.split(":")[1] +
+                    " PM"
+                  : closeTime + " AM"
+              } `,
+            ]);
+          }
+          return itm;
+        })
+      );
+
+      handleCloseDaysTimeModal();
+    }
+
+    if (hours && !closed && !open24Hours && selectedAllHours) {
+      hours?.map((itm) =>
+        selectedAllHours?.map((day) => {
+          if (day === itm.key) {
+            return (itm.value = [
+              `${
+                startTime?.split(":")[0] > 12
+                  ? startTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    startTime?.split(":")[1] +
+                    " PM"
+                  : startTime + " AM"
+              }  - ${
+                closeTime?.split(":")[0] > 12
+                  ? closeTime?.split(":")[0] -
+                    12 +
+                    ":" +
+                    closeTime?.split(":")[1] +
+                    " PM"
+                  : closeTime + " AM"
+              } `,
+            ]);
+          }
+          return itm;
+        })
+      );
+
+      handleCloseDaysTimeModal();
+    }
+
+    if (
+      hours &&
+      !closed &&
+      !open24Hours &&
+      selectedWeek === undefined &&
+      selectedAllHours === undefined
+    ) {
+      const index = hours.findIndex(
+        (item) => item.key === selectedDay?.split(" - ")[0]
+      );
+      if (hours[index]?.value && startTime && closeTime) {
+        hours[index].value = [
+          `${
+            startTime.split(":")[0] > 12
+              ? startTime.split(":")[0] -
+                12 +
+                ":" +
+                startTime.split(":")[1] +
+                " PM"
+              : startTime + " AM"
+          }  - ${
+            closeTime.split(":")[0] > 12
+              ? closeTime.split(":")[0] -
+                12 +
+                ":" +
+                closeTime.split(":")[1] +
+                " PM"
+              : closeTime + " AM"
+          } `,
+        ];
+        setHours(hours);
+      }
+
+      handleCloseDaysTimeModal();
+    }
+  };
+
+  const handleCloseDaysTimeModal = () => {
+    setDaysTimeModalOpen(false);
+    setSelectedWeek();
+    setSelectedDay();
+    setSelectedAllHours();
+    setClosed(false);
+    setOpen24Hours(false);
+    setStartTime();
+    setCloseTime();
+  };
+
+  const DisableButton = () => {
+    if ((startTime && closeTime) === undefined && !open24Hours && !closed) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  return (
+    <>
+      <CustomAuthModal
+        open={daysTimeModalOpen}
+        onClose={handleCloseDaysTimeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="animate__animated animate__slideInDown"
+      >
+        <Box sx={style} className="!w-[80%] lg:!w-[40%]">
+          <div className="p-5 pb-0">
+            {/* <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
+              Select days & time
+            </p> */}
+            <div className="flex justify-between items-center">
+              <div className="sm:text-[22px] text-[16px] font-bold">
+                Select days & time
+              </div>
+              <span>
+                <CloseIcon
+                  className="text-gray-500 !text-xl sm:!text-3xl"
+                  fontSize="large"
+                  onClick={() => handleCloseDaysTimeModal(false)}
+                />
+              </span>
+            </div>
+
+            <div className="max-h-[calc(100vh-300px)] sm:max-h-[calc(100vh-350px)] overflow-auto">
+              <div className="mt-10 flex items-center gap-2 sm:gap-5 flex-wrap">
+                {[
+                  "Sunday",
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                ]?.map((itm, index) => (
+                  <div
+                    className={`md:px-[3%] md:py-[2%] px-[4%] py-[2%]  border rounded-[50%] cursor-pointer ${
+                      selectedDay?.split(" - ")[0] === itm &&
+                      "bg-colorGreen text-white"
+                    } ${
+                      selectedWeek?.find((day) => day === itm) &&
+                      "bg-colorGreen text-white"
+                    } ${
+                      selectedAllHours?.find((day) => day === itm) &&
+                      "bg-colorGreen text-white"
+                    }  hover:bg-[#bdbbbb]`}
+                    key={itm}
+                  >
+                    {itm.charAt(0)}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={open24Hours}
+                      onChange={(e) => {
+                        setOpen24Hours(e.target.checked);
+                        if (closed) {
+                          setClosed(!e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label="Open 24 Hours"
+                  className="uppercase"
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={closed}
+                      onChange={(e) => {
+                        setClosed(e.target.checked);
+                        if (open24Hours) {
+                          setOpen24Hours(!e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label="Closed"
+                  className="uppercase"
+                />
+              </div>
+              {!(closed || open24Hours) && (
+                <div className=" mt-5 flex flex-col sm:flex-row sm:items-center items-start gap-10">
+                  <TextField
+                    label="Open Time"
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => {
+                      setStartTime(e.target.value);
+                    }}
+                  />
+
+                  <TextField
+                    label="Close Time"
+                    type="time"
+                    value={closeTime}
+                    onChange={(e) => {
+                      setCloseTime(e.target.value);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div className=" mt-5">
               <Divider />
             </div>
-            <div className="container mt-5 flex items-center justify-end gap-5">
+            <div className="mt-4 flex items-center justify-end">
               <Button
                 variant="outlined"
-                className="rounded-xl capitalize text-colorBlack py-2 px-5"
-                onClick={handleSubBranchModalClose}
+                size="large"
+                className="!font-semibold !mr-4 !bg-[#FAFCFC] !border !border-[#e5e7eb] hover:!border-[#e5e7eb] hover:!border !text-inherit hover:!bg-[#FAFCFC]"
+                onClick={handleCloseDaysTimeModal}
               >
                 Cancel
               </Button>
               <Button
-                variant="contained"
-                className="rounded-xl capitalize text-colorWhite bg-colorPrimary py-2 px-5"
-                onClick={subBranchSubmit}
+                size="large"
+                className={`!font-semibold !text-white !bg-colorGreen hover:!bg-colorGreen !border-colorGreen`}
+                onClick={saveDaysTimeData}
+                disabled={DisableButton()}
               >
-                {subBranchEdit?.id ? "Update" : "Save"}
+                Save
               </Button>
             </div>
           </div>
@@ -2664,3 +3019,5 @@ const SubBranchModal = ({
     </>
   );
 };
+
+export default withAuthWithoutShop(ShopPage);

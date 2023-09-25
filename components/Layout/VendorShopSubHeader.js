@@ -1,69 +1,94 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import StoreIcon from "@mui/icons-material/Store";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import ImageLoadingSkeleton from "../Modal/ImageLoadingSkeleton";
+import { Avatar, Divider, Skeleton } from "@mui/material";
 
-const VendorShopSubHeader = () => {
-  const { userProfile } = useSelector((state) => state.userProfile);
-  const [isTop, setIsTop] = useState(true);
+const VendorShopSubHeader = ({ handleMobileSidebarClick }) => {
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const router = useRouter();
 
+  const [selectedValue, setSelectedValue] = useState("");
+
   useEffect(() => {
-    const handleScroll = () => {
-      setIsTop(window.scrollY === 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const setActiveLink = (path) => {
     const withoutLastChunk = router.pathname.slice(
       0,
       router.pathname.lastIndexOf("/")
     );
 
-    return router.pathname === path || withoutLastChunk === path
-      ? "text-colorPrimary hover:text-colorPrimary"
-      : "text-[#544E5D] hover:opacity-50";
-  };
+    if (router.pathname === "/vendor/dashboard") {
+      setSelectedValue("Dashboard");
+    } else if (withoutLastChunk === "/vendor/shopEdit") {
+      setSelectedValue("Shop");
+    } else if (
+      withoutLastChunk === "/vendor/shop" ||
+      `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+    ) {
+      setSelectedValue("Products");
+    }
+  }, [router.pathname, vendorShopDetails?.id]);
+
+  const vendorSubHeaderTabs = [
+    {
+      label: "Dashboard",
+      icon: <DashboardIcon className="mr-4" />,
+      path: "/vendor/dashboard",
+    },
+    {
+      label: "Shop",
+      icon: <StoreIcon className="mr-4" />,
+      path: `/vendor/shopEdit/${vendorShopDetails?.id}`,
+    },
+    {
+      label: "Products",
+      icon: <ProductionQuantityLimitsIcon className="mr-4" />,
+      path: `/vendor/shop/${vendorShopDetails?.id}`,
+    },
+  ];
+
   return (
-    <div
-      className={`w-full ${
-        isTop
-          ? "sticky top-0 left-0  transition-all duration-500 transform origin-top"
-          : ""
-      }bg-[#F5F5F5] z-10 shadow-md`}
-    >
-      <div className="container flex items-center">
-        <ul className="flex items-center gap-10 p-5">
-          <li
-            className={`${setActiveLink(
-              "/vendor/dashboard"
-            )} text-base xl:text-lg`}
-          >
-            <Link href="/vendor/dashboard">Dashboard</Link>
-          </li>
-          <li
-            className={`${setActiveLink(
-              "/vendor/shopEdit"
-            )}  text-base xl:text-lg`}
-          >
-            <Link href={`/vendor/shopEdit/${userProfile.userCreatedShopId}`}>
-              Shop
-            </Link>
-          </li>
-          <li
-            className={`${setActiveLink("/vendor/shop")} text-base xl:text-lg`}
-          >
-            <Link href={`/vendor/shop/${userProfile.userCreatedShopId}`}>
-              Products
-            </Link>
-          </li>
-        </ul>
+    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 flex flex-col items-center ">
+      <div className="flex justify-center">
+        <div className="w-[120px] h-[120px] mb-10 sm:mt-10 rounded-full">
+          {vendorShopDetails?.shop_logo ? (
+            <Avatar
+              src={vendorShopDetails?.shop_logo}
+              alt="Shop Logo"
+              className="!object-cover !w-full !h-full"
+            />
+          ) : (
+            <ImageLoadingSkeleton className="rounded-full" variant="circular" />
+          )}
+        </div>
+      </div>
+      <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
+        <div className="lg:text-3xl text-[28px] font-bold text-[#151827] pb-8 whitespace-nowrap w-full text-center">
+          {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
+        </div>
+        <Divider className="w-full opacity-50 sm:mb-11" />
+        <div className="w-full font-Nova ml-[30%] mt-5 sm:hidden">
+          {vendorSubHeaderTabs.map((tab, index) => (
+            <p
+              key={index}
+              onClick={() => {
+                handleMobileSidebarClick();
+                router.push(tab.path);
+              }}
+              className={`font-semibold sm:pb-10 text-base mr-4 pb-6 ${
+                selectedValue === tab.label
+                  ? "text-[#29977E]"
+                  : "text-[#151827]"
+              }  cursor-pointer uppercase`}
+            >
+              {tab.icon}
+              {tab.label}
+            </p>
+          ))}
+        </div>
       </div>
     </div>
   );

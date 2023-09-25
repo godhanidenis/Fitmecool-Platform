@@ -4,9 +4,9 @@
   left: 0;
 }
 
-.product-overlay {
+/* .product-overlay { */
   /* position: absolute; */
-  top: 0;
+  /* top: 0;
   bottom: 0;
   left: 0;
   right: 0;
@@ -20,35 +20,23 @@
 }
 .detailButton {
   position: absolute;
-  top: 92%;
+  top: 93%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}  */
+
+
+.image-container {
+  /* width: 300px; */
+  /* Adjust the width as needed */
+  transition: transform 0.3s ease;
+  /* Smooth transition for zoom effect */
 }
 
-.slick-prev:before,
-.slick-next:before {
-  color: gray !important;
-}
-
-.slick-initialized .slick-slide > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.slick-prev {
-  left: 4px !important;
-  z-index: 1 !important;
-}
-
-.slick-next {
-  right: 4px !important;
-  z-index: 1 !important;
-}
-
-.BrainhubCarouselItem {
-  margin-top: 5px;
-  margin-bottom: 5px;
+/* Apply zoom when hovering over the image */
+.image-container:hover {
+  transform: scale(1.1);
+  /* You can adjust the scale factor for desired zoom level */
 }

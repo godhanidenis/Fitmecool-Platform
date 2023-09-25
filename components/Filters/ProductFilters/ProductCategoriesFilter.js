@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Autocomplete,
-  Checkbox,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Checkbox, Divider, FormControl, FormGroup } from "@mui/material";
 import CardInteractive from "../CardInteractive/CardInteractive";
 
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { useDispatch, useSelector } from "react-redux";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
+import CommonSearchField from "../CommonSearchField";
+import ShowMoreLessFilter from "../ShowMoreLessFilter";
+import { changeProductPage } from "../../../redux/ducks/product";
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-const ProductCategoriesFilter = ({ setProductPageSkip }) => {
+const ProductCategoriesFilter = () => {
   const { categories } = useSelector((state) => state.categories);
 
   const [menCategoryLabel, setMenCategoryLabel] = useState([]);
@@ -35,8 +25,14 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
 
   const [abc, setAbc] = useState(false);
 
+  const [menSearchValue, setMenSearchValue] = useState("");
+  const [womenSearchValue, setWomenSearchValue] = useState("");
+
+  const [menCatShowMore, setMenCatShowMore] = useState(true);
+  const [womenCatShowMore, setWomenCatShowMore] = useState(true);
+
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
@@ -57,21 +53,21 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
   }, [abc, categoryId, dispatch]);
 
   useEffect(() => {
-    productsFiltersReducer.appliedProductsFilters &&
+    appliedProductsFilters &&
       setSelectedMenCat(
-        productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+        appliedProductsFilters.categoryId.selectedValue
           .map((itm) => categories.find((i) => i.id === itm))
           .filter((ele) => ele.category_type === "Men")
           .map((i) => i.category_name)
       );
 
     setSelectedWomenCat(
-      productsFiltersReducer.appliedProductsFilters.categoryId.selectedValue
+      appliedProductsFilters.categoryId.selectedValue
         .map((itm) => categories.find((i) => i.id === itm))
         .filter((ele) => ele.category_type === "Women")
         .map((i) => i.category_name)
     );
-  }, [categories, productsFiltersReducer.appliedProductsFilters]);
+  }, [categories, appliedProductsFilters]);
 
   useEffect(() => {
     setMenCategoryLabel(
@@ -87,111 +83,175 @@ const ProductCategoriesFilter = ({ setProductPageSkip }) => {
   }, [categories]);
 
   return (
-    <CardInteractive
-      cardTitle="Categories"
-      bottomComponent={
-        <>
-          <Accordion
-            sx={{
-              boxShadow: "none",
-            }}
-            className="text-colorBlack"
-          >
-            <AccordionSummary  expandIcon={<ExpandMoreIcon />}>
-              <Typography>Men</Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={{ padding: "0px 16px 0px" }}>
-              <Autocomplete
-                multiple
-                options={menCategoryLabel}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option}
-                onChange={(event, newValue) => {
-                  setSelectedMenCat(newValue);
-                  setProductPageSkip(0);
-                  setAbc(true);
-                  setMenSelectedData(
-                    newValue.map(
-                      (itm) =>
-                        categories.find((ele) => ele.category_name === itm)?.id
-                    )
-                  );
-                }}
-                value={selectedMenCat}
-                renderOption={(props, option, { selected }) =>
-                  option && (
-                    <li {...props}>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </li>
-                  )
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Men's Categories"
-                    placeholder="Men's Categories"
-                    size="small"
+    <>
+      <CardInteractive
+        cardTitle="MEN"
+        bottomComponent={
+          <>
+            <FormControl fullWidth>
+              <FormGroup>
+                <CommonSearchField
+                  value={menSearchValue}
+                  onChange={(e) => setMenSearchValue(e.target.value)}
+                  selectedFilterLength={
+                    appliedProductsFilters.categoryId.selectedValue
+                      .map((itm) => categories.find((i) => i.id === itm))
+                      .filter((ele) => ele.category_type === "Men").length
+                  }
+                  clearDispatched={() => setMenSelectedData([])}
+                />
+                <div
+                  className={`flex flex-col overflow-auto ${
+                    !menCatShowMore && !menSearchValue && "max-h-[252px]"
+                  }`}
+                >
+                  {(menSearchValue
+                    ? menCatShowMore
+                      ? menCategoryLabel
+                          ?.filter((i) =>
+                            i
+                              .toLowerCase()
+                              .includes(menSearchValue.toLowerCase())
+                          )
+                          .slice(0, 3)
+                      : menCategoryLabel?.filter((i) =>
+                          i.toLowerCase().includes(menSearchValue.toLowerCase())
+                        )
+                    : menCatShowMore
+                    ? menCategoryLabel.slice(0, 3)
+                    : menCategoryLabel
+                  ).map((itm) => (
+                    <StyledFormLabelCheckBox
+                      key={itm}
+                      value={itm}
+                      control={
+                        <Checkbox
+                          checked={selectedMenCat.includes(itm)}
+                          onChange={(event) => {
+                            const updatedSelection = selectedMenCat.includes(
+                              itm
+                            )
+                              ? selectedMenCat.filter((cat) => cat !== itm)
+                              : [...selectedMenCat, itm];
+                            setSelectedMenCat(updatedSelection);
+                            dispatch(changeProductPage(0));
+                            setAbc(true);
+                            setMenSelectedData(
+                              updatedSelection.map(
+                                (item) =>
+                                  categories.find(
+                                    (ele) => ele.category_name === item
+                                  )?.id
+                              )
+                            );
+                          }}
+                        />
+                      }
+                      label={itm}
+                    />
+                  ))}
+                </div>
+                {menCategoryLabel?.filter((i) =>
+                  i.toLowerCase().includes(menSearchValue.toLowerCase())
+                ).length > 3 && (
+                  <ShowMoreLessFilter
+                    value={menCatShowMore}
+                    onClick={() => setMenCatShowMore(!menCatShowMore)}
                   />
                 )}
-              />
-            </AccordionDetails>
-          </Accordion>
+              </FormGroup>
+            </FormControl>
+          </>
+        }
+      />
 
-          <Accordion sx={{ boxShadow: "none" }} className="text-colorBlack">
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Women</Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={{ padding: "0px 16px 0px" }}>
-              <Autocomplete
-                multiple
-                options={womenCategoryLabel}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option}
-                onChange={(event, newValue) => {
-                  setSelectedWomenCat(newValue);
-                  setProductPageSkip(0);
-                  setAbc(true);
-                  setWomenSelectedData(
-                    newValue.map(
-                      (itm) =>
-                        categories.find((ele) => ele.category_name === itm)?.id
-                    )
-                  );
-                }}
-                value={selectedWomenCat}
-                renderOption={(props, option, { selected }) =>
-                  option && (
-                    <li {...props}>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </li>
-                  )
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Women's Categories"
-                    placeholder="Women's Categories"
-                    size="small"
+      <Divider sx={{ margin: "12px" }} />
+
+      <CardInteractive
+        cardTitle="WOMEN"
+        bottomComponent={
+          <>
+            <FormControl fullWidth>
+              <FormGroup>
+                <CommonSearchField
+                  value={womenSearchValue}
+                  onChange={(e) => setWomenSearchValue(e.target.value)}
+                  selectedFilterLength={
+                    appliedProductsFilters.categoryId.selectedValue
+                      .map((itm) => categories.find((i) => i.id === itm))
+                      .filter((ele) => ele.category_type === "Women").length
+                  }
+                  clearDispatched={() => setWomenSelectedData([])}
+                />
+                <div
+                  className={`flex flex-col overflow-auto ${
+                    !womenCatShowMore && !womenSearchValue && "max-h-[252px]"
+                  }`}
+                >
+                  {(womenSearchValue
+                    ? womenCatShowMore
+                      ? womenCategoryLabel
+                          ?.filter((i) =>
+                            i
+                              .toLowerCase()
+                              .includes(womenSearchValue.toLowerCase())
+                          )
+                          .slice(0, 3)
+                      : womenCategoryLabel?.filter((i) =>
+                          i
+                            .toLowerCase()
+                            .includes(womenSearchValue.toLowerCase())
+                        )
+                    : womenCatShowMore
+                    ? womenCategoryLabel.slice(0, 3)
+                    : womenCategoryLabel
+                  ).map((itm) => (
+                    <StyledFormLabelCheckBox
+                      key={itm}
+                      value={itm}
+                      control={
+                        <Checkbox
+                          checked={selectedWomenCat.includes(itm)}
+                          onChange={(event) => {
+                            const updatedSelection = selectedWomenCat.includes(
+                              itm
+                            )
+                              ? selectedWomenCat.filter((cat) => cat !== itm)
+                              : [...selectedWomenCat, itm];
+                            setSelectedWomenCat(updatedSelection);
+                            dispatch(changeProductPage(0));
+                            setAbc(true);
+                            setWomenSelectedData(
+                              updatedSelection.map(
+                                (item) =>
+                                  categories.find(
+                                    (ele) => ele.category_name === item
+                                  )?.id
+                              )
+                            );
+                          }}
+                        />
+                      }
+                      label={itm}
+                    />
+                  ))}
+                </div>
+                {womenCategoryLabel?.filter((i) =>
+                  i.toLowerCase().includes(womenSearchValue.toLowerCase())
+                ).length > 3 && (
+                  <ShowMoreLessFilter
+                    value={womenCatShowMore}
+                    onClick={() => setWomenCatShowMore(!womenCatShowMore)}
                   />
                 )}
-              />
-            </AccordionDetails>
-          </Accordion>
-        </>
-      }
-    />
+              </FormGroup>
+            </FormControl>
+          </>
+        }
+      />
+
+      <Divider sx={{ margin: "12px" }} />
+    </>
   );
 };
 
