@@ -4,7 +4,7 @@ import { assets } from "../../../constants";
 
 const Vendor = () => {
   return (
-    <div className="grid grid-cols-12 gap-3 sm:gap-8  py-3 sm:p-3 md:p-8 2xl:p-10 shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded-md">
+    <div className="grid grid-cols-12 gap-3 sm:gap-8  p-3 sm:p-3 md:p-8 2xl:p-10 shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded-md">
       <div className="sm:col-start-3 col-span-4 sm:col-span-3">
         <div className="flex flex-col items-center gap-3 sm:gap-5 2xl:gap-5">
           <Image src={assets.storeImage3} alt="Store3" width={64} height={64} />

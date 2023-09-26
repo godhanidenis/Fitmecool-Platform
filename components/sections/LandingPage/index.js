@@ -197,6 +197,9 @@ const LandingPage = () => {
   const carouselItems = [
     { imageSrc: assets.bannerImg1, des: "bannerImg1" },
     { imageSrc: assets.bannerImg2, des: "bannerImg2" },
+    { imageSrc: assets.bannerImg3, des: "bannerImg3" },
+    { imageSrc: assets.bannerImg4, des: "bannerImg4" },
+    { imageSrc: assets.bannerImg5, des: "bannerImg6" },
   ];
 
   const CustomDot = ({ onClick, active }) => {

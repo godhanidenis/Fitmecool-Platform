@@ -435,7 +435,12 @@ export const UserProfile = ({ setAccessToken }) => {
         onClick={handleProfileToggle}
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
-        <Avatar className="!bg-colorGreen">
+        <Avatar
+          className="!bg-colorGreen"
+          sx={{
+            fontSize: "14px",
+          }}
+        >
           {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
             String(userProfile?.last_name?.charAt(0).toUpperCase())}
         </Avatar>
