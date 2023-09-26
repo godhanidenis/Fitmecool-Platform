@@ -436,7 +436,7 @@ export const UserProfile = ({ setAccessToken }) => {
         onClick={handleProfileToggle}
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
-        <Avatar>
+        <Avatar className="!bg-colorGreen">
           {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
             String(userProfile?.last_name?.charAt(0).toUpperCase())}
         </Avatar>
@@ -486,7 +486,7 @@ export const UserProfile = ({ setAccessToken }) => {
               <ClickAwayListener onClickAway={handleProfileClose}>
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
-                    <Avatar className="!mb-2 !w-14 !h-14">
+                    <Avatar className="!mb-2 !w-14 !h-14 !bg-colorGreen">
                       {String(userProfile?.first_name)
                         ?.charAt(0)
                         .toUpperCase() +

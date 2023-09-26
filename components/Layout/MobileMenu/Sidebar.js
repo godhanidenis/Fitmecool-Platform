@@ -139,7 +139,7 @@ const Sidebar = ({
             </>
           ) : (
             <div className="flex gap-5 cursor-pointer">
-              <Avatar sx={{ width: 56, height: 56 }}>
+              <Avatar className="!bg-colorGreen" sx={{ width: 56, height: 56 }}>
                 {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
                   String(userProfile?.last_name?.charAt(0).toUpperCase())}
               </Avatar>
