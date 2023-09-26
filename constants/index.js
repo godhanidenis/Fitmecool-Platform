@@ -1,5 +1,10 @@
 import { generateImageUrl } from "../utils/common";
 
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import StoreIcon from "@mui/icons-material/Store";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
+
 export const colorsList = [
   "red",
   "pink",
@@ -82,3 +87,26 @@ export const footerData = {
     },
   ],
 };
+
+export const vendorSidebarTabs = [
+  {
+    label: "Dashboard",
+    icon: <DashboardIcon />,
+    path: "/vendor/dashboard",
+  },
+  {
+    label: "Shop",
+    icon: <StoreIcon />,
+    path: "/vendor/shopEdit",
+  },
+  {
+    label: "Products",
+    icon: <ProductionQuantityLimitsIcon />,
+    path: "/vendor/shop",
+  },
+  {
+    label: "Subscription",
+    icon: <SubscriptionsIcon />,
+    path: `/vendor/shop-subscription`,
+  },
+];

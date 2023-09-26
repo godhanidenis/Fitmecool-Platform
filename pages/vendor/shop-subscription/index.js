@@ -200,7 +200,7 @@ const ShopSubscription = () => {
               <CircularProgress color="secondary" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-10 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 mt-10 gap-5">
               {subscriptionAllPlans?.items
                 ?.filter(
                   (itm) => itm.period === (checked ? "monthly" : "weekly")
@@ -305,10 +305,10 @@ const SubscriptionPlanActions = ({ switchHandler }) => {
               className="hidden peer"
               onChange={switchHandler}
             />
-            <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-colorGrey text-white">
+            <span className="px-4 py-1 bg-colorPrimary peer-checked:text-black peer-checked:bg-colorGrey text-white duration-700">
               Weekly
             </span>
-            <span className="px-4 py-1 peer-checked:bg-colorPrimary bg-colorGrey peer-checked:text-white text-black">
+            <span className="px-4 py-1 peer-checked:bg-colorPrimary bg-colorGrey peer-checked:text-white text-black duration-700">
               Monthly
             </span>
           </label>

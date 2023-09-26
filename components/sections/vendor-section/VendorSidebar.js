@@ -1,17 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import { Avatar, Divider, Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import StoreIcon from "@mui/icons-material/Store";
-import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
-import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import { useSelector } from "react-redux";
+import { vendorSidebarTabs } from "../../../constants";
 
-const VendorSidebar = ({ vendorShopDetails }) => {
+const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
   const router = useRouter();
 
   const [selectedValue, setSelectedValue] = useState("");
+
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   useEffect(() => {
     const withoutLastChunk = router.pathname.slice(
@@ -33,31 +32,12 @@ const VendorSidebar = ({ vendorShopDetails }) => {
     }
   }, [router.pathname, vendorShopDetails?.id]);
 
-  const vendorSidebarTabs = [
-    {
-      label: "Dashboard",
-      icon: <DashboardIcon />,
-      path: "/vendor/dashboard",
-    },
-    {
-      label: "Shop",
-      icon: <StoreIcon />,
-      path: `/vendor/shopEdit/${vendorShopDetails?.id}`,
-    },
-    {
-      label: "Products",
-      icon: <ProductionQuantityLimitsIcon />,
-      path: `/vendor/shop/${vendorShopDetails?.id}`,
-    },
-    {
-      label: "Subscription",
-      icon: <SubscriptionsIcon />,
-      path: `/vendor/shop-subscription`,
-    },
-  ];
-
   return (
-    <div className="sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 hidden sm:flex flex-col items-center">
+    <div
+      className={`sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 ${
+        forHeader ? "flex" : "hidden"
+      } lg:flex flex-col items-center`}
+    >
       <div className="flex justify-center">
         <div className="w-[120px] h-[120px] mb-4 rounded-full">
           {vendorShopDetails?.shop_logo ? (
@@ -76,11 +56,18 @@ const VendorSidebar = ({ vendorShopDetails }) => {
           {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
         </div>
         <Divider className="w-full opacity-50 sm:mb-6" />
-        <div className="w-full font-Nova ml-[30%] hidden sm:block">
+        <div className="w-full font-Nova pl-[15%] mt-5">
           {vendorSidebarTabs.map((tab, index) => (
             <p
               key={index}
-              onClick={() => router.push(tab.path)}
+              onClick={() => {
+                forHeader && handleMobileSidebarClick();
+                router.push(
+                  tab.label === "Shop" || tab.label === "Products"
+                    ? `${tab.path}/${vendorShopDetails?.id}`
+                    : tab.path
+                );
+              }}
               className={`font-semibold pb-8 text-lg ${
                 selectedValue === tab.label
                   ? "text-[#29977E]"
@@ -96,4 +83,5 @@ const VendorSidebar = ({ vendorShopDetails }) => {
     </div>
   );
 };
+
 export default VendorSidebar;

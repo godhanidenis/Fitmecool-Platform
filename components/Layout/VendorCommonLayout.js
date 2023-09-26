@@ -2,14 +2,11 @@ import React, { useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
-import { useRouter } from "next/router";
 import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
 import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
-  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
-  const router = useRouter();
 
   const dispatch = useDispatch();
 
@@ -36,12 +33,10 @@ const VendorCommonLayout = ({ children }) => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen sm:gap-10  font-Nova">
-      <div className="sm:w-[300px] w-full relative">
-        <div className="">
-          <VendorSidebar vendorShopDetails={vendorShopDetails} />
-        </div>
+      <div className="lg:w-[300px] relative">
+        <VendorSidebar />
       </div>
-      <div className="w-full lg:w-[73%] sm:w-[60%] sm:mt-6 px-4 py-4 sm:mr-5 sm:px-0 sm:py-0">
+      <div className="w-full lg:w-[73%] sm:mt-6 px-4 py-4 sm:mr-5 sm:px-0 sm:py-0">
         {children}
       </div>
     </div>

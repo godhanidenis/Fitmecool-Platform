@@ -15,9 +15,9 @@ import Router, { useRouter } from "next/router";
 import { userLogout } from "../../../redux/ducks/userProfile";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { toast } from "react-toastify";
-import VendorShopSubHeader from "../VendorShopSubHeader";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
+import VendorSidebar from "../../sections/vendor-section/VendorSidebar";
 
 const Sidebar = ({
   className = "",
@@ -127,7 +127,7 @@ const Sidebar = ({
         ></div>
       )}
       <div
-        className={`lg:hidden flex flex-col pt-2.5 w-10/12 fixed z-[9999] overflow-auto left-0 top-0 h-screen overflow-y-scroll transition-transform duration-300 bg-colorWhite border-l ${className}`}
+        className={`lg:hidden flex flex-col pt-2.5 w-[90%] sm:w-[50%] fixed z-[9999] overflow-auto left-0 top-0 h-screen overflow-y-scroll transition-transform duration-300 bg-colorWhite ${className}`}
       >
         <div className="px-8 py-5 flex items-center gap-2.5 border-b">
           {!accessToken ? (
@@ -226,15 +226,14 @@ const Sidebar = ({
 
         {userProfile.user_type === "vendor" &&
           Router.pathname !== "/vendor/shop-setup" && (
-            <>
-              <VendorShopSubHeader
-                handleMobileSidebarClick={handleMobileSidebarClick}
-              />
-            </>
+            <VendorSidebar
+              forHeader={true}
+              handleMobileSidebarClick={handleMobileSidebarClick}
+            />
           )}
 
         {accessToken && (
-          <div className="fixed bottom-0 w-10/12 left-0 border-t py-4 px-8 bg-colorWhite">
+          <div className="fixed bottom-0 w-[90%] sm:w-[50%] left-0 border-t py-4 px-8 bg-colorWhite">
             <p
               className="text-[#4a4a4a]"
               onClick={() => {
