@@ -103,7 +103,7 @@ const MenCollection = () => {
   return (
     <>
       <div className="flex justify-between gap-1 2xl:gap-5 items-center ">
-        <div className="w-[70%] md:w-[80%] 2xl:w-[90%]mx-auto flex items-center justify-start">
+        <div className="w-[70%] md:w-[80%] 2xl:w-[90%] flex items-center justify-start">
           <CustomTab
             variant="scrollable"
             value={value}
