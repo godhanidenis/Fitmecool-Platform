@@ -15,7 +15,7 @@ import Footer from "../components/Layout/Footer";
 import { ToastContainer } from "react-toastify";
 import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
-import { CircularProgress, CssBaseline } from "@mui/material/";
+import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import appConfig from "../config";
 import { useEffect, useState } from "react";
@@ -41,11 +41,17 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLogoLoading, setIsLogoLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
+      setIsLogoLoading(false);
     }, 1200);
+  }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 400);
   }, []);
 
   useEffect(() => {
@@ -91,43 +97,49 @@ function MyApp({ Component, pageProps }) {
           <ToastContainer />
 
           <Provider store={store}>
-            {!router.pathname.includes("/auth/") && <Header />}
-            {isLoading ? (
-              <div className="flex flex-col justify-center items-center h-screen bg-[#0000003b]">
+            {isLogoLoading && (
+              <div className="fixed flex justify-center z-10 bg-[#0000006e] w-full h-full">
+                {/* <div className="absolute flex flex-col justify-center place-items-center -mt-16  h-screen bg-[#0000003b]"> */}
                 <div className="flex flex-col justify-center items-center">
-                  <Image
-                    src={assets.appBlackLogo}
-                    alt="AppLogo"
-                    width={80}
-                    height={80}
-                    // className="animate__animated animate__bounce"
-                    className="animate-bounce "
-                  />
-                  <div className="text-[24px] font-bold text-black tracking-wider font-Nova ">
-                    R<span className="text-[20px]">entbless</span>
+                  <div className="flex flex-col justify-center items-center bg-[#ffffff41] p-5 rounded-xl">
+                    <Image
+                      src={assets.appBlackLogo}
+                      alt="AppLogo"
+                      width={80}
+                      height={80}
+                      // className="animate__animated animate__bounce"
+                      className="animate-bounce "
+                    />
+                    <div className="text-[24px] font-bold text-black tracking-wider font-Nova ">
+                      R<span className="text-[20px]">entbless</span>
+                    </div>
                   </div>
                 </div>
-                {/* <CircularProgress color="secondary" /> */}
-              </div>
-            ) : (
-              <div>
-                {router.pathname.includes("/vendor/") &&
-                router.pathname !== "/vendor/shop-setup" &&
-                !router.pathname.includes("/addEditProduct") ? (
-                  <VendorCommonLayout>
-                    <Component {...pageProps} />
-                  </VendorCommonLayout>
-                ) : router.pathname === "/auth/user-type" ||
-                  router.pathname === "/auth/signup" ||
-                  router.pathname === "/auth/signin" ? (
-                  <AuthCommonLayout>
-                    <Component {...pageProps} />
-                  </AuthCommonLayout>
-                ) : (
-                  <Component {...pageProps} />
-                )}
               </div>
             )}
+            {!router.pathname.includes("/auth/") && <Header />}
+            {isLoading && <div className="h-screen" />}
+            <div
+            // onLoad={() => {
+            //   setIsLoading(false);
+            // }}
+            >
+              {router.pathname.includes("/vendor/") &&
+              router.pathname !== "/vendor/shop-setup" &&
+              !router.pathname.includes("/addEditProduct") ? (
+                <VendorCommonLayout>
+                  <Component {...pageProps} />
+                </VendorCommonLayout>
+              ) : router.pathname === "/auth/user-type" ||
+                router.pathname === "/auth/signup" ||
+                router.pathname === "/auth/signin" ? (
+                <AuthCommonLayout>
+                  <Component {...pageProps} />
+                </AuthCommonLayout>
+              ) : (
+                <Component {...pageProps} />
+              )}
+            </div>
             {!router.pathname.includes("/auth/") && <Footer />}
           </Provider>
         </ThemeProvider>

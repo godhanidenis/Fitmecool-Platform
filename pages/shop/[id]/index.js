@@ -197,8 +197,12 @@ const ShopDetail = ({ shopDetails }) => {
           </div>
           <div className="py-8 px-2 sm:px-12">
             <div className="container">
-              {shopReviews.slice(0, 6)?.map((review) => (
-                <ShopCommentsSection review={review} key={review.id} />
+              {shopReviews.slice(0, 6)?.map((review, index) => (
+                <ShopCommentsSection
+                  review={review}
+                  key={review.id}
+                  isEven={index % 2 === 0}
+                />
               ))}
               {shopReviews?.length > 6 && (
                 <div className="mt-[80px] flex justify-center">

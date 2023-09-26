@@ -27,7 +27,6 @@ const Reviews = ({ shopDetails }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
-
   return (
     <>
       <div className="pb-20 md:pb-28 font-Nova">
@@ -46,8 +45,12 @@ const Reviews = ({ shopDetails }) => {
           />
         </div>
         <div className="pb-0 mt-8 container">
-          {shopReviews?.map((review) => (
-            <ShopCommentsSection review={review} key={review?.id} />
+          {shopReviews?.map((review, index) => (
+            <ShopCommentsSection
+              review={review}
+              key={review?.id}
+              isEven={index % 2 === 0}
+            />
           ))}
         </div>
       </div>
