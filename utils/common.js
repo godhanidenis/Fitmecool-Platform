@@ -1,9 +1,3 @@
-import appConfig from "../config";
-
-export const generateImageUrl = (imageName, type) => {
-  return `${appConfig.wasabiUrl}/${imageName}.${type}`;
-};
-
 export function formatDate(inputDateStr) {
   const options = { year: "numeric", month: "short", day: "2-digit" };
   const date = new Date(inputDateStr);

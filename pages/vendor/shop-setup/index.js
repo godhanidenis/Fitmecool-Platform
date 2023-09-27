@@ -41,6 +41,8 @@ import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendo
 import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
+import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
+import { assets } from "../../../constants";
 
 const subBranchStyle = {
   position: "absolute",
@@ -170,14 +172,14 @@ const ShopPage = () => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState("Individual");
+  const [selectedOption, setSelectedOption] = useState("Shop");
   const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
   const [shopDetails, setShopDetails] = useState("Show");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
 
   const [mainBranch, setMainBranch] = useState("Show");
-  const [subBranchSec, setsubBranchSec] = useState("Show");
+  const [subBranchSec, setSubBranchSec] = useState("Show");
   const [managerDetails, setManagerDetails] = useState("Show");
 
   const [shopLogo, setShopLogo] = useState("");
@@ -355,7 +357,7 @@ const ShopPage = () => {
     setManagerDetails(option);
   };
   const handleSubBranchDetails = (option) => {
-    setsubBranchSec(option);
+    setSubBranchSec(option);
   };
 
   const returnSubBranchData = (val) => {
@@ -570,7 +572,12 @@ const ShopPage = () => {
     <>
       <div className="w-full">
         <div className="h-[452px] sm:h-[50vh] relative">
-          <div className="absolute inset-0 bg-black mix-blend-darken opacity-80"></div>
+          <div
+            className="absolute inset-0  mix-blend-darken bg-cover bg-repeat-round"
+            style={{ backgroundImage: `url(${assets.homeCoverImage})` }}
+          >
+            <div className="absolute w-full h-full  bg-[#000000a9]" />
+          </div>
         </div>
         <div className="relative -mt-[calc(50vh-25px)] container">
           <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
@@ -583,102 +590,52 @@ const ShopPage = () => {
           </div>
           <div className="flex justify-center mt-10">
             <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
-              <div
-                className={`py-2 px-4 cursor-pointer rounded-2xl ${
-                  selectedOption === "Individual"
-                    ? "border-2 border-yellow-500"
-                    : "border"
-                }`}
-                onClick={() => handleClickIndividual("Individual", false)}
-              >
-                <div className="flex justify-between">
-                  <div className="flex">
-                    <SiHandshake
-                      className={`${
-                        selectedOption === "Individual"
-                          ? "text-yellow-500"
-                          : "text-white"
-                      }`}
-                      fontSize="25px"
-                    />
-                    <div
-                      className={`${
-                        selectedOption === "Individual"
-                          ? "text-yellow-500"
-                          : "text-white"
-                      } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
-                    >
-                      Individual
+              {["Shop", "Individual"].map((userType, index) => (
+                <div
+                  key={index}
+                  className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                    selectedOption === userType
+                      ? "border-2 border-yellow-500"
+                      : "border"
+                  }`}
+                  onClick={() =>
+                    handleClickIndividual(
+                      userType,
+                      userType === "Individual" ? true : false
+                    )
+                  }
+                >
+                  <div className="flex justify-between">
+                    <div className="flex">
+                      <SiHandshake
+                        className={`${
+                          selectedOption === userType
+                            ? "text-yellow-500"
+                            : "text-white"
+                        }`}
+                        fontSize="25px"
+                      />
+                      <div
+                        className={`${
+                          selectedOption === userType
+                            ? "text-yellow-500"
+                            : "text-white"
+                        } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                      >
+                        {userType}
+                      </div>
+                    </div>
+                    <div>
+                      {selectedOption === userType && (
+                        <CheckCircleIcon className="text-yellow-500" />
+                      )}
                     </div>
                   </div>
-                  <div>
-                    {selectedOption === "Individual" && (
-                      <CheckCircleIcon className="text-yellow-500" />
-                    )}
-                  </div>
                 </div>
-              </div>
-              <div
-                className={`py-2 px-4 cursor-pointer rounded-2xl ${
-                  selectedOption === "Shop"
-                    ? "border-2 border-yellow-500"
-                    : "border"
-                }`}
-                onClick={() => handleClickIndividual("Shop", false)}
-              >
-                <div className="flex justify-between">
-                  <div className="flex">
-                    <SiHandshake
-                      className={`${
-                        selectedOption === "Shop"
-                          ? "text-yellow-500"
-                          : "text-white"
-                      }`}
-                      fontSize="25px"
-                    />
-                    <div
-                      className={`${
-                        selectedOption === "Shop"
-                          ? "text-yellow-500"
-                          : "text-white"
-                      } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
-                    >
-                      Shop
-                    </div>
-                  </div>
-                  <div>
-                    <CheckCircleIcon
-                      className={`${
-                        selectedOption === "Shop"
-                          ? "text-yellow-500"
-                          : "text-white"
-                      }`}
-                    />
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-          {/* <div className="flex justify-center mt-16 gap-3">
-            <button
-              className={`text-gray-400 sm:text-2xl sm:py-3  sm:px-14  py-2 text-lg px-8 ${
-                selectedOption === "Shop" &&
-                "bg-colorGreen roundebbg-colorGreend-md text-white"
-              }`}
-              onClick={() => handleClickIndividual("Shop", false)}
-            >
-              Shop
-            </button>
-            <button
-              className={`text-gray-400 sm:text-2xl sm:py-3  sm:px-14  py-2 text-lg px-8 ${
-                selectedOption === "Individual" &&
-                "bg-colorGreen rounded-md text-white"
-              }`}
-              onClick={() => handleClickIndividual("Individual", true)}
-            >
-              Individual
-            </button>
-          </div> */}
+
           <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
             <div className="md:mx-10">
               <div className="flex justify-evenly mb-3 sm:mb-5">
@@ -857,6 +814,7 @@ const ShopPage = () => {
                           fieldError={errors?.user_email}
                           formValue={{
                             ...register("user_email", {
+                              required: "*User email is required",
                               pattern: {
                                 value:
                                   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -961,6 +919,7 @@ const ShopPage = () => {
                               placeholder="Your shop email"
                               formValue={{
                                 ...register("shop_email", {
+                                  required: "*Shop email is required",
                                   pattern: {
                                     value:
                                       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -1052,61 +1011,63 @@ const ShopPage = () => {
 
                   {/* Shop Open/Close Time */}
 
-                  <div className="border mt-10">
+                  <div className="mt-10">
                     {!individual && (
                       <>
-                        <div className="flex justify-between items-center px-3 md:px-5 py-2 bg-colorPrimary">
-                          <div className="flex">
-                            <div className="uppercase font-semibold sm:text-lg text-sm text-white">
-                              Shop Open/Close Time
-                            </div>
-                          </div>
-                          <div className="flex">
-                            <div
-                              className="flex gap-2 mr-4 items-center cursor-pointer"
-                              onClick={() => setHoursModalOpen(true)}
-                            >
-                              <EditIcon
-                                fontSize="small"
-                                className="text-white"
-                              />
-                              <div className="text-white sm:text-lg text-sm">
-                                Edit
+                        <div className="border">
+                          <div className="flex justify-between items-center px-3 md:px-5 py-2 bg-colorPrimary">
+                            <div className="flex">
+                              <div className="uppercase font-semibold sm:text-lg text-sm text-white">
+                                Shop Open/Close Time
                               </div>
                             </div>
-                            {shopTimeDetails === "Show" ? (
-                              <KeyboardArrowUpIcon
-                                onClick={() => handleShopTimeDetails("Hide")}
-                                className="text-white cursor-pointer"
-                              />
-                            ) : (
-                              <KeyboardArrowDownIcon
-                                onClick={() => handleShopTimeDetails("Show")}
-                                className="text-white cursor-pointer"
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div
-                          className={`space-y-5 p-4 md:p-10 ${
-                            shopTimeDetails === "Hide" && "hidden"
-                          }`}
-                        >
-                          <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
-                            {hours?.map((day, index) => (
-                              <div className="relative" key={index}>
-                                {day["value"]?.map((time, index) => (
-                                  <TimeCustomTextField
-                                    key={index}
-                                    type="text"
-                                    id={index}
-                                    variant="outlined"
-                                    label={day["key"]}
-                                    value={time}
-                                  />
-                                ))}
+                            <div className="flex">
+                              <div
+                                className="flex gap-2 mr-4 items-center cursor-pointer"
+                                onClick={() => setHoursModalOpen(true)}
+                              >
+                                <EditIcon
+                                  fontSize="small"
+                                  className="text-white"
+                                />
+                                <div className="text-white sm:text-lg text-sm">
+                                  Edit
+                                </div>
                               </div>
-                            ))}
+                              {shopTimeDetails === "Show" ? (
+                                <KeyboardArrowUpIcon
+                                  onClick={() => handleShopTimeDetails("Hide")}
+                                  className="text-white cursor-pointer"
+                                />
+                              ) : (
+                                <KeyboardArrowDownIcon
+                                  onClick={() => handleShopTimeDetails("Show")}
+                                  className="text-white cursor-pointer"
+                                />
+                              )}
+                            </div>
+                          </div>
+                          <div
+                            className={`space-y-5 p-4 md:p-10 ${
+                              shopTimeDetails === "Hide" && "hidden"
+                            }`}
+                          >
+                            <div className="w-full grid sm:grid-cols-3 gap-y-8 gap-4 grid-cols-1">
+                              {hours?.map((day, index) => (
+                                <div className="relative" key={index}>
+                                  {day["value"]?.map((time, index) => (
+                                    <TimeCustomTextField
+                                      key={index}
+                                      type="text"
+                                      id={index}
+                                      variant="outlined"
+                                      label={day["key"]}
+                                      value={time}
+                                    />
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </>
@@ -1951,6 +1912,7 @@ const ShopPage = () => {
                               getValues={getValues}
                               subBranchEdit={subBranchEdit}
                               setSubBranchEdit={setSubBranchEdit}
+                              subBranchButtonShow={subBranchButtonShow}
                             />
                           </div>
                         </>
@@ -2020,6 +1982,7 @@ const SubBranchModal = ({
   getValues,
   setSubBranchEdit,
   subBranchEdit,
+  subBranchButtonShow,
 }) => {
   const [managerValue, setManagerValue] = useState("");
 
@@ -2440,6 +2403,7 @@ const SubBranchModal = ({
               variant="contained"
               className="font-semibold text-white bg-colorGreen hover:bg-colorGreen border-0 hover:border-0"
               onClick={subBranchSubmit}
+              disabled={!subBranchButtonShow}
             >
               {subBranchEdit?.id ? "Update" : "Add"}
             </Button>

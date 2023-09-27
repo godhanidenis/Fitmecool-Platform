@@ -1,12 +1,8 @@
 import { Avatar } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { getReviewedTimeString } from "../../../utils/common";
-import UserProfileAvatar, {
-  stringToColor,
-} from "../../Layout/UserProfileAvatar";
 
 const ShopCommentsSection = ({ review, isEven }) => {
-  console.log("isEven :>> ", isEven);
   return (
     <div className="flex justify-center border-b mt-10 relative">
       <div className="grid grid-cols-12 w-full">
@@ -20,7 +16,7 @@ const ShopCommentsSection = ({ review, isEven }) => {
               /> */}
               <Avatar
                 className={`!w-16 !h-16 ${
-                  isEven ? "bg-[#29977d9a]" : "bg-[#29977E]"
+                  isEven ? "!bg-[#29977d9a]" : "!bg-[#29977E]"
                 }`}
               >
                 {review?.user_name

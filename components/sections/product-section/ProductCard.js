@@ -213,7 +213,7 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
   return (
     <>
       <div className="shadow-xl flex flex-col rounded-lg">
-        <div className="cursor-pointer product-parent-div">
+        <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
               <Carousel

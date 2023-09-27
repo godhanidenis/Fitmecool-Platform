@@ -2,7 +2,6 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import {
   Box,
-  Checkbox,
   Dialog,
   FormControlLabel,
   LinearProgress,
@@ -10,18 +9,9 @@ import {
   Paper,
   Select,
   Tabs,
-  Typography,
   linearProgressClasses,
 } from "@mui/material";
 import PropTypes from "prop-types";
-
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
-
-import StepConnector, {
-  stepConnectorClasses,
-} from "@mui/material/StepConnector";
 
 export const CustomTextField = styled(TextField)(({ theme }) => ({
   [`& .MuiInput-input`]: {
@@ -190,80 +180,6 @@ export function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
-export const QontoConnector = styled(StepConnector)(({ theme }) => ({
-  [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 10,
-    left: "calc(-50% + 16px)",
-    right: "calc(50% + 16px)",
-  },
-  [`&.${stepConnectorClasses.active}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: "#95539B",
-    },
-  },
-  [`&.${stepConnectorClasses.completed}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: "#95539B",
-    },
-  },
-  [`& .${stepConnectorClasses.line}`]: {
-    borderColor: "#eaeaf0",
-    borderTopWidth: 3,
-    borderRadius: 1,
-  },
-}));
-
-const QontoStepIconRoot = styled("div")(({ theme, ownerState }) => ({
-  color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
-  display: "flex",
-  height: 22,
-  alignItems: "center",
-  ...(ownerState.active && {
-    color: "#95539B",
-  }),
-  "& .QontoStepIcon-completedIcon": {
-    color: "#95539B",
-    zIndex: 1,
-    fontSize: 24,
-  },
-  "& .QontoStepIcon-circle": {
-    width: 8,
-    height: 8,
-    borderRadius: "50%",
-    backgroundColor: "currentColor",
-  },
-}));
-
-export function QontoStepIcon(props) {
-  const { active, completed, className } = props;
-
-  return (
-    <QontoStepIconRoot ownerState={{ active }} className={className}>
-      {active ? (
-        <RadioButtonCheckedIcon className="QontoStepIcon-completedIcon" />
-      ) : completed ? (
-        <CheckCircleOutlineIcon className="QontoStepIcon-completedIcon" />
-      ) : (
-        <RadioButtonUncheckedIcon className="QontoStepIcon-completedIcon" />
-      )}
-    </QontoStepIconRoot>
-  );
-}
-
-QontoStepIcon.propTypes = {
-  /**
-   * Whether this step is active.
-   * @default false
-   */
-  active: PropTypes.bool,
-  className: PropTypes.string,
-  /**
-   * Mark the step as completed. Is passed to child components.
-   * @default false
-   */
-  completed: PropTypes.bool,
-};
 
 export const StyledFormLabelCheckBox = styled(FormControlLabel)(
   ({ theme, checked }) => ({

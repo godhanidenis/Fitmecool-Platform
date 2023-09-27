@@ -19,7 +19,7 @@ const ShopCard = ({ shop }) => {
       className="rounded-lg shadow-lg flex flex-col w-[100%] cursor-pointer"
       onClick={() => Router.push(`/shop/${shop.id}`)}
     >
-      <div className="product-parent-div  ">
+      <div className="relative top-0 left-0">
         <div
           className="relative"
           style={{

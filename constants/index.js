@@ -1,9 +1,8 @@
-import { generateImageUrl } from "../utils/common";
-
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import StoreIcon from "@mui/icons-material/Store";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
+import appConfig from "../config";
 
 export const colorsList = [
   "red",
@@ -19,37 +18,37 @@ export const colorsList = [
 ];
 
 export const assets = {
-  appLogo: generateImageUrl("rentblessLogo", "png"),
-  appBlackLogo: generateImageUrl("BlackLogo", "png"),
-  emptyCart: generateImageUrl("empty_cart", "png"),
-  appStore: generateImageUrl("appStore", "png"),
-  playStore: generateImageUrl("playStore", "png"),
-  bannerImg1: generateImageUrl("bannerImg1", "png"),
-  bannerImg2: generateImageUrl("bannerImg2", "png"),
-  bannerImg3: generateImageUrl("bannerImg3", "png"),
-  bannerImg4: generateImageUrl("bannerImg4", "png"),
-  bannerImg5: generateImageUrl("bannerImg5", "png"),
-  bannerImg6: generateImageUrl("bannerImg6", "png"),
-  phoneImage: generateImageUrl("phone", "png"),
-  storeImage1: generateImageUrl("store1", "png"),
-  storeImage2: generateImageUrl("store2", "png"),
-  storeImage3: generateImageUrl("store3", "png"),
-  storeImage4: generateImageUrl("store4", "png"),
-  storeImage5: generateImageUrl("store5", "png"),
-  homeCoverImage: generateImageUrl("homeCoverImage", "png"),
-  bharatFlag: generateImageUrl("bharatFlag", "png"),
-  authCover: generateImageUrl("authCover", "png"),
-  callIcon: generateImageUrl("callIcon", "svg"),
-  emailIcon: generateImageUrl("emailIcon", "svg"),
-  facebookIcon: generateImageUrl("facebookIcon", "svg"),
-  googleIcon: generateImageUrl("googleIcon", "svg"),
-  locationIcon: generateImageUrl("locationIcon", "svg"),
-  shareIcon: generateImageUrl("shareIcon", "svg"),
-  facebookLogo: generateImageUrl("facebookLogo", "svg"),
-  instagramLogo: generateImageUrl("instagramLogo", "svg"),
-  linkedinLogo: generateImageUrl("linkedinLogo", "svg"),
-  twitterLogo: generateImageUrl("twitterLogo", "svg"),
-  youtubeLogo: generateImageUrl("youtubeLogo", "svg"),
+  appLogo: `${appConfig.wasabiUrl}/rentblessLogo.png`,
+  appBlackLogo: `${appConfig.wasabiUrl}/BlackLogo.png`,
+  emptyCart: `${appConfig.wasabiUrl}/empty_cart.png`,
+  appStore: `${appConfig.wasabiUrl}/appStore.png`,
+  playStore: `${appConfig.wasabiUrl}/playStore.png`,
+  bannerImg1: `${appConfig.wasabiUrl}/bannerImg1.png`,
+  bannerImg2: `${appConfig.wasabiUrl}/bannerImg2.png`,
+  bannerImg3: `${appConfig.wasabiUrl}/bannerImg3.png`,
+  bannerImg4: `${appConfig.wasabiUrl}/bannerImg4.png`,
+  bannerImg5: `${appConfig.wasabiUrl}/bannerImg5.png`,
+  bannerImg6: `${appConfig.wasabiUrl}/bannerImg6.png`,
+  phoneImage: `${appConfig.wasabiUrl}/phone.png`,
+  storeImage1: `${appConfig.wasabiUrl}/store1.png`,
+  storeImage2: `${appConfig.wasabiUrl}/store2.png`,
+  storeImage3: `${appConfig.wasabiUrl}/store3.png`,
+  storeImage4: `${appConfig.wasabiUrl}/store4.png`,
+  storeImage5: `${appConfig.wasabiUrl}/store5.png`,
+  homeCoverImage: `${appConfig.wasabiUrl}/homeCoverImage.png`,
+  bharatFlag: `${appConfig.wasabiUrl}/bharatFlag.png`,
+  authCover: `${appConfig.wasabiUrl}/authCover.png`,
+  callIcon: `${appConfig.wasabiUrl}/callIcon.svg`,
+  emailIcon: `${appConfig.wasabiUrl}/emailIcon.svg`,
+  facebookIcon: `${appConfig.wasabiUrl}/facebookIcon.svg`,
+  googleIcon: `${appConfig.wasabiUrl}/googleIcon.svg`,
+  locationIcon: `${appConfig.wasabiUrl}/locationIcon.svg`,
+  shareIcon: `${appConfig.wasabiUrl}/shareIcon.svg`,
+  facebookLogo: `${appConfig.wasabiUrl}/facebookLogo.svg`,
+  instagramLogo: `${appConfig.wasabiUrl}/instagramLogo.svg`,
+  linkedinLogo: `${appConfig.wasabiUrl}/linkedinLogo.svg`,
+  twitterLogo: `${appConfig.wasabiUrl}/twitterLogo.svg`,
+  youtubeLogo: `${appConfig.wasabiUrl}/youtubeLogo.svg`,
 };
 
 export const footerData = {

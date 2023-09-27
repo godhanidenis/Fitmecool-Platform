@@ -154,7 +154,7 @@ const ShopCard = ({ shop }) => {
   return (
     <div className="bg-white shadow-xl h-full">
       <div className="">
-        <div className="cursor-pointer product-parent-div">
+        <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
               <Carousel

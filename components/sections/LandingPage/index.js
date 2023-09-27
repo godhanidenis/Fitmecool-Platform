@@ -199,7 +199,8 @@ const LandingPage = () => {
     { imageSrc: assets.bannerImg2, des: "bannerImg2" },
     { imageSrc: assets.bannerImg3, des: "bannerImg3" },
     { imageSrc: assets.bannerImg4, des: "bannerImg4" },
-    { imageSrc: assets.bannerImg5, des: "bannerImg6" },
+    { imageSrc: assets.bannerImg5, des: "bannerImg5" },
+    { imageSrc: assets.bannerImg6, des: "bannerImg6" },
   ];
 
   const CustomDot = ({ onClick, active }) => {
