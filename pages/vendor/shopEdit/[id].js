@@ -49,6 +49,7 @@ import VendorBranchTable from "../../../components/Layout/VendorBranchTable";
 import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
 import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
+import { HoursModal } from "../shop-setup";
 
 const style = {
   position: "absolute",
@@ -189,12 +190,28 @@ const ShopEdit = () => {
     ownerInfoReset();
   }, [ownerInfoReset, value]);
 
+  // const srcToFile = async (src, fileName, mimeType) => {
+  //   const res = await fetch(src, {
+  //     mode: "no-cors",
+  //   });
+  //   const buf = await res.arrayBuffer();
+  //   return new File([buf], fileName, { type: mimeType });
+  // };
+
   const srcToFile = async (src, fileName, mimeType) => {
-    const res = await fetch(src, {
-      mode: "no-cors",
-    });
-    const buf = await res.arrayBuffer();
-    return new File([buf], fileName, { type: mimeType });
+    try {
+      const res = await fetch(src);
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+      }
+
+      const buf = await res.arrayBuffer();
+      return new File([buf], fileName, { type: mimeType });
+    } catch (error) {
+      console.error("Fetch error:", error);
+      // Handle the error or provide appropriate feedback to the user
+    }
   };
 
   const onShopLogoPreviewImage = (e) => {
@@ -602,12 +619,16 @@ const ShopEdit = () => {
     console.log("Errors Occurred !! :", errors);
 
   const shopLayoutOnSubmit = (data) => {
+    console.log("data1 :>> ", data);
     setShopLayoutLoading(true);
     shopLayoutAllMediaImages.map((img) =>
       deleteMedia({
         file: img,
         fileType: "image",
-      }).then((res) => setShopLayoutAllMediaImages([]))
+      }).then((res) => {
+        setShopLayoutAllMediaImages([]);
+        console.log("data1 res :>> ", res);
+      })
     );
 
     shopLayoutAllMediaVideos !== undefined &&
@@ -639,6 +660,7 @@ const ShopEdit = () => {
                       theme: "colored",
                     });
                     setShopLayoutLoading(false);
+                    console.log("data1 res :>> ", res);
                   },
                   (error) => {
                     setShopLayoutLoading(false);
@@ -1053,6 +1075,7 @@ const ShopEdit = () => {
                 selectedWeek={selectedWeek}
                 selectedAllHours={selectedAllHours}
                 setSelectedAllHours={setSelectedAllHours}
+                ShopEdit="true"
               />
 
               <DaysTimeModal
@@ -1617,7 +1640,7 @@ const ShopEdit = () => {
                               >
                                 {shopImages[index] ? (
                                   <>
-                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50">
+                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-10">
                                       <EditIcon
                                         sx={{
                                           "@media (max-width: 768px)": {
@@ -1764,7 +1787,7 @@ const ShopEdit = () => {
                             Shop Video
                           </p>
                           <p className="sm:text-sm text-xs text-gray-400 text-center">
-                            No Size Limit
+                            Size Limited
                           </p>
                         </div>
                       </div>
@@ -1837,231 +1860,6 @@ const ShopEdit = () => {
 };
 
 export default withAuth(ShopEdit);
-
-const HoursModal = ({
-  hoursModalOpen,
-  setHoursModalOpen,
-  setDaysTimeModalOpen,
-  hours,
-  setSelectedDay,
-  setSelectedWeek,
-  setSelectedAllHours,
-}) => {
-  return (
-    <>
-      <CustomAuthModal
-        open={hoursModalOpen}
-        onClose={() => setHoursModalOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="animate__animated animate__slideInDown"
-      >
-        <Box sx={style} className="!w-[90%] lg:!w-[80%] xl:!w-[50%]">
-          <div className="sm:p-5 lg:p-5 p-1">
-            <div className="flex justify-between items-center">
-              <div className="sm:text-[28px] text-[16px] font-bold">Hours</div>
-              <span>
-                <CloseIcon
-                  className="text-gray-500 !text-xl sm:!text-3xl"
-                  fontSize="large"
-                  onClick={() => setHoursModalOpen(false)}
-                />
-              </span>
-            </div>
-            <div className="h-[calc(100vh-300px)] sm:h-[calc(100vh-400px)] overflow-auto">
-              <div className="grid grid-cols-1 gap-y-5 my-2">
-                {hours?.map((day, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between sm:items-center items-start w-full lg:gap-5 xl:gap-10 sm:gap-16 gap-2"
-                  >
-                    <div className="flex xl:gap-32  items-center mt-1 sm:mt-0">
-                      <div className="sm:text-xl text-sm font-semibold">
-                        {day["key"]}
-                      </div>
-                    </div>
-                    {day["value"].map((time, index) => (
-                      <div
-                        key={index}
-                        className="flex gap-2 sm:gap-4 sm:items-center items-start sm:mr-20"
-                      >
-                        {time === "Closed" || time === "Open 24 hours" ? (
-                          <p
-                            className={`${
-                              time === "Closed"
-                                ? "text-red-600"
-                                : time === "Open 24 hours"
-                                ? "text-green-600"
-                                : ""
-                            } font-semibold text-xl`}
-                          >
-                            {time}
-                          </p>
-                        ) : (
-                          <div className="flex lg:gap-4 gap-2 sm:flex-row flex-col">
-                            <div className="relative">
-                              <TimeCustomTextField
-                                type="time"
-                                id={index}
-                                variant="outlined"
-                                label="Start with"
-                                value={
-                                  time?.split(" - ")[0]?.split(" ")[1] === "PM"
-                                    ? String(
-                                        Number(
-                                          time
-                                            ?.split(" - ")[1]
-                                            ?.split(" ")[0]
-                                            ?.split(":")[0]
-                                        ) + 12
-                                      ) +
-                                      ":" +
-                                      time
-                                        ?.split(" - ")[0]
-                                        ?.split(" ")[0]
-                                        ?.split(":")[1]
-                                    : time?.split(" - ")[0]?.split(" ")[0]
-                                }
-                              />
-                            </div>
-                            <div className="relative">
-                              <TimeCustomTextField
-                                type="time"
-                                id={index}
-                                variant="outlined"
-                                label="End with"
-                                value={
-                                  time?.split(" - ")[1]?.split(" ")[1] === "PM"
-                                    ? String(
-                                        Number(
-                                          time
-                                            ?.split(" - ")[1]
-                                            ?.split(" ")[0]
-                                            ?.split(":")[0]
-                                        ) + 12
-                                      ) +
-                                      ":" +
-                                      time
-                                        ?.split(" - ")[1]
-                                        ?.split(" ")[0]
-                                        ?.split(":")[1]
-                                    : time?.split(" - ")[1]?.split(" ")[0]
-                                }
-                              />
-                            </div>
-                          </div>
-                        )}
-
-                        <span
-                          onClick={() => {
-                            setDaysTimeModalOpen(true);
-                            setSelectedDay(day["key"] + " - " + time);
-                          }}
-                          className="border mr-2 sm:mr-0 border-gray-200 rounded-full text-gray-400 hover:text-white xl:ml-10  hover:bg-colorGreen hover:border-colorGreen"
-                        >
-                          <div className="hidden sm:block cursor-pointer">
-                            <EditIcon className="m-1 sm:m-3" />
-                          </div>
-                          <div className="sm:hidden cursor-pointer">
-                            <EditIcon fontSize="small" className="m-1 sm:m-3" />
-                          </div>
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-              <div className="flex sm:justify-center flex-wrap lg:gap-4 gap-2 mt-8">
-                <button
-                  onClick={() => {
-                    setDaysTimeModalOpen(true);
-
-                    setSelectedAllHours([
-                      "Sunday",
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ]);
-                  }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
-                >
-                  <span className="hidden sm:block">
-                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                  </span>
-                  <span className="sm:hidden">
-                    <EditIcon className="-ml-1" fontSize="small" />
-                  </span>
-                  Edit all hours
-                </button>
-                <button
-                  onClick={() => {
-                    setDaysTimeModalOpen(true);
-
-                    setSelectedWeek([
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ]);
-                  }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
-                >
-                  <span className="hidden sm:block">
-                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                  </span>
-                  <span className="sm:hidden">
-                    <EditIcon className="-ml-1" fontSize="small" />
-                  </span>
-                  Edit Mon to Sat
-                </button>
-                <button
-                  onClick={() => {
-                    setDaysTimeModalOpen(true);
-                    setSelectedDay(
-                      "Sunday" +
-                        " - " +
-                        hours[hours.findIndex((item) => item.key === "Sunday")]
-                          .value
-                    );
-                  }}
-                  className="uppercase sm:flex sm:items-center border-2 border-gray-400 lg:px-8 lg:py-3 sm:px-5 sm:py-2 sm:text-[14px] text-[10px] px-1 py-1 rounded-[4px] lg:rounded-md text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen"
-                >
-                  <span className="hidden sm:block">
-                    <EditIcon className="lg:mx-4 lg:-ml-6 mx-2 -ml-2" />
-                  </span>
-                  <span className="sm:hidden">
-                    <EditIcon className="-ml-1" fontSize="small" />
-                  </span>
-                  Edit Sunday
-                </button>
-              </div>
-            </div>
-
-            <div className="flex justify-end mt-5 lg:gap-6 gap-4">
-              <button
-                onClick={() => setHoursModalOpen(false)}
-                className="uppercase font-semibold text-colorGreen lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm py-1 px-3 rounded-[4px] lg:rounded-md border-2 border-colorGreen"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => setHoursModalOpen(false)}
-                className="uppercase font-semibold text-white lg:py-3 lg:px-8 sm:py-2 sm:px-5 sm:text-lg text-sm px-3 py-1 rounded-[4px] lg:rounded-md bg-colorGreen"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </Box>
-      </CustomAuthModal>
-    </>
-  );
-};
 
 const DaysTimeModal = ({
   daysTimeModalOpen,

@@ -2414,7 +2414,7 @@ const SubBranchModal = ({
   );
 };
 
-const HoursModal = ({
+export const HoursModal = ({
   hoursModalOpen,
   setHoursModalOpen,
   setDaysTimeModalOpen,
@@ -2425,6 +2425,7 @@ const HoursModal = ({
   selectedWeek,
   selectedAllHours,
   setSelectedAllHours,
+  ShopEdit,
 }) => {
   return (
     <>
@@ -2439,7 +2440,7 @@ const HoursModal = ({
           <div className="sm:p-5 p-1 sm:pb-0">
             <div className="flex justify-between items-center">
               <div className="sm:text-[28px] text-[16px] font-bold">
-                Set Hours
+                {ShopEdit === "true" ? "Hours" : "Set Hours"}
               </div>
               <span>
                 <CloseIcon

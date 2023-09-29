@@ -128,11 +128,19 @@ const AddEditProductPage = () => {
   }, [id]);
 
   async function srcToFile(src, fileName, mimeType) {
-    const res = await fetch(src, {
-      mode: "no-cors",
-    });
-    const buf = await res.arrayBuffer();
-    return new File([buf], fileName, { type: mimeType });
+    try {
+      const res = await fetch(src);
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+      }
+
+      const buf = await res.arrayBuffer();
+      return new File([buf], fileName, { type: mimeType });
+    } catch (error) {
+      console.error("Fetch error:", error);
+      // Handle the error or provide appropriate feedback to the user
+    }
   }
 
   useEffect(() => {

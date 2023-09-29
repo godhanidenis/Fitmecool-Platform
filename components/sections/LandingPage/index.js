@@ -42,82 +42,6 @@ const responsive = {
   },
 };
 
-const TrendingCustomLeftArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "white",
-        color: "black",
-        left: -12,
-        position: "absolute",
-        cursor: "pointer",
-        width: "40px",
-        height: "40px",
-        borderRadius: "50%",
-        marginLeft: "16px",
-        bottom: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "2px 2px 10px 0 rgba(0, 0, 0, 0.5)",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "12px",
-          height: "12px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(135deg)",
-          cursor: "pointer",
-          position: "relative",
-          right: "-2px",
-        }}
-      />
-    </div>
-  );
-};
-
-const TrendingCustomRightArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "white",
-        color: "black",
-        right: -12,
-        position: "absolute",
-        cursor: "pointer",
-        width: "40px",
-        height: "40px",
-        borderRadius: "50%",
-        marginRight: "16px",
-        bottom: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "-2px 4px 10px 0 rgba(0, 0, 0, 0.5)",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "12px",
-          height: "12px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(-45deg)",
-          cursor: "pointer",
-          position: "relative",
-          left: "-2px",
-        }}
-      />
-    </div>
-  );
-};
-
 const responsive1 = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 1600 },
@@ -198,9 +122,6 @@ const LandingPage = () => {
     { imageSrc: assets.bannerImg1, des: "bannerImg1" },
     { imageSrc: assets.bannerImg2, des: "bannerImg2" },
     { imageSrc: assets.bannerImg3, des: "bannerImg3" },
-    { imageSrc: assets.bannerImg4, des: "bannerImg4" },
-    { imageSrc: assets.bannerImg5, des: "bannerImg5" },
-    { imageSrc: assets.bannerImg6, des: "bannerImg6" },
   ];
 
   const CustomDot = ({ onClick, active }) => {
