@@ -190,14 +190,6 @@ const ShopEdit = () => {
     ownerInfoReset();
   }, [ownerInfoReset, value]);
 
-  // const srcToFile = async (src, fileName, mimeType) => {
-  //   const res = await fetch(src, {
-  //     mode: "no-cors",
-  //   });
-  //   const buf = await res.arrayBuffer();
-  //   return new File([buf], fileName, { type: mimeType });
-  // };
-
   const srcToFile = async (src, fileName, mimeType) => {
     try {
       const res = await fetch(src);
@@ -210,7 +202,6 @@ const ShopEdit = () => {
       return new File([buf], fileName, { type: mimeType });
     } catch (error) {
       console.error("Fetch error:", error);
-      // Handle the error or provide appropriate feedback to the user
     }
   };
 

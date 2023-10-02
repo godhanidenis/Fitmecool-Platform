@@ -23,10 +23,12 @@ import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { changeProductPage } from "../../redux/ducks/product";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({ theme, index }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#151827",
     color: "white",
+    width: index === 0 ? "20px" : "100px",
+    whiteSpace: "nowrap",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -67,7 +69,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                   "Inquiry",
                   "Action",
                 ].map((itm, index) => (
-                  <StyledTableCell align="left" key={index}>
+                  <StyledTableCell align="center" key={index} index={index}>
                     <b>{itm}</b>
                   </StyledTableCell>
                 ))}
@@ -76,7 +78,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
             <TableBody>
               {productsData?.map((item, index) => (
                 <StyledTableRow key={index}>
-                  <TableCell align="left">{index + 1}</TableCell>
+                  <TableCell align="center">{index + 1}</TableCell>
                   <TableCell>
                     <div className="relative">
                       <Image
@@ -90,28 +92,30 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell align="left">
+                  <TableCell align="center">
                     {item?.branchInfo?.shop_info?.shop_name}
                   </TableCell>
-                  <TableCell align="left">{item?.product_name}</TableCell>
-                  <TableCell align="left">{item?.product_color}</TableCell>
-                  <TableCell align="left">
+                  <TableCell align="center">
+                    <div className="line-clamp-1">{item?.product_name}</div>
+                  </TableCell>
+                  <TableCell align="center">{item?.product_color}</TableCell>
+                  <TableCell align="center">
                     <div className="line-clamp-2">
                       {HTMLReactParser(item?.product_description)}
                     </div>
                   </TableCell>
-                  <TableCell align="left">
-                    <>
-                      <p>
-                        WhatsAppInquiry : <b>{item.whatsapp_inquiry}</b>
+                  <TableCell align="center">
+                    <div className="flex flex-col items-center">
+                      <p className="flex justify-between p-1 whitespace-no-wrap w-[150px]">
+                        WhatsApp Inquiry : <b>{item.whatsapp_inquiry}</b>
                       </p>
-                      <p>
-                        ContactInquiry : <b>{item.contact_inquiry}</b>
+                      <p className="flex justify-between p-1 whitespace-no-wrap w-[150px]">
+                        Contact Inquiry : <b>{item.contact_inquiry}</b>
                       </p>
-                    </>
+                    </div>
                   </TableCell>
-                  <TableCell align="left">
-                    <div className="flex gap-2">
+                  <TableCell align="center">
+                    <div className="flex gap-2 justify-center">
                       <button
                         className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-black text-white duration-300 hover:opacity-80 `}
                         onClick={() => {

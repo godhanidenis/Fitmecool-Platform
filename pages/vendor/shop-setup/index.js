@@ -2164,30 +2164,10 @@ const SubBranchModal = ({
     <>
       <Box>
         <div>
-          {/* <div className="flex items-center">
-            <ArrowBackIcon
-              className="!text-black !cursor-pointer"
-              onClick={handleSubBranchModalClose}
-            />
-            <p className="flex items-center text-colorBlack text-xl ml-5 font-semibold">
-              {subBranchEdit?.id ? "Update" : "Add"} Sub Branch
-            </p>
-            <CloseIcon
-              className="!text-black !ml-auto !cursor-pointer"
-              onClick={handleSubBranchModalClose}
-            />
-          </div> */}
-
           <div>
             <div className="bg-colorWhite rounded-lg my-5 space-y-5">
-              {/* <h3 className="text-colorPrimary text-lg font-semibold leading-8">
-                  Branches
-                </h3> */}
               <form>
                 <div className="flex flex-col space-y-3">
-                  {/* <p className="mt-2 container flex items-center text-colorBlack text-lg">
-                      Sub Branch
-                    </p> */}
                   <div className="flex items-center justify-center gap-20">
                     <div className="w-full flex flex-col gap-2">
                       <Box sx={{ display: "flex" }}>

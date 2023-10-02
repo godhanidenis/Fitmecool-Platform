@@ -139,7 +139,6 @@ const AddEditProductPage = () => {
       return new File([buf], fileName, { type: mimeType });
     } catch (error) {
       console.error("Fetch error:", error);
-      // Handle the error or provide appropriate feedback to the user
     }
   }
 

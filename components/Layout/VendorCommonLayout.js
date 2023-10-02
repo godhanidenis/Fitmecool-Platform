@@ -32,11 +32,11 @@ const VendorCommonLayout = ({ children }) => {
   }, [dispatch, userProfile?.subscriptionId]);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen sm:gap-10  font-Nova ">
+    <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">
       <div className="lg:w-[300px] relative sm:bg-white shadow-xl">
         <VendorSidebar />
       </div>
-      <div className="w-full lg:w-[73%] sm:mt-6 px-4 py-4 sm:mr-5 sm:px-0 sm:py-0">
+      <div className="w-full lg:w-[73%] xl:w-[83%] sm:mt-6 px-4 py-4 sm:my-5 sm:px-10 sm:py-0">
         {children}
       </div>
     </div>
