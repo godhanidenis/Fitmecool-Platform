@@ -1706,10 +1706,14 @@ const ShopEdit = () => {
                             </>
                           );
                         })
-                      : [0, 1, 2].map((itm) => (
+                      : [0, 1, 2].map((itm, index) => (
                           <div
                             key={itm}
-                            className="w-full relative sm:h-[290px] h-[344px]"
+                            className={`${
+                              index === 0
+                                ? "col-start-2 lg:col-start-3"
+                                : "col-start-2"
+                            } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full `}
                           >
                             <ImageLoadingSkeleton className="rounded-3xl" />
                           </div>
@@ -2610,13 +2614,13 @@ const AddEditSubBranch = ({
 
         <div className="mt-4 flex items-center justify-end gap-3">
           <button
-            className="flex items-cente capitalize text-lg py-1 px-2 rounded-md border-2 text-black"
+            className="flex items-center capitalize text-lg py-1 px-2 rounded-md border-2 text-black"
             onClick={handleSubBranchSectionClose}
           >
             Cancel
           </button>
           <button
-            className="flex items-cente capitalize text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
+            className="flex items-center capitalize text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
             onClick={subBranchSubmit}
           >
             {editSubBranchId === undefined ? "Save" : "Update"}

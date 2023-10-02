@@ -1011,7 +1011,7 @@ const ShopPage = () => {
 
                   {/* Shop Open/Close Time */}
 
-                  <div className="mt-10">
+                  <div className="my-10">
                     {!individual && (
                       <>
                         <div className="border">

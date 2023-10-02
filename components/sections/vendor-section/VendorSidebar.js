@@ -34,7 +34,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
 
   return (
     <div
-      className={`sm:bg-white sm:h-screen lg:p-6 p-5 sm:py-10 ${
+      className={`lg:p-6 p-5 sm:py-10 ${
         forHeader ? "flex" : "hidden"
       } lg:flex flex-col items-center`}
     >

@@ -21,82 +21,6 @@ import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerro
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 
-const TrendingCustomLeftArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "black",
-        color: "white",
-        left: 0,
-        position: "absolute",
-        cursor: "pointer",
-        width: "28px",
-        height: "28px",
-        borderRadius: "50%",
-        marginLeft: "16px",
-        marginBottom: "25%",
-        bottom: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "10px",
-          height: "10px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(135deg)",
-          cursor: "pointer",
-          position: "relative",
-          right: "-2px",
-        }}
-      />
-    </div>
-  );
-};
-
-const TrendingCustomRightArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "black",
-        color: "white",
-        right: 0,
-        position: "absolute",
-        cursor: "pointer",
-        width: "28px",
-        height: "28px",
-        borderRadius: "50%",
-        marginRight: "16px",
-        marginBottom: "25%",
-        bottom: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "10px",
-          height: "10px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(-45deg)",
-          cursor: "pointer",
-          position: "relative",
-          left: "-2px",
-        }}
-      />
-    </div>
-  );
-};
-
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
@@ -224,14 +148,6 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                 arrows={false}
                 removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
-                // customLeftArrow={
-                //   <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-                // }
-                // customRightArrow={
-                //   <TrendingCustomRightArrow
-                //     onClick={TrendingCustomRightArrow}
-                //   />
-                // }
                 dotListClass={"Landing_customDots"}
               >
                 {productImages}
@@ -357,24 +273,6 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
               </>
             )}
           </div>
-
-          {/* {!onlyCarousal && (
-            <>
-              <div className="product-overlay">
-                <Link href={`/product/${product.id}`}>
-                  <a
-                    target={`${
-                      themeLayout === "webScreen" ? "_blank" : "_self"
-                    }`}
-                  >
-                    <button className="text-colorWhite sm:text-base text-[10px] px-5 sm:py-2 py-1 w-[80%] bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
-                      See Details
-                    </button>
-                  </a>
-                </Link>
-              </div>
-            </>
-          )} */}
         </div>
 
         {!onlyCarousal && (

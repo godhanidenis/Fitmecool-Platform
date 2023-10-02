@@ -51,7 +51,7 @@ const ShopCard = ({ shop }) => {
         </div>
         <div className=" w-full flex -mt-10 md:-mt-10 lg:-mt-14 xl:-mt-14 2xl:-mt-12  justify-center">
           <div
-            className="flex"
+            className="flex relative"
             style={{
               width: themeLayout === "mobileScreen" ? "60px" : "90px",
               height: themeLayout === "mobileScreen" ? "60px" : "90px",
@@ -61,7 +61,7 @@ const ShopCard = ({ shop }) => {
               src={shop?.shop_logo ?? ""}
               alt="Shop Logo"
               objectFit="cover"
-              className={`rounded-full absolute top-0 left-0 ${
+              className={`rounded-full absolute top-0 left-0  ${
                 isShopLogoLoaded ? "opacity-100" : "opacity-0"
               }`}
               onLoad={() => setIsShopLogoLoaded(true)}
@@ -69,14 +69,14 @@ const ShopCard = ({ shop }) => {
               height="100%"
               // layout="responsive"
             />
-            {/* {!isShopLogoLoaded && (
+            {!isShopLogoLoaded && (
               <ImageLoadingSkeleton
-                className="rounded-[50%]"
+                className="rounded-[50%] absolute"
                 variant="circular"
                 width="100%"
                 height="100%"
               />
-            )} */}
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-1 justify-center items-center p-5">
