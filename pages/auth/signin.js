@@ -194,7 +194,7 @@ const Login = () => {
           )}
         </div>
         <Link href="/auth/forgot-password">
-          <p className="flex justify-end text-gray-400 cursor-pointer">
+          <p className="flex justify-end text-gray-400 hover:opacity-50 cursor-pointer">
             Forgot Password?
           </p>
         </Link>

@@ -87,7 +87,9 @@ const UpdatePassword = () => {
             Update Password
           </h1>
           <p className="text-gray-700 text-sm mb-12">
-            update your new password
+            Experience the next level of security and peace of mind by renewing
+            your password – your gateway to a safer and more empowered online
+            journey awaits!
           </p>
 
           <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>

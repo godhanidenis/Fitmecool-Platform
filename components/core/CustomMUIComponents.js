@@ -201,9 +201,6 @@ export const CustomDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
-  "& .MuiDialog-backdrop": {
-    backgroundColor: "#CAA9CD !important",
-  },
   "& .MuiDialog-paper": {
     top: 0,
     position: "absolute",
@@ -212,6 +209,7 @@ export const CustomDialog = styled(Dialog)(({ theme }) => ({
     maxHeight: "100%",
     maxWidth: "100%",
     margin: "0px",
+    borderRadius: 0,
   },
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),

@@ -276,15 +276,19 @@ const Header = () => {
             open={openSearchDialog}
             onClose={handleSearchDialogClose}
           >
-            <DialogTitle m={0} p={2} display="flex">
+            <DialogTitle
+              m={0}
+              p={2}
+              height={72}
+              display="flex"
+              className="!bg-colorPrimary"
+            >
               <div className="w-full flex items-center justify-center cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
-                  <span className="text-4xl">R</span>entbless
-                </h2>
+                <AppLogo />
               </div>
 
               <IconButton onClick={handleSearchDialogClose}>
-                <CloseIcon />
+                <CloseIcon className="!text-white" />
               </IconButton>
             </DialogTitle>
 
