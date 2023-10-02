@@ -64,6 +64,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                   "Product Name",
                   "Color",
                   "Description",
+                  "Inquiry",
                   "Action",
                 ].map((itm, index) => (
                   <StyledTableCell align="left" key={index}>
@@ -98,6 +99,16 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                     <div className="line-clamp-2">
                       {HTMLReactParser(item?.product_description)}
                     </div>
+                  </TableCell>
+                  <TableCell align="left">
+                    <>
+                      <p>
+                        WhatsAppInquiry : <b>{item.whatsapp_inquiry}</b>
+                      </p>
+                      <p>
+                        ContactInquiry : <b>{item.contact_inquiry}</b>
+                      </p>
+                    </>
                   </TableCell>
                   <TableCell align="left">
                     <div className="flex gap-2">

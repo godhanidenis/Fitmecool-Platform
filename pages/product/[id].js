@@ -24,7 +24,11 @@ import {
   productLikeToggle,
   shopFollowToggle,
 } from "../../redux/ducks/userProfile";
-import { productLike } from "../../graphql/mutations/products";
+import {
+  productContactInquiry,
+  productLike,
+  productWhatsappInquiry,
+} from "../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
@@ -607,11 +611,19 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-4 sm:gap-0 mt-10 items-center justify-between">
-                  <div className="w-[100%] md:w-[48%]">
+                  <div
+                    className="w-[100%] md:w-[48%]"
+                    onClick={() =>
+                      productWhatsappInquiry({
+                        id: productDetails.data.product.data.id,
+                      })
+                    }
+                  >
                     <a
-                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                        window.location.href
-                      )}`}
+                      href={`https://api.whatsapp.com/send?phone=${
+                        productDetails.data.product.data.branchInfo
+                          ?.manager_contact
+                      }&text=${encodeURIComponent(window.location.href)}`}
                       target="_blank"
                       className="w-full"
                       rel="noreferrer"
@@ -627,7 +639,14 @@ const ProductDetail = ({ productDetails }) => {
                     </a>
                   </div>
 
-                  <div className="w-[100%] md:w-[48%]">
+                  <div
+                    className="w-[100%] md:w-[48%]"
+                    onClick={() =>
+                      productContactInquiry({
+                        id: productDetails.data.product.data.id,
+                      })
+                    }
+                  >
                     <button
                       className="bg-[#E8EBEA] text-[#31333E] text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
