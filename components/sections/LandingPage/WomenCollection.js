@@ -13,17 +13,17 @@ const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 1600 },
     items: 6,
-    slidesToSlide: 6,
+    slidesToSlide: 2,
   },
   desktop: {
     breakpoint: { max: 1600, min: 1367 }, // Desktop screens
     items: 5,
-    slidesToSlide: 5,
+    slidesToSlide: 2,
   },
   laptop: {
     breakpoint: { max: 1366, min: 1024 }, // Laptop screens
     items: 4,
-    slidesToSlide: 4,
+    slidesToSlide: 1,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 }, // Example: New breakpoint for larger tablets
@@ -156,8 +156,8 @@ const WomenCollection = () => {
               ref={carouselRef}
               responsive={responsive}
               customTransition="all .5s ease-in-out"
-              removeArrowOnDeviceType={["mobile"]}
-              arrows={true}
+              // removeArrowOnDeviceType={["mobile"]}
+              arrows={false}
               infinite
               // autoPlay
               // autoPlaySpeed={5000}

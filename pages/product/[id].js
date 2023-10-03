@@ -565,13 +565,18 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">
                     About
                   </div>
-                  <div className="border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
+                  <div
+                    className={`${
+                      readMore ? "h-[250px] overflow-scroll" : " "
+                    } border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px] `}
+                  >
                     <div className="font-normal text-lg text-[#888888] leading-6">
                       <div
                         dangerouslySetInnerHTML={{
                           __html: readMore
                             ? productDescription
-                            : productDescription.slice(0, 250),
+                            : productDescription.slice(0, 250) +
+                              (productDescription.length > 250 ? "..." : " "),
                         }}
                       />
                       {productDescription.length > 250 && (
