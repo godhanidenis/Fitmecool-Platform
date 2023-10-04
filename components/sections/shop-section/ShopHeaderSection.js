@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Button, Grid, Typography } from "@mui/material";
+import { Avatar, Button, Grid, Typography } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
@@ -33,6 +33,8 @@ const ShopHeaderSection = ({
   const pageShareURL = window.location.href;
 
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
+  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
 
   const router = useRouter();
 
@@ -66,7 +68,26 @@ const ShopHeaderSection = ({
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row">
               <div className="mt-[-45px] flex justify-center">
-                {shopDetails?.shop_logo ? (
+                {isLogoImage ? (
+                  <Avatar
+                    className="!bg-colorGreen"
+                    sx={{
+                      fontSize: "70px",
+                      width: "150px",
+                      height: "150px",
+                    }}
+                  >
+                    {String(shopDetails.shop_name)
+                      ?.split(" ")[0][0]
+                      .toUpperCase()}
+                    {/* {String(shopDetails.shop_name)
+                      ?.split(" ")[0][0]
+                      .toUpperCase() +
+                      String(shopDetails.shop_name)
+                        ?.split(" ")[1][0]
+                        .toUpperCase()} */}
+                  </Avatar>
+                ) : (
                   <Image
                     src={shopDetails?.shop_logo ?? ""}
                     alt="shop logo"
@@ -74,8 +95,14 @@ const ShopHeaderSection = ({
                     width={150}
                     height={150}
                     className="rounded-[50%]"
+                    onLoad={() => setIsShopLogoLoaded(true)}
+                    onError={() => {
+                      setIsLogoImage(true);
+                    }}
                   />
-                ) : (
+                )}
+
+                {!isShopLogoLoaded && (
                   <ImageLoadingSkeleton
                     className="rounded-[50%]"
                     variant="circular"

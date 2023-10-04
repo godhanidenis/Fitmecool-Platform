@@ -113,7 +113,10 @@ const ShopDetail = ({ shopDetails }) => {
   return (
     <>
       <div className="font-Nova">
-        <DirectoryHero bgImg={shopDetails?.data?.shop?.shop_cover_image} />
+        <DirectoryHero
+          title={shopDetails?.data?.shop?.shop_name}
+          bgImg={shopDetails?.data?.shop?.shop_cover_image}
+        />
         <div className="">
           <ShopHeaderSection
             shopDetails={shopDetails.data.shop}

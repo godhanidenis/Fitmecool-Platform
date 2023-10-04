@@ -6,11 +6,14 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import Link from "next/link";
+import { Avatar } from "@mui/material";
 
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
+  const [isShopImages, setIsShopImages] = useState(false);
 
   return (
     <div className="rounded-lg shadow-lg flex flex-col w-[100%] cursor-pointer">
@@ -30,16 +33,24 @@ const ShopCard = ({ shop }) => {
               {!isShopImagesLoaded && (
                 <ImageLoadingSkeleton className="object-cover" />
               )}
-              <Image
-                // src={shop?.shop_images[0]?.links}
-                src={shop?.shop_cover_image}
-                alt={shop?.shop_name}
-                className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
-                  isShopImagesLoaded ? "opacity-100" : "opacity-0 "
-                }`}
-                onLoad={() => setShopImagesLoaded(true)}
-                layout="fill"
-              />
+              {isShopImages ? (
+                <></>
+              ) : (
+                <Image
+                  // src={shop?.shop_images[0]?.links}
+                  src={shop?.shop_cover_image}
+                  alt={shop?.shop_name}
+                  className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
+                    isShopImagesLoaded ? "opacity-100" : "opacity-0 "
+                  }`}
+                  onLoad={() => setShopImagesLoaded(true)}
+                  layout="fill"
+                  onError={() => {
+                    setIsShopImages(true);
+                  }}
+                />
+              )}
+
               <div
                 className={`absolute top-0 left-0 w-full h-full bg-black opacity-50 rounded-t-lg ${
                   isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -57,8 +68,22 @@ const ShopCard = ({ shop }) => {
                   height: themeLayout === "mobileScreen" ? "60px" : "90px",
                 }}
               >
+                {isLogoImage && (
+                  <Avatar
+                    className="!bg-colorGreen"
+                    sx={{
+                      fontSize: "40px",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
+                    {/* {String(shop.shop_name)?.split(" ")[0][0].toUpperCase() +
+                      String(shop.shop_name)?.split(" ")[1][0].toUpperCase()} */}
+                  </Avatar>
+                )}
                 <Image
-                  src={shop?.shop_logo ?? ""}
+                  src={shop?.shop_logo}
                   alt="Shop Logo"
                   objectFit="cover"
                   className={`rounded-full absolute top-0 left-0  ${
@@ -68,6 +93,9 @@ const ShopCard = ({ shop }) => {
                   width="100%"
                   height="100%"
                   // layout="responsive"
+                  onError={() => {
+                    setIsLogoImage(true);
+                  }}
                 />
                 {!isShopLogoLoaded && (
                   <ImageLoadingSkeleton
@@ -85,7 +113,7 @@ const ShopCard = ({ shop }) => {
               </p>
               <p className="text-[#878A99] text-[12px]  font-light flex justify-center items-center">
                 <span className="text-center line-clamp-1 ">
-                  <LocationOnIcon className="!mr-1 !w-4" />{" "}
+                  <LocationOnIcon className="!mr-1 !w-4" />
                   {shop?.branch_info?.length > 1
                     ? shop?.branch_info?.map(
                         (itm) =>

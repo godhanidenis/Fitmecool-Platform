@@ -6,6 +6,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
 import Carousel from "react-multi-carousel";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import { Avatar } from "@mui/material";
 
 const responsive = {
   superLargeDesktop: {
@@ -26,88 +27,14 @@ const responsive = {
   },
 };
 
-const TrendingCustomLeftArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "black",
-        color: "white",
-        left: 0,
-        position: "absolute",
-        cursor: "pointer",
-        width: "38px",
-        height: "38px",
-        borderRadius: "50%",
-        marginLeft: "16px",
-        marginBottom: "25%",
-        bottom: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "10px",
-          height: "10px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(135deg)",
-          cursor: "pointer",
-          position: "relative",
-          right: "-1px",
-        }}
-      />
-    </div>
-  );
-};
-
-const TrendingCustomRightArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "black",
-        color: "white",
-        right: 0,
-        position: "absolute",
-        cursor: "pointer",
-        width: "38px",
-        height: "38px",
-        borderRadius: "50%",
-        marginRight: "16px",
-        marginBottom: "25%",
-        bottom: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "10px",
-          height: "10px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(-45deg)",
-          cursor: "pointer",
-          position: "relative",
-          left: "-1px",
-        }}
-      />
-    </div>
-  );
-};
-
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
   const [currentImageIndex, setCurrentImageIndex] = useState(null);
   const [autoplay, setAutoplay] = useState(false);
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
+  const [isShopImages, setIsShopImages] = useState(false);
 
   const carouselRef = useRef(null);
 
@@ -134,20 +61,27 @@ const ShopCard = ({ shop }) => {
         )}
         <Link href={`/shop/${shop.id}`}>
           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-            <Image
-              // src={itm?.links ?? ""}
-              src={
-                currentImageIndex === null
-                  ? itm?.links
-                  : currentImageIndex === 0 && shop.shop_images[0]?.links
-              }
-              alt={shop?.shop_name}
-              className={`object-cover absolute top-0 left-0 ${
-                isShopImagesLoaded ? "opacity-100" : "opacity-0"
-              }`}
-              onLoad={() => setShopImagesLoaded(true)}
-              layout="fill"
-            />
+            {isShopImages ? (
+              <div className="w-full h-full bg-[#00000031]" />
+            ) : (
+              <Image
+                // src={itm?.links ?? ""}
+                src={
+                  currentImageIndex === null
+                    ? itm?.links
+                    : currentImageIndex === 0 && shop.shop_images[0]?.links
+                }
+                alt={shop?.shop_name}
+                className={`object-cover absolute top-0 left-0 ${
+                  isShopImagesLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                onLoad={() => setShopImagesLoaded(true)}
+                onError={() => {
+                  setIsShopImages(true);
+                }}
+                layout="fill"
+              />
+            )}
           </a>
         </Link>
       </div>
@@ -165,33 +99,14 @@ const ShopCard = ({ shop }) => {
                 autoPlay={autoplay}
                 autoPlaySpeed={900}
                 infinite
-                // removeArrowOnDeviceType={["mobile"]}
                 arrows={false}
                 responsive={responsive}
-                // customLeftArrow={
-                //   <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-                // }
-                // customRightArrow={
-                //   <TrendingCustomRightArrow
-                //     onClick={TrendingCustomRightArrow}
-                //   />
-                // }
                 dotListClass={"Landing_customDots"}
               >
                 {shopImages}
               </Carousel>
             </div>
           </div>
-
-          {/* <div className="product-overlay">
-            <Link href={`/shop/${shop.id}`}>
-              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
-                  Visit Shop
-                </button>
-              </a>
-            </Link>
-          </div> */}
         </div>
       </div>
       <Link href={`/shop/${shop.id}`}>
@@ -218,7 +133,28 @@ const ShopCard = ({ shop }) => {
                         isShopLogoLoaded ? "opacity-100" : "opacity-0"
                       }`}
                       onLoad={() => setIsShopLogoLoaded(true)}
+                      onError={() => {
+                        setIsLogoImage(true);
+                      }}
                     />
+                    {isLogoImage && (
+                      <Avatar
+                        className="!bg-colorGreen"
+                        sx={{
+                          fontSize: "18px",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
+                        {/* {String(shop.shop_name)
+                          ?.split(" ")[0][0]
+                          .toUpperCase() +
+                          String(shop.shop_name)
+                            ?.split(" ")[1][0]
+                            .toUpperCase()} */}
+                      </Avatar>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col align-baseline">

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { productLikeToggle } from "../../../redux/ducks/userProfile";
 import { productLike } from "../../../graphql/mutations/products";
 import { toast } from "react-toastify";
-import { Tooltip, tooltipClasses } from "@mui/material";
+import { Avatar, Tooltip, tooltipClasses } from "@mui/material";
 import Router from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import {
@@ -48,6 +48,8 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
   const [OpenToolTip, setOpenToolTip] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
+  const [isShopImages, setIsShopImages] = useState(false);
 
   const carouselRef = useRef(null);
 
@@ -109,20 +111,27 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
             target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
             rel="noopener noreferrer"
           >
-            <Image
-              // src={itm ?? ""}
-              src={
-                currentImageIndex === null
-                  ? itm
-                  : currentImageIndex === 0 && product.product_image.front
-              }
-              alt={product?.product_name}
-              className={`object-cover absolute top-0 left-0 rounded-t-lg ${
-                isProductImagesLoaded ? "opacity-100" : "opacity-0"
-              }`}
-              onLoad={() => setProductImagesLoaded(true)}
-              layout="fill"
-            />
+            {isShopImages ? (
+              <div className="w-full h-full bg-[#00000031]" />
+            ) : (
+              <Image
+                // src={itm ?? ""}
+                src={
+                  currentImageIndex === null
+                    ? itm
+                    : currentImageIndex === 0 && product.product_image.front
+                }
+                alt={product?.product_name}
+                className={`object-cover absolute top-0 left-0 rounded-t-lg ${
+                  isProductImagesLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                onLoad={() => setProductImagesLoaded(true)}
+                onError={() => {
+                  setIsShopImages(true);
+                }}
+                layout="fill"
+              />
+            )}
           </a>
         </Link>
       </div>
@@ -310,13 +319,36 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                       )}
                       <Image
                         alt="Shop Logo"
-                        src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
+                        src={product?.branchInfo?.shop_info?.shop_logo}
                         layout="fill"
                         className={`rounded-[50%] absolute top-0 left-0 ${
                           isShopLogoLoaded ? "opacity-100" : "opacity-0"
                         }`}
                         onLoad={() => setIsShopLogoLoaded(true)}
+                        onError={() => {
+                          setIsLogoImage(true);
+                        }}
                       />
+                      {isLogoImage && (
+                        <Avatar
+                          className="!bg-colorGreen"
+                          sx={{
+                            fontSize: "12px",
+                            width: "100%",
+                            height: "100%",
+                          }}
+                        >
+                          {String(product.branchInfo?.shop_info?.shop_name)
+                            ?.split(" ")[0][0]
+                            .toUpperCase()}
+                          {/* {String(product.branchInfo?.shop_info?.shop_name)
+                            ?.split(" ")[0][0]
+                            .toUpperCase() +
+                            String(product.branchInfo?.shop_info?.shop_name)
+                              ?.split(" ")[1][0]
+                              .toUpperCase()} */}
+                        </Avatar>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-col justify-center">
