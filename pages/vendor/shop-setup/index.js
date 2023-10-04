@@ -1088,13 +1088,13 @@ const ShopPage = () => {
                               })}
                             />
                           </div>
-                          {errors.shopLogo && (
+                          {/* {errors.shopLogo && (
                             <div className="mt-2">
                               <span style={{ color: "red" }}>
                                 {errors.shopLogo?.message}
                               </span>
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>
@@ -1154,13 +1154,13 @@ const ShopPage = () => {
                               })}
                             />
                           </div>
-                          {errors.shopBackground && (
+                          {/* {errors.shopBackground && (
                             <div className="mt-2">
                               <span style={{ color: "red" }}>
                                 {errors.shopBackground?.message}
                               </span>
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>
@@ -1172,71 +1172,69 @@ const ShopPage = () => {
                       </div>
                       <div className="p-6">
                         <div className="sm:mx-auto flex xl:gap-8 xl:flex-row flex-col gap-4">
-                          {["One", "Two", "Three", "Four"]?.map(
-                            (item, index) => {
-                              return (
-                                <>
-                                  <div
-                                    key={index}
-                                    className="w-full cursor-pointer h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-lg flex items-center justify-center"
-                                    onClick={() =>
-                                      handleBrowseClickShopImages(
-                                        `shopImage${item}`,
-                                        index
-                                      )
-                                    }
-                                  >
-                                    {shopImages[index] ? (
-                                      <div className="w-full h-full relative">
-                                        <Image
-                                          src={shopImages[index] ?? ""}
-                                          alt="Uploaded Image"
-                                          layout="fill"
-                                          objectFit="contain"
-                                        />
+                          {["One", "Two", "Three"]?.map((item, index) => {
+                            return (
+                              <>
+                                <div
+                                  key={index}
+                                  className="w-full cursor-pointer h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-lg flex items-center justify-center"
+                                  onClick={() =>
+                                    handleBrowseClickShopImages(
+                                      `shopImage${item}`,
+                                      index
+                                    )
+                                  }
+                                >
+                                  {shopImages[index] ? (
+                                    <div className="w-full h-full relative">
+                                      <Image
+                                        src={shopImages[index] ?? ""}
+                                        alt="Uploaded Image"
+                                        layout="fill"
+                                        objectFit="contain"
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="flex flex-col gap-4 text-center p-2">
+                                      <span className="flex justify-center">
+                                        <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                      </span>
+                                      <div className="flex flex-col gap-1 justify-center">
+                                        <p className="text-base sm:text-base text-colorGreen">
+                                          <span className="text-gray-400">
+                                            Click to Upload{" "}
+                                          </span>
+                                          Shop Image
+                                        </p>
                                       </div>
-                                    ) : (
-                                      <div className="flex flex-col gap-4 text-center p-2">
-                                        <span className="flex justify-center">
-                                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                                        </span>
-                                        <div className="flex flex-col gap-1 justify-center">
-                                          <p className="text-base sm:text-base text-colorGreen">
-                                            <span className="text-gray-400">
-                                              Click to Upload{" "}
-                                            </span>
-                                            Shop Image
-                                          </p>
-                                        </div>
-                                      </div>
-                                    )}
-                                    <input
-                                      id={`shopImage${item}`}
-                                      type="file"
-                                      accept="image/*,video/*"
-                                      className="hidden"
-                                      {...register("shopImages", {
-                                        // required: !ShopImgError[index]
-                                        //   ? "Shop all images is required *"
-                                        //   : false,
-                                        onChange: (e) => {
-                                          createShopImagesChange(e, index);
-                                        },
-                                      })}
-                                    />
-                                  </div>
-                                </>
-                              );
-                            }
-                          )}
+                                    </div>
+                                  )}
+                                  <input
+                                    id={`shopImage${item}`}
+                                    type="file"
+                                    accept="image/*,video/*"
+                                    className="hidden"
+                                    {...register("shopImages", {
+                                      // required: !ShopImgError[index]
+                                      //   ? "Shop all images is required *"
+                                      //   : false,
+                                      onChange: (e) => {
+                                        createShopImagesChange(e, index);
+                                      },
+                                    })}
+                                  />
+                                </div>
+                              </>
+                            );
+                          })}
                         </div>
-                        {errors.shopImages && (
+                        {/* {errors.shopImages && (
                           <div className="flex justify-center mt-2">
                             <span style={{ color: "red" }}>
                               {errors.shopImages?.message}
                             </span>
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </div>
