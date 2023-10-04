@@ -5,9 +5,9 @@ import { CustomTab, TabPanel, a11yProps } from "../../core/CustomMUIComponents";
 import { CircularProgress, Tab } from "@mui/material";
 import { useSelector } from "react-redux";
 import { getProducts } from "../../../graphql/queries/productQueries";
-import { useRouter } from "next/router";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Link from "next/link";
 
 const responsive = {
   superLargeDesktop: {
@@ -39,14 +39,12 @@ const responsive = {
 
 const WomenCollection = () => {
   const { categories } = useSelector((state) => state.categories);
-
+  const { themeLayout } = useSelector((state) => state.themeLayout);
   const [womenCategory, setWomenCategory] = useState([]);
   const [value, setValue] = useState(0);
   const [womenCategoryId, setWomenCategoryId] = useState([]);
   const [womenCategoryData, setWomenCategoryData] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
 
   const carouselRef = useRef(null);
 
@@ -122,13 +120,16 @@ const WomenCollection = () => {
             ))}
           </CustomTab>
         </div>
-
-        <button
-          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
-          onClick={() => router.push("/home")}
-        >
-          View All
-        </button>
+        <Link href={`/home`} passHref>
+          <a
+            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+            rel="noopener noreferrer"
+          >
+            <button className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]">
+              View All
+            </button>
+          </a>
+        </Link>
       </div>
       {womenCategoryData?.length > 0 ? (
         <div className="p-5 flex gap-5">

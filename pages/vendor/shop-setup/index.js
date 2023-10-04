@@ -606,7 +606,7 @@ const ShopPage = () => {
                   }
                 >
                   <div className="flex justify-between">
-                    <div className="flex">
+                    <div className="flex items-center">
                       <SiHandshake
                         className={`${
                           selectedOption === userType

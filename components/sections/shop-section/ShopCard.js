@@ -132,21 +132,24 @@ const ShopCard = ({ shop }) => {
         {!isShopImagesLoaded && (
           <ImageLoadingSkeleton className="object-cover" />
         )}
-
-        <Image
-          // src={itm?.links ?? ""}
-          src={
-            currentImageIndex === null
-              ? itm?.links
-              : currentImageIndex === 0 && shop.shop_images[0]?.links
-          }
-          alt={shop?.shop_name}
-          className={`object-cover absolute top-0 left-0 ${
-            isShopImagesLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          onLoad={() => setShopImagesLoaded(true)}
-          layout="fill"
-        />
+        <Link href={`/shop/${shop.id}`}>
+          <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+            <Image
+              // src={itm?.links ?? ""}
+              src={
+                currentImageIndex === null
+                  ? itm?.links
+                  : currentImageIndex === 0 && shop.shop_images[0]?.links
+              }
+              alt={shop?.shop_name}
+              className={`object-cover absolute top-0 left-0 ${
+                isShopImagesLoaded ? "opacity-100" : "opacity-0"
+              }`}
+              onLoad={() => setShopImagesLoaded(true)}
+              layout="fill"
+            />
+          </a>
+        </Link>
       </div>
     );
   });

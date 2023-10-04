@@ -104,20 +104,27 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
         {!isProductImagesLoaded && (
           <ImageLoadingSkeleton className="object-cover" />
         )}
-        <Image
-          // src={itm ?? ""}
-          src={
-            currentImageIndex === null
-              ? itm
-              : currentImageIndex === 0 && product.product_image.front
-          }
-          alt={product?.product_name}
-          className={`object-cover absolute top-0 left-0 rounded-t-lg ${
-            isProductImagesLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          onLoad={() => setProductImagesLoaded(true)}
-          layout="fill"
-        />
+        <Link href={`/product/${product.id}`} passHref>
+          <a
+            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+            rel="noopener noreferrer"
+          >
+            <Image
+              // src={itm ?? ""}
+              src={
+                currentImageIndex === null
+                  ? itm
+                  : currentImageIndex === 0 && product.product_image.front
+              }
+              alt={product?.product_name}
+              className={`object-cover absolute top-0 left-0 rounded-t-lg ${
+                isProductImagesLoaded ? "opacity-100" : "opacity-0"
+              }`}
+              onLoad={() => setProductImagesLoaded(true)}
+              layout="fill"
+            />
+          </a>
+        </Link>
       </div>
     );
   });
