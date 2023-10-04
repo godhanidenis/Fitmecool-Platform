@@ -372,189 +372,107 @@ const ShopPage = () => {
     };
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
       console.log("Data To be Submitted !!", data);
       setLoading(true);
-      SingleImageUploadFile(uploadShopLogo).then((logoResponse) => {
-        SingleImageUploadFile(uploadShopBackground).then(
-          (backgroundResponse) => {
-            MultipleImageUploadFile(uploadShopImages).then((imagesResponse) => {
-              uploadShopVideo !== ""
-                ? VideoUploadFile(uploadShopVideo).then((videoResponse) => {
-                    shopRegistration({
-                      userId: userProfile.id,
-                      ownerInfo: {
-                        owner_firstName: data.first_name,
-                        owner_lastName: data.last_name,
-                        owner_email: data.user_email,
-                        owner_contact: data.user_contact,
-                      },
-                      shopInfo: {
-                        shop_logo: logoResponse.data.data.singleUpload,
-                        shop_cover_image:
-                          backgroundResponse.data.data.singleUpload,
-                        shop_images:
-                          imagesResponse.data.data.multipleUpload?.map(
-                            (itm) => {
-                              return { links: itm };
-                            }
-                          ),
-                        shop_video: videoResponse.data.data.singleUpload,
 
-                        form_steps: "3",
-                        shop_social_link: {
-                          facebook: individual ? "" : data.facebook_link,
-                          instagram: individual ? "" : data.instagram_link,
-                          website: individual ? "" : data.personal_website,
-                        },
-                        shop_name: data.shop_name,
-                        shop_email: data.shop_email,
-                        shop_type: individual ? "individual" : "shop",
-                        shop_time: hours?.map((day) => {
-                          return {
-                            week: day["key"],
-                            open_time:
-                              day["value"][0] === "Closed" ||
-                              day["value"][0] === "Open 24 hours"
-                                ? "-"
-                                : day["value"][0].split(" - ")[0],
-                            close_time:
-                              day["value"][0] === "Closed" ||
-                              day["value"][0] === "Open 24 hours"
-                                ? "-"
-                                : day["value"][0].split(" - ")[1],
-                            is_close:
-                              day["value"][0] === "Closed" ? true : false,
-                            is_24Hours_open:
-                              day["value"][0] === "Open 24 hours"
-                                ? true
-                                : false,
-                          };
-                        }),
-                      },
-                      branchInfo: [
-                        {
-                          branch_address: data.address,
-                          branch_city: data.city,
-                          branch_pinCode: data.pin_code,
-                          manager_name:
-                            data.manager_first_name +
-                            " " +
-                            data.manager_last_name,
-                          manager_contact: data.manager_user_contact,
-                          manager_email: data.manager_user_email,
-                          branch_type: "main",
-                        },
-                        ...(subBranch.length > 0
-                          ? subBranch?.map(returnSubBranchData)
-                          : []),
-                      ],
-                    }).then(
-                      (res) => {
-                        console.log("res:::", res);
-                        dispatch(
-                          setShopRegisterId(res.data.createShop.shopInfo.id)
-                        );
-                        toast.success(res.data.createShop.message, {
-                          theme: "colored",
-                        });
-                        setLoading(false);
-                        localStorage.setItem("userHaveAnyShop", "true");
-                        router.push("/vendor/dashboard");
-                      },
-                      (error) => {
-                        setLoading(false);
-                        toast.error(error.message, { theme: "colored" });
-                      }
-                    );
-                  })
-                : shopRegistration({
-                    userId: userProfile.id,
-                    ownerInfo: {
-                      owner_firstName: data.first_name,
-                      owner_lastName: data.last_name,
-                      owner_email: data.user_email,
-                      owner_contact: data.user_contact,
-                    },
-                    shopInfo: {
-                      shop_logo: logoResponse.data.data.singleUpload,
-                      shop_cover_image:
-                        backgroundResponse.data.data.singleUpload,
-                      shop_images: imagesResponse.data.data.multipleUpload?.map(
-                        (itm) => {
-                          return { links: itm };
-                        }
-                      ),
-                      form_steps: "3",
-                      shop_social_link: {
-                        facebook: individual ? "" : data.facebook_link,
-                        instagram: individual ? "" : data.instagram_link,
-                        website: individual ? "" : data.personal_website,
-                      },
-                      shop_name: data.shop_name,
-                      shop_email: data.shop_email,
-                      shop_type: individual ? "individual" : "shop",
-                      shop_time: hours?.map((day) => {
-                        return {
-                          week: day["key"],
-                          open_time:
-                            day["value"][0] === "Closed" ||
-                            day["value"][0] === "Open 24 hours"
-                              ? "-"
-                              : day["value"][0].split(" - ")[0],
-                          close_time:
-                            day["value"][0] === "Closed" ||
-                            day["value"][0] === "Open 24 hours"
-                              ? "-"
-                              : day["value"][0].split(" - ")[1],
-                          is_close: day["value"][0] === "Closed" ? true : false,
-                          is_24Hours_open:
-                            day["value"][0] === "Open 24 hours" ? true : false,
-                        };
-                      }),
-                    },
-                    branchInfo: [
-                      {
-                        branch_address: data.address,
-                        branch_pinCode: data.pin_code,
-                        branch_city: data.city,
-                        manager_name:
-                          data.manager_first_name +
-                          " " +
-                          data.manager_last_name,
-                        manager_contact: data.manager_user_contact,
-                        manager_email: data.manager_user_email,
-                        branch_type: "main",
-                      },
-                      ...(subBranch.length > 0
-                        ? subBranch?.map(returnSubBranchData)
-                        : []),
-                    ],
-                  }).then(
-                    (res) => {
-                      console.log("res:::", res);
-                      dispatch(
-                        setShopRegisterId(res.data.createShop.shopInfo.id)
-                      );
-                      toast.success(res.data.createShop.message, {
-                        theme: "colored",
-                      });
-                      setLoading(false);
-                      localStorage.setItem("userHaveAnyShop", "true");
-                      router.push("/vendor/dashboard");
-                    },
-                    (error) => {
-                      setLoading(false);
-                      toast.error(error.message, { theme: "colored" });
-                    }
-                  );
-            });
-          }
+      let logoResponse = "";
+      let backgroundResponse = "";
+      let imagesResponse = "";
+      let videoResponse = null;
+
+      if (uploadShopLogo) {
+        logoResponse = await SingleImageUploadFile(uploadShopLogo);
+      }
+      if (uploadShopBackground) {
+        backgroundResponse = await SingleImageUploadFile(uploadShopBackground);
+      }
+      if (uploadShopImages.filter((item) => item !== undefined).length > 0) {
+        imagesResponse = await MultipleImageUploadFile(
+          uploadShopImages.filter((item) => item !== undefined)
         );
-      });
+      }
+      if (uploadShopVideo) {
+        videoResponse = await VideoUploadFile(uploadShopVideo);
+      }
+
+      await shopRegistration({
+        userId: userProfile.id,
+        ownerInfo: {
+          owner_firstName: data.first_name,
+          owner_lastName: data.last_name,
+          owner_email: data.user_email,
+          owner_contact: data.user_contact,
+        },
+        shopInfo: {
+          shop_logo: logoResponse?.data?.data?.singleUpload || "",
+          shop_cover_image: backgroundResponse?.data?.data?.singleUpload || "",
+          shop_images:
+            imagesResponse?.data?.data?.multipleUpload?.map((itm) => {
+              return { links: itm };
+            }) || [],
+          shop_video: videoResponse?.data?.data?.singleUpload || "",
+
+          form_steps: "3",
+          shop_social_link: {
+            facebook: individual ? "" : data.facebook_link,
+            instagram: individual ? "" : data.instagram_link,
+            website: individual ? "" : data.personal_website,
+          },
+          shop_name: data.shop_name,
+          shop_email: data.shop_email,
+          shop_type: individual ? "individual" : "shop",
+          shop_time: hours?.map((day) => {
+            return {
+              week: day["key"],
+              open_time:
+                day["value"][0] === "Closed" ||
+                day["value"][0] === "Open 24 hours"
+                  ? "-"
+                  : day["value"][0].split(" - ")[0],
+              close_time:
+                day["value"][0] === "Closed" ||
+                day["value"][0] === "Open 24 hours"
+                  ? "-"
+                  : day["value"][0].split(" - ")[1],
+              is_close: day["value"][0] === "Closed" ? true : false,
+              is_24Hours_open:
+                day["value"][0] === "Open 24 hours" ? true : false,
+            };
+          }),
+        },
+        branchInfo: [
+          {
+            branch_address: data.address,
+            branch_city: data.city,
+            branch_pinCode: data.pin_code,
+            manager_name:
+              data.manager_first_name + " " + data.manager_last_name,
+            manager_contact: data.manager_user_contact,
+            manager_email: data.manager_user_email,
+            branch_type: "main",
+          },
+          ...(subBranch.length > 0 ? subBranch?.map(returnSubBranchData) : []),
+        ],
+      }).then(
+        (res) => {
+          console.log("res:::", res);
+          dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
+          toast.success(res.data.createShop.message, {
+            theme: "colored",
+          });
+          setLoading(false);
+          localStorage.setItem("userHaveAnyShop", "true");
+          router.push("/vendor/dashboard");
+        },
+        (error) => {
+          setLoading(false);
+          toast.error(error.message, { theme: "colored" });
+        }
+      );
     }
   };
 
@@ -1287,7 +1205,7 @@ const ShopPage = () => {
                                             <span className="text-gray-400">
                                               Click to Upload{" "}
                                             </span>
-                                            Product Image
+                                            Shop Image
                                           </p>
                                         </div>
                                       </div>
