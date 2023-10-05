@@ -45,23 +45,21 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
               src={vendorShopDetails?.shop_logo}
               alt="Shop Logo"
               className="!object-cover !w-full !h-full"
+            ></Avatar>
+          ) : vendorShopDetails?.shop_logo?.length === 0 ? (
+            <Avatar
+              className="!bg-colorGreen"
+              sx={{
+                fontSize: "70px",
+                width: "100%",
+                height: "100%",
+              }}
             >
-              {!vendorShopDetails?.shop_logo && (
-                <Avatar
-                  className="!bg-colorGreen"
-                  sx={{
-                    fontSize: "70px",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  {String(vendorShopDetails?.shop_name)
-                    ?.split(" ")[0][0]
-                    .toUpperCase()}
-                  {/* {String(vendorShopDetails?.shop_name)?.split(" ")[0][0].toUpperCase() +
+              {String(vendorShopDetails?.shop_name)
+                ?.split(" ")[0][0]
+                .toUpperCase()}
+              {/* {String(vendorShopDetails?.shop_name)?.split(" ")[0][0].toUpperCase() +
                       String(vendorShopDetails?.shop_name)?.split(" ")[1][0].toUpperCase()} */}
-                </Avatar>
-              )}
             </Avatar>
           ) : (
             <ImageLoadingSkeleton className="rounded-full" variant="circular" />

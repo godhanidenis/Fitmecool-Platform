@@ -22,6 +22,10 @@ const UserType = () => {
     setIsHydrated(true);
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("user_type_for_auth", "customer");
+  }, []);
+
   if (!isHydrated) {
     return null;
   }

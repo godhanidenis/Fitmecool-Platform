@@ -103,9 +103,27 @@ const LandingPage = () => {
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
   const carouselItems = [
-    { imageSrc: assets.bannerImg1, des: "bannerImg1" },
-    { imageSrc: assets.bannerImg2, des: "bannerImg2" },
-    { imageSrc: assets.bannerImg3, des: "bannerImg3" },
+    {
+      imageSrc: assets.bannerImg1,
+      des: "bannerImg1",
+      fun: () => router.push(`/home`),
+    },
+    {
+      imageSrc: assets.bannerImg2,
+      des: "bannerImg2",
+      fun: () => {
+        router.push(`/auth/user-type/`);
+        localStorage.setItem("user_type_for_auth", "vendor");
+      },
+    },
+    {
+      imageSrc: assets.bannerImg3,
+      des: "bannerImg3",
+      fun: () => {
+        router.push(`/auth/user-type/`);
+        localStorage.setItem("user_type_for_auth", "vendor");
+      },
+    },
   ];
 
   const CustomDot = ({ onClick, active }) => {
@@ -161,7 +179,16 @@ const LandingPage = () => {
               alt="banner"
               layout="fill"
               onLoad={() => setBannerImagesLoaded(true)}
+              onClick={item.fun}
+              className="cursor-pointer"
             />
+            {/* <div className="absolute bottom-28 right-80 p-2">
+                <button
+                  className="bg-[#0000] text-[#000] border border-[#000] px- py-1 rounded-sm tracking-wider"
+                >
+                  + Explore
+                </button>
+              </div> */}
             {!isBannerImagesLoaded && (
               <ImageLoadingSkeleton className="object-cover" />
             )}

@@ -4,6 +4,8 @@ import ImageLoadingSkeleton from "../Modal/ImageLoadingSkeleton";
 
 const CustomReactImageMagnify = ({ large, preview }) => {
   const [imageHover, setImageHover] = useState(false);
+  const [isShopImages, setIsShopImages] = useState(false);
+  const [isProductImage, setIsProductImage] = useState("");
 
   useEffect(() => {
     let elem = document.getElementById("preview");
@@ -38,13 +40,22 @@ const CustomReactImageMagnify = ({ large, preview }) => {
     <>
       <div className="image-preview">
         {preview ? (
-          <img
-            id="preview"
-            src={preview}
-            onMouseEnter={loadImage}
-            onMouseLeave={() => setImageHover(false)}
-            alt=""
-          />
+          isProductImage === preview && isShopImages ? (
+            <div className=" w-full h-full cursor-pointer rounded-[16px] bg-[#00000031]" />
+          ) : (
+            <img
+              id="preview"
+              src={preview}
+              onMouseEnter={loadImage}
+              onMouseLeave={() => setImageHover(false)}
+              alt="product"
+              onError={() => {
+                setIsShopImages(true);
+                setIsProductImage(preview);
+              }}
+              className="rounded-[16px]"
+            />
+          )
         ) : (
           <div className="w-full h-full" id="preview">
             <ImageLoadingSkeleton className="rounded-xl" />

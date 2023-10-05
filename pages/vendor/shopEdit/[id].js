@@ -229,9 +229,17 @@ const ShopEdit = () => {
     }
   };
 
+  function fillArrayWithEmptyValues(arr, targetLength) {
+    while (arr.length < targetLength) {
+      arr.push({ links: "none" });
+    }
+
+    return arr;
+  }
+
   const updateShopImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    let resImgIndex = shopImages?.findIndex(
+    let resImgIndex = fillArrayWithEmptyValues([...shopImages], 3)?.findIndex(
       (obj) => obj?.links === ShopEditImg
     );
 
@@ -1489,7 +1497,7 @@ const ShopEdit = () => {
                             <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                           </span>
                           <div className="flex flex-col gap-1">
-                            <p className="sm:text-2xl text-sm font-bold text-gray-400">
+                            <p className="sm:text-lg text-sm font-bold text-gray-400">
                               Click to upload{" "}
                               <span className="text-colorGreen">logo</span>
                             </p>
@@ -1570,8 +1578,8 @@ const ShopEdit = () => {
                             <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
                           </span>
                           <div className="flex flex-col gap-1">
-                            <p className="sm:text-2xl text-sm font-bold text-gray-400">
-                              <span className="text-colorGreen">
+                            <p className="sm:text-lg text-sm font-bold text-colorGreen">
+                              <span className="text-gray-400">
                                 Click to Upload
                               </span>{" "}
                               Cover Image
@@ -1619,84 +1627,93 @@ const ShopEdit = () => {
                     </span>
                   </div>
                   <div className="grid grid-cols-12 gap-6">
-                    {shopImages?.length > 0
-                      ? shopImages?.map((image, index) => {
-                          return (
-                            <div
-                              key={index}
-                              className={`${
-                                index === 0
-                                  ? "col-start-2 lg:col-start-3"
-                                  : "col-start-2"
-                              } col-span-10 sm:col-span-6 md:col-span-6 lg:col-span-3 w-full cursor-pointer relative h-[300px] sm:h-[300px] border border-gray-200 rounded-xl flex items-center justify-center`}
-                            >
-                              {shopImages[index] ? (
-                                <>
-                                  <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-10">
-                                    <EditIcon
-                                      sx={{
-                                        "@media (max-width: 768px)": {
-                                          fontSize: 16,
-                                        },
-                                      }}
-                                      onClick={() => (
-                                        setShopEditImg(image?.links),
-                                        document
-                                          .getElementById("shopEditId")
-                                          .click()
-                                      )}
-                                    />
-                                  </span>
+                    {shopImages &&
+                    fillArrayWithEmptyValues([...shopImages], 3)?.length > 0
+                      ? fillArrayWithEmptyValues([...shopImages], 3)?.map(
+                          (image, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className={`${
+                                  index === 0
+                                    ? "col-start-2 lg:col-start-3"
+                                    : "col-start-2"
+                                } col-span-10 sm:col-span-6 md:col-span-6 lg:col-span-3 w-full cursor-pointer relative h-[300px] sm:h-[300px] border border-gray-200 rounded-xl flex items-center justify-center`}
+                              >
+                                {shopImages[index] ? (
+                                  <>
+                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-10">
+                                      <EditIcon
+                                        sx={{
+                                          "@media (max-width: 768px)": {
+                                            fontSize: 16,
+                                          },
+                                        }}
+                                        onClick={() => (
+                                          setShopEditImg(image?.links),
+                                          document
+                                            .getElementById("shopEditId")
+                                            .click()
+                                        )}
+                                      />
+                                    </span>
 
-                                  <div className="w-full relative h-full">
-                                    <img
-                                      src={image?.links}
-                                      alt="Uploaded Image"
-                                      className="object-cover h-full w-full rounded-xl"
-                                    />
+                                    <div className="w-full relative h-full">
+                                      <img
+                                        src={image?.links}
+                                        alt="Uploaded Image"
+                                        className="object-cover h-full w-full rounded-xl"
+                                      />
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div
+                                    className={`${
+                                      index === 0 ? "col-start-3" : ""
+                                    } col-span-3`}
+                                    onClick={() => (
+                                      setShopEditImg(image?.links),
+                                      document
+                                        .getElementById("shopEditId")
+                                        .click()
+                                    )}
+                                  >
+                                    <span className="flex justify-center">
+                                      <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                                    </span>
+                                    <div className="flex flex-col gap-1">
+                                      <p className="sm:text-lg text-sm font-bold text-gray-400">
+                                        <span className="text-colorGreen">
+                                          Click to Upload{" "}
+                                        </span>
+                                        Front Image
+                                      </p>
+                                      <p className="text-xs text-gray-400 text-center">
+                                        We Support JPG, PNG & No Size Limit
+                                      </p>
+                                    </div>
                                   </div>
-                                </>
-                              ) : (
-                                <div
-                                  className={`${
-                                    index === 0 ? "col-start-3" : ""
-                                  } col-span-3`}
-                                >
-                                  <span className="flex justify-center">
-                                    <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                                  </span>
-                                  <div className="flex flex-col gap-1">
-                                    <p className="sm:text-lg text-sm font-bold text-gray-400">
-                                      <span className="text-colorGreen">
-                                        Click to Upload{" "}
-                                      </span>
-                                      Front Image
-                                    </p>
-                                    <p className="text-xs text-gray-400 text-center">
-                                      We Support JPG, PNG & No Size Limit
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-                              <input
-                                id="shopEditId"
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                className="hidden"
-                                {...shopLayoutRegister("shopImages", {
-                                  // required:
-                                  //   shopImages?.length === 0
-                                  //     ? "Shop Image is required"
-                                  //     : false,
-                                  onChange: (e) => {
-                                    updateShopImagesChange(e);
-                                  },
-                                })}
-                              />
-                            </div>
-                          );
-                        })
+                                )}
+                                <input
+                                  id="shopEditId"
+                                  type="file"
+                                  accept="image/*"
+                                  multiple
+                                  className="hidden"
+                                  {...shopLayoutRegister("shopImages", {
+                                    // required:
+                                    //   shopImages?.length === 0
+                                    //     ? "Shop Image is required"
+                                    //     : false,
+                                    onChange: (e) => {
+                                      updateShopImagesChange(e);
+                                    },
+                                  })}
+                                />
+                              </div>
+                            );
+                          }
+                        )
                       : [0, 1, 2].map((itm, index) => (
                           <div
                             key={itm}

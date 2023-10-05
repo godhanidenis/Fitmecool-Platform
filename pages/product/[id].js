@@ -65,6 +65,8 @@ const ContactStyle = {
 const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
+  const [isShopImages, setIsShopImages] = useState(false);
+  const [isProductImage, setIsProductImage] = useState("");
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -162,12 +164,23 @@ const ProductDetail = ({ productDetails }) => {
         onClick={() => selectImage(itm, i)}
       >
         {itm ? (
-          <img
-            src={itm}
-            alt="Product Images"
-            style={{ border: images === itm ? "2px solid #29977E" : 0 }}
-            className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
-          />
+          isProductImage === itm && isShopImages ? (
+            <div
+              className=" w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
+              style={{ border: images === itm ? "2px solid #29977E" : 0 }}
+            />
+          ) : (
+            <img
+              src={itm}
+              alt="Product Images"
+              style={{ border: images === itm ? "2px solid #29977E" : 0 }}
+              className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
+              onError={() => {
+                setIsShopImages(true);
+                setIsProductImage(itm);
+              }}
+            />
+          )
         ) : (
           <ImageLoadingSkeleton className="rounded-[16px] !w-[129px] !h-[146px]" />
         )}

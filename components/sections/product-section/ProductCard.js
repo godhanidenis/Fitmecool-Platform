@@ -49,7 +49,8 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
   const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
   const [OpenToolTip, setOpenToolTip] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
-  const [isShopImages, setIsShopImages] = useState(false);
+  const [isProductImages, setIsProductImages] = useState(false);
+  const [isProductImage, setIsProductImage] = useState("");
 
   const carouselRef = useRef(null);
 
@@ -108,10 +109,10 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
         )}
         <Link href={`/product/${product.id}`} passHref>
           <a
-            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+            target={`${themeLayout === "webScreen" ? "_self" : "_self"}`}
             rel="noopener noreferrer"
           >
-            {isShopImages ? (
+            {isProductImage === itm && isProductImages ? (
               <div className="w-full h-full bg-[#00000031]" />
             ) : (
               <Image
@@ -127,7 +128,8 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                 }`}
                 onLoad={() => setProductImagesLoaded(true)}
                 onError={() => {
-                  setIsShopImages(true);
+                  setIsProductImages(true);
+                  setIsProductImage(itm);
                 }}
                 layout="fill"
               />

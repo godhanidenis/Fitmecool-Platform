@@ -62,7 +62,13 @@ const ShopCard = ({ shop }) => {
         <Link href={`/shop/${shop.id}`}>
           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
             {isShopImages ? (
-              <div className="w-full h-full bg-[#00000031]" />
+              <div
+                className="bg-[#00000031]"
+                style={{
+                  width: "100%",
+                  height: themeLayout === "mobileScreen" ? 250 : 300,
+                }}
+              />
             ) : (
               <Image
                 // src={itm?.links ?? ""}
@@ -103,7 +109,17 @@ const ShopCard = ({ shop }) => {
                 responsive={responsive}
                 dotListClass={"Landing_customDots"}
               >
-                {shopImages}
+                {shop?.shop_images?.length === 0 ? (
+                  <div
+                    className="bg-[#00000031]"
+                    style={{
+                      width: "100%",
+                      height: themeLayout === "mobileScreen" ? 250 : 300,
+                    }}
+                  />
+                ) : (
+                  shopImages
+                )}
               </Carousel>
             </div>
           </div>
