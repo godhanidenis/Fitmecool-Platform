@@ -42,7 +42,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         <div className="w-[120px] h-[120px] mb-4 rounded-full">
           {vendorShopDetails?.shop_logo ? (
             <Avatar
-              src={vendorShopDetails?.shop_logo}
+              src={vendorShopDetails?.shop_logo ?? ""}
               alt="Shop Logo"
               className="!object-cover !w-full !h-full"
             ></Avatar>

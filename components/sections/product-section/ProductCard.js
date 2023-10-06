@@ -109,7 +109,7 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
         )}
         <Link href={`/product/${product.id}`} passHref>
           <a
-            target={`${themeLayout === "webScreen" ? "_self" : "_self"}`}
+            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
             rel="noopener noreferrer"
           >
             {isProductImage === itm && isProductImages ? (
@@ -294,16 +294,13 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
         </div>
 
         {!onlyCarousal && (
-          <Link
-            href={`/product/${product.id}`}
-            passHref
-            className="bg-[#FFFFFF]"
-          >
+          <Link href={`/product/${product.id}`} passHref>
             <a
+              className="bg-[#FFFFFF] rounded-b-lg"
               target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
               rel="noopener noreferrer"
             >
-              <div className=" pl-3">
+              <div className="pl-3">
                 <div>
                   <span className="line-clamp-1 font-semibold text-black text-base mt-4">
                     {product.product_name}
@@ -321,7 +318,7 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
                       )}
                       <Image
                         alt="Shop Logo"
-                        src={product?.branchInfo?.shop_info?.shop_logo}
+                        src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
                         layout="fill"
                         className={`rounded-[50%] absolute top-0 left-0 ${
                           isShopLogoLoaded ? "opacity-100" : "opacity-0"

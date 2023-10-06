@@ -355,7 +355,7 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-      <div className="container flex flex-col justify-center mt-10 mb-0 sm:mb-8">
+      <div className="container flex flex-col justify-center mt-10 mb-0 lg:mb-8">
         <div className="text-center">
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             Featured Vendors
@@ -365,7 +365,7 @@ const LandingPage = () => {
           </p>
         </div>
 
-        <div className="w-full h-[400px] place-items-center pt-5">
+        <div className="w-full h-[350px] lg:h-[400px] place-items-center pt-5">
           <div className="flex justify-end">
             <button
               className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"

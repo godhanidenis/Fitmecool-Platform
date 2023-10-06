@@ -139,7 +139,7 @@ const Header = () => {
       />
       <header
         className={`${
-          userProfile.user_type === "vendor" ? "py-0" : "py-4 sm:py-0"
+          userProfile.user_type === "vendor" ? "py-0" : "py-1 sm:py-0"
         } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}

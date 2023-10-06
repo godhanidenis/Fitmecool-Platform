@@ -2051,6 +2051,7 @@ const SubBranchModal = ({
         };
         setSubBranch(editSelectedSubBranch);
       }
+      handleSubBranchModalClose();
     }
   };
 
@@ -2332,9 +2333,12 @@ export const HoursModal = ({
         aria-describedby="modal-modal-description"
         className="animate__animated animate__slideInDown"
       >
-        <Box sx={style} className="!w-[90%] lg:!w-[80%] xl:!w-[50%]">
+        <Box
+          sx={style}
+          className="!w-[90%] lg:!w-[80%] xl:!w-[50%] !overflow-scroll"
+        >
           <div className="sm:p-5 p-1 sm:pb-0">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-5">
               <div className="sm:text-[28px] text-[16px] font-bold">
                 {ShopEdit === "true" ? "Hours" : "Set Hours"}
               </div>
@@ -2346,7 +2350,7 @@ export const HoursModal = ({
                 />
               </span>
             </div>
-            <div className="sm:h-[calc(100vh-300px)] overflow-auto">
+            <div className="h-[50vh] sm:h-[80%] overflow-auto">
               <div className="grid grid-cols-1 gap-y-5 my-2">
                 {hours?.map((day, index) => (
                   <div
@@ -2446,10 +2450,10 @@ export const HoursModal = ({
               </div>
             </div>
 
-            <div className="flex justify-between mt-5 lg:gap-6 gap-4">
+            <div className="flex flex-col lg:flex-row xl:flex-col 2xl:flex-row justify-center items-center lg:justify-between  mt-5 lg:gap-6 gap-4">
               <div className="flex">
                 <div
-                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-1 sm:mr-4 gap-2"
                   onClick={() => {
                     setDaysTimeModalOpen(true);
 
@@ -2465,7 +2469,10 @@ export const HoursModal = ({
                   }}
                 >
                   <span>
-                    <EditIcon fontSize="small" className="" />
+                    <EditIcon
+                      fontSize="small"
+                      className="!text-[15px] sm:!text-[20px]"
+                    />
                   </span>
                   Edit all hours
                 </div>
@@ -2482,10 +2489,13 @@ export const HoursModal = ({
                       "Saturday",
                     ]);
                   }}
-                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-1 sm:mr-4 gap-2"
                 >
                   <span className="">
-                    <EditIcon fontSize="small" className="" />
+                    <EditIcon
+                      fontSize="small"
+                      className="!text-[15px] sm:!text-[20px]"
+                    />
                   </span>
                   Edit Mon to Sat
                 </div>
@@ -2499,10 +2509,13 @@ export const HoursModal = ({
                           .value
                     );
                   }}
-                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-4"
+                  className="uppercase sm:flex sm:items-center sm:text-[14px] text-[10px] py-1 text-gray-400 font-semibold hover:border-colorGreen hover:text-colorGreen whitespace-nowrap cursor-pointer mr-1 sm:mr-4 gap-2"
                 >
                   <span className="">
-                    <EditIcon fontSize="small" className="" />
+                    <EditIcon
+                      fontSize="small"
+                      className="!text-[15px] sm:!text-[20px]"
+                    />
                   </span>
                   Edit Sunday
                 </div>

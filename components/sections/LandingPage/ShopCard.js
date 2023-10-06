@@ -83,7 +83,7 @@ const ShopCard = ({ shop }) => {
                   </Avatar>
                 )}
                 <Image
-                  src={shop?.shop_logo}
+                  src={shop?.shop_logo ?? ""}
                   alt="Shop Logo"
                   objectFit="cover"
                   className={`rounded-full absolute top-0 left-0  ${

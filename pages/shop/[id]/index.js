@@ -165,11 +165,17 @@ const ShopDetail = ({ shopDetails }) => {
                             (productPageSkip === 0 && 1) ||
                             productPageSkip / 6 + 1
                           }
-                          onChange={(e, p) =>
+                          onChange={(e, p) => {
+                            const targetScrollPosition = 500;
+
+                            window.scrollTo({
+                              top: targetScrollPosition,
+                              behavior: "smooth",
+                            });
                             dispatch(
                               changeProductPage((p === 1 && 0) || (p - 1) * 6)
-                            )
-                          }
+                            );
+                          }}
                         />
                       </div>
                     )}

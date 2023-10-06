@@ -134,23 +134,23 @@ const MenCollection = () => {
       {menCategoryData?.length > 0 ? (
         <div className="p-5 flex gap-5">
           <button
-            className="flex justify-center items-center p-2 border border-1 rounded-lg"
+            className="flex justify-center items-center p-1 rounded-lg bg-[#0000002a]"
             onClick={prevSlide}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon className="!text-black" />
           </button>
           <button
-            className="flex justify-center items-center p-2 border border-1 rounded-lg"
+            className="flex justify-center items-center p-1 rounded-lg bg-[#0000002a]"
             onClick={nextSlide}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon className="!text-black" />
           </button>
         </div>
       ) : (
         <div className="p-3"></div>
       )}
       <TabPanel value={value} index={value}>
-        <div className="w-full h-[416px]">
+        <div className="w-full h-[360px] lg:h-[416px]">
           {!loading && menCategoryData.length > 0 ? (
             <Carousel
               ref={carouselRef}

@@ -244,7 +244,7 @@ const ProductDetail = ({ productDetails }) => {
                   className="!w-12 !h-12 !cursor-pointer"
                   src={
                     productDetails.data.product.data.branchInfo?.shop_info
-                      .shop_logo
+                      .shop_logo ?? ""
                   }
                 />
               ) : (
@@ -376,7 +376,7 @@ const ProductDetail = ({ productDetails }) => {
   return (
     <>
       <div className="bg-colorWhite font-Nova container">
-        <div className="pt-4 pb-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
+        <div className="py-2 sm:py-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               <div className="text-colorGreen font-semibold">Product</div>
@@ -628,7 +628,7 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 sm:gap-0 mt-10 items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-0 mt-10 items-center justify-between">
                   <div
                     className="w-[100%] md:w-[48%]"
                     onClick={() =>
@@ -689,7 +689,7 @@ const ProductDetail = ({ productDetails }) => {
             {productDetails.data.product.related &&
               productDetails.data.product.related.length >
                 (isScreenWide ? 5 : 4) && (
-                <div className="rounded-2xl border border-[#15182766] text-[#15182766] py-2 px-2 sm:px-4 flex items-center justify-center">
+                <div className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] flex items-center">
                   <Link
                     href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
                   >

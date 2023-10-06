@@ -14,7 +14,9 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
   EmailShareButton,
   FacebookShareButton,
+  EmailIcon,
   WhatsappIcon,
+  FacebookIcon,
   WhatsappShareButton,
 } from "react-share";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -267,14 +269,14 @@ const ShopHeaderSection = ({
               <Grid item xs={3} sm={3}>
                 <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="lg:flex items-center justify-center w-[100%]">
-                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center md:justify-center">
                       <ShareIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[10px] sm:text-[16px]">Share</p>
                     </div>
-                    <div className="flex pt-2 sm:pt-0 ml-0 sm:ml-6 gap-1 sm:gap-0 items-center">
+                    <div className="flex pt-2 sm:pt-0 ml-0 sm:ml-6 lg:ml-0 xl:ml-6 gap-1 lg:gap-0 items-center md:justify-center">
                       <div className="lg:p-2 rounded-lg cursor-pointer">
                         <FacebookShareButton
                           windowWidth={900}
@@ -283,10 +285,15 @@ const ShopHeaderSection = ({
                         >
                           <Image
                             src={assets.facebookIcon}
-                            width={26}
-                            height={26}
+                            width={window.innerWidth >= 1024 ? 26 : 15}
+                            height={window.innerWidth >= 1024 ? 26 : 15}
                             alt="facebookIcon"
                           />
+                          {/* <FacebookIcon
+                            size={window.innerWidth >= 1024 ? 26 : 22}
+                            round={true}
+                            className="w-full"
+                          /> */}
                         </FacebookShareButton>
                       </div>
                       <div className="lg:p-2 !rounded-lg cursor-pointer">
@@ -295,7 +302,11 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <WhatsappIcon size={26} round={true} />
+                          <WhatsappIcon
+                            size={window.innerWidth >= 1024 ? 26 : 15}
+                            round={true}
+                            className="w-full"
+                          />
                         </WhatsappShareButton>
                       </div>
                       <div className="lg:p-2 mt-[2px] rounded-lg cursor-pointer">
@@ -305,10 +316,15 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
+                          {/* <EmailIcon
+                            size={window.innerWidth >= 1024 ? 26 : 22}
+                            round={true}
+                            className="w-full"
+                          /> */}
                           <Image
                             src={assets.googleIcon}
-                            width={26}
-                            height={26}
+                            width={window.innerWidth >= 1024 ? 26 : 15}
+                            height={window.innerWidth >= 1024 ? 26 : 15}
                             alt="googleIcon"
                           />
                         </EmailShareButton>

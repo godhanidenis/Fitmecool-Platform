@@ -7,7 +7,7 @@ const appConfig = {
     "654172903266-8ntimomq9b1f15a0uh2vok4om4ve61n3.apps.googleusercontent.com",
 
   wasabiUrl:
-    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/images",
+    "https://s3.us-east-1.wasabisys.com/flyontech-rental-productt/assets",
 };
 
 export default appConfig;

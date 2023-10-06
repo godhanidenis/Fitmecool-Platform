@@ -103,7 +103,7 @@ const SubHeader = () => {
   );
 
   return (
-    <div className="sm:flex hidden items-center">
+    <div className="lg:flex hidden items-center">
       <div
         className=""
         onMouseLeave={handleMenuClose.bind(this)}

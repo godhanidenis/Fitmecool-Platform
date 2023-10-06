@@ -34,7 +34,7 @@ const UserType = () => {
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
         <ArrowBackIcon
-          onClick={() => Router.push("/")}
+          onClick={() => window.history.back()}
           className="cursor-pointer text-3xl"
         />
         <div className="">
@@ -50,11 +50,12 @@ const UserType = () => {
         Unlock Fashion Possibilities – Where Customers and Shop Owners Connect,
         on StyleSwap, Your Trusted Clothing Rental Platform!
       </p>
-      <div className="flex my-8 gap-6 max-[380px]:flex-col">
+      <div className="flex my-8 gap-6">
         <div
           className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-            selectedUserType === "customer" &&
-            "border-2 border-colorGreen rounded-2xl"
+            selectedUserType === "customer"
+              ? "border-2 border-colorGreen rounded-2xl"
+              : "border-2 border-[#7e7e7e48] rounded-2xl"
           }`}
           onClick={() => handleUserType("customer")}
         >
@@ -81,8 +82,9 @@ const UserType = () => {
         </div>
         <div
           className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
-            selectedUserType === "vendor" &&
-            "border-2 border-colorGreen rounded-2xl"
+            selectedUserType === "vendor"
+              ? "border-2 border-colorGreen rounded-2xl"
+              : "border-2 border-[#7e7e7e48] rounded-2xl"
           }`}
           onClick={() => handleUserType("vendor")}
         >
