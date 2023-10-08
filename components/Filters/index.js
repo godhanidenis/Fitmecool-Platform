@@ -4,37 +4,25 @@ import ProductByShopFilter from "./ProductFilters/ProductByShopFilter";
 import ProductColorFilter from "./ProductFilters/ProductColorFilter";
 import ShopRatingsFilter from "./ShopFilters/ShopRatingsFilter";
 import ProductCategoriesFilter from "./ProductFilters/ProductCategoriesFilter";
-import { Divider } from "@mui/material";
+import { useSelector } from "react-redux";
 
-const Filter = ({
-  byShop,
-  setByShop,
-  setProductPageSkip,
-  setShopPageSkip,
-  productByShop,
-}) => {
+const Filter = ({ productByShop }) => {
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
+
   return (
     <div className="flex flex-col space-y-4 mb-5">
-      <FilterActions
-        byShop={byShop}
-        setByShop={setByShop}
-        productByShop={productByShop}
-      />
-
-      {/* <Divider /> */}
+      <FilterActions productByShop={productByShop} />
 
       {!byShop ? (
-        <div className="px-4">
-          <ProductCategoriesFilter setProductPageSkip={setProductPageSkip} />
-          {!productByShop && (
-            <ProductByShopFilter setProductPageSkip={setProductPageSkip} />
-          )}
-          <ProductColorFilter setProductPageSkip={setProductPageSkip} />
+        <div className="px-5 sm:px-12">
+          <ProductCategoriesFilter />
+          {!productByShop && <ProductByShopFilter />}
+          <ProductColorFilter />
         </div>
       ) : (
-        <div className="px-4">
-          <ShopByLocation setShopPageSkip={setShopPageSkip} />
-          <ShopRatingsFilter setShopPageSkip={setShopPageSkip} />
+        <div className="px-5 sm:px-12">
+          <ShopByLocation />
+          <ShopRatingsFilter />
         </div>
       )}
     </div>

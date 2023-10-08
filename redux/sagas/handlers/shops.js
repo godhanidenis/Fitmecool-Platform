@@ -1,11 +1,11 @@
 import { call, put } from "redux-saga/effects";
 import {
-  loadMoreShopsError,
-  loadMoreShopsSuccess,
+  loadAllShopsListsError,
+  loadAllShopsListsSuccess,
   loadShopsError,
   loadShopsSuccess,
 } from "../../ducks/shop";
-import { requestGetShops } from "../requests/shops";
+import { requestGetAllShops, requestGetShops } from "../requests/shops";
 
 export function* handleGetShops({ payload }) {
   try {
@@ -17,12 +17,13 @@ export function* handleGetShops({ payload }) {
   }
 }
 
-export function* handleGetMoreShops({ payload }) {
+export function* handleGetAllShops() {
   try {
-    const response = yield call(requestGetShops, payload);
+    const response = yield call(requestGetAllShops);
 
-    yield put(loadMoreShopsSuccess(response.data.shopList));
+    console.log("response.data", response.data);
+    yield put(loadAllShopsListsSuccess(response.data.getAllShops));
   } catch (error) {
-    yield put(loadMoreShopsError(error.message));
+    yield put(loadAllShopsListsError(error));
   }
 }

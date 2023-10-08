@@ -2,7 +2,7 @@ export const CHANGE_APPLIED_SHOPS_FILTERS = "CHANGE_APPLIED_SHOPS_FILTERS";
 
 export const CHANGE_SORT_SHOPS_FILTERS = "CHANGE_SORT_SHOPS_FILTERS";
 
-export const CHANGE_SHOPS_LAYOUT = "CHANGE_SHOPS_LAYOUT";
+export const CHANGE_BY_SHOP_FILTERS = "CHANGE_BY_SHOP_FILTERS";
 
 export const changeAppliedShopsFilters = (filter) => ({
   type: CHANGE_APPLIED_SHOPS_FILTERS,
@@ -14,9 +14,9 @@ export const changeSortShopsFilters = (sortFilter) => ({
   payload: sortFilter,
 });
 
-export const changeShopsLayout = (layout) => ({
-  type: CHANGE_SHOPS_LAYOUT,
-  payload: layout,
+export const changeByShopFilters = (byShop) => ({
+  type: CHANGE_BY_SHOP_FILTERS,
+  payload: byShop,
 });
 
 const initialState = {
@@ -29,9 +29,9 @@ const initialState = {
     },
   },
   sortFilters: {
-    sortType: { selectedValue: "" },
+    sortType: { selectedValue: "new" },
   },
-  shopLayout: "list",
+  byShop: false,
 };
 
 const shopsFiltersReducer = (state = initialState, action) => {
@@ -56,11 +56,12 @@ const shopsFiltersReducer = (state = initialState, action) => {
         },
       };
 
-    case CHANGE_SHOPS_LAYOUT:
+    case CHANGE_BY_SHOP_FILTERS:
       return {
         ...state,
-        [`${action.payload.key}`]: `${action.payload.value}`,
+        byShop: action.payload,
       };
+
     default:
       return state;
   }

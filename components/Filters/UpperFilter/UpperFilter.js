@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
+  Chip,
   Divider,
   FormControl,
   FormControlLabel,
@@ -13,42 +13,155 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  changeProductsLayout,
+  changeAppliedProductsFilters,
   changeSortProductsFilters,
 } from "../../../redux/ducks/productsFilters";
 import {
-  changeShopsLayout,
+  changeAppliedShopsFilters,
   changeSortShopsFilters,
 } from "../../../redux/ducks/shopsFilters";
 import DrawerFilters from "../DrawerFilters";
-import SegmentOutlinedIcon from "@mui/icons-material/SegmentOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import ListIcon from "@mui/icons-material/List";
-import WindowIcon from "@mui/icons-material/Window";
-const UpperFilter = ({
-  byShop,
-  setByShop,
-  setProductPageSkip,
-  showDrawerFilter,
-  setShopPageSkip,
-  showOnlyShopDetailPage,
-  isVendor,
-}) => {
+import { changeProductPage } from "../../../redux/ducks/product";
+import { changeShopPage } from "../../../redux/ducks/shop";
+
+const UpperFilter = ({ showOnlyShopDetailPage }) => {
+  const [selectedProductFilters, setSelectedProductFilters] = useState([]);
+  const [selectedShopFilters, setSelectedShopFilters] = useState([]);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedShops, setSelectedShops] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [searchProducts, setSearchProducts] = useState([]);
+
+  const [selectedLocations, setSelectedLocations] = useState([]);
+  const [selectedRatings, setSelectedRatings] = useState([]);
+
   const [sortByAnchor, setSortByAnchor] = useState(null);
   const openSortByAnchor = Boolean(sortByAnchor);
 
   const dispatch = useDispatch();
-  const productsFiltersReducer = useSelector(
+  const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
-  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
+  const {
+    appliedShopsFilters,
+    sortFilters: shopSortFilters,
+    byShop,
+  } = useSelector((state) => state.shopsFiltersReducer);
 
   const { productsCount } = useSelector((state) => state.products);
-  const { shopsCount } = useSelector((state) => state.shops);
+  const { allShopsLists, shopsCount } = useSelector((state) => state.shops);
+  const { categories } = useSelector((state) => state.categories);
+  const { areaLists } = useSelector((state) => state.areaLists);
+
+  const { themeLayout } = useSelector((state) => state.themeLayout);
+
+  useEffect(() => {
+    setSelectedProductFilters([
+      ...selectedCategories,
+      ...(showOnlyShopDetailPage ? [] : selectedShops),
+      ...selectedColors,
+      ...searchProducts,
+    ]);
+  }, [
+    searchProducts,
+    selectedCategories,
+    selectedColors,
+    selectedShops,
+    showOnlyShopDetailPage,
+  ]);
+
+  useEffect(() => {
+    setSelectedShopFilters([...selectedLocations, ...selectedRatings]);
+  }, [selectedLocations, selectedRatings]);
+
+  useEffect(() => {
+    const selectedCategoryIds = appliedProductsFilters.categoryId.selectedValue;
+
+    const selectedCategories = categories.filter((category) =>
+      selectedCategoryIds.includes(category.id)
+    );
+
+    const mappedCategories = selectedCategories.map((category) => ({
+      type: "categoryId",
+      label: category.category_name,
+      value: category.id,
+    }));
+
+    setSelectedCategories(mappedCategories);
+  }, [categories, appliedProductsFilters.categoryId.selectedValue]);
+
+  useEffect(() => {
+    const selectedShopIds = appliedProductsFilters.shopId.selectedValue;
+
+    const selectedShopsData = allShopsLists?.data.filter((shop) =>
+      selectedShopIds.includes(shop.id)
+    );
+
+    const mappedShops = selectedShopsData.map((shop) => ({
+      type: "shopId",
+      label: shop.shop_name,
+      value: shop.id,
+    }));
+
+    setSelectedShops(mappedShops);
+  }, [appliedProductsFilters.shopId.selectedValue, allShopsLists?.data]);
+
+  useEffect(() => {
+    setSelectedColors(
+      appliedProductsFilters.productColor.selectedValue.map((color) => ({
+        type: "productColor",
+        label: color,
+        value: color,
+      }))
+    );
+  }, [appliedProductsFilters.productColor.selectedValue]);
+
+  useEffect(() => {
+    appliedProductsFilters.searchBarData.selectedValue &&
+    appliedProductsFilters.searchBarData.selectedValue !== ""
+      ? setSearchProducts([
+          {
+            type: "searchBarData",
+            label: appliedProductsFilters.searchBarData.selectedValue,
+            value: appliedProductsFilters.searchBarData.selectedValue,
+          },
+        ])
+      : setSearchProducts([]);
+  }, [appliedProductsFilters.searchBarData.selectedValue]);
+
+  useEffect(() => {
+    const selectedLocationPins = appliedShopsFilters.locations.selectedValue;
+
+    const selectedLocations = areaLists.filter((area) =>
+      selectedLocationPins.includes(area.pin)
+    );
+
+    const mappedLocations = selectedLocations.map((location) => ({
+      type: "locations",
+      label: location.area,
+      value: location.pin,
+    }));
+
+    setSelectedLocations(mappedLocations);
+  }, [areaLists, appliedShopsFilters.locations.selectedValue]);
+
+  useEffect(() => {
+    appliedShopsFilters.stars.selectedValue &&
+    appliedShopsFilters.stars.selectedValue !== "0"
+      ? setSelectedRatings([
+          {
+            type: "stars",
+            label: appliedShopsFilters.stars.selectedValue,
+            value: appliedShopsFilters.stars.selectedValue,
+          },
+        ])
+      : setSelectedRatings([]);
+  }, [appliedShopsFilters.stars.selectedValue]);
 
   const handleChangeSortType = (event, newValue) => {
-    setProductPageSkip(0);
     setSortByAnchor(null);
     !byShop
       ? dispatch(
@@ -70,9 +183,7 @@ const UpperFilter = ({
   };
 
   const GetSortByName = (value) => {
-    if (value === "") {
-      return "Default";
-    } else if (value === "new") {
+    if (value === "new") {
       return "Latest";
     } else if (value === "old") {
       return "Oldest";
@@ -80,402 +191,211 @@ const UpperFilter = ({
   };
 
   return (
-    // <div className="flex lg:flex-row flex-col-reverse justify-between gap-4">
-    //   <div>
-    //     <span className="text-[#979ca0] text-base">
-    //       {" "}
-    //       <span className="text-black font-bold text-base">
-    //         {byShop ? "Shops" : "Products"}&nbsp;{" "}
-    //       </span>
-    //       ({byShop ? shopsCount : productsCount} items){" "}
-    //     </span>
-    //   </div>
-    //   <div className="flex items-center justify-between sm:gap-6">
-    //     <p className="text-[#979ca0] sm:text-base text-sm font-semibold">
-    //       Sort by :
-    //       <Button
-    //         onClick={(event) => {
-    //           setSortByAnchor(event.currentTarget);
-    //         }}
-    //         disableElevation
-    //         disableRipple
-    //         endIcon={
-    //           !openSortByAnchor ? (
-    //             <KeyboardArrowDownIcon className="text-black" />
-    //           ) : (
-    //             <KeyboardArrowUpIcon className="text-black" />
-    //           )
-    //         }
-    //       >
-    //         <span className="text-black capitalize sm:text-base text-sm  font-semibold">
-    //           {byShop
-    //             ? GetSortByName(
-    //                 shopsFiltersReducer.sortFilters.sortType.selectedValue
-    //               )
-    //             : GetSortByName(
-    //                 productsFiltersReducer.sortFilters.sortType.selectedValue
-    //               )}
-    //         </span>
-    //       </Button>
-    //     </p>
-    //     <Popover
-    //       anchorEl={sortByAnchor}
-    //       open={openSortByAnchor}
-    //       add={openSortByAnchor ? "simple-popover" : undefined}
-    //       onClose={() => {
-    //         setSortByAnchor(null);
-    //       }}
-    //       transformOrigin={{
-    //         horizontal: "left",
-    //         vertical: "top",
-    //       }}
-    //       anchorOrigin={{
-    //         horizontal: "left",
-    //         vertical: "bottom",
-    //       }}
-    //     >
-    //       <Box>
-    //         <FormControl sx={{ padding: "10px" }}>
-    //           <RadioGroup
-    //             aria-labelledby="sort-selector-label"
-    //             name="sort-selector"
-    //             value={
-    //               byShop
-    //                 ? shopsFiltersReducer.sortFilters.sortType.selectedValue
-    //                 : productsFiltersReducer.sortFilters.sortType.selectedValue
-    //             }
-    //             onChange={handleChangeSortType}
-    //           >
-    //             <FormControlLabel
-    //               value=""
-    //               control={<Radio className="text-colorPrimary" />}
-    //               label={
-    //                 <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-    //                   Default
-    //                 </Typography>
-    //               }
-    //             />
-    //             <FormControlLabel
-    //               value="new"
-    //               control={<Radio className="text-colorPrimary" />}
-    //               label={
-    //                 <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-    //                   Latest
-    //                 </Typography>
-    //               }
-    //             />
-    //             <FormControlLabel
-    //               value="old"
-    //               control={<Radio className="text-colorPrimary" />}
-    //               label={
-    //                 <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-    //                   Oldest
-    //                 </Typography>
-    //               }
-    //             />
-    //           </RadioGroup>
-    //         </FormControl>
-    //         <Divider />
-    //       </Box>
-    //     </Popover>
-
-    //     <p className="font-semibold text-black sm:text-base text-sm cursor-pointer">
-    //       Filter{" "}
-    //       <span>
-    //         <KeyboardArrowDownIcon fontSize="small" />
-    //       </span>
-    //     </p>
-
-    //     <div className="flex">
-    //       <div
-    //         className={`${
-    //           !byShop && productsFiltersReducer.productLayout === "list"
-    //             ? "!text-colorGreen bg-white"
-    //             : "text-[#878A99] bg-[#E8EBEA]"
-    //         } ${
-    //           byShop && shopsFiltersReducer.shopLayout === "list"
-    //             ? "!text-colorGreen bg-white"
-    //             : "text-[#878A99] bg-[#E8EBEA]"
-    //         } cursor-pointer px-3 py-1 rounded-r`}
-    //         onClick={() =>
-    //           !byShop
-    //             ? dispatch(
-    //                 changeProductsLayout({
-    //                   key: "productLayout",
-    //                   value: "list",
-    //                 })
-    //               )
-    //             : dispatch(
-    //                 changeShopsLayout({
-    //                   key: "shopLayout",
-    //                   value: "list",
-    //                 })
-    //               )
-    //         }
-    //         style={{
-    //           boxShadow:
-    //             ((!byShop && productsFiltersReducer.productLayout === "list") ||
-    //               (byShop && shopsFiltersReducer.shopLayout === "list")) &&
-    //             "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-    //         }}
-    //       >
-    //         <ListIcon
-    //           sx={{
-    //             fontSize: 20,
-    //             "@media (max-width: 648px)": {
-    //               fontSize: 16,
-    //             },
-    //           }}
-    //         />
-    //       </div>
-    //       <div
-    //         className={`${
-    //           !byShop && productsFiltersReducer.productLayout === "grid"
-    //             ? "!text-colorGreen bg-white"
-    //             : "text-[#878A99] bg-[#E8EBEA]"
-    //         } ${
-    //           byShop && shopsFiltersReducer.shopLayout === "grid"
-    //             ? "!text-colorGreen bg-white"
-    //             : "text-[#878A99] bg-[#E8EBEA]"
-    //         } cursor-pointer px-3 py-1 rounded-l`}
-    //         onClick={() =>
-    //           !byShop
-    //             ? dispatch(
-    //                 changeProductsLayout({
-    //                   key: "productLayout",
-    //                   value: "grid",
-    //                 })
-    //               )
-    //             : dispatch(
-    //                 changeShopsLayout({
-    //                   key: "shopLayout",
-    //                   value: "grid",
-    //                 })
-    //               )
-    //         }
-    //         style={{
-    //           boxShadow:
-    //             ((!byShop && productsFiltersReducer.productLayout === "grid") ||
-    //               (byShop && shopsFiltersReducer.shopLayout === "grid")) &&
-    //             "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-    //         }}
-    //       >
-    //         <WindowIcon
-    //           sx={{
-    //             fontSize: 20,
-    //             "@media (max-width: 648px)": {
-    //               fontSize: 16,
-    //             },
-    //           }}
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-
-    <div
-      className={`justify-between flex ${
-        !isVendor
-          ? "sm:grid flex-col-reverse grid-cols-8"
-          : "lg:flex-row flex-col-reverse gap-4"
-      }`}
-    >
-      <div
-        className={`flex items-center  ${
-          !isVendor ? "sm:col-span-2 mt-5 sm:mt-0" : ""
-        }`}
-      >
-        <span className="text-[#979ca0] text-base">
-          <span className="text-black font-bold text-[16px]">
-            {byShop ? "Shops" : "Products"}&nbsp;
-          </span>
-          ({byShop ? shopsCount : productsCount} items)
-        </span>
-      </div>
-
-      <div
-        className={`flex items-center ${
-          !isVendor
-            ? "w-full justify-between gap-2 sm:col-span-6"
-            : "justify-between"
-        }`}
-      >
-        <div className={`flex items-center ${!isVendor ? "sm:px-6" : ""}`}>
-          <p className="text-black text-[16px] font-bold">Sort By :</p>
-          <Button
-            onClick={(event) => {
-              setSortByAnchor(event.currentTarget);
-            }}
-            disableElevation
-            disableRipple
-            endIcon={
-              !openSortByAnchor ? (
-                <KeyboardArrowDownIcon className="text-[#979ca0]" />
-              ) : (
-                <KeyboardArrowUpIcon className="text-[#979ca0]" />
-              )
-            }
-          >
-            <span className="text-[#979ca0] capitalize text-base">
-              {byShop
-                ? GetSortByName(
-                    shopsFiltersReducer.sortFilters.sortType.selectedValue
-                  )
-                : GetSortByName(
-                    productsFiltersReducer.sortFilters.sortType.selectedValue
-                  )}
+    <div className="w-full border-b">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <span className="text-[#979ca0] text-base">
+            <span className="text-black font-bold text-[16px]">
+              {byShop ? "Shops" : "Products"}&nbsp;
             </span>
-          </Button>
-          <Popover
-            anchorEl={sortByAnchor}
-            open={openSortByAnchor}
-            add={openSortByAnchor ? "simple-popover" : undefined}
-            onClose={() => {
-              setSortByAnchor(null);
-            }}
-            transformOrigin={{
-              horizontal: "left",
-              vertical: "top",
-            }}
-            anchorOrigin={{
-              horizontal: "left",
-              vertical: "bottom",
-            }}
-          >
-            <Box>
-              <FormControl sx={{ padding: "10px" }}>
-                <RadioGroup
-                  aria-labelledby="sort-selector-label"
-                  name="sort-selector"
-                  value={
-                    byShop
-                      ? shopsFiltersReducer.sortFilters.sortType.selectedValue
-                      : productsFiltersReducer.sortFilters.sortType
-                          .selectedValue
-                  }
-                  onChange={handleChangeSortType}
-                >
-                  <FormControlLabel
-                    value=""
-                    control={<Radio className="text-colorPrimary" />}
-                    label={
-                      <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                        Default
-                      </Typography>
-                    }
-                  />
-                  <FormControlLabel
-                    value="new"
-                    control={<Radio className="text-colorPrimary" />}
-                    label={
-                      <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                        Latest
-                      </Typography>
-                    }
-                  />
-                  <FormControlLabel
-                    value="old"
-                    control={<Radio className="text-colorPrimary" />}
-                    label={
-                      <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                        Oldest
-                      </Typography>
-                    }
-                  />
-                </RadioGroup>
-              </FormControl>
-              <Divider />
-            </Box>
-          </Popover>
+            ({byShop ? shopsCount : productsCount})
+          </span>
         </div>
-        <div className={`flex gap-5`}>
-          {showDrawerFilter && (
-            <DrawerFilters
-              byShop={byShop}
-              setByShop={setByShop}
-              setShopPageSkip={setShopPageSkip}
-              setProductPageSkip={setProductPageSkip}
-              showOnlyShopDetailPage={showOnlyShopDetailPage}
-            />
-          )}
 
-          <div className="flex">
-            <div
-              className={`${
-                !byShop && productsFiltersReducer.productLayout === "grid"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } ${
-                byShop && shopsFiltersReducer.shopLayout === "grid"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } cursor-pointer px-2 py-1 rounded-l`}
-              onClick={() =>
-                !byShop
-                  ? dispatch(
-                      changeProductsLayout({
-                        key: "productLayout",
-                        value: "grid",
-                      })
-                    )
-                  : dispatch(
-                      changeShopsLayout({
-                        key: "shopLayout",
-                        value: "grid",
-                      })
-                    )
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center mb-1">
+            <Button
+              onClick={(event) => {
+                setSortByAnchor(event.currentTarget);
+              }}
+              disableElevation
+              disableRipple
+              endIcon={
+                !openSortByAnchor ? (
+                  <KeyboardArrowDownIcon className="text-[#979ca0]" />
+                ) : (
+                  <KeyboardArrowUpIcon className="text-[#979ca0]" />
+                )
               }
-              style={{
-                boxShadow:
-                  ((!byShop &&
-                    productsFiltersReducer.productLayout === "grid") ||
-                    (byShop && shopsFiltersReducer.shopLayout === "grid")) &&
-                  "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
+            >
+              <span className="text-[#979ca0] capitalize text-base">
+                {byShop
+                  ? GetSortByName(shopSortFilters.sortType.selectedValue)
+                  : GetSortByName(sortFilters.sortType.selectedValue)}
+              </span>
+            </Button>
+            <Popover
+              anchorEl={sortByAnchor}
+              open={openSortByAnchor}
+              add={openSortByAnchor ? "simple-popover" : undefined}
+              onClose={() => {
+                setSortByAnchor(null);
+              }}
+              transformOrigin={{
+                horizontal: "left",
+                vertical: "top",
+              }}
+              anchorOrigin={{
+                horizontal: "left",
+                vertical: "bottom",
               }}
             >
-              <GridViewOutlinedIcon fontSize="medium" />
-            </div>
-
-            <div
-              className={`${
-                !byShop && productsFiltersReducer.productLayout === "list"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } ${
-                byShop && shopsFiltersReducer.shopLayout === "list"
-                  ? "!text-colorGreen bg-white"
-                  : "text-[#878A99] bg-[#E8EBEA]"
-              } cursor-pointer px-2 py-1 rounded-r`}
-              onClick={() =>
-                !byShop
-                  ? dispatch(
-                      changeProductsLayout({
-                        key: "productLayout",
-                        value: "list",
-                      })
-                    )
-                  : dispatch(
-                      changeShopsLayout({
-                        key: "shopLayout",
-                        value: "list",
-                      })
-                    )
-              }
-              style={{
-                boxShadow:
-                  ((!byShop &&
-                    productsFiltersReducer.productLayout === "list") ||
-                    (byShop && shopsFiltersReducer.shopLayout === "list")) &&
-                  "0px 0.735294px 1.47059px rgba(37, 123, 106, 0.08), 0px 1.47059px 2.94118px rgba(37, 123, 106, 0.16)",
-              }}
-            >
-              <SegmentOutlinedIcon fontSize="medium" />
-            </div>
+              <Box>
+                <FormControl sx={{ padding: "10px" }}>
+                  <RadioGroup
+                    aria-labelledby="sort-selector-label"
+                    name="sort-selector"
+                    value={
+                      byShop
+                        ? shopSortFilters.sortType.selectedValue
+                        : sortFilters.sortType.selectedValue
+                    }
+                    onChange={handleChangeSortType}
+                  >
+                    {[
+                      { label: "Latest", value: "new" },
+                      { label: "Oldest", value: "old" },
+                    ]?.map((item, index) => (
+                      <FormControlLabel
+                        key={index}
+                        value={item.value}
+                        control={<Radio className="text-colorPrimary" />}
+                        label={
+                          <Typography
+                            sx={{ fontWeight: 500, fontSize: "16px" }}
+                          >
+                            {item.label}
+                          </Typography>
+                        }
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                <Divider />
+              </Box>
+            </Popover>
           </div>
+
+          <DrawerFilters showOnlyShopDetailPage={showOnlyShopDetailPage} />
         </div>
       </div>
+      {(byShop ? selectedShopFilters : selectedProductFilters).length > 0 && (
+        <div
+          className={`w-full flex gap-5 sm:gap-10 my-2 capitalize justify-between ${
+            themeLayout === "mobileScreen" && "items-center"
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2 ${
+              themeLayout === "mobileScreen"
+                ? "overflow-x-auto hide-scrollbar"
+                : "flex-wrap"
+            }`}
+          >
+            {(byShop ? selectedShopFilters : selectedProductFilters).map(
+              (itm, index) => (
+                <SelectedFilterBadge
+                  key={index}
+                  itm={itm}
+                  byShop={byShop}
+                  appliedProductsFilters={appliedProductsFilters}
+                  appliedShopsFilters={appliedShopsFilters}
+                  dispatch={dispatch}
+                />
+              )
+            )}
+          </div>
+          <span
+            className="underline cursor-pointer text-colorGreen whitespace-nowrap mr-2"
+            onClick={() => {
+              if (byShop) {
+                ["locations", "stars"].map((itm) =>
+                  dispatch(
+                    changeAppliedShopsFilters({
+                      key: itm,
+                      value: {
+                        selectedValue: itm === "stars" ? "0" : [],
+                      },
+                    })
+                  )
+                );
+                dispatch(changeShopPage(0));
+              } else {
+                [
+                  "categoryId",
+                  "productColor",
+                  ...(showOnlyShopDetailPage ? [] : ["shopId"]),
+                  "searchBarData",
+                ].map((itm) =>
+                  dispatch(
+                    changeAppliedProductsFilters({
+                      key: itm,
+                      value: {
+                        selectedValue: itm === "searchBarData" ? "" : [],
+                      },
+                    })
+                  )
+                );
+                dispatch(changeProductPage(0));
+              }
+            }}
+          >
+            Clear All
+          </span>
+        </div>
+      )}
     </div>
   );
 };
 
 export default UpperFilter;
+
+const SelectedFilterBadge = ({
+  itm,
+  byShop,
+  appliedProductsFilters,
+  appliedShopsFilters,
+  dispatch,
+}) => {
+  const handleDeleteFilterBadge = () => {
+    if (byShop) {
+      dispatch(
+        changeAppliedShopsFilters({
+          key: itm.type,
+          value: {
+            selectedValue:
+              itm.type === "stars"
+                ? "0"
+                : appliedShopsFilters[itm.type].selectedValue.filter(
+                    (item) => item !== itm.value
+                  ),
+          },
+        })
+      );
+      dispatch(changeShopPage(0));
+    } else {
+      dispatch(
+        changeAppliedProductsFilters({
+          key: itm.type,
+          value: {
+            selectedValue:
+              itm.type === "searchBarData"
+                ? ""
+                : appliedProductsFilters[itm.type].selectedValue.filter(
+                    (item) => item !== itm.value
+                  ),
+          },
+        })
+      );
+      dispatch(changeProductPage(0));
+    }
+  };
+
+  return (
+    <Chip
+      color="secondary"
+      label={itm.label}
+      onDelete={handleDeleteFilterBadge}
+    />
+  );
+};

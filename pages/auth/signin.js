@@ -8,18 +8,22 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
-import { signIn } from "../../graphql/mutations/authMutations";
+import { googleSignIn, signIn } from "../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
 import {
   loadUserProfileStart,
   loginUserId,
 } from "../../redux/ducks/userProfile";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useGoogleLogin } from "@react-oauth/google";
+import { getGoogleUserInfo } from "../../services/googleUserInfo";
+import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [asVendor, setAsVendor] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -31,20 +35,33 @@ const Login = () => {
   } = useForm();
 
   useEffect(() => {
-    if (localStorage.getItem("user_type_for_auth") === "vendor") {
-      setAsVendor(true);
-    } else {
-      setAsVendor(false);
-    }
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      Router.push(
-        localStorage.getItem("user_type") ? "/vendor/dashboard" : "/"
-      );
-    }
+    localStorage.getItem("user_type_for_auth") === "vendor"
+      ? setAsVendor(true)
+      : setAsVendor(false);
   }, []);
+
+  const handleAfterSignInResponse = (userId, token, message) => {
+    setLoading(false);
+    dispatch(loginUserId(userId));
+    dispatch(loadUserProfileStart({ id: userId }));
+    localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
+    toast.success(message, { theme: "colored" });
+    localStorage.removeItem("user_type_for_auth");
+    localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
+    setTimeout(() => {
+      Router.push(asVendor ? "/vendor/dashboard" : "/");
+    }, 1000);
+  };
+
+  const handleAfterSignInError = (message) => {
+    setLoading(false);
+    toast.error(message, { theme: "colored" });
+  };
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -53,144 +70,163 @@ const Login = () => {
       password: data.password,
       type: asVendor ? "vendor" : "customer",
     }).then(
-      (res) => {
-        setLoading(false);
-        dispatch(loginUserId(res.data.signIn.user));
-        dispatch(loadUserProfileStart({ id: res.data.signIn.user }));
-        localStorage.setItem("token", res.data.signIn.token);
-        localStorage.setItem("userId", res.data.signIn.user);
-        toast.success(res.data.signIn.message, { theme: "colored" });
-        localStorage.removeItem("user_type_for_auth");
-        localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-        setTimeout(() => {
-          Router.push(asVendor ? "/vendor/dashboard" : "/");
-        }, 1000);
-      },
-      (error) => {
-        setLoading(false);
-        toast.error(error.message, { theme: "colored" });
-      }
+      (res) =>
+        handleAfterSignInResponse(
+          res.data.signIn.user,
+          res.data.signIn.token,
+          res.data.signIn.message
+        ),
+      (error) => handleAfterSignInError(error.message)
     );
   };
 
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (codeResponse) => {
+      try {
+        const { token_type, access_token } = codeResponse;
+        const { email } = await getGoogleUserInfo(token_type, access_token);
+
+        googleSignIn({
+          username: email,
+          type: asVendor ? "vendor" : "customer",
+        }).then(
+          (res) =>
+            handleAfterSignInResponse(
+              res.data.googleSignIn.user,
+              res.data.googleSignIn.token,
+              res.data.googleSignIn.message
+            ),
+          (error) => handleAfterSignInError(error.message)
+        );
+      } catch (error) {
+        console.log("Error fetching user info:", error);
+        toast.error(error?.response?.data?.error?.message, {
+          theme: "colored",
+        });
+      }
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
-    <div className="bg-background w-full">
-      <div className="bg-white flex w-full p-5 sm:p-10 sm:gap-10 min-h-[100vh] overflow-auto">
-        <div className="md:w-[50%] sm:w-full flex flex-col">
-          <div className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary flex items-center gap-4">
-            <ArrowBackIcon
-              onClick={() => Router.push("/auth/user-type")}
-              className="cursor-pointer"
-            />
-            <div className="">
-              <h2 className="text-3xl font-bold max-[600px]:text-xl text-colorPrimary uppercase">
-                <span className="sm:text-4xl text-[24px]">R</span>entbless
-              </h2>
-            </div>
-          </div>
-          <div className="text-4xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
-            Login As a {asVendor ? "Vendor" : "Customer"} !
-          </div>
-          <p className="text-xl mt-4 text-gray-400 max-[600px]:text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-          </p>
-          <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium">
-            <FcGoogle />
-            Continue to Google
-          </button>{" "}
-          <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
-            <FaFacebook className="text-sky-700" />
-            Continue to Facebook
-          </button>
-          <p className="my-2 flex justify-center font-semibold text-colorPrimary">
-            Or
-          </p>
-          <form onReset={reset}>
-            <input
-              type="text"
-              placeholder={
-                asVendor ? "Email Address or Contact Number" : "Contact Number"
-              }
-              {...register("username", {
-                required: "Username is required",
-              })}
-              className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
-            />
-            {errors.username && (
-              <div className="mt-1 ml-1">
-                <span style={{ color: "red" }}>{errors.username?.message}</span>
-              </div>
-            )}
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                {...register("password", {
-                  required: "Password is required",
-                })}
-                className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
-              />
-
-              {showPassword ? (
-                <VisibilityOutlinedIcon
-                  className="absolute top-5 right-5 text-gray-400 cursor-pointer"
-                  onClick={() => setShowPassword((show) => !show)}
-                />
-              ) : (
-                <VisibilityOffOutlinedIcon
-                  className="absolute top-5 right-5 text-gray-400 cursor-pointer"
-                  onClick={() => setShowPassword((show) => !show)}
-                />
-              )}
-
-              {errors.password && (
-                <div className="mt-1 ml-1">
-                  <span style={{ color: "red" }}>
-                    {errors.password?.message}
-                  </span>
-                </div>
-              )}
-            </div>
-            <Link href="/auth/forgot-password">
-              <p className="flex justify-end text-gray-400 cursor-pointer">
-                Forgot Password?
-              </p>
-            </Link>
-          </form>
-          <div className="flex-grow"></div>
-          <div className="w-full mt-5">
-            <button
-              type="submit"
-              onClick={handleSubmit(onSubmit, onError)}
-              className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
-            >
-              {loading && (
-                <CircularProgress
-                  size={20}
-                  color="primary"
-                  sx={{ color: "white", mr: 1 }}
-                />
-              )}{" "}
-              Sign In
-            </button>
-            <p className="text-base max-[480px]:text-xs text-gray-400 mt-2 flex justify-center">
-              Don&apos;t have an account?
-              <span
-                className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
-                onClick={() => Router.push("/auth/signup")}
-              >
-                Sign Up
-              </span>
-            </p>
-          </div>
+    <>
+      <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
+        <ArrowBackIcon
+          onClick={() => Router.push("/auth/user-type")}
+          className="cursor-pointer text-3xl"
+        />
+        <div className="">
+          <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
+            <span className="sm:text-4xl text-[24px]">R</span>entbless
+          </h2>
         </div>
-        <div className="hidden md:block md:w-[50%] auth-cover rounded-3xl"></div>
       </div>
-    </div>
+      <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
+        Login{" "}
+        <span className="text-colorGreen">
+          As {asVendor ? "Vendor" : "Customer"}
+        </span>
+      </div>
+      <p className="text-sm sm:text-xl mt-2 text-gray-400">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry.
+      </p>
+      <button
+        onClick={handleGoogleLogin}
+        className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
+      >
+        <FcGoogle />
+        Continue to Google
+      </button>
+      <button className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-2 flex items-center justify-center gap-2 font-medium">
+        <FaFacebook className="text-sky-700" />
+        Continue to Facebook
+      </button>
+      <p className="my-2 flex justify-center font-semibold text-colorPrimary">
+        OR
+      </p>
+      <form onReset={reset}>
+        <input
+          type="text"
+          placeholder="Email Address or Contact Number *"
+          {...register("username", {
+            required: "Username is required",
+          })}
+          className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
+        />
+        {errors.username && (
+          <div className="mt-1 ml-1">
+            <span style={{ color: "red" }}>{errors.username?.message}</span>
+          </div>
+        )}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password *"
+            {...register("password", {
+              required: "Password is required",
+            })}
+            className="rounded-xl p-3 border w-full my-2 focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen xl:p-3 sm:p-2"
+          />
+
+          {showPassword ? (
+            <VisibilityOutlinedIcon
+              className="absolute top-5 right-5 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword((show) => !show)}
+            />
+          ) : (
+            <VisibilityOffOutlinedIcon
+              className="absolute top-5 right-5 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword((show) => !show)}
+            />
+          )}
+
+          {errors.password && (
+            <div className="mt-1 ml-1">
+              <span style={{ color: "red" }}>{errors.password?.message}</span>
+            </div>
+          )}
+        </div>
+        <Link href="/auth/forgot-password">
+          <p className="flex justify-end text-gray-400 hover:opacity-50 cursor-pointer">
+            Forgot Password?
+          </p>
+        </Link>
+      </form>
+      <div className="flex-grow"></div>
+      <div className="w-full mt-5">
+        <button
+          type="submit"
+          onClick={handleSubmit(onSubmit, onError)}
+          className="h-14 flex items-center justify-center text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm"
+        >
+          {loading && (
+            <CircularProgress
+              size={20}
+              color="primary"
+              sx={{ color: "white", mr: 1 }}
+            />
+          )}{" "}
+          Sign In
+        </button>
+        <p className="text-base max-[480px]:text-xs text-gray-400 mt-2 flex justify-center">
+          Don&apos;t have an account?
+          <span
+            className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
+            onClick={() => Router.push("/auth/signup")}
+          >
+            Sign Up
+          </span>
+        </p>
+      </div>
+    </>
   );
 };
 
-export default Login;
+export default withoutAuthAndUserType(Login);

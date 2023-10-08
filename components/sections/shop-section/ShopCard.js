@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
 import Carousel from "react-multi-carousel";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import { Avatar } from "@mui/material";
 
 const responsive = {
   superLargeDesktop: {
@@ -25,201 +27,188 @@ const responsive = {
   },
 };
 
-const TrendingCustomLeftArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "black",
-        color: "white",
-        left: 0,
-        position: "absolute",
-        cursor: "pointer",
-        width: "38px",
-        height: "38px",
-        borderRadius: "50%",
-        marginLeft: "16px",
-        marginBottom: "25%",
-        bottom: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "10px",
-          height: "10px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(135deg)",
-          cursor: "pointer",
-          position: "relative",
-          right: "-1px",
-        }}
-      />
-    </div>
-  );
-};
-
-const TrendingCustomRightArrow = ({ onClick }) => {
-  return (
-    <div
-      style={{
-        background: "black",
-        color: "white",
-        right: 0,
-        position: "absolute",
-        cursor: "pointer",
-        width: "38px",
-        height: "38px",
-        borderRadius: "50%",
-        marginRight: "16px",
-        marginBottom: "25%",
-        bottom: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      onClick={() => onClick()}
-    >
-      <i
-        style={{
-          border: "solid",
-          width: "10px",
-          height: "10px",
-          borderWidth: "0px 2px 2px 0px",
-          display: "inline-block",
-          transform: "rotate(-45deg)",
-          cursor: "pointer",
-          position: "relative",
-          left: "-1px",
-        }}
-      />
-    </div>
-  );
-};
-
 const ShopCard = ({ shop }) => {
-  const shopsFiltersReducer = useSelector((state) => state.shopsFiltersReducer);
-
   const { themeLayout } = useSelector((state) => state.themeLayout);
+  const [currentImageIndex, setCurrentImageIndex] = useState(null);
+  const [autoplay, setAutoplay] = useState(false);
+  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
+  const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
+  const [isShopImages, setIsShopImages] = useState(false);
 
-  const items = shop.shop_images.map((itm) => {
+  const carouselRef = useRef(null);
+
+  const shopImages = shop.shop_images.map((itm, index) => {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <div
+        className="relative"
+        key={index}
         style={{
           width: "100%",
-          height:
-            shopsFiltersReducer.shopLayout === "list"
-              ? themeLayout === "mobileScreen"
-                ? 250
-                : 300
-              : themeLayout === "mobileScreen"
-              ? 250
-              : 300,
+          height: themeLayout === "mobileScreen" ? 250 : 300,
         }}
-        src={itm?.links ?? ""}
-        alt={shop.name}
-        className="rounded-t-xl object-cover"
-        key={itm}
-      />
+        onMouseEnter={() => {
+          setAutoplay(true);
+          setCurrentImageIndex(null);
+        }}
+        onMouseLeave={() => {
+          setAutoplay(false);
+          setCurrentImageIndex(0);
+        }}
+      >
+        {!isShopImagesLoaded && (
+          <ImageLoadingSkeleton className="object-cover" />
+        )}
+        <Link href={`/shop/${shop.id}`}>
+          <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+            {isShopImages ? (
+              <div
+                className="bg-[#00000031]"
+                style={{
+                  width: "100%",
+                  height: themeLayout === "mobileScreen" ? 250 : 300,
+                }}
+              />
+            ) : (
+              <Image
+                // src={itm?.links ?? ""}
+                src={
+                  currentImageIndex === null
+                    ? itm?.links
+                    : currentImageIndex === 0 && shop.shop_images[0]?.links
+                }
+                alt={shop?.shop_name}
+                className={`object-cover absolute top-0 left-0 ${
+                  isShopImagesLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                onLoad={() => setShopImagesLoaded(true)}
+                onError={() => {
+                  setIsShopImages(true);
+                }}
+                layout="fill"
+              />
+            )}
+          </a>
+        </Link>
+      </div>
     );
   });
 
   return (
-    <div className="bg-white rounded-lg ">
+    <div className="bg-white shadow-xl h-full">
       <div className="">
-        <div className="my-[5px] cursor-pointer product-parent-div">
+        <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
             <div className="w-[100%]">
               <Carousel
+                ref={carouselRef}
+                autoPlay={autoplay}
+                autoPlaySpeed={900}
                 infinite
-                removeArrowOnDeviceType={["mobile"]}
+                arrows={false}
                 responsive={responsive}
-                customLeftArrow={
-                  <TrendingCustomLeftArrow onClick={TrendingCustomLeftArrow} />
-                }
-                customRightArrow={
-                  <TrendingCustomRightArrow
-                    onClick={TrendingCustomRightArrow}
-                  />
-                }
                 dotListClass={"Landing_customDots"}
               >
-                {items}
+                {shop?.shop_images?.length === 0 ? (
+                  <div
+                    className="bg-[#00000031]"
+                    style={{
+                      width: "100%",
+                      height: themeLayout === "mobileScreen" ? 250 : 300,
+                    }}
+                  />
+                ) : (
+                  shopImages
+                )}
               </Carousel>
             </div>
           </div>
-
-          <div className="product-overlay">
-            <Link href={`/shop/${shop.id}`}>
-              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                <button className="text-colorWhite text-base px-4 py-2 w-full md:w-1/2 lg:w-full xl:w-1/2 bg-colorPrimary rounded-t-[16px] detailButton whitespace-nowrap">
-                  Visit Shop
-                </button>
-              </a>
-            </Link>
-          </div>
         </div>
       </div>
-      <div className="px-5 py-3">
-        <div
-          style={{ alignItems: "flex-start" }}
-          className="flex gap-2 justify-between"
-        >
-          <div className="flex gap-2 justify-start">
-            <div className="flex justify-center items-center">
-              <Image
-                alt="Shop Logo"
-                src={shop?.shop_logo ?? ""}
-                width={50}
-                height={50}
-                className="rounded-[50%]"
-              />
-            </div>
-            <div className="flex flex-col align-baseline">
-              <Link href={`/shop/${shop.id}`}>
-                <a
-                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-                >
+      <Link href={`/shop/${shop.id}`}>
+        <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+          <div className="px-5 py-3">
+            <div
+              style={{ alignItems: "flex-start" }}
+              className="flex gap-2 justify-between"
+            >
+              <div className="flex gap-2 justify-start">
+                <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center relative w-[50px] h-[50px]">
+                    {!isShopLogoLoaded && (
+                      <ImageLoadingSkeleton
+                        className="rounded-[50%]"
+                        variant="circular"
+                      />
+                    )}
+                    <Image
+                      alt="Shop Logo"
+                      src={shop?.shop_logo ?? ""}
+                      layout="fill"
+                      className={`rounded-[50%] absolute top-0 left-0 ${
+                        isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                      }`}
+                      onLoad={() => setIsShopLogoLoaded(true)}
+                      onError={() => {
+                        setIsLogoImage(true);
+                      }}
+                    />
+                    {isLogoImage && (
+                      <Avatar
+                        className="!bg-colorGreen"
+                        sx={{
+                          fontSize: "18px",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
+                        {/* {String(shop.shop_name)
+                          ?.split(" ")[0][0]
+                          .toUpperCase() +
+                          String(shop.shop_name)
+                            ?.split(" ")[1][0]
+                            .toUpperCase()} */}
+                      </Avatar>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-col align-baseline">
                   <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
                     {shop.shop_name}
                   </p>
-                </a>
-              </Link>
-              <p className="text-[#888888] text-sm font-normal">
-                <LocationOnIcon fontSize="small" className="!mr-1" />
-                {shop?.branch_info?.length > 1
-                  ? shop?.branch_info?.map(
-                      (itm) => itm.branch_type === "main" && itm.branch_address
-                    )
-                  : shop?.branch_info[0]?.branch_address}
-              </p>
-              {shopsFiltersReducer.shopLayout === "list" && (
-                <span className="text-[14px] font-normal flex items-center mt-2 text-colorBlack">
-                  {`${shop?.shopFollowerCount} Followers`}
+
+                  <p className="text-[#888888] text-sm font-normal">
+                    <LocationOnIcon fontSize="small" className="!mr-1" />
+                    {shop?.branch_info?.length > 1
+                      ? shop?.branch_info?.map(
+                          (itm) =>
+                            itm.branch_type === "main" && itm.branch_address
+                        )
+                      : shop?.branch_info[0]?.branch_address}
+                  </p>
+
+                  <span className="text-[14px] font-normal flex items-center mt-2 text-colorBlack">
+                    {`${shop?.shopFollowerCount} Followers`}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center mt-2 flex-wrap gap-2">
+                <div className="p-1 flex items-center gap-1">
+                  <StarIcon fontSize="small" className="!text-yellow-400" />
+                  <p className="text-colorBlack text-[14px] font-normal">
+                    {shop.shop_rating}
+                  </p>
+                </div>
+                <span className="text-[14px] font-normal text-[gray]">
+                  ({shop.shopReviewCount})
                 </span>
-              )}
+              </div>
             </div>
           </div>
-          {shopsFiltersReducer.shopLayout === "list" && (
-            <div className="flex items-center mt-2 flex-wrap gap-2">
-              <div className="p-1 flex items-center gap-1">
-                <StarIcon fontSize="small" className="!text-yellow-400" />
-                <p className="text-colorBlack text-[14px] font-normal">
-                  {shop.shop_rating}
-                </p>
-              </div>
-              <span className="text-[14px] font-normal text-[gray]">
-                ({shop.shopReviewCount})
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
+        </a>
+      </Link>
     </div>
   );
 };

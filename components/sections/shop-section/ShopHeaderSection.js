@@ -1,44 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import {
-  Button,
-  Divider,
-  Grid,
-  Tooltip,
-  tooltipClasses,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Grid, Typography } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { shopFollow } from "../../../graphql/mutations/shops";
 import { useDispatch, useSelector } from "react-redux";
 import Router, { useRouter } from "next/router";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import facebookIcon from "../../../assets/facebook.png";
-import whatsUpIcon from "../../../assets/wpToolTipIcon.svg";
-import googleIcon from "../../../assets/googleIcon.svg";
 import {
   EmailShareButton,
   FacebookShareButton,
+  EmailIcon,
   WhatsappIcon,
+  FacebookIcon,
   WhatsappShareButton,
 } from "react-share";
-import AddIcon from "@mui/icons-material/Add";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fbfbfb",
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  boxShadow: "none",
-}));
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import { ShopHeaderItem } from "../../core/CustomMUIComponents";
+import { assets } from "../../../constants";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -51,8 +35,8 @@ const ShopHeaderSection = ({
   const pageShareURL = window.location.href;
 
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
-
-  const [OpenToolTip, setOpenToolTip] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
+  const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
 
   const router = useRouter();
 
@@ -60,30 +44,11 @@ const ShopHeaderSection = ({
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
-  const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const handleClick = () => {
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#ffffff",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)",
-      top: 0,
-    },
-    [theme.breakpoints.down("sm")]: {
-      [`& .${tooltipClasses.tooltip}`]: {
-        marginTop: "2px !important",
-        padding: "5px 0px !important",
-      },
-    },
-  }));
   useEffect(() => {
     if (!isAuthenticate) {
       setShopFollowByUser(false);
@@ -101,42 +66,92 @@ const ShopHeaderSection = ({
   return (
     <>
       <div className="flex justify-center font-Nova">
-        <div className="grid-cols-12 mt-[-50px] container bg-[#151827]">
+        <div className="grid-cols-12 mt-[-100px] container bg-[#151827] rounded-lg shadow-xl">
           <div className="col-span-12 pl-[4%] pr-[4%]">
-            <div className="flex flex-col	sm:flex-row	">
+            <div className="flex flex-col	sm:flex-row">
               <div className="mt-[-45px] flex justify-center">
-                <Image
-                  src={shopDetails?.shop_logo ?? ""}
-                  alt="shop logo"
-                  layout="fixed"
-                  width={150}
-                  height={150}
-                  className="rounded-[50%]"
-                />
+                {isLogoImage ? (
+                  <Avatar
+                    className="!bg-colorGreen"
+                    sx={{
+                      fontSize: "70px",
+                      width: "150px",
+                      height: "150px",
+                    }}
+                  >
+                    {String(shopDetails.shop_name)
+                      ?.split(" ")[0][0]
+                      .toUpperCase()}
+                    {/* {String(shopDetails.shop_name)
+                      ?.split(" ")[0][0]
+                      .toUpperCase() +
+                      String(shopDetails.shop_name)
+                        ?.split(" ")[1][0]
+                        .toUpperCase()} */}
+                  </Avatar>
+                ) : (
+                  <Image
+                    src={shopDetails?.shop_logo ?? ""}
+                    alt="shop logo"
+                    layout="fixed"
+                    width={150}
+                    height={150}
+                    className="rounded-[50%]"
+                    onLoad={() => setIsShopLogoLoaded(true)}
+                    onError={() => {
+                      setIsLogoImage(true);
+                    }}
+                  />
+                )}
+
+                {!isShopLogoLoaded && (
+                  <ImageLoadingSkeleton
+                    className="rounded-[50%]"
+                    variant="circular"
+                    width={150}
+                    height={150}
+                    sx={{
+                      backgroundColor: "#F3F6F6",
+                    }}
+                  />
+                )}
               </div>
               <div className="flex flex-col w-full sm:ml-[2%]">
-                <div className="sm:flex justify-between flex-nowrap">
+                <div className="flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-3">
-                    <div className="oneLineAfterThreeDots font-semibold text-[30px] text-[#FFFFFF]">
+                    <div className="font-semibold text-[30px] text-[#FFFFFF] line-clamp-1">
                       {shopDetails.shop_name}
                     </div>
-                    <div className="oneLineAfterThreeDots text-[#FFFFFF] text-[18px] font-normal ">
-                      {"Let's be Effortlessly Cool: Embrace Your Signature Style with Us"}
+                    <div className="text-[#FFFFFF] text-[18px] font-normal ">
+                      {
+                        "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
+                      }
                     </div>
-                    <span className="sm:pb-[55px] pb-[30px] text-[#878A99] text-[16px] font-normal oneLineAfterThreeDots">
+                    <span className="text-[#878A99] text-[16px] font-normal flex">
                       <LocationOnIcon
                         fontSize="small"
-                        className="-ml-1 !mr-1 text-[red]"
+                        className="-ml-1 !mr-1 text-[red] mb-1"
                       />
-                      {shopDetails.branch_info.map(
-                        (itm) =>
-                          itm.branch_type === "main" && itm.branch_address
-                      )}
+                      <span className="line-clamp-1">
+                        {shopDetails.branch_info.map(
+                          (itm) =>
+                            itm.branch_type === "main" && itm.branch_address
+                        )}
+                      </span>
                     </span>
+
+                    <Typography
+                      className="text-colorGreen underline pb-2 sm:pb-10 mt-2 cursor-pointer"
+                      onClick={() =>
+                        router.push(`/shop/${shopDetails?.id}/branches`)
+                      }
+                    >
+                      See Branches
+                    </Typography>
                   </div>
-                  <div className="flex sm:mt-6 items-start">
+                  <div className="mt-2 sm:mt-5">
                     <Button
-                      className="border !border-[#FFFFFF] w-[120px] rounded-[8px]"
+                      className="rounded-lg bg-colorGreen hover:bg-colorGreen"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -176,38 +191,19 @@ const ShopHeaderSection = ({
                         }
                       }}
                     >
-                      <Typography
-                        sx={{ textTransform: "none", color: "#FFFFFF" }}
-                      >
+                      <div className="text-colorWhite normal-case">
                         {shopFollowByUser ? (
                           "UnFollow"
                         ) : (
-                          <>
-                            <div className="flex items-center">
-                              <AddIcon className="w-[22px] h-[22px]" />
-                              <div className="pt-[2px]">Follow</div>
+                          <div className="flex items-center">
+                            <PersonAddIcon sx={{ color: "#ffffff" }} />
+                            <div className="hidden sm:block pt-[2px] ml-2">
+                              Follow
                             </div>
-                          </>
+                          </div>
                         )}
-                      </Typography>
+                      </div>
                     </Button>
-                    <div className="ml-[24px]">
-                      <a
-                        target="_blank"
-                        href={`/shop/${shopDetails?.id}/branches`}
-                        rel="noreferrer"
-                      >
-                        <Button
-                          variant="contained"
-                          className={`!bg-colorGreen !hover:bg-colorGreen !flex !items-center !justify-center capitalize`}
-                          // onClick={() =>
-                          //   Router.push(`/shop/${shopDetails?.id}/branches`)
-                          // }
-                        >
-                          <Typography color="#FFFFFF">See Branches</Typography>
-                        </Button>
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -217,36 +213,36 @@ const ShopHeaderSection = ({
           <div className="mt-[24px] sm:mt-0 relative">
             <Grid container>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <ProductionQuantityLimitsIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[10px] sm:text-[16px]">Products</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
+                    <p className="text-[#FFFFFF] text-[20px] sm:text-[32px] pt-1 sm:pt-0 font-medium ml-0 sm:ml-6">
                       {totalProducts}
                     </p>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
               <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <PeopleAltIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[9px] sm:text-[16px]">Followers</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
+                    <p className="text-[#FFFFFF] text-[20px] sm:text-[32px] pt-1 sm:pt-0 font-medium ml-0 sm:ml-6">
                       {totalFollowers}
                     </p>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
               <Grid
                 sx={{ borderRight: 1 }}
@@ -255,57 +251,61 @@ const ShopHeaderSection = ({
                 sm={3}
                 onClick={handleClick}
               >
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <RateReviewIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
-                      <p className="text-[10px] sm:text-[16px]">Review </p>
+                      <p className="text-[10px] sm:text-[16px]">Review</p>
                     </div>
-                    <p className="text-[#FFFFFF] text-[16px] sm:text-[32px] pt-[12px] sm:pt-0 font-medium ml-6">
+                    <p className="text-[#FFFFFF] text-[20px] sm:text-[32px] pt-1 sm:pt-0 font-medium ml-0 sm:ml-6">
                       {totalReview}
                     </p>
                   </div>
-                </Item>
+                </ShopHeaderItem>
               </Grid>
-              <Grid
-                item
-                xs={3}
-                sm={3}
-                onMouseLeave={() => setOpenToolTip(false)}
-              >
-                <Item className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row">
+              <Grid item xs={3} sm={3}>
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
                   <div className="lg:flex items-center justify-center w-[100%]">
-                    <div className="flex items-center">
+                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center md:justify-center">
                       <ShareIcon
                         fontSize="medium"
                         className="sm:mr-[8px] mr-[5px]"
                       />
                       <p className="text-[10px] sm:text-[16px]">Share</p>
                     </div>
-                    <div className="flex pt-[12px] sm:pt-0 ml-6 items-center">
+                    <div className="flex pt-2 sm:pt-0 ml-0 sm:ml-6 lg:ml-0 xl:ml-6 gap-1 lg:gap-0 items-center md:justify-center">
                       <div className="lg:p-2 rounded-lg cursor-pointer">
                         <FacebookShareButton
                           windowWidth={900}
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <Image src={facebookIcon ?? ""} alt="facebookIcon" />
+                          <Image
+                            src={assets.facebookIcon}
+                            width={window.innerWidth >= 1024 ? 26 : 15}
+                            height={window.innerWidth >= 1024 ? 26 : 15}
+                            alt="facebookIcon"
+                          />
+                          {/* <FacebookIcon
+                            size={window.innerWidth >= 1024 ? 26 : 22}
+                            round={true}
+                            className="w-full"
+                          /> */}
                         </FacebookShareButton>
                       </div>
-                      <div className="lg:p-2 rounded-lg cursor-pointer">
+                      <div className="lg:p-2 !rounded-lg cursor-pointer">
                         <WhatsappShareButton
                           windowWidth={900}
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <Image
-                            width={26}
-                            height={26}
-                            src={whatsUpIcon ?? ""}
-                            alt="whatsUpIcon"
+                          <WhatsappIcon
+                            size={window.innerWidth >= 1024 ? 26 : 15}
+                            round={true}
+                            className="w-full"
                           />
                         </WhatsappShareButton>
                       </div>
@@ -316,52 +316,22 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          <Image src={googleIcon ?? ""} alt="googleIcon" />
+                          {/* <EmailIcon
+                            size={window.innerWidth >= 1024 ? 26 : 22}
+                            round={true}
+                            className="w-full"
+                          /> */}
+                          <Image
+                            src={assets.googleIcon}
+                            width={window.innerWidth >= 1024 ? 26 : 15}
+                            height={window.innerWidth >= 1024 ? 26 : 15}
+                            alt="googleIcon"
+                          />
                         </EmailShareButton>
                       </div>
                     </div>
                   </div>
-                </Item>
-                {/* <HtmlTooltip
-                  title={
-                    <React.Fragment>
-                      <div className="flex">
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <FacebookShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                          </FacebookShareButton>
-                        </div>
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <WhatsappShareButton windowWidth={900} windowHeight={900} url={pageShareURL}>
-                            <WhatsappIcon size={25} round={true} />
-                          </WhatsappShareButton>
-                        </div>
-                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                          <EmailShareButton
-                            subject="Shop Detail"
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image src={googleIcon ?? ""} alt="googleIcon" />
-                          </EmailShareButton>
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  }
-                >
-                  <Item
-                    onClick={() => setOpenToolTip(!OpenToolTip)}
-                    className="!bg-[#1F2233] text-[#FFFFFF]  !cursor-pointer flex flex-col sm:flex-row"
-                  >
-                    <div className="flex items-center justify-between w-[100%]">
-                      <div className="flex items-center">
-                        <ShareIcon fontSize="small" className="sm:mr-[16px] mr-[5px]" />
-                        <p className="sm:py-[10px] py-[20px] text-[10px] sm:text-[16px]">Share </p>
-                      </div>
-                    </div>
-                  </Item>
-                </HtmlTooltip> */}
+                </ShopHeaderItem>
               </Grid>
             </Grid>
           </div>

@@ -2,21 +2,16 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import {
   Box,
-  Checkbox,
+  Dialog,
   FormControlLabel,
+  LinearProgress,
   Modal,
+  Paper,
+  Select,
   Tabs,
-  Typography,
+  linearProgressClasses,
 } from "@mui/material";
 import PropTypes from "prop-types";
-
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
-
-import StepConnector, {
-  stepConnectorClasses,
-} from "@mui/material/StepConnector";
 
 export const CustomTextField = styled(TextField)(({ theme }) => ({
   [`& .MuiInput-input`]: {
@@ -34,60 +29,122 @@ export const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
+export const CustomIconTextField = styled(TextField)(({ theme }) => ({
+  [`& .MuiOutlinedInput-root`]: {
+    color: "#919EAB",
+    borderRadius: "3px",
+    border: "1.8px solid #919EAB",
+    fontSize: "16px",
+    lineHeight: "15px",
+    height: "33px",
+    alignItems: "center",
+    padding: "15px",
+    paddingBottom: "20px",
+    paddingTop: "20px",
+    [theme.breakpoints.down("sm")]: {
+      // Add your styles for the 'sm' breakpoint and up here
+      fontSize: "10px",
+      gap: "5px",
+      paddingBottom: "12px",
+      paddingTop: "12px",
+    },
+  },
+  [`& .MuiInput-root:after`]: {
+    border: 0,
+  },
+}));
+
 export const CustomAuthModal = styled(Modal)(({ theme }) => ({
   [`& .MuiBackdrop-root`]: {
     backgroundColor: "transparent !important",
   },
 }));
 
-export const CustomTab = styled(Tabs)(({ theme }) => ({
-  [`& .MuiTab-root`]: {
-    textTransform: "none",
-    color: "#FFFFFF",
-    fontWeight: 600,
-    fontSize: "14px",
-    paddingTop: "32px",
-    paddingBottom: "32px",
-  },
-  [`& .MuiTab-root:hover`]: {
-    color: "#29977E !important",
-  },
-  [`& .Mui-selected:hover`]: {
-    color: "#29977E !important",
-  },
-  [`& .Mui-selected`]: {
-    fontWeight: 600,
-    fontSize: "16px",
-    color: "#29977E !important",
-  },
-  [`& .MuiTabs-indicator`]: {
-    backgroundColor: "#29977E !important",
-    height: "5px",
-  },
-}));
+export const CustomTab = styled(Tabs)(
+  ({ theme, hometab, collection, subheader }) => ({
+    [`& .MuiTab-root`]: {
+      textTransform: "none",
+      color: hometab ? "#000" : collection ? "#31333e93" : "#FFFFFF",
+      fontWeight: 600,
+      fontSize: hometab ? "20px" : collection ? "18px" : "14px",
+      marginTop: subheader && "20px",
+      paddingTop: collection
+        ? "0px"
+        : hometab
+        ? "16px"
+        : subheader
+        ? "0px"
+        : "16px",
+      paddingBottom: collection ? "0px" : subheader && "10px",
+      paddingRight: hometab && "16px",
+      paddingLeft: hometab && "16px",
+      borderBottom: hometab && "3px solid #0000000a",
+
+      [theme.breakpoints.down("lg")]: {
+        paddingTop: collection && "16px",
+        paddingBottom: collection && "16px",
+      },
+      [theme.breakpoints.down("md")]: {
+        fontSize: hometab && "18px",
+        paddingTop: collection && "16px",
+        paddingBottom: collection && "16px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: (hometab || collection) && "16px",
+      },
+    },
+    [`& .MuiTab-root:hover`]: {
+      color: collection ? "black !important" : "#29977E !important",
+    },
+    [`& .Mui-selected:hover`]: {
+      color: collection ? "black !important" : "#29977E !important",
+    },
+    [`& .Mui-selected`]: {
+      fontWeight: 600,
+      fontSize: hometab ? "20px" : collection ? "18px" : "16px",
+      color: collection ? "black !important" : "#29977E !important",
+      [theme.breakpoints.down("md")]: {
+        fontSize: hometab && "18px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: (hometab || collection) && "16px",
+      },
+    },
+    [`& .MuiTabs-indicator`]: {
+      backgroundColor: collection ? "black !important" : "#29977E !important",
+      height: subheader ? "5px" : "3px",
+      [theme.breakpoints.down("md")]: {
+        height: hometab && "3px",
+      },
+      [theme.breakpoints.down("sm")]: {
+        height: hometab && "3px",
+      },
+    },
+  })
+);
 
 export const CustomVenderShopTab = styled(Tabs)(({ theme }) => ({
   [`& .MuiTab-root`]: {
     textTransform: "none",
-    color: "rgba(21, 24, 39, 0.56)",
+    color: "#fff",
     fontWeight: 600,
-    fontSize: "18px",
+    fontSize: "16px",
     lineHeight: "16px",
-    paddingX: "20px",
-    paddingY: "16px",
-    marginRight: "16px",
+    margin: "8px",
 
     [theme.breakpoints.down("sm")]: {
       fontSize: "14px",
-      paddingX: "16px",
-      paddingY: "12px",
     },
   },
 
+  [`& .MuiTabScrollButton-root`]: {
+    color: "yellow",
+  },
+
   [`& .Mui-selected`]: {
-    backgroundColor: "#151827",
-    borderRadius: "500px",
-    color: "#FFF !important",
+    backgroundColor: "#FFF",
+    borderRadius: "4px",
+    color: "#151827 !important",
     fontWeight: 500,
   },
   [`& .MuiTabs-indicator`]: {
@@ -124,80 +181,6 @@ export function a11yProps(index) {
   };
 }
 
-export const QontoConnector = styled(StepConnector)(({ theme }) => ({
-  [`&.${stepConnectorClasses.alternativeLabel}`]: {
-    top: 10,
-    left: "calc(-50% + 16px)",
-    right: "calc(50% + 16px)",
-  },
-  [`&.${stepConnectorClasses.active}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: "#95539B",
-    },
-  },
-  [`&.${stepConnectorClasses.completed}`]: {
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: "#95539B",
-    },
-  },
-  [`& .${stepConnectorClasses.line}`]: {
-    borderColor: "#eaeaf0",
-    borderTopWidth: 3,
-    borderRadius: 1,
-  },
-}));
-
-const QontoStepIconRoot = styled("div")(({ theme, ownerState }) => ({
-  color: theme.palette.mode === "dark" ? theme.palette.grey[700] : "#eaeaf0",
-  display: "flex",
-  height: 22,
-  alignItems: "center",
-  ...(ownerState.active && {
-    color: "#95539B",
-  }),
-  "& .QontoStepIcon-completedIcon": {
-    color: "#95539B",
-    zIndex: 1,
-    fontSize: 24,
-  },
-  "& .QontoStepIcon-circle": {
-    width: 8,
-    height: 8,
-    borderRadius: "50%",
-    backgroundColor: "currentColor",
-  },
-}));
-
-export function QontoStepIcon(props) {
-  const { active, completed, className } = props;
-
-  return (
-    <QontoStepIconRoot ownerState={{ active }} className={className}>
-      {active ? (
-        <RadioButtonCheckedIcon className="QontoStepIcon-completedIcon" />
-      ) : completed ? (
-        <CheckCircleOutlineIcon className="QontoStepIcon-completedIcon" />
-      ) : (
-        <RadioButtonUncheckedIcon className="QontoStepIcon-completedIcon" />
-      )}
-    </QontoStepIconRoot>
-  );
-}
-
-QontoStepIcon.propTypes = {
-  /**
-   * Whether this step is active.
-   * @default false
-   */
-  active: PropTypes.bool,
-  className: PropTypes.string,
-  /**
-   * Mark the step as completed. Is passed to child components.
-   * @default false
-   */
-  completed: PropTypes.bool,
-};
-
 export const StyledFormLabelCheckBox = styled(FormControlLabel)(
   ({ theme, checked }) => ({
     ".MuiFormControlLabel-label": {
@@ -206,10 +189,66 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
       lineHeight: "14px",
     },
     ".MuiCheckbox-root": {
-      color: "#000000",
+      color: "#31333e66",
     },
     ".MuiCheckbox-root.Mui-checked": {
       color: "#29977E",
     },
   })
 );
+
+export const CustomDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialog-paper": {
+    top: 0,
+    position: "absolute",
+    height: "50vh",
+    width: "100vw",
+    maxHeight: "100%",
+    maxWidth: "100%",
+    margin: "0px",
+    borderRadius: 0,
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+export const LocationSelect = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    color: "white !important",
+  },
+  "& .MuiSelect-icon": {
+    color: "white !important",
+  },
+}));
+
+export const ShopHeaderItem = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fbfbfb",
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  boxShadow: "none",
+}));
+
+export const CustomBorderLinearProgress = styled(LinearProgress)(
+  ({ theme }) => ({
+    height: 12,
+    borderRadius: "12px",
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "rgba(24, 23, 37, 0.1)",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      backgroundColor: "rgba(21, 24, 39, 0.4)",
+    },
+  })
+);
+
+export const NativeSelectInput = styled(Select)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    marginLeft: 10,
+  },
+}));

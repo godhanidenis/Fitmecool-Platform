@@ -1,13 +1,12 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
-import VendorShopSubHeader from "./VendorShopSubHeader";
+import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
+import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
-  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const dispatch = useDispatch();
 
@@ -17,26 +16,30 @@ const VendorCommonLayout = ({ children }) => {
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
 
-  return (
-    <>
-      <div className="w-full relative font-Nova">
-        <VendorShopSubHeader />
-        <img
-          src={vendorShopDetails?.shop_cover_image}
-          alt="shop cover image"
-          className="h-[396px] w-full"
-        />
-      </div>
+  useEffect(() => {
+    if (userProfile?.subscriptionId) {
+      getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
+        (res) =>
+          dispatch(
+            setSubscriptionStatus(
+              res?.data?.singleSubscription?.status === "active" ? true : false
+            )
+          )
+      );
+    } else {
+      dispatch(setSubscriptionStatus(false));
+    }
+  }, [dispatch, userProfile?.subscriptionId]);
 
-      <div className="flex flex-col md:flex-row min-h-screen gap-10 p-5 sm:px-10 font-Nova">
-        <div className="w-full  md:w-[30%] relative mb-[350px] sm:mb-0">
-          <div className="absolute lg:-top-36 -top-32 left-0 right-0 bottom-0">
-            <VendorSidebar vendorShopDetails={vendorShopDetails} />
-          </div>
-        </div>
-        <div className="w-full md:w-[70%] mt-12 sm:mt-0">{children}</div>
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">
+      <div className="lg:w-[300px] relative sm:bg-white shadow-xl">
+        <VendorSidebar />
       </div>
-    </>
+      <div className="w-full lg:w-[73%] xl:w-[83%] sm:mt-6 px-4 py-4 sm:my-5 sm:px-10 sm:py-0">
+        {children}
+      </div>
+    </div>
   );
 };
 

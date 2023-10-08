@@ -1,187 +1,102 @@
 import React, { useEffect, useState } from "react";
-import { Tooltip, styled, tooltipClasses } from "@mui/material";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import Rating from "@mui/material/Rating";
-import Box from "@mui/material/Box";
-import StarIcon from "@mui/icons-material/Star";
-import { TbShare3 } from "react-icons/tb";
-import facebookIcon from "../../../assets/facebook.png";
-import googleIcon from "../../../assets/googleIcon.svg";
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  WhatsappIcon,
-  WhatsappShareButton,
-} from "react-share";
-import Image from "next/image";
+import { Avatar, Divider, Skeleton } from "@mui/material";
+import { useRouter } from "next/router";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import { useSelector } from "react-redux";
+import { vendorSidebarTabs } from "../../../constants";
 
-const VendorSidebar = ({ vendorShopDetails }) => {
-  const [ratingValue, setRatingValue] = useState(null);
+const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
+  const router = useRouter();
 
-  const [OpenToolTip, setOpenToolTip] = useState(false);
-  const pageShareURL = typeof window !== "undefined" && window.location.href;
+  const [selectedValue, setSelectedValue] = useState("");
 
-  const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: "#ffffff",
-      color: "rgba(0, 0, 0, 0.87)",
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      boxShadow: "0 0 10px rgba(0,0,0,.1)",
-    },
-  }));
-
-  const ShareIconComponent = React.forwardRef(function MyComponent(props, ref) {
-    //  Spread the props to the underlying DOM element.
-    return (
-      <div {...props} ref={ref}>
-        <TbShare3
-          onClick={props.onClick}
-          className="lg:text-2xl xl:text-3xl sm:text-xl text-2xl"
-        />
-      </div>
-    );
-  });
-
-  const handleTooltipOpen = () => {
-    setOpenToolTip(!OpenToolTip);
-  };
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   useEffect(() => {
-    if (vendorShopDetails) {
-      setRatingValue(vendorShopDetails?.shop_rating);
+    const withoutLastChunk = router.pathname.slice(
+      0,
+      router.pathname.lastIndexOf("/")
+    );
+
+    if (router.pathname === "/vendor/dashboard") {
+      setSelectedValue("Dashboard");
+    } else if (router.pathname === "/vendor/shop-subscription") {
+      setSelectedValue("Subscription");
+    } else if (withoutLastChunk === "/vendor/shopEdit") {
+      setSelectedValue("Shop");
+    } else if (
+      withoutLastChunk === "/vendor/shop" ||
+      `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/`
+    ) {
+      setSelectedValue("Products");
     }
-  }, [vendorShopDetails]);
+  }, [router.pathname, vendorShopDetails?.id]);
 
   return (
-    <div className="bg-white rounded-3xl lg:p-10 p-5 py-10">
+    <div
+      className={`lg:p-6 p-5 sm:py-10 ${
+        forHeader ? "flex" : "hidden"
+      } lg:flex flex-col items-center`}
+    >
       <div className="flex justify-center">
-        <div className="xl:w-[278px] xl:h-[278px] lg:h-[200px] sm:h-[150px] lg:w-[200px] sm:w-[150px] h-[200px] w-[200px] mb-10 rounded-full">
-          <img
-            src={vendorShopDetails?.shop_logo}
-            className="object-cover rounded-full w-full h-full"
-          />
-        </div>
-      </div>
-      <div className="flex flex-col items-center lg:gap-2 gap-1">
-        <div className="xl:text-4xl lg:text-xl sm:text-sm text-[32px] font-bold text-colorBlack">
-          {vendorShopDetails?.shop_name}
-        </div>
-        <div className="flex items-center">
-          <span>
-            <LocationOnOutlinedIcon
-              className="text-gray-400"
+        <div className="w-[120px] h-[120px] mb-4 rounded-full">
+          {vendorShopDetails?.shop_logo ? (
+            <Avatar
+              src={vendorShopDetails?.shop_logo ?? ""}
+              alt="Shop Logo"
+              className="!object-cover !w-full !h-full"
+            ></Avatar>
+          ) : vendorShopDetails?.shop_logo?.length === 0 ? (
+            <Avatar
+              className="!bg-colorGreen"
               sx={{
-                fontSize: 24,
-                "@media (max-width: 768px)": {
-                  fontSize: 12,
-                },
-                "@media (max-width: 648px)": {
-                  fontSize: 24,
-                },
-              }}
-            />
-          </span>
-          <span className="xl:text-2xl lg:text-lg sm:text-sm text-[22px] text-gray-400">
-            {vendorShopDetails?.branch_info?.map((item) =>
-              item?.branch_type === "main" ? item.branch_address : ""
-            )}
-          </span>
-        </div>
-        <span className="flex items-center">
-          <Rating
-            sx={{
-              fontSize: 16,
-              "@media (max-width: 768px)": {
-                fontSize: 10,
-              },
-              "@media (max-width: 648px)": {
-                fontSize: 16,
-              },
-            }}
-            precision={0.5}
-            name="read-only"
-            value={ratingValue}
-            emptyIcon={
-              <StarIcon
-                sx={{
-                  opacity: 0.55,
-                  fontSize: 16,
-                  "@media (max-width: 768px)": {
-                    fontSize: 10,
-                  },
-                  "@media (max-width: 648px)": {
-                    fontSize: 16,
-                  },
-                }}
-              />
-            }
-            readOnly
-          />
-          {vendorShopDetails?.shop_rating !== null && (
-            <Box
-              sx={{
-                ml: 1,
-                fontSize: 18,
-                "@media (max-width: 768px)": {
-                  fontSize: 12,
-                },
-                "@media (max-width: 648px)": {
-                  fontSize: 16,
-                },
+                fontSize: "70px",
+                width: "100%",
+                height: "100%",
               }}
             >
-              {ratingValue}
-            </Box>
+              {String(vendorShopDetails?.shop_name)
+                ?.split(" ")[0][0]
+                .toUpperCase()}
+              {/* {String(vendorShopDetails?.shop_name)?.split(" ")[0][0].toUpperCase() +
+                      String(vendorShopDetails?.shop_name)?.split(" ")[1][0].toUpperCase()} */}
+            </Avatar>
+          ) : (
+            <ImageLoadingSkeleton className="rounded-full" variant="circular" />
           )}
-        </span>
-        <div
-          onMouseLeave={() => setOpenToolTip(false)}
-          className="text-gray-400 m-10 border border-gray-200 rounded-full p-3 cursor-pointer"
-        >
-          <HtmlTooltip
-            title={
-              // <React.Fragment>
-              <div className="flex">
-                <div className="p-2 rounded-lg cursor-pointer">
-                  <FacebookShareButton
-                    windowWidth={900}
-                    windowHeight={900}
-                    url={pageShareURL}
-                  >
-                    <Image src={facebookIcon ?? ""} alt="facebookIcon" />
-                  </FacebookShareButton>
-                </div>
-                <div className="p-2 rounded-lg cursor-pointer">
-                  <WhatsappShareButton
-                    windowWidth={900}
-                    windowHeight={900}
-                    url={pageShareURL}
-                  >
-                    <WhatsappIcon size={25} round={true} />
-                  </WhatsappShareButton>
-                </div>
-                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                  <EmailShareButton
-                    subject="Product Detail Page"
-                    windowWidth={900}
-                    windowHeight={900}
-                    url={pageShareURL}
-                  >
-                    <Image src={googleIcon ?? ""} alt="googleIcon" />
-                  </EmailShareButton>
-                </div>
-              </div>
-              // </React.Fragment>
-            }
-          >
-            <ShareIconComponent onClick={handleTooltipOpen} />
-          </HtmlTooltip>
+        </div>
+      </div>
+      <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
+        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 whitespace-nowrap w-full text-center">
+          {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
+        </div>
+        <Divider className="w-full opacity-50 " />
+        <div className="w-full font-Nova pl-[15%] mt-5">
+          {vendorSidebarTabs.map((tab, index) => (
+            <p
+              key={index}
+              onClick={() => {
+                forHeader && handleMobileSidebarClick();
+                router.push(
+                  tab.label === "Shop" || tab.label === "Products"
+                    ? `${tab.path}/${vendorShopDetails?.id}`
+                    : tab.path
+                );
+              }}
+              className={`font-semibold pb-8 text-lg ${
+                selectedValue === tab.label
+                  ? "text-[#29977E]"
+                  : "text-[#151827]"
+              } cursor-pointer uppercase flex items-center gap-4`}
+            >
+              {tab.icon}
+              {tab.label}
+            </p>
+          ))}
         </div>
       </div>
     </div>
   );
 };
+
 export default VendorSidebar;

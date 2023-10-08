@@ -135,3 +135,33 @@ export const deleteProduct = async (payload) => {
   });
   return results;
 };
+
+export const productWhatsappInquiry = async (payload) => {
+  const results = await client.mutate({
+    mutation: gql`
+      mutation ProductWhatsappInquiry($productWhatsappInquiryId: String) {
+        productWhatsappInquiry(id: $productWhatsappInquiryId)
+      }
+    `,
+    variables: {
+      productWhatsappInquiryId: payload.id,
+    },
+    fetchPolicy: "no-cache",
+  });
+  return results;
+};
+
+export const productContactInquiry = async (payload) => {
+  const results = await client.mutate({
+    mutation: gql`
+      mutation ProductContactInquiry($productContactInquiryId: String) {
+        productContactInquiry(id: $productContactInquiryId)
+      }
+    `,
+    variables: {
+      productContactInquiryId: payload.id,
+    },
+    fetchPolicy: "no-cache",
+  });
+  return results;
+};

@@ -1,44 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
-import Link from "next/link";
-
 import SearchIcon from "@mui/icons-material/Search";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import Badge from "@mui/material/Badge";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import CloseIcon from "@mui/icons-material/Close";
-import ProfileIcon from "../../assets/profile.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
+  Badge,
   ClickAwayListener,
+  DialogContent,
+  DialogTitle,
   Divider,
+  FormControl,
   Grid,
   Grow,
+  IconButton,
+  InputAdornment,
+  InputLabel,
   MenuItem,
   MenuList,
+  OutlinedInput,
   Paper,
   Popper,
-  Select,
 } from "@mui/material";
 import {
   loadUserProfileStart,
   userLogout,
 } from "../../redux/ducks/userProfile";
-import { changeProductsSearchBarData } from "../../redux/ducks/productsFilters";
+import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
@@ -46,74 +41,13 @@ import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
-import InputLabel from "@mui/material/InputLabel";
-import LocationIcon from "../../assets/LocationIcon.svg";
 import { loadAreaListsStart } from "../../redux/ducks/areaLists";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
-import Venderheader from "./Venderheader";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialog-backdrop": {
-    backgroundColor: "#CAA9CD !important",
-  },
-  "& .MuiDialog-paper": {
-    top: "0",
-    position: "absolute",
-    maxHeight: "50vh",
-    height: "50vh",
-    width: "100vw",
-    maxWidth: "100%",
-    margin: "0px",
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-const StyledSelect = styled(Select)`
-  & .MuiInputBase-input {
-    color: white;
-  }
-
-  & .MuiSelect-icon {
-    color: white;
-  }
-  & .MuiInputLabel-root {
-    color: white;
-  }
-`;
-
-function BootstrapDialogTitle(props) {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-}
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
+import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
+import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import { changeProductPage } from "../../redux/ducks/product";
+import AppLogo from "./AppLogo";
+import { assets } from "../../constants";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
@@ -121,10 +55,18 @@ const Header = () => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [selectedLocation, setSelectedLocation] = useState("");
+
   const dispatch = useDispatch();
 
   const isScreenWide = useResizeScreenLayout();
   const router = useRouter();
+
+  const { areaLists } = useSelector((state) => state.areaLists);
+  const { userProfile } = useSelector((state) => state.userProfile);
+  const { byShop } = useSelector((state) => state.shopsFiltersReducer);
+
+  const [openSearchDialog, setOpenSearchDialog] = useState(false);
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -137,28 +79,12 @@ const Header = () => {
   const handleMobileSidebarClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  const [selectedLocation, setSelectedLocation] = useState("");
-
-  const { areaLists } = useSelector((state) => state.areaLists);
-  const { userProfile } = useSelector((state) => state.userProfile);
-  const [openModel, setOpenModel] = React.useState(false);
-  const productsFiltersReducer = useSelector(
-    (state) => state.productsFiltersReducer
-  );
-
-  const handleChangeLocation = (event) => {
-    setSelectedLocation(event.target.value);
-  };
 
   useEffect(() => {
     dispatch(loadCategoriesStart());
     dispatch(loadAreaListsStart());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
-
-  useEffect(() => {
-    setSearchBarValue(productsFiltersReducer.searchBarData);
-  }, [productsFiltersReducer.searchBarData]);
 
   useEffect(() => {
     const getAccessToken = localStorage.getItem("token");
@@ -169,12 +95,34 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
-  const handleClickOpen = () => {
-    setOpenModel(true);
+  const handleSearchDialogClose = () => {
+    setSearchBarValue("");
+    setOpenSearchDialog(false);
   };
 
-  const handleClose = () => {
-    setOpenModel(false);
+  const handleSearch = (searchData) => {
+    ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+      dispatch(
+        changeAppliedProductsFilters({
+          key: itm,
+          value: {
+            selectedValue:
+              itm === "searchBarData"
+                ? searchData
+                  ? searchData
+                  : searchBarValue
+                : [],
+          },
+        })
+      )
+    );
+
+    dispatch(changeProductPage(0));
+    byShop && dispatch(changeByShopFilters(false));
+
+    handleSearchDialogClose();
+
+    router.pathname !== "/home" && router.push("/home");
   };
 
   const scrollDirection = useScrollDirection();
@@ -191,10 +139,10 @@ const Header = () => {
       />
       <header
         className={`${
-          router.pathname === "/vendor/shop-setup" ? "lg:py-4" : "lg:py-0"
-        } py-4 w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
+          userProfile.user_type === "vendor" ? "py-0" : "py-1 sm:py-0"
+        } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
-        }  transition-all duration-500`}
+        } transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
           <div className="flex items-center justify-start gap-3">
@@ -206,20 +154,18 @@ const Header = () => {
                 onClick={handleMobileSidebarClick}
               />
             )}
-
-            <Link
-              href={`${
-                userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
-              }`}
-            >
-              <div className="cursor-pointer">
-                <h2 className="sm:text-2xl text-[18px] font-semibold uppercase cursor-pointer text-colorWhite">
-                  <span className="sm:text-4xl text-[24px]">R</span>entbless
-                </h2>
-              </div>
-            </Link>
+            {userProfile.user_type === "vendor" &&
+              router.pathname !== "/vendor/shop-setup" && (
+                <MenuIcon
+                  sx={{ color: "white" }}
+                  fontSize="large"
+                  className="lg:!hidden"
+                  onClick={handleMobileSidebarClick}
+                />
+              )}
+            <AppLogo />
             {userProfile.user_type !== "vendor" && (
-              <div className="headerLocationDiv ml-[24px]">
+              <div className="headerLocationDiv ml-2 sm:ml-6">
                 <FormControl
                   variant="standard"
                   sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
@@ -228,16 +174,23 @@ const Header = () => {
                     id="demo-simple-select-standard-label"
                     className="!flex !items-center !gap-1"
                   >
-                    <Image width={20} height={20} src={LocationIcon} alt="" />
+                    <Image
+                      width={20}
+                      height={20}
+                      src={assets.locationIcon}
+                      alt="locationIcon"
+                    />
                     <span className="text-[#878A99] text-[14px] font-normal">
                       Location
                     </span>
                   </InputLabel>
-                  <StyledSelect
+                  <LocationSelect
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
-                    onChange={handleChangeLocation}
+                    onChange={(event) =>
+                      setSelectedLocation(event.target.value)
+                    }
                     label="Location"
                   >
                     {areaLists?.map((location, index) => (
@@ -245,7 +198,7 @@ const Header = () => {
                         {location?.area}
                       </MenuItem>
                     ))}
-                  </StyledSelect>
+                  </LocationSelect>
                 </FormControl>
               </div>
             )}
@@ -255,12 +208,6 @@ const Header = () => {
               <SubHeader />
             </div>
           )}
-          {userProfile.user_type === "vendor" &&
-            router.pathname !== "/vendor/shop-setup" && (
-              <div className="font-Nova">
-                <Venderheader />
-              </div>
-            )}
           <div className="flex items-center">
             <ul className="flex items-center gap-2">
               {userProfile.user_type !== "vendor" && (
@@ -269,35 +216,40 @@ const Header = () => {
                     <SearchIcon
                       sx={{ color: "white" }}
                       fontSize="large"
-                      onClick={handleClickOpen}
+                      onClick={() => setOpenSearchDialog(true)}
                     />
                   </li>
                   <li className="hidden lg:block">
-                    <Link href={`/productLike`} passHref>
-                      <IconButton color="inherit">
-                        <Badge
-                          badgeContent={userProfile?.product_like_list?.length}
-                          color="error"
-                        >
-                          <FavoriteBorderOutlinedIcon
-                            sx={{ color: "white" }}
-                            fontSize="large"
-                          />
-                        </Badge>
-                      </IconButton>
-                    </Link>
+                    <IconButton
+                      color="inherit"
+                      onClick={() =>
+                        router.push(
+                          accessToken ? "/productLike" : "/auth/user-type"
+                        )
+                      }
+                    >
+                      <Badge
+                        badgeContent={userProfile?.product_like_list?.length}
+                        color="error"
+                      >
+                        <FavoriteBorderOutlinedIcon
+                          sx={{ color: "white" }}
+                          fontSize="large"
+                        />
+                      </Badge>
+                    </IconButton>
                   </li>
                 </>
               )}
               <li>
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
-                    <p
+                    <button
                       onClick={() => Router.push("/auth/user-type")}
-                      className="underline hover:scale-105 hidden lg:block"
+                      className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-colorGreen"
                     >
-                      SingIn / SignUp
-                    </p>
+                      Login / Register
+                    </button>
 
                     <PersonAddAltIcon
                       sx={{ color: "white" }}
@@ -318,91 +270,85 @@ const Header = () => {
         </div>
       </header>
 
-      {openModel && (
-        <div
-          style={{
-            background: "#95539B",
-            position: "fixed",
-            display: "block",
-            width: "100%",
-            height: "100%",
-            opacity: ".4",
-            zIndex: 2,
-            cursor: "pointer",
-          }}
-        >
-          <BootstrapDialog
-            onClose={handleClose}
-            aria-labelledby="customized-dialog-title"
-            open={openModel}
+      {openSearchDialog && (
+        <div className="bg-colorPrimary fixed block w-full h-full opacity-50 z-[2] cursor-pointer">
+          <CustomDialog
+            open={openSearchDialog}
+            onClose={handleSearchDialogClose}
           >
-            <BootstrapDialogTitle
-              id="customized-dialog-title"
-              onClose={handleClose}
+            <DialogTitle
+              m={0}
+              p={2}
+              height={72}
+              display="flex"
+              className="!bg-colorPrimary"
             >
-              <div className="flex justify-center cursor-pointer">
-                <h2 className="text-2xl font-normal uppercase cursor-pointer text-[#95539B]">
-                  <span className="text-4xl">R</span>entbless
-                </h2>
+              <div className="w-full flex items-center justify-center cursor-pointer">
+                <AppLogo />
               </div>
-            </BootstrapDialogTitle>
+
+              <IconButton onClick={handleSearchDialogClose}>
+                <CloseIcon className="!text-white" />
+              </IconButton>
+            </DialogTitle>
 
             <DialogContent dividers className="flex justify-center p-0">
-              <Grid
-                container
-                direction="column"
-                justifyContent="start"
-                alignItems="center"
-              >
-                <Grid item xs={6}>
-                  <FormControl
-                    sx={{
-                      width: 500,
-                      background: "white",
-                      borderRadius: "5px",
-                    }}
-                    variant="outlined"
+              <Grid container justifyContent="center">
+                <Grid item lg={4} xs={5}>
+                  <OutlinedInput
+                    placeholder="What are you looking for?"
                     size="small"
-                  >
-                    <OutlinedInput
-                      placeholder="What are you looking for?"
-                      value={searchBarValue}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          dispatch(
-                            changeProductsSearchBarData({
-                              key: "searchBarData",
-                              value: searchBarValue,
-                            })
-                          );
-                        }
-                      }}
-                      onChange={(e) => {
-                        setSearchBarValue(e.currentTarget.value);
-                      }}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            onClick={() =>
-                              dispatch(
-                                changeProductsSearchBarData({
-                                  key: "searchBarData",
-                                  value: searchBarValue,
-                                })
-                              )
-                            }
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
+                    fullWidth
+                    value={searchBarValue}
+                    onKeyDown={(e) =>
+                      searchBarValue !== "" &&
+                      e.key === "Enter" &&
+                      handleSearch()
+                    }
+                    onChange={(e) => setSearchBarValue(e.currentTarget.value)}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={() =>
+                            searchBarValue !== "" && handleSearch()
+                          }
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <div className="mt-10">
+                    <p className="text-lg text-colorPrimary font-Nova font-medium">
+                      Popular Searches
+                    </p>
+
+                    <div className="flex items-center flex-wrap gap-4 my-5">
+                      {[
+                        "kurta",
+                        "choli",
+                        "sherwani",
+                        "suit",
+                        "sider's choli",
+                        "jodhpuri",
+                        "black art",
+                        "Pretty Marsidise",
+                      ].map((itm, index) => (
+                        <p
+                          className="px-5 py-2 border rounded-3xl cursor-pointer capitalize text-colorPrimary hover:text-colorGreen hover:border-colorGreen"
+                          key={index}
+                          onClick={() => handleSearch(itm)}
+                        >
+                          {itm}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
                 </Grid>
               </Grid>
             </DialogContent>
-          </BootstrapDialog>
+          </CustomDialog>
         </div>
       )}
     </>
@@ -428,6 +374,15 @@ export const UserProfile = ({ setAccessToken }) => {
   const options = [
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
+
+  if (userProfile.user_type === "vendor" && userProfile.subscriptionStatus) {
+    options.unshift({
+      icon: <SubscriptionsIcon />,
+      name: "User Subscription",
+      func: subscription,
+    });
+  }
+
   if (userProfile.user_type === "vendor" && userProfile.userHaveAnyShop) {
     options.unshift({
       icon: <DashboardIcon />,
@@ -435,6 +390,7 @@ export const UserProfile = ({ setAccessToken }) => {
       func: dashboard,
     });
   }
+
   if (userProfile.user_type !== "vendor") {
     options.unshift({
       icon: <FavoriteBorderOutlinedIcon />,
@@ -448,6 +404,10 @@ export const UserProfile = ({ setAccessToken }) => {
     Router.push("/vendor/dashboard");
   }
 
+  function subscription() {
+    Router.push("/vendor/shop-subscription");
+  }
+
   function wishList() {
     Router.push("/productLike");
   }
@@ -456,6 +416,15 @@ export const UserProfile = ({ setAccessToken }) => {
     dispatch(userLogout());
     setAccessToken("");
     handleProfileClose();
+    userProfile.user_type === "vendor" &&
+      dispatch(
+        changeAppliedProductsFilters({
+          key: "shopId",
+          value: {
+            selectedValue: [],
+          },
+        })
+      );
     Router.push("/");
 
     toast.success("Logout Successfully", {
@@ -470,8 +439,14 @@ export const UserProfile = ({ setAccessToken }) => {
         onClick={handleProfileToggle}
         className="flex items-center justify-between gap-4 cursor-pointer"
       >
-        <Avatar>
-          <Image src={ProfileIcon ?? ""} alt="ProfileIcon" layout="fill" />
+        <Avatar
+          className="!bg-colorGreen"
+          sx={{
+            fontSize: "14px",
+          }}
+        >
+          {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
+            String(userProfile?.last_name?.charAt(0).toUpperCase())}
         </Avatar>
         <span className="font-semibold hidden text-colorWhite sm:flex">
           {userProfile?.first_name + " " + userProfile?.last_name}
@@ -519,8 +494,11 @@ export const UserProfile = ({ setAccessToken }) => {
               <ClickAwayListener onClickAway={handleProfileClose}>
                 <MenuList autoFocusItem={anchorElUser}>
                   <div className="flex flex-col mx-4 my-2 items-center">
-                    <Avatar className="mb-2 !w-14 !h-14">
-                      <Image src={ProfileIcon ?? ""} alt="ProfileIcon" />
+                    <Avatar className="!mb-2 !w-14 !h-14 !bg-colorGreen">
+                      {String(userProfile?.first_name)
+                        ?.charAt(0)
+                        .toUpperCase() +
+                        String(userProfile?.last_name?.charAt(0).toUpperCase())}
                     </Avatar>
                     <b>
                       {userProfile?.first_name + " " + userProfile?.last_name}

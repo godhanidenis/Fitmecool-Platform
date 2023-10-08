@@ -87,6 +87,8 @@ export const getProducts = async (payload) => {
             flag
             productLikes
             product_color
+            whatsapp_inquiry
+            contact_inquiry
           }
           count
           limit
@@ -251,6 +253,8 @@ export const getProductDetails = async (payload) => {
             }
             flag
             productLikes
+            whatsapp_inquiry
+            contact_inquiry
           }
         }
       }
@@ -258,6 +262,7 @@ export const getProductDetails = async (payload) => {
     variables: {
       productId: payload.id,
     },
+    fetchPolicy: "no-cache",
   });
   return result;
 };

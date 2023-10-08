@@ -1,30 +1,55 @@
 import Link from "next/link";
-import Image from "next/image";
-import backIcon from "../../assets/svg/backIcon.svg";
 import Box from "@mui/material/Box";
 import EmailIcon from "@mui/icons-material/Email";
 import { CustomTextField } from "../../components/core/CustomMUIComponents";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "@mui/material";
+import { forgotPassword } from "../../graphql/mutations/authMutations";
+import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [invalid, setInvalid] = useState(false);
   const [success, setSuccess] = useState(false);
   const [alertMsg, setAlertMsg] = useState(false);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+
   const onSubmit = async (data) => {
-    console.log("data", data);
+    setLoading(true);
+    forgotPassword({ userInfo: { user_email: data.email } }).then(
+      (res) => {
+        setLoading(false);
+        setAlertMsg(res?.data?.forgotPassword);
+        setSuccess(true);
+      },
+      (err) => {
+        setLoading(false);
+        setAlertMsg(err?.message);
+        setInvalid(true);
+      }
+    );
   };
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <div
@@ -37,15 +62,14 @@ const ForgotPassword = () => {
         <div className="grid grid-cols-3">
           <div className="text-start">
             <Link href="/">
-              <button className="text-white  focus:ring-0 focus:outline-none font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center border">
-                <Image src={backIcon ?? ""} alt="back" />
+              <button className="rounded-lg text-center p-2 flex items-center border">
+                <ArrowBackIosIcon className="!text-colorStone !w-4 !h-4 !ml-1" />
               </button>
             </Link>
           </div>
           <div className="col-span-2.5 flex items-center justify-center">
             <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
-              <span className="text-4xl">W</span>edding
-              <span className="text-4xl">B</span>ell
+              <span className="text-4xl">R</span>entbless
             </h2>
           </div>
         </div>
@@ -122,4 +146,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default withoutAuthForUserType(ForgotPassword);
