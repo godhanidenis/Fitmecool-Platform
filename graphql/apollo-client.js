@@ -1,12 +1,11 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import appConfig from "../config";
 import Router from "next/router";
 import { toast } from "react-toastify";
 
 const httpLink = createHttpLink({
-  uri: `${appConfig.appUrl}`,
+  uri: `${process.env.NEXT_PUBLIC_API_URL}`,
 });
 
 const authLink = setContext((_, { headers }) => {

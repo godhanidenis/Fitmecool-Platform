@@ -16,7 +16,6 @@ import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import appConfig from "../config";
 import { useEffect, useState } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 import Script from "next/script";
@@ -90,7 +89,7 @@ function MyApp({ Component, pageProps }) {
         />
       </Head>
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
-      <GoogleOAuthProvider clientId={appConfig.googleClientId}>
+      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <ToastContainer />
