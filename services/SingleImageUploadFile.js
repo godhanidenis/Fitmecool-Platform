@@ -1,6 +1,5 @@
 import axios from "axios";
 import FormData from "form-data";
-import appConfig from "../config";
 
 export const SingleImageUploadFile = async (data) => {
   const formData = new FormData();
@@ -12,5 +11,5 @@ export const SingleImageUploadFile = async (data) => {
   formData.append("map", '{"0": ["variables.file"]}');
   formData.append("0", uploadFile);
 
-  return await axios.post(`${appConfig.appUrl}`, formData, {});
+  return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}`, formData, {});
 };
