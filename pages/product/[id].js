@@ -75,6 +75,8 @@ const ProductDetail = ({ productDetails }) => {
 
   const [readMore, setReadMore] = useState(false);
 
+  const [photos, setPhotos] = useState([]);
+
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
@@ -137,43 +139,53 @@ const ProductDetail = ({ productDetails }) => {
     dispatch(loadAreaListsStart());
   }, [dispatch]);
 
-  let photos = [
-    {
-      src: productDetails.data.product.data.product_image?.front,
-      type: "image",
-    },
-    {
-      src: productDetails.data.product.data.product_image?.back,
-      type: "image",
-    },
-    {
-      src: productDetails.data.product.data.product_image?.side,
-      type: "image",
-    },
-  ];
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState();
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
   useEffect(() => {
-    setImages(photos[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // Initialize the photos array with initial values
+    const initialPhotos = [
+      {
+        src: productDetails.data.product.data.product_image?.front,
+        type: "image",
+      },
+      {
+        src: productDetails.data.product.data.product_image?.back,
+        type: "image",
+      },
+      {
+        src: productDetails.data.product.data.product_image?.side,
+        type: "image",
+      },
+    ];
 
-  useEffect(() => {
     if (productDetails.data.product.data.product_video) {
-      photos.push({
+      // If there's a video, add it to the initialPhotos array
+      initialPhotos.push({
         src: productDetails.data.product.data.product_video,
         type: "video",
       });
     }
+
+    // Set the initial photos state
+    setPhotos(initialPhotos);
+  }, [
+    productDetails.data.product.data.product_image,
+    productDetails.data.product.data.product_video,
+  ]);
+
+  useEffect(() => {
+    if (photos?.length > 0) setImages(photos[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productDetails.data.product.data.product_video]);
+  }, [photos?.length]);
 
   const selectImage = (img) => {
     setImages(img);
   };
+
+  console.log("photos :>> ", photos);
 
   const productImages = photos?.map((itm, i) => {
     return (
