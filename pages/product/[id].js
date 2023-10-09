@@ -49,6 +49,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 import { assets } from "../../constants";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 const ContactStyle = {
   position: "absolute",
@@ -136,10 +137,19 @@ const ProductDetail = ({ productDetails }) => {
     dispatch(loadAreaListsStart());
   }, [dispatch]);
 
-  const photos = [
-    productDetails.data.product.data.product_image?.front,
-    productDetails.data.product.data.product_image?.back,
-    productDetails.data.product.data.product_image?.side,
+  let photos = [
+    {
+      src: productDetails.data.product.data.product_image?.front,
+      type: "image",
+    },
+    {
+      src: productDetails.data.product.data.product_image?.back,
+      type: "image",
+    },
+    {
+      src: productDetails.data.product.data.product_image?.side,
+      type: "image",
+    },
   ];
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState();
@@ -151,7 +161,17 @@ const ProductDetail = ({ productDetails }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const selectImage = (img, i) => {
+  useEffect(() => {
+    if (productDetails.data.product.data.product_video) {
+      photos.push({
+        src: productDetails.data.product.data.product_video,
+        type: "video",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productDetails.data.product.data.product_video]);
+
+  const selectImage = (img) => {
     setImages(img);
   };
 
@@ -159,9 +179,9 @@ const ProductDetail = ({ productDetails }) => {
     return (
       <div
         className="mx-auto mb-[24px] relative"
-        onMouseEnter={() => selectImage(itm, i)}
+        onMouseEnter={() => selectImage(itm)}
         key={i}
-        onClick={() => selectImage(itm, i)}
+        onClick={() => selectImage(itm)}
       >
         {itm ? (
           isProductImage === itm && isShopImages ? (
@@ -170,16 +190,40 @@ const ProductDetail = ({ productDetails }) => {
               style={{ border: images === itm ? "2px solid #29977E" : 0 }}
             />
           ) : (
-            <img
-              src={itm}
-              alt="Product Images"
-              style={{ border: images === itm ? "2px solid #29977E" : 0 }}
-              className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
-              onError={() => {
-                setIsShopImages(true);
-                setIsProductImage(itm);
-              }}
-            />
+            <>
+              {itm?.type === "image" && (
+                <img
+                  src={itm?.src}
+                  alt="Product Images"
+                  style={{
+                    border: images?.src === itm?.src ? "2px solid #29977E" : 0,
+                  }}
+                  className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
+                  onError={() => {
+                    setIsShopImages(true);
+                    setIsProductImage(itm);
+                  }}
+                />
+              )}
+              {itm?.type === "video" && (
+                <div className="relative">
+                  <video
+                    src={itm?.src}
+                    alt="Product Video"
+                    style={{
+                      border:
+                        images?.src === itm?.src ? "2px solid #29977E" : 0,
+                    }}
+                    className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
+                    onError={() => {
+                      setIsShopImages(true);
+                      setIsProductImage(itm);
+                    }}
+                  />
+                  <PlayCircleIcon className="!absolute !top-2 !right-2 !text-colorPrimary" />
+                </div>
+              )}
+            </>
           )
         ) : (
           <ImageLoadingSkeleton className="rounded-[16px] !w-[129px] !h-[146px]" />

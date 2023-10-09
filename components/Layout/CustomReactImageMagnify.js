@@ -30,7 +30,7 @@ const CustomReactImageMagnify = ({ large, preview }) => {
   };
 
   let divShow = {
-    backgroundImage: `url(${large})`,
+    backgroundImage: `url(${large?.src})`,
   };
 
   let divHide = {
@@ -43,18 +43,38 @@ const CustomReactImageMagnify = ({ large, preview }) => {
           isProductImage === preview && isShopImages ? (
             <div className=" w-full h-full cursor-pointer rounded-[16px] bg-[#00000031]" />
           ) : (
-            <img
-              id="preview"
-              src={preview}
-              onMouseEnter={loadImage}
-              onMouseLeave={() => setImageHover(false)}
-              alt="product"
-              onError={() => {
-                setIsShopImages(true);
-                setIsProductImage(preview);
-              }}
-              className="rounded-[16px]"
-            />
+            <>
+              {preview?.type === "image" && (
+                <img
+                  id="preview"
+                  src={preview?.src}
+                  onMouseEnter={loadImage}
+                  onMouseLeave={() => setImageHover(false)}
+                  alt="product"
+                  onError={() => {
+                    setIsShopImages(true);
+                    setIsProductImage(preview);
+                  }}
+                  className="rounded-[16px]"
+                />
+              )}
+
+              {preview?.type === "video" && (
+                <video
+                  src={preview?.src}
+                  alt="product-video"
+                  onError={() => {
+                    setIsShopImages(true);
+                    setIsProductImage(preview);
+                  }}
+                  className="!rounded-[16px] !h-full !w-full !cursor-pointer"
+                  autoPlay={true}
+                  controls
+                  muted
+                  loop
+                />
+              )}
+            </>
           )
         ) : (
           <div className="w-full h-full" id="preview">
