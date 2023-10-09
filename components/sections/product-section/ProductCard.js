@@ -161,12 +161,13 @@ const ProductCard = ({ product, onlyCarousal, landingPage }) => {
               <Carousel
                 ref={carouselRef}
                 autoPlay={autoplay}
-                autoPlaySpeed={900}
+                autoPlaySpeed={1500}
                 infinite
                 arrows={false}
                 removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
                 dotListClass={"Landing_customDots"}
+                className="rounded-t-lg"
               >
                 {productImages}
               </Carousel>

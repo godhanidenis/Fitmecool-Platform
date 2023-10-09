@@ -798,10 +798,10 @@ const AddEditProductPage = () => {
               }}
             >
               {productVideo !== "" ? (
-                <div className="w-full sm:h-[350px] relative  h-[214px]">
+                <div className="w-full sm:h-[300px] relative  h-[214px]">
                   <video
                     autoPlay
-                    className="object-cover h-full w-full rounded-3xl"
+                    className="object-cover h-full w-full rounded-xl"
                     controls
                     src={productVideo}
                   ></video>

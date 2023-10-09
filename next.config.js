@@ -5,8 +5,9 @@ const nextConfig = {
   trailingSlash: true,
   images: {
     domains: [
-      "flyontech-rental-productt.s3.us-east-1.wasabisys.com",
       "s3.us-east-1.wasabisys.com",
+      "rentbless-dev.s3.us-east-1.wasabisys.com",
+      "rentbless-prod.s3.us-east-1.wasabisys.com",
     ],
   },
 };

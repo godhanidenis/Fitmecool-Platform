@@ -46,6 +46,8 @@ const WomenCollection = () => {
   const [womenCategoryData, setWomenCategoryData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [screenSize, setScreenSize] = useState(window.innerWidth);
+
   const carouselRef = useRef(null);
 
   const nextSlide = () => {
@@ -87,6 +89,14 @@ const WomenCollection = () => {
     );
   };
 
+  const shouldShowButtons = (minScreenSize, maxScreenSize, minDataLength) => {
+    return (
+      screenSize >= minScreenSize &&
+      screenSize <= maxScreenSize &&
+      womenCategoryData?.length >= minDataLength
+    );
+  };
+
   useEffect(() => {
     setWomenCategory(categories.filter((itm) => itm.category_type === "Women"));
     setWomenCategoryId(
@@ -98,6 +108,21 @@ const WomenCollection = () => {
     womenCategoryId?.length > 0 && getAllWomenProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [womenCategoryId]);
+
+  useEffect(() => {
+    // Function to update the screenSize state when the window is resized
+    const handleResize = () => {
+      setScreenSize(window.innerWidth);
+    };
+
+    // Add the event listener for the 'resize' event
+    window.addEventListener("resize", handleResize);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
@@ -131,7 +156,11 @@ const WomenCollection = () => {
           </a>
         </Link>
       </div>
-      {womenCategoryData?.length > 0 ? (
+      {shouldShowButtons(1600, 4000, 6) ||
+      shouldShowButtons(1367, 1600, 5) ||
+      shouldShowButtons(1024, 1366, 4) ||
+      shouldShowButtons(464, 1024, 3) ||
+      shouldShowButtons(0, 464, 2) ? (
         <div className="p-5 flex gap-5">
           <button
             className="flex justify-center items-center p-1 rounded-lg bg-[#0000002a]"

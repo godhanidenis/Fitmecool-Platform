@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
 import Image from "next/image";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
   CustomIconTextField,
   CustomTab,
@@ -20,27 +19,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { assets } from "../../../constants";
 import { useRouter } from "next/router";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
-import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import BannerHero from "../../DirectoryHero/BAnnerHero";
 
 const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-};
-
-const responsive1 = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 1600 },
     items: 5,
@@ -83,7 +64,6 @@ const LandingPage = () => {
   const router = useRouter();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [isBannerImagesLoaded, setBannerImagesLoaded] = useState(false);
   const { shopPageSkip, shopsData } = useSelector((state) => state.shops);
 
   const { appliedShopsFilters, sortFilters } = useSelector(
@@ -106,12 +86,12 @@ const LandingPage = () => {
     {
       imageSrc: assets.bannerImg1,
       des: "bannerImg1",
-      fun: () => router.push(`/home`),
+      func: () => router.push(`/home`),
     },
     {
       imageSrc: assets.bannerImg2,
       des: "bannerImg2",
-      fun: () => {
+      func: () => {
         router.push(`/auth/user-type/`);
         localStorage.setItem("user_type_for_auth", "vendor");
       },
@@ -119,25 +99,12 @@ const LandingPage = () => {
     {
       imageSrc: assets.bannerImg3,
       des: "bannerImg3",
-      fun: () => {
+      func: () => {
         router.push(`/auth/user-type/`);
         localStorage.setItem("user_type_for_auth", "vendor");
       },
     },
   ];
-
-  const CustomDot = ({ onClick, active }) => {
-    return (
-      <li className="" onClick={() => onClick()}>
-        <FiberManualRecordIcon
-          className={`${
-            active ? "!text-[#31333E]" : "!text-[#31333e33]"
-          } !w-2 lg:!w-3 !h-2 lg:!h-3 !mx-1 !cursor-pointer`}
-          fontSize="small"
-        />
-      </li>
-    );
-  };
 
   const getAllShops = () => {
     setLoading(true);
@@ -150,7 +117,8 @@ const LandingPage = () => {
         area: appliedShopsFilters.locations.selectedValue,
         sort: sortFilters.sortType.selectedValue,
         stars: appliedShopsFilters.stars.selectedValue,
-      })
+      }),
+      setLoading(false)
     );
   };
 
@@ -161,40 +129,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <Carousel
-        responsive={responsive}
-        arrows={false}
-        showDots
-        customDot={<CustomDot />}
-        customTransition="all .5s ease-in-out"
-        infinite
-        autoPlay
-        autoPlaySpeed={3000}
-        className="!pb-8"
-      >
-        {carouselItems.map((item, index) => (
-          <div key={index} className="flex w-full h-[200px] md:h-[438px]">
-            <Image
-              src={item.imageSrc}
-              alt="banner"
-              layout="fill"
-              onLoad={() => setBannerImagesLoaded(true)}
-              onClick={item.fun}
-              className="cursor-pointer"
-            />
-            {/* <div className="absolute bottom-28 right-80 p-2">
-                <button
-                  className="bg-[#0000] text-[#000] border border-[#000] px- py-1 rounded-sm tracking-wider"
-                >
-                  + Explore
-                </button>
-              </div> */}
-            {!isBannerImagesLoaded && (
-              <ImageLoadingSkeleton className="object-cover" />
-            )}
-          </div>
-        ))}
-      </Carousel>
+      <BannerHero carouselItems={carouselItems} className="cursor-pointer" />
       <div className="flex flex-col justify-center mt-1 md:mt-8">
         <div className="text-center">
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
@@ -377,27 +312,34 @@ const LandingPage = () => {
               View All
             </button>
           </div>
-          <Carousel
-            // ref={carouselRef}
-            responsive={responsive1}
-            customTransition="all .5s ease-in-out"
-            removeArrowOnDeviceType={["mobile"]}
-            arrows={false}
-            infinite
-            autoPlay
-            autoPlaySpeed={2000}
-            className="py-5"
-          >
-            {shopsData.map((shop) => (
-              <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
-                <ShopCard shop={shop} />
-              </div>
-            ))}
-          </Carousel>
-          {loading && shopsData.length === 0 && (
-            <div className="flex justify-center items-center h-full">
-              <CircularProgress color="secondary" />
+          {!loading && shopsData.length > 0 ? (
+            <Carousel
+              responsive={responsive}
+              customTransition="all .5s ease-in-out"
+              removeArrowOnDeviceType={["mobile"]}
+              arrows={false}
+              infinite
+              autoPlay
+              autoPlaySpeed={2000}
+              className="py-5"
+            >
+              {shopsData.map((shop) => (
+                <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
+                  <ShopCard shop={shop} />
+                </div>
+              ))}
+            </Carousel>
+          ) : !loading && shopsData.length === 0 ? (
+            <div className="flex items-center justify-center  pb-8 h-full w-full">
+              No Product Found
             </div>
+          ) : (
+            loading &&
+            shopsData.length === 0 && (
+              <div className="flex justify-center items-center h-full">
+                <CircularProgress color="secondary" />
+              </div>
+            )
           )}
         </div>
       </div>
