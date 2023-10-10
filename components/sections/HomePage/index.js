@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
-import Carousel from "react-multi-carousel";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
   changeProductPage,
   loadProductsStart,
@@ -13,26 +10,8 @@ import { changeShopPage, loadShopsStart } from "../../../redux/ducks/shop";
 import ShopCard from "../shop-section/ShopCard";
 import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
-import DirectoryHero from "../../DirectoryHero/DirectoryHero";
 import { assets } from "../../../constants";
-
-const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-    slidesToSlide: 1,
-  },
-};
+import BannerHero from "../../DirectoryHero/BannerHero";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -70,19 +49,6 @@ const HomePage = () => {
     { imageSrc: assets.bannerImg5, des: "bannerImg5" },
     { imageSrc: assets.bannerImg6, des: "bannerImg6" },
   ];
-
-  const CustomDot = ({ onClick, active }) => {
-    return (
-      <li className="" onClick={() => onClick()}>
-        <FiberManualRecordIcon
-          className={`${
-            active ? "!text-[#31333E]" : "!text-[#31333e33]"
-          } !w-2 lg:!w-3 !h-2 lg:!h-3 !mx-1 !cursor-pointer`}
-          fontSize="small"
-        />
-      </li>
-    );
-  };
 
   const getAllProducts = () => {
     dispatch(
@@ -128,24 +94,7 @@ const HomePage = () => {
 
   return (
     <>
-      <Carousel
-        responsive={responsive}
-        arrows={false}
-        showDots
-        customDot={<CustomDot />}
-        customTransition="all .5s ease-in-out"
-        infinite
-        autoPlay
-        autoPlaySpeed={3000}
-        className="!pb-8"
-      >
-        {carouselItems.map((item, index) => (
-          <div key={index} className="flex w-full h-[137px] md:h-[438px]">
-            <Image src={item.imageSrc} alt="banner" layout="fill" />
-          </div>
-        ))}
-      </Carousel>
-      {/* <DirectoryHero bgImg={assets.homeCoverImage} /> */}
+      <BannerHero carouselItems={carouselItems} />
 
       <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
         <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
@@ -177,7 +126,7 @@ const HomePage = () => {
                           <ProductCard product={product} key={product.id} />
                         ))}
                       </div>
-                      {productsCount > 6 && (
+                      {productsCount > 10 && (
                         <div className="flex justify-center py-4 sm:py-8">
                           <Pagination
                             color="primary"
@@ -186,13 +135,19 @@ const HomePage = () => {
                               (productPageSkip === 0 && 1) ||
                               productPageSkip / 10 + 1
                             }
-                            onChange={(e, p) =>
+                            onChange={(e, p) => {
+                              const targetScrollPosition = 500;
+
+                              window.scrollTo({
+                                top: targetScrollPosition,
+                                behavior: "smooth",
+                              });
                               dispatch(
                                 changeProductPage(
                                   (p === 1 && 0) || (p - 1) * 10
                                 )
-                              )
-                            }
+                              );
+                            }}
                           />
                         </div>
                       )}
@@ -232,7 +187,7 @@ const HomePage = () => {
                         ))}
                       </div>
 
-                      {shopsCount > 6 && (
+                      {shopsCount > 10 && (
                         <div className="flex justify-center py-4 sm:py-8">
                           <Pagination
                             color="primary"
@@ -240,11 +195,17 @@ const HomePage = () => {
                             page={
                               (shopPageSkip === 0 && 1) || shopPageSkip / 10 + 1
                             }
-                            onChange={(e, p) =>
+                            onChange={(e, p) => {
+                              const targetScrollPosition = 500;
+
+                              window.scrollTo({
+                                top: targetScrollPosition,
+                                behavior: "smooth",
+                              });
                               dispatch(
                                 changeShopPage((p === 1 && 0) || (p - 1) * 10)
-                              )
-                            }
+                              );
+                            }}
                           />
                         </div>
                       )}

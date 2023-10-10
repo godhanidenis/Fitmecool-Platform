@@ -286,7 +286,7 @@ const ProductDetail = ({ productDetails }) => {
   const shopDetailHeader = () => (
     <div className="flex items-center bg-colorPrimary p-3">
       <div className="flex items-center justify-between w-full gap-3">
-        <div className="flex justify-start items-center gap-1 sm:gap-4">
+        <div className="flex gap-3 w-full">
           <div className="flex justify-center items-center">
             <Link
               href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
@@ -312,39 +312,49 @@ const ProductDetail = ({ productDetails }) => {
               )}
             </Link>
           </div>
-          <div className="flex flex-col justify-center">
-            <Link
-              href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-            >
-              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                <p className="line-clamp-1 text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
-                  {
-                    productDetails.data.product.data.branchInfo?.shop_info
-                      .shop_name
-                  }
-                </p>
-              </a>
-            </Link>
-            <p className="text-[#888888] text-xs sm:text-sm font-normal">
-              25 days ago
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <Rating
-            name="text-feedback"
-            value={Math.round(
-              productDetails.data.product.data.branchInfo?.shop_info.shop_rating
-            )}
-            readOnly
-            emptyIcon={<StarIcon fontSize="small" sx={{ fontSize: "6px" }} />}
-          />
-          <div className="text-[#878A99] font-normal text-[13px] flex items-center">
-            <div className="flex items-center">
-              <LocationOnIcon fontSize="small" className="!mr-1" />
-              <span className="line-clamp-1">
-                {productDetails.data.product.data.branchInfo?.branch_address}
-              </span>
+          <div className="flex flex-col md:flex-row justify-center items-start md:items-center gap-1 sm:gap-4">
+            <div className="flex flex-col justify-start">
+              <Link
+                href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+              >
+                <a
+                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+                >
+                  <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
+                    {
+                      productDetails.data.product.data.branchInfo?.shop_info
+                        .shop_name
+                    }
+                  </p>
+                </a>
+              </Link>
+              <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal">
+                25 days ago
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <Rating
+                name="text-feedback"
+                value={Math.round(
+                  productDetails.data.product.data.branchInfo?.shop_info
+                    .shop_rating
+                )}
+                readOnly
+                emptyIcon={
+                  <StarIcon fontSize="small" sx={{ fontSize: "6px" }} />
+                }
+              />
+              <div className="text-[#878A99] font-normal text-[13px] flex items-center">
+                <div className="flex items-center">
+                  <LocationOnIcon fontSize="small" className="!mr-1" />
+                  <span className="line-clamp-1">
+                    {
+                      productDetails.data.product.data.branchInfo
+                        ?.branch_address
+                    }
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -609,7 +619,7 @@ const ProductDetail = ({ productDetails }) => {
                 <Box className="!hidden lg:!block">{shopDetailHeader()}</Box>
                 <div className="mt-5">
                   <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                    <span className="font-semibold text-[30px] text-colorGreen leading-9">
+                    <span className="font-semibold text-[30px] text-colorGreen leading-9 capitalize">
                       {productDetails.data.product.data.product_name}
                     </span>
                     <button

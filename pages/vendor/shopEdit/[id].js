@@ -161,7 +161,7 @@ const ShopEdit = () => {
 
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [value, setValue] = React.useState(4);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -690,6 +690,20 @@ const ShopEdit = () => {
   const shopLayoutOnError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
+  const TabList = [
+    "Owner Details",
+    "Shop Info",
+    "Main Branch",
+    "Sub Branch",
+    "Shop Layout",
+  ];
+  const IndividualTabList = [
+    "Owner Details",
+    "Shop Info",
+    "Main Branch",
+    "Shop Layout",
+  ];
+
   if (!isHydrated) {
     return null;
   }
@@ -706,20 +720,24 @@ const ShopEdit = () => {
                 variant="scrollable"
                 scrollButtons="auto"
               >
-                {[
-                  "Owner Details",
-                  "Shop Info",
-                  "Main Branch",
-                  "Sub Branch",
-                  "Shop Layout",
-                ].map((item, index) => (
-                  <Tab
-                    key={index}
-                    label={item}
-                    {...a11yProps(index)}
-                    className="capitalize text-base"
-                  />
-                ))}
+                {individual &&
+                  IndividualTabList.map((item, index) => (
+                    <Tab
+                      key={index}
+                      label={item}
+                      {...a11yProps(index)}
+                      className="capitalize text-base"
+                    />
+                  ))}
+                {!individual &&
+                  TabList.map((item, index) => (
+                    <Tab
+                      key={index}
+                      label={item}
+                      {...a11yProps(index)}
+                      className="capitalize text-base"
+                    />
+                  ))}
               </CustomVenderShopTab>
             </Box>
           </div>
@@ -1402,52 +1420,54 @@ const ShopEdit = () => {
             </div>
           </TabPanel>
 
-          <TabPanel value={value} index={3}>
-            {!individual && !addEditSubBranchShow && (
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={() => setAddEditSubBranchShow(true)}
-                  className="flex items-center text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
-                >
-                  <span className="hidden sm:inline">
-                    <AddIcon fontSize="medium" className="mr-1 -mt-1" />
-                  </span>
-                  <span className="sm:hidden">
-                    <AddIcon fontSize="small" className="mr-1 -mt-1" />
-                  </span>
-                  Sub Branch
-                </button>
-              </div>
-            )}
-
-            {addEditSubBranchShow ? (
-              <AddEditSubBranch
-                addEditSubBranchShow={addEditSubBranchShow}
-                setAddEditSubBranchShow={setAddEditSubBranchShow}
-                getAllSubBranchList={getAllSubBranchList}
-                ShopId={userProfile?.userCreatedShopId}
-                editSubBranchId={editSubBranchId}
-                setEditSubBranchId={setEditSubBranchId}
-                mainBranchInfoGetValue={mainBranchInfoGetValue}
-                ownerInfoGetValue={ownerInfoGetValue}
-              />
-            ) : (
-              <>
-                <div className="mt-4">
-                  <VendorBranchTable
-                    subBranchList={subBranchList}
-                    getAllSubBranchList={getAllSubBranchList}
-                    setAddEditSubBranchShow={setAddEditSubBranchShow}
-                    setEditSubBranchId={setEditSubBranchId}
-                    setBranchDeleteModalOpen={setBranchDeleteModalOpen}
-                    setDeleteBranchId={setDeleteBranchId}
-                  />
+          {!individual && (
+            <TabPanel value={value} index={3}>
+              {!individual && !addEditSubBranchShow && (
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => setAddEditSubBranchShow(true)}
+                    className="flex items-center text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
+                  >
+                    <span className="hidden sm:inline">
+                      <AddIcon fontSize="medium" className="mr-1 -mt-1" />
+                    </span>
+                    <span className="sm:hidden">
+                      <AddIcon fontSize="small" className="mr-1 -mt-1" />
+                    </span>
+                    Sub Branch
+                  </button>
                 </div>
-              </>
-            )}
-          </TabPanel>
+              )}
 
-          <TabPanel value={value} index={4}>
+              {addEditSubBranchShow ? (
+                <AddEditSubBranch
+                  addEditSubBranchShow={addEditSubBranchShow}
+                  setAddEditSubBranchShow={setAddEditSubBranchShow}
+                  getAllSubBranchList={getAllSubBranchList}
+                  ShopId={userProfile?.userCreatedShopId}
+                  editSubBranchId={editSubBranchId}
+                  setEditSubBranchId={setEditSubBranchId}
+                  mainBranchInfoGetValue={mainBranchInfoGetValue}
+                  ownerInfoGetValue={ownerInfoGetValue}
+                />
+              ) : (
+                <>
+                  <div className="mt-4">
+                    <VendorBranchTable
+                      subBranchList={subBranchList}
+                      getAllSubBranchList={getAllSubBranchList}
+                      setAddEditSubBranchShow={setAddEditSubBranchShow}
+                      setEditSubBranchId={setEditSubBranchId}
+                      setBranchDeleteModalOpen={setBranchDeleteModalOpen}
+                      setDeleteBranchId={setDeleteBranchId}
+                    />
+                  </div>
+                </>
+              )}
+            </TabPanel>
+          )}
+
+          <TabPanel value={value} index={individual ? 3 : 4}>
             <div className="container rounded-lg mt-10">
               <div className="grid grid-cols-3 gap-6 sm:gap-10 my-10">
                 <div className="col-span-3 lg:flex justify-center gap-10 items-start">

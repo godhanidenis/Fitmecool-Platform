@@ -211,11 +211,12 @@ const ProductCard = ({ product, onlyCarousal }) => {
             <div className="w-[100%]">
               <Carousel
                 autoPlay={autoplay}
-                autoPlaySpeed={900}
+                autoPlaySpeed={1500}
                 infinite
                 arrows={onlyCarousal}
                 // removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
+                className="rounded-t-lg"
               >
                 {productImages}
               </Carousel>
