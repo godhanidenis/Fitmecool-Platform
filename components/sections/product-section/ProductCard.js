@@ -50,8 +50,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
   const [OpenToolTip, setOpenToolTip] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isProductImages, setIsProductImages] = useState(false);
-  const [isProductImage, setIsProductImage] = useState("");
-
+  const [isProductImage, setIsProductImage] = useState([]);
   const [photos, setPhotos] = useState([]);
 
   const shopId = product.branchInfo?.shop_id;
@@ -145,7 +144,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
             target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
             rel="noopener noreferrer"
           >
-            {isProductImage === itm && isProductImages ? (
+            {isProductImage.includes(itm) && isProductImages ? (
               <div className="w-full h-full bg-[#00000031]" />
             ) : (
               <>
@@ -163,7 +162,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     onLoad={() => setProductImagesLoaded(true)}
                     onError={() => {
                       setIsProductImages(true);
-                      setIsProductImage(itm);
+                      setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
                     layout="fill"
                   />
@@ -174,7 +173,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     alt="product video"
                     onError={() => {
                       setIsProductImages(true);
-                      setIsProductImage(itm);
+                      setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
                     className="h-full w-full !cursor-pointer !object-cover"
                     autoPlay={true}

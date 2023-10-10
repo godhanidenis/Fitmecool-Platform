@@ -205,31 +205,39 @@ const SubHeader = () => {
                 onMouseLeave={handleMenuClose.bind(this)}
               >
                 <div>
-                  <div className="grid grid-cols-9 gap-10">
-                    <div className="col-span-4 p-1">
-                      {allShopsLists?.data?.map((itm, index) => {
-                        if (
-                          index <=
-                          allShopsLists?.data?.length / 2 - (0.5 || 1)
-                        ) {
-                          return generateQuickFilterComponent("shopId", itm);
-                        }
-                        return "";
-                      })}
+                  {allShopsLists?.data?.length === 0 ? (
+                    "No Shops Available"
+                  ) : (
+                    <div className="grid grid-cols-9 gap-10">
+                      <div className="col-span-4 p-1">
+                        {allShopsLists?.data?.map((itm, index) => {
+                          if (
+                            index <=
+                            allShopsLists?.data?.length / 2 - (0.5 || 1)
+                          ) {
+                            return generateQuickFilterComponent("shopId", itm);
+                          }
+                          return "";
+                        })}
+                      </div>
+                      <Divider
+                        orientation="vertical"
+                        variant="middle"
+                        flexItem
+                      />
+                      <div className="col-span-4 p-1">
+                        {allShopsLists?.data?.map((itm, index) => {
+                          if (
+                            index >
+                            allShopsLists?.data?.length / 2 - (0.5 || 1)
+                          ) {
+                            return generateQuickFilterComponent("shopId", itm);
+                          }
+                          return "";
+                        })}
+                      </div>
                     </div>
-                    <Divider orientation="vertical" variant="middle" flexItem />
-                    <div className="col-span-4 p-1">
-                      {allShopsLists?.data?.map((itm, index) => {
-                        if (
-                          index >
-                          allShopsLists?.data?.length / 2 - (0.5 || 1)
-                        ) {
-                          return generateQuickFilterComponent("shopId", itm);
-                        }
-                        return "";
-                      })}
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </TabPanel>

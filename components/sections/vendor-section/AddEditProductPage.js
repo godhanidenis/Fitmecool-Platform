@@ -675,7 +675,7 @@ const AddEditProductPage = () => {
                     ["undo", "redo"],
                     ["bold", "underline", "italic"],
                   ],
-                  defaultStyle: "font-size: 20px;",
+                  defaultStyle: "font-size: 18px;",
                 }}
                 setContents={editorDescriptionContent}
                 onChange={handleEditorChange}

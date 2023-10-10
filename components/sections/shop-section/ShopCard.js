@@ -36,7 +36,7 @@ const ShopCard = ({ shop }) => {
   const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
-
+  const [isShopImage, setIsShopImage] = useState([]);
   const carouselRef = useRef(null);
 
   const shopImages = shop.shop_images.map((itm, index) => {
@@ -62,7 +62,7 @@ const ShopCard = ({ shop }) => {
         )}
         <Link href={`/shop/${shop.id}`}>
           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-            {isShopImages ? (
+            {isShopImage.includes(itm) && isShopImages ? (
               <div
                 className="bg-[#00000031]"
                 style={{
@@ -85,6 +85,7 @@ const ShopCard = ({ shop }) => {
                 onLoad={() => setShopImagesLoaded(true)}
                 onError={() => {
                   setIsShopImages(true);
+                  setIsShopImage((prevIndexes) => [...prevIndexes, itm]);
                 }}
                 layout="fill"
               />

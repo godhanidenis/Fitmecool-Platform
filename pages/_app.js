@@ -138,7 +138,8 @@ function MyApp({ Component, pageProps }) {
                 <Component {...pageProps} />
               )}
             </div>
-            {!router.pathname.includes("/auth/") && <Footer />}
+            {!router.pathname.includes("/auth/") &&
+              !router.pathname.includes("/vendor/") && <Footer />}
           </Provider>
         </ThemeProvider>
       </GoogleOAuthProvider>
