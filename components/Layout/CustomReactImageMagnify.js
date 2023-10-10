@@ -41,7 +41,7 @@ const CustomReactImageMagnify = ({ large, preview }) => {
       <div className="image-preview">
         {preview ? (
           isProductImage === preview && isShopImages ? (
-            <div className=" w-full h-full cursor-pointer rounded-[16px] bg-[#00000031]" />
+            <div className="w-full h-full cursor-pointer rounded-[16px] bg-[#00000031]" />
           ) : (
             <>
               {preview?.type === "image" && (
@@ -67,7 +67,7 @@ const CustomReactImageMagnify = ({ large, preview }) => {
                     setIsShopImages(true);
                     setIsProductImage(preview);
                   }}
-                  className="!rounded-[16px] !h-full !w-full !cursor-pointer"
+                  className="!rounded-[16px] h-full w-full !cursor-pointer !object-cover"
                   autoPlay={true}
                   controls
                   muted
@@ -95,8 +95,8 @@ const CustomReactImageMagnify = ({ large, preview }) => {
             }
 
             .zoom-box {
-              width: 500px;
-              height: 100%;
+              width: 400px;
+              height: 65%;
               position: absolute;
               margin-left: 175%;
               top: 0;

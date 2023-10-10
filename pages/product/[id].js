@@ -185,8 +185,6 @@ const ProductDetail = ({ productDetails }) => {
     setImages(img);
   };
 
-  console.log("photos :>> ", photos);
-
   const productImages = photos?.map((itm, i) => {
     return (
       <div
@@ -198,7 +196,7 @@ const ProductDetail = ({ productDetails }) => {
         {itm ? (
           isProductImage === itm && isShopImages ? (
             <div
-              className=" w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
+              className="w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
               style={{ border: images === itm ? "2px solid #29977E" : 0 }}
             />
           ) : (
@@ -210,7 +208,7 @@ const ProductDetail = ({ productDetails }) => {
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,
                   }}
-                  className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
+                  className="rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
                   onError={() => {
                     setIsShopImages(true);
                     setIsProductImage(itm);
@@ -218,7 +216,7 @@ const ProductDetail = ({ productDetails }) => {
                 />
               )}
               {itm?.type === "video" && (
-                <div className="relative">
+                <div className="relative w-[130px] h-[150px]">
                   <video
                     src={itm?.src}
                     alt="Product Video"
@@ -226,7 +224,7 @@ const ProductDetail = ({ productDetails }) => {
                       border:
                         images?.src === itm?.src ? "2px solid #29977E" : 0,
                     }}
-                    className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
+                    className="rounded-[16px] object-cover cursor-pointer w-full h-full"
                     onError={() => {
                       setIsShopImages(true);
                       setIsProductImage(itm);
@@ -238,7 +236,7 @@ const ProductDetail = ({ productDetails }) => {
             </>
           )
         ) : (
-          <ImageLoadingSkeleton className="rounded-[16px] !w-[129px] !h-[146px]" />
+          <ImageLoadingSkeleton className="rounded-[16px] !w-[130px] !h-[150px]" />
         )}
       </div>
     );
@@ -471,12 +469,12 @@ const ProductDetail = ({ productDetails }) => {
           <div className="!w-[100%] ">
             <div className="grid grid-cols-2 p-2 gap-8">
               <div className="col-span-2 lg:col-span-1 hidden sm:flex">
-                <div className="grid grid-cols-4">
+                <div className="grid grid-cols-4 w-full h-full">
                   <div className="col-span-1">
                     <div className="p-2 pt-0">{productImages}</div>
                   </div>
                   <div className="col-span-3">
-                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[600px] rounded-2xl">
+                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] rounded-2xl">
                       <CustomReactImageMagnify
                         large={images}
                         preview={images}

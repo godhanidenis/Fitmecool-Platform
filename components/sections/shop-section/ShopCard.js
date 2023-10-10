@@ -107,7 +107,6 @@ const ShopCard = ({ shop }) => {
                 infinite
                 arrows={false}
                 responsive={responsive}
-                dotListClass={"Landing_customDots"}
               >
                 {shop?.shop_images?.length === 0 ? (
                   <div

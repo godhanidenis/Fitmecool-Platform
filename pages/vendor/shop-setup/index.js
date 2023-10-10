@@ -1725,7 +1725,6 @@ const ShopPage = () => {
                                     onClick={TrendingCustomRightArrow}
                                   />
                                 }
-                                // dotListClass={"Landing_customDots"}
                               >
                                 {subBranch?.map((sub, index) => (
                                   <div
