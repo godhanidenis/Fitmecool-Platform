@@ -68,8 +68,6 @@ const AddEditProductPage = () => {
   const [editorDescriptionContent, setEditorDescriptionContent] = useState("");
   const [errorDescription, setErrorDescription] = useState("");
 
-  // console.log("isHydrated :>> ", isHydrated);
-
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
     let resImgIndex = SelectImgIndex;

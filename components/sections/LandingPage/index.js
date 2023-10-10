@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { assets } from "../../../constants";
 import { useRouter } from "next/router";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
-import BannerHero from "../../DirectoryHero/BAnnerHero";
+import BannerHero from "../../DirectoryHero/BannerHero";
 
 const responsive = {
   superLargeDesktop: {

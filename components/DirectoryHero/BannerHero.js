@@ -36,7 +36,7 @@ const CustomDot = ({ onClick, active }) => {
   );
 };
 
-const BannerHero = ({ carouselItems, className = { className } }) => {
+const BannerHero = ({ carouselItems, className }) => {
   const [isBannerImagesLoaded, setBannerImagesLoaded] = useState(false);
   return (
     <Carousel

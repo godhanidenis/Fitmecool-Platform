@@ -11,7 +11,7 @@ import ShopCard from "../shop-section/ShopCard";
 import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
 import { assets } from "../../../constants";
-import BannerHero from "../../DirectoryHero/BAnnerHero";
+import BannerHero from "../../DirectoryHero/BannerHero";
 
 const HomePage = () => {
   const dispatch = useDispatch();
