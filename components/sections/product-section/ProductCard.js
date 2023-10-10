@@ -213,7 +213,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                 autoPlay={autoplay}
                 autoPlaySpeed={1500}
                 infinite
-                arrows={onlyCarousal}
+                arrows={onlyCarousal ? true : false}
                 // removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
                 className="rounded-t-lg"
