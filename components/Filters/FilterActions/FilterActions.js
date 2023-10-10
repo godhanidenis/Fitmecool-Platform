@@ -39,7 +39,7 @@ const FilterActions = ({ productByShop }) => {
           </Stack>
         )} */}
       </div>
-      <Divider className="mx-6" />
+      <Divider className="!mx-6" />
     </div>
   );
 };

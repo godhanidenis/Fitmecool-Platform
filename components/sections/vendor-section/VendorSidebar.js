@@ -67,10 +67,10 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         </div>
       </div>
       <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
-        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 whitespace-nowrap w-full text-center">
+        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 w-full text-center">
           {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
         </div>
-        <Divider className="w-full opacity-50 " />
+        <Divider className="!w-full !opacity-50 " />
         <div className="w-full font-Nova pl-[15%] mt-5">
           {vendorSidebarTabs.map((tab, index) => (
             <p

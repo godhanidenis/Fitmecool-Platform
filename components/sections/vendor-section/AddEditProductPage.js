@@ -536,7 +536,7 @@ const AddEditProductPage = () => {
                           id=""
                           label="product Type"
                           {...register("product_type", {
-                            required: "product Type is required",
+                            required: "Product Type is required",
                             onChange: (e) => {
                               setProductType(e.target.value);
                             },
@@ -586,7 +586,7 @@ const AddEditProductPage = () => {
                             id=""
                             label="Category"
                             {...register("product_category", {
-                              required: "product Category is required",
+                              required: "Product Category is required",
                             })}
                           >
                             <option value="">
@@ -636,7 +636,7 @@ const AddEditProductPage = () => {
                           id=""
                           label="Branch"
                           {...register("product_branch", {
-                            required: "product Branch is required",
+                            required: "Product Branch is required",
                           })}
                         >
                           <option value="">
@@ -675,6 +675,7 @@ const AddEditProductPage = () => {
                     ["undo", "redo"],
                     ["bold", "underline", "italic"],
                   ],
+                  defaultStyle: "font-size: 20px;",
                 }}
                 setContents={editorDescriptionContent}
                 onChange={handleEditorChange}
@@ -867,10 +868,10 @@ const AddEditProductPage = () => {
             )}
           </div>
         </div>
-        <Divider className="mt-5 mb-5 sm:mx-6" />
+        <Divider className="!mt-5 !mb-5 sm:!mx-6" />
         <div className="flex justify-end sm:gap-4 gap-2 mb-8">
           <button
-            className="bg-white rounded-[4px] sm:py-2 sm:px-4 font-semibold sm:text-xl text-sm px-8 py-2 border"
+            className="bg-white rounded-[4px] sm:py-2 sm:px-4 sm:text-xl text-sm px-8 py-2 border"
             onClick={() =>
               router.push(`/vendor/shop/${vendorShopDetails?.id}/`)
             }

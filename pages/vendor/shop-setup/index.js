@@ -992,7 +992,7 @@ const ShopPage = () => {
                     )}
                   </div>
 
-                  <Divider className="mt-10" />
+                  <Divider className="!mt-10" />
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1296,7 +1296,7 @@ const ShopPage = () => {
                       </div>
                     </div>
                   </div>
-                  <Divider className="mt-10" />
+                  <Divider className="!mt-10" />
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1835,7 +1835,7 @@ const ShopPage = () => {
                     </div>
                   )}
 
-                  <Divider className="mt-10" />
+                  <Divider className="!mt-10" />
 
                   <ActionButtons
                     currentStep={currentStep}

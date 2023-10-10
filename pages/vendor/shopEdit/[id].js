@@ -690,19 +690,9 @@ const ShopEdit = () => {
   const shopLayoutOnError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
-  const TabList = [
-    "Owner Details",
-    "Shop Info",
-    "Main Branch",
-    "Sub Branch",
-    "Shop Layout",
-  ];
-  const IndividualTabList = [
-    "Owner Details",
-    "Shop Info",
-    "Main Branch",
-    "Shop Layout",
-  ];
+  const TabList = ["Owner Details", "Shop Info", "Main Branch", "Shop Layout"];
+
+  if (!individual) TabList.splice(3, 0, "Sub Branch");
 
   if (!isHydrated) {
     return null;
@@ -720,24 +710,14 @@ const ShopEdit = () => {
                 variant="scrollable"
                 scrollButtons="auto"
               >
-                {individual &&
-                  IndividualTabList.map((item, index) => (
-                    <Tab
-                      key={index}
-                      label={item}
-                      {...a11yProps(index)}
-                      className="capitalize text-base"
-                    />
-                  ))}
-                {!individual &&
-                  TabList.map((item, index) => (
-                    <Tab
-                      key={index}
-                      label={item}
-                      {...a11yProps(index)}
-                      className="capitalize text-base"
-                    />
-                  ))}
+                {TabList.map((item, index) => (
+                  <Tab
+                    key={index}
+                    label={item}
+                    {...a11yProps(index)}
+                    className="capitalize text-base"
+                  />
+                ))}
               </CustomVenderShopTab>
             </Box>
           </div>
@@ -940,7 +920,7 @@ const ShopEdit = () => {
                         placeholder="Personal Website Link"
                         formValue={{
                           ...shopInfoRegister("personal_website", {
-                            required: "Personal Website is required",
+                            // required: "Personal Website is required",
                           }),
                         }}
                       />
@@ -962,7 +942,7 @@ const ShopEdit = () => {
                           placeholder="Your facebook link"
                           formValue={{
                             ...shopInfoRegister("facebook_link", {
-                              required: "Facebook Link is required",
+                              // required: "Facebook Link is required",
                             }),
                           }}
                         />
@@ -983,7 +963,7 @@ const ShopEdit = () => {
                           placeholder="Your instagram link"
                           formValue={{
                             ...shopInfoRegister("instagram_link", {
-                              required: "Instagram Link is required",
+                              // required: "Instagram Link is required",
                             }),
                           }}
                         />
@@ -1049,30 +1029,30 @@ const ShopEdit = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-center">
-                      <Box className="flex w-full sm:justify-end justify-center mb-6">
-                        <button
-                          type="submit"
-                          onClick={shopInfoHandleSubmit(
-                            shopInfoOnSubmit,
-                            shopInfoOError
-                          )}
-                          className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
-                        >
-                          {shopLoading && (
-                            <CircularProgress
-                              size={20}
-                              color="primary"
-                              sx={{ color: "white", mr: 1 }}
-                            />
-                          )}
-                          Update
-                        </button>
-                      </Box>
-                    </div>
                   </div>
                 </>
               )}
+              <div className="flex items-center justify-center">
+                <Box className="flex w-full sm:justify-end justify-center mb-6">
+                  <button
+                    type="submit"
+                    onClick={shopInfoHandleSubmit(
+                      shopInfoOnSubmit,
+                      shopInfoOError
+                    )}
+                    className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
+                  >
+                    {shopLoading && (
+                      <CircularProgress
+                        size={20}
+                        color="primary"
+                        sx={{ color: "white", mr: 1 }}
+                      />
+                    )}
+                    Update
+                  </button>
+                </Box>
+              </div>
               <HoursModal
                 hoursModalOpen={hoursModalOpen}
                 setHoursModalOpen={setHoursModalOpen}
@@ -1183,7 +1163,7 @@ const ShopEdit = () => {
                     className="cursor-pointer"
                   />
                 )}
-                <div className="font-semibold sm:text-lg text-sm">
+                <div className="font-semibold sm:text-lg text-sm uppercase">
                   Manager Details
                 </div>
               </div>
@@ -1191,7 +1171,7 @@ const ShopEdit = () => {
                 className={`space-y-6 ${managerDetails === "Hide" && "hidden"}`}
               >
                 <div className="flex items-center">
-                  <span className="uppercase font-semibold">
+                  <span className="uppercase sm:text-lg text-sm font-semibold">
                     Same As Owner:
                   </span>
                   <RadioGroup
