@@ -6,11 +6,9 @@ import { TbPhotoPlus } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import { getBranchLists } from "../../../graphql/queries/branchListsQueries";
 import {
   createProduct,
   updateProduct,
@@ -24,7 +22,6 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { getProductDetails } from "../../../graphql/queries/productQueries";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
 import { NativeSelectInput } from "../../core/CustomMUIComponents";
 import dynamic from "next/dynamic";
@@ -34,7 +31,12 @@ const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
 });
 
-const AddEditProductPage = () => {
+const AddEditProductPage = ({
+  setAddEditProductShow,
+  editableProductData,
+  setEditableProductData,
+  getAllProducts,
+}) => {
   const {
     register,
     handleSubmit,
@@ -52,13 +54,10 @@ const AddEditProductPage = () => {
   const [productVideo, setProductVideo] = useState("");
   const [uploadProductVideo, setUploadProductVideo] = useState();
   const [loading, setLoading] = useState(false);
-  const [editProductId, setEditProductId] = useState();
   const [productType, setProductType] = useState();
-  const [branchList, setBranchList] = useState([]);
+
   const [menCategoryLabel, setMenCategoryLabel] = useState([]);
   const [womenCategoryLabel, setWomenCategoryLabel] = useState([]);
-  const router = useRouter();
-  const { id, id1 } = router.query;
   const { categories } = useSelector((state) => state.categories);
   const [productAllMediaImages, setProductAllMediaImages] = useState([]);
   const [productAllMediaVideo, setProductAllMediaVideo] = useState();
@@ -89,12 +88,6 @@ const AddEditProductPage = () => {
   };
 
   useEffect(() => {
-    if (id1) {
-      setEditProductId(id1);
-    }
-  }, [id1]);
-
-  useEffect(() => {
     setMenCategoryLabel(
       categories.filter((itm) => itm.category_type === "Men").map((i) => i)
     );
@@ -110,22 +103,11 @@ const AddEditProductPage = () => {
     setUploadProductImages([]);
     setProductVideo();
     setUploadProductVideo();
-    setEditProductId();
   };
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  useEffect(() => {
-    getBranchLists().then((res) => {
-      const branches = res.data.branchList.filter(
-        (branch) => branch.shop_id === id
-      );
-
-      setBranchList(branches);
-    });
-  }, [id]);
 
   async function srcToFile(src, fileName, mimeType) {
     try {
@@ -143,97 +125,89 @@ const AddEditProductPage = () => {
   }
 
   useEffect(() => {
-    if (editProductId !== undefined) {
-      getProductDetails({ id: editProductId }).then((res) => {
-        console.log("res:::", res.data.product.data);
+    if (editableProductData) {
+      setValue("product_name", editableProductData?.product_name);
+      setEditorDescriptionContent(editableProductData?.product_description);
+      setValue("product_color", editableProductData?.product_color);
+      setValue("product_type", editableProductData.categoryInfo?.category_type);
+      setProductType(editableProductData.categoryInfo?.category_type);
+      setValue("product_category", editableProductData?.categoryInfo?.id);
+      setValue("product_branch", editableProductData?.branchInfo?.id);
 
-        setValue("product_name", res?.data?.product?.data?.product_name);
-        setEditorDescriptionContent(
-          res?.data?.product?.data?.product_description
-        );
-        setValue("product_color", res?.data?.product.data?.product_color);
-        setValue("product_type", res?.data?.product?.data?.product_type);
-        setProductType(res?.data?.product?.data.product_type);
-        setValue(
-          "product_category",
-          res?.data?.product?.data?.categoryInfo?.id
-        );
-        setValue("product_branch", res?.data?.product?.data?.branchInfo?.id);
+      editableProductData?.product_image?.front &&
+        srcToFile(
+          editableProductData?.product_image?.front,
+          "profile.png",
+          "image/png"
+        ).then(function (file) {
+          setUploadProductImages((old) => [...old, file]);
+        });
+      editableProductData?.product_image?.back &&
+        srcToFile(
+          editableProductData?.product_image?.back,
+          "profile.png",
+          "image/png"
+        ).then(function (file) {
+          setUploadProductImages((old) => [...old, file]);
+        });
+      editableProductData?.product_image?.side &&
+        srcToFile(
+          editableProductData?.product_image?.side,
+          "profile.png",
+          "image/png"
+        ).then(function (file) {
+          setUploadProductImages((old) => [...old, file]);
+        });
 
-        res?.data?.product?.data?.product_image?.front &&
-          srcToFile(
-            res?.data?.product?.data?.product_image?.front,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadProductImages((old) => [...old, file]);
-          });
-        res?.data?.product?.data?.product_image?.back &&
-          srcToFile(
-            res?.data?.product?.data?.product_image?.back,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadProductImages((old) => [...old, file]);
-          });
-        res?.data?.product?.data?.product_image?.side &&
-          srcToFile(
-            res?.data?.product?.data?.product_image?.side,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadProductImages((old) => [...old, file]);
-          });
+      editableProductData?.product_image?.front &&
+        setProductImages((old) => [
+          ...old,
+          editableProductData?.product_image?.front,
+        ]);
+      editableProductData?.product_image?.back &&
+        setProductImages((old) => [
+          ...old,
+          editableProductData?.product_image?.back,
+        ]);
+      editableProductData?.product_image?.side &&
+        setProductImages((old) => [
+          ...old,
+          editableProductData?.product_image?.side,
+        ]);
 
-        res?.data?.product?.data?.product_image?.front &&
-          setProductImages((old) => [
-            ...old,
-            res?.data?.product?.data?.product_image?.front,
-          ]);
-        res?.data?.product?.data?.product_image?.back &&
-          setProductImages((old) => [
-            ...old,
-            res?.data?.product?.data?.product_image?.back,
-          ]);
-        res?.data?.product?.data?.product_image?.side &&
-          setProductImages((old) => [
-            ...old,
-            res?.data?.product?.data?.product_image?.side,
-          ]);
+      editableProductData?.product_image?.front &&
+        setProductAllMediaImages((old) => [
+          ...old,
+          editableProductData?.product_image?.front,
+        ]);
+      editableProductData?.product_image?.back &&
+        setProductAllMediaImages((old) => [
+          ...old,
+          editableProductData?.product_image?.back,
+        ]);
+      editableProductData?.product_image?.side &&
+        setProductAllMediaImages((old) => [
+          ...old,
+          editableProductData?.product_image?.side,
+        ]);
 
-        res?.data?.product?.data?.product_image?.front &&
-          setProductAllMediaImages((old) => [
-            ...old,
-            res?.data?.product?.data?.product_image?.front,
-          ]);
-        res?.data?.product?.data?.product_image?.back &&
-          setProductAllMediaImages((old) => [
-            ...old,
-            res?.data?.product?.data?.product_image?.back,
-          ]);
-        res?.data?.product?.data?.product_image?.side &&
-          setProductAllMediaImages((old) => [
-            ...old,
-            res?.data?.product?.data?.product_image?.side,
-          ]);
+      editableProductData?.product_video &&
+        srcToFile(
+          editableProductData?.product_video,
+          "profile.mp4",
+          "video"
+        ).then(function (file) {
+          setUploadProductVideo(file);
+        });
 
-        res?.data?.product?.data?.product_video &&
-          srcToFile(
-            res?.data?.product?.data?.product_video,
-            "profile.mp4",
-            "video"
-          ).then(function (file) {
-            setUploadProductVideo(file);
-          });
+      editableProductData?.product_video &&
+        setProductVideo(editableProductData?.product_video);
 
-        res?.data?.product?.data?.product_video &&
-          setProductVideo(res?.data?.product?.data?.product_video);
-
-        res?.data?.product?.data?.product_video &&
-          setProductAllMediaVideo(res?.data?.product?.data?.product_video);
-      });
+      editableProductData?.product_video &&
+        setProductAllMediaVideo(editableProductData?.product_video);
+      // });
     }
-  }, [editProductId, setValue]);
+  }, [editableProductData, setValue]);
 
   const onProductVideoPreview = (e) => {
     const reader = new FileReader();
@@ -268,7 +242,89 @@ const AddEditProductPage = () => {
     } else {
       setErrorDescription("");
       setLoading(true);
-      if (editProductId === undefined) {
+      if (editableProductData) {
+        productAllMediaImages.map((img) =>
+          deleteMedia({
+            file: img,
+            fileType: "image",
+          }).then((res) => setProductAllMediaImages([]))
+        );
+
+        productAllMediaVideo !== undefined &&
+          deleteMedia({
+            file: productAllMediaVideo,
+            fileType: "video",
+          }).then((res) => setProductAllMediaVideo());
+
+        MultipleImageUploadFile(uploadProductImages).then((res) => {
+          uploadProductVideo !== undefined
+            ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
+                updateProduct({
+                  id: editableProductData?.id,
+                  productInfo: {
+                    branch_id: data.product_branch,
+                    category_id: data.product_category,
+                    product_color: data.product_color,
+                    product_description: editorDescriptionContent,
+                    product_name: data.product_name,
+                    product_type: data.product_type,
+                    product_image: {
+                      front: res.data.data.multipleUpload[0],
+                      back: res.data.data.multipleUpload[1],
+                      side: res.data.data.multipleUpload[2],
+                    },
+                    product_video: videoResponse.data.data.singleUpload,
+                  },
+                }).then(
+                  (res) => {
+                    console.log("res:::", res);
+                    toast.success(res.data.updateProduct.message, {
+                      theme: "colored",
+                    });
+                    setLoading(false);
+                    getAllProducts();
+                    handleProductListingModalClose();
+                    setAddEditProductShow(false);
+                  },
+                  (error) => {
+                    setLoading(false);
+                    toast.error(error.message, { theme: "colored" });
+                  }
+                );
+              })
+            : updateProduct({
+                id: editableProductData?.id,
+                productInfo: {
+                  branch_id: data.product_branch,
+                  category_id: data.product_category,
+                  product_color: data.product_color,
+                  product_description: editorDescriptionContent,
+                  product_name: data.product_name,
+                  product_type: data.product_type,
+                  product_image: {
+                    front: res.data.data.multipleUpload[0],
+                    back: res.data.data.multipleUpload[1],
+                    side: res.data.data.multipleUpload[2],
+                  },
+                },
+              }).then(
+                (res) => {
+                  console.log("res:::", res);
+                  toast.success(res.data.updateProduct.message, {
+                    theme: "colored",
+                  });
+                  setLoading(false);
+                  getAllProducts();
+                  handleProductListingModalClose();
+                  setAddEditProductShow(false);
+                },
+                (error) => {
+                  setLoading(false);
+                  toast.error(error.message, { theme: "colored" });
+                }
+              );
+        });
+      } else {
         MultipleImageUploadFile(uploadProductImages).then((res) => {
           uploadProductVideo !== undefined
             ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
@@ -294,8 +350,9 @@ const AddEditProductPage = () => {
                       theme: "colored",
                     });
                     setLoading(false);
+                    getAllProducts();
                     handleProductListingModalClose();
-                    router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
+                    setAddEditProductShow(false);
                   },
                   (error) => {
                     setLoading(false);
@@ -324,88 +381,9 @@ const AddEditProductPage = () => {
                     theme: "colored",
                   });
                   setLoading(false);
+                  getAllProducts();
                   handleProductListingModalClose();
-                  router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                },
-                (error) => {
-                  setLoading(false);
-                  toast.error(error.message, { theme: "colored" });
-                }
-              );
-        });
-      } else {
-        productAllMediaImages.map((img) =>
-          deleteMedia({
-            file: img,
-            fileType: "image",
-          }).then((res) => setProductAllMediaImages([]))
-        );
-
-        productAllMediaVideo !== undefined &&
-          deleteMedia({
-            file: productAllMediaVideo,
-            fileType: "video",
-          }).then((res) => setProductAllMediaVideo());
-
-        MultipleImageUploadFile(uploadProductImages).then((res) => {
-          uploadProductVideo !== undefined
-            ? VideoUploadFile(uploadProductVideo).then((videoResponse) => {
-                updateProduct({
-                  id: editProductId,
-                  productInfo: {
-                    branch_id: data.product_branch,
-                    category_id: data.product_category,
-                    product_color: data.product_color,
-                    product_description: editorDescriptionContent,
-                    product_name: data.product_name,
-                    product_type: data.product_type,
-                    product_image: {
-                      front: res.data.data.multipleUpload[0],
-                      back: res.data.data.multipleUpload[1],
-                      side: res.data.data.multipleUpload[2],
-                    },
-                    product_video: videoResponse.data.data.singleUpload,
-                  },
-                }).then(
-                  (res) => {
-                    console.log("res:::", res);
-                    toast.success(res.data.updateProduct.message, {
-                      theme: "colored",
-                    });
-                    setLoading(false);
-                    handleProductListingModalClose();
-                    router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
-                  },
-                  (error) => {
-                    setLoading(false);
-                    toast.error(error.message, { theme: "colored" });
-                  }
-                );
-              })
-            : updateProduct({
-                id: editProductId,
-                productInfo: {
-                  branch_id: data.product_branch,
-                  category_id: data.product_category,
-                  product_color: data.product_color,
-                  product_description: editorDescriptionContent,
-                  product_name: data.product_name,
-                  product_type: data.product_type,
-                  product_image: {
-                    front: res.data.data.multipleUpload[0],
-                    back: res.data.data.multipleUpload[1],
-                    side: res.data.data.multipleUpload[2],
-                  },
-                },
-              }).then(
-                (res) => {
-                  console.log("res:::", res);
-                  toast.success(res.data.updateProduct.message, {
-                    theme: "colored",
-                  });
-                  setLoading(false);
-                  handleProductListingModalClose();
-                  router.push(`/vendor/shop/${vendorShopDetails?.id}/`);
+                  setAddEditProductShow(false);
                 },
                 (error) => {
                   setLoading(false);
@@ -424,8 +402,8 @@ const AddEditProductPage = () => {
   }
   return (
     <div>
-      <div className="container sm:p-0 sm:py-6 p-6">
-        <div className="font-semibold text-black flex items-center gap-2 mx-2">
+      <div className="sm:p-0 sm:py-6 p-6">
+        <div className="font-semibold text-black flex items-center gap-2 sm:mx-4">
           <span>
             <ArrowBackIcon
               sx={{
@@ -435,18 +413,18 @@ const AddEditProductPage = () => {
                 },
               }}
               className="cursor-pointer"
-              onClick={() =>
-                router.push(`/vendor/shop/${vendorShopDetails?.id}/`)
-              }
+              onClick={() => {
+                setAddEditProductShow(false);
+                setEditableProductData();
+              }}
             />
           </span>
           <span className="text-xl">
-            {" "}
-            {editProductId === undefined ? "Add" : "Update"} Product
+            {editableProductData ? "Update" : "Add"} Product
           </span>
         </div>
         <div className="my-5 mt-8">
-          <div className="text-base sm:text-lg font-semibold  mb-3 mt-5 sm:mx-6 text-black ">
+          <div className="text-base sm:text-lg font-semibold mb-3 mt-5 sm:mx-6 text-black ">
             Product Details
           </div>
           <div className="sm:flex justify-between">
@@ -493,17 +471,12 @@ const AddEditProductPage = () => {
                             required: "Product Color is required",
                           })}
                         >
-                          <option value="">
-                            <em></em>
-                          </option>
-                          {colorsList?.map((color, index) => {
-                            return (
-                              <option key={index} value={color}>
-                                {" "}
-                                {capitalize(color)}
-                              </option>
-                            );
-                          })}
+                          <option value=""></option>
+                          {colorsList?.map((color, index) => (
+                            <option key={index} value={color}>
+                              {capitalize(color)}
+                            </option>
+                          ))}
                         </NativeSelectInput>
                       </>
                     )}
@@ -542,17 +515,12 @@ const AddEditProductPage = () => {
                             },
                           })}
                         >
-                          <option value="">
-                            <em></em>
-                          </option>
-                          {["Men", "Women"].map((type, index) => {
-                            return (
-                              <option key={index} value={type}>
-                                {" "}
-                                {capitalize(type)}
-                              </option>
-                            );
-                          })}
+                          <option value=""></option>
+                          {["Men", "Women"].map((type, index) => (
+                            <option key={index} value={type}>
+                              {capitalize(type)}
+                            </option>
+                          ))}
                         </NativeSelectInput>
                       </>
                     )}
@@ -589,9 +557,7 @@ const AddEditProductPage = () => {
                               required: "Product Category is required",
                             })}
                           >
-                            <option value="">
-                              <em></em>
-                            </option>
+                            <option value=""></option>
                             {productType === "Men" &&
                               menCategoryLabel.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
@@ -639,10 +605,8 @@ const AddEditProductPage = () => {
                             required: "Product Branch is required",
                           })}
                         >
-                          <option value="">
-                            <em></em>
-                          </option>
-                          {branchList.map((branch) => (
+                          <option value=""></option>
+                          {vendorShopDetails?.branch_info?.map((branch) => (
                             <option key={branch.id} value={branch.id}>
                               {branch.branch_address +
                                 " " +
@@ -702,86 +666,82 @@ const AddEditProductPage = () => {
             <div className="grid grid-cols-12 gap-6">
               {["One", "Two", "Three"]?.map((item, index) => {
                 return (
-                  <>
-                    <div
-                      key={index}
-                      className={`${
-                        index === 0
-                          ? "col-start-2 lg:col-start-1"
-                          : "col-start-2"
-                      } col-span-10 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3 2xl:col-span-2 w-full cursor-pointer h-[300px] sm:h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center`}
-                      onClick={() => {
-                        productImages[index] === undefined
-                          ? (setSelectImgIndex(index),
-                            document
-                              .getElementById(`productImage${item}`)
-                              .click())
-                          : "";
-                      }}
-                    >
-                      {productImages[index] ? (
-                        <div className="w-full relative h-full">
-                          <img
-                            src={productImages[index] ?? ""}
-                            alt="Uploaded Image"
-                            className="object-cover h-full w-full rounded-xl"
+                  <div
+                    key={index}
+                    className={`${
+                      index === 0 ? "col-start-2 lg:col-start-1" : "col-start-2"
+                    } col-span-10 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-3 2xl:col-span-2 w-full cursor-pointer h-[300px] sm:h-[300px] border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center`}
+                    onClick={() => {
+                      productImages[index] === undefined
+                        ? (setSelectImgIndex(index),
+                          document
+                            .getElementById(`productImage${item}`)
+                            .click())
+                        : "";
+                    }}
+                  >
+                    {productImages[index] ? (
+                      <div className="w-full relative h-full">
+                        <img
+                          src={productImages[index] ?? ""}
+                          alt="Uploaded Image"
+                          className="object-cover h-full w-full rounded-xl"
+                        />
+                        <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
+                          <EditIcon
+                            sx={{
+                              fontSize: 18,
+                              "@media (max-width: 648px)": {
+                                fontSize: 16,
+                              },
+                            }}
+                            onClick={() => {
+                              setSelectImgIndex(index),
+                                document
+                                  .getElementById(`productImage${item}`)
+                                  .click();
+                            }}
                           />
-                          <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
-                            <EditIcon
-                              sx={{
-                                fontSize: 18,
-                                "@media (max-width: 648px)": {
-                                  fontSize: 16,
-                                },
-                              }}
-                              onClick={() => {
-                                setSelectImgIndex(index),
-                                  document
-                                    .getElementById(`productImage${item}`)
-                                    .click();
-                              }}
-                            />
-                          </span>
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-4 px-3 py-3">
+                        <span className="flex justify-center">
+                          <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
+                        </span>
+                        <div className="flex flex-col gap-1">
+                          <p className="sm:text-base  font-semibold text-sm text-gray-400 text-center">
+                            <span className="text-colorGreen">
+                              Click to Upload{" "}
+                            </span>
+                            {item === "One"
+                              ? "Front Image"
+                              : item === "Two"
+                              ? "Back Image"
+                              : "Side Image"}
+                          </p>
+                          <p className="sm:text-sm text-xs text-gray-400 text-center">
+                            We Support JPG & PNG
+                          </p>
                         </div>
-                      ) : (
-                        <div className="flex flex-col gap-4 px-3 py-3">
-                          <span className="flex justify-center">
-                            <TbPhotoPlus className="w-14 h-14 text-gray-400 hover:text-colorGreen" />
-                          </span>
-                          <div className="flex flex-col gap-1">
-                            <p className="sm:text-base  font-semibold text-sm text-gray-400 text-center">
-                              <span className="text-colorGreen">
-                                Click to Upload{" "}
-                              </span>
-                              {item === "One"
-                                ? "Front Image"
-                                : item === "Two"
-                                ? "Back Image"
-                                : "Side Image"}
-                            </p>
-                            <p className="sm:text-sm text-xs text-gray-400 text-center">
-                              We Support JPG & PNG
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      <input
-                        id={`productImage${item}`}
-                        name="productImages"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        {...register("productImages", {
-                          required: !ProductImgError[index]
-                            ? "Product All Image is required"
-                            : false,
-                          onChange: (e) => {
-                            createProductImagesChange(e);
-                          },
-                        })}
-                      />
-                    </div>
-                  </>
+                      </div>
+                    )}
+                    <input
+                      id={`productImage${item}`}
+                      name="productImages"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      {...register("productImages", {
+                        required: !ProductImgError[index]
+                          ? "Product All Image is required"
+                          : false,
+                        onChange: (e) => {
+                          createProductImagesChange(e);
+                        },
+                      })}
+                    />
+                  </div>
                 );
               })}
             </div>
@@ -872,9 +832,10 @@ const AddEditProductPage = () => {
         <div className="flex justify-end sm:gap-4 gap-2 mb-8">
           <button
             className="bg-white rounded-[4px] sm:py-2 sm:px-4 sm:text-xl text-sm px-8 py-2 border"
-            onClick={() =>
-              router.push(`/vendor/shop/${vendorShopDetails?.id}/`)
-            }
+            onClick={() => {
+              setAddEditProductShow(false);
+              setEditableProductData();
+            }}
           >
             Cancel
           </button>
@@ -891,7 +852,7 @@ const AddEditProductPage = () => {
                 sx={{ color: "white", mr: 1 }}
               />
             )}
-            {editProductId === undefined ? "Submit" : "Update"}
+            {editableProductData ? "Update" : "Submit"}
           </button>
         </div>
       </div>

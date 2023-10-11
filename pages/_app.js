@@ -97,7 +97,6 @@ function MyApp({ Component, pageProps }) {
           <Provider store={store}>
             {isLogoLoading && (
               <div className="fixed flex justify-center z-10 bg-[#0000006e] w-full h-full">
-                {/* <div className="absolute flex flex-col justify-center place-items-center -mt-16  h-screen bg-[#0000003b]"> */}
                 <div className="flex flex-col justify-center items-center">
                   <div className="flex flex-col justify-center items-center bg-[#ffffff41] p-5 rounded-xl">
                     <Image
@@ -105,7 +104,6 @@ function MyApp({ Component, pageProps }) {
                       alt="AppLogo"
                       width={80}
                       height={80}
-                      // className="animate__animated animate__bounce"
                       className="animate-bounce "
                     />
                     <div className="text-[24px] font-bold text-black tracking-wider font-Nova ">
@@ -117,20 +115,13 @@ function MyApp({ Component, pageProps }) {
             )}
             {!router.pathname.includes("/auth/") && <Header />}
             {isLoading && <div className="h-screen" />}
-            <div
-            // onLoad={() => {
-            //   setIsLoading(false);
-            // }}
-            >
+            <div>
               {router.pathname.includes("/vendor/") &&
-              router.pathname !== "/vendor/shop-setup" &&
-              !router.pathname.includes("/addEditProduct") ? (
+              router.pathname !== "/vendor/shop-setup" ? (
                 <VendorCommonLayout>
                   <Component {...pageProps} />
                 </VendorCommonLayout>
-              ) : router.pathname === "/auth/user-type" ||
-                router.pathname === "/auth/signup" ||
-                router.pathname === "/auth/signin" ? (
+              ) : router.pathname.includes("/auth/") ? (
                 <AuthCommonLayout>
                   <Component {...pageProps} />
                 </AuthCommonLayout>

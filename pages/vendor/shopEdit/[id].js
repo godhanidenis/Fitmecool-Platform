@@ -23,16 +23,10 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm } from "react-hook-form";
-import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
 import { useDispatch, useSelector } from "react-redux";
 import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  getBranchLists,
-  getSingleBranchDetails,
-} from "../../../graphql/queries/branchListsQueries";
 import { deleteBranch, updateBranch } from "../../../graphql/mutations/branch";
 import { createBranch } from "../../../graphql/mutations/branch";
 import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
@@ -50,6 +44,7 @@ import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
 import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import { HoursModal } from "../shop-setup";
+import { useRouter } from "next/router";
 
 const style = {
   position: "absolute",
@@ -70,7 +65,6 @@ const ShopEdit = () => {
   const [sameAsOwner, setSameAsOwner] = useState("False");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
   const [managerDetails, setManagerDetails] = useState("Show");
-  const [branchDetails, setBranchDetails] = useState({});
 
   const [hours, setHours] = useState([
     { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
@@ -120,8 +114,6 @@ const ShopEdit = () => {
     reset: shopLayoutReset,
   } = useForm();
 
-  const [shopOwnerId, setShopOwnerId] = useState("");
-
   const [ownerLoading, setOwnerLoading] = useState(false);
   const [shopLoading, setShopLoading] = useState(false);
   const [mainBranchLoading, setMainBranchLoading] = useState(false);
@@ -138,7 +130,7 @@ const ShopEdit = () => {
 
   const [branchDeleteModalOpen, setBranchDeleteModalOpen] = useState(false);
   const [deleteBranchId, setDeleteBranchId] = useState();
-  const [editSubBranchId, setEditSubBranchId] = useState();
+  const [editableBranchData, setEditableBranchData] = useState();
 
   const [addEditSubBranchShow, setAddEditSubBranchShow] = useState(false);
 
@@ -162,6 +154,9 @@ const ShopEdit = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [value, setValue] = useState(0);
+  const router = useRouter();
+
+  const { id } = router.query;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -174,21 +169,22 @@ const ShopEdit = () => {
     setManagerDetails(option);
   };
 
-  if (Object.keys(branchDetails).length === 0) {
-    subBranchList.forEach((item) => {
-      setBranchDetails((prevState) => ({
-        ...prevState,
-        [item.id]: true,
-      }));
-    });
-  }
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
   useEffect(() => {
+    if (id && vendorShopDetails?.id) {
+      if (id !== vendorShopDetails?.id) {
+        router.push("/vendor/dashboard");
+      }
+    }
+  }, [id, router, vendorShopDetails?.id]);
+
+  useEffect(() => {
     ownerInfoReset();
-  }, [ownerInfoReset, value]);
+    mainBranchInfoReset();
+  }, [mainBranchInfoReset, ownerInfoReset, value]);
 
   const srcToFile = async (src, fileName, mimeType) => {
     try {
@@ -233,7 +229,6 @@ const ShopEdit = () => {
     while (arr.length < targetLength) {
       arr.push({ links: "none" });
     }
-
     return arr;
   }
 
@@ -270,100 +265,152 @@ const ShopEdit = () => {
     }
   };
 
-  const getAllSubBranchList = () => {
-    getBranchLists().then((res) => {
-      const subBranches = res.data.branchList
-        .filter((branch) => branch.shop_id === userProfile?.userCreatedShopId)
-        .filter((itm) => itm.branch_type === "sub");
-      setSubBranchList(subBranches);
-    });
+  const updateVendorShopDetailStore = () => {
+    dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
   };
 
   useEffect(() => {
-    if (sameAsOwner === "True") {
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        ownerInfoGetValue("first_name")
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        ownerInfoGetValue("last_name")
-      );
-      mainBranchInfoSetValue(
-        "manager_user_email",
-        ownerInfoGetValue("user_email")
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        ownerInfoGetValue("user_contact")
-      );
+    if (vendorShopDetails?.shop_type === "shop") {
+      setIndividual(false);
     } else {
+      setIndividual(true);
+    }
+  }, [vendorShopDetails]);
+
+  useEffect(() => {
+    if (vendorShopDetails && value === 2 && mainBranch) {
+      if (sameAsOwner === "True") {
+        mainBranchInfoSetValue(
+          "manager_first_name",
+          vendorShopDetails?.ownerInfo?.owner_firstName
+        );
+        mainBranchInfoSetValue(
+          "manager_last_name",
+          vendorShopDetails?.ownerInfo?.owner_lastName
+        );
+        mainBranchInfoSetValue(
+          "manager_user_email",
+          vendorShopDetails?.ownerInfo?.owner_email
+        );
+        mainBranchInfoSetValue(
+          "manager_user_contact",
+          vendorShopDetails?.ownerInfo?.owner_contact
+        );
+      } else {
+        mainBranchInfoSetValue("address", mainBranch?.branch_address);
+        mainBranchInfoSetValue("pin_code", mainBranch?.branch_pinCode);
+
+        mainBranchInfoSetValue(
+          "manager_first_name",
+          mainBranch?.manager_name.split(" ")[0]
+        );
+        mainBranchInfoSetValue(
+          "manager_last_name",
+          mainBranch?.manager_name.split(" ")[1]
+        );
+        mainBranchInfoSetValue(
+          "manager_user_contact",
+          mainBranch?.manager_contact
+        );
+        mainBranchInfoSetValue("city", mainBranch?.branch_city);
+        mainBranchInfoSetValue("manager_user_email", mainBranch?.manager_email);
+      }
+    }
+  }, [
+    mainBranch,
+    mainBranchInfoSetValue,
+    sameAsOwner,
+    value,
+    vendorShopDetails,
+  ]);
+
+  useEffect(() => {
+    if (vendorShopDetails && value === 0) {
+      ownerInfoSetValue(
+        "first_name",
+        vendorShopDetails?.ownerInfo?.owner_firstName
+      );
+      ownerInfoSetValue(
+        "last_name",
+        vendorShopDetails?.ownerInfo?.owner_lastName
+      );
+      ownerInfoSetValue(
+        "user_email",
+        vendorShopDetails?.ownerInfo?.owner_email
+      );
+      ownerInfoSetValue(
+        "user_contact",
+        vendorShopDetails?.ownerInfo?.owner_contact
+      );
+    }
+    if (vendorShopDetails && value === 1) {
+      shopInfoSetValue("shop_name", vendorShopDetails?.shop_name);
+      shopInfoSetValue("shop_email", vendorShopDetails?.shop_email);
+      shopInfoSetValue(
+        "facebook_link",
+        vendorShopDetails?.shop_social_link?.facebook
+      );
+      shopInfoSetValue(
+        "instagram_link",
+        vendorShopDetails?.shop_social_link?.instagram
+      );
+      shopInfoSetValue(
+        "personal_website",
+        vendorShopDetails?.shop_social_link?.website
+      );
+
+      vendorShopDetails?.shop_time?.map((time) => {
+        hours.map((itm) => {
+          if (time.is_24Hours_open) {
+            if (itm.key === time.week) {
+              itm.value = ["Open 24 hours"];
+            }
+          } else if (time.is_close) {
+            if (itm.key === time.week) {
+              itm.value = ["Closed"];
+            }
+          } else {
+            if (itm.key === time.week) {
+              itm.value = [`${time.open_time} - ${time.close_time}`];
+            }
+          }
+
+          return itm;
+        });
+        setHours(hours);
+      });
+    }
+
+    if (vendorShopDetails && value === 2) {
       const mainBranches = vendorShopDetails?.branch_info?.find(
         (itm) => itm.branch_type === "main"
       );
       setMainBranch(mainBranches);
 
+      const subBranches = vendorShopDetails?.branch_info?.filter(
+        (itm) => itm.branch_type === "sub"
+      );
+      setSubBranchList(subBranches);
+
+      if (mainBranches?.same_as === "owner") {
+        setSameAsOwner("True");
+      } else {
+        setSameAsOwner("False");
+      }
+
       mainBranchInfoSetValue("address", mainBranches?.branch_address);
       mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
-
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        mainBranches?.manager_name.split(" ")[0]
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        mainBranches?.manager_name.split(" ")[1]
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        mainBranches?.manager_contact
-      );
       mainBranchInfoSetValue("city", mainBranches?.branch_city);
-      mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
     }
-  }, [
-    sameAsOwner,
-    mainBranchInfoSetValue,
-    ownerInfoGetValue,
-    vendorShopDetails?.branch_info,
-  ]);
 
-  useEffect(() => {
-    if (userProfile?.userCreatedShopId) {
-      dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
-    }
-  }, [dispatch, userProfile?.userCreatedShopId, value]);
-  useEffect(() => {
-    if (userProfile?.userCreatedShopId) {
-      getAllSubBranchList();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProfile?.userCreatedShopId]);
-
-  useEffect(() => {
-    if (userProfile?.userCreatedShopId) {
-      getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
-        (ownerRes) => {
-          setShopOwnerId(ownerRes?.data?.shopOwner?.id);
-          ownerInfoSetValue(
-            "first_name",
-            ownerRes?.data?.shopOwner?.owner_firstName
-          );
-          ownerInfoSetValue(
-            "last_name",
-            ownerRes?.data?.shopOwner?.owner_lastName
-          );
-          ownerInfoSetValue(
-            "user_email",
-            ownerRes?.data?.shopOwner?.owner_email
-          );
-          ownerInfoSetValue(
-            "user_contact",
-            ownerRes?.data?.shopOwner?.owner_contact
-          );
-        }
+    if (vendorShopDetails && !individual && value === 3) {
+      const subBranches = vendorShopDetails?.branch_info?.filter(
+        (itm) => itm.branch_type === "sub"
       );
+      setSubBranchList(subBranches);
+    }
 
+    if (vendorShopDetails && individual ? value === 3 : value === 4) {
       {
         vendorShopDetails?.shop_logo &&
           srcToFile(
@@ -386,7 +433,6 @@ const ShopEdit = () => {
             setUploadShopBackground(file);
           });
       }
-
       setShopBackground(vendorShopDetails?.shop_cover_image);
 
       vendorShopDetails?.shop_images?.map((img) => {
@@ -396,7 +442,6 @@ const ShopEdit = () => {
           ) {
             console.log("uploadShopImages00000000", file);
             setGetUploadShopImages((old) => [...old, file]);
-            // setUploadShopImages((old) => [...old, file]);
           });
       });
       setShopImages(vendorShopDetails?.shop_images);
@@ -409,7 +454,6 @@ const ShopEdit = () => {
             }
           );
       }
-
       vendorShopDetails?.shop_video &&
         setShopVideo(vendorShopDetails?.shop_video);
 
@@ -423,90 +467,31 @@ const ShopEdit = () => {
 
       vendorShopDetails?.shop_video &&
         setShopLayoutAllMediaVideos(vendorShopDetails?.shop_video);
-
-      vendorShopDetails?.shop_time?.map((time) => {
-        hours.map((itm) => {
-          if (time.is_24Hours_open) {
-            if (itm.key === time.week) {
-              itm.value = ["Open 24 hours"];
-            }
-          } else if (time.is_close) {
-            if (itm.key === time.week) {
-              itm.value = ["Closed"];
-            }
-          } else {
-            if (itm.key === time.week) {
-              itm.value = [`${time.open_time} - ${time.close_time}`];
-            }
-          }
-
-          return itm;
-        });
-        setHours(hours);
-      });
-
-      if (vendorShopDetails?.shop_type === "shop") {
-        setIndividual(false);
-      } else {
-        setIndividual(true);
-      }
-      shopInfoSetValue("shop_name", vendorShopDetails?.shop_name);
-      shopInfoSetValue("shop_email", vendorShopDetails?.shop_email);
-      shopInfoSetValue(
-        "facebook_link",
-        vendorShopDetails?.shop_social_link?.facebook
-      );
-      shopInfoSetValue(
-        "instagram_link",
-        vendorShopDetails?.shop_social_link?.instagram
-      );
-      shopInfoSetValue(
-        "personal_website",
-        vendorShopDetails?.shop_social_link?.website
-      );
-
-      const mainBranches = vendorShopDetails?.branch_info?.find(
-        (itm) => itm.branch_type === "main"
-      );
-      setMainBranch(mainBranches);
-
-      mainBranchInfoSetValue("address", mainBranches?.branch_address);
-      mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
-
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        mainBranches?.manager_name.split(" ")[0]
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        mainBranches?.manager_name.split(" ")[1]
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        mainBranches?.manager_contact
-      );
-      mainBranchInfoSetValue("city", mainBranches?.branch_city);
-      mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
     }
   }, [
     hours,
-    userProfile?.userCreatedShopId,
+    individual,
     mainBranchInfoSetValue,
     ownerInfoSetValue,
     shopInfoSetValue,
-    vendorShopDetails,
     value,
+    vendorShopDetails,
   ]);
 
   useEffect(() => {
-    setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
-  }, [getUploadShopImages, getUploadShopImages.length]);
+    if (vendorShopDetails && individual ? value === 3 : value === 4)
+      setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
+  }, [getUploadShopImages, individual, value, vendorShopDetails]);
+
+  useEffect(() => {
+    setAddEditSubBranchShow(false);
+  }, [value]);
 
   const ownerInfoOnSubmit = (data) => {
     setOwnerLoading(true);
     shopUpdate({
       ownerInfo: {
-        id: shopOwnerId,
+        id: vendorShopDetails?.ownerInfo?.id,
         owner_firstName: data.first_name,
         owner_lastName: data.last_name,
         owner_email: data.user_email,
@@ -517,7 +502,9 @@ const ShopEdit = () => {
         toast.success(res.data.updateShop.message, {
           theme: "colored",
         });
+
         setOwnerLoading(false);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setOwnerLoading(false);
@@ -576,6 +563,7 @@ const ShopEdit = () => {
           theme: "colored",
         });
         setShopLoading(false);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setShopLoading(false);
@@ -595,6 +583,7 @@ const ShopEdit = () => {
           branch_address: data.address,
           branch_pinCode: data.pin_code,
           branch_city: data.city,
+          same_as: sameAsOwner === "True" ? "owner" : "none",
           manager_name: data.manager_first_name + " " + data.manager_last_name,
           manager_contact: data.manager_user_contact,
           manager_email: data.manager_user_email,
@@ -607,6 +596,7 @@ const ShopEdit = () => {
           theme: "colored",
         });
         setMainBranchLoading(false);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setMainBranchLoading(false);
@@ -617,10 +607,6 @@ const ShopEdit = () => {
   const mainBranchInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
-  console.log(
-    "uploadShopLogo :>> ",
-    shopLayoutAllMediaImages.filter((itm) => itm !== "" && itm !== null)
-  );
   const shopLayoutOnSubmit = async (data) => {
     console.log("data1 :>> ", data);
     setShopLayoutLoading(true);
@@ -679,7 +665,7 @@ const ShopEdit = () => {
           theme: "colored",
         });
         setShopLayoutLoading(false);
-        console.log("data1 res :>> ", res);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setShopLayoutLoading(false);
@@ -919,9 +905,7 @@ const ShopEdit = () => {
                         isRequired={false}
                         placeholder="Personal Website Link"
                         formValue={{
-                          ...shopInfoRegister("personal_website", {
-                            // required: "Personal Website is required",
-                          }),
+                          ...shopInfoRegister("personal_website", {}),
                         }}
                       />
                       <div className="mt-2">
@@ -941,9 +925,7 @@ const ShopEdit = () => {
                           isRequired={false}
                           placeholder="Your facebook link"
                           formValue={{
-                            ...shopInfoRegister("facebook_link", {
-                              // required: "Facebook Link is required",
-                            }),
+                            ...shopInfoRegister("facebook_link", {}),
                           }}
                         />
                         <div className="mt-2">
@@ -962,9 +944,7 @@ const ShopEdit = () => {
                           isRequired={false}
                           placeholder="Your instagram link"
                           formValue={{
-                            ...shopInfoRegister("instagram_link", {
-                              // required: "Instagram Link is required",
-                            }),
+                            ...shopInfoRegister("instagram_link", {}),
                           }}
                         />
                         <div className="mt-2">
@@ -1402,7 +1382,7 @@ const ShopEdit = () => {
 
           {!individual && (
             <TabPanel value={value} index={3}>
-              {!individual && !addEditSubBranchShow && (
+              {!addEditSubBranchShow && (
                 <div className="flex justify-end mt-4">
                   <button
                     onClick={() => setAddEditSubBranchShow(true)}
@@ -1421,23 +1401,20 @@ const ShopEdit = () => {
 
               {addEditSubBranchShow ? (
                 <AddEditSubBranch
-                  addEditSubBranchShow={addEditSubBranchShow}
                   setAddEditSubBranchShow={setAddEditSubBranchShow}
-                  getAllSubBranchList={getAllSubBranchList}
+                  updateVendorShopDetailStore={updateVendorShopDetailStore}
                   ShopId={userProfile?.userCreatedShopId}
-                  editSubBranchId={editSubBranchId}
-                  setEditSubBranchId={setEditSubBranchId}
-                  mainBranchInfoGetValue={mainBranchInfoGetValue}
-                  ownerInfoGetValue={ownerInfoGetValue}
+                  editableBranchData={editableBranchData}
+                  setEditableBranchData={setEditableBranchData}
                 />
               ) : (
                 <>
                   <div className="mt-4">
                     <VendorBranchTable
                       subBranchList={subBranchList}
-                      getAllSubBranchList={getAllSubBranchList}
+                      updateVendorShopDetailStore={updateVendorShopDetailStore}
                       setAddEditSubBranchShow={setAddEditSubBranchShow}
-                      setEditSubBranchId={setEditSubBranchId}
+                      setEditableBranchData={setEditableBranchData}
                       setBranchDeleteModalOpen={setBranchDeleteModalOpen}
                       setDeleteBranchId={setDeleteBranchId}
                     />
@@ -1514,8 +1491,6 @@ const ShopEdit = () => {
                         accept="image/*"
                         className="hidden"
                         {...shopLayoutRegister("shopLogo", {
-                          // required:
-                          //   shopLogo === "" ? "shopLogo is required" : false,
                           onChange: (e) => {
                             if (e.target.files && e.target.files.length > 0) {
                               onShopLogoPreviewImage(e);
@@ -1524,13 +1499,6 @@ const ShopEdit = () => {
                         })}
                       />
                     </div>
-                    {/* <div className="mt-2">
-                      {shopLayoutErrors.shopLogo && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {shopLayoutErrors.shopLogo?.message}
-                        </span>
-                      )}
-                    </div> */}
                   </div>
 
                   <div className="flex flex-col mt-6 sm:mt-6 lg:mt-0 items-center justify-center">
@@ -1597,10 +1565,6 @@ const ShopEdit = () => {
                         accept="image/*"
                         className="hidden"
                         {...shopLayoutRegister("shopBackground", {
-                          // required:
-                          //   shopBackground === ""
-                          //     ? "shopBackground is required"
-                          //     : false,
                           onChange: (e) => {
                             if (e.target.files && e.target.files.length > 0) {
                               onShopBackgroundPreviewImage(e);
@@ -1609,13 +1573,6 @@ const ShopEdit = () => {
                         })}
                       />
                     </div>
-                    {/* <div className="mt-2">
-                      {shopLayoutErrors.shopBackground && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {shopLayoutErrors.shopBackground?.message}
-                        </span>
-                      )}
-                    </div> */}
                   </div>
                 </div>
 
@@ -1701,10 +1658,6 @@ const ShopEdit = () => {
                                   multiple
                                   className="hidden"
                                   {...shopLayoutRegister("shopImages", {
-                                    // required:
-                                    //   shopImages?.length === 0
-                                    //     ? "Shop Image is required"
-                                    //     : false,
                                     onChange: (e) => {
                                       updateShopImagesChange(e);
                                     },
@@ -1727,13 +1680,6 @@ const ShopEdit = () => {
                           </div>
                         ))}
                   </div>
-                  {/* <div className="mt-2">
-                    {shopLayoutErrors.shopImages && (
-                      <span style={{ color: "red" }} className="-mb-6">
-                        {shopLayoutErrors.shopImages?.message}
-                      </span>
-                    )}
-                  </div> */}
                 </div>
                 <div className="w-full col-span-3">
                   <div className="text-base sm:text-xl font-semibold mb-3 text-black flex justify-center">
@@ -1858,7 +1804,7 @@ const ShopEdit = () => {
               toast.success(res.data.deleteBranch, {
                 theme: "colored",
               });
-              getAllSubBranchList();
+              updateVendorShopDetailStore();
             },
             (error) => {
               toast.error(error.message, { theme: "colored" });
@@ -2208,12 +2154,10 @@ const DaysTimeModal = ({
 
 const AddEditSubBranch = ({
   setAddEditSubBranchShow,
-  getAllSubBranchList,
+  updateVendorShopDetailStore,
   ShopId,
-  editSubBranchId,
-  setEditSubBranchId,
-  ownerInfoGetValue,
-  mainBranchInfoGetValue,
+  editableBranchData,
+  setEditableBranchData,
 }) => {
   const [managerValue, setManagerValue] = useState("");
 
@@ -2226,6 +2170,10 @@ const AddEditSubBranch = ({
   const [subManagerEmail, setSubManagerEmail] = useState("");
   const [subManagerPhone, setSubManagerPhone] = useState("");
 
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+
+  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState({
     subManagerAddressError: "",
     subManagerCityError: "",
@@ -2236,46 +2184,63 @@ const AddEditSubBranch = ({
     subManagerPhoneError: "",
   });
 
+  const mainBranches = vendorShopDetails?.branch_info?.find(
+    (itm) => itm.branch_type === "main"
+  );
+
   useEffect(() => {
     if (managerValue === "Same as owner") {
-      setSubManagerFirstName(ownerInfoGetValue("first_name"));
-      setSubManagerLastName(ownerInfoGetValue("last_name"));
-      setSubManagerEmail(ownerInfoGetValue("user_email"));
-      setSubManagerPhone(ownerInfoGetValue("user_contact"));
+      setSubManagerFirstName(vendorShopDetails?.ownerInfo?.owner_firstName);
+      setSubManagerLastName(vendorShopDetails?.ownerInfo?.owner_lastName);
+      setSubManagerEmail(vendorShopDetails?.ownerInfo?.owner_email);
+      setSubManagerPhone(vendorShopDetails?.ownerInfo?.owner_contact);
       error.subManagerFirstNameError = "";
       error.subManagerLastNameError = "";
       error.subManagerEmailError = "";
       error.subManagerPhoneError = "";
     } else if (managerValue === "same as main branch manager") {
-      setSubManagerFirstName(mainBranchInfoGetValue("manager_first_name"));
-      setSubManagerLastName(mainBranchInfoGetValue("manager_last_name"));
-      setSubManagerEmail(mainBranchInfoGetValue("manager_user_email"));
-      setSubManagerPhone(mainBranchInfoGetValue("manager_user_contact"));
+      setSubManagerFirstName(mainBranches?.manager_name.split(" ")[0]);
+      setSubManagerLastName(mainBranches?.manager_name.split(" ")[1]);
+      setSubManagerEmail(mainBranches?.manager_email);
+      setSubManagerPhone(mainBranches?.manager_contact);
       error.subManagerFirstNameError = "";
       error.subManagerLastNameError = "";
       error.subManagerEmailError = "";
       error.subManagerPhoneError = "";
     } else {
-      setSubManagerFirstName("");
-      setSubManagerLastName("");
-      setSubManagerEmail("");
-      setSubManagerPhone("");
+      if (editableBranchData) {
+        setSubManagerFirstName(editableBranchData?.manager_name.split(" ")[0]);
+        setSubManagerLastName(editableBranchData?.manager_name.split(" ")[1]);
+        setSubManagerEmail(editableBranchData?.manager_email);
+        setSubManagerPhone(editableBranchData?.manager_contact);
+      } else {
+        setSubManagerFirstName("");
+        setSubManagerLastName("");
+        setSubManagerEmail("");
+        setSubManagerPhone("");
+      }
     }
-  }, [error, mainBranchInfoGetValue, managerValue, ownerInfoGetValue]);
+  }, [
+    editableBranchData,
+    error,
+    mainBranches,
+    managerValue,
+    vendorShopDetails,
+  ]);
 
   useEffect(() => {
-    if (editSubBranchId !== undefined) {
-      getSingleBranchDetails({ id: editSubBranchId }).then((res) => {
-        setSubManagerAddress(res.data.branch.branch_address);
-        setSubManagerCity(res.data.branch.branch_city);
-        setSubManagerPinCode(res.data.branch.branch_pinCode);
-        setSubManagerFirstName(res.data.branch.manager_name.split(" ")[0]);
-        setSubManagerLastName(res.data.branch.manager_name.split(" ")[1]);
-        setSubManagerEmail(res.data.branch.manager_email);
-        setSubManagerPhone(res.data.branch.manager_contact);
-      });
+    if (editableBranchData) {
+      setSubManagerAddress(editableBranchData.branch_address);
+      setSubManagerCity(editableBranchData.branch_city);
+      setSubManagerPinCode(editableBranchData.branch_pinCode);
+      setManagerValue(
+        (editableBranchData?.same_as === "owner" && "Same as owner") ||
+          (editableBranchData?.same_as === "main_branch_manager" &&
+            "same as main branch manager") ||
+          ""
+      );
     }
-  }, [editSubBranchId]);
+  }, [editableBranchData]);
 
   const subBranchSubmit = () => {
     let allError = {};
@@ -2335,37 +2300,19 @@ const AddEditSubBranch = ({
     ) {
       setError(allError);
     } else {
-      if (editSubBranchId === undefined) {
-        createBranch({
-          branchInfo: {
-            branch_address: subManagerAddress,
-            branch_city: subManagerCity,
-            branch_pinCode: subManagerPinCode,
-            manager_name: subManagerFirstName + " " + subManagerLastName,
-            manager_contact: subManagerPhone,
-            manager_email: subManagerEmail,
-            branch_type: "sub",
-            shop_id: ShopId,
-          },
-        }).then(
-          (res) => {
-            toast.success(res.data.createBranch.message, {
-              theme: "colored",
-            });
-            getAllSubBranchList();
-            handleSubBranchSectionClose();
-          },
-          (error) => {
-            toast.error(error.message, { theme: "colored" });
-          }
-        );
-      } else {
+      setLoading(true);
+      if (editableBranchData) {
         updateBranch({
-          id: editSubBranchId,
+          id: editableBranchData?.id,
           branchInfo: {
             branch_address: subManagerAddress,
             branch_city: subManagerCity,
             branch_pinCode: subManagerPinCode,
+            same_as:
+              (managerValue === "Same as owner" && "owner") ||
+              (managerValue === "same as main branch manager" &&
+                "main_branch_manager") ||
+              "none",
             manager_name: subManagerFirstName + " " + subManagerLastName,
             manager_contact: subManagerPhone,
             manager_email: subManagerEmail,
@@ -2377,11 +2324,44 @@ const AddEditSubBranch = ({
             toast.success(res.data.updateBranch.message, {
               theme: "colored",
             });
-            getAllSubBranchList();
+            setLoading(false);
+            updateVendorShopDetailStore();
             handleSubBranchSectionClose();
           },
           (error) => {
             toast.error(error.message, { theme: "colored" });
+            setLoading(false);
+          }
+        );
+      } else {
+        createBranch({
+          branchInfo: {
+            branch_address: subManagerAddress,
+            branch_city: subManagerCity,
+            branch_pinCode: subManagerPinCode,
+            same_as:
+              (managerValue === "Same as owner" && "owner") ||
+              (managerValue === "same as main branch manager" &&
+                "main_branch_manager") ||
+              "none",
+            manager_name: subManagerFirstName + " " + subManagerLastName,
+            manager_contact: subManagerPhone,
+            manager_email: subManagerEmail,
+            branch_type: "sub",
+            shop_id: ShopId,
+          },
+        }).then(
+          (res) => {
+            toast.success(res.data.createBranch.message, {
+              theme: "colored",
+            });
+            updateVendorShopDetailStore();
+            handleSubBranchSectionClose();
+            setLoading(false);
+          },
+          (error) => {
+            toast.error(error.message, { theme: "colored" });
+            setLoading(false);
           }
         );
       }
@@ -2398,7 +2378,8 @@ const AddEditSubBranch = ({
     setSubManagerEmail("");
     setManagerValue("");
     setSubManagerPhone("");
-    setEditSubBranchId();
+    setEditableBranchData();
+    setLoading(false);
     error.subManagerFirstNameError = "";
     error.subManagerLastNameError = "";
     error.subManagerEmailError = "";
@@ -2421,7 +2402,7 @@ const AddEditSubBranch = ({
             onClick={handleSubBranchSectionClose}
           />
           <p className="flex items-center text-colorBlack text-xl font-semibold ml-2">
-            {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
+            {editableBranchData ? "Update" : "Add"} Sub Branch
           </p>
         </div>
 
@@ -2631,7 +2612,14 @@ const AddEditSubBranch = ({
             className="flex items-center capitalize text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
             onClick={subBranchSubmit}
           >
-            {editSubBranchId === undefined ? "Save" : "Update"}
+            {loading && (
+              <CircularProgress
+                size={20}
+                color="primary"
+                sx={{ color: "white", mr: 1 }}
+              />
+            )}
+            {editableBranchData ? "Update" : "Save"}
           </button>
         </div>
       </div>

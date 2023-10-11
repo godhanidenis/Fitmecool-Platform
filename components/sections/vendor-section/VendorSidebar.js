@@ -77,11 +77,12 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
               key={index}
               onClick={() => {
                 forHeader && handleMobileSidebarClick();
-                router.push(
-                  tab.label === "Shop" || tab.label === "Products"
-                    ? `${tab.path}/${vendorShopDetails?.id}`
-                    : tab.path
-                );
+
+                if (tab.label === "Shop" || tab.label === "Products") {
+                  router.push(`${tab.path}/${vendorShopDetails?.id}`);
+                } else {
+                  router.push(tab.path);
+                }
               }}
               className={`font-semibold pb-8 text-lg ${
                 selectedValue === tab.label

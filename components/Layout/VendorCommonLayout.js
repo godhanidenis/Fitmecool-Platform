@@ -4,9 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
 import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
 import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
+import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
+import { loadProductsStart } from "../../redux/ducks/product";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
+
+  const { appliedProductsFilters, sortFilters } = useSelector(
+    (state) => state.productsFiltersReducer
+  );
+
+  const { productPageSkip } = useSelector((state) => state.products);
 
   const dispatch = useDispatch();
 
@@ -15,6 +23,44 @@ const VendorCommonLayout = ({ children }) => {
       dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
+
+  const getAllProducts = () => {
+    dispatch(
+      loadProductsStart({
+        pageData: {
+          skip: productPageSkip,
+          limit: 6,
+        },
+        filter: {
+          category_id: appliedProductsFilters.categoryId.selectedValue,
+          product_color: appliedProductsFilters.productColor.selectedValue,
+        },
+        shopId: appliedProductsFilters.shopId.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
+        search: appliedProductsFilters.searchBarData.selectedValue,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (userProfile?.userCreatedShopId) {
+      dispatch(
+        changeAppliedProductsFilters({
+          key: "shopId",
+          value: {
+            selectedValue: [userProfile?.userCreatedShopId],
+          },
+        })
+      );
+    }
+  }, [dispatch, userProfile?.userCreatedShopId]);
+
+  useEffect(() => {
+    if (appliedProductsFilters.shopId.selectedValue.length > 0) {
+      getAllProducts();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
   useEffect(() => {
     if (userProfile?.subscriptionId) {

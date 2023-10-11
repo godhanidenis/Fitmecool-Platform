@@ -12,6 +12,7 @@ export const getBranchLists = async () => {
           branch_type
           flag
           id
+          same_as
           manager_contact
           manager_email
           manager_name
@@ -32,6 +33,7 @@ export const getSingleBranchDetails = async (payload) => {
         branch(id: $branchId) {
           id
           shop_id
+          same_as
           branch_address
           branch_pinCode
           branch_city
