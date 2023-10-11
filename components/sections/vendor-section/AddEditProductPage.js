@@ -752,7 +752,7 @@ const AddEditProductPage = ({
               <span className="text-[#31333e66]">( Optional )</span>
             </div>
             <div
-              className="lg:w-[30%] mt-4 lg:mt-0 w-full cursor-pointer  sm:h-[300px] h-[214px]  border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center"
+              className="lg:w-[30%] mt-4 lg:mt-0 w-full cursor-pointer sm:h-[300px] h-[214px]  border border-gray-200 hover:border-2 hover:border-colorGreen rounded-xl flex items-center justify-center"
               onClick={() => {
                 productVideo == "" &&
                   document.getElementById("productVideoId").click();
