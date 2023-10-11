@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Magnifier from "react-magnifier";
 
 import Image from "next/image";
 import {
@@ -67,7 +68,7 @@ const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
-  const [isProductImage, setIsProductImage] = useState("");
+  const [isProductImage, setIsProductImage] = useState([]);
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -140,7 +141,7 @@ const ProductDetail = ({ productDetails }) => {
   }, [dispatch]);
 
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState();
+  const [images, setImages] = useState({ src: "" });
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
@@ -189,12 +190,16 @@ const ProductDetail = ({ productDetails }) => {
     return (
       <div
         className="mx-auto mb-[24px] relative"
-        onMouseEnter={() => selectImage(itm)}
+        onMouseEnter={() => {
+          selectImage(itm);
+        }}
         key={i}
-        onClick={() => selectImage(itm)}
+        onClick={() => {
+          selectImage(itm);
+        }}
       >
         {itm ? (
-          isProductImage === itm && isShopImages ? (
+          isProductImage.includes(itm) && isShopImages ? (
             <div
               className="w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
               style={{ border: images === itm ? "2px solid #29977E" : 0 }}
@@ -211,7 +216,7 @@ const ProductDetail = ({ productDetails }) => {
                   className="rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
                   onError={() => {
                     setIsShopImages(true);
-                    setIsProductImage(itm);
+                    setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                   }}
                 />
               )}
@@ -227,7 +232,7 @@ const ProductDetail = ({ productDetails }) => {
                     className="rounded-[16px] object-cover cursor-pointer w-full h-full"
                     onError={() => {
                       setIsShopImages(true);
-                      setIsProductImage(itm);
+                      setIsProductImage(isProductImage.push(itm));
                     }}
                   />
                   <PlayCircleIcon className="!absolute !top-2 !right-2 !text-colorPrimary" />
@@ -484,11 +489,42 @@ const ProductDetail = ({ productDetails }) => {
                     <div className="p-2 pt-0">{productImages}</div>
                   </div>
                   <div className="col-span-3">
-                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] rounded-2xl">
-                      <CustomReactImageMagnify
+                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
+                      {/* <CustomReactImageMagnify
                         large={images}
                         preview={images}
-                      />
+                      /> */}
+                      {images?.type === "image" && (
+                        <Magnifier
+                          src={images?.src}
+                          mgShape="square"
+                          mgWidth={300}
+                          mgHeight={300}
+                          mgBorderWidth={0}
+                          zoomFactor={0.5}
+                          style={{
+                            // objectFit: "fill",
+                            objectFit: "cover",
+                            height: "700px",
+                            borderRadius: "16px",
+                          }}
+                        />
+                      )}
+                      {images?.type === "video" && (
+                        <video
+                          src={images?.src}
+                          alt="product-video"
+                          onError={() => {
+                            setIsShopImages(true);
+                            setIsProductImage(images);
+                          }}
+                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover"
+                          autoPlay={true}
+                          controls
+                          muted
+                          loop
+                        />
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center justify-between mt-4">
                       <div className="w-[30%]">

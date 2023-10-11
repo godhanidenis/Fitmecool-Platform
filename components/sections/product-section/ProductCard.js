@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { Avatar, Tooltip, tooltipClasses } from "@mui/material";
 import Router from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -46,12 +47,11 @@ const ProductCard = ({ product, onlyCarousal }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
 
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
-  const [isProductImagesLoaded, setProductImagesLoaded] = useState(false);
+  const [isProductImagesLoaded, setIsProductImagesLoaded] = useState(false);
   const [OpenToolTip, setOpenToolTip] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isProductImages, setIsProductImages] = useState(false);
-  const [isProductImage, setIsProductImage] = useState("");
-
+  const [isProductImage, setIsProductImage] = useState([]);
   const [photos, setPhotos] = useState([]);
 
   const shopId = product.branchInfo?.shop_id;
@@ -145,7 +145,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
             target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
             rel="noopener noreferrer"
           >
-            {isProductImage === itm && isProductImages ? (
+            {isProductImage.includes(itm) && isProductImages ? (
               <div className="w-full h-full bg-[#00000031]" />
             ) : (
               <>
@@ -157,13 +157,13 @@ const ProductCard = ({ product, onlyCarousal }) => {
                         : currentImageIndex === 0 && photos[0]?.src
                     }
                     alt={product?.product_name}
-                    className={`object-cover absolute top-0 left-0 rounded-t-lg ${
-                      isProductImagesLoaded ? "opacity-100" : "opacity-0"
-                    }`}
-                    onLoad={() => setProductImagesLoaded(true)}
+                    className={`absolute top-0 left-0 ${
+                      onlyCarousal ? `` : `rounded-t-lg`
+                    } ${isProductImagesLoaded ? "opacity-100" : "opacity-0"}`}
+                    onLoad={() => setIsProductImagesLoaded(true)}
                     onError={() => {
                       setIsProductImages(true);
-                      setIsProductImage(itm);
+                      setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
                     layout="fill"
                   />
@@ -174,9 +174,9 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     alt="product video"
                     onError={() => {
                       setIsProductImages(true);
-                      setIsProductImage(itm);
+                      setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
-                    className="h-full w-full !cursor-pointer !object-cover"
+                    className="h-full w-full !cursor-pointer !object-fill"
                     autoPlay={true}
                     controls
                     muted
@@ -203,6 +203,19 @@ const ProductCard = ({ product, onlyCarousal }) => {
     },
   }));
 
+  const CustomDot = ({ onClick, active }) => {
+    return (
+      <li className="" onClick={() => onClick()}>
+        <FiberManualRecordIcon
+          className={`${
+            active ? "!text-[#31333E]" : "!text-[#31333e33]"
+          } !w-2 lg:!w-3 !h-2 lg:!h-3 !mx-1 !cursor-pointer`}
+          fontSize="small"
+        />
+      </li>
+    );
+  };
+
   return (
     <>
       <div className="shadow-xl flex flex-col rounded-lg">
@@ -213,10 +226,12 @@ const ProductCard = ({ product, onlyCarousal }) => {
                 autoPlay={autoplay}
                 autoPlaySpeed={1500}
                 infinite
-                arrows={onlyCarousal ? true : false}
+                showDots={onlyCarousal ? true : false}
+                customDot={onlyCarousal ? <CustomDot /> : null}
+                arrows={false}
                 // removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
-                className="rounded-t-lg"
+                className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
               >
                 {productImages}
               </Carousel>
