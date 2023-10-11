@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import Magnifier from "react-magnifier";
+// import Magnifier from "react-magnifier";
 
 import Image from "next/image";
 import {
@@ -141,7 +141,7 @@ const ProductDetail = ({ productDetails }) => {
   }, [dispatch]);
 
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState({ src: "" });
+  const [images, setImages] = useState();
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
@@ -490,11 +490,11 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div className="col-span-3">
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
-                      {/* <CustomReactImageMagnify
+                      <CustomReactImageMagnify
                         large={images}
                         preview={images}
-                      /> */}
-                      {images?.type === "image" && (
+                      />
+                      {/* {images?.type === "image" && (
                         <Magnifier
                           src={images?.src}
                           mgShape="square"
@@ -524,7 +524,7 @@ const ProductDetail = ({ productDetails }) => {
                           muted
                           loop
                         />
-                      )}
+                      )} */}
                     </div>
                     <div className="flex flex-wrap items-center justify-between mt-4">
                       <div className="w-[30%]">
