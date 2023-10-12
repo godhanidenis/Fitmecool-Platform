@@ -96,7 +96,7 @@ const ShopHeaderSection = ({
                     layout="fixed"
                     width={150}
                     height={150}
-                    className="rounded-[50%]"
+                    className="rounded-[50%] object-cover object-center"
                     onLoad={() => setIsShopLogoLoaded(true)}
                     onError={() => {
                       setIsLogoImage(true);

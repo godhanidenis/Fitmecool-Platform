@@ -141,7 +141,7 @@ const ProductDetail = ({ productDetails }) => {
   }, [dispatch]);
 
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState();
+  const [images, setImages] = useState({ src: "" });
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
@@ -213,7 +213,7 @@ const ProductDetail = ({ productDetails }) => {
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,
                   }}
-                  className="rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
+                  className="object-top rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
                   onError={() => {
                     setIsShopImages(true);
                     setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
@@ -317,7 +317,7 @@ const ProductDetail = ({ productDetails }) => {
               )}
             </Link>
           </div>
-          <div className="flex flex-col md:flex-row justify-center items-start md:items-center gap-1 sm:gap-4">
+          <div className="flex flex-row justify-center items-center gap-1 sm:gap-4">
             <div className="flex flex-col justify-start">
               <Link
                 href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
@@ -333,7 +333,7 @@ const ProductDetail = ({ productDetails }) => {
                   </p>
                 </a>
               </Link>
-              <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal">
+              <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal line-clamp-1">
                 25 days ago
               </p>
             </div>
@@ -444,7 +444,7 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      <div className="bg-colorWhite font-Nova container">
+      <div className="font-Nova container">
         <div className="py-2 sm:py-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
@@ -490,10 +490,17 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div className="col-span-3">
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
-                      <CustomReactImageMagnify
-                        large={images}
-                        preview={images}
-                      />
+                      {images?.type === "image" && (
+                        <CustomReactImageMagnify
+                          // large={images}
+                          // preview={images}
+
+                          src={images.src}
+                          height="700px"
+                          width="100%"
+                          className="object-cover rounded-2xl object-top"
+                        />
+                      )}
                       {/* {images?.type === "image" && (
                         <Magnifier
                           src={images?.src}
@@ -509,7 +516,7 @@ const ProductDetail = ({ productDetails }) => {
                             borderRadius: "16px",
                           }}
                         />
-                      )}
+                      )}*/}
                       {images?.type === "video" && (
                         <video
                           src={images?.src}
@@ -518,13 +525,13 @@ const ProductDetail = ({ productDetails }) => {
                             setIsShopImages(true);
                             setIsProductImage(images);
                           }}
-                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover"
+                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover !object-top"
                           autoPlay={true}
                           controls
                           muted
                           loop
                         />
-                      )} */}
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center justify-between mt-4">
                       <div className="w-[30%]">

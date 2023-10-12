@@ -1453,7 +1453,7 @@ const ShopEdit = () => {
                               <img
                                 src={shopLogo}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-full"
+                                className="object-cover h-full w-full rounded-full object-center"
                               />
                             </div>
                           </>
@@ -1528,7 +1528,7 @@ const ShopEdit = () => {
                               <img
                                 src={shopBackground}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-xl"
+                                className="object-cover h-full w-full rounded-xl object-top"
                               />
                             </div>
                           </>
@@ -1619,7 +1619,7 @@ const ShopEdit = () => {
                                       <img
                                         src={image?.links}
                                         alt="Uploaded Image"
-                                        className="object-cover h-full w-full rounded-xl"
+                                        className="object-cover h-full w-full rounded-xl object-top"
                                       />
                                     </div>
                                   </>

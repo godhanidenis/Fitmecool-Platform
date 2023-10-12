@@ -157,7 +157,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                         : currentImageIndex === 0 && photos[0]?.src
                     }
                     alt={product?.product_name}
-                    className={`absolute top-0 left-0 ${
+                    className={`object-cover object-top absolute top-0 left-0 ${
                       onlyCarousal ? `` : `rounded-t-lg`
                     } ${isProductImagesLoaded ? "opacity-100" : "opacity-0"}`}
                     onLoad={() => setIsProductImagesLoaded(true)}
@@ -176,7 +176,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                       setIsProductImages(true);
                       setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
-                    className="h-full w-full !cursor-pointer !object-fill"
+                    className="h-full !object-cover !object-top w-full !cursor-pointer"
                     autoPlay={true}
                     controls
                     muted
@@ -385,7 +385,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                         alt="Shop Logo"
                         src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
                         layout="fill"
-                        className={`rounded-[50%] absolute top-0 left-0 ${
+                        className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
                           isShopLogoLoaded ? "opacity-100" : "opacity-0"
                         }`}
                         onLoad={() => setIsShopLogoLoaded(true)}

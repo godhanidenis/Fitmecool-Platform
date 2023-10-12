@@ -1050,6 +1050,7 @@ const ShopPage = () => {
                                   alt="Uploaded Image"
                                   layout="fill"
                                   objectFit="contain"
+                                  objectPosition="center"
                                 />
                               </div>
                             ) : (
@@ -1191,7 +1192,8 @@ const ShopPage = () => {
                                         src={shopImages[index] ?? ""}
                                         alt="Uploaded Image"
                                         layout="fill"
-                                        objectFit="contain"
+                                        objectFit="cover"
+                                        objectPosition="center top"
                                       />
                                     </div>
                                   ) : (
