@@ -138,7 +138,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
         }}
       >
         {!isProductImagesLoaded && (
-          <ImageLoadingSkeleton className="object-cover" />
+          <ImageLoadingSkeleton className="object-cover h-full" />
         )}
         <Link href={`/product/${product.id}`} passHref>
           <a
@@ -221,7 +221,16 @@ const ProductCard = ({ product, onlyCarousal }) => {
       <div className="shadow-xl flex flex-col rounded-lg">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
-            <div className="w-[100%]">
+            <div
+              className="w-[100%]"
+              style={{
+                height: onlyCarousal
+                  ? 400
+                  : themeLayout === "mobileScreen"
+                  ? 250
+                  : 300,
+              }}
+            >
               <Carousel
                 autoPlay={autoplay}
                 autoPlaySpeed={1500}
