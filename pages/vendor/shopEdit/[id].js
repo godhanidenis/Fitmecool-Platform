@@ -29,10 +29,6 @@ import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { deleteBranch, updateBranch } from "../../../graphql/mutations/branch";
 import { createBranch } from "../../../graphql/mutations/branch";
-import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
-import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
-import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -45,6 +41,7 @@ import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import { HoursModal } from "../shop-setup";
 import { useRouter } from "next/router";
+import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 
 const style = {
   position: "absolute",
@@ -79,6 +76,7 @@ const ShopEdit = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+
   const dispatch = useDispatch();
 
   const {
@@ -136,20 +134,21 @@ const ShopEdit = () => {
 
   const [shopLogo, setShopLogo] = useState("");
   const [uploadShopLogo, setUploadShopLogo] = useState("");
+  const [deleteShopLogo, setDeleteShopLogo] = useState("");
 
   const [shopBackground, setShopBackground] = useState("");
   const [uploadShopBackground, setUploadShopBackground] = useState("");
+  const [deleteShopBackground, setDeleteShopBackground] = useState("");
 
   const [shopImages, setShopImages] = useState([]);
-  const [uploadShopImages, setUploadShopImages] = useState("");
-  const [getUploadShopImages, setGetUploadShopImages] = useState([]);
-
+  const [shopImagesWasabiUrl, setShopImageWasabiUrl] = useState([]);
+  const [editableShopImages, setEditableShopImages] = useState([]);
   const [ShopEditImg, setShopEditImg] = useState("");
+  const [deleteShopImages, setDeleteShopImages] = useState([]);
+
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
-
-  const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
-  const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
+  const [deleteShopVideo, setDeleteShopVideo] = useState("");
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -158,6 +157,24 @@ const ShopEdit = () => {
 
   const { id } = router.query;
 
+  const emptyImageStates = () => {
+    setShopLogo("");
+    setUploadShopLogo("");
+    setShopBackground("");
+    setUploadShopBackground("");
+    setShopImages([]);
+    setShopImageWasabiUrl([]);
+    setEditableShopImages([]);
+    setDeleteShopImages([]);
+    setShopEditImg("");
+    setDeleteShopLogo("");
+    setDeleteShopBackground("");
+    setDeleteShopVideo("");
+  };
+
+  useEffect(() => {
+    emptyImageStates();
+  }, [value]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -186,83 +203,53 @@ const ShopEdit = () => {
     mainBranchInfoReset();
   }, [mainBranchInfoReset, ownerInfoReset, value]);
 
-  const srcToFile = async (src, fileName, mimeType) => {
-    try {
-      const res = await fetch(src);
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
-      }
-
-      const buf = await res.arrayBuffer();
-      return new File([buf], fileName, { type: mimeType });
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-  };
-
   const onShopLogoPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopLogo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopLogo(reader.result);
-      });
-    }
+    setUploadShopLogo(e.target.files[0]);
+    setShopLogo(URL.createObjectURL(e.target.files[0]));
+    setDeleteShopLogo("");
   };
 
   const onShopBackgroundPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopBackground(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopBackground(reader.result);
-      });
-    }
+    setUploadShopBackground(e.target.files[0]);
+    setShopBackground(URL.createObjectURL(e.target.files[0]));
+    setDeleteShopBackground("");
   };
 
   function fillArrayWithEmptyValues(arr, targetLength) {
     while (arr.length < targetLength) {
-      arr.push({ links: "none" });
+      arr.push({ links: `none${arr.length}` });
     }
     return arr;
   }
 
   const updateShopImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    let resImgIndex = fillArrayWithEmptyValues([...shopImages], 3)?.findIndex(
-      (obj) => obj?.links === ShopEditImg
-    );
 
-    let uploadShopImagesData = uploadShopImages;
+    let deleteShopImagesData = deleteShopImages;
+
+    deleteShopImagesData[ShopEditImg] = undefined;
+    setDeleteShopImages(() => [...deleteShopImagesData]);
+
     let shopImagesData = shopImages;
+    let editableShopImagesData = editableShopImages;
 
-    uploadShopImagesData[resImgIndex] = files[0];
-    setUploadShopImages(() => [...uploadShopImagesData]);
+    editableShopImagesData[ShopEditImg] = {
+      oldLink: shopImagesWasabiUrl[ShopEditImg]?.links,
+      newData: files[0],
+    };
+
+    setEditableShopImages(() => [...editableShopImagesData]);
 
     files.forEach((file) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        shopImagesData[resImgIndex] = { links: reader.result };
-        setShopImages(() => [...shopImagesData]);
-      };
+      shopImagesData[ShopEditImg] = { links: URL.createObjectURL(file) };
+      setShopImages(() => [...shopImagesData]);
     });
   };
 
   const onShopVideoPreview = (e) => {
-    const reader = new FileReader();
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopVideo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopVideo(reader.result);
-      });
-    }
+    setUploadShopVideo(e.target.files[0]);
+    setShopVideo(URL.createObjectURL(e.target.files[0]));
+    setDeleteShopVideo("");
   };
 
   const updateVendorShopDetailStore = () => {
@@ -411,62 +398,15 @@ const ShopEdit = () => {
     }
 
     if (vendorShopDetails && individual ? value === 3 : value === 4) {
-      {
-        vendorShopDetails?.shop_logo &&
-          srcToFile(
-            vendorShopDetails?.shop_logo,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadShopLogo(file);
-          });
-      }
       setShopLogo(vendorShopDetails?.shop_logo);
 
-      {
-        vendorShopDetails?.shop_cover_image &&
-          srcToFile(
-            vendorShopDetails?.shop_cover_image,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadShopBackground(file);
-          });
-      }
       setShopBackground(vendorShopDetails?.shop_cover_image);
 
-      vendorShopDetails?.shop_images?.map((img) => {
-        img?.links &&
-          srcToFile(img?.links, "profile.png", "image/png").then(function (
-            file
-          ) {
-            console.log("uploadShopImages00000000", file);
-            setGetUploadShopImages((old) => [...old, file]);
-          });
-      });
-      setShopImages(vendorShopDetails?.shop_images);
+      setShopImageWasabiUrl([...vendorShopDetails?.shop_images]);
+      setShopImages([...vendorShopDetails?.shop_images]);
 
-      {
-        vendorShopDetails?.shop_video &&
-          srcToFile(vendorShopDetails?.shop_video, "profile.mp4", "video").then(
-            function (file) {
-              setUploadShopVideo(file);
-            }
-          );
-      }
       vendorShopDetails?.shop_video &&
         setShopVideo(vendorShopDetails?.shop_video);
-
-      setShopLayoutAllMediaImages([
-        vendorShopDetails?.shop_logo,
-        vendorShopDetails?.shop_cover_image,
-        ...(vendorShopDetails?.shop_images?.length > 0
-          ? vendorShopDetails?.shop_images?.map((itm) => itm.links)
-          : []),
-      ]);
-
-      vendorShopDetails?.shop_video &&
-        setShopLayoutAllMediaVideos(vendorShopDetails?.shop_video);
     }
   }, [
     hours,
@@ -477,11 +417,6 @@ const ShopEdit = () => {
     value,
     vendorShopDetails,
   ]);
-
-  useEffect(() => {
-    if (vendorShopDetails && individual ? value === 3 : value === 4)
-      setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
-  }, [getUploadShopImages, individual, value, vendorShopDetails]);
 
   useEffect(() => {
     setAddEditSubBranchShow(false);
@@ -607,63 +542,176 @@ const ShopEdit = () => {
   const mainBranchInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
-  const shopLayoutOnSubmit = async (data) => {
-    console.log("data1 :>> ", data);
-    setShopLayoutLoading(true);
-    shopLayoutAllMediaImages
-      .filter((itm) => itm !== "" && itm !== null)
-      .map((img) =>
-        deleteMedia({
-          file: img,
-          fileType: "image",
-        }).then((res) => {
-          setShopLayoutAllMediaImages([]);
-          console.log("data1 res :>> ", res);
-        })
+  const deleteImageFiles = async (deletableProducts, type) => {
+    try {
+      const deletionPromises = deletableProducts.map((deleteProduct) =>
+        fileDelete(deleteProduct, type)
       );
+      await Promise.all(deletionPromises);
+    } catch (error) {
+      console.error("Error deleting files:", error);
+    }
+  };
 
-    shopLayoutAllMediaVideos !== undefined &&
-      (await deleteMedia({
-        file: shopLayoutAllMediaVideos,
-        fileType: "video",
-      }).then((res) => setShopLayoutAllMediaVideos()));
+  const shopLayoutOnSubmit = async (data) => {
+    setShopLayoutLoading(true);
 
     let logoResponse = "";
     let backgroundResponse = "";
-    let imagesResponse = "";
+    let imagesResponse = [];
     let videoResponse = null;
 
-    if (uploadShopLogo) {
-      logoResponse = await SingleImageUploadFile(uploadShopLogo);
+    if (deleteShopLogo) {
+      await deleteImageFiles([deleteShopLogo], "image");
     }
-    if (uploadShopBackground) {
-      backgroundResponse = await SingleImageUploadFile(uploadShopBackground);
+
+    if (deleteShopBackground) {
+      await deleteImageFiles([deleteShopBackground], "image");
     }
-    if (uploadShopImages.filter((item) => item !== undefined).length > 0) {
-      imagesResponse = await MultipleImageUploadFile(
-        uploadShopImages.filter((item) => item !== undefined)
+
+    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
+      await deleteImageFiles(
+        deleteShopImages?.filter((itm) => itm !== undefined),
+        "image"
       );
     }
+
+    if (deleteShopVideo) {
+      await deleteImageFiles([deleteShopVideo], "video");
+    }
+
+    if (uploadShopLogo) {
+      if (vendorShopDetails?.shop_logo) {
+        try {
+          const shopLogoRes = await fileUpdate(
+            vendorShopDetails?.shop_logo,
+            "image",
+            uploadShopLogo
+          );
+          logoResponse = shopLogoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      } else {
+        try {
+          const shopLogoRes = await fileUpload(uploadShopLogo);
+          logoResponse = shopLogoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      }
+    }
+
+    if (uploadShopBackground) {
+      if (vendorShopDetails?.shop_cover_image) {
+        try {
+          const shopCoverRes = await fileUpdate(
+            vendorShopDetails?.shop_cover_image,
+            "image",
+            uploadShopBackground
+          );
+          backgroundResponse = shopCoverRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      } else {
+        try {
+          const shopCoverRes = await fileUpload(uploadShopBackground);
+          backgroundResponse = shopCoverRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      }
+    }
+
+    if (editableShopImages?.length > 0) {
+      const uploadPromises = editableShopImages
+        ?.filter((itm) => itm !== undefined)
+        ?.map((shopImage) => {
+          if (shopImage?.oldLink) {
+            return fileUpdate(shopImage?.oldLink, "image", shopImage?.newData);
+          } else {
+            return fileUpload(shopImage?.newData);
+          }
+        });
+
+      try {
+        const updateShopImgs = await Promise.all(uploadPromises);
+        imagesResponse = updateShopImgs;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
+      }
+    }
+
     if (uploadShopVideo) {
-      videoResponse = await VideoUploadFile(uploadShopVideo);
+      if (vendorShopDetails?.shop_video) {
+        try {
+          const shopVideoRes = await fileUpdate(
+            vendorShopDetails?.shop_video,
+            "video",
+            uploadShopVideo
+          );
+          videoResponse = shopVideoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      } else {
+        try {
+          const shopVideoRes = await fileUpload(uploadShopVideo);
+          videoResponse = shopVideoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      }
+    }
+
+    const existingLinks = shopImagesWasabiUrl.map((item) => item.links);
+
+    const filteredImageResponse = imagesResponse.filter(
+      (item) => !existingLinks.includes(item)
+    );
+
+    let combinedLinks = [
+      ...shopImagesWasabiUrl,
+      ...filteredImageResponse.map((links) => ({ links })),
+    ];
+
+    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
+      combinedLinks = combinedLinks.filter((linkObj) => {
+        return !deleteShopImages
+          ?.filter((itm) => itm !== undefined)
+          .includes(linkObj.links);
+      });
     }
 
     await shopUpdate({
       shopLayout: {
         id: userProfile?.userCreatedShopId,
-        shop_logo: logoResponse?.data?.data?.singleUpload || "",
-        shop_cover_image: backgroundResponse?.data?.data?.singleUpload || "",
-        shop_images:
-          imagesResponse?.data?.data?.multipleUpload?.map((itm) => {
-            return { links: itm };
-          }) || [],
-        shop_video: videoResponse?.data?.data?.singleUpload || "",
+        shop_logo:
+          logoResponse || (deleteShopLogo ? "" : vendorShopDetails?.shop_logo),
+        shop_cover_image:
+          backgroundResponse ||
+          (deleteShopBackground ? "" : vendorShopDetails?.shop_cover_image),
+        shop_images: combinedLinks?.map((item) => ({
+          links: item.links,
+        })),
+        shop_video:
+          videoResponse ||
+          (deleteShopVideo ? "" : vendorShopDetails?.shop_video),
       },
     }).then(
       (res) => {
         toast.success(res.data.updateShop.message, {
           theme: "colored",
         });
+        emptyImageStates();
         setShopLayoutLoading(false);
         updateVendorShopDetailStore();
       },
@@ -673,6 +721,7 @@ const ShopEdit = () => {
       }
     );
   };
+
   const shopLayoutOnError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
@@ -1449,6 +1498,16 @@ const ShopEdit = () => {
                                 }
                               />
                             </span>
+                            <span
+                              onClick={() => {
+                                setShopLogo("");
+                                setUploadShopLogo("");
+                                setDeleteShopLogo(vendorShopDetails?.shop_logo);
+                              }}
+                              className="absolute left-4 sm:bottom-2 bottom-0 border border-red-600 rounded-full p-2 bg-red-600"
+                            >
+                              <DeleteIcon style={{ color: "white" }} />
+                            </span>
                             <div className="w-full h-full">
                               <img
                                 src={shopLogo}
@@ -1523,6 +1582,18 @@ const ShopEdit = () => {
                                     .click()
                                 }
                               />
+                            </span>
+                            <span
+                              onClick={() => {
+                                setShopBackground("");
+                                setUploadShopBackground("");
+                                setDeleteShopBackground(
+                                  vendorShopDetails?.shop_cover_image
+                                );
+                              }}
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
+                            >
+                              <DeleteIcon style={{ color: "white" }} />
                             </span>
                             <div className="w-full h-full">
                               <img
@@ -1607,12 +1678,46 @@ const ShopEdit = () => {
                                           },
                                         }}
                                         onClick={() => (
-                                          setShopEditImg(image?.links),
+                                          setShopEditImg(index),
                                           document
                                             .getElementById("shopEditId")
                                             .click()
                                         )}
                                       />
+                                    </span>
+
+                                    <span
+                                      onClick={() => {
+                                        setShopImages(
+                                          shopImages?.filter(
+                                            (itm, idx) => idx !== index
+                                          )
+                                        );
+
+                                        setEditableShopImages(
+                                          editableShopImages.filter(
+                                            (itm, idx) => idx !== index
+                                          )
+                                        );
+
+                                        let deleteShopImagesData =
+                                          deleteShopImages;
+
+                                        deleteShopImagesData[index] =
+                                          shopImagesWasabiUrl[index]?.links;
+                                        setDeleteShopImages(() => [
+                                          ...deleteShopImagesData,
+                                        ]);
+
+                                        let shopImagesData = shopImages;
+                                        shopImagesData[index] = undefined;
+                                        setShopImages(() => [
+                                          ...shopImagesData,
+                                        ]);
+                                      }}
+                                      className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 z-[99999]"
+                                    >
+                                      <DeleteIcon style={{ color: "white" }} />
                                     </span>
 
                                     <div className="w-full relative h-full">
@@ -1629,7 +1734,7 @@ const ShopEdit = () => {
                                       index === 0 ? "col-start-3" : ""
                                     } col-span-3`}
                                     onClick={() => (
-                                      setShopEditImg(image?.links),
+                                      setShopEditImg(index),
                                       document
                                         .getElementById("shopEditId")
                                         .click()
@@ -1674,7 +1779,7 @@ const ShopEdit = () => {
                               index === 0
                                 ? "col-start-2 lg:col-start-3"
                                 : "col-start-2"
-                            } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full `}
+                            } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full`}
                           >
                             <ImageLoadingSkeleton className="rounded-3xl" />
                           </div>
@@ -1722,6 +1827,9 @@ const ShopEdit = () => {
                               onClick={() => {
                                 setShopVideo("");
                                 setUploadShopVideo("");
+                                setDeleteShopVideo(
+                                  vendorShopDetails?.shop_video
+                                );
                               }}
                               className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
                             >

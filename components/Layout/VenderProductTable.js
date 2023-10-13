@@ -20,11 +20,9 @@ import HTMLReactParser from "html-react-parser";
 import ConfirmationModal from "../Modal/ConfirmationModal";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";
-import {
-  changeProductPage,
-  loadProductsStart,
-} from "../../redux/ducks/product";
+import { changeProductPage } from "../../redux/ducks/product";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
+import { fileDelete } from "../../services/wasabi";
 
 const StyledTableCell = styled(TableCell)(({ theme, index }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -58,7 +56,21 @@ const VenderProductTable = ({
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState();
 
+  const [deletableProductsImages, setDeletableProductsImages] = useState([]);
+  const [deletableProductVideo, setDeletableProductVideo] = useState();
+
   const dispatch = useDispatch();
+
+  const deleteImageFiles = async (deletableProducts, type) => {
+    try {
+      const deletionPromises = deletableProducts.map((deleteProduct) =>
+        fileDelete(deleteProduct, type)
+      );
+      await Promise.all(deletionPromises);
+    } catch (error) {
+      console.error("Error deleting files:", error);
+    }
+  };
 
   return (
     <>
@@ -90,7 +102,6 @@ const VenderProductTable = ({
                   <TableCell>
                     <div className="relative">
                       <Image
-                        // className="object-cover"
                         objectFit="cover"
                         objectPosition="center top"
                         src={item?.product_image?.front}
@@ -145,6 +156,16 @@ const VenderProductTable = ({
                         onClick={() => {
                           setProductDeleteModalOpen(true);
                           setDeleteProductId(item?.id);
+
+                          setDeletableProductsImages(
+                            ["front", "back", "side"].map(
+                              (key) => item?.product_image[key]
+                            )
+                          );
+
+                          if (item?.product_video) {
+                            setDeletableProductVideo(item?.product_video);
+                          }
                         }}
                       >
                         <DeleteIcon
@@ -170,7 +191,13 @@ const VenderProductTable = ({
           deleteModalOpen={productDeleteModalOpen}
           setDeleteModalOpen={setProductDeleteModalOpen}
           deleteId={deleteProductId}
-          onClickItemDelete={() => {
+          onClickItemDelete={async () => {
+            await deleteImageFiles(deletableProductsImages, "image");
+
+            if (deletableProductVideo) {
+              await deleteImageFiles([deletableProductVideo], "video");
+            }
+
             deleteProduct({ id: deleteProductId }).then(
               (res) => {
                 toast.success(res.data.deleteProduct, {
