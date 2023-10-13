@@ -141,7 +141,7 @@ const ProductDetail = ({ productDetails }) => {
   }, [dispatch]);
 
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState();
+  const [images, setImages] = useState({ src: "" });
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
@@ -213,7 +213,7 @@ const ProductDetail = ({ productDetails }) => {
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,
                   }}
-                  className="rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
+                  className="object-top rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
                   onError={() => {
                     setIsShopImages(true);
                     setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
@@ -291,7 +291,7 @@ const ProductDetail = ({ productDetails }) => {
   const shopDetailHeader = () => (
     <div className="flex items-center bg-colorPrimary p-3">
       <div className="flex items-center justify-between w-full gap-3">
-        <div className="flex gap-3 w-full">
+        <div className="flex gap-3 items-center">
           <div className="flex justify-center items-center">
             <Link
               href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
@@ -317,60 +317,51 @@ const ProductDetail = ({ productDetails }) => {
               )}
             </Link>
           </div>
-          <div className="flex flex-col md:flex-row justify-center items-start md:items-center gap-1 sm:gap-4">
-            <div className="flex flex-col justify-start">
-              <Link
-                href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
-              >
-                <a
-                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-                >
-                  <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
-                    {
-                      productDetails.data.product.data.branchInfo?.shop_info
-                        .shop_name
-                    }
-                  </p>
-                </a>
-              </Link>
-              <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal">
-                25 days ago
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <Rating
-                name="text-feedback"
-                value={Math.round(
-                  productDetails.data.product.data.branchInfo?.shop_info
-                    .shop_rating
-                )}
-                readOnly
-                emptyIcon={
-                  <StarIcon fontSize="small" sx={{ fontSize: "6px" }} />
-                }
-              />
-              <div className="text-[#878A99] font-normal text-[13px] flex items-center">
-                <div className="flex items-center">
-                  <LocationOnIcon fontSize="small" className="!mr-1" />
-                  <span className="line-clamp-1">
-                    {
-                      productDetails.data.product.data.branchInfo
-                        ?.branch_address
-                    }
-                  </span>
-                </div>
-              </div>
+          <div className="flex flex-col justify-start">
+            <Link
+              href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
+            >
+              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+                <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
+                  {
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      .shop_name
+                  }
+                </p>
+              </a>
+            </Link>
+            <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal line-clamp-1">
+              25 days ago
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <Rating
+            name="text-feedback"
+            value={Math.round(
+              productDetails.data.product.data.branchInfo?.shop_info.shop_rating
+            )}
+            readOnly
+            emptyIcon={<StarIcon fontSize="small" sx={{ fontSize: "6px" }} />}
+          />
+          <div className="text-[#878A99] font-normal text-[13px] flex items-center">
+            <div className="flex items-center">
+              <LocationOnIcon fontSize="small" className="!mr-1" />
+              <span className="line-clamp-1">
+                {productDetails.data.product.data.branchInfo?.branch_address}
+              </span>
             </div>
           </div>
         </div>
 
         <div className="flex items-center md:justify-end">
           <Button
+            className="!bg-colorGreen "
             variant="outlined"
             sx={{
               textTransform: "none",
               color: "white",
-              border: "1px solid white",
+              border: "1px solid colorGreen",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -444,7 +435,7 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      <div className="bg-colorWhite font-Nova container">
+      <div className="font-Nova container">
         <div className="py-2 sm:py-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
@@ -490,10 +481,17 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div className="col-span-3">
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
-                      <CustomReactImageMagnify
-                        large={images}
-                        preview={images}
-                      />
+                      {images?.type === "image" && (
+                        <CustomReactImageMagnify
+                          // large={images}
+                          // preview={images}
+
+                          src={images.src}
+                          height="700px"
+                          width="100%"
+                          className="object-cover rounded-2xl object-top"
+                        />
+                      )}
                       {/* {images?.type === "image" && (
                         <Magnifier
                           src={images?.src}
@@ -509,7 +507,7 @@ const ProductDetail = ({ productDetails }) => {
                             borderRadius: "16px",
                           }}
                         />
-                      )}
+                      )}*/}
                       {images?.type === "video" && (
                         <video
                           src={images?.src}
@@ -518,13 +516,13 @@ const ProductDetail = ({ productDetails }) => {
                             setIsShopImages(true);
                             setIsProductImage(images);
                           }}
-                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover"
+                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover !object-top"
                           autoPlay={true}
                           controls
                           muted
                           loop
                         />
-                      )} */}
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center justify-between mt-4">
                       <div className="w-[30%]">
@@ -877,11 +875,17 @@ const ContactDetailsModal = ({
             <Divider />
             <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
               <div className="flex justify-center items-center">
-                <Avatar className="!w-16 !h-16 bg-colorGreen">
+                <Avatar
+                  className="!w-16 !h-16 bg-colorGreen"
+                  sx={{
+                    fontSize: "20px",
+                  }}
+                >
                   {manager_name
                     .split(" ")
                     .slice(0, 2)
                     .map((user) => user.charAt(0).toUpperCase())}
+                  {/* {String(manager_name)?.charAt(0).toUpperCase()} */}
                 </Avatar>
               </div>
               <div className="flex flex-col justify-center">

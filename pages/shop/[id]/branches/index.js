@@ -6,10 +6,13 @@ import SeeBranchDropDown from "../../../../components/Filters/CardInteractive/Se
 import { useRouter } from "next/router";
 import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
 import ImageLoadingSkeleton from "../../../../components/Modal/ImageLoadingSkeleton";
+import { Avatar } from "@mui/material";
 
 const Branches = ({ shopDetails, shopId }) => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isLogoImage, setIsLogoImage] = useState(false);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -30,34 +33,53 @@ const Branches = ({ shopDetails, shopId }) => {
           <span className="font-semibold ml-2">Back To Shop</span>
         </div>
         <div className="bg-white shadow-xl rounded-lg pb-4 mb-8">
-          <div className="flex flex-col sm:flex-row items-center p-8 pt-6 bg-colorPrimary rounded-t-xl">
-            <div className="flex justify-center">
-              {shopDetails?.data?.shop?.shop_logo ? (
-                <Image
-                  src={shopDetails?.data?.shop?.shop_logo ?? ""}
-                  alt="shop logo"
-                  layout="fixed"
-                  width={150}
-                  height={150}
-                  className="rounded-[50%]"
-                />
-              ) : (
+          <div className="flex flex-col sm:flex-row items-center p-8 pt-6 bg-colorPrimary rounded-t-xl gap-[24px]">
+            <div className="flex justify-center relative w-[150px] h-[150px]">
+              <Image
+                src={shopDetails?.data?.shop?.shop_logo ?? ""}
+                alt="shop logo"
+                layout="fixed"
+                width={150}
+                height={150}
+                className="rounded-[50%] object-cover object-center"
+                onLoad={() => setIsImageLoaded(true)}
+                onError={() => {
+                  setIsLogoImage(true);
+                }}
+              />
+              {!isImageLoaded && (
                 <ImageLoadingSkeleton
-                  className="rounded-[50%]"
+                  className="rounded-[50%] absolute"
                   variant="circular"
-                  width={150}
-                  height={150}
+                  width="100%"
+                  height="100%"
                   sx={{
                     backgroundColor: "dimgray",
                   }}
                 />
               )}
+              {isLogoImage && (
+                <Avatar
+                  className="!bg-colorGreen"
+                  sx={{
+                    fontSize: "72px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  {String(shopDetails?.data?.shop?.shop_name)
+                    ?.split(" ")[0][0]
+                    .toUpperCase()}
+                  {/* {String(shopDetails?.data?.shop?.shop_name)?.split(" ")[0][0].toUpperCase() +
+                      String(shopDetails?.data?.shop?.shop_name)?.split(" ")[1][0].toUpperCase()} */}
+                </Avatar>
+              )}
             </div>
-            <div className="sm:ml-[24px] flex flex-col items-center sm:items-start">
-              <span className="sm:text-[32px] text-[30px] font-semibold text-white">
+            <div className="flex flex-col items-center sm:items-start">
+              <span className="sm:text-[32px] text-[30px] font-semibold text-white text-center">
                 {shopDetails?.data?.shop?.shop_name}
               </span>
-              <span className="text-white text-base font-normal">
+              <span className="text-white text-base font-normal text-center">
                 {
                   "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
                 }
@@ -74,8 +96,8 @@ const Branches = ({ shopDetails, shopId }) => {
                   <SeeBranchDropDown
                     cardTitle={`Branch ${index + 1}`}
                     bottomComponent={
-                      <div className="mb-[16px]">
-                        <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 ml-[18px]">
+                      <div className="">
+                        <div className="grid sm:grid-cols-3 grid-cols-1 gap-4 m-[18px]">
                           <div
                             style={{
                               boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",

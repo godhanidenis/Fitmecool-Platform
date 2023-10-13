@@ -121,7 +121,9 @@ function MyApp({ Component, pageProps }) {
                 <VendorCommonLayout>
                   <Component {...pageProps} />
                 </VendorCommonLayout>
-              ) : router.pathname.includes("/auth/") ? (
+              ) : router.pathname === "/auth/user-type" ||
+                router.pathname === "/auth/signup" ||
+                router.pathname === "/auth/signin" ? (
                 <AuthCommonLayout>
                   <Component {...pageProps} />
                 </AuthCommonLayout>

@@ -79,7 +79,7 @@ const ShopCard = ({ shop }) => {
                     : currentImageIndex === 0 && shop.shop_images[0]?.links
                 }
                 alt={shop?.shop_name}
-                className={`absolute top-0 left-0 rounded-t-lg  ${
+                className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
                   isShopImagesLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => setShopImagesLoaded(true)}
@@ -105,7 +105,7 @@ const ShopCard = ({ shop }) => {
               <Carousel
                 ref={carouselRef}
                 autoPlay={autoplay}
-                autoPlaySpeed={900}
+                autoPlaySpeed={1500}
                 infinite
                 arrows={false}
                 responsive={responsive}
@@ -147,7 +147,7 @@ const ShopCard = ({ shop }) => {
                       alt="Shop Logo"
                       src={shop?.shop_logo ?? ""}
                       layout="fill"
-                      className={`rounded-[50%] absolute top-0 left-0 ${
+                      className={`rounded-[50%] absolute top-0 left-0 object-cover object-center ${
                         isShopLogoLoaded ? "opacity-100" : "opacity-0"
                       }`}
                       onLoad={() => setIsShopLogoLoaded(true)}

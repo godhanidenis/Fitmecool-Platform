@@ -52,7 +52,7 @@ const BannerHero = ({ carouselItems, className }) => {
     >
       {carouselItems &&
         carouselItems.map((item, index) => (
-          <div key={index} className="flex w-full h-[200px] md:h-[438px]">
+          <div key={index} className="flex w-full h-[155px] md:h-[438px]">
             <Image
               src={item.imageSrc}
               alt="banner"

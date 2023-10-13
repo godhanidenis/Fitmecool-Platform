@@ -631,7 +631,7 @@ const AddEditProductPage = ({
                         <img
                           src={productImages[index] ?? ""}
                           alt="Uploaded Image"
-                          className="object-cover h-full w-full rounded-xl"
+                          className="object-cover h-full w-full rounded-xl object-top"
                         />
                         <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
                           <EditIcon
