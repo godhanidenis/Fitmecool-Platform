@@ -11,7 +11,7 @@ const AppLogo = () => {
     <Link
       href={`${userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"}`}
     >
-      <div className="cursor-pointer pt-[7px]">
+      <div className="cursor-pointer pt-[5px]">
         <Image src={assets.appLogo} alt="AppLogo" width={150} height={50} />
       </div>
     </Link>

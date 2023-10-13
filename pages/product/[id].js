@@ -875,11 +875,17 @@ const ContactDetailsModal = ({
             <Divider />
             <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
               <div className="flex justify-center items-center">
-                <Avatar className="!w-16 !h-16 bg-colorGreen">
+                <Avatar
+                  className="!w-16 !h-16 bg-colorGreen"
+                  sx={{
+                    fontSize: "20px",
+                  }}
+                >
                   {manager_name
                     .split(" ")
                     .slice(0, 2)
                     .map((user) => user.charAt(0).toUpperCase())}
+                  {/* {String(manager_name)?.charAt(0).toUpperCase()} */}
                 </Avatar>
               </div>
               <div className="flex flex-col justify-center">

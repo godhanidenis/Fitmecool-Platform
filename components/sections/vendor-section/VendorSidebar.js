@@ -84,11 +84,11 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
                   router.push(tab.path);
                 }
               }}
-              className={`font-semibold pb-8 text-lg ${
+              className={`font-semibold p-3 m-1 text-lg ${
                 selectedValue === tab.label
-                  ? "text-[#29977E]"
+                  ? "text-[#29977E] bg-[#29977d21]"
                   : "text-[#151827]"
-              } cursor-pointer uppercase flex items-center gap-4`}
+              } cursor-pointer uppercase flex items-center rounded-xl gap-4 hover:bg-[#29977d0c]`}
             >
               {tab.icon}
               {tab.label}

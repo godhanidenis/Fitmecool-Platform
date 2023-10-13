@@ -105,7 +105,7 @@ const ShopCard = ({ shop }) => {
               <Carousel
                 ref={carouselRef}
                 autoPlay={autoplay}
-                autoPlaySpeed={900}
+                autoPlaySpeed={1500}
                 infinite
                 arrows={false}
                 responsive={responsive}
