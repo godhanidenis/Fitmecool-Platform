@@ -197,6 +197,22 @@ export const StyledFormLabelCheckBox = styled(FormControlLabel)(
   })
 );
 
+export const StyledFormLabelRadio = styled(FormControlLabel)(
+  ({ theme, checked }) => ({
+    ".MuiFormControlLabel-label": {
+      color: `${checked ? "#29977E !important" : "#31333E"}`,
+      fontSize: "15px",
+      lineHeight: "14px",
+    },
+    ".MuiRadio-root": {
+      color: "#31333e66",
+    },
+    ".MuiRadio-root.Mui-checked": {
+      color: "#29977E",
+    },
+  })
+);
+
 export const CustomDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),

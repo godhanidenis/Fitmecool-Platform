@@ -72,6 +72,10 @@ const MenCollection = () => {
       filter: {
         category_id: menCategoryId,
         product_color: [],
+        product_price: {
+          min: 0,
+          max: 0,
+        },
       },
       shopId: [],
       sort: "new",
