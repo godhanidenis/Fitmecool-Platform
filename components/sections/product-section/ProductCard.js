@@ -70,7 +70,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
   const [photos, setPhotos] = useState([]);
   const [CarouselImage, setCarouselImage] = useState(false);
 
-  const handleCloseCarouselImage = () => setCarouselImage(false);
+  // const handleCloseCarouselImage = () => setCarouselImage(false);
 
   const shopId = product.branchInfo?.shop_id;
   const pageShareURL = window.location.href;
@@ -189,9 +189,9 @@ const ProductCard = ({ product, onlyCarousal }) => {
                       setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
                     layout="fill"
-                    onClick={() => {
-                      onlyCarousal && setCarouselImage(true);
-                    }}
+                    // onClick={() => {
+                    //   onlyCarousal && setCarouselImage(true);
+                    // }}
                   />
                 )}
                 {itm?.type === "video" && (
@@ -470,7 +470,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
           </Link>
         )}
       </div>
-      {CarouselImage && (
+      {/* {CarouselImage && (
         <CarouselImagesModal
           CarouselImage={CarouselImage}
           handleCloseCarouselImage={handleCloseCarouselImage}
@@ -478,53 +478,53 @@ const ProductCard = ({ product, onlyCarousal }) => {
           onlyCarousal={onlyCarousal}
           CustomDot={CustomDot}
         />
-      )}
+      )} */}
     </>
   );
 };
 
 export default ProductCard;
 
-const CarouselImagesModal = ({
-  CarouselImage,
-  handleCloseCarouselImage,
-  productImages,
-  onlyCarousal,
-  CustomDot,
-}) => {
-  return (
-    <Modal
-      open={CarouselImage}
-      onClose={handleCloseCarouselImage}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      className="sm:hidden !bg-[#000000e5]"
-    >
-      <Box sx={ContactStyle}>
-        <div className="flex justify-center items-center relative">
-          <div className="bg-colorWhite rounded-lg w-[100%] mx-auto max-w-[1246px]">
-            <Carousel
-              infinite
-              showDots={onlyCarousal ? true : false}
-              customDot={onlyCarousal ? <CustomDot /> : null}
-              arrows={false}
-              // removeArrowOnDeviceType={["mobile"]}
-              responsive={responsive}
-              className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
-            >
-              {productImages}
-            </Carousel>
-          </div>
-          <div className="flex justify-end items-center absolute -top-4 right-2">
-            <div
-              className="p-1 rounded-full bg-[#000000]"
-              onClick={handleCloseCarouselImage}
-            >
-              <CloseOutlined className="!text-white" fontSize="medium" />
-            </div>
-          </div>
-        </div>
-      </Box>
-    </Modal>
-  );
-};
+// const CarouselImagesModal = ({
+//   CarouselImage,
+//   handleCloseCarouselImage,
+//   productImages,
+//   onlyCarousal,
+//   CustomDot,
+// }) => {
+//   return (
+//     <Modal
+//       open={CarouselImage}
+//       onClose={handleCloseCarouselImage}
+//       aria-labelledby="modal-modal-title"
+//       aria-describedby="modal-modal-description"
+//       className="sm:hidden !bg-[#000000e5]"
+//     >
+//       <Box sx={ContactStyle}>
+//         <div className="flex justify-center items-center relative">
+//           <div className="bg-colorWhite rounded-lg w-[100%] mx-auto max-w-[1246px]">
+//             <Carousel
+//               infinite
+//               showDots={onlyCarousal ? true : false}
+//               customDot={onlyCarousal ? <CustomDot /> : null}
+//               arrows={false}
+//               // removeArrowOnDeviceType={["mobile"]}
+//               responsive={responsive}
+//               className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
+//             >
+//               {productImages}
+//             </Carousel>
+//           </div>
+//           <div className="flex justify-end items-center absolute -top-4 right-2">
+//             <div
+//               className="p-1 rounded-full bg-[#000000]"
+//               onClick={handleCloseCarouselImage}
+//             >
+//               <CloseOutlined className="!text-white" fontSize="medium" />
+//             </div>
+//           </div>
+//         </div>
+//       </Box>
+//     </Modal>
+//   );
+// };
