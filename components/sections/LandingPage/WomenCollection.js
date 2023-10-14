@@ -73,6 +73,10 @@ const WomenCollection = () => {
       filter: {
         category_id: womenCategoryId,
         product_color: [],
+        product_price: {
+          min: 0,
+          max: 0,
+        },
       },
       shopId: [],
       sort: "new",
