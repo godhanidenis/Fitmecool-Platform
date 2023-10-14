@@ -35,9 +35,7 @@ const CardInteractive = ({ cardTitle = "", bottomComponent }) => {
         </button>
       </FilterTitle>
       {cardOpen && (
-        <div
-          className={`${ cardTitle == "RATINGS" ? "px-6" : "px-4"}`}
-        > 
+        <div className={`${cardTitle == "RATINGS" ? "px-6" : "px-4"}`}>
           {bottomComponent}
         </div>
       )}

@@ -13,20 +13,18 @@ const CustomTextFieldVendor = ({
   ...rest
 }) => {
   return (
-    <>
-      <TextField
-        type={type}
-        id={id}
-        fullWidth
-        {...formValue}
-        {...rest}
-        variant="outlined"
-        label={label}
-        InputLabelProps={{
-          shrink: !!fieldValue || fieldError,
-        }}
-      />
-    </>
+    <TextField
+      type={type}
+      id={id}
+      fullWidth
+      {...formValue}
+      {...rest}
+      variant="outlined"
+      label={label}
+      InputLabelProps={{
+        shrink: !!fieldValue || fieldError,
+      }}
+    />
   );
 };
 

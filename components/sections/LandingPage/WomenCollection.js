@@ -186,11 +186,8 @@ const WomenCollection = () => {
               ref={carouselRef}
               responsive={responsive}
               customTransition="all .5s ease-in-out"
-              // removeArrowOnDeviceType={["mobile"]}
               arrows={false}
               infinite
-              // autoPlay
-              // autoPlaySpeed={5000}
             >
               {womenCategoryData?.map((product) => (
                 <div key={product.id} className={`pr-3 pb-8`}>

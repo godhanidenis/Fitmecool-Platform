@@ -58,8 +58,6 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
               {String(vendorShopDetails?.shop_name)
                 ?.split(" ")[0][0]
                 .toUpperCase()}
-              {/* {String(vendorShopDetails?.shop_name)?.split(" ")[0][0].toUpperCase() +
-                      String(vendorShopDetails?.shop_name)?.split(" ")[1][0].toUpperCase()} */}
             </Avatar>
           ) : (
             <ImageLoadingSkeleton className="rounded-full" variant="circular" />

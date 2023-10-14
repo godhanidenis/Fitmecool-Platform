@@ -82,12 +82,6 @@ const ShopHeaderSection = ({
                     {String(shopDetails.shop_name)
                       ?.split(" ")[0][0]
                       .toUpperCase()}
-                    {/* {String(shopDetails.shop_name)
-                      ?.split(" ")[0][0]
-                      .toUpperCase() +
-                      String(shopDetails.shop_name)
-                        ?.split(" ")[1][0]
-                        .toUpperCase()} */}
                   </Avatar>
                 ) : (
                   <Image
@@ -299,11 +293,6 @@ const ShopHeaderSection = ({
                             height={window.innerWidth >= 1024 ? 26 : 15}
                             alt="facebookIcon"
                           />
-                          {/* <FacebookIcon
-                            size={window.innerWidth >= 1024 ? 26 : 22}
-                            round={true}
-                            className="w-full"
-                          /> */}
                         </FacebookShareButton>
                       </div>
                       <div className="lg:p-2 !rounded-lg cursor-pointer">
@@ -326,11 +315,6 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          {/* <EmailIcon
-                            size={window.innerWidth >= 1024 ? 26 : 22}
-                            round={true}
-                            className="w-full"
-                          /> */}
                           <Image
                             src={assets.googleIcon}
                             width={window.innerWidth >= 1024 ? 26 : 15}

@@ -189,9 +189,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                       setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                     }}
                     layout="fill"
-                    onClick={() => {
-                      onlyCarousal && setCarouselImage(true);
-                    }}
+                    onClick={() => onlyCarousal && setCarouselImage(true)}
                   />
                 )}
                 {itm?.type === "video" && (
@@ -264,7 +262,6 @@ const ProductCard = ({ product, onlyCarousal }) => {
                 showDots={onlyCarousal ? true : false}
                 customDot={onlyCarousal ? <CustomDot /> : null}
                 arrows={false}
-                // removeArrowOnDeviceType={["mobile"]}
                 responsive={responsive}
                 className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
               >
@@ -440,12 +437,6 @@ const ProductCard = ({ product, onlyCarousal }) => {
                           {String(product.branchInfo?.shop_info?.shop_name)
                             ?.split(" ")[0][0]
                             .toUpperCase()}
-                          {/* {String(product.branchInfo?.shop_info?.shop_name)
-                            ?.split(" ")[0][0]
-                            .toUpperCase() +
-                            String(product.branchInfo?.shop_info?.shop_name)
-                              ?.split(" ")[1][0]
-                              .toUpperCase()} */}
                         </Avatar>
                       )}
                     </div>
@@ -470,13 +461,15 @@ const ProductCard = ({ product, onlyCarousal }) => {
           </Link>
         )}
       </div>
-      <CarouselImagesModal
-        CarouselImage={CarouselImage}
-        handleCloseCarouselImage={handleCloseCarouselImage}
-        productImages={productImages}
-        onlyCarousal={onlyCarousal}
-        CustomDot={CustomDot}
-      />
+      {CarouselImage && (
+        <CarouselImagesModal
+          CarouselImage={CarouselImage}
+          handleCloseCarouselImage={handleCloseCarouselImage}
+          productImages={productImages}
+          onlyCarousal={onlyCarousal}
+          CustomDot={CustomDot}
+        />
+      )}
     </>
   );
 };
@@ -506,7 +499,6 @@ const CarouselImagesModal = ({
               showDots={onlyCarousal ? true : false}
               customDot={onlyCarousal ? <CustomDot /> : null}
               arrows={false}
-              // removeArrowOnDeviceType={["mobile"]}
               responsive={responsive}
               className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
             >

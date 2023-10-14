@@ -1,7 +1,5 @@
-import { generateRandomNumberString } from "../../utils/common";
-import { s3 } from "../../wasabi/config";
-
-const destinationBucketName = "rentbless-dev";
+import { generateRandomNumberString } from "../utils/common";
+import { destinationBucketName, s3 } from "../wasabi/config";
 
 const generateFileType = (fileType) => {
   if (fileType === "image/png") {

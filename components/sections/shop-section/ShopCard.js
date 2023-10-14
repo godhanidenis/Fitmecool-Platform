@@ -72,7 +72,6 @@ const ShopCard = ({ shop }) => {
               />
             ) : (
               <Image
-                // src={itm?.links ?? ""}
                 src={
                   currentImageIndex === null
                     ? itm?.links
@@ -165,12 +164,6 @@ const ShopCard = ({ shop }) => {
                         }}
                       >
                         {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
-                        {/* {String(shop.shop_name)
-                          ?.split(" ")[0][0]
-                          .toUpperCase() +
-                          String(shop.shop_name)
-                            ?.split(" ")[1][0]
-                            .toUpperCase()} */}
                       </Avatar>
                     )}
                   </div>

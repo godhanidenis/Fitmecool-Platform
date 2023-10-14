@@ -8,3 +8,5 @@ AWS.config.update({
 });
 
 export const s3 = new AWS.S3();
+
+export const destinationBucketName = "rentbless-dev";

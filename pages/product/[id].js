@@ -483,31 +483,13 @@ const ProductDetail = ({ productDetails }) => {
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
                       {images?.type === "image" && (
                         <CustomReactImageMagnify
-                          // large={images}
-                          // preview={images}
-
                           src={images.src}
                           height="700px"
                           width="100%"
                           className="object-cover rounded-2xl object-top"
                         />
                       )}
-                      {/* {images?.type === "image" && (
-                        <Magnifier
-                          src={images?.src}
-                          mgShape="square"
-                          mgWidth={300}
-                          mgHeight={300}
-                          mgBorderWidth={0}
-                          zoomFactor={0.5}
-                          style={{
-                            // objectFit: "fill",
-                            objectFit: "cover",
-                            height: "700px",
-                            borderRadius: "16px",
-                          }}
-                        />
-                      )}*/}
+
                       {images?.type === "video" && (
                         <video
                           src={images?.src}

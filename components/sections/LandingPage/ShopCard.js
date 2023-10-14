@@ -78,8 +78,6 @@ const ShopCard = ({ shop }) => {
                     }}
                   >
                     {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
-                    {/* {String(shop.shop_name)?.split(" ")[0][0].toUpperCase() +
-                      String(shop.shop_name)?.split(" ")[1][0].toUpperCase()} */}
                   </Avatar>
                 )}
                 <Image
@@ -92,7 +90,6 @@ const ShopCard = ({ shop }) => {
                   onLoad={() => setIsShopLogoLoaded(true)}
                   width="100%"
                   height="100%"
-                  // layout="responsive"
                   onError={() => {
                     setIsLogoImage(true);
                   }}
