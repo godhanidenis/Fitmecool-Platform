@@ -470,13 +470,15 @@ const ProductCard = ({ product, onlyCarousal }) => {
           </Link>
         )}
       </div>
-      <CarouselImagesModal
-        CarouselImage={CarouselImage}
-        handleCloseCarouselImage={handleCloseCarouselImage}
-        productImages={productImages}
-        onlyCarousal={onlyCarousal}
-        CustomDot={CustomDot}
-      />
+      {CarouselImage && (
+        <CarouselImagesModal
+          CarouselImage={CarouselImage}
+          handleCloseCarouselImage={handleCloseCarouselImage}
+          productImages={productImages}
+          onlyCarousal={onlyCarousal}
+          CustomDot={CustomDot}
+        />
+      )}
     </>
   );
 };
