@@ -123,7 +123,14 @@ export const getShopDetails = async (payload) => {
             week
           }
           shop_email
-          owner_id
+          ownerInfo {
+            id
+            owner_firstName
+            owner_lastName
+            owner_email
+            owner_contact
+            flag
+          }
           shop_logo
           shop_cover_image
           shop_images {
@@ -155,7 +162,7 @@ export const getShopDetails = async (payload) => {
           branch_info {
             id
             shop_id
-
+            same_as
             branch_address
             branch_pinCode
             branch_city
@@ -166,75 +173,6 @@ export const getShopDetails = async (payload) => {
             flag
             product_info {
               id
-              product_name
-              product_description
-              product_image {
-                front
-                back
-                side
-              }
-              product_video
-              product_color
-              categoryInfo {
-                id
-                category_name
-                category_type
-                flag
-              }
-
-              flag
-              productLikes
-              branchInfo {
-                id
-                shop_id
-                shop_info {
-                  id
-                  user_id
-                  shop_name
-                  shop_time {
-                    close_time
-                    is_24Hours_open
-                    is_close
-                    open_time
-                    week
-                  }
-                  shop_logo
-                  shop_cover_image
-                  shop_images {
-                    links
-                  }
-                  shop_video
-                  shop_type
-                  is_live
-                  flag
-                  form_steps
-                  shop_social_link {
-                    facebook
-                    instagram
-                    website
-                  }
-                  shopFollowerCount
-                  shopReviewCount
-                  shop_review {
-                    id
-                    shop_id
-                    user_id
-                    user_name
-                    user_type
-                    stars
-                    message
-                    flag
-                  }
-                  shop_rating
-                }
-                branch_address
-                branch_pinCode
-                manager_name
-                manager_contact
-                manager_email
-                branch_type
-                flag
-              }
             }
           }
         }

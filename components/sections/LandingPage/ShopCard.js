@@ -38,7 +38,7 @@ const ShopCard = ({ shop }) => {
               ) : (
                 <Image
                   // src={shop?.shop_images[0]?.links}
-                  src={shop?.shop_cover_image}
+                  src={shop?.shop_cover_image ?? ""}
                   alt={shop?.shop_name}
                   className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
                     isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -78,8 +78,6 @@ const ShopCard = ({ shop }) => {
                     }}
                   >
                     {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
-                    {/* {String(shop.shop_name)?.split(" ")[0][0].toUpperCase() +
-                      String(shop.shop_name)?.split(" ")[1][0].toUpperCase()} */}
                   </Avatar>
                 )}
                 <Image
@@ -92,7 +90,6 @@ const ShopCard = ({ shop }) => {
                   onLoad={() => setIsShopLogoLoaded(true)}
                   width="100%"
                   height="100%"
-                  // layout="responsive"
                   onError={() => {
                     setIsLogoImage(true);
                   }}

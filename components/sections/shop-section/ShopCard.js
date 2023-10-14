@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Carousel from "react-multi-carousel";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { Avatar } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
 
 const responsive = {
   superLargeDesktop: {
@@ -35,7 +36,7 @@ const ShopCard = ({ shop }) => {
   const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
-
+  const [isShopImage, setIsShopImage] = useState([]);
   const carouselRef = useRef(null);
 
   const shopImages = shop.shop_images.map((itm, index) => {
@@ -61,7 +62,7 @@ const ShopCard = ({ shop }) => {
         )}
         <Link href={`/shop/${shop.id}`}>
           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-            {isShopImages ? (
+            {isShopImage.includes(itm) && isShopImages ? (
               <div
                 className="bg-[#00000031]"
                 style={{
@@ -71,19 +72,19 @@ const ShopCard = ({ shop }) => {
               />
             ) : (
               <Image
-                // src={itm?.links ?? ""}
                 src={
                   currentImageIndex === null
                     ? itm?.links
                     : currentImageIndex === 0 && shop.shop_images[0]?.links
                 }
                 alt={shop?.shop_name}
-                className={`object-cover absolute top-0 left-0 ${
+                className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
                   isShopImagesLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => setShopImagesLoaded(true)}
                 onError={() => {
                   setIsShopImages(true);
+                  setIsShopImage((prevIndexes) => [...prevIndexes, itm]);
                 }}
                 layout="fill"
               />
@@ -95,7 +96,7 @@ const ShopCard = ({ shop }) => {
   });
 
   return (
-    <div className="bg-white shadow-xl h-full">
+    <div className="bg-white shadow-xl h-full rounded-lg">
       <div className="">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
@@ -103,11 +104,11 @@ const ShopCard = ({ shop }) => {
               <Carousel
                 ref={carouselRef}
                 autoPlay={autoplay}
-                autoPlaySpeed={900}
+                autoPlaySpeed={1500}
                 infinite
                 arrows={false}
                 responsive={responsive}
-                dotListClass={"Landing_customDots"}
+                className="rounded-t-lg"
               >
                 {shop?.shop_images?.length === 0 ? (
                   <div
@@ -133,7 +134,7 @@ const ShopCard = ({ shop }) => {
               className="flex gap-2 justify-between"
             >
               <div className="flex gap-2 justify-start">
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-start">
                   <div className="flex justify-center items-center relative w-[50px] h-[50px]">
                     {!isShopLogoLoaded && (
                       <ImageLoadingSkeleton
@@ -145,7 +146,7 @@ const ShopCard = ({ shop }) => {
                       alt="Shop Logo"
                       src={shop?.shop_logo ?? ""}
                       layout="fill"
-                      className={`rounded-[50%] absolute top-0 left-0 ${
+                      className={`rounded-[50%] absolute top-0 left-0 object-cover object-center ${
                         isShopLogoLoaded ? "opacity-100" : "opacity-0"
                       }`}
                       onLoad={() => setIsShopLogoLoaded(true)}
@@ -163,12 +164,6 @@ const ShopCard = ({ shop }) => {
                         }}
                       >
                         {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
-                        {/* {String(shop.shop_name)
-                          ?.split(" ")[0][0]
-                          .toUpperCase() +
-                          String(shop.shop_name)
-                            ?.split(" ")[1][0]
-                            .toUpperCase()} */}
                       </Avatar>
                     )}
                   </div>
@@ -178,32 +173,37 @@ const ShopCard = ({ shop }) => {
                     {shop.shop_name}
                   </p>
 
-                  <p className="text-[#888888] text-sm font-normal">
-                    <LocationOnIcon fontSize="small" className="!mr-1" />
-                    {shop?.branch_info?.length > 1
-                      ? shop?.branch_info?.map(
-                          (itm) =>
-                            itm.branch_type === "main" && itm.branch_address
-                        )
-                      : shop?.branch_info[0]?.branch_address}
+                  <p className="text-[#878A99] text-sm font-light flex justify-start">
+                    <span className="text-start line-clamp-1 ">
+                      <LocationOnIcon fontSize="small" className="!mr-1" />
+                      {shop?.branch_info?.length > 1
+                        ? shop?.branch_info?.map(
+                            (itm) =>
+                              itm.branch_type === "main" && itm.branch_address
+                          )
+                        : shop?.branch_info[0]?.branch_address}
+                    </span>
                   </p>
 
-                  <span className="text-[14px] font-normal flex items-center mt-2 text-colorBlack">
-                    {`${shop?.shopFollowerCount} Followers`}
-                  </span>
+                  <p className="text-[16px] font-normal flex items-center mt-2 text-colorBlack gap-1">
+                    <span className="rounded-full flex items-center">
+                      <PersonIcon className="!w-4" />
+                    </span>
+                    <span className="flex items-center justify-center">
+                      {shop?.shopFollowerCount}
+                    </span>
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center mt-2 flex-wrap gap-2">
-                <div className="p-1 flex items-center gap-1">
-                  <StarIcon fontSize="small" className="!text-yellow-400" />
-                  <p className="text-colorBlack text-[14px] font-normal">
-                    {shop.shop_rating}
-                  </p>
-                </div>
-                <span className="text-[14px] font-normal text-[gray]">
-                  ({shop.shopReviewCount})
-                </span>
+              <div className="flex items-center flex-nowrap">
+                <p className="text-[#151827] text-[14px] flex items-center gap-[2px]">
+                  <StarIcon className="!text-yellow-400 !w-4" />
+                  {shop.shop_rating}{" "}
+                  <span className="text-[#15182766]">
+                    ({shop.shopReviewCount})
+                  </span>
+                </p>
               </div>
             </div>
           </div>

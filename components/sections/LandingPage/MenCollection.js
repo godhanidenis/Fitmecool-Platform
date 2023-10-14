@@ -45,6 +45,7 @@ const MenCollection = () => {
   const [menCategoryData, setMenCategoryData] = useState([]);
   const [menCategory, setMenCategory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [screenSize, setScreenSize] = useState(window.innerWidth);
 
   const carouselRef = useRef(null);
 
@@ -71,6 +72,10 @@ const MenCollection = () => {
       filter: {
         category_id: menCategoryId,
         product_color: [],
+        product_price: {
+          min: 0,
+          max: 0,
+        },
       },
       shopId: [],
       sort: "new",
@@ -87,6 +92,14 @@ const MenCollection = () => {
     );
   };
 
+  const shouldShowButtons = (minScreenSize, maxScreenSize, minDataLength) => {
+    return (
+      screenSize >= minScreenSize &&
+      screenSize <= maxScreenSize &&
+      menCategoryData?.length >= minDataLength
+    );
+  };
+
   useEffect(() => {
     setMenCategory(categories.filter((itm) => itm.category_type === "Men"));
     setMenCategoryId(
@@ -98,6 +111,21 @@ const MenCollection = () => {
     menCategoryId?.length > 0 && getAllMenProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menCategoryId]);
+
+  useEffect(() => {
+    // Function to update the screenSize state when the window is resized
+    const handleResize = () => {
+      setScreenSize(window.innerWidth);
+    };
+
+    // Add the event listener for the 'resize' event
+    window.addEventListener("resize", handleResize);
+
+    // Remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
@@ -131,7 +159,11 @@ const MenCollection = () => {
           </a>
         </Link>
       </div>
-      {menCategoryData?.length > 0 ? (
+      {shouldShowButtons(1600, 4000, 6) ||
+      shouldShowButtons(1367, 1600, 5) ||
+      shouldShowButtons(1024, 1366, 4) ||
+      shouldShowButtons(464, 1024, 3) ||
+      shouldShowButtons(0, 464, 2) ? (
         <div className="p-5 flex gap-5">
           <button
             className="flex justify-center items-center p-1 rounded-lg bg-[#0000002a]"
@@ -156,11 +188,8 @@ const MenCollection = () => {
               ref={carouselRef}
               responsive={responsive}
               customTransition="all .5s ease-in-out"
-              // removeArrowOnDeviceType={["mobile"]}
               arrows={false}
               infinite
-              // autoPlay
-              // autoPlaySpeed={5000}
             >
               {menCategoryData?.map((product, index) => (
                 <div key={product.id} className={`pr-3 pb-8`}>

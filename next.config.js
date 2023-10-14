@@ -3,10 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: false,
   trailingSlash: true,
+  staticPageGenerationTimeout: 100,
   images: {
     domains: [
-      "flyontech-rental-productt.s3.us-east-1.wasabisys.com",
       "s3.us-east-1.wasabisys.com",
+      "rentbless-dev.s3.us-east-1.wasabisys.com",
+      "rentbless-prod.s3.us-east-1.wasabisys.com",
     ],
   },
 };

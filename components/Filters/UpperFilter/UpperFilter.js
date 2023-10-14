@@ -33,6 +33,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedShops, setSelectedShops] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedPrices, setSelectedPrices] = useState([]);
   const [searchProducts, setSearchProducts] = useState([]);
 
   const [selectedLocations, setSelectedLocations] = useState([]);
@@ -63,11 +64,13 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       ...selectedCategories,
       ...(showOnlyShopDetailPage ? [] : selectedShops),
       ...selectedColors,
+      ...selectedPrices,
       ...searchProducts,
     ]);
   }, [
     searchProducts,
     selectedCategories,
+    selectedPrices,
     selectedColors,
     selectedShops,
     showOnlyShopDetailPage,
@@ -118,6 +121,19 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       }))
     );
   }, [appliedProductsFilters.productColor.selectedValue]);
+
+  useEffect(() => {
+    appliedProductsFilters.productPrice.selectedValue.min === 0 &&
+    appliedProductsFilters.productPrice.selectedValue.max === 0
+      ? setSelectedPrices([])
+      : setSelectedPrices([
+          {
+            type: "productPrice",
+            label: `Price: ${appliedProductsFilters.productPrice.selectedValue.min} - ${appliedProductsFilters.productPrice.selectedValue.max}`,
+            value: appliedProductsFilters.productPrice.selectedValue,
+          },
+        ]);
+  }, [appliedProductsFilters.productPrice.selectedValue]);
 
   useEffect(() => {
     appliedProductsFilters.searchBarData.selectedValue &&
@@ -183,10 +199,22 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   };
 
   const GetSortByName = (value) => {
-    if (value === "new") {
-      return "Latest";
-    } else if (value === "old") {
-      return "Oldest";
+    if (value === "high-low") {
+      return "Price: high to low";
+    } else if (value === "low-high") {
+      return "Price: low to high";
+    } else {
+      return "Sort by";
+    }
+  };
+
+  const GetSortByNameForShop = (value) => {
+    if (value === "rating") {
+      return "Rating: high to low";
+    } else if (value === "follower") {
+      return "Follower: high to low";
+    } else {
+      return "Sort by";
     }
   };
 
@@ -218,9 +246,9 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                 )
               }
             >
-              <span className="text-[#979ca0] capitalize text-base">
+              <span className="text-[#979ca0] normal-case text-base">
                 {byShop
-                  ? GetSortByName(shopSortFilters.sortType.selectedValue)
+                  ? GetSortByNameForShop(shopSortFilters.sortType.selectedValue)
                   : GetSortByName(sortFilters.sortType.selectedValue)}
               </span>
             </Button>
@@ -252,23 +280,32 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                     }
                     onChange={handleChangeSortType}
                   >
-                    {[
-                      { label: "Latest", value: "new" },
-                      { label: "Oldest", value: "old" },
-                    ]?.map((item, index) => (
-                      <FormControlLabel
-                        key={index}
-                        value={item.value}
-                        control={<Radio className="text-colorPrimary" />}
-                        label={
-                          <Typography
-                            sx={{ fontWeight: 500, fontSize: "16px" }}
-                          >
-                            {item.label}
-                          </Typography>
-                        }
-                      />
-                    ))}
+                    {
+                    // byShop
+                    //   ? [
+                    //       { label: "Default", value: "" },
+                    //       { label: "Rating: high to low", value: "rating" },
+                    //       { label: "Follower: high to low", value: "follower" },
+                    //     ]
+                    //   :
+                       [
+                          { label: "Default", value: "" },
+                          { label: "Price: high to low", value: "high-low" },
+                          { label: "Price: low to high", value: "low-high" },
+                        ]?.map((item, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={item.value}
+                            control={<Radio className="!text-colorPrimary" />}
+                            label={
+                              <Typography
+                                sx={{ fontWeight: 500, fontSize: "16px" }}
+                              >
+                                {item.label}
+                              </Typography>
+                            }
+                          />
+                        ))}
                   </RadioGroup>
                 </FormControl>
                 <Divider />
@@ -308,6 +345,15 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
           <span
             className="underline cursor-pointer text-colorGreen whitespace-nowrap mr-2"
             onClick={() => {
+              const passValueForProduct = (itm) => {
+                if (itm === "searchBarData") {
+                  return "";
+                } else if (itm === "productPrice") {
+                  return { min: 0, max: 0 };
+                } else {
+                  return [];
+                }
+              };
               if (byShop) {
                 ["locations", "stars"].map((itm) =>
                   dispatch(
@@ -324,6 +370,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                 [
                   "categoryId",
                   "productColor",
+                  "productPrice",
                   ...(showOnlyShopDetailPage ? [] : ["shopId"]),
                   "searchBarData",
                 ].map((itm) =>
@@ -331,7 +378,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                     changeAppliedProductsFilters({
                       key: itm,
                       value: {
-                        selectedValue: itm === "searchBarData" ? "" : [],
+                        selectedValue: passValueForProduct(itm),
                       },
                     })
                   )
@@ -357,6 +404,18 @@ const SelectedFilterBadge = ({
   appliedShopsFilters,
   dispatch,
 }) => {
+  const passValueForProduct = () => {
+    if (itm.type === "searchBarData") {
+      return "";
+    } else if (itm.type === "productPrice") {
+      return { min: 0, max: 0 };
+    } else {
+      return appliedProductsFilters[itm.type].selectedValue.filter(
+        (item) => item !== itm.value
+      );
+    }
+  };
+
   const handleDeleteFilterBadge = () => {
     if (byShop) {
       dispatch(
@@ -378,12 +437,7 @@ const SelectedFilterBadge = ({
         changeAppliedProductsFilters({
           key: itm.type,
           value: {
-            selectedValue:
-              itm.type === "searchBarData"
-                ? ""
-                : appliedProductsFilters[itm.type].selectedValue.filter(
-                    (item) => item !== itm.value
-                  ),
+            selectedValue: passValueForProduct(),
           },
         })
       );

@@ -22,13 +22,7 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
-import {
-  CustomAuthModal,
-  CustomTextField,
-} from "../../../components/core/CustomMUIComponents";
-import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
-import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import { VideoUploadFile } from "../../../services/VideoUploadFile";
+import { CustomAuthModal } from "../../../components/core/CustomMUIComponents";
 import { shopRegistration } from "../../../graphql/mutations/shops";
 import { setShopRegisterId } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
@@ -38,25 +32,10 @@ import TimeCustomTextField from "../../../components/Layout/TimeCustomTextField"
 import Carousel from "react-multi-carousel";
 import Image from "next/image";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
-import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
-import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
 import { assets } from "../../../constants";
-
-const subBranchStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "50%",
-  maxWidth: "1200px",
-  bgcolor: "background.paper",
-  border: "0px solid #000",
-  boxShadow: 24,
-  borderRadius: "12px",
-  height: "auto",
-};
+import { fileUpload } from "../../../services/wasabi";
 
 const style = {
   position: "absolute",
@@ -190,7 +169,6 @@ const ShopPage = () => {
 
   const [shopImages, setShopImages] = useState([]);
   const [uploadShopImages, setUploadShopImages] = useState([]);
-  const ShopImgError = shopImages?.filter((item) => item !== undefined);
 
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
@@ -268,27 +246,13 @@ const ShopPage = () => {
   }, [getValues, sameAsOwner, setValue, currentStep]);
 
   const onShopLogoPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopLogo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopLogo(reader.result);
-      });
-    }
+    setUploadShopLogo(e.target.files[0]);
+    setShopLogo(URL.createObjectURL(e.target.files[0]));
   };
 
   const onShopBackgroundPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopBackground(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopBackground(reader.result);
-      });
-    }
+    setUploadShopBackground(e.target.files[0]);
+    setShopBackground(URL.createObjectURL(e.target.files[0]));
   };
 
   const [SelectImgIndex, setSelectImgIndex] = useState();
@@ -309,24 +273,14 @@ const ShopPage = () => {
     setUploadShopImages(() => [...uploadShopImagesData]);
 
     files.forEach((file) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        shopImagesData[resImgIndex] = reader.result;
-        setShopImages(() => [...shopImagesData]);
-      };
+      shopImagesData[resImgIndex] = URL.createObjectURL(file);
+      setShopImages(() => [...shopImagesData]);
     });
   };
 
   const onShopVideoPreview = (e) => {
-    const reader = new FileReader();
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopVideo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopVideo(reader.result);
-      });
-    }
+    setUploadShopVideo(e.target.files[0]);
+    setShopVideo(URL.createObjectURL(e.target.files[0]));
   };
 
   const handleOwnerDetails = (option) => {
@@ -372,6 +326,21 @@ const ShopPage = () => {
     };
   };
 
+  const multipleImageUploadFile = async (uploadShopImages) => {
+    const uploadPromises = uploadShopImages?.map((uploadShopImg) => {
+      return fileUpload(uploadShopImg);
+    });
+
+    try {
+      const uploadShopImgs = await Promise.all(uploadPromises);
+      console.log("uploadShopImgs :>> ", uploadShopImgs);
+      return uploadShopImgs;
+    } catch (error) {
+      console.error("Error during file upload:", error);
+      return [];
+    }
+  };
+
   const onSubmit = async (data) => {
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
@@ -381,22 +350,37 @@ const ShopPage = () => {
 
       let logoResponse = "";
       let backgroundResponse = "";
-      let imagesResponse = "";
+      let imagesResponse = [];
       let videoResponse = null;
 
       if (uploadShopLogo) {
-        logoResponse = await SingleImageUploadFile(uploadShopLogo);
+        await fileUpload(uploadShopLogo)
+          .then((res) => (logoResponse = res))
+          .catch((error) => {
+            console.error("Error during file upload:", error);
+          });
       }
+
       if (uploadShopBackground) {
-        backgroundResponse = await SingleImageUploadFile(uploadShopBackground);
+        await fileUpload(uploadShopBackground)
+          .then((res) => (backgroundResponse = res))
+          .catch((error) => {
+            console.error("Error during file upload:", error);
+          });
       }
+
       if (uploadShopImages.filter((item) => item !== undefined).length > 0) {
-        imagesResponse = await MultipleImageUploadFile(
+        await multipleImageUploadFile(
           uploadShopImages.filter((item) => item !== undefined)
-        );
+        ).then((res) => (imagesResponse = res));
       }
+
       if (uploadShopVideo) {
-        videoResponse = await VideoUploadFile(uploadShopVideo);
+        await fileUpload(uploadShopVideo)
+          .then((res) => (videoResponse = res))
+          .catch((error) => {
+            console.error("Error during file upload:", error);
+          });
       }
 
       await shopRegistration({
@@ -408,13 +392,13 @@ const ShopPage = () => {
           owner_contact: data.user_contact,
         },
         shopInfo: {
-          shop_logo: logoResponse?.data?.data?.singleUpload || "",
-          shop_cover_image: backgroundResponse?.data?.data?.singleUpload || "",
+          shop_logo: logoResponse || "",
+          shop_cover_image: backgroundResponse || "",
           shop_images:
-            imagesResponse?.data?.data?.multipleUpload?.map((itm) => {
+            imagesResponse?.map((itm) => {
               return { links: itm };
             }) || [],
-          shop_video: videoResponse?.data?.data?.singleUpload || "",
+          shop_video: videoResponse || "",
 
           form_steps: "3",
           shop_social_link: {
@@ -992,7 +976,7 @@ const ShopPage = () => {
                     )}
                   </div>
 
-                  <Divider className="mt-10" />
+                  <Divider className="!mt-10" />
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1050,6 +1034,7 @@ const ShopPage = () => {
                                   alt="Uploaded Image"
                                   layout="fill"
                                   objectFit="contain"
+                                  objectPosition="center"
                                 />
                               </div>
                             ) : (
@@ -1073,10 +1058,6 @@ const ShopPage = () => {
                               accept="image/*,video/*"
                               className="hidden"
                               {...register("shopLogo", {
-                                // required:
-                                //   shopLogo === ""
-                                //     ? "ShopLogo is required *"
-                                //     : false,
                                 onChange: (e) => {
                                   if (
                                     e.target.files &&
@@ -1088,13 +1069,6 @@ const ShopPage = () => {
                               })}
                             />
                           </div>
-                          {/* {errors.shopLogo && (
-                            <div className="mt-2">
-                              <span style={{ color: "red" }}>
-                                {errors.shopLogo?.message}
-                              </span>
-                            </div>
-                          )} */}
                         </div>
                       </div>
                     </div>
@@ -1139,10 +1113,6 @@ const ShopPage = () => {
                               accept="image/*,video/*"
                               className="hidden"
                               {...register("shopBackground", {
-                                // required:
-                                //   shopBackground === ""
-                                //     ? "ShopBackground is required *"
-                                //     : false,
                                 onChange: (e) => {
                                   if (
                                     e.target.files &&
@@ -1154,13 +1124,6 @@ const ShopPage = () => {
                               })}
                             />
                           </div>
-                          {/* {errors.shopBackground && (
-                            <div className="mt-2">
-                              <span style={{ color: "red" }}>
-                                {errors.shopBackground?.message}
-                              </span>
-                            </div>
-                          )} */}
                         </div>
                       </div>
                     </div>
@@ -1191,7 +1154,8 @@ const ShopPage = () => {
                                         src={shopImages[index] ?? ""}
                                         alt="Uploaded Image"
                                         layout="fill"
-                                        objectFit="contain"
+                                        objectFit="cover"
+                                        objectPosition="center top"
                                       />
                                     </div>
                                   ) : (
@@ -1215,9 +1179,6 @@ const ShopPage = () => {
                                     accept="image/*,video/*"
                                     className="hidden"
                                     {...register("shopImages", {
-                                      // required: !ShopImgError[index]
-                                      //   ? "Shop all images is required *"
-                                      //   : false,
                                       onChange: (e) => {
                                         createShopImagesChange(e, index);
                                       },
@@ -1228,13 +1189,6 @@ const ShopPage = () => {
                             );
                           })}
                         </div>
-                        {/* {errors.shopImages && (
-                          <div className="flex justify-center mt-2">
-                            <span style={{ color: "red" }}>
-                              {errors.shopImages?.message}
-                            </span>
-                          </div>
-                        )} */}
                       </div>
                     </div>
                   </div>
@@ -1296,7 +1250,7 @@ const ShopPage = () => {
                       </div>
                     </div>
                   </div>
-                  <Divider className="mt-10" />
+                  <Divider className="!mt-10" />
                   <ActionButtons
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
@@ -1725,7 +1679,6 @@ const ShopPage = () => {
                                     onClick={TrendingCustomRightArrow}
                                   />
                                 }
-                                // dotListClass={"Landing_customDots"}
                               >
                                 {subBranch?.map((sub, index) => (
                                   <div
@@ -1817,7 +1770,6 @@ const ShopPage = () => {
                                   </div>
                                 ))}
                               </Carousel>
-                              {/* </div> */}
                             </div>
                           )}
                           <div className="p-4 pt-2 pb-2 md:p-10 md:pt-4 md:pb-4">
@@ -1836,7 +1788,7 @@ const ShopPage = () => {
                     </div>
                   )}
 
-                  <Divider className="mt-10" />
+                  <Divider className="!mt-10" />
 
                   <ActionButtons
                     currentStep={currentStep}

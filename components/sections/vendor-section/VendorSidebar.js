@@ -58,8 +58,6 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
               {String(vendorShopDetails?.shop_name)
                 ?.split(" ")[0][0]
                 .toUpperCase()}
-              {/* {String(vendorShopDetails?.shop_name)?.split(" ")[0][0].toUpperCase() +
-                      String(vendorShopDetails?.shop_name)?.split(" ")[1][0].toUpperCase()} */}
             </Avatar>
           ) : (
             <ImageLoadingSkeleton className="rounded-full" variant="circular" />
@@ -67,27 +65,28 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         </div>
       </div>
       <div className="flex flex-col items-center lg:gap-2 gap-1 w-full">
-        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 whitespace-nowrap w-full text-center">
+        <div className="lg:text-3xl text-[32px] font-bold text-[#151827] pb-2 w-full text-center">
           {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
         </div>
-        <Divider className="w-full opacity-50 " />
+        <Divider className="!w-full !opacity-50 " />
         <div className="w-full font-Nova pl-[15%] mt-5">
           {vendorSidebarTabs.map((tab, index) => (
             <p
               key={index}
               onClick={() => {
                 forHeader && handleMobileSidebarClick();
-                router.push(
-                  tab.label === "Shop" || tab.label === "Products"
-                    ? `${tab.path}/${vendorShopDetails?.id}`
-                    : tab.path
-                );
+
+                if (tab.label === "Shop" || tab.label === "Products") {
+                  router.push(`${tab.path}/${vendorShopDetails?.id}`);
+                } else {
+                  router.push(tab.path);
+                }
               }}
-              className={`font-semibold pb-8 text-lg ${
+              className={`font-semibold p-3 m-1 text-lg ${
                 selectedValue === tab.label
-                  ? "text-[#29977E]"
+                  ? "text-[#29977E] bg-[#29977d21]"
                   : "text-[#151827]"
-              } cursor-pointer uppercase flex items-center gap-4`}
+              } cursor-pointer uppercase flex items-center rounded-xl gap-4 hover:bg-[#29977d0c]`}
             >
               {tab.icon}
               {tab.label}

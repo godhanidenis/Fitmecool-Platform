@@ -82,12 +82,6 @@ const ShopHeaderSection = ({
                     {String(shopDetails.shop_name)
                       ?.split(" ")[0][0]
                       .toUpperCase()}
-                    {/* {String(shopDetails.shop_name)
-                      ?.split(" ")[0][0]
-                      .toUpperCase() +
-                      String(shopDetails.shop_name)
-                        ?.split(" ")[1][0]
-                        .toUpperCase()} */}
                   </Avatar>
                 ) : (
                   <Image
@@ -96,7 +90,7 @@ const ShopHeaderSection = ({
                     layout="fixed"
                     width={150}
                     height={150}
-                    className="rounded-[50%]"
+                    className="rounded-[50%] object-cover object-center"
                     onLoad={() => setIsShopLogoLoaded(true)}
                     onError={() => {
                       setIsLogoImage(true);
@@ -141,7 +135,7 @@ const ShopHeaderSection = ({
                     </span>
 
                     <Typography
-                      className="text-colorGreen underline pb-2 sm:pb-10 mt-2 cursor-pointer"
+                      className="text-colorGreen underline pb-2 sm:pb-10 !mt-2 cursor-pointer"
                       onClick={() =>
                         router.push(`/shop/${shopDetails?.id}/branches`)
                       }
@@ -151,7 +145,7 @@ const ShopHeaderSection = ({
                   </div>
                   <div className="mt-2 sm:mt-5">
                     <Button
-                      className="rounded-lg bg-colorGreen hover:bg-colorGreen"
+                      className="!rounded-lg !bg-colorGreen"
                       variant="outlined"
                       onClick={() => {
                         if (isAuthenticate) {
@@ -212,8 +206,13 @@ const ShopHeaderSection = ({
 
           <div className="mt-[24px] sm:mt-0 relative">
             <Grid container>
-              <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
+              <Grid
+                sx={{ borderRight: 1, borderColor: "#e5e7eb46" }}
+                item
+                xs={3}
+                sm={3}
+              >
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row !p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <ProductionQuantityLimitsIcon
@@ -228,8 +227,13 @@ const ShopHeaderSection = ({
                   </div>
                 </ShopHeaderItem>
               </Grid>
-              <Grid sx={{ borderRight: 1 }} item xs={3} sm={3}>
-                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
+              <Grid
+                sx={{ borderRight: 1, borderColor: "#e5e7eb46" }}
+                item
+                xs={3}
+                sm={3}
+              >
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  !p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <PeopleAltIcon
@@ -245,13 +249,13 @@ const ShopHeaderSection = ({
                 </ShopHeaderItem>
               </Grid>
               <Grid
-                sx={{ borderRight: 1 }}
+                sx={{ borderRight: 1, borderColor: "#e5e7eb46" }}
                 item
                 xs={3}
                 sm={3}
                 onClick={handleClick}
               >
-                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  p-2">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row  !p-2">
                   <div className="sm:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center">
                       <RateReviewIcon
@@ -267,7 +271,7 @@ const ShopHeaderSection = ({
                 </ShopHeaderItem>
               </Grid>
               <Grid item xs={3} sm={3}>
-                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row p-2">
+                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row !p-2">
                   <div className="lg:flex items-center justify-center w-[100%]">
                     <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center md:justify-center">
                       <ShareIcon
@@ -289,11 +293,6 @@ const ShopHeaderSection = ({
                             height={window.innerWidth >= 1024 ? 26 : 15}
                             alt="facebookIcon"
                           />
-                          {/* <FacebookIcon
-                            size={window.innerWidth >= 1024 ? 26 : 22}
-                            round={true}
-                            className="w-full"
-                          /> */}
                         </FacebookShareButton>
                       </div>
                       <div className="lg:p-2 !rounded-lg cursor-pointer">
@@ -316,11 +315,6 @@ const ShopHeaderSection = ({
                           windowHeight={900}
                           url={pageShareURL}
                         >
-                          {/* <EmailIcon
-                            size={window.innerWidth >= 1024 ? 26 : 22}
-                            round={true}
-                            className="w-full"
-                          /> */}
                           <Image
                             src={assets.googleIcon}
                             width={window.innerWidth >= 1024 ? 26 : 15}

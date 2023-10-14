@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
+
+  const router = useRouter();
 
   const [selectedUserType, setSelectedUserType] = useState(
     typeof window !== "undefined" &&
@@ -34,7 +36,11 @@ const UserType = () => {
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
         <ArrowBackIcon
-          onClick={() => window.history.back()}
+          onClick={() =>
+            router.pathname === "/auth/user-type"
+              ? router.push("/")
+              : window.history.back()
+          }
           className="cursor-pointer text-3xl"
         />
         <div className="">

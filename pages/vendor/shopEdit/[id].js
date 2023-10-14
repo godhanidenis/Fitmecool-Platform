@@ -23,22 +23,12 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useForm } from "react-hook-form";
-import { getShopOwnerDetail } from "../../../graphql/queries/shopQueries";
 import { useDispatch, useSelector } from "react-redux";
 import { shopUpdate } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  getBranchLists,
-  getSingleBranchDetails,
-} from "../../../graphql/queries/branchListsQueries";
 import { deleteBranch, updateBranch } from "../../../graphql/mutations/branch";
 import { createBranch } from "../../../graphql/mutations/branch";
-import { deleteMedia } from "../../../graphql/mutations/deleteMedia";
-import { SingleImageUploadFile } from "../../../services/SingleImageUploadFile";
-import { MultipleImageUploadFile } from "../../../services/MultipleImageUploadFile";
-import { VideoUploadFile } from "../../../services/VideoUploadFile";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -50,6 +40,8 @@ import ConfirmationModal from "../../../components/Modal/ConfirmationModal";
 import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import { HoursModal } from "../shop-setup";
+import { useRouter } from "next/router";
+import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 
 const style = {
   position: "absolute",
@@ -70,7 +62,6 @@ const ShopEdit = () => {
   const [sameAsOwner, setSameAsOwner] = useState("False");
   const [shopTimeDetails, setShopTimeDetails] = useState("Show");
   const [managerDetails, setManagerDetails] = useState("Show");
-  const [branchDetails, setBranchDetails] = useState({});
 
   const [hours, setHours] = useState([
     { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
@@ -85,6 +76,7 @@ const ShopEdit = () => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+
   const dispatch = useDispatch();
 
   const {
@@ -120,8 +112,6 @@ const ShopEdit = () => {
     reset: shopLayoutReset,
   } = useForm();
 
-  const [shopOwnerId, setShopOwnerId] = useState("");
-
   const [ownerLoading, setOwnerLoading] = useState(false);
   const [shopLoading, setShopLoading] = useState(false);
   const [mainBranchLoading, setMainBranchLoading] = useState(false);
@@ -138,31 +128,53 @@ const ShopEdit = () => {
 
   const [branchDeleteModalOpen, setBranchDeleteModalOpen] = useState(false);
   const [deleteBranchId, setDeleteBranchId] = useState();
-  const [editSubBranchId, setEditSubBranchId] = useState();
+  const [editableBranchData, setEditableBranchData] = useState();
 
   const [addEditSubBranchShow, setAddEditSubBranchShow] = useState(false);
 
   const [shopLogo, setShopLogo] = useState("");
   const [uploadShopLogo, setUploadShopLogo] = useState("");
+  const [deleteShopLogo, setDeleteShopLogo] = useState("");
 
   const [shopBackground, setShopBackground] = useState("");
   const [uploadShopBackground, setUploadShopBackground] = useState("");
+  const [deleteShopBackground, setDeleteShopBackground] = useState("");
 
   const [shopImages, setShopImages] = useState([]);
-  const [uploadShopImages, setUploadShopImages] = useState("");
-  const [getUploadShopImages, setGetUploadShopImages] = useState([]);
-
+  const [shopImagesWasabiUrl, setShopImageWasabiUrl] = useState([]);
+  const [editableShopImages, setEditableShopImages] = useState([]);
   const [ShopEditImg, setShopEditImg] = useState("");
+  const [deleteShopImages, setDeleteShopImages] = useState([]);
+
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
-
-  const [shopLayoutAllMediaImages, setShopLayoutAllMediaImages] = useState([]);
-  const [shopLayoutAllMediaVideos, setShopLayoutAllMediaVideos] = useState();
+  const [deleteShopVideo, setDeleteShopVideo] = useState("");
 
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [value, setValue] = React.useState(4);
+  const [value, setValue] = useState(0);
+  const router = useRouter();
 
+  const { id } = router.query;
+
+  const emptyImageStates = () => {
+    setShopLogo("");
+    setUploadShopLogo("");
+    setShopBackground("");
+    setUploadShopBackground("");
+    setShopImages([]);
+    setShopImageWasabiUrl([]);
+    setEditableShopImages([]);
+    setDeleteShopImages([]);
+    setShopEditImg("");
+    setDeleteShopLogo("");
+    setDeleteShopBackground("");
+    setDeleteShopVideo("");
+  };
+
+  useEffect(() => {
+    emptyImageStates();
+  }, [value]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -174,255 +186,165 @@ const ShopEdit = () => {
     setManagerDetails(option);
   };
 
-  if (Object.keys(branchDetails).length === 0) {
-    subBranchList.forEach((item) => {
-      setBranchDetails((prevState) => ({
-        ...prevState,
-        [item.id]: true,
-      }));
-    });
-  }
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
   useEffect(() => {
-    ownerInfoReset();
-  }, [ownerInfoReset, value]);
-
-  const srcToFile = async (src, fileName, mimeType) => {
-    try {
-      const res = await fetch(src);
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+    if (id && vendorShopDetails?.id) {
+      if (id !== vendorShopDetails?.id) {
+        router.push("/vendor/dashboard");
       }
-
-      const buf = await res.arrayBuffer();
-      return new File([buf], fileName, { type: mimeType });
-    } catch (error) {
-      console.error("Fetch error:", error);
     }
-  };
+  }, [id, router, vendorShopDetails?.id]);
+
+  useEffect(() => {
+    ownerInfoReset();
+    mainBranchInfoReset();
+  }, [mainBranchInfoReset, ownerInfoReset, value]);
 
   const onShopLogoPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopLogo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopLogo(reader.result);
-      });
-    }
+    setUploadShopLogo(e.target.files[0]);
+    setShopLogo(URL.createObjectURL(e.target.files[0]));
+    setDeleteShopLogo("");
   };
 
   const onShopBackgroundPreviewImage = (e) => {
-    const reader = new FileReader();
-
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopBackground(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopBackground(reader.result);
-      });
-    }
+    setUploadShopBackground(e.target.files[0]);
+    setShopBackground(URL.createObjectURL(e.target.files[0]));
+    setDeleteShopBackground("");
   };
 
   function fillArrayWithEmptyValues(arr, targetLength) {
     while (arr.length < targetLength) {
-      arr.push({ links: "none" });
+      arr.push({ links: `none${arr.length}` });
     }
-
     return arr;
   }
 
   const updateShopImagesChange = (e) => {
     const files = Array.from(e.target.files);
-    let resImgIndex = fillArrayWithEmptyValues([...shopImages], 3)?.findIndex(
-      (obj) => obj?.links === ShopEditImg
-    );
 
-    let uploadShopImagesData = uploadShopImages;
+    let deleteShopImagesData = deleteShopImages;
+
+    deleteShopImagesData[ShopEditImg] = undefined;
+    setDeleteShopImages(() => [...deleteShopImagesData]);
+
     let shopImagesData = shopImages;
+    let editableShopImagesData = editableShopImages;
 
-    uploadShopImagesData[resImgIndex] = files[0];
-    setUploadShopImages(() => [...uploadShopImagesData]);
+    editableShopImagesData[ShopEditImg] = {
+      oldLink: shopImagesWasabiUrl[ShopEditImg]?.links,
+      newData: files[0],
+    };
+
+    setEditableShopImages(() => [...editableShopImagesData]);
 
     files.forEach((file) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        shopImagesData[resImgIndex] = { links: reader.result };
-        setShopImages(() => [...shopImagesData]);
-      };
+      shopImagesData[ShopEditImg] = { links: URL.createObjectURL(file) };
+      setShopImages(() => [...shopImagesData]);
     });
   };
 
   const onShopVideoPreview = (e) => {
-    const reader = new FileReader();
-    if (e.target.files && e.target.files.length > 0) {
-      setUploadShopVideo(e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
-      reader.addEventListener("load", (e) => {
-        setShopVideo(reader.result);
-      });
-    }
+    setUploadShopVideo(e.target.files[0]);
+    setShopVideo(URL.createObjectURL(e.target.files[0]));
+    setDeleteShopVideo("");
   };
 
-  const getAllSubBranchList = () => {
-    getBranchLists().then((res) => {
-      const subBranches = res.data.branchList
-        .filter((branch) => branch.shop_id === userProfile?.userCreatedShopId)
-        .filter((itm) => itm.branch_type === "sub");
-      setSubBranchList(subBranches);
-    });
+  const updateVendorShopDetailStore = () => {
+    dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
   };
 
   useEffect(() => {
-    if (sameAsOwner === "True") {
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        ownerInfoGetValue("first_name")
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        ownerInfoGetValue("last_name")
-      );
-      mainBranchInfoSetValue(
-        "manager_user_email",
-        ownerInfoGetValue("user_email")
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        ownerInfoGetValue("user_contact")
-      );
+    if (vendorShopDetails?.shop_type === "shop") {
+      setIndividual(false);
     } else {
-      const mainBranches = vendorShopDetails?.branch_info?.find(
-        (itm) => itm.branch_type === "main"
-      );
-      setMainBranch(mainBranches);
+      setIndividual(true);
+    }
+  }, [vendorShopDetails]);
 
-      mainBranchInfoSetValue("address", mainBranches?.branch_address);
-      mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
+  useEffect(() => {
+    if (vendorShopDetails && value === 2 && mainBranch) {
+      if (sameAsOwner === "True") {
+        mainBranchInfoSetValue(
+          "manager_first_name",
+          vendorShopDetails?.ownerInfo?.owner_firstName
+        );
+        mainBranchInfoSetValue(
+          "manager_last_name",
+          vendorShopDetails?.ownerInfo?.owner_lastName
+        );
+        mainBranchInfoSetValue(
+          "manager_user_email",
+          vendorShopDetails?.ownerInfo?.owner_email
+        );
+        mainBranchInfoSetValue(
+          "manager_user_contact",
+          vendorShopDetails?.ownerInfo?.owner_contact
+        );
+      } else {
+        mainBranchInfoSetValue("address", mainBranch?.branch_address);
+        mainBranchInfoSetValue("pin_code", mainBranch?.branch_pinCode);
 
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        mainBranches?.manager_name.split(" ")[0]
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        mainBranches?.manager_name.split(" ")[1]
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        mainBranches?.manager_contact
-      );
-      mainBranchInfoSetValue("city", mainBranches?.branch_city);
-      mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
+        mainBranchInfoSetValue(
+          "manager_first_name",
+          mainBranch?.manager_name.split(" ")[0]
+        );
+        mainBranchInfoSetValue(
+          "manager_last_name",
+          mainBranch?.manager_name.split(" ")[1]
+        );
+        mainBranchInfoSetValue(
+          "manager_user_contact",
+          mainBranch?.manager_contact
+        );
+        mainBranchInfoSetValue("city", mainBranch?.branch_city);
+        mainBranchInfoSetValue("manager_user_email", mainBranch?.manager_email);
+      }
     }
   }, [
-    sameAsOwner,
+    mainBranch,
     mainBranchInfoSetValue,
-    ownerInfoGetValue,
-    vendorShopDetails?.branch_info,
+    sameAsOwner,
+    value,
+    vendorShopDetails,
   ]);
 
   useEffect(() => {
-    if (userProfile?.userCreatedShopId) {
-      dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
-    }
-  }, [dispatch, userProfile?.userCreatedShopId, value]);
-  useEffect(() => {
-    if (userProfile?.userCreatedShopId) {
-      getAllSubBranchList();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProfile?.userCreatedShopId]);
-
-  useEffect(() => {
-    if (userProfile?.userCreatedShopId) {
-      getShopOwnerDetail({ id: vendorShopDetails?.owner_id }).then(
-        (ownerRes) => {
-          setShopOwnerId(ownerRes?.data?.shopOwner?.id);
-          ownerInfoSetValue(
-            "first_name",
-            ownerRes?.data?.shopOwner?.owner_firstName
-          );
-          ownerInfoSetValue(
-            "last_name",
-            ownerRes?.data?.shopOwner?.owner_lastName
-          );
-          ownerInfoSetValue(
-            "user_email",
-            ownerRes?.data?.shopOwner?.owner_email
-          );
-          ownerInfoSetValue(
-            "user_contact",
-            ownerRes?.data?.shopOwner?.owner_contact
-          );
-        }
+    if (vendorShopDetails && value === 0) {
+      ownerInfoSetValue(
+        "first_name",
+        vendorShopDetails?.ownerInfo?.owner_firstName
       );
-
-      {
-        vendorShopDetails?.shop_logo &&
-          srcToFile(
-            vendorShopDetails?.shop_logo,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadShopLogo(file);
-          });
-      }
-      setShopLogo(vendorShopDetails?.shop_logo);
-
-      {
-        vendorShopDetails?.shop_cover_image &&
-          srcToFile(
-            vendorShopDetails?.shop_cover_image,
-            "profile.png",
-            "image/png"
-          ).then(function (file) {
-            setUploadShopBackground(file);
-          });
-      }
-
-      setShopBackground(vendorShopDetails?.shop_cover_image);
-
-      vendorShopDetails?.shop_images?.map((img) => {
-        img?.links &&
-          srcToFile(img?.links, "profile.png", "image/png").then(function (
-            file
-          ) {
-            console.log("uploadShopImages00000000", file);
-            setGetUploadShopImages((old) => [...old, file]);
-            // setUploadShopImages((old) => [...old, file]);
-          });
-      });
-      setShopImages(vendorShopDetails?.shop_images);
-
-      {
-        vendorShopDetails?.shop_video &&
-          srcToFile(vendorShopDetails?.shop_video, "profile.mp4", "video").then(
-            function (file) {
-              setUploadShopVideo(file);
-            }
-          );
-      }
-
-      vendorShopDetails?.shop_video &&
-        setShopVideo(vendorShopDetails?.shop_video);
-
-      setShopLayoutAllMediaImages([
-        vendorShopDetails?.shop_logo,
-        vendorShopDetails?.shop_cover_image,
-        ...(vendorShopDetails?.shop_images?.length > 0
-          ? vendorShopDetails?.shop_images?.map((itm) => itm.links)
-          : []),
-      ]);
-
-      vendorShopDetails?.shop_video &&
-        setShopLayoutAllMediaVideos(vendorShopDetails?.shop_video);
+      ownerInfoSetValue(
+        "last_name",
+        vendorShopDetails?.ownerInfo?.owner_lastName
+      );
+      ownerInfoSetValue(
+        "user_email",
+        vendorShopDetails?.ownerInfo?.owner_email
+      );
+      ownerInfoSetValue(
+        "user_contact",
+        vendorShopDetails?.ownerInfo?.owner_contact
+      );
+    }
+    if (vendorShopDetails && value === 1) {
+      shopInfoSetValue("shop_name", vendorShopDetails?.shop_name);
+      shopInfoSetValue("shop_email", vendorShopDetails?.shop_email);
+      shopInfoSetValue(
+        "facebook_link",
+        vendorShopDetails?.shop_social_link?.facebook
+      );
+      shopInfoSetValue(
+        "instagram_link",
+        vendorShopDetails?.shop_social_link?.instagram
+      );
+      shopInfoSetValue(
+        "personal_website",
+        vendorShopDetails?.shop_social_link?.website
+      );
 
       vendorShopDetails?.shop_time?.map((time) => {
         hours.map((itm) => {
@@ -444,69 +366,67 @@ const ShopEdit = () => {
         });
         setHours(hours);
       });
+    }
 
-      if (vendorShopDetails?.shop_type === "shop") {
-        setIndividual(false);
-      } else {
-        setIndividual(true);
-      }
-      shopInfoSetValue("shop_name", vendorShopDetails?.shop_name);
-      shopInfoSetValue("shop_email", vendorShopDetails?.shop_email);
-      shopInfoSetValue(
-        "facebook_link",
-        vendorShopDetails?.shop_social_link?.facebook
-      );
-      shopInfoSetValue(
-        "instagram_link",
-        vendorShopDetails?.shop_social_link?.instagram
-      );
-      shopInfoSetValue(
-        "personal_website",
-        vendorShopDetails?.shop_social_link?.website
-      );
-
+    if (vendorShopDetails && value === 2) {
       const mainBranches = vendorShopDetails?.branch_info?.find(
         (itm) => itm.branch_type === "main"
       );
       setMainBranch(mainBranches);
 
+      const subBranches = vendorShopDetails?.branch_info?.filter(
+        (itm) => itm.branch_type === "sub"
+      );
+      setSubBranchList(subBranches);
+
+      if (mainBranches?.same_as === "owner") {
+        setSameAsOwner("True");
+      } else {
+        setSameAsOwner("False");
+      }
+
       mainBranchInfoSetValue("address", mainBranches?.branch_address);
       mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
-
-      mainBranchInfoSetValue(
-        "manager_first_name",
-        mainBranches?.manager_name.split(" ")[0]
-      );
-      mainBranchInfoSetValue(
-        "manager_last_name",
-        mainBranches?.manager_name.split(" ")[1]
-      );
-      mainBranchInfoSetValue(
-        "manager_user_contact",
-        mainBranches?.manager_contact
-      );
       mainBranchInfoSetValue("city", mainBranches?.branch_city);
-      mainBranchInfoSetValue("manager_user_email", mainBranches?.manager_email);
+    }
+
+    if (vendorShopDetails && !individual && value === 3) {
+      const subBranches = vendorShopDetails?.branch_info?.filter(
+        (itm) => itm.branch_type === "sub"
+      );
+      setSubBranchList(subBranches);
+    }
+
+    if (vendorShopDetails && individual ? value === 3 : value === 4) {
+      setShopLogo(vendorShopDetails?.shop_logo);
+
+      setShopBackground(vendorShopDetails?.shop_cover_image);
+
+      setShopImageWasabiUrl([...vendorShopDetails?.shop_images]);
+      setShopImages([...vendorShopDetails?.shop_images]);
+
+      vendorShopDetails?.shop_video &&
+        setShopVideo(vendorShopDetails?.shop_video);
     }
   }, [
     hours,
-    userProfile?.userCreatedShopId,
+    individual,
     mainBranchInfoSetValue,
     ownerInfoSetValue,
     shopInfoSetValue,
-    vendorShopDetails,
     value,
+    vendorShopDetails,
   ]);
 
   useEffect(() => {
-    setUploadShopImages([...getUploadShopImages?.slice(0, 3)]);
-  }, [getUploadShopImages, getUploadShopImages.length]);
+    setAddEditSubBranchShow(false);
+  }, [value]);
 
   const ownerInfoOnSubmit = (data) => {
     setOwnerLoading(true);
     shopUpdate({
       ownerInfo: {
-        id: shopOwnerId,
+        id: vendorShopDetails?.ownerInfo?.id,
         owner_firstName: data.first_name,
         owner_lastName: data.last_name,
         owner_email: data.user_email,
@@ -517,7 +437,9 @@ const ShopEdit = () => {
         toast.success(res.data.updateShop.message, {
           theme: "colored",
         });
+
         setOwnerLoading(false);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setOwnerLoading(false);
@@ -576,6 +498,7 @@ const ShopEdit = () => {
           theme: "colored",
         });
         setShopLoading(false);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setShopLoading(false);
@@ -595,6 +518,7 @@ const ShopEdit = () => {
           branch_address: data.address,
           branch_pinCode: data.pin_code,
           branch_city: data.city,
+          same_as: sameAsOwner === "True" ? "owner" : "none",
           manager_name: data.manager_first_name + " " + data.manager_last_name,
           manager_contact: data.manager_user_contact,
           manager_email: data.manager_user_email,
@@ -607,6 +531,7 @@ const ShopEdit = () => {
           theme: "colored",
         });
         setMainBranchLoading(false);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setMainBranchLoading(false);
@@ -617,69 +542,178 @@ const ShopEdit = () => {
   const mainBranchInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
-  console.log(
-    "uploadShopLogo :>> ",
-    shopLayoutAllMediaImages.filter((itm) => itm !== "" && itm !== null)
-  );
-  const shopLayoutOnSubmit = async (data) => {
-    console.log("data1 :>> ", data);
-    setShopLayoutLoading(true);
-    shopLayoutAllMediaImages
-      .filter((itm) => itm !== "" && itm !== null)
-      .map((img) =>
-        deleteMedia({
-          file: img,
-          fileType: "image",
-        }).then((res) => {
-          setShopLayoutAllMediaImages([]);
-          console.log("data1 res :>> ", res);
-        })
+  const deleteImageFiles = async (deletableProducts, type) => {
+    try {
+      const deletionPromises = deletableProducts.map((deleteProduct) =>
+        fileDelete(deleteProduct, type)
       );
+      await Promise.all(deletionPromises);
+    } catch (error) {
+      console.error("Error deleting files:", error);
+    }
+  };
 
-    shopLayoutAllMediaVideos !== undefined &&
-      (await deleteMedia({
-        file: shopLayoutAllMediaVideos,
-        fileType: "video",
-      }).then((res) => setShopLayoutAllMediaVideos()));
+  const shopLayoutOnSubmit = async (data) => {
+    setShopLayoutLoading(true);
 
     let logoResponse = "";
     let backgroundResponse = "";
-    let imagesResponse = "";
+    let imagesResponse = [];
     let videoResponse = null;
 
-    if (uploadShopLogo) {
-      logoResponse = await SingleImageUploadFile(uploadShopLogo);
+    if (deleteShopLogo) {
+      await deleteImageFiles([deleteShopLogo], "image");
     }
-    if (uploadShopBackground) {
-      backgroundResponse = await SingleImageUploadFile(uploadShopBackground);
+
+    if (deleteShopBackground) {
+      await deleteImageFiles([deleteShopBackground], "image");
     }
-    if (uploadShopImages.filter((item) => item !== undefined).length > 0) {
-      imagesResponse = await MultipleImageUploadFile(
-        uploadShopImages.filter((item) => item !== undefined)
+
+    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
+      await deleteImageFiles(
+        deleteShopImages?.filter((itm) => itm !== undefined),
+        "image"
       );
     }
+
+    if (deleteShopVideo) {
+      await deleteImageFiles([deleteShopVideo], "video");
+    }
+
+    if (uploadShopLogo) {
+      if (vendorShopDetails?.shop_logo) {
+        try {
+          const shopLogoRes = await fileUpdate(
+            vendorShopDetails?.shop_logo,
+            "image",
+            uploadShopLogo
+          );
+          logoResponse = shopLogoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      } else {
+        try {
+          const shopLogoRes = await fileUpload(uploadShopLogo);
+          logoResponse = shopLogoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      }
+    }
+
+    if (uploadShopBackground) {
+      if (vendorShopDetails?.shop_cover_image) {
+        try {
+          const shopCoverRes = await fileUpdate(
+            vendorShopDetails?.shop_cover_image,
+            "image",
+            uploadShopBackground
+          );
+          backgroundResponse = shopCoverRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      } else {
+        try {
+          const shopCoverRes = await fileUpload(uploadShopBackground);
+          backgroundResponse = shopCoverRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      }
+    }
+
+    if (editableShopImages?.length > 0) {
+      const uploadPromises = editableShopImages
+        ?.filter((itm) => itm !== undefined)
+        ?.map((shopImage) => {
+          if (shopImage?.oldLink) {
+            return fileUpdate(shopImage?.oldLink, "image", shopImage?.newData);
+          } else {
+            return fileUpload(shopImage?.newData);
+          }
+        });
+
+      try {
+        const updateShopImgs = await Promise.all(uploadPromises);
+        imagesResponse = updateShopImgs;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
+      }
+    }
+
     if (uploadShopVideo) {
-      videoResponse = await VideoUploadFile(uploadShopVideo);
+      if (vendorShopDetails?.shop_video) {
+        try {
+          const shopVideoRes = await fileUpdate(
+            vendorShopDetails?.shop_video,
+            "video",
+            uploadShopVideo
+          );
+          videoResponse = shopVideoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      } else {
+        try {
+          const shopVideoRes = await fileUpload(uploadShopVideo);
+          videoResponse = shopVideoRes;
+        } catch (error) {
+          console.error("Error during file upload:", error);
+          return;
+        }
+      }
+    }
+
+    const existingLinks = shopImagesWasabiUrl.map((item) => item.links);
+
+    const filteredImageResponse = imagesResponse.filter(
+      (item) => !existingLinks.includes(item)
+    );
+
+    let combinedLinks = [
+      ...shopImagesWasabiUrl,
+      ...filteredImageResponse.map((links) => ({ links })),
+    ];
+
+    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
+      combinedLinks = combinedLinks.filter((linkObj) => {
+        return !deleteShopImages
+          ?.filter((itm) => itm !== undefined)
+          .includes(linkObj.links);
+      });
     }
 
     await shopUpdate({
       shopLayout: {
         id: userProfile?.userCreatedShopId,
-        shop_logo: logoResponse?.data?.data?.singleUpload || "",
-        shop_cover_image: backgroundResponse?.data?.data?.singleUpload || "",
-        shop_images:
-          imagesResponse?.data?.data?.multipleUpload?.map((itm) => {
-            return { links: itm };
-          }) || [],
-        shop_video: videoResponse?.data?.data?.singleUpload || "",
+        shop_logo:
+          logoResponse || (deleteShopLogo ? "" : vendorShopDetails?.shop_logo),
+        shop_cover_image:
+          backgroundResponse ||
+          (deleteShopBackground ? "" : vendorShopDetails?.shop_cover_image),
+        shop_images: combinedLinks?.map((item) => ({
+          links: item.links,
+        })),
+        shop_video:
+          videoResponse ||
+          (deleteShopVideo ? "" : vendorShopDetails?.shop_video),
       },
     }).then(
       (res) => {
         toast.success(res.data.updateShop.message, {
           theme: "colored",
         });
+        emptyImageStates();
         setShopLayoutLoading(false);
-        console.log("data1 res :>> ", res);
+        updateVendorShopDetailStore();
       },
       (error) => {
         setShopLayoutLoading(false);
@@ -687,8 +721,13 @@ const ShopEdit = () => {
       }
     );
   };
+
   const shopLayoutOnError = (errors) =>
     console.log("Errors Occurred !! :", errors);
+
+  const TabList = ["Owner Details", "Shop Info", "Main Branch", "Shop Layout"];
+
+  if (!individual) TabList.splice(3, 0, "Sub Branch");
 
   if (!isHydrated) {
     return null;
@@ -706,13 +745,7 @@ const ShopEdit = () => {
                 variant="scrollable"
                 scrollButtons="auto"
               >
-                {[
-                  "Owner Details",
-                  "Shop Info",
-                  "Main Branch",
-                  "Sub Branch",
-                  "Shop Layout",
-                ].map((item, index) => (
+                {TabList.map((item, index) => (
                   <Tab
                     key={index}
                     label={item}
@@ -921,9 +954,7 @@ const ShopEdit = () => {
                         isRequired={false}
                         placeholder="Personal Website Link"
                         formValue={{
-                          ...shopInfoRegister("personal_website", {
-                            required: "Personal Website is required",
-                          }),
+                          ...shopInfoRegister("personal_website", {}),
                         }}
                       />
                       <div className="mt-2">
@@ -943,9 +974,7 @@ const ShopEdit = () => {
                           isRequired={false}
                           placeholder="Your facebook link"
                           formValue={{
-                            ...shopInfoRegister("facebook_link", {
-                              required: "Facebook Link is required",
-                            }),
+                            ...shopInfoRegister("facebook_link", {}),
                           }}
                         />
                         <div className="mt-2">
@@ -964,9 +993,7 @@ const ShopEdit = () => {
                           isRequired={false}
                           placeholder="Your instagram link"
                           formValue={{
-                            ...shopInfoRegister("instagram_link", {
-                              required: "Instagram Link is required",
-                            }),
+                            ...shopInfoRegister("instagram_link", {}),
                           }}
                         />
                         <div className="mt-2">
@@ -1031,30 +1058,30 @@ const ShopEdit = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-center">
-                      <Box className="flex w-full sm:justify-end justify-center mb-6">
-                        <button
-                          type="submit"
-                          onClick={shopInfoHandleSubmit(
-                            shopInfoOnSubmit,
-                            shopInfoOError
-                          )}
-                          className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
-                        >
-                          {shopLoading && (
-                            <CircularProgress
-                              size={20}
-                              color="primary"
-                              sx={{ color: "white", mr: 1 }}
-                            />
-                          )}
-                          Update
-                        </button>
-                      </Box>
-                    </div>
                   </div>
                 </>
               )}
+              <div className="flex items-center justify-center">
+                <Box className="flex w-full sm:justify-end justify-center mb-6">
+                  <button
+                    type="submit"
+                    onClick={shopInfoHandleSubmit(
+                      shopInfoOnSubmit,
+                      shopInfoOError
+                    )}
+                    className="sm:py-2 sm:px-4 bg-colorGreen sm:rounded-md text-white sm:text-xl rounded-[4px] text-sm px-8 py-2 flex items-center"
+                  >
+                    {shopLoading && (
+                      <CircularProgress
+                        size={20}
+                        color="primary"
+                        sx={{ color: "white", mr: 1 }}
+                      />
+                    )}
+                    Update
+                  </button>
+                </Box>
+              </div>
               <HoursModal
                 hoursModalOpen={hoursModalOpen}
                 setHoursModalOpen={setHoursModalOpen}
@@ -1165,7 +1192,7 @@ const ShopEdit = () => {
                     className="cursor-pointer"
                   />
                 )}
-                <div className="font-semibold sm:text-lg text-sm">
+                <div className="font-semibold sm:text-lg text-sm uppercase">
                   Manager Details
                 </div>
               </div>
@@ -1173,7 +1200,7 @@ const ShopEdit = () => {
                 className={`space-y-6 ${managerDetails === "Hide" && "hidden"}`}
               >
                 <div className="flex items-center">
-                  <span className="uppercase font-semibold">
+                  <span className="uppercase sm:text-lg text-sm font-semibold">
                     Same As Owner:
                   </span>
                   <RadioGroup
@@ -1402,52 +1429,51 @@ const ShopEdit = () => {
             </div>
           </TabPanel>
 
-          <TabPanel value={value} index={3}>
-            {!individual && !addEditSubBranchShow && (
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={() => setAddEditSubBranchShow(true)}
-                  className="flex items-center text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
-                >
-                  <span className="hidden sm:inline">
-                    <AddIcon fontSize="medium" className="mr-1 -mt-1" />
-                  </span>
-                  <span className="sm:hidden">
-                    <AddIcon fontSize="small" className="mr-1 -mt-1" />
-                  </span>
-                  Sub Branch
-                </button>
-              </div>
-            )}
-
-            {addEditSubBranchShow ? (
-              <AddEditSubBranch
-                addEditSubBranchShow={addEditSubBranchShow}
-                setAddEditSubBranchShow={setAddEditSubBranchShow}
-                getAllSubBranchList={getAllSubBranchList}
-                ShopId={userProfile?.userCreatedShopId}
-                editSubBranchId={editSubBranchId}
-                setEditSubBranchId={setEditSubBranchId}
-                mainBranchInfoGetValue={mainBranchInfoGetValue}
-                ownerInfoGetValue={ownerInfoGetValue}
-              />
-            ) : (
-              <>
-                <div className="mt-4">
-                  <VendorBranchTable
-                    subBranchList={subBranchList}
-                    getAllSubBranchList={getAllSubBranchList}
-                    setAddEditSubBranchShow={setAddEditSubBranchShow}
-                    setEditSubBranchId={setEditSubBranchId}
-                    setBranchDeleteModalOpen={setBranchDeleteModalOpen}
-                    setDeleteBranchId={setDeleteBranchId}
-                  />
+          {!individual && (
+            <TabPanel value={value} index={3}>
+              {!addEditSubBranchShow && (
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => setAddEditSubBranchShow(true)}
+                    className="flex items-center text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
+                  >
+                    <span className="hidden sm:inline">
+                      <AddIcon fontSize="medium" className="mr-1 -mt-1" />
+                    </span>
+                    <span className="sm:hidden">
+                      <AddIcon fontSize="small" className="mr-1 -mt-1" />
+                    </span>
+                    Sub Branch
+                  </button>
                 </div>
-              </>
-            )}
-          </TabPanel>
+              )}
 
-          <TabPanel value={value} index={4}>
+              {addEditSubBranchShow ? (
+                <AddEditSubBranch
+                  setAddEditSubBranchShow={setAddEditSubBranchShow}
+                  updateVendorShopDetailStore={updateVendorShopDetailStore}
+                  ShopId={userProfile?.userCreatedShopId}
+                  editableBranchData={editableBranchData}
+                  setEditableBranchData={setEditableBranchData}
+                />
+              ) : (
+                <>
+                  <div className="mt-4">
+                    <VendorBranchTable
+                      subBranchList={subBranchList}
+                      updateVendorShopDetailStore={updateVendorShopDetailStore}
+                      setAddEditSubBranchShow={setAddEditSubBranchShow}
+                      setEditableBranchData={setEditableBranchData}
+                      setBranchDeleteModalOpen={setBranchDeleteModalOpen}
+                      setDeleteBranchId={setDeleteBranchId}
+                    />
+                  </div>
+                </>
+              )}
+            </TabPanel>
+          )}
+
+          <TabPanel value={value} index={individual ? 3 : 4}>
             <div className="container rounded-lg mt-10">
               <div className="grid grid-cols-3 gap-6 sm:gap-10 my-10">
                 <div className="col-span-3 lg:flex justify-center gap-10 items-start">
@@ -1472,11 +1498,21 @@ const ShopEdit = () => {
                                 }
                               />
                             </span>
+                            <span
+                              onClick={() => {
+                                setShopLogo("");
+                                setUploadShopLogo("");
+                                setDeleteShopLogo(vendorShopDetails?.shop_logo);
+                              }}
+                              className="absolute left-4 sm:bottom-2 bottom-0 border border-red-600 rounded-full p-2 bg-red-600"
+                            >
+                              <DeleteIcon style={{ color: "white" }} />
+                            </span>
                             <div className="w-full h-full">
                               <img
                                 src={shopLogo}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-full"
+                                className="object-cover h-full w-full rounded-full object-center"
                               />
                             </div>
                           </>
@@ -1514,8 +1550,6 @@ const ShopEdit = () => {
                         accept="image/*"
                         className="hidden"
                         {...shopLayoutRegister("shopLogo", {
-                          // required:
-                          //   shopLogo === "" ? "shopLogo is required" : false,
                           onChange: (e) => {
                             if (e.target.files && e.target.files.length > 0) {
                               onShopLogoPreviewImage(e);
@@ -1524,13 +1558,6 @@ const ShopEdit = () => {
                         })}
                       />
                     </div>
-                    {/* <div className="mt-2">
-                      {shopLayoutErrors.shopLogo && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {shopLayoutErrors.shopLogo?.message}
-                        </span>
-                      )}
-                    </div> */}
                   </div>
 
                   <div className="flex flex-col mt-6 sm:mt-6 lg:mt-0 items-center justify-center">
@@ -1556,11 +1583,23 @@ const ShopEdit = () => {
                                 }
                               />
                             </span>
+                            <span
+                              onClick={() => {
+                                setShopBackground("");
+                                setUploadShopBackground("");
+                                setDeleteShopBackground(
+                                  vendorShopDetails?.shop_cover_image
+                                );
+                              }}
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
+                            >
+                              <DeleteIcon style={{ color: "white" }} />
+                            </span>
                             <div className="w-full h-full">
                               <img
                                 src={shopBackground}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-xl"
+                                className="object-cover h-full w-full rounded-xl object-top"
                               />
                             </div>
                           </>
@@ -1597,10 +1636,6 @@ const ShopEdit = () => {
                         accept="image/*"
                         className="hidden"
                         {...shopLayoutRegister("shopBackground", {
-                          // required:
-                          //   shopBackground === ""
-                          //     ? "shopBackground is required"
-                          //     : false,
                           onChange: (e) => {
                             if (e.target.files && e.target.files.length > 0) {
                               onShopBackgroundPreviewImage(e);
@@ -1609,13 +1644,6 @@ const ShopEdit = () => {
                         })}
                       />
                     </div>
-                    {/* <div className="mt-2">
-                      {shopLayoutErrors.shopBackground && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {shopLayoutErrors.shopBackground?.message}
-                        </span>
-                      )}
-                    </div> */}
                   </div>
                 </div>
 
@@ -1650,7 +1678,7 @@ const ShopEdit = () => {
                                           },
                                         }}
                                         onClick={() => (
-                                          setShopEditImg(image?.links),
+                                          setShopEditImg(index),
                                           document
                                             .getElementById("shopEditId")
                                             .click()
@@ -1658,11 +1686,45 @@ const ShopEdit = () => {
                                       />
                                     </span>
 
+                                    <span
+                                      onClick={() => {
+                                        setShopImages(
+                                          shopImages?.filter(
+                                            (itm, idx) => idx !== index
+                                          )
+                                        );
+
+                                        setEditableShopImages(
+                                          editableShopImages.filter(
+                                            (itm, idx) => idx !== index
+                                          )
+                                        );
+
+                                        let deleteShopImagesData =
+                                          deleteShopImages;
+
+                                        deleteShopImagesData[index] =
+                                          shopImagesWasabiUrl[index]?.links;
+                                        setDeleteShopImages(() => [
+                                          ...deleteShopImagesData,
+                                        ]);
+
+                                        let shopImagesData = shopImages;
+                                        shopImagesData[index] = undefined;
+                                        setShopImages(() => [
+                                          ...shopImagesData,
+                                        ]);
+                                      }}
+                                      className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 z-[99999]"
+                                    >
+                                      <DeleteIcon style={{ color: "white" }} />
+                                    </span>
+
                                     <div className="w-full relative h-full">
                                       <img
                                         src={image?.links}
                                         alt="Uploaded Image"
-                                        className="object-cover h-full w-full rounded-xl"
+                                        className="object-cover h-full w-full rounded-xl object-top"
                                       />
                                     </div>
                                   </>
@@ -1672,7 +1734,7 @@ const ShopEdit = () => {
                                       index === 0 ? "col-start-3" : ""
                                     } col-span-3`}
                                     onClick={() => (
-                                      setShopEditImg(image?.links),
+                                      setShopEditImg(index),
                                       document
                                         .getElementById("shopEditId")
                                         .click()
@@ -1701,10 +1763,6 @@ const ShopEdit = () => {
                                   multiple
                                   className="hidden"
                                   {...shopLayoutRegister("shopImages", {
-                                    // required:
-                                    //   shopImages?.length === 0
-                                    //     ? "Shop Image is required"
-                                    //     : false,
                                     onChange: (e) => {
                                       updateShopImagesChange(e);
                                     },
@@ -1721,19 +1779,12 @@ const ShopEdit = () => {
                               index === 0
                                 ? "col-start-2 lg:col-start-3"
                                 : "col-start-2"
-                            } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full `}
+                            } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full`}
                           >
                             <ImageLoadingSkeleton className="rounded-3xl" />
                           </div>
                         ))}
                   </div>
-                  {/* <div className="mt-2">
-                    {shopLayoutErrors.shopImages && (
-                      <span style={{ color: "red" }} className="-mb-6">
-                        {shopLayoutErrors.shopImages?.message}
-                      </span>
-                    )}
-                  </div> */}
                 </div>
                 <div className="w-full col-span-3">
                   <div className="text-base sm:text-xl font-semibold mb-3 text-black flex justify-center">
@@ -1776,6 +1827,9 @@ const ShopEdit = () => {
                               onClick={() => {
                                 setShopVideo("");
                                 setUploadShopVideo("");
+                                setDeleteShopVideo(
+                                  vendorShopDetails?.shop_video
+                                );
                               }}
                               className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
                             >
@@ -1858,7 +1912,7 @@ const ShopEdit = () => {
               toast.success(res.data.deleteBranch, {
                 theme: "colored",
               });
-              getAllSubBranchList();
+              updateVendorShopDetailStore();
             },
             (error) => {
               toast.error(error.message, { theme: "colored" });
@@ -2208,12 +2262,10 @@ const DaysTimeModal = ({
 
 const AddEditSubBranch = ({
   setAddEditSubBranchShow,
-  getAllSubBranchList,
+  updateVendorShopDetailStore,
   ShopId,
-  editSubBranchId,
-  setEditSubBranchId,
-  ownerInfoGetValue,
-  mainBranchInfoGetValue,
+  editableBranchData,
+  setEditableBranchData,
 }) => {
   const [managerValue, setManagerValue] = useState("");
 
@@ -2226,6 +2278,10 @@ const AddEditSubBranch = ({
   const [subManagerEmail, setSubManagerEmail] = useState("");
   const [subManagerPhone, setSubManagerPhone] = useState("");
 
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+
+  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState({
     subManagerAddressError: "",
     subManagerCityError: "",
@@ -2236,46 +2292,63 @@ const AddEditSubBranch = ({
     subManagerPhoneError: "",
   });
 
+  const mainBranches = vendorShopDetails?.branch_info?.find(
+    (itm) => itm.branch_type === "main"
+  );
+
   useEffect(() => {
     if (managerValue === "Same as owner") {
-      setSubManagerFirstName(ownerInfoGetValue("first_name"));
-      setSubManagerLastName(ownerInfoGetValue("last_name"));
-      setSubManagerEmail(ownerInfoGetValue("user_email"));
-      setSubManagerPhone(ownerInfoGetValue("user_contact"));
+      setSubManagerFirstName(vendorShopDetails?.ownerInfo?.owner_firstName);
+      setSubManagerLastName(vendorShopDetails?.ownerInfo?.owner_lastName);
+      setSubManagerEmail(vendorShopDetails?.ownerInfo?.owner_email);
+      setSubManagerPhone(vendorShopDetails?.ownerInfo?.owner_contact);
       error.subManagerFirstNameError = "";
       error.subManagerLastNameError = "";
       error.subManagerEmailError = "";
       error.subManagerPhoneError = "";
     } else if (managerValue === "same as main branch manager") {
-      setSubManagerFirstName(mainBranchInfoGetValue("manager_first_name"));
-      setSubManagerLastName(mainBranchInfoGetValue("manager_last_name"));
-      setSubManagerEmail(mainBranchInfoGetValue("manager_user_email"));
-      setSubManagerPhone(mainBranchInfoGetValue("manager_user_contact"));
+      setSubManagerFirstName(mainBranches?.manager_name.split(" ")[0]);
+      setSubManagerLastName(mainBranches?.manager_name.split(" ")[1]);
+      setSubManagerEmail(mainBranches?.manager_email);
+      setSubManagerPhone(mainBranches?.manager_contact);
       error.subManagerFirstNameError = "";
       error.subManagerLastNameError = "";
       error.subManagerEmailError = "";
       error.subManagerPhoneError = "";
     } else {
-      setSubManagerFirstName("");
-      setSubManagerLastName("");
-      setSubManagerEmail("");
-      setSubManagerPhone("");
+      if (editableBranchData) {
+        setSubManagerFirstName(editableBranchData?.manager_name.split(" ")[0]);
+        setSubManagerLastName(editableBranchData?.manager_name.split(" ")[1]);
+        setSubManagerEmail(editableBranchData?.manager_email);
+        setSubManagerPhone(editableBranchData?.manager_contact);
+      } else {
+        setSubManagerFirstName("");
+        setSubManagerLastName("");
+        setSubManagerEmail("");
+        setSubManagerPhone("");
+      }
     }
-  }, [error, mainBranchInfoGetValue, managerValue, ownerInfoGetValue]);
+  }, [
+    editableBranchData,
+    error,
+    mainBranches,
+    managerValue,
+    vendorShopDetails,
+  ]);
 
   useEffect(() => {
-    if (editSubBranchId !== undefined) {
-      getSingleBranchDetails({ id: editSubBranchId }).then((res) => {
-        setSubManagerAddress(res.data.branch.branch_address);
-        setSubManagerCity(res.data.branch.branch_city);
-        setSubManagerPinCode(res.data.branch.branch_pinCode);
-        setSubManagerFirstName(res.data.branch.manager_name.split(" ")[0]);
-        setSubManagerLastName(res.data.branch.manager_name.split(" ")[1]);
-        setSubManagerEmail(res.data.branch.manager_email);
-        setSubManagerPhone(res.data.branch.manager_contact);
-      });
+    if (editableBranchData) {
+      setSubManagerAddress(editableBranchData.branch_address);
+      setSubManagerCity(editableBranchData.branch_city);
+      setSubManagerPinCode(editableBranchData.branch_pinCode);
+      setManagerValue(
+        (editableBranchData?.same_as === "owner" && "Same as owner") ||
+          (editableBranchData?.same_as === "main_branch_manager" &&
+            "same as main branch manager") ||
+          ""
+      );
     }
-  }, [editSubBranchId]);
+  }, [editableBranchData]);
 
   const subBranchSubmit = () => {
     let allError = {};
@@ -2335,37 +2408,19 @@ const AddEditSubBranch = ({
     ) {
       setError(allError);
     } else {
-      if (editSubBranchId === undefined) {
-        createBranch({
-          branchInfo: {
-            branch_address: subManagerAddress,
-            branch_city: subManagerCity,
-            branch_pinCode: subManagerPinCode,
-            manager_name: subManagerFirstName + " " + subManagerLastName,
-            manager_contact: subManagerPhone,
-            manager_email: subManagerEmail,
-            branch_type: "sub",
-            shop_id: ShopId,
-          },
-        }).then(
-          (res) => {
-            toast.success(res.data.createBranch.message, {
-              theme: "colored",
-            });
-            getAllSubBranchList();
-            handleSubBranchSectionClose();
-          },
-          (error) => {
-            toast.error(error.message, { theme: "colored" });
-          }
-        );
-      } else {
+      setLoading(true);
+      if (editableBranchData) {
         updateBranch({
-          id: editSubBranchId,
+          id: editableBranchData?.id,
           branchInfo: {
             branch_address: subManagerAddress,
             branch_city: subManagerCity,
             branch_pinCode: subManagerPinCode,
+            same_as:
+              (managerValue === "Same as owner" && "owner") ||
+              (managerValue === "same as main branch manager" &&
+                "main_branch_manager") ||
+              "none",
             manager_name: subManagerFirstName + " " + subManagerLastName,
             manager_contact: subManagerPhone,
             manager_email: subManagerEmail,
@@ -2377,11 +2432,44 @@ const AddEditSubBranch = ({
             toast.success(res.data.updateBranch.message, {
               theme: "colored",
             });
-            getAllSubBranchList();
+            setLoading(false);
+            updateVendorShopDetailStore();
             handleSubBranchSectionClose();
           },
           (error) => {
             toast.error(error.message, { theme: "colored" });
+            setLoading(false);
+          }
+        );
+      } else {
+        createBranch({
+          branchInfo: {
+            branch_address: subManagerAddress,
+            branch_city: subManagerCity,
+            branch_pinCode: subManagerPinCode,
+            same_as:
+              (managerValue === "Same as owner" && "owner") ||
+              (managerValue === "same as main branch manager" &&
+                "main_branch_manager") ||
+              "none",
+            manager_name: subManagerFirstName + " " + subManagerLastName,
+            manager_contact: subManagerPhone,
+            manager_email: subManagerEmail,
+            branch_type: "sub",
+            shop_id: ShopId,
+          },
+        }).then(
+          (res) => {
+            toast.success(res.data.createBranch.message, {
+              theme: "colored",
+            });
+            updateVendorShopDetailStore();
+            handleSubBranchSectionClose();
+            setLoading(false);
+          },
+          (error) => {
+            toast.error(error.message, { theme: "colored" });
+            setLoading(false);
           }
         );
       }
@@ -2398,7 +2486,8 @@ const AddEditSubBranch = ({
     setSubManagerEmail("");
     setManagerValue("");
     setSubManagerPhone("");
-    setEditSubBranchId();
+    setEditableBranchData();
+    setLoading(false);
     error.subManagerFirstNameError = "";
     error.subManagerLastNameError = "";
     error.subManagerEmailError = "";
@@ -2421,7 +2510,7 @@ const AddEditSubBranch = ({
             onClick={handleSubBranchSectionClose}
           />
           <p className="flex items-center text-colorBlack text-xl font-semibold ml-2">
-            {editSubBranchId === undefined ? "Add" : "Update"} Sub Branch
+            {editableBranchData ? "Update" : "Add"} Sub Branch
           </p>
         </div>
 
@@ -2631,7 +2720,14 @@ const AddEditSubBranch = ({
             className="flex items-center capitalize text-lg py-1 px-2 rounded-md border-2 bg-colorGreen text-white border-colorGreen"
             onClick={subBranchSubmit}
           >
-            {editSubBranchId === undefined ? "Save" : "Update"}
+            {loading && (
+              <CircularProgress
+                size={20}
+                color="primary"
+                sx={{ color: "white", mr: 1 }}
+              />
+            )}
+            {editableBranchData ? "Update" : "Save"}
           </button>
         </div>
       </div>

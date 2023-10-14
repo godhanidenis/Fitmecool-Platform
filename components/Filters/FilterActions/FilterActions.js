@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Divider, Stack, Switch } from "@mui/material";
+import { Divider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CustomSwitchComponent from "../../core/CustomSwitchComponent";
@@ -27,19 +27,8 @@ const FilterActions = ({ productByShop }) => {
         {!productByShop && (
           <CustomSwitchComponent checked={checked} onChange={switchHandler} />
         )}
-        {/* {!productByShop && (
-          <Stack direction="row" alignItems="center">
-            <span>Product</span>
-            <Switch
-              checked={checked}
-              onChange={switchHandler}
-              color="secondary"
-            />
-            <span>Shop</span>
-          </Stack>
-        )} */}
       </div>
-      <Divider className="mx-6" />
+      <Divider className="!mx-6" />
     </div>
   );
 };

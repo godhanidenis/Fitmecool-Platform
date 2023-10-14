@@ -41,7 +41,7 @@ const SeeBranchDropDown = ({ cardTitle = "", bottomComponent }) => {
         </div>
         {cardOpen && (
           <div
-            className={`px-3 pt-3 ${
+            className={`p-3 ${
               cardTitle == "Shops" ||
               cardTitle == "Colors" ||
               cardTitle == "Locations"

@@ -13,7 +13,6 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { deleteProduct } from "../../graphql/mutations/products";
 import { toast } from "react-toastify";
@@ -22,6 +21,8 @@ import ConfirmationModal from "../Modal/ConfirmationModal";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { changeProductPage } from "../../redux/ducks/product";
+import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
+import { fileDelete } from "../../services/wasabi";
 
 const StyledTableCell = styled(TableCell)(({ theme, index }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,13 +46,32 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const VenderProductTable = ({ productsData, getAllProducts }) => {
-  const router = useRouter();
+const VenderProductTable = ({
+  productsData,
+  setAddEditProductShow,
+  setEditableProductData,
+  getAllProducts,
+}) => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState();
 
+  const [deletableProductsImages, setDeletableProductsImages] = useState([]);
+  const [deletableProductVideo, setDeletableProductVideo] = useState();
+
   const dispatch = useDispatch();
+
+  const deleteImageFiles = async (deletableProducts, type) => {
+    try {
+      const deletionPromises = deletableProducts.map((deleteProduct) =>
+        fileDelete(deleteProduct, type)
+      );
+      await Promise.all(deletionPromises);
+    } catch (error) {
+      console.error("Error deleting files:", error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -82,7 +102,6 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                   <TableCell>
                     <div className="relative">
                       <Image
-                        // className="object-cover"
                         objectFit="cover"
                         objectPosition="center top"
                         src={item?.product_image?.front}
@@ -119,9 +138,8 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                       <button
                         className={`flex justify-center items-center w-8 h-8 rounded-full transition-colors bg-black text-white duration-300 hover:opacity-80 `}
                         onClick={() => {
-                          router?.push(
-                            `/vendor/shop/${vendorShopDetails?.id}/addEditProduct/${item?.id}`
-                          );
+                          setAddEditProductShow(true);
+                          setEditableProductData(item);
                         }}
                       >
                         <EditIcon
@@ -138,6 +156,16 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                         onClick={() => {
                           setProductDeleteModalOpen(true);
                           setDeleteProductId(item?.id);
+
+                          setDeletableProductsImages(
+                            ["front", "back", "side"].map(
+                              (key) => item?.product_image[key]
+                            )
+                          );
+
+                          if (item?.product_video) {
+                            setDeletableProductVideo(item?.product_video);
+                          }
                         }}
                       >
                         <DeleteIcon
@@ -163,7 +191,13 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
           deleteModalOpen={productDeleteModalOpen}
           setDeleteModalOpen={setProductDeleteModalOpen}
           deleteId={deleteProductId}
-          onClickItemDelete={() => {
+          onClickItemDelete={async () => {
+            await deleteImageFiles(deletableProductsImages, "image");
+
+            if (deletableProductVideo) {
+              await deleteImageFiles([deletableProductVideo], "video");
+            }
+
             deleteProduct({ id: deleteProductId }).then(
               (res) => {
                 toast.success(res.data.deleteProduct, {
@@ -171,6 +205,7 @@ const VenderProductTable = ({ productsData, getAllProducts }) => {
                 });
                 dispatch(changeProductPage(0));
                 getAllProducts();
+                dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
               },
               (error) => {
                 toast.error(error.message, { theme: "colored" });

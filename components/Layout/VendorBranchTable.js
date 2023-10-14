@@ -14,7 +14,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 const VendorBranchTable = ({
   subBranchList,
   setAddEditSubBranchShow,
-  setEditSubBranchId,
+  setEditableBranchData,
   setBranchDeleteModalOpen,
   setDeleteBranchId,
 }) => {
@@ -65,7 +65,7 @@ const VendorBranchTable = ({
                           className="cursor-pointer"
                           onClick={() => {
                             setAddEditSubBranchShow(true);
-                            setEditSubBranchId(item?.id);
+                            setEditableBranchData(item);
                           }}
                         />
                       </span>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+// import Magnifier from "react-magnifier";
 
 import Image from "next/image";
 import {
@@ -49,6 +50,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 import { assets } from "../../constants";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 
 const ContactStyle = {
   position: "absolute",
@@ -66,13 +68,15 @@ const ProductDetail = ({ productDetails }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
-  const [isProductImage, setIsProductImage] = useState("");
+  const [isProductImage, setIsProductImage] = useState([]);
 
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [OpenToolTip, setOpenToolTip] = useState(false);
 
   const [readMore, setReadMore] = useState(false);
+
+  const [photos, setPhotos] = useState([]);
 
   const pageShareURL = window.location.href;
 
@@ -136,22 +140,49 @@ const ProductDetail = ({ productDetails }) => {
     dispatch(loadAreaListsStart());
   }, [dispatch]);
 
-  const photos = [
-    productDetails.data.product.data.product_image?.front,
-    productDetails.data.product.data.product_image?.back,
-    productDetails.data.product.data.product_image?.side,
-  ];
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState();
+  const [images, setImages] = useState({ src: "" });
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
   useEffect(() => {
-    setImages(photos[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // Initialize the photos array with initial values
+    const initialPhotos = [
+      {
+        src: productDetails.data.product.data.product_image?.front,
+        type: "image",
+      },
+      {
+        src: productDetails.data.product.data.product_image?.back,
+        type: "image",
+      },
+      {
+        src: productDetails.data.product.data.product_image?.side,
+        type: "image",
+      },
+    ];
 
-  const selectImage = (img, i) => {
+    if (productDetails.data.product.data.product_video) {
+      // If there's a video, add it to the initialPhotos array
+      initialPhotos.push({
+        src: productDetails.data.product.data.product_video,
+        type: "video",
+      });
+    }
+
+    // Set the initial photos state
+    setPhotos(initialPhotos);
+  }, [
+    productDetails.data.product.data.product_image,
+    productDetails.data.product.data.product_video,
+  ]);
+
+  useEffect(() => {
+    if (photos?.length > 0) setImages(photos[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [photos?.length]);
+
+  const selectImage = (img) => {
     setImages(img);
   };
 
@@ -159,30 +190,58 @@ const ProductDetail = ({ productDetails }) => {
     return (
       <div
         className="mx-auto mb-[24px] relative"
-        onMouseEnter={() => selectImage(itm, i)}
+        onMouseEnter={() => {
+          selectImage(itm);
+        }}
         key={i}
-        onClick={() => selectImage(itm, i)}
+        onClick={() => {
+          selectImage(itm);
+        }}
       >
         {itm ? (
-          isProductImage === itm && isShopImages ? (
+          isProductImage.includes(itm) && isShopImages ? (
             <div
-              className=" w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
+              className="w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
               style={{ border: images === itm ? "2px solid #29977E" : 0 }}
             />
           ) : (
-            <img
-              src={itm}
-              alt="Product Images"
-              style={{ border: images === itm ? "2px solid #29977E" : 0 }}
-              className="rounded-[16px] object-cover cursor-pointer w-[129px] h-[146px]"
-              onError={() => {
-                setIsShopImages(true);
-                setIsProductImage(itm);
-              }}
-            />
+            <>
+              {itm?.type === "image" && (
+                <img
+                  src={itm?.src}
+                  alt="Product Images"
+                  style={{
+                    border: images?.src === itm?.src ? "2px solid #29977E" : 0,
+                  }}
+                  className="object-top rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
+                  onError={() => {
+                    setIsShopImages(true);
+                    setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
+                  }}
+                />
+              )}
+              {itm?.type === "video" && (
+                <div className="relative w-[130px] h-[150px]">
+                  <video
+                    src={itm?.src}
+                    alt="Product Video"
+                    style={{
+                      border:
+                        images?.src === itm?.src ? "2px solid #29977E" : 0,
+                    }}
+                    className="rounded-[16px] object-cover cursor-pointer w-full h-full"
+                    onError={() => {
+                      setIsShopImages(true);
+                      setIsProductImage(isProductImage.push(itm));
+                    }}
+                  />
+                  <PlayCircleIcon className="!absolute !top-2 !right-2 !text-colorPrimary" />
+                </div>
+              )}
+            </>
           )
         ) : (
-          <ImageLoadingSkeleton className="rounded-[16px] !w-[129px] !h-[146px]" />
+          <ImageLoadingSkeleton className="rounded-[16px] !w-[130px] !h-[150px]" />
         )}
       </div>
     );
@@ -232,7 +291,7 @@ const ProductDetail = ({ productDetails }) => {
   const shopDetailHeader = () => (
     <div className="flex items-center bg-colorPrimary p-3">
       <div className="flex items-center justify-between w-full gap-3">
-        <div className="flex justify-start items-center gap-1 sm:gap-4">
+        <div className="flex gap-3 items-center">
           <div className="flex justify-center items-center">
             <Link
               href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
@@ -258,12 +317,12 @@ const ProductDetail = ({ productDetails }) => {
               )}
             </Link>
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-start">
             <Link
               href={`/shop/${productDetails.data.product.data.branchInfo?.shop_id}`}
             >
               <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-                <p className="line-clamp-1 text-white text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
+                <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
                   {
                     productDetails.data.product.data.branchInfo?.shop_info
                       .shop_name
@@ -271,7 +330,7 @@ const ProductDetail = ({ productDetails }) => {
                 </p>
               </a>
             </Link>
-            <p className="text-[#888888] text-xs sm:text-sm font-normal">
+            <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal line-clamp-1">
               25 days ago
             </p>
           </div>
@@ -297,11 +356,12 @@ const ProductDetail = ({ productDetails }) => {
 
         <div className="flex items-center md:justify-end">
           <Button
+            className="!bg-colorGreen "
             variant="outlined"
             sx={{
               textTransform: "none",
               color: "white",
-              border: "1px solid white",
+              border: "1px solid colorGreen",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -375,7 +435,7 @@ const ProductDetail = ({ productDetails }) => {
 
   return (
     <>
-      <div className="bg-colorWhite font-Nova container">
+      <div className="font-Nova container">
         <div className="py-2 sm:py-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
@@ -415,16 +475,36 @@ const ProductDetail = ({ productDetails }) => {
           <div className="!w-[100%] ">
             <div className="grid grid-cols-2 p-2 gap-8">
               <div className="col-span-2 lg:col-span-1 hidden sm:flex">
-                <div className="grid grid-cols-4">
+                <div className="grid grid-cols-4 w-full h-full">
                   <div className="col-span-1">
                     <div className="p-2 pt-0">{productImages}</div>
                   </div>
                   <div className="col-span-3">
-                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[600px] rounded-2xl">
-                      <CustomReactImageMagnify
-                        large={images}
-                        preview={images}
-                      />
+                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
+                      {images?.type === "image" && (
+                        <CustomReactImageMagnify
+                          src={images.src}
+                          height="700px"
+                          width="100%"
+                          className="object-cover rounded-2xl object-top"
+                        />
+                      )}
+
+                      {images?.type === "video" && (
+                        <video
+                          src={images?.src}
+                          alt="product-video"
+                          onError={() => {
+                            setIsShopImages(true);
+                            setIsProductImage(images);
+                          }}
+                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover !object-top"
+                          autoPlay={true}
+                          controls
+                          muted
+                          loop
+                        />
+                      )}
                     </div>
                     <div className="flex flex-wrap items-center justify-between mt-4">
                       <div className="w-[30%]">
@@ -555,7 +635,7 @@ const ProductDetail = ({ productDetails }) => {
                 <Box className="!hidden lg:!block">{shopDetailHeader()}</Box>
                 <div className="mt-5">
                   <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
-                    <span className="font-semibold text-[30px] text-colorGreen leading-9">
+                    <span className="font-semibold text-[30px] text-colorGreen leading-9 capitalize">
                       {productDetails.data.product.data.product_name}
                     </span>
                     <button
@@ -777,11 +857,17 @@ const ContactDetailsModal = ({
             <Divider />
             <div className="p-5 flex flex-col sm:flex-row gap-4 justify-start">
               <div className="flex justify-center items-center">
-                <Avatar className="!w-16 !h-16 bg-colorGreen">
+                <Avatar
+                  className="!w-16 !h-16 bg-colorGreen"
+                  sx={{
+                    fontSize: "20px",
+                  }}
+                >
                   {manager_name
                     .split(" ")
                     .slice(0, 2)
                     .map((user) => user.charAt(0).toUpperCase())}
+                  {/* {String(manager_name)?.charAt(0).toUpperCase()} */}
                 </Avatar>
               </div>
               <div className="flex flex-col justify-center">

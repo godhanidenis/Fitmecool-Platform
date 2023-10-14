@@ -21,6 +21,12 @@ const initialState = {
     productColor: {
       selectedValue: [],
     },
+    productPrice: {
+      selectedValue: {
+        min: 0,
+        max: 0,
+      },
+    },
     shopId: {
       selectedValue: [],
     },
@@ -29,7 +35,7 @@ const initialState = {
     },
   },
   sortFilters: {
-    sortType: { selectedValue: "new" },
+    sortType: { selectedValue: "" },
   },
 };
 
