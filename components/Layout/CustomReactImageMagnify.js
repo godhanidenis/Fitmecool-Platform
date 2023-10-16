@@ -46,7 +46,7 @@ const CustomReactImageMagnify = ({
           // close magnifier
           setShowMagnifier(false);
         }}
-        alt={"img"}
+        alt="img"
       />
 
       <div
@@ -63,7 +63,7 @@ const CustomReactImageMagnify = ({
           top: `${y - magnifierHeight / 2}px`,
           left: `${x - magnifieWidth / 2}px`,
           opacity: "1", // reduce opacity so you can verify position
-          border: "1px solid #00000014;",
+          border: "1px solid #00000014",
           backgroundColor: "white",
           backgroundImage: `url('${src}')`,
           backgroundRepeat: "no-repeat",

@@ -104,7 +104,7 @@ function MyApp({ Component, pageProps }) {
                       alt="AppLogo"
                       width={80}
                       height={80}
-                      className="animate-bounce "
+                      className="animate-bounce"
                     />
                     <div className="text-[24px] font-bold text-black tracking-wider font-Nova ">
                       R<span className="text-[20px]">entbless</span>

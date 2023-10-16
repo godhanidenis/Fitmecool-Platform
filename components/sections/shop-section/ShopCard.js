@@ -77,6 +77,7 @@ const ShopCard = ({ shop }) => {
                     ? itm?.links
                     : currentImageIndex === 0 && shop.shop_images[0]?.links
                 }
+                unoptimized={true}
                 alt={shop?.shop_name}
                 className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
                   isShopImagesLoaded ? "opacity-100" : "opacity-0"
@@ -145,6 +146,7 @@ const ShopCard = ({ shop }) => {
                     <Image
                       alt="Shop Logo"
                       src={shop?.shop_logo ?? ""}
+                      unoptimized={true}
                       layout="fill"
                       className={`rounded-[50%] absolute top-0 left-0 object-cover object-center ${
                         isShopLogoLoaded ? "opacity-100" : "opacity-0"

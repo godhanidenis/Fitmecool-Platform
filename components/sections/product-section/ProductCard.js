@@ -177,6 +177,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                         ? itm?.src
                         : currentImageIndex === 0 && photos[0]?.src
                     }
+                    unoptimized={true}
                     alt={product?.product_name}
                     className={`object-cover object-top absolute top-0 left-0 ${
                       onlyCarousal ? `` : `rounded-t-lg`
@@ -416,6 +417,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                       <Image
                         alt="Shop Logo"
                         src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
+                        unoptimized={true}
                         layout="fill"
                         className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
                           isShopLogoLoaded ? "opacity-100" : "opacity-0"

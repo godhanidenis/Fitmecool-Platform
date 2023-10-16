@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -26,6 +25,7 @@ import { colorsList } from "../../../constants";
 import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import Image from "next/image";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -71,12 +71,6 @@ const AddEditProductPage = ({
 
   const [productPriceVisible, setProductPriceVisible] = useState(false);
   const [productListingType, setProductListingType] = useState(false);
-
-  console.log(
-    "productPriceVisible , productListingType :>> ",
-    productPriceVisible,
-    productListingType
-  );
 
   const productListingTypeHandler = (event) => {
     setProductListingType(event.target.checked);
@@ -753,10 +747,12 @@ const AddEditProductPage = ({
                   >
                     {productImages[index] ? (
                       <div className="w-full relative h-full">
-                        <img
+                        <Image
                           src={productImages[index] ?? ""}
                           alt="Uploaded Image"
-                          className="object-cover h-full w-full rounded-xl object-top"
+                          className="!object-cover !h-full !w-full !rounded-xl !object-top"
+                          layout="fill"
+                          unoptimized={true}
                         />
                         <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
                           <EditIcon
@@ -935,7 +931,6 @@ const AddEditProductPage = ({
 export default AddEditProductPage;
 
 const CustomSwitchComponent = ({ onChange, type, value }) => {
-  console.log("value  :>> ", value);
   return (
     <>
       <div className="flex justify-start items-center">
@@ -943,9 +938,9 @@ const CustomSwitchComponent = ({ onChange, type, value }) => {
           <label className="flex items-center cursor-pointer">
             <input
               type="checkbox"
-              value={value}
               className="hidden peer"
               onChange={onChange}
+              checked={value}
             />
             <span className="px-4 py-1 bg-colorGreen peer-checked:text-black peer-checked:bg-colorGrey text-white flex items-center">
               {type ? "Rent" : <VisibilityIcon />}
