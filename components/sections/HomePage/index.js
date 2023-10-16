@@ -60,6 +60,10 @@ const HomePage = () => {
         filter: {
           category_id: appliedProductsFilters.categoryId.selectedValue,
           product_color: appliedProductsFilters.productColor.selectedValue,
+          product_price: {
+            min: appliedProductsFilters.productPrice.selectedValue.min,
+            max: appliedProductsFilters.productPrice.selectedValue.max,
+          },
         },
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,

@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: false,
   trailingSlash: true,
+  staticPageGenerationTimeout: 100,
   images: {
     domains: [
       "s3.us-east-1.wasabisys.com",

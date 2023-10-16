@@ -5,6 +5,7 @@ import ProductColorFilter from "./ProductFilters/ProductColorFilter";
 import ShopRatingsFilter from "./ShopFilters/ShopRatingsFilter";
 import ProductCategoriesFilter from "./ProductFilters/ProductCategoriesFilter";
 import { useSelector } from "react-redux";
+import ProductPriceFilter from "./ProductFilters/ProductPriceFilter";
 
 const Filter = ({ productByShop }) => {
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
@@ -18,6 +19,7 @@ const Filter = ({ productByShop }) => {
           <ProductCategoriesFilter />
           {!productByShop && <ProductByShopFilter />}
           <ProductColorFilter />
+          <ProductPriceFilter />
         </div>
       ) : (
         <div className="px-5 sm:px-12">
