@@ -243,225 +243,241 @@ const ProductCard = ({ product, onlyCarousal }) => {
 
   return (
     <>
-      <div className="shadow-xl flex flex-col rounded-lg">
-        <div className="cursor-pointer relative top-0 left-0">
-          <div className="grid grid-cols-1 place-items-center">
-            <div
-              className="w-[100%]"
-              style={{
-                height: onlyCarousal
-                  ? 400
-                  : themeLayout === "mobileScreen"
-                  ? 250
-                  : 300,
-              }}
+      <div className="relative">
+        {product?.product_listing_type && (
+          <div className="ribbon">
+            <span
+              className={`ribbon__content ${
+                product?.product_listing_type === "rent"
+                  ? "bg-[#ff3b3b]"
+                  : "bg-[#29977E]"
+              } `}
             >
-              <Carousel
-                autoPlay={autoplay}
-                autoPlaySpeed={1500}
-                infinite
-                showDots={onlyCarousal ? true : false}
-                customDot={onlyCarousal ? <CustomDot /> : null}
-                arrows={false}
-                responsive={responsive}
-                className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
-              >
-                {productImages}
-              </Carousel>
-            </div>
+              {product?.product_listing_type === "sell" ? "Sell" : "Rent"}
+            </span>
           </div>
+        )}
 
-          <div className="flex flex-col absolute top-0 right-[16px]">
-            <button
-              className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
-              style={{
-                backdropFilter: "blur(20px)",
-              }}
-              onClick={() => {
-                if (isAuthenticate) {
-                  productLike({
-                    productInfo: {
-                      product_id: product.id,
-                      user_id: userProfile.id,
-                    },
-                  }).then(
-                    (res) => {
-                      dispatch(
-                        !productLikeByUser
-                          ? productLikeToggle({
-                              productInfo: {
-                                key: "like",
-                                value: res.data.productLike.data,
-                              },
-                            })
-                          : productLikeToggle({
-                              productInfo: {
-                                key: "disLike",
-                                value: product.id,
-                              },
-                            })
-                      );
-                      toast.success(res.data.productLike.message, {
-                        theme: "colored",
-                      });
-                    },
-                    (error) => {
-                      toast.error(error.message, { theme: "colored" });
-                    }
-                  );
-                } else {
-                  Router.push("/auth/user-type");
-                }
-              }}
-            >
-              {!productLikeByUser ? (
-                <FavoriteBorderIcon className="!text-white" />
-              ) : (
-                "❤️"
-              )}
-            </button>
-            {onlyCarousal && (
-              <>
-                <HtmlTooltip
-                  title={
-                    <React.Fragment>
-                      <div className="">
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <FacebookShareButton
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image
-                              src={assets.facebookIcon}
-                              alt="facebookIcon"
-                              width={25}
-                              height={25}
-                            />
-                          </FacebookShareButton>
-                        </div>
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <WhatsappShareButton
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <WhatsappIcon size={25} round={true} />
-                          </WhatsappShareButton>
-                        </div>
-                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                          <EmailShareButton
-                            subject="Product Detail Page"
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image
-                              src={assets.googleIcon}
-                              width={25}
-                              height={25}
-                              alt="googleIcon"
-                            />
-                          </EmailShareButton>
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  }
+        <div className="shadow-xl flex flex-col rounded-lg">
+          <div className="cursor-pointer relative top-0 left-0">
+            <div className="grid grid-cols-1 place-items-center">
+              <div
+                className="w-[100%]"
+                style={{
+                  height: onlyCarousal
+                    ? 400
+                    : themeLayout === "mobileScreen"
+                    ? 250
+                    : 300,
+                }}
+              >
+                <Carousel
+                  autoPlay={autoplay}
+                  autoPlaySpeed={1500}
+                  infinite
+                  showDots={onlyCarousal ? true : false}
+                  customDot={onlyCarousal ? <CustomDot /> : null}
+                  arrows={false}
+                  responsive={responsive}
+                  className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
                 >
+                  {productImages}
+                </Carousel>
+              </div>
+            </div>
+
+            <div className="flex flex-col absolute top-0 right-[16px]">
+              <button
+                className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
+                style={{
+                  backdropFilter: "blur(20px)",
+                }}
+                onClick={() => {
+                  if (isAuthenticate) {
+                    productLike({
+                      productInfo: {
+                        product_id: product.id,
+                        user_id: userProfile.id,
+                      },
+                    }).then(
+                      (res) => {
+                        dispatch(
+                          !productLikeByUser
+                            ? productLikeToggle({
+                                productInfo: {
+                                  key: "like",
+                                  value: res.data.productLike.data,
+                                },
+                              })
+                            : productLikeToggle({
+                                productInfo: {
+                                  key: "disLike",
+                                  value: product.id,
+                                },
+                              })
+                        );
+                        toast.success(res.data.productLike.message, {
+                          theme: "colored",
+                        });
+                      },
+                      (error) => {
+                        toast.error(error.message, { theme: "colored" });
+                      }
+                    );
+                  } else {
+                    Router.push("/auth/user-type");
+                  }
+                }}
+              >
+                {!productLikeByUser ? (
+                  <FavoriteBorderIcon className="!text-white" />
+                ) : (
+                  "❤️"
+                )}
+              </button>
+              {onlyCarousal && (
+                <>
+                  <HtmlTooltip
+                    title={
+                      <React.Fragment>
+                        <div className="">
+                          <div className="p-2 rounded-lg cursor-pointer">
+                            <FacebookShareButton
+                              windowWidth={900}
+                              windowHeight={900}
+                              url={pageShareURL}
+                            >
+                              <Image
+                                src={assets.facebookIcon}
+                                alt="facebookIcon"
+                                width={25}
+                                height={25}
+                              />
+                            </FacebookShareButton>
+                          </div>
+                          <div className="p-2 rounded-lg cursor-pointer">
+                            <WhatsappShareButton
+                              windowWidth={900}
+                              windowHeight={900}
+                              url={pageShareURL}
+                            >
+                              <WhatsappIcon size={25} round={true} />
+                            </WhatsappShareButton>
+                          </div>
+                          <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                            <EmailShareButton
+                              subject="Product Detail Page"
+                              windowWidth={900}
+                              windowHeight={900}
+                              url={pageShareURL}
+                            >
+                              <Image
+                                src={assets.googleIcon}
+                                width={25}
+                                height={25}
+                                alt="googleIcon"
+                              />
+                            </EmailShareButton>
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    }
+                  >
+                    <button
+                      onClick={() => setOpenToolTip(!OpenToolTip)}
+                      className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
+                      style={{
+                        backdropFilter: "blur(20px)",
+                      }}
+                    >
+                      <FileUploadOutlinedIcon className="!text-white" />
+                    </button>
+                  </HtmlTooltip>
                   <button
-                    onClick={() => setOpenToolTip(!OpenToolTip)}
-                    className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
+                    className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300`}
                     style={{
                       backdropFilter: "blur(20px)",
                     }}
                   >
-                    <FileUploadOutlinedIcon className="!text-white" />
+                    <ReportGmailerrorredOutlinedIcon className="!text-white" />
                   </button>
-                </HtmlTooltip>
-                <button
-                  className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300`}
-                  style={{
-                    backdropFilter: "blur(20px)",
-                  }}
-                >
-                  <ReportGmailerrorredOutlinedIcon className="!text-white" />
-                </button>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
 
-        {!onlyCarousal && (
-          <Link href={`/product/${product.id}`} passHref>
-            <a
-              className="bg-[#FFFFFF] rounded-b-lg"
-              target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-              rel="noopener noreferrer"
-            >
-              <div className="pl-3">
-                <div>
-                  <span className="line-clamp-1 font-semibold text-black text-base mt-4">
-                    {product.product_name}
-                  </span>
-                </div>
+          {!onlyCarousal && (
+            <Link href={`/product/${product.id}`} passHref>
+              <a
+                className="bg-[#FFFFFF] rounded-b-lg"
+                target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+                rel="noopener noreferrer"
+              >
+                <div className="pl-3">
+                  <div>
+                    <span className="line-clamp-1 font-semibold text-black text-base mt-4">
+                      {product.product_name}
+                    </span>
+                  </div>
 
-                <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
-                  <div className="flex justify-center items-center">
-                    <div className="relative sm:w-6 sm:h-6 w-4 h-4">
-                      {!isShopLogoLoaded && (
-                        <ImageLoadingSkeleton
-                          className="rounded-[50%]"
-                          variant="circular"
-                        />
-                      )}
-                      <Image
-                        alt="Shop Logo"
-                        src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
-                        unoptimized={true}
-                        layout="fill"
-                        className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
-                          isShopLogoLoaded ? "opacity-100" : "opacity-0"
-                        }`}
-                        onLoad={() => setIsShopLogoLoaded(true)}
-                        onError={() => {
-                          setIsLogoImage(true);
-                        }}
-                      />
-                      {isLogoImage && (
-                        <Avatar
-                          className="!bg-colorGreen"
-                          sx={{
-                            fontSize: "12px",
-                            width: "100%",
-                            height: "100%",
+                  <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
+                    <div className="flex justify-center items-center">
+                      <div className="relative sm:w-6 sm:h-6 w-4 h-4">
+                        {!isShopLogoLoaded && (
+                          <ImageLoadingSkeleton
+                            className="rounded-[50%]"
+                            variant="circular"
+                          />
+                        )}
+                        <Image
+                          alt="Shop Logo"
+                          src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
+                          unoptimized={true}
+                          layout="fill"
+                          className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
+                            isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                          }`}
+                          onLoad={() => setIsShopLogoLoaded(true)}
+                          onError={() => {
+                            setIsLogoImage(true);
                           }}
+                        />
+                        {isLogoImage && (
+                          <Avatar
+                            className="!bg-colorGreen"
+                            sx={{
+                              fontSize: "12px",
+                              width: "100%",
+                              height: "100%",
+                            }}
+                          >
+                            {String(product.branchInfo?.shop_info?.shop_name)
+                              ?.split(" ")[0][0]
+                              .toUpperCase()}
+                          </Avatar>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <Link href={`/shop/${shopId}`} passHref>
+                        <a
+                          target={`${
+                            themeLayout === "webScreen" ? "_blank" : "_self"
+                          }`}
+                          rel="noopener noreferrer"
                         >
-                          {String(product.branchInfo?.shop_info?.shop_name)
-                            ?.split(" ")[0][0]
-                            .toUpperCase()}
-                        </Avatar>
-                      )}
+                          <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
+                            {product.branchInfo?.shop_info?.shop_name}
+                          </span>
+                        </a>
+                      </Link>
                     </div>
                   </div>
-                  <div className="flex flex-col justify-center">
-                    <Link href={`/shop/${shopId}`} passHref>
-                      <a
-                        target={`${
-                          themeLayout === "webScreen" ? "_blank" : "_self"
-                        }`}
-                        rel="noopener noreferrer"
-                      >
-                        <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
-                          {product.branchInfo?.shop_info?.shop_name}
-                        </span>
-                      </a>
-                    </Link>
-                  </div>
                 </div>
-              </div>
-            </a>
-          </Link>
-        )}
+              </a>
+            </Link>
+          )}
+        </div>
       </div>
       {CarouselImage && (
         <CarouselImagesModal

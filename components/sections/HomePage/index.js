@@ -127,15 +127,11 @@ const HomePage = () => {
                     <>
                       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
                         {productsData?.map((product) => (
-                          <div key={product.id} className="relative">
-                            {product?.product_listing_type && (
-                              <div className="absolute -top-2 -left-2 bg-[#368014] p-2 rounded-full z-10 text-white">
-                                {product?.product_listing_type
-                                  ? "Sell"
-                                  : "Rent"}
-                              </div>
-                            )}
-                            <ProductCard product={product} />
+                          <div
+                            key={product.id}
+                            className={`px-3 pt-2 pb-5 overflow-hidden`}
+                          >
+                            <ProductCard product={product} key={product.id} />
                           </div>
                         ))}
                       </div>
