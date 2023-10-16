@@ -37,8 +37,8 @@ const ShopCard = ({ shop }) => {
                 <></>
               ) : (
                 <Image
-                  // src={shop?.shop_images[0]?.links}
                   src={shop?.shop_cover_image ?? ""}
+                  unoptimized={true}
                   alt={shop?.shop_name}
                   className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
                     isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -82,6 +82,7 @@ const ShopCard = ({ shop }) => {
                 )}
                 <Image
                   src={shop?.shop_logo ?? ""}
+                  unoptimized={true}
                   alt="Shop Logo"
                   objectFit="cover"
                   className={`rounded-full absolute top-0 left-0  ${

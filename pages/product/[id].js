@@ -305,6 +305,7 @@ const ProductDetail = ({ productDetails }) => {
                     productDetails.data.product.data.branchInfo?.shop_info
                       .shop_logo ?? ""
                   }
+                  key={new Date().getTime()}
                 />
               ) : (
                 <ImageLoadingSkeleton
@@ -840,6 +841,7 @@ const ContactDetailsModal = ({
                       ?.shop_logo ?? ""
                   }
                   alt="Shop Logo"
+                  key={new Date().getTime()}
                 />
               </div>
               <div className="flex flex-col justify-center">
@@ -867,7 +869,6 @@ const ContactDetailsModal = ({
                     .split(" ")
                     .slice(0, 2)
                     .map((user) => user.charAt(0).toUpperCase())}
-                  {/* {String(manager_name)?.charAt(0).toUpperCase()} */}
                 </Avatar>
               </div>
               <div className="flex flex-col justify-center">

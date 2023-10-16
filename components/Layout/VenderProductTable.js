@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import {
   Paper,
   Table,
@@ -104,7 +103,8 @@ const VenderProductTable = ({
                       <Image
                         objectFit="cover"
                         objectPosition="center top"
-                        src={item?.product_image?.front}
+                        src={item?.product_image?.front ?? ""}
+                        unoptimized={true}
                         width={"100%"}
                         height={"100%"}
                         alt="Product Image"

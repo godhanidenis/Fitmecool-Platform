@@ -37,6 +37,7 @@ const Branches = ({ shopDetails, shopId }) => {
             <div className="flex justify-center relative w-[150px] h-[150px]">
               <Image
                 src={shopDetails?.data?.shop?.shop_logo ?? ""}
+                unoptimized={true}
                 alt="shop logo"
                 layout="fixed"
                 width={150}
@@ -70,8 +71,6 @@ const Branches = ({ shopDetails, shopId }) => {
                   {String(shopDetails?.data?.shop?.shop_name)
                     ?.split(" ")[0][0]
                     .toUpperCase()}
-                  {/* {String(shopDetails?.data?.shop?.shop_name)?.split(" ")[0][0].toUpperCase() +
-                      String(shopDetails?.data?.shop?.shop_name)?.split(" ")[1][0].toUpperCase()} */}
                 </Avatar>
               )}
             </div>

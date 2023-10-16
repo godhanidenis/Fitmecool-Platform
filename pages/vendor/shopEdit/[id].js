@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -42,6 +41,7 @@ import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendo
 import { HoursModal } from "../shop-setup";
 import { useRouter } from "next/router";
 import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
+import Image from "next/image";
 
 const style = {
   position: "absolute",
@@ -170,11 +170,14 @@ const ShopEdit = () => {
     setDeleteShopLogo("");
     setDeleteShopBackground("");
     setDeleteShopVideo("");
+    setShopVideo("");
+    setUploadShopVideo("");
   };
 
   useEffect(() => {
     emptyImageStates();
   }, [value]);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -1486,7 +1489,7 @@ const ShopEdit = () => {
                       {shopLogo !== "" ? (
                         shopLogo ? (
                           <>
-                            <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                            <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
                               <EditIcon
                                 sx={{
                                   "@media (max-width: 768px)": {
@@ -1504,15 +1507,23 @@ const ShopEdit = () => {
                                 setUploadShopLogo("");
                                 setDeleteShopLogo(vendorShopDetails?.shop_logo);
                               }}
-                              className="absolute left-4 sm:bottom-2 bottom-0 border border-red-600 rounded-full p-2 bg-red-600"
+                              className="absolute left-4 sm:bottom-2 bottom-0 border border-red-600 rounded-full p-2 bg-red-600 text-white z-[9999]"
                             >
-                              <DeleteIcon style={{ color: "white" }} />
+                              <DeleteIcon
+                                sx={{
+                                  "@media (max-width: 768px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                              />
                             </span>
                             <div className="w-full h-full">
-                              <img
+                              <Image
                                 src={shopLogo}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-full object-center"
+                                className="!object-cover !h-full !w-full !rounded-full !object-center"
+                                layout="fill"
+                                unoptimized={true}
                               />
                             </div>
                           </>
@@ -1569,7 +1580,7 @@ const ShopEdit = () => {
                       {shopBackground !== "" ? (
                         shopBackground ? (
                           <>
-                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
                               <EditIcon
                                 sx={{
                                   "@media (max-width: 768px)": {
@@ -1591,15 +1602,23 @@ const ShopEdit = () => {
                                   vendorShopDetails?.shop_cover_image
                                 );
                               }}
-                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[9999]"
                             >
-                              <DeleteIcon style={{ color: "white" }} />
+                              <DeleteIcon
+                                sx={{
+                                  "@media (max-width: 768px)": {
+                                    fontSize: 16,
+                                  },
+                                }}
+                              />{" "}
                             </span>
                             <div className="w-full h-full">
-                              <img
+                              <Image
                                 src={shopBackground}
                                 alt="Uploaded Image"
-                                className="object-cover h-full w-full rounded-xl object-top"
+                                className="!object-cover !h-full !w-full !rounded-xl !object-top"
+                                layout="fill"
+                                unoptimized={true}
                               />
                             </div>
                           </>
@@ -1670,7 +1689,7 @@ const ShopEdit = () => {
                               >
                                 {shopImages[index] ? (
                                   <>
-                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-10">
+                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
                                       <EditIcon
                                         sx={{
                                           "@media (max-width: 768px)": {
@@ -1715,16 +1734,24 @@ const ShopEdit = () => {
                                           ...shopImagesData,
                                         ]);
                                       }}
-                                      className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 z-[99999]"
+                                      className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[99999]"
                                     >
-                                      <DeleteIcon style={{ color: "white" }} />
+                                      <DeleteIcon
+                                        sx={{
+                                          "@media (max-width: 768px)": {
+                                            fontSize: 16,
+                                          },
+                                        }}
+                                      />
                                     </span>
 
                                     <div className="w-full relative h-full">
-                                      <img
+                                      <Image
                                         src={image?.links}
                                         alt="Uploaded Image"
-                                        className="object-cover h-full w-full rounded-xl object-top"
+                                        className="!object-cover !h-full !w-full !rounded-xl !object-top"
+                                        layout="fill"
+                                        unoptimized={true}
                                       />
                                     </div>
                                   </>
@@ -1809,7 +1836,7 @@ const ShopEdit = () => {
                               src={shopVideo}
                             ></video>
 
-                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white">
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
                               <EditIcon
                                 onClick={() => {
                                   document
@@ -1831,9 +1858,14 @@ const ShopEdit = () => {
                                   vendorShopDetails?.shop_video
                                 );
                               }}
-                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600"
+                              sx={{
+                                "@media (max-width: 768px)": {
+                                  fontSize: 16,
+                                },
+                              }}
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[9999]"
                             >
-                              <DeleteIcon style={{ color: "white" }} />
+                              <DeleteIcon />
                             </span>
                           </>
                         ) : (
