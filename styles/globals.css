@@ -120,3 +120,20 @@ h6 {
 .switch-button-checkbox + .switch-button-label .switch-button-label-span {
   position: relative;
 }
+
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* For Internet Explorer */
+input[type="number"] {
+  -ms-inner-appearance: textfield;
+}

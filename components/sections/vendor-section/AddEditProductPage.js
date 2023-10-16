@@ -24,6 +24,8 @@ import { NativeSelectInput } from "../../core/CustomMUIComponents";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../constants";
 import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -66,6 +68,22 @@ const AddEditProductPage = ({
   const [isHydrated, setIsHydrated] = useState(false);
   const [editorDescriptionContent, setEditorDescriptionContent] = useState("");
   const [errorDescription, setErrorDescription] = useState("");
+
+  const [productPriceVisible, setProductPriceVisible] = useState(false);
+  const [productListingType, setProductListingType] = useState(false);
+
+  console.log(
+    "productPriceVisible , productListingType :>> ",
+    productPriceVisible,
+    productListingType
+  );
+
+  const productListingTypeHandler = (event) => {
+    setProductListingType(event.target.checked);
+  };
+  const productPriceVisibleHandler = (event) => {
+    setProductPriceVisible(event.target.checked);
+  };
 
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
@@ -111,11 +129,16 @@ const AddEditProductPage = ({
       setValue("product_name", editableProductData?.product_name);
       setEditorDescriptionContent(editableProductData?.product_description);
       setValue("product_color", editableProductData?.product_color);
+      setValue("product_price", editableProductData?.product_price);
+      setValue("product_discount", editableProductData?.product_discount);
       setValue("product_type", editableProductData.categoryInfo?.category_type);
       setProductType(editableProductData.categoryInfo?.category_type);
       setValue("product_category", editableProductData?.categoryInfo?.id);
       setValue("product_branch", editableProductData?.branchInfo?.id);
-
+      setProductListingType(
+        editableProductData?.product_listing_type === "rent" ? false : true
+      );
+      setProductPriceVisible(!editableProductData?.product_price_visible);
       editableProductData?.product_image?.front &&
         setProductImages((old) => [
           ...old,
@@ -194,6 +217,7 @@ const AddEditProductPage = ({
   };
 
   const onSubmit = async (data) => {
+    console.log("data 123 :>> ", data);
     if (isEditorEmpty()) {
       setErrorDescription("Product description is required");
     } else {
@@ -272,6 +296,10 @@ const AddEditProductPage = ({
             product_video:
               videoResponse ||
               (deleteProductVideo ? "" : editableProductData.product_video),
+            product_price: Number(data.product_price),
+            product_discount: Number(data.product_discount),
+            product_price_visible: !productPriceVisible,
+            product_listing_type: productListingType ? "sell" : "rent",
           },
         }).then(
           (res) => {
@@ -320,6 +348,10 @@ const AddEditProductPage = ({
               side: productImagesRes[2],
             },
             product_video: productVideoRes || "",
+            product_price: Number(data.product_price),
+            product_discount: Number(data.product_discount),
+            product_price_visible: !productPriceVisible,
+            product_listing_type: productListingType ? "sell" : "rent",
           },
         }).then(
           (res) => {
@@ -371,10 +403,18 @@ const AddEditProductPage = ({
         </div>
         <div className="my-5 mt-8">
           <div className="text-base sm:text-lg font-semibold mb-3 mt-5 sm:mx-6 text-black ">
-            Product Details
+            Product
           </div>
           <div className="sm:flex justify-between">
             <div className={`sm:w-[50%] space-y-6 sm:mx-6`}>
+              <div className="w-full flex gap-3 items-center ">
+                <p className="text-lg font-medium font-Nova">Product Type*</p>
+                <CustomSwitchComponent
+                  onChange={productListingTypeHandler}
+                  type={true}
+                  value={productListingType}
+                />
+              </div>
               <div className="w-full relative">
                 <CustomTextFieldVendor
                   label="Name*"
@@ -396,6 +436,91 @@ const AddEditProductPage = ({
                       {errors.product_name?.message}
                     </span>
                   )}
+                </div>
+              </div>
+              <div className="w-full relative sm:flex  sm:gap-5">
+                <div className="sm:w-[50%]">
+                  <CustomTextFieldVendor
+                    label="Price*"
+                    type="number"
+                    id="pprice"
+                    price={true}
+                    isRequired={false}
+                    placeholder="Product Price"
+                    fieldValue={getValues("product_price")}
+                    fieldError={errors?.product_price}
+                    formValue={{
+                      ...register("product_price", {
+                        required: "Product Price is required",
+                      }),
+                    }}
+                  />
+                  <div className="mt-2">
+                    {errors.product_price && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_price?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:w-[50%] mt-5 sm:mt-0">
+                  <CustomTextFieldVendor
+                    label="Discount*"
+                    type="number"
+                    id="pdiscount"
+                    discount={true}
+                    isRequired={false}
+                    placeholder="Product Discount "
+                    fieldValue={getValues("product_discount")}
+                    fieldError={errors?.product_discount}
+                    formValue={{
+                      ...register("product_discount", {
+                        required: "Product Discount  is required",
+                      }),
+                    }}
+                  />
+                  <div className="mt-2">
+                    {errors.product_discount && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_discount?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="w-full relative sm:flex  sm:gap-5">
+                <div className="sm:w-[50%] ">
+                  <CustomTextFieldVendor
+                    label="Final Price*"
+                    type="number"
+                    id="pfprice"
+                    price={true}
+                    isRequired={false}
+                    placeholder="Product Final Price"
+                    fieldValue={getValues("product_final_price")}
+                    fieldError={errors?.product_final_price}
+                    formValue={{
+                      ...register("product_final_price", {
+                        required: "Product Final Price  is required",
+                      }),
+                    }}
+                  />
+                  <div className="mt-2">
+                    {errors.product_final_price && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_final_price?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:w-[50%] flex gap-3 items-center mt-5 sm:mt-0">
+                  <p className="text-lg font-medium font-Nova">
+                    Price Visibility*
+                  </p>
+                  <CustomSwitchComponent
+                    onChange={productPriceVisibleHandler}
+                    value={productPriceVisible}
+                  />
                 </div>
               </div>
               <div className="w-full relative">
@@ -446,7 +571,7 @@ const AddEditProductPage = ({
                     render={({ field }) => (
                       <>
                         <InputLabel id="product-Type-id">
-                          Product Type*
+                          Product Category*
                         </InputLabel>
                         <NativeSelectInput
                           {...field}
@@ -455,7 +580,7 @@ const AddEditProductPage = ({
                           id=""
                           label="product Type"
                           {...register("product_type", {
-                            required: "Product Type is required",
+                            required: "Product Category is required",
                             onChange: (e) => {
                               setProductType(e.target.value);
                             },
@@ -491,7 +616,7 @@ const AddEditProductPage = ({
                       render={({ field }) => (
                         <>
                           <InputLabel id="Category-id">
-                            Select Category*
+                            Select Sub Category*
                           </InputLabel>
                           <NativeSelectInput
                             {...field}
@@ -589,7 +714,7 @@ const AddEditProductPage = ({
                 }}
                 setContents={editorDescriptionContent}
                 onChange={handleEditorChange}
-                height={productType ? "280px" : "200px"}
+                height={productType ? "500px" : "420px"}
               />
               <div className="mt-2">
                 {errorDescription && (
@@ -808,3 +933,29 @@ const AddEditProductPage = ({
 };
 
 export default AddEditProductPage;
+
+const CustomSwitchComponent = ({ onChange, type, value }) => {
+  console.log("value  :>> ", value);
+  return (
+    <>
+      <div className="flex justify-start items-center">
+        <div className="flex items-center">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              value={value}
+              className="hidden peer"
+              onChange={onChange}
+            />
+            <span className="px-4 py-1 bg-colorGreen peer-checked:text-black peer-checked:bg-colorGrey text-white flex items-center">
+              {type ? "Rent" : <VisibilityIcon />}
+            </span>
+            <span className="px-4 py-1 peer-checked:bg-colorGreen bg-colorGrey peer-checked:text-white text-black flex items-center">
+              {type ? "Sell" : <VisibilityOffIcon />}
+            </span>
+          </label>
+        </div>
+      </div>
+    </>
+  );
+};
