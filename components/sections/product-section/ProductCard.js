@@ -22,7 +22,7 @@ import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerro
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 import Modal from "@mui/material/Modal";
-import { CloseOutlined } from "@mui/icons-material";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 const ContactStyle = {
   position: "absolute",
