@@ -198,6 +198,18 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
         );
   };
 
+  const options = byShop
+    ? [
+        { label: "Default", value: "" },
+        { label: "Rating: high to low", value: "rating" },
+        { label: "Follower: high to low", value: "follower" },
+      ]
+    : [
+        { label: "Default", value: "" },
+        { label: "Price: high to low", value: "high-low" },
+        { label: "Price: low to high", value: "low-high" },
+      ];
+
   const GetSortByName = (value) => {
     if (value === "high-low") {
       return "Price: high to low";
@@ -280,32 +292,20 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                     }
                     onChange={handleChangeSortType}
                   >
-                    {
-                    // byShop
-                    //   ? [
-                    //       { label: "Default", value: "" },
-                    //       { label: "Rating: high to low", value: "rating" },
-                    //       { label: "Follower: high to low", value: "follower" },
-                    //     ]
-                    //   :
-                       [
-                          { label: "Default", value: "" },
-                          { label: "Price: high to low", value: "high-low" },
-                          { label: "Price: low to high", value: "low-high" },
-                        ]?.map((item, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={item.value}
-                            control={<Radio className="!text-colorPrimary" />}
-                            label={
-                              <Typography
-                                sx={{ fontWeight: 500, fontSize: "16px" }}
-                              >
-                                {item.label}
-                              </Typography>
-                            }
-                          />
-                        ))}
+                    {options?.map((item, index) => (
+                      <FormControlLabel
+                        key={index}
+                        value={item.value}
+                        control={<Radio className="!text-colorPrimary" />}
+                        label={
+                          <Typography
+                            sx={{ fontWeight: 500, fontSize: "16px" }}
+                          >
+                            {item.label}
+                          </Typography>
+                        }
+                      />
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <Divider />
