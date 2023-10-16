@@ -45,6 +45,7 @@ const AddEditProductPage = ({
     setValue,
     getValues,
     control,
+    watch,
   } = useForm();
 
   const [SelectImgIndex, setSelectImgIndex] = useState();
@@ -72,11 +73,38 @@ const AddEditProductPage = ({
   const [productPriceVisible, setProductPriceVisible] = useState(false);
   const [productListingType, setProductListingType] = useState(false);
 
-  console.log(
-    "productPriceVisible , productListingType :>> ",
-    productPriceVisible,
-    productListingType
-  );
+  const priceHandle = (e) => {
+    const price = parseFloat(e.target.value);
+    if (!isNaN(price)) {
+      const discount = parseFloat(getValues("product_discount") || 0);
+      const finalPrice = price - price * (discount / 100);
+      setValue("product_final_price", finalPrice);
+    } else {
+      setValue("product_final_price", null);
+    }
+  };
+
+  const discountHandle = (e) => {
+    const discount = parseFloat(e.target.value);
+    if (!isNaN(discount)) {
+      const price = parseFloat(getValues("product_price") || 0);
+      const finalPrice = price - price * (discount / 100);
+      setValue("product_final_price", finalPrice);
+    }
+  };
+
+  const finalPriceHandle = (e) => {
+    const finalPrice = parseFloat(e.target.value);
+    if (!isNaN(finalPrice)) {
+      const price = parseFloat(getValues("product_price") || 0);
+      if (price !== 0) {
+        const discount = ((price - finalPrice) / price) * 100;
+        setValue("product_discount", discount);
+      }
+    } else {
+      setValue("product_discount", 0);
+    }
+  };
 
   const productListingTypeHandler = (event) => {
     setProductListingType(event.target.checked);
@@ -126,6 +154,10 @@ const AddEditProductPage = ({
 
   useEffect(() => {
     if (editableProductData) {
+      const finalPrice =
+        editableProductData?.product_price -
+        editableProductData?.product_price *
+          (editableProductData?.product_discount / 100);
       setValue("product_name", editableProductData?.product_name);
       setEditorDescriptionContent(editableProductData?.product_description);
       setValue("product_color", editableProductData?.product_color);
@@ -135,6 +167,7 @@ const AddEditProductPage = ({
       setProductType(editableProductData.categoryInfo?.category_type);
       setValue("product_category", editableProductData?.categoryInfo?.id);
       setValue("product_branch", editableProductData?.branchInfo?.id);
+      setValue("product_final_price", finalPrice);
       setProductListingType(
         editableProductData?.product_listing_type === "rent" ? false : true
       );
@@ -217,7 +250,6 @@ const AddEditProductPage = ({
   };
 
   const onSubmit = async (data) => {
-    console.log("data 123 :>> ", data);
     if (isEditorEmpty()) {
       setErrorDescription("Product description is required");
     } else {
@@ -452,6 +484,7 @@ const AddEditProductPage = ({
                     formValue={{
                       ...register("product_price", {
                         required: "Product Price is required",
+                        onChange: priceHandle,
                       }),
                     }}
                   />
@@ -476,6 +509,7 @@ const AddEditProductPage = ({
                     formValue={{
                       ...register("product_discount", {
                         required: "Product Discount  is required",
+                        onChange: discountHandle,
                       }),
                     }}
                   />
@@ -502,6 +536,7 @@ const AddEditProductPage = ({
                     formValue={{
                       ...register("product_final_price", {
                         required: "Product Final Price  is required",
+                        onChange: finalPriceHandle,
                       }),
                     }}
                   />
@@ -935,7 +970,6 @@ const AddEditProductPage = ({
 export default AddEditProductPage;
 
 const CustomSwitchComponent = ({ onChange, type, value }) => {
-  console.log("value  :>> ", value);
   return (
     <>
       <div className="flex justify-start items-center">
@@ -943,7 +977,7 @@ const CustomSwitchComponent = ({ onChange, type, value }) => {
           <label className="flex items-center cursor-pointer">
             <input
               type="checkbox"
-              value={value}
+              checked={value}
               className="hidden peer"
               onChange={onChange}
             />

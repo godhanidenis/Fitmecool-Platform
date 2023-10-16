@@ -190,9 +190,16 @@ const MenCollection = () => {
               customTransition="all .5s ease-in-out"
               arrows={false}
               infinite
+              className="!pt-2 !ps-2"
             >
               {menCategoryData?.map((product, index) => (
-                <div key={product.id} className={`pr-3 pb-8`}>
+                <div key={product.id} className={`pr-3 pb-8 relative`}>
+                  {product?.product_listing_type && (
+                    <div className="absolute -top-2 -left-2 bg-[#368014] p-2 rounded-full z-[999999] text-white">
+                      {product?.product_listing_type ? "Sell" : "Rent"}
+                    </div>
+                  )}
+
                   <ProductCard product={product} landingPage={true} />
                 </div>
               ))}
