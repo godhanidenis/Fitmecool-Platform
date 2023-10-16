@@ -170,7 +170,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       ? setSelectedRatings([
           {
             type: "stars",
-            label: appliedShopsFilters.stars.selectedValue,
+            label: `Rating: ${appliedShopsFilters.stars.selectedValue}`,
             value: appliedShopsFilters.stars.selectedValue,
           },
         ])
