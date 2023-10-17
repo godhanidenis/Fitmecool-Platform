@@ -48,6 +48,9 @@ export const assets = {
   linkedinLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/svgs/linkedinLogo.svg`,
   twitterLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/svgs/twitterLogo.svg`,
   youtubeLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/svgs/youtubeLogo.svg`,
+  cloth: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/cloth.png`,
+  shop_vendorIcon: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/shop_vendorIcon.png`,
+  store_Icon: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/store_Icon.png`,
 };
 
 export const footerData = {

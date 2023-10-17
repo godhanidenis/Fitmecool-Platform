@@ -16,7 +16,7 @@ const ShopCard = ({ shop }) => {
   const [isShopImages, setIsShopImages] = useState(false);
 
   return (
-    <div className="rounded-lg shadow-lg flex flex-col w-[100%] cursor-pointer">
+    <div className="rounded-lg shadow-md flex flex-col w-[100%] cursor-pointer">
       <Link href={`/shop/${shop.id}`} passHref>
         <a
           target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
@@ -37,8 +37,8 @@ const ShopCard = ({ shop }) => {
                 <></>
               ) : (
                 <Image
-                  // src={shop?.shop_images[0]?.links}
                   src={shop?.shop_cover_image ?? ""}
+                  unoptimized={true}
                   alt={shop?.shop_name}
                   className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
                     isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -82,6 +82,7 @@ const ShopCard = ({ shop }) => {
                 )}
                 <Image
                   src={shop?.shop_logo ?? ""}
+                  unoptimized={true}
                   alt="Shop Logo"
                   objectFit="cover"
                   className={`rounded-full absolute top-0 left-0  ${
@@ -104,7 +105,7 @@ const ShopCard = ({ shop }) => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-1 justify-center items-center p-5">
+            <div className="flex flex-col gap-1 justify-center items-center p-5 shadow-md rounded-lg">
               <p className="text-[16px] text-[#151827] font-semibold line-clamp-1">
                 {shop.shop_name}
               </p>

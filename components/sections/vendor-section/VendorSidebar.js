@@ -43,9 +43,10 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
           {vendorShopDetails?.shop_logo ? (
             <Avatar
               src={vendorShopDetails?.shop_logo ?? ""}
+              key={new Date().getTime()}
               alt="Shop Logo"
               className="!object-cover !w-full !h-full"
-            ></Avatar>
+            />
           ) : vendorShopDetails?.shop_logo?.length === 0 ? (
             <Avatar
               className="!bg-colorGreen"
@@ -69,7 +70,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
           {vendorShopDetails?.shop_name ?? <Skeleton animation="wave" />}
         </div>
         <Divider className="!w-full !opacity-50 " />
-        <div className="w-full font-Nova pl-[15%] mt-5">
+        <div className="w-full font-Nova mt-5">
           {vendorSidebarTabs.map((tab, index) => (
             <p
               key={index}

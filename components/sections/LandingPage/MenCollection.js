@@ -76,6 +76,7 @@ const MenCollection = () => {
           min: 0,
           max: 0,
         },
+        product_listing_type: "",
       },
       shopId: [],
       sort: "new",
@@ -182,7 +183,7 @@ const MenCollection = () => {
         <div className="p-3"></div>
       )}
       <TabPanel value={value} index={value}>
-        <div className="w-full h-[360px] lg:h-[416px]">
+        <div className="w-full h-[370px] lg:h-[430px]">
           {!loading && menCategoryData.length > 0 ? (
             <Carousel
               ref={carouselRef}
@@ -192,9 +193,16 @@ const MenCollection = () => {
               infinite
             >
               {menCategoryData?.map((product, index) => (
-                <div key={product.id} className={`pr-3 pb-8`}>
-                  <ProductCard product={product} landingPage={true} />
-                </div>
+                // <div
+                //   key={product.id}
+                //   className={`px-3 pt-2 pb-8 overflow-hidden`}
+                // >
+                <ProductCard
+                  product={product}
+                  landingPage={true}
+                  key={product.id}
+                />
+                // </div>
               ))}
             </Carousel>
           ) : !loading && menCategoryData.length === 0 ? (

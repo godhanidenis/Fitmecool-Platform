@@ -195,10 +195,6 @@ const ShopPage = () => {
     { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
   ]);
 
-  useEffect(() => {
-    console.log("subBranch :", subBranch);
-  }, [subBranch]);
-
   const {
     register,
     handleSubmit,
@@ -323,6 +319,11 @@ const ShopPage = () => {
       manager_contact: val.subManagerPhone,
       manager_email: val.manager_user_email,
       branch_type: "sub",
+      same_as:
+        (val.managerValue === "Same as owner" && "owner") ||
+        (val.managerValue === "same as main branch manager" &&
+          "main_branch_manager") ||
+        "none",
     };
   };
 
@@ -438,6 +439,7 @@ const ShopPage = () => {
             manager_contact: data.manager_user_contact,
             manager_email: data.manager_user_email,
             branch_type: "main",
+            same_as: sameAsOwner === "True" ? "owner" : "none",
           },
           ...(subBranch.length > 0 ? subBranch?.map(returnSubBranchData) : []),
         ],
@@ -1982,6 +1984,7 @@ const SubBranchModal = ({
             subManagerLastName,
             subManagerEmail,
             subManagerPhone,
+            managerValue,
           },
         ]);
       } else {
@@ -2000,6 +2003,7 @@ const SubBranchModal = ({
           subManagerLastName,
           subManagerEmail,
           subManagerPhone,
+          managerValue,
         };
         setSubBranch(editSelectedSubBranch);
       }
