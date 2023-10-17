@@ -77,6 +77,7 @@ const WomenCollection = () => {
           min: 0,
           max: 0,
         },
+        product_listing_type: "",
       },
       shopId: [],
       sort: "new",

@@ -64,6 +64,8 @@ const HomePage = () => {
             min: appliedProductsFilters.productPrice.selectedValue.min,
             max: appliedProductsFilters.productPrice.selectedValue.max,
           },
+          product_listing_type:
+            appliedProductsFilters.productListingType.selectedValue,
         },
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,

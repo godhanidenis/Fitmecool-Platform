@@ -3,8 +3,6 @@ import { Divider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CustomSwitchComponent from "../../core/CustomSwitchComponent";
-import { assets } from "../../../constants";
-import Image from "next/image";
 
 const FilterActions = ({ productByShop }) => {
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
