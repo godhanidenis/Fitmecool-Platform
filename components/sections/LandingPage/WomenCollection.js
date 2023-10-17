@@ -192,9 +192,13 @@ const WomenCollection = () => {
               customTransition="all .5s ease-in-out"
               arrows={false}
               infinite
+              className="!pt-2 !ps-2"
             >
               {womenCategoryData?.map((product) => (
-                <div key={product.id} className={`pr-3 pb-8`}>
+                <div
+                  key={product.id}
+                  className={`px-3 pt-2 pb-8 overflow-hidden`}
+                >
                   <ProductCard product={product} landingPage={true} />
                 </div>
               ))}
