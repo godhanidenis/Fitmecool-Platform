@@ -76,6 +76,8 @@ const CustomReactImageMagnify = ({
           //calculete position of zoomed image.
           backgroundPositionX: `${-x * zoomLevel + magnifieWidth / 2}px`,
           backgroundPositionY: `${-y * zoomLevel + magnifierHeight / 2}px`,
+
+          zIndex: 1,
         }}
       ></div>
     </div>

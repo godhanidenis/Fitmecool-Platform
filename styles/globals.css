@@ -82,15 +82,15 @@ input[type="number"] {
   .ribbon__content {
       /* top: 6px;
       left: -33px; */
-          top: 13px;
-            left: -33px;
+          top: 15px;
+            left: -31px;
       -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
       transform: rotate(320deg);
       position: absolute;
       display: block;
       /* width: 123px; */
-      width: 133px;
+      width: 137px;
       /* background-color: #29977E; */
       box-shadow: 0 0px 10px ;
       color: #fff;
@@ -103,8 +103,8 @@ input[type="number"] {
     
   }
   .ribbon::before {
-      top: 74px;
-      left: -10px;
+      top: 77px;
+      left: -9px;
       border-top-color: transparent;
       border-right-color: transparent;
       position: absolute;
@@ -117,7 +117,7 @@ input[type="number"] {
   }
   .ribbon::after {
       bottom: 0;
-      right: -99px;
+      right: -103px;
       border-top-color: transparent;
       border-right-color: transparent;
       position: absolute;

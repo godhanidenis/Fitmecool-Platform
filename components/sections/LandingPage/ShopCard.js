@@ -16,7 +16,7 @@ const ShopCard = ({ shop }) => {
   const [isShopImages, setIsShopImages] = useState(false);
 
   return (
-    <div className="rounded-lg shadow-lg flex flex-col w-[100%] cursor-pointer">
+    <div className="rounded-lg shadow-md flex flex-col w-[100%] cursor-pointer">
       <Link href={`/shop/${shop.id}`} passHref>
         <a
           target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
@@ -105,7 +105,7 @@ const ShopCard = ({ shop }) => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-1 justify-center items-center p-5">
+            <div className="flex flex-col gap-1 justify-center items-center p-5 shadow-md rounded-lg">
               <p className="text-[16px] text-[#151827] font-semibold line-clamp-1">
                 {shop.shop_name}
               </p>

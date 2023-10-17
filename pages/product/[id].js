@@ -85,6 +85,11 @@ const ProductDetail = ({ productDetails }) => {
     (state) => state.userProfile
   );
 
+  const finalPrice =
+    productDetails.data.product.data?.product_price -
+    productDetails.data.product.data?.product_price *
+      (productDetails.data.product.data?.product_discount / 100);
+
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const HtmlTooltip = styled(({ className, ...props }) => (
@@ -654,7 +659,25 @@ const ProductDetail = ({ productDetails }) => {
                     </button>
                   </div>
                 </div>
-
+                {productDetails.data.product.data?.product_price_visible && (
+                  <div className="flex gap-2 mt-3 items-center">
+                    <p className="text-black text-lg font-bold">
+                      ₹{finalPrice}
+                    </p>
+                    {productDetails.data.product.data?.product_discount !==
+                      0 && (
+                      <div className="flex gap-2 items-center">
+                        <p className="text-[#9d9d9d] text-sm  font-semibold line-through">
+                          ₹{productDetails.data.product.data?.product_price}
+                        </p>
+                        <p className="text-green-600 text-md font-normal ">
+                          ({productDetails.data.product.data?.product_discount}%
+                          OFF)
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="mt-3">
                   <div className="text-[#151827] font-semibold text-[22px] mb-[5px]">
                     About
@@ -789,7 +812,7 @@ const ProductDetail = ({ productDetails }) => {
           <div
             className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
               isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
-            } gap-4 sm:gap-8 place-items-center mt-4`}
+            } place-items-center mt-4`}
           >
             {productDetails.data.product.related &&
               productDetails.data.product.related

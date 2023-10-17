@@ -97,7 +97,7 @@ const ShopCard = ({ shop }) => {
   });
 
   return (
-    <div className="bg-white shadow-xl h-full rounded-lg">
+    <div className="bg-white shadow-md h-full rounded-lg">
       <div className="">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">

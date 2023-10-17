@@ -185,7 +185,7 @@ const WomenCollection = () => {
       )}
 
       <TabPanel value={value} index={value}>
-        <div className="w-full h-[360px] lg:h-[416px]">
+        <div className="w-full h-[370px] lg:h-[430px]">
           {!loading && womenCategoryData.length > 0 ? (
             <Carousel
               ref={carouselRef}
@@ -193,15 +193,18 @@ const WomenCollection = () => {
               customTransition="all .5s ease-in-out"
               arrows={false}
               infinite
-              className="!pt-2 !ps-2"
             >
               {womenCategoryData?.map((product) => (
-                <div
+                // <div
+                //   key={product.id}
+                //   className={`px-3 pt-2 pb-8 overflow-hidden`}
+                // >
+                <ProductCard
+                  product={product}
+                  landingPage={true}
                   key={product.id}
-                  className={`px-3 pt-2 pb-8 overflow-hidden`}
-                >
-                  <ProductCard product={product} landingPage={true} />
-                </div>
+                />
+                // </div>
               ))}
             </Carousel>
           ) : !loading && womenCategoryData.length === 0 ? (

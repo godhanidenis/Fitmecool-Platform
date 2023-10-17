@@ -39,6 +39,10 @@ export const getUserProfile = async () => {
             }
             product_video
             product_color
+            product_discount
+            product_price
+            product_price_visible
+            product_listing_type
             categoryInfo {
               id
               category_name
