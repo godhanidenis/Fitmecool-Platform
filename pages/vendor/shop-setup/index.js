@@ -195,9 +195,7 @@ const ShopPage = () => {
     { key: "Saturday", value: ["09:00 AM - 08:00 PM"] },
   ]);
 
-  useEffect(() => {
-    console.log("subBranch :", subBranch);
-  }, [subBranch]);
+  const [managerValue, setManagerValue] = useState("");
 
   const {
     register,
@@ -323,6 +321,11 @@ const ShopPage = () => {
       manager_contact: val.subManagerPhone,
       manager_email: val.manager_user_email,
       branch_type: "sub",
+      same_as:
+        (managerValue === "Same as owner" && "owner") ||
+        (managerValue === "same as main branch manager" &&
+          "main_branch_manager") ||
+        "none",
     };
   };
 
@@ -438,6 +441,7 @@ const ShopPage = () => {
             manager_contact: data.manager_user_contact,
             manager_email: data.manager_user_email,
             branch_type: "main",
+            same_as: sameAsOwner === "True" ? "owner" : "none",
           },
           ...(subBranch.length > 0 ? subBranch?.map(returnSubBranchData) : []),
         ],
@@ -1781,6 +1785,8 @@ const ShopPage = () => {
                               subBranchEdit={subBranchEdit}
                               setSubBranchEdit={setSubBranchEdit}
                               subBranchButtonShow={subBranchButtonShow}
+                              managerValue={managerValue}
+                              setManagerValue={setManagerValue}
                             />
                           </div>
                         </>
@@ -1851,9 +1857,9 @@ const SubBranchModal = ({
   setSubBranchEdit,
   subBranchEdit,
   subBranchButtonShow,
+  managerValue,
+  setManagerValue,
 }) => {
-  const [managerValue, setManagerValue] = useState("");
-
   const [subManagerAddress, setSubManagerAddress] = useState("");
   const [subManagerCity, setSubManagerCity] = useState("");
   const [subManagerPinCode, setSubManagerPinCode] = useState("");
