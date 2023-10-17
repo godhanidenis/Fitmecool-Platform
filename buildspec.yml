@@ -16,7 +16,6 @@ artifacts:
     - .next/**/*
     - package.json
     - package-lock.json
-    - server.js
 # artifacts:
 #   files:
 #     - .elasticbeanstalk/**/*
