@@ -17,7 +17,7 @@ const CustomTextFieldVendor = ({
   ...rest
 }) => {
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", width: "100%" }}>
       <TextField
         type={type}
         id={id}
