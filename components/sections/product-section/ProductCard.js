@@ -23,6 +23,7 @@ import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 import Modal from "@mui/material/Modal";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import { refactorPrice } from "../../../utils/common";
 
 const ContactStyle = {
   position: "absolute",
@@ -487,7 +488,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                             : "text-white"
                         } text-sm sm:text-md xl:text-md 2xl:text-lg font-bold`}
                       >
-                        ₹{finalPrice}
+                        ₹{refactorPrice(finalPrice)}
                       </p>
                       {product?.product_discount !== 0 && (
                         <div className="flex gap-2 items-center">

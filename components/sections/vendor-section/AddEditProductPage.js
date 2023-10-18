@@ -26,6 +26,7 @@ import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
+import { refactorPrice } from "../../../utils/common";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -78,7 +79,7 @@ const AddEditProductPage = ({
     if (!isNaN(price)) {
       const discount = parseFloat(getValues("product_discount") || 0);
       const finalPrice = price - price * (discount / 100);
-      setValue("product_final_price", finalPrice);
+      setValue("product_final_price", finalPrice.toFixed(2));
     } else {
       setValue("product_final_price", null);
     }
@@ -89,7 +90,7 @@ const AddEditProductPage = ({
     if (!isNaN(discount)) {
       const price = parseFloat(getValues("product_price") || 0);
       const finalPrice = price - price * (discount / 100);
-      setValue("product_final_price", finalPrice);
+      setValue("product_final_price", finalPrice.toFixed(2));
     }
   };
 
@@ -99,7 +100,7 @@ const AddEditProductPage = ({
       const price = parseFloat(getValues("product_price") || 0);
       if (price !== 0) {
         const discount = ((price - finalPrice) / price) * 100;
-        setValue("product_discount", discount);
+        setValue("product_discount", discount.toFixed(2));
       }
     } else {
       setValue("product_discount", 0);
@@ -162,7 +163,10 @@ const AddEditProductPage = ({
       setEditorDescriptionContent(editableProductData?.product_description);
       setValue("product_color", editableProductData?.product_color);
       setValue("product_price", editableProductData?.product_price);
-      setValue("product_discount", editableProductData?.product_discount);
+      setValue(
+        "product_discount",
+        editableProductData?.product_discount.toFixed(2)
+      );
       setValue("product_type", editableProductData.categoryInfo?.category_type);
       setProductType(editableProductData.categoryInfo?.category_type);
       setValue("product_category", editableProductData?.categoryInfo?.id);
@@ -328,8 +332,8 @@ const AddEditProductPage = ({
             product_video:
               videoResponse ||
               (deleteProductVideo ? "" : editableProductData.product_video),
-            product_price: Number(data.product_price),
-            product_discount: Number(data.product_discount),
+            product_price: refactorPrice(data.product_price),
+            product_discount: refactorPrice(data.product_discount),
             product_price_visible: !productPriceVisible,
             product_listing_type: productListingType ? "sell" : "rent",
           },
@@ -380,8 +384,8 @@ const AddEditProductPage = ({
               side: productImagesRes[2],
             },
             product_video: productVideoRes || "",
-            product_price: Number(data.product_price),
-            product_discount: Number(data.product_discount),
+            product_price: refactorPrice(data.product_price),
+            product_discount: refactorPrice(data.product_discount),
             product_price_visible: !productPriceVisible,
             product_listing_type: productListingType ? "sell" : "rent",
           },
@@ -408,11 +412,19 @@ const AddEditProductPage = ({
   const handleInput = (e) => {
     const inputValue = e.target.value;
 
-    // Check if the input exceeds 10 characters and truncate it
-    if (inputValue.length > 10) {
-      e.target.value = inputValue.slice(0, 10);
-    } else if (inputValue < 0) {
+    if (inputValue < 0) {
       e.target.value = 0;
+    }
+    if (e.target.id === "pdiscount") {
+      if (inputValue > 100) {
+        e.target.value = 100;
+      }
+    }
+    if (e.target.id === "pfprice") {
+      const price = parseFloat(getValues("product_price"));
+      if (inputValue > price) {
+        e.target.value = price;
+      }
     }
   };
 

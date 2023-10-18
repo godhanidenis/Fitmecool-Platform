@@ -51,6 +51,7 @@ import { screeResizeForViewMoreItems } from "../../components/core/useScreenResi
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 import { assets } from "../../constants";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { refactorPrice } from "../../utils/common";
 
 const ContactStyle = {
   position: "absolute",
@@ -660,7 +661,7 @@ const ProductDetail = ({ productDetails }) => {
                 {productDetails.data.product.data?.product_price_visible && (
                   <div className="flex gap-2 mt-3 items-center">
                     <p className="text-black text-lg font-bold">
-                      ₹{finalPrice}
+                      ₹{refactorPrice(finalPrice)}
                     </p>
                     {productDetails.data.product.data?.product_discount !==
                       0 && (
