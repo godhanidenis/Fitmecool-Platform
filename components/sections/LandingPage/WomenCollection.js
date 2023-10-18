@@ -79,7 +79,7 @@ const WomenCollection = () => {
         product_listing_type: "",
       },
       shopId: [],
-      sort: "new",
+      sort: "",
       search: "",
     }).then(
       (res) => {
@@ -114,15 +114,12 @@ const WomenCollection = () => {
   }, [womenCategoryId]);
 
   useEffect(() => {
-    // Function to update the screenSize state when the window is resized
     const handleResize = () => {
       setScreenSize(window.innerWidth);
     };
 
-    // Add the event listener for the 'resize' event
     window.addEventListener("resize", handleResize);
 
-    // Remove the event listener when the component unmounts
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -149,16 +146,18 @@ const WomenCollection = () => {
             ))}
           </CustomTab>
         </div>
-        <Link href={`/home`} passHref>
-          <a
-            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-            rel="noopener noreferrer"
-          >
-            <button className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]">
-              View All
-            </button>
-          </a>
-        </Link>
+        {!loading && (
+          <Link href={`/home`} passHref>
+            <a
+              target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+              rel="noopener noreferrer"
+            >
+              <button className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]">
+                View All
+              </button>
+            </a>
+          </Link>
+        )}
       </div>
       {shouldShowButtons(1600, 4000, 6) ||
       shouldShowButtons(1367, 1600, 5) ||

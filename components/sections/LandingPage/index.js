@@ -124,6 +124,17 @@ const LandingPage = () => {
     );
   };
 
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    // Check if the input exceeds 10 characters and truncate it
+    if (inputValue.length > 10) {
+      e.target.value = inputValue.slice(0, 10);
+    } else if (inputValue < 0) {
+      e.target.value = 0;
+    }
+  };
+
   useEffect(() => {
     getAllShops();
   }, []);
@@ -181,7 +192,7 @@ const LandingPage = () => {
           <MenCollection />
         </div>
       </div>
-      <div className="container flex flex-col justify-center">
+      <div className="container flex flex-col justify-center mt-7">
         <div className="text-center">
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             Women’s Collection
@@ -194,7 +205,7 @@ const LandingPage = () => {
           <WomenCollection />
         </div>
       </div>
-      <div className="bg-[#29977E0A] py-8 mt-0 sm:mt-8">
+      <div className="bg-[#29977E0A] py-8 mt-8">
         <div className="container grid grid-cols-12">
           <div className="w-full flex justify-start col-span-9 sm:col-span-10 lg:col-span-7 lg:col-start-2 items-start">
             <div className=" flex flex-col">
@@ -244,6 +255,7 @@ const LandingPage = () => {
                         message: "Please enter a valid 10-digit mobile number",
                       },
                     })}
+                    onInput={handleInput}
                   />
                   {errors?.mobileNumber && (
                     <p className="text-red-600">

@@ -405,6 +405,17 @@ const AddEditProductPage = ({
     }
   };
 
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    // Check if the input exceeds 10 characters and truncate it
+    if (inputValue.length > 10) {
+      e.target.value = inputValue.slice(0, 10);
+    } else if (inputValue < 0) {
+      e.target.value = 0;
+    }
+  };
+
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
 
   if (!isHydrated) {
@@ -487,6 +498,7 @@ const AddEditProductPage = ({
                         onChange: priceHandle,
                       }),
                     }}
+                    onInput={handleInput}
                   />
                   <div className="mt-2">
                     {errors.product_price && (
@@ -512,6 +524,7 @@ const AddEditProductPage = ({
                         onChange: discountHandle,
                       }),
                     }}
+                    onInput={handleInput}
                   />
                   <div className="mt-2">
                     {errors.product_discount && (
@@ -539,6 +552,7 @@ const AddEditProductPage = ({
                         onChange: finalPriceHandle,
                       }),
                     }}
+                    onInput={handleInput}
                   />
                   <div className="mt-2">
                     {errors.product_final_price && (
