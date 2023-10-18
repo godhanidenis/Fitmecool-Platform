@@ -87,10 +87,12 @@ const AddEditProductPage = ({
 
   const discountHandle = (e) => {
     const discount = parseFloat(e.target.value);
+    const price = parseFloat(getValues("product_price") || 0);
     if (!isNaN(discount)) {
-      const price = parseFloat(getValues("product_price") || 0);
       const finalPrice = price - price * (discount / 100);
       setValue("product_final_price", finalPrice.toFixed(2));
+    } else {
+      setValue("product_final_price", price.toFixed(2));
     }
   };
 
