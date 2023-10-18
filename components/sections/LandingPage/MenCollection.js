@@ -62,7 +62,6 @@ const MenCollection = () => {
   };
 
   const getAllMenProducts = () => {
-    setMenCategoryData([]);
     setLoading(true);
     getProducts({
       pageData: {
@@ -114,7 +113,6 @@ const MenCollection = () => {
   }, [menCategoryId]);
 
   useEffect(() => {
-    // Function to update the screenSize state when the window is resized
     const handleResize = () => {
       setScreenSize(window.innerWidth);
     };
@@ -184,38 +182,32 @@ const MenCollection = () => {
       )}
       <TabPanel value={value} index={value}>
         <div className="w-full h-[370px] lg:h-[430px]">
-          {!loading && menCategoryData.length > 0 ? (
-            <Carousel
-              ref={carouselRef}
-              responsive={responsive}
-              customTransition="all .5s ease-in-out"
-              arrows={false}
-              infinite
-            >
-              {menCategoryData?.map((product, index) => (
-                // <div
-                //   key={product.id}
-                //   className={`px-3 pt-2 pb-8 overflow-hidden`}
-                // >
-                <ProductCard
-                  product={product}
-                  landingPage={true}
-                  key={product.id}
-                />
-                // </div>
-              ))}
-            </Carousel>
-          ) : !loading && menCategoryData.length === 0 ? (
-            <div className="flex items-center justify-center  pb-8 h-full w-full">
-              No Product Found
-            </div>
-          ) : (
-            loading &&
-            menCategoryData.length === 0 && (
-              <div className="flex justify-center items-center h-full">
-                <CircularProgress color="secondary" />
+          {!loading ? (
+            menCategoryData.length > 0 ? (
+              <Carousel
+                ref={carouselRef}
+                responsive={responsive}
+                customTransition="all .5s ease-in-out"
+                arrows={false}
+                infinite
+              >
+                {menCategoryData.map((product) => (
+                  <ProductCard
+                    product={product}
+                    landingPage={true}
+                    key={product.id}
+                  />
+                ))}
+              </Carousel>
+            ) : (
+              <div className="flex items-center justify-center pb-8 h-full w-full">
+                No Product Found
               </div>
             )
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <CircularProgress color="secondary" />
+            </div>
           )}
         </div>
       </TabPanel>

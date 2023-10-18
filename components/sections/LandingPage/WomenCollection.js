@@ -63,7 +63,6 @@ const WomenCollection = () => {
   };
 
   const getAllWomenProducts = () => {
-    setWomenCategoryData([]);
     setLoading(true);
     getProducts({
       pageData: {
@@ -186,38 +185,32 @@ const WomenCollection = () => {
 
       <TabPanel value={value} index={value}>
         <div className="w-full h-[370px] lg:h-[430px]">
-          {!loading && womenCategoryData.length > 0 ? (
-            <Carousel
-              ref={carouselRef}
-              responsive={responsive}
-              customTransition="all .5s ease-in-out"
-              arrows={false}
-              infinite
-            >
-              {womenCategoryData?.map((product) => (
-                // <div
-                //   key={product.id}
-                //   className={`px-3 pt-2 pb-8 overflow-hidden`}
-                // >
-                <ProductCard
-                  product={product}
-                  landingPage={true}
-                  key={product.id}
-                />
-                // </div>
-              ))}
-            </Carousel>
-          ) : !loading && womenCategoryData.length === 0 ? (
-            <div className="flex items-center justify-center  pb-8 h-full w-full">
-              No Product Found
-            </div>
-          ) : (
-            loading &&
-            womenCategoryData.length === 0 && (
-              <div className="flex justify-center items-center h-full">
-                <CircularProgress color="secondary" />
+          {!loading ? (
+            womenCategoryData.length > 0 ? (
+              <Carousel
+                ref={carouselRef}
+                responsive={responsive}
+                customTransition="all .5s ease-in-out"
+                arrows={false}
+                infinite
+              >
+                {womenCategoryData.map((product) => (
+                  <ProductCard
+                    product={product}
+                    landingPage={true}
+                    key={product.id}
+                  />
+                ))}
+              </Carousel>
+            ) : (
+              <div className="flex items-center justify-center pb-8 h-full w-full">
+                No Product Found
               </div>
             )
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <CircularProgress color="secondary" />
+            </div>
           )}
         </div>
       </TabPanel>

@@ -14,12 +14,12 @@ import MenCollection from "./MenCollection";
 import WomenCollection from "./WomenCollection";
 import { useForm } from "react-hook-form";
 import ShopCard from "./ShopCard";
-import { loadShopsStart } from "../../../redux/ducks/shop";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { assets } from "../../../constants";
 import { useRouter } from "next/router";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import BannerHero from "../../DirectoryHero/BannerHero";
+import { getShops } from "../../../graphql/queries/shopQueries";
 
 const responsive = {
   superLargeDesktop: {
@@ -64,11 +64,7 @@ const LandingPage = () => {
   const router = useRouter();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { shopPageSkip, shopsData } = useSelector((state) => state.shops);
-
-  const { appliedShopsFilters, sortFilters } = useSelector(
-    (state) => state.shopsFiltersReducer
-  );
+  const [shopsData, setShopsData] = useState([]);
 
   const {
     register,
@@ -108,24 +104,29 @@ const LandingPage = () => {
 
   const getAllShops = () => {
     setLoading(true);
-    dispatch(
-      loadShopsStart({
-        pageData: {
-          skip: shopPageSkip,
-          limit: 10,
-        },
-        area: appliedShopsFilters.locations.selectedValue,
-        sort: sortFilters.sortType.selectedValue,
-        stars: appliedShopsFilters.stars.selectedValue,
-      }),
-      setLoading(false)
+    getShops({
+      pageData: {
+        skip: 0,
+        limit: 10,
+      },
+      area: [],
+      sort: "",
+      stars: "",
+    }).then(
+      (res) => {
+        setShopsData(res?.data?.shopList?.data);
+        setLoading(false);
+      },
+      (err) => {
+        console.log("error >> ", err);
+        setLoading(false);
+      }
     );
   };
 
   useEffect(() => {
     getAllShops();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedShopsFilters, sortFilters, shopPageSkip]);
+  }, []);
 
   return (
     <>
@@ -301,45 +302,46 @@ const LandingPage = () => {
         </div>
 
         <div className="w-full h-[350px] lg:h-[400px] place-items-center pt-5">
-          <div className="flex justify-end">
-            <button
-              className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
-              onClick={() => {
-                dispatch(changeByShopFilters(true));
-                router.push("/home");
-              }}
-            >
-              View All
-            </button>
-          </div>
-          {!loading && shopsData.length > 0 ? (
-            <Carousel
-              responsive={responsive}
-              customTransition="all .5s ease-in-out"
-              removeArrowOnDeviceType={["mobile"]}
-              arrows={false}
-              infinite
-              autoPlay
-              autoPlaySpeed={2000}
-              className="py-5"
-            >
-              {shopsData.map((shop) => (
-                <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
-                  <ShopCard shop={shop} />
-                </div>
-              ))}
-            </Carousel>
-          ) : !loading && shopsData.length === 0 ? (
-            <div className="flex items-center justify-center  pb-8 h-full w-full">
-              No Product Found
+          {!loading && (
+            <div className="flex justify-end">
+              <button
+                className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
+                onClick={() => {
+                  dispatch(changeByShopFilters(true));
+                  router.push("/home");
+                }}
+              >
+                View All
+              </button>
             </div>
-          ) : (
-            loading &&
-            shopsData.length === 0 && (
-              <div className="flex justify-center items-center h-full">
-                <CircularProgress color="secondary" />
+          )}
+          {!loading ? (
+            shopsData.length > 0 ? (
+              <Carousel
+                responsive={responsive}
+                customTransition="all .5s ease-in-out"
+                removeArrowOnDeviceType={["mobile"]}
+                arrows={false}
+                infinite
+                autoPlay
+                autoPlaySpeed={2000}
+                className="py-5"
+              >
+                {shopsData.map((shop) => (
+                  <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
+                    <ShopCard shop={shop} />
+                  </div>
+                ))}
+              </Carousel>
+            ) : (
+              <div className="flex items-center justify-center pb-8 h-full w-full">
+                No Shop Found
               </div>
             )
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <CircularProgress color="secondary" />
+            </div>
           )}
         </div>
       </div>
