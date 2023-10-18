@@ -348,7 +348,7 @@ const ProductDetail = ({ productDetails }) => {
               productDetails.data.product.data.branchInfo?.shop_info.shop_rating
             )}
             readOnly
-            emptyIcon={<StarIcon fontSize="small" sx={{ fontSize: "6px" }} />}
+            emptyIcon={<StarIcon sx={{ color: "gray" }} />}
           />
           <div className="text-[#878A99] font-normal text-[13px] flex items-center">
             <div className="flex items-center">
@@ -422,12 +422,10 @@ const ProductDetail = ({ productDetails }) => {
             {shopFollowByUser ? (
               "Unfollow"
             ) : (
-              <>
-                <div className="flex items-center justify-center">
-                  <AddIcon className="text-white" fontSize="small" />
-                  <div className="text-white">Follow</div>
-                </div>
-              </>
+              <div className="flex items-center justify-center">
+                <AddIcon className="text-white" fontSize="small" />
+                <div className="text-white">Follow</div>
+              </div>
             )}
           </Button>
         </div>
