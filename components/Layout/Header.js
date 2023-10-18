@@ -95,6 +95,10 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
+  const handleAuthButtonClick = () => {
+    localStorage.setItem("last_path", new URL(window.location.href).pathname);
+    Router.push("/auth/user-type");
+  };
   const handleSearchDialogClose = () => {
     setSearchBarValue("");
     setOpenSearchDialog(false);
@@ -245,7 +249,7 @@ const Header = () => {
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
                     <button
-                      onClick={() => Router.push("/auth/user-type")}
+                      onClick={handleAuthButtonClick}
                       className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-colorGreen"
                     >
                       Login / Register
@@ -255,7 +259,7 @@ const Header = () => {
                       sx={{ color: "white" }}
                       fontSize="large"
                       className="lg:!hidden"
-                      onClick={() => Router.push("/auth/user-type")}
+                      onClick={handleAuthButtonClick}
                     />
                   </div>
                 )}

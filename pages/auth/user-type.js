@@ -8,7 +8,6 @@ import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAut
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
-  const [backHome, setBackHome] = useState(false);
 
   const router = useRouter();
 
@@ -29,11 +28,6 @@ const UserType = () => {
     localStorage.setItem("user_type_for_auth", "customer");
   }, []);
 
-  useEffect(() => {
-    router.pathname === "/auth/signin/" && setBackHome(true);
-    router.pathname === "/auth/user-type/" && setBackHome(false);
-  }, [router]);
-
   if (!isHydrated) {
     return null;
   }
@@ -42,14 +36,10 @@ const UserType = () => {
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
         <ArrowBackIcon
-          onClick={() =>
-            router.pathname === "/auth/signin/"
-              ? backHome
-                ? window.history.back()
-                : router.push("/")
-              : // window.history.back()
-                window.history.back()
-          }
+          onClick={() => {
+            router.push(localStorage.getItem("last_path") ?? "/");
+            localStorage.removeItem("last_path");
+          }}
           className="cursor-pointer text-3xl"
         />
         <div className="">
