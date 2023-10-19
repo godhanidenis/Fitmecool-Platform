@@ -24,6 +24,8 @@ import { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 import ShopCommentsSection from "../../../components/sections/shop-section/ShopCommentsSection";
 import ShopReviewSection from "../../../components/sections/shop-section/ShopReviewSection";
+import { useResizeScreenLayout } from "../../../components/core/useScreenResize";
+import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 
 const ShopDetail = ({ shopDetails }) => {
   const [shopReviews, setShopReviews] = useState([]);
@@ -101,7 +103,7 @@ const ShopDetail = ({ shopDetails }) => {
   }, [dispatch, router.query.id]);
 
   useEffect(() => {
-    getAllProducts();
+    appliedProductsFilters.shopId.selectedValue?.length > 0 && getAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
@@ -112,6 +114,11 @@ const ShopDetail = ({ shopDetails }) => {
     dispatch(loadAreaListsStart());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
+
+  const isScreenWide = useResizeScreenLayout();
+  useEffect(() => {
+    !isScreenWide && dispatch(changeByShopFilters(false));
+  }, [dispatch, isScreenWide]);
 
   if (!isHydrated) {
     return null;

@@ -13,10 +13,6 @@ import { changeProductPage } from "../../../redux/ducks/product";
 
 const productListingTypeFilterData = [
   {
-    label: "Any",
-    value: "",
-  },
-  {
     label: "Rent",
     value: "rent",
   },
@@ -52,22 +48,44 @@ const ProductTypeFilter = () => {
           <>
             <FormControl fullWidth>
               <FormGroup>
-                <div className={`flex flex-col overflow-auto`}>
+                <div className="flex flex-col overflow-auto">
                   {productListingTypeFilterData?.map((item, index) => (
-                    <StyledFormLabelRadio
+                    <div
+                      className="flex items-center justify-between"
                       key={index}
-                      value={item.value}
-                      label={capitalize(item.label)}
-                      control={
-                        <Radio
-                          checked={
-                            appliedProductsFilters.productListingType
-                              .selectedValue === item.value
+                    >
+                      <StyledFormLabelRadio
+                        value={item.value}
+                        label={capitalize(item.label)}
+                        control={
+                          <Radio
+                            checked={
+                              appliedProductsFilters.productListingType
+                                .selectedValue === item.value
+                            }
+                            onChange={() => handleCheckboxChange(item.value)}
+                          />
+                        }
+                      />
+                      {appliedProductsFilters.productListingType
+                        .selectedValue === item.value && (
+                        <span
+                          className="underline cursor-pointer text-colorGreen"
+                          onClick={() =>
+                            dispatch(
+                              changeAppliedProductsFilters({
+                                key: "productListingType",
+                                value: {
+                                  selectedValue: "",
+                                },
+                              })
+                            )
                           }
-                          onChange={() => handleCheckboxChange(item.value)}
-                        />
-                      }
-                    />
+                        >
+                          Clear
+                        </span>
+                      )}
+                    </div>
                   ))}
                 </div>
               </FormGroup>
