@@ -99,16 +99,36 @@ const VenderProductTable = ({
                 <StyledTableRow key={index}>
                   <TableCell align="center">{index + 1}</TableCell>
                   <TableCell>
-                    <div className="relative">
-                      <Image
-                        objectFit="cover"
-                        objectPosition="center top"
-                        src={item?.product_image?.front ?? ""}
-                        unoptimized={true}
-                        width={"100%"}
-                        height={"100%"}
-                        alt="Product Image"
-                      />
+                    <div className="relative flex justify-center ">
+                      <div className="relative cursor-pointer pt-1 ps-1 overflow-hidden ">
+                        {item?.product_listing_type && (
+                          <div className="absolute top-0">
+                            <span
+                              className={`z-10 absolute w-28 p-[1px] text-white text-[8px] font-semibold uppercase flex items-center justify-center transform -rotate-45 top-2 -left-[45px]  border-2 border-[#f5cd79] ${
+                                item?.product_listing_type === "rent"
+                                  ? "bg-[#ff3b3b]"
+                                  : "bg-[#29977E]"
+                              } `}
+                            >
+                              {item?.product_listing_type === "sell"
+                                ? "Sell"
+                                : "Rent"}
+                            </span>
+                            <span className="absolute top-0 z-0 left-8 p-1 bg-[#f19066]" />
+                            <span className="absolute top-[36px] z-0 -left-[4px] p-1 bg-[#f19066]" />
+                          </div>
+                        )}
+
+                        <Image
+                          objectFit="cover"
+                          objectPosition="center top"
+                          src={item?.product_image?.front ?? ""}
+                          unoptimized={true}
+                          width={"100%"}
+                          height={"100%"}
+                          alt="Product Image"
+                        />
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell align="center">

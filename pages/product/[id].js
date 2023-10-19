@@ -32,6 +32,8 @@ import {
 } from "../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
+import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
+import { TiArrowForwardOutline } from "react-icons/ti";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
@@ -345,11 +347,17 @@ const ProductDetail = ({ productDetails }) => {
         <div className="flex flex-col">
           <Rating
             name="text-feedback"
+            className="!text-[17px] sm:!text-[24px]"
             value={Math.round(
               productDetails.data.product.data.branchInfo?.shop_info.shop_rating
             )}
             readOnly
-            emptyIcon={<StarIcon sx={{ color: "gray" }} />}
+            emptyIcon={
+              <StarIcon
+                sx={{ color: "gray" }}
+                className="!text-[17px] sm:!text-[24px]"
+              />
+            }
           />
           <div className="text-[#878A99] font-normal text-[13px] flex items-center">
             <div className="flex items-center">
@@ -484,7 +492,29 @@ const ProductDetail = ({ productDetails }) => {
                   <div className="col-span-1">
                     <div className="p-2 pt-0">{productImages}</div>
                   </div>
-                  <div className="col-span-3">
+                  <div className="col-span-3 relative">
+                    <div className="absolute h-52 w-52 -left-1 2xl:-left-4 -top-1 2xl:-top-4 overflow-hidden">
+                      {productDetails.data.product.data
+                        ?.product_listing_type && (
+                        <div className="absolute top-0">
+                          <span
+                            className={`z-[8] absolute w-80 p-[2px] text-white text-[18px] font-semibold uppercase flex items-center justify-center transform -rotate-45 top-14 -left-[80px]  border-[5px] border-[#f5cd79] ${
+                              productDetails.data.product.data
+                                ?.product_listing_type === "rent"
+                                ? "bg-[#ff3b3b]"
+                                : "bg-[#29977E]"
+                            } `}
+                          >
+                            {productDetails.data.product.data
+                              ?.product_listing_type === "sell"
+                              ? "Sell"
+                              : "Rent"}
+                          </span>
+                          <span className="absolute top-0 z-0 left-[147px] p-5 bg-[#f19066]" />
+                          <span className="absolute top-[147px] z-0 -left-[4px] p-5 bg-[#f19066]" />
+                        </div>
+                      )}
+                    </div>
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
                       {images?.type === "image" && (
                         <CustomReactImageMagnify
@@ -511,6 +541,7 @@ const ProductDetail = ({ productDetails }) => {
                         />
                       )}
                     </div>
+
                     <div className="flex flex-wrap items-center justify-between mt-4">
                       <div className="w-[30%]">
                         <Button
@@ -526,6 +557,8 @@ const ProductDetail = ({ productDetails }) => {
                             paddingBottom: "12px",
                             fontWeight: 600,
                             fontSize: "18px",
+                            display: "flex",
+                            gap: "5px",
                           }}
                           onClick={handleProductLike}
                         >
@@ -534,7 +567,7 @@ const ProductDetail = ({ productDetails }) => {
                           ) : (
                             "❤️"
                           )}
-                          &nbsp; Like
+                          <span>Like</span>
                         </Button>
                       </div>
                       <div
@@ -600,15 +633,19 @@ const ProductDetail = ({ productDetails }) => {
                               paddingBottom: "12px",
                               fontWeight: 600,
                               fontSize: "18px",
+                              display: "flex",
+                              gap: "5px",
+                              alignItems: "center",
                             }}
                           >
-                            <Image
+                            <TiArrowForwardOutline className="!text-[24px]" />
+                            {/* <Image
                               src={assets.shareIcon}
                               width={24}
                               height={24}
                               alt="shareIcon"
-                            />
-                            &nbsp; Share
+                            /> */}
+                            <span>Share</span>
                           </Button>
                         </HtmlTooltip>
                       </div>
@@ -625,10 +662,12 @@ const ProductDetail = ({ productDetails }) => {
                             paddingBottom: "12px",
                             fontWeight: 600,
                             fontSize: "18px",
+                            display: "flex",
+                            gap: "5px",
                           }}
                         >
                           <ReportGmailerrorredOutlinedIcon className="!text-[#f34747]" />
-                          &nbsp;Report
+                          <span>Report</span>
                         </Button>
                       </div>
                     </div>
@@ -660,14 +699,17 @@ const ProductDetail = ({ productDetails }) => {
                 </div>
                 {productDetails.data.product.data?.product_price_visible && (
                   <div className="flex gap-2 mt-3 items-center">
-                    <p className="text-black text-lg font-bold">
-                      ₹{refactorPrice(finalPrice)}
+                    <p className="text-black text-[22px] font-bold">
+                      ₹{refactorPrice(Math.round(finalPrice))}
                     </p>
                     {productDetails.data.product.data?.product_discount !==
                       0 && (
                       <div className="flex gap-2 items-center">
-                        <p className="text-[#9d9d9d] text-sm  font-semibold line-through">
-                          ₹{productDetails.data.product.data?.product_price}
+                        <p className="text-[#9d9d9d] text-[16px] font-medium line-through">
+                          ₹
+                          {Math.round(
+                            productDetails.data.product.data?.product_price
+                          )}
                         </p>
                         <p className="text-green-600 text-md font-normal ">
                           ({productDetails.data.product.data?.product_discount}%
