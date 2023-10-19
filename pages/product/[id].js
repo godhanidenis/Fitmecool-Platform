@@ -639,12 +639,6 @@ const ProductDetail = ({ productDetails }) => {
                             }}
                           >
                             <TiArrowForwardOutline className="!text-[24px]" />
-                            {/* <Image
-                              src={assets.shareIcon}
-                              width={24}
-                              height={24}
-                              alt="shareIcon"
-                            /> */}
                             <span>Share</span>
                           </Button>
                         </HtmlTooltip>

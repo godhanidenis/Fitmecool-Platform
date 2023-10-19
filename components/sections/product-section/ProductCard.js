@@ -255,7 +255,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
           {product?.product_listing_type && (
             <div className="absolute top-0">
               <span
-                className={`z-10 absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
+                className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
                   product?.product_listing_type === "rent"
                     ? "bg-[#ff3b3b]"
                     : "bg-[#29977E]"
@@ -507,8 +507,11 @@ const ProductCard = ({ product, onlyCarousal }) => {
                         )}
                       </div>
                     ) : (
-                      <div className="text-sm sm:text-md text-[#3f3f3f] font-semibold flex items-center p-2">
-                        No Price visible
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
+                        <p className="text-black text-sm  font-bold">
+                          No Price Visible !
+                        </p>
+                        <p className="text-[#fff] text-sm">*</p>
                       </div>
                     )}
                   </div>
