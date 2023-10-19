@@ -8,13 +8,6 @@ import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilte
 
 const priceFilterData = [
   {
-    label: "Any Price",
-    value: {
-      min: 0,
-      max: 0,
-    },
-  },
-  {
     label: "Under ₹1000",
     value: {
       min: 0,
@@ -76,24 +69,48 @@ const ProductPriceFilter = () => {
         <>
           <FormControl fullWidth>
             <FormGroup>
-              <div className={`flex flex-col overflow-auto`}>
+              <div className="flex flex-col overflow-auto">
                 {priceFilterData?.map((item, index) => (
-                  <StyledFormLabelRadio
+                  <div
+                    className="flex items-center justify-between"
                     key={index}
-                    value={item.value}
-                    label={capitalize(item.label)}
-                    control={
-                      <Radio
-                        checked={
-                          appliedProductsFilters.productPrice.selectedValue
-                            .min === item.value.min &&
-                          appliedProductsFilters.productPrice.selectedValue
-                            .max === item.value.max
-                        }
-                        onChange={() => handleCheckboxChange(item.value)}
-                      />
-                    }
-                  />
+                  >
+                    <StyledFormLabelRadio
+                      value={item.value}
+                      label={capitalize(item.label)}
+                      control={
+                        <Radio
+                          checked={
+                            appliedProductsFilters.productPrice.selectedValue
+                              .min === item.value.min &&
+                            appliedProductsFilters.productPrice.selectedValue
+                              .max === item.value.max
+                          }
+                          onChange={() => handleCheckboxChange(item.value)}
+                        />
+                      }
+                    />
+                    {appliedProductsFilters.productPrice.selectedValue.min ===
+                      item.value.min &&
+                      appliedProductsFilters.productPrice.selectedValue.max ===
+                        item.value.max && (
+                        <span
+                          className="underline cursor-pointer text-colorGreen"
+                          onClick={() =>
+                            dispatch(
+                              changeAppliedProductsFilters({
+                                key: "productPrice",
+                                value: {
+                                  selectedValue: { min: 0, max: 0 },
+                                },
+                              })
+                            )
+                          }
+                        >
+                          Clear
+                        </span>
+                      )}
+                  </div>
                 ))}
               </div>
             </FormGroup>

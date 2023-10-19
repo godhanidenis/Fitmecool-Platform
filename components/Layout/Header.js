@@ -104,18 +104,35 @@ const Header = () => {
     setOpenSearchDialog(false);
   };
 
+  const passValueForProduct = (itm, searchBarData) => {
+    if (itm === "searchBarData") {
+      return searchBarData;
+    } else if (itm === "productPrice") {
+      return { min: 0, max: 0 };
+    } else if (itm === "productListingType") {
+      return "";
+    } else {
+      return [];
+    }
+  };
+
   const handleSearch = (searchData) => {
-    ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+    [
+      "productColor",
+      "shopId",
+      "categoryId",
+      "searchBarData",
+      "productPrice",
+      "productListingType",
+    ].map((itm) =>
       dispatch(
         changeAppliedProductsFilters({
           key: itm,
           value: {
-            selectedValue:
-              itm === "searchBarData"
-                ? searchData
-                  ? searchData
-                  : searchBarValue
-                : [],
+            selectedValue: passValueForProduct(
+              itm,
+              searchData ? searchData : searchBarValue
+            ),
           },
         })
       )

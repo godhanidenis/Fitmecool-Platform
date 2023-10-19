@@ -12,6 +12,8 @@ import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
 import { assets } from "../../../constants";
 import BannerHero from "../../DirectoryHero/BannerHero";
+// import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+// import { useResizeScreenLayout } from "../../core/useScreenResize";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -97,6 +99,20 @@ const HomePage = () => {
     getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedShopsFilters, shopSortFilter, shopPageSkip]);
+
+  // const isScreenWide = useResizeScreenLayout();
+
+  // useEffect(() => {
+  //   !isScreenWide &&
+  //     dispatch(
+  //       changeAppliedProductsFilters({
+  //         key: "shopId",
+  //         value: {
+  //           selectedValue: [],
+  //         },
+  //       })
+  //     );
+  // }, [dispatch, isScreenWide]);
 
   return (
     <>
