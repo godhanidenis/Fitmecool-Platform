@@ -86,7 +86,20 @@ const ProductPriceFilter = () => {
                             appliedProductsFilters.productPrice.selectedValue
                               .max === item.value.max
                           }
-                          onChange={() => handleCheckboxChange(item.value)}
+                          onChange={() => {
+                            handleCheckboxChange(item.value);
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
+                          }}
                         />
                       }
                     />
@@ -96,7 +109,7 @@ const ProductPriceFilter = () => {
                         item.value.max && (
                         <span
                           className="underline cursor-pointer text-colorGreen"
-                          onClick={() =>
+                          onClick={() => {
                             dispatch(
                               changeAppliedProductsFilters({
                                 key: "productPrice",
@@ -104,8 +117,19 @@ const ProductPriceFilter = () => {
                                   selectedValue: { min: 0, max: 0 },
                                 },
                               })
-                            )
-                          }
+                            );
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
+                          }}
                         >
                           Clear
                         </span>

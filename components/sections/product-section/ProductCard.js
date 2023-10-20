@@ -493,7 +493,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     {product?.product_price_visible ? (
                       <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
                         <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold">
-                          ₹{refactorPrice(Math.round(finalPrice))}
+                          ₹{Math.round(finalPrice)}
                         </p>
                         {product?.product_discount !== 0 && (
                           <div className="flex gap-2 items-center">
@@ -501,7 +501,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                               ₹{Math.round(product?.product_price)}
                             </p>
                             <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium">
-                              ({product?.product_discount}% OFF)
+                              ({refactorPrice(product?.product_discount)}% OFF)
                             </p>
                           </div>
                         )}

@@ -163,12 +163,18 @@ const HomePage = () => {
                               productPageSkip / 10 + 1
                             }
                             onChange={(e, p) => {
-                              const targetScrollPosition = 500;
+                              const targetElement =
+                                document.getElementById("titleName");
 
-                              window.scrollTo({
-                                top: targetScrollPosition,
-                                behavior: "smooth",
-                              });
+                              if (targetElement) {
+                                const targetScrollPosition =
+                                  targetElement.getBoundingClientRect().top;
+
+                                window.scrollTo({
+                                  top: window.scrollY + targetScrollPosition,
+                                  behavior: "smooth",
+                                });
+                              }
                               dispatch(
                                 changeProductPage(
                                   (p === 1 && 0) || (p - 1) * 10
@@ -223,12 +229,17 @@ const HomePage = () => {
                               (shopPageSkip === 0 && 1) || shopPageSkip / 10 + 1
                             }
                             onChange={(e, p) => {
-                              const targetScrollPosition = 500;
+                              const targetElement =
+                                document.getElementById("titleName");
+                              if (targetElement) {
+                                const targetScrollPosition =
+                                  targetElement.getBoundingClientRect().top;
 
-                              window.scrollTo({
-                                top: targetScrollPosition,
-                                behavior: "smooth",
-                              });
+                                window.scrollTo({
+                                  top: window.scrollY + targetScrollPosition,
+                                  behavior: "smooth",
+                                });
+                              }
                               dispatch(
                                 changeShopPage((p === 1 && 0) || (p - 1) * 10)
                               );

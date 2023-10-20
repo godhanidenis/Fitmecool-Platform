@@ -127,12 +127,19 @@ const LandingPage = () => {
   const handleInput = (e) => {
     const inputValue = e.target.value;
 
-    // Check if the input exceeds 10 characters and truncate it
     if (inputValue.length > 10) {
       e.target.value = inputValue.slice(0, 10);
     } else if (inputValue < 0) {
       e.target.value = 0;
     }
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
   };
 
   useEffect(() => {

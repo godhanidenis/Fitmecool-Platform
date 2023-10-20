@@ -63,7 +63,20 @@ const ProductTypeFilter = () => {
                               appliedProductsFilters.productListingType
                                 .selectedValue === item.value
                             }
-                            onChange={() => handleCheckboxChange(item.value)}
+                            onChange={() => {
+                              handleCheckboxChange(item.value);
+                              const targetElement =
+                                document.getElementById("titleName");
+                              if (targetElement) {
+                                const targetScrollPosition =
+                                  targetElement.getBoundingClientRect().top;
+
+                                window.scrollTo({
+                                  top: window.scrollY + targetScrollPosition,
+                                  behavior: "smooth",
+                                });
+                              }
+                            }}
                           />
                         }
                       />
@@ -71,7 +84,7 @@ const ProductTypeFilter = () => {
                         .selectedValue === item.value && (
                         <span
                           className="underline cursor-pointer text-colorGreen"
-                          onClick={() =>
+                          onClick={() => {
                             dispatch(
                               changeAppliedProductsFilters({
                                 key: "productListingType",
@@ -79,8 +92,19 @@ const ProductTypeFilter = () => {
                                   selectedValue: "",
                                 },
                               })
-                            )
-                          }
+                            );
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
+                          }}
                         >
                           Clear
                         </span>

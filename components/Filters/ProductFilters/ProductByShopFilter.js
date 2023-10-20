@@ -54,7 +54,7 @@ const ProductByShopFilter = () => {
                 selectedFilterLength={
                   appliedProductsFilters.shopId.selectedValue.length
                 }
-                clearDispatched={() =>
+                clearDispatched={() => {
                   dispatch(
                     changeAppliedProductsFilters({
                       key: "shopId",
@@ -62,8 +62,18 @@ const ProductByShopFilter = () => {
                         selectedValue: [],
                       },
                     })
-                  )
-                }
+                  );
+                  const targetElement = document.getElementById("titleName");
+                  if (targetElement) {
+                    const targetScrollPosition =
+                      targetElement.getBoundingClientRect().top;
+
+                    window.scrollTo({
+                      top: window.scrollY + targetScrollPosition,
+                      behavior: "smooth",
+                    });
+                  }
+                }}
               />
               <FormGroup>
                 <div
@@ -104,6 +114,17 @@ const ProductByShopFilter = () => {
                             setSelectedData(updatedSelection);
                             dispatch(changeProductPage(0));
                             setAbc(true);
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
                           }}
                         />
                       }

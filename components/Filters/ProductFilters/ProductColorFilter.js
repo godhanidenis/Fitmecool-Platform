@@ -39,6 +39,15 @@ const ProductColorFilter = () => {
         },
       })
     );
+    const targetElement = document.getElementById("titleName");
+    if (targetElement) {
+      const targetScrollPosition = targetElement.getBoundingClientRect().top;
+
+      window.scrollTo({
+        top: window.scrollY + targetScrollPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
@@ -55,7 +64,7 @@ const ProductColorFilter = () => {
                   selectedFilterLength={
                     appliedProductsFilters.productColor.selectedValue.length
                   }
-                  clearDispatched={() =>
+                  clearDispatched={() => {
                     dispatch(
                       changeAppliedProductsFilters({
                         key: "productColor",
@@ -63,8 +72,18 @@ const ProductColorFilter = () => {
                           selectedValue: [],
                         },
                       })
-                    )
-                  }
+                    );
+                    const targetElement = document.getElementById("titleName");
+                    if (targetElement) {
+                      const targetScrollPosition =
+                        targetElement.getBoundingClientRect().top;
+
+                      window.scrollTo({
+                        top: window.scrollY + targetScrollPosition,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
                 />
                 <div
                   className={`flex flex-col overflow-auto ${

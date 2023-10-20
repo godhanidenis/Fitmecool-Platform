@@ -127,6 +127,14 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
     );
   }, [appliedProductsFilters.productColor.selectedValue]);
 
+  const priceFilterLabel = (price) => {
+    if (price.min > 0 && price.max === 0) {
+      return `Price: Over ${price.min}`;
+    } else {
+      return `Price: ${price.min} - ${price.max}`;
+    }
+  };
+
   useEffect(() => {
     appliedProductsFilters.productPrice.selectedValue.min === 0 &&
     appliedProductsFilters.productPrice.selectedValue.max === 0
@@ -134,7 +142,9 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       : setSelectedPrices([
           {
             type: "productPrice",
-            label: `Price: ${appliedProductsFilters.productPrice.selectedValue.min} - ${appliedProductsFilters.productPrice.selectedValue.max}`,
+            label: priceFilterLabel(
+              appliedProductsFilters.productPrice.selectedValue
+            ),
             value: appliedProductsFilters.productPrice.selectedValue,
           },
         ]);
@@ -248,7 +258,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   };
 
   return (
-    <div className="w-full border-b">
+    <div className="w-full border-b" id="titleName">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <span className="text-[#979ca0] text-base">

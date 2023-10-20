@@ -494,26 +494,26 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div className="col-span-3 relative">
                     <div className="absolute h-52 w-52 -left-1 2xl:-left-4 -top-1 2xl:-top-4 overflow-hidden">
-                      {productDetails.data.product.data
-                        ?.product_listing_type && (
-                        <div className="absolute top-0">
-                          <span
-                            className={`z-[8] absolute w-80 p-[2px] text-white text-[18px] font-semibold uppercase flex items-center justify-center transform -rotate-45 top-14 -left-[80px]  border-[5px] border-[#f5cd79] ${
-                              productDetails.data.product.data
-                                ?.product_listing_type === "rent"
-                                ? "bg-[#ff3b3b]"
-                                : "bg-[#29977E]"
-                            } `}
-                          >
-                            {productDetails.data.product.data
-                              ?.product_listing_type === "sell"
-                              ? "Sell"
-                              : "Rent"}
-                          </span>
-                          <span className="absolute top-0 z-0 left-[147px] p-5 bg-[#f19066]" />
-                          <span className="absolute top-[147px] z-0 -left-[4px] p-5 bg-[#f19066]" />
-                        </div>
-                      )}
+                      {productDetails.data.product.data?.product_listing_type &&
+                        images?.type === "image" && (
+                          <div className="absolute top-0">
+                            <span
+                              className={`z-[8] absolute w-80 p-[2px] text-white text-[18px] font-semibold uppercase flex items-center justify-center transform -rotate-45 top-14 -left-[80px]  border-[5px] border-[#f5cd79] ${
+                                productDetails.data.product.data
+                                  ?.product_listing_type === "rent"
+                                  ? "bg-[#ff3b3b]"
+                                  : "bg-[#29977E]"
+                              } `}
+                            >
+                              {productDetails.data.product.data
+                                ?.product_listing_type === "sell"
+                                ? "Sell"
+                                : "Rent"}
+                            </span>
+                            <span className="absolute top-0 z-0 left-[147px] p-5 bg-[#f19066]" />
+                            <span className="absolute top-[147px] z-0 -left-[4px] p-5 bg-[#f19066]" />
+                          </div>
+                        )}
                     </div>
                     <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
                       {images?.type === "image" && (
@@ -694,7 +694,7 @@ const ProductDetail = ({ productDetails }) => {
                 {productDetails.data.product.data?.product_price_visible && (
                   <div className="flex gap-2 mt-3 items-center">
                     <p className="text-black text-[22px] font-bold">
-                      ₹{refactorPrice(Math.round(finalPrice))}
+                      ₹{Math.round(finalPrice)}
                     </p>
                     {productDetails.data.product.data?.product_discount !==
                       0 && (
@@ -706,8 +706,11 @@ const ProductDetail = ({ productDetails }) => {
                           )}
                         </p>
                         <p className="text-green-600 text-md font-normal ">
-                          ({productDetails.data.product.data?.product_discount}%
-                          OFF)
+                          (
+                          {refactorPrice(
+                            productDetails.data.product.data?.product_discount
+                          )}
+                          % OFF)
                         </p>
                       </div>
                     )}
