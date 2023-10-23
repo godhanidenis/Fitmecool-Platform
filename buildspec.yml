@@ -12,10 +12,7 @@ phases:
       - npm run-script build
 
 artifacts:
-  files:
-    - .next/**/*
-    - package.json
-    - package-lock.json
+  files: "**/*"
 # artifacts:
 #   files:
 #     - .elasticbeanstalk/**/*
