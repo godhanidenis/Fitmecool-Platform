@@ -13,11 +13,9 @@ phases:
 
 artifacts:
   files:
-    - "*"
-  base-directory: .next
+    - .next/**/*
     - package.json
-# artifacts:
-#   files: "**/*"
+    - package-lock.json
 # artifacts:
 #   files:
 #     - .elasticbeanstalk/**/*
