@@ -17,6 +17,7 @@ import {
   Divider,
   FormControl,
   InputLabel,
+  MenuItem,
 } from "@mui/material";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
 import { NativeSelectInput } from "../../core/CustomMUIComponents";
@@ -26,6 +27,7 @@ import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
+import { refactorPrice } from "../../../utils/common";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -78,7 +80,7 @@ const AddEditProductPage = ({
     if (!isNaN(price)) {
       const discount = parseFloat(getValues("product_discount") || 0);
       const finalPrice = price - price * (discount / 100);
-      setValue("product_final_price", finalPrice);
+      setValue("product_final_price", Math.round(finalPrice));
     } else {
       setValue("product_final_price", null);
     }
@@ -86,10 +88,12 @@ const AddEditProductPage = ({
 
   const discountHandle = (e) => {
     const discount = parseFloat(e.target.value);
+    const price = parseFloat(getValues("product_price") || 0);
     if (!isNaN(discount)) {
-      const price = parseFloat(getValues("product_price") || 0);
       const finalPrice = price - price * (discount / 100);
-      setValue("product_final_price", finalPrice);
+      setValue("product_final_price", Math.round(finalPrice));
+    } else {
+      setValue("product_final_price", price);
     }
   };
 
@@ -99,7 +103,7 @@ const AddEditProductPage = ({
       const price = parseFloat(getValues("product_price") || 0);
       if (price !== 0) {
         const discount = ((price - finalPrice) / price) * 100;
-        setValue("product_discount", discount);
+        setValue("product_discount", discount.toFixed(2));
       }
     } else {
       setValue("product_discount", 0);
@@ -161,7 +165,7 @@ const AddEditProductPage = ({
       setValue("product_name", editableProductData?.product_name);
       setEditorDescriptionContent(editableProductData?.product_description);
       setValue("product_color", editableProductData?.product_color);
-      setValue("product_price", editableProductData?.product_price);
+      setValue("product_price", Math.round(editableProductData?.product_price));
       setValue("product_discount", editableProductData?.product_discount);
       setValue("product_type", editableProductData.categoryInfo?.category_type);
       setProductType(editableProductData.categoryInfo?.category_type);
@@ -328,8 +332,8 @@ const AddEditProductPage = ({
             product_video:
               videoResponse ||
               (deleteProductVideo ? "" : editableProductData.product_video),
-            product_price: Number(data.product_price),
-            product_discount: Number(data.product_discount),
+            product_price: Math.round(data.product_price),
+            product_discount: data.product_discount,
             product_price_visible: !productPriceVisible,
             product_listing_type: productListingType ? "sell" : "rent",
           },
@@ -380,8 +384,8 @@ const AddEditProductPage = ({
               side: productImagesRes[2],
             },
             product_video: productVideoRes || "",
-            product_price: Number(data.product_price),
-            product_discount: Number(data.product_discount),
+            product_price: Math.round(data.product_price),
+            product_discount: data.product_discount,
             product_price_visible: !productPriceVisible,
             product_listing_type: productListingType ? "sell" : "rent",
           },
@@ -401,6 +405,33 @@ const AddEditProductPage = ({
             toast.error(error.message, { theme: "colored" });
           }
         );
+      }
+    }
+  };
+
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
+
+    if (inputValue < 0) {
+      e.target.value = 0;
+    }
+    if (e.target.id === "pdiscount") {
+      if (inputValue > 100) {
+        e.target.value = 100;
+      }
+    }
+    if (e.target.id === "pfprice") {
+      const price = parseFloat(getValues("product_price"));
+      if (inputValue > price) {
+        e.target.value = price;
       }
     }
   };
@@ -487,6 +518,7 @@ const AddEditProductPage = ({
                         onChange: priceHandle,
                       }),
                     }}
+                    onInput={handleInput}
                   />
                   <div className="mt-2">
                     {errors.product_price && (
@@ -512,6 +544,7 @@ const AddEditProductPage = ({
                         onChange: discountHandle,
                       }),
                     }}
+                    onInput={handleInput}
                   />
                   <div className="mt-2">
                     {errors.product_discount && (
@@ -539,6 +572,7 @@ const AddEditProductPage = ({
                         onChange: finalPriceHandle,
                       }),
                     }}
+                    onInput={handleInput}
                   />
                   <div className="mt-2">
                     {errors.product_final_price && (
@@ -559,35 +593,28 @@ const AddEditProductPage = ({
                 </div>
               </div>
               <div className="w-full relative">
-                <FormControl fullWidth>
-                  <Controller
-                    name="product_color"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <InputLabel id="color-id">Product Color*</InputLabel>
-                        <NativeSelectInput
-                          {...field}
-                          native
-                          labelId="color-id"
-                          id=""
-                          label="Product Color"
-                          {...register("product_color", {
-                            required: "Product Color is required",
-                          })}
-                        >
-                          <option value=""></option>
-                          {colorsList?.map((color, index) => (
-                            <option key={index} value={color}>
-                              {capitalize(color)}
-                            </option>
-                          ))}
-                        </NativeSelectInput>
-                      </>
-                    )}
-                  />
-                </FormControl>
+                <CustomTextFieldVendor
+                  label="Product Color*"
+                  select
+                  fullWidth
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fieldValue={getValues("product_color")}
+                  fieldError={errors?.product_color}
+                  formValue={{
+                    ...register("product_color", {
+                      required: "Product Color is required",
+                    }),
+                  }}
+                >
+                  <option value=""></option>
+                  {colorsList?.map((color, index) => (
+                    <option key={index} value={color}>
+                      {capitalize(color)}
+                    </option>
+                  ))}
+                </CustomTextFieldVendor>
 
                 <div className="mt-2">
                   {errors.product_color && (
@@ -598,40 +625,31 @@ const AddEditProductPage = ({
                 </div>
               </div>
               <div className="w-full relative">
-                <FormControl fullWidth>
-                  <Controller
-                    name="product_type"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <InputLabel id="product-Type-id">
-                          Product Category*
-                        </InputLabel>
-                        <NativeSelectInput
-                          {...field}
-                          native
-                          labelId="product-Type-id"
-                          id=""
-                          label="product Type"
-                          {...register("product_type", {
-                            required: "Product Category is required",
-                            onChange: (e) => {
-                              setProductType(e.target.value);
-                            },
-                          })}
-                        >
-                          <option value=""></option>
-                          {["Men", "Women"].map((type, index) => (
-                            <option key={index} value={type}>
-                              {capitalize(type)}
-                            </option>
-                          ))}
-                        </NativeSelectInput>
-                      </>
-                    )}
-                  />
-                </FormControl>
+                <CustomTextFieldVendor
+                  label="Product Category*"
+                  select
+                  fullWidth
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fieldValue={getValues("product_type")}
+                  fieldError={errors?.product_type}
+                  formValue={{
+                    ...register("product_type", {
+                      required: "Product Category is required",
+                      onChange: (e) => {
+                        setProductType(e.target.value);
+                      },
+                    }),
+                  }}
+                >
+                  <option value=""></option>
+                  {["Men", "Women"].map((type, index) => (
+                    <option key={index} value={type}>
+                      {capitalize(type)}
+                    </option>
+                  ))}
+                </CustomTextFieldVendor>
 
                 <div className="mt-2">
                   {errors.product_type && (
@@ -643,44 +661,35 @@ const AddEditProductPage = ({
               </div>
               {productType && (
                 <div className="w-full relative">
-                  <FormControl fullWidth>
-                    <Controller
-                      name="product_category"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <InputLabel id="Category-id">
-                            Select Sub Category*
-                          </InputLabel>
-                          <NativeSelectInput
-                            {...field}
-                            native
-                            labelId="Category-id"
-                            id=""
-                            label="Category"
-                            {...register("product_category", {
-                              required: "Product Category is required",
-                            })}
-                          >
-                            <option value=""></option>
-                            {productType === "Men" &&
-                              menCategoryLabel.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                  {cat.category_name}
-                                </option>
-                              ))}
-                            {productType === "Women" &&
-                              womenCategoryLabel.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                  {cat.category_name}
-                                </option>
-                              ))}
-                          </NativeSelectInput>
-                        </>
-                      )}
-                    />
-                  </FormControl>
+                  <CustomTextFieldVendor
+                    label="Select Sub Category*"
+                    select
+                    fullWidth
+                    SelectProps={{
+                      native: true,
+                    }}
+                    fieldValue={getValues("product_category")}
+                    fieldError={errors?.product_category}
+                    formValue={{
+                      ...register("product_category", {
+                        required: "Product Category is required",
+                      }),
+                    }}
+                  >
+                    <option value=""></option>
+                    {productType === "Men" &&
+                      menCategoryLabel.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.category_name}
+                        </option>
+                      ))}
+                    {productType === "Women" &&
+                      womenCategoryLabel.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.category_name}
+                        </option>
+                      ))}
+                  </CustomTextFieldVendor>
 
                   <div className="mt-2">
                     {errors.product_category && (
@@ -693,39 +702,33 @@ const AddEditProductPage = ({
               )}
 
               <div className="w-full relative">
-                <FormControl fullWidth>
-                  <Controller
-                    name="product_branch"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <InputLabel id="Branch-id">Select Branch*</InputLabel>
-                        <NativeSelectInput
-                          {...field}
-                          native
-                          labelId="Branch-id"
-                          id=""
-                          label="Branch"
-                          {...register("product_branch", {
-                            required: "Product Branch is required",
-                          })}
-                        >
-                          <option value=""></option>
-                          {vendorShopDetails?.branch_info?.map((branch) => (
-                            <option key={branch.id} value={branch.id}>
-                              {branch.branch_address +
-                                " " +
-                                "(" +
-                                branch.branch_type +
-                                ")"}
-                            </option>
-                          ))}
-                        </NativeSelectInput>
-                      </>
-                    )}
-                  />
-                </FormControl>
+                <CustomTextFieldVendor
+                  label="Select Branch*"
+                  select
+                  fullWidth
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fieldValue={getValues("product_branch")}
+                  fieldError={errors?.product_branch}
+                  formValue={{
+                    ...register("product_branch", {
+                      required: "Product Branch is required",
+                    }),
+                  }}
+                >
+                  <option value=""></option>
+                  {vendorShopDetails?.branch_info?.map((branch) => (
+                    <option key={branch.id} value={branch.id}>
+                      {branch.branch_address +
+                        " " +
+                        "(" +
+                        branch.branch_type +
+                        ")"}
+                    </option>
+                  ))}
+                </CustomTextFieldVendor>
+
                 <div className="mt-2">
                   {errors.product_branch && (
                     <span style={{ color: "red" }} className="-mb-6">

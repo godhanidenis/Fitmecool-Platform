@@ -61,7 +61,7 @@ const ForgotPassword = () => {
       <div className="block p-4 rounded-lg shadow-lg bg-white text-center col-span-10 sm:col-span-8 md:col-span-8 lg:col-span-6 xl:col-span-4">
         <div className="grid grid-cols-3">
           <div className="text-start">
-            <Link href="/">
+            <Link href="/auth/user-type">
               <button className="rounded-lg text-center p-2 flex items-center border">
                 <ArrowBackIosIcon className="!text-colorStone !w-4 !h-4 !ml-1" />
               </button>

@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import VendorSidebar from "../../sections/vendor-section/VendorSidebar";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Sidebar = ({
   className = "",
@@ -130,27 +131,39 @@ const Sidebar = ({
         className={`lg:hidden flex flex-col pt-2.5 w-[90%] sm:w-[50%] fixed z-[9999] overflow-auto left-0 top-0 h-screen overflow-y-scroll transition-transform duration-300 bg-colorWhite ${className}`}
       >
         <div className="px-8 py-5 flex items-center gap-2.5 border-b">
-          {!accessToken ? (
-            <>
-              <PersonAddAltIcon sx={{ color: "black" }} fontSize="medium" />
-              <div className="text-base flex items-center font-semibold text-[#4a4a4a]">
-                SingIn / SignUp
-              </div>
-            </>
-          ) : (
-            <div className="flex gap-5 cursor-pointer">
-              <Avatar className="!bg-colorGreen" sx={{ width: 56, height: 56 }}>
-                {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
-                  String(userProfile?.last_name?.charAt(0).toUpperCase())}
-              </Avatar>
-              <div className="flex flex-col justify-center">
-                <b>{userProfile?.first_name + " " + userProfile?.last_name}</b>
-                <span className="font-medium text-base">
-                  {userProfile?.user_email?.substring(0, 17) + "..."}
-                </span>
-              </div>
+          <div className="flex justify-between w-full items-center">
+            <div>
+              {!accessToken ? (
+                <div className="flex gap-2">
+                  <PersonAddAltIcon sx={{ color: "black" }} fontSize="medium" />
+                  <div className="text-base flex items-center font-semibold text-[#4a4a4a]">
+                    SingIn / SignUp
+                  </div>
+                </div>
+              ) : (
+                <div className="flex gap-5 cursor-pointer">
+                  <Avatar
+                    className="!bg-colorGreen"
+                    sx={{ width: 56, height: 56 }}
+                  >
+                    {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
+                      String(userProfile?.last_name?.charAt(0).toUpperCase())}
+                  </Avatar>
+                  <div className="flex flex-col justify-center">
+                    <b>
+                      {userProfile?.first_name + " " + userProfile?.last_name}
+                    </b>
+                    <span className="font-medium text-base">
+                      {userProfile?.user_email?.substring(0, 17) + "..."}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+            <div onClick={handleMobileSidebarClick} className="cursor-pointer">
+              <CloseIcon className="!text-black" />
+            </div>
+          </div>
         </div>
 
         {userProfile.user_type !== "vendor" && (

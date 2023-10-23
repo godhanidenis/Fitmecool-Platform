@@ -22,6 +22,7 @@ import Image from "next/image";
 import { changeProductPage } from "../../redux/ducks/product";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
 import { fileDelete } from "../../services/wasabi";
+import { refactorPrice } from "../../utils/common";
 
 const StyledTableCell = styled(TableCell)(({ theme, index }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -81,10 +82,9 @@ const VenderProductTable = ({
                 {[
                   "No",
                   "Thumbnail",
-                  "Shop Name",
                   "Product Name",
+                  "Price",
                   "Color",
-                  "Description",
                   "Inquiry",
                   "Action",
                 ].map((itm, index) => (
@@ -99,30 +99,54 @@ const VenderProductTable = ({
                 <StyledTableRow key={index}>
                   <TableCell align="center">{index + 1}</TableCell>
                   <TableCell>
-                    <div className="relative">
-                      <Image
-                        objectFit="cover"
-                        objectPosition="center top"
-                        src={item?.product_image?.front ?? ""}
-                        unoptimized={true}
-                        width={"100%"}
-                        height={"100%"}
-                        alt="Product Image"
-                      />
+                    <div className="relative flex justify-center ">
+                      <div className="relative cursor-pointer pt-1 ps-1 overflow-hidden ">
+                        {item?.product_listing_type && (
+                          <div className="absolute top-0">
+                            <span
+                              className={`z-[8] absolute w-28 p-[1px] text-white text-[8px] font-semibold uppercase flex items-center justify-center transform -rotate-45 top-2 -left-[45px]  border-2 border-[#f5cd79] ${
+                                item?.product_listing_type === "rent"
+                                  ? "bg-[#ff3b3b]"
+                                  : "bg-[#29977E]"
+                              } `}
+                            >
+                              {item?.product_listing_type === "sell"
+                                ? "Sell"
+                                : "Rent"}
+                            </span>
+                            <span className="absolute top-0 z-0 left-8 p-1 bg-[#f19066]" />
+                            <span className="absolute top-[36px] z-0 -left-[4px] p-1 bg-[#f19066]" />
+                          </div>
+                        )}
+
+                        <Image
+                          objectFit="cover"
+                          objectPosition="center top"
+                          src={item?.product_image?.front ?? ""}
+                          unoptimized={true}
+                          width={"100%"}
+                          height={"100%"}
+                          alt="Product Image"
+                        />
+                      </div>
                     </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    {item?.branchInfo?.shop_info?.shop_name}
                   </TableCell>
                   <TableCell align="center">
                     <div className="line-clamp-1">{item?.product_name}</div>
                   </TableCell>
-                  <TableCell align="center">{item?.product_color}</TableCell>
                   <TableCell align="center">
-                    <div className="line-clamp-2">
-                      {HTMLReactParser(item?.product_description)}
+                    <div className="line-clamp-1">
+                      ₹
+                      {refactorPrice(
+                        Math.round(
+                          item?.product_price -
+                            item?.product_price * (item?.product_discount / 100)
+                        )
+                      )}
                     </div>
                   </TableCell>
+                  <TableCell align="center">{item?.product_color}</TableCell>
+
                   <TableCell align="center">
                     <div className="flex flex-col items-center">
                       <p className="flex justify-between p-1 whitespace-no-wrap w-[150px]">

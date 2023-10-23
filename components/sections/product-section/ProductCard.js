@@ -23,6 +23,7 @@ import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 import Modal from "@mui/material/Modal";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import { refactorPrice } from "../../../utils/common";
 
 const ContactStyle = {
   position: "absolute",
@@ -245,12 +246,16 @@ const ProductCard = ({ product, onlyCarousal }) => {
 
   return (
     <>
-      <div className="ps-3 pe-1 pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg">
-        <div className="relative cursor-pointer">
+      <div
+        className={`ps-3 pe-1 pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg  ${
+          onlyCarousal && `mt-2 me-2`
+        }`}
+      >
+        <div className={`relative cursor-pointer`}>
           {product?.product_listing_type && (
-            <div className="ribbon">
+            <div className="absolute top-0">
               <span
-                className={`ribbon__content ${
+                className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
                   product?.product_listing_type === "rent"
                     ? "bg-[#ff3b3b]"
                     : "bg-[#29977E]"
@@ -258,17 +263,23 @@ const ProductCard = ({ product, onlyCarousal }) => {
               >
                 {product?.product_listing_type === "sell" ? "Sell" : "Rent"}
               </span>
+              <span className="absolute -top-[10px] z-0 left-[98px] p-2 bg-[#f19066]" />
+              <span className="absolute top-[74px] z-0 -left-[15px] p-2 bg-[#f19066]" />
             </div>
           )}
 
-          <div className="shadow-md flex flex-col rounded-xl">
+          <div
+            className={`${
+              onlyCarousal ? "" : "shadow-md"
+            } flex flex-col rounded-xl`}
+          >
             <div className="cursor-pointer relative top-0 left-0">
               <div className="grid grid-cols-1 place-items-center">
                 <div
                   className="w-[100%]"
                   style={{
                     height: onlyCarousal
-                      ? 400
+                      ? 420
                       : themeLayout === "mobileScreen"
                       ? 250
                       : 300,
@@ -282,7 +293,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     customDot={onlyCarousal ? <CustomDot /> : null}
                     arrows={false}
                     responsive={responsive}
-                    className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
+                    className={`${onlyCarousal ? `!pb-5` : `rounded-t-lg`}`}
                   >
                     {productImages}
                   </Carousel>
@@ -479,39 +490,30 @@ const ProductCard = ({ product, onlyCarousal }) => {
                       </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
-                      <p
-                        className={`${
-                          product?.product_price_visible
-                            ? "text-black"
-                            : "text-white"
-                        } text-sm sm:text-md xl:text-md 2xl:text-lg font-bold`}
-                      >
-                        ₹{finalPrice}
-                      </p>
-                      {product?.product_discount !== 0 && (
-                        <div className="flex gap-2 items-center">
-                          <p
-                            className={`${
-                              product?.product_price_visible
-                                ? "text-[#9d9d9d]"
-                                : "text-white"
-                            } text-sm  font-semibold line-through`}
-                          >
-                            ₹{product?.product_price}
-                          </p>
-                          <p
-                            className={`${
-                              product?.product_price_visible
-                                ? "text-green-600"
-                                : "text-white"
-                            } text-sm sm:text-md xl:text-sm 2xl:text-md font-normal `}
-                          >
-                            ({product?.product_discount}% OFF)
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    {product?.product_price_visible ? (
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
+                        <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold">
+                          ₹{Math.round(finalPrice)}
+                        </p>
+                        {product?.product_discount !== 0 && (
+                          <div className="flex gap-2 items-center">
+                            <p className="text-[#9d9d9d] text-sm  font-semibold line-through">
+                              ₹{Math.round(product?.product_price)}
+                            </p>
+                            <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium">
+                              ({refactorPrice(product?.product_discount)}% OFF)
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
+                        <p className="text-black text-sm  font-bold">
+                          No Price Visible !
+                        </p>
+                        <p className="text-[#fff] text-sm">*</p>
+                      </div>
+                    )}
                   </div>
                 </a>
               </Link>
