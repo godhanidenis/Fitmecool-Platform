@@ -5,24 +5,17 @@ phases:
     runtime-versions:
       nodejs: 18
 
+  pre_build:
+    commands:
+      - npm install # Install project dependencies
+
   build:
     commands:
-      # run build script
-      - npm install --force
-      - npm run-script build
+      - npm run build # Build the Next.js application
+
+  post_build:
+    commands:
+      - zip -r application.zip . # Create a ZIP file of the built application
 
 artifacts:
-  files:
-    - .next/**/*
-    - package.json
-    - package-lock.json
-# artifacts:
-#   files:
-#     - .elasticbeanstalk/**/*
-#     - build/**/*
-#     - public/**/*
-#     - src/**/*
-#     - package.json
-#     - appspec.yml
-#     - buildspec.yml
-#     - scripts/**/*
+  files: application.zip
