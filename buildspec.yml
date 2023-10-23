@@ -15,6 +15,7 @@ artifacts:
   files:
     - "*"
   base-directory: .next
+    - package.json
 # artifacts:
 #   files: "**/*"
 # artifacts:
