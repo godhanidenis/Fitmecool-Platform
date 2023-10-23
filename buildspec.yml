@@ -12,7 +12,11 @@ phases:
       - npm run-script build
 
 artifacts:
-  files: "**/*"
+  files:
+    - "*"
+  base-directory: .next
+# artifacts:
+#   files: "**/*"
 # artifacts:
 #   files:
 #     - .elasticbeanstalk/**/*
