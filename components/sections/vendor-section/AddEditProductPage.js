@@ -150,6 +150,7 @@ const AddEditProductPage = ({
     setProductVideo();
     setUploadProductVideo();
     setDeleteProductVideo();
+    setEditableProductData();
   };
 
   useEffect(() => {
@@ -317,6 +318,7 @@ const AddEditProductPage = ({
         await updateProduct({
           id: editableProductData?.id,
           productInfo: {
+            shop_id: vendorShopDetails?.id,
             branch_id: data.product_branch,
             category_id: data.product_category,
             product_color: data.product_color,
@@ -333,7 +335,7 @@ const AddEditProductPage = ({
               videoResponse ||
               (deleteProductVideo ? "" : editableProductData.product_video),
             product_price: Math.round(data.product_price),
-            product_discount: data.product_discount,
+            product_discount: Number(data.product_discount),
             product_price_visible: !productPriceVisible,
             product_listing_type: productListingType ? "sell" : "rent",
           },
@@ -372,6 +374,7 @@ const AddEditProductPage = ({
 
         await createProduct({
           productInfo: {
+            shop_id: vendorShopDetails?.id,
             branch_id: data.product_branch,
             category_id: data.product_category,
             product_color: data.product_color,
@@ -385,7 +388,7 @@ const AddEditProductPage = ({
             },
             product_video: productVideoRes || "",
             product_price: Math.round(data.product_price),
-            product_discount: data.product_discount,
+            product_discount: Number(data.product_discount),
             product_price_visible: !productPriceVisible,
             product_listing_type: productListingType ? "sell" : "rent",
           },

@@ -148,6 +148,7 @@ export const getShopDetails = async (payload) => {
           }
           shopFollowerCount
           shopReviewCount
+          productLimit
           shop_review {
             id
             shop_id
