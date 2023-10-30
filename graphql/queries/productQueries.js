@@ -20,6 +20,7 @@ export const getProducts = async (payload) => {
         ) {
           data {
             id
+            shop_id
             product_name
             product_description
             product_image {
@@ -121,6 +122,7 @@ export const getProductDetails = async (payload) => {
         product(id: $productId) {
           data {
             id
+            shop_id
             product_name
             product_description
             product_image {
@@ -197,6 +199,7 @@ export const getProductDetails = async (payload) => {
           }
           related {
             id
+            shop_id
             product_name
             product_description
             product_image {
