@@ -21,7 +21,6 @@ const iconStyles = {
 
 const ShopDashboard = () => {
   const [isHydrated, setIsHydrated] = useState(false);
-  const [totalProducts, setTotalProducts] = useState(0);
   const router = useRouter();
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
@@ -30,17 +29,10 @@ const ShopDashboard = () => {
     setIsHydrated(true);
   }, []);
 
-  useEffect(() => {
-    var count = 0;
-    vendorShopDetails?.branch_info?.map((itm) =>
-      setTotalProducts((count += itm.product_info?.length))
-    );
-  }, [vendorShopDetails.branch_info]);
-
   const dashboardCards = [
     {
       label: "Total Products",
-      totalNumber: totalProducts,
+      totalNumber: vendorShopDetails?.balanceProduct,
       icon: <ShoppingCartIcon sx={iconStyles} />,
       path: `/vendor/shop/${vendorShopDetails?.id}`,
     },

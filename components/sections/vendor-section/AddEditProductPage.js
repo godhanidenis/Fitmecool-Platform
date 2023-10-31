@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { TbPhotoPlus } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -28,6 +28,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
 import { refactorPrice } from "../../../utils/common";
+import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -56,6 +57,7 @@ const AddEditProductPage = ({
 
   const ProductImgError = productImages?.filter((item) => item !== undefined);
 
+  const dispatch = useDispatch();
   const [productVideo, setProductVideo] = useState("");
   const [uploadProductVideo, setUploadProductVideo] = useState();
   const [deleteProductVideo, setDeleteProductVideo] = useState();
@@ -400,6 +402,7 @@ const AddEditProductPage = ({
             });
             setLoading(false);
             getAllProducts();
+            dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
             handleProductListingModalClose();
             setAddEditProductShow(false);
           },

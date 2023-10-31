@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { deleteProduct } from "../../graphql/mutations/products";
 import { toast } from "react-toastify";
-import HTMLReactParser from "html-react-parser";
 import ConfirmationModal from "../Modal/ConfirmationModal";
 import { styled } from "@mui/material/styles";
 import Image from "next/image";

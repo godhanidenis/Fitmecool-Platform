@@ -383,6 +383,7 @@ export const UserProfile = ({ setAccessToken }) => {
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
   const { userProfile } = useSelector((state) => state.userProfile);
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const handleProfileToggle = () => {
     setAnchorElUser((prevOpen) => !prevOpen);
@@ -454,7 +455,14 @@ export const UserProfile = ({ setAccessToken }) => {
   }
 
   return (
-    <>
+    <div className="flex items-center gap-5">
+      {userProfile?.userHaveAnyShop && vendorShopDetails && (
+        <span className="font-semibold text-colorWhite">
+          Available Product :{" "}
+          {vendorShopDetails.productLimit - vendorShopDetails.balanceProduct ||
+            0}
+        </span>
+      )}
       <div
         ref={anchorRef}
         onClick={handleProfileToggle}
@@ -550,6 +558,6 @@ export const UserProfile = ({ setAccessToken }) => {
           </Grow>
         )}
       </Popper>
-    </>
+    </div>
   );
 };
