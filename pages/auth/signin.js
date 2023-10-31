@@ -200,7 +200,7 @@ const Login = () => {
           </p>
         </Link>
       </form>
-      <div className="flex-grow"></div>
+      <div className="sm:flex-grow"></div>
       <div className="w-full mt-5">
         <button
           type="submit"

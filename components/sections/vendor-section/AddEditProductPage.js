@@ -12,6 +12,7 @@ import {
   updateProduct,
 } from "../../../graphql/mutations/products";
 import {
+  Alert,
   capitalize,
   CircularProgress,
   Divider,
@@ -29,6 +30,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
 import { refactorPrice } from "../../../utils/common";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
+import { useRouter } from "next/router";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -76,6 +78,9 @@ const AddEditProductPage = ({
 
   const [productPriceVisible, setProductPriceVisible] = useState(false);
   const [productListingType, setProductListingType] = useState(false);
+  const [alertMsg, setAlertMsg] = useState(false);
+
+  const router = useRouter();
 
   const priceHandle = (e) => {
     const price = parseFloat(e.target.value);
@@ -408,7 +413,9 @@ const AddEditProductPage = ({
           },
           (error) => {
             setLoading(false);
-            toast.error(error.message, { theme: "colored" });
+            // toast.error(error.message, { theme: "colored" });
+            setAlertMsg(true);
+            setAlertMsg(error.message);
           }
         );
       }
@@ -470,7 +477,18 @@ const AddEditProductPage = ({
             {editableProductData ? "Update" : "Add"} Product
           </span>
         </div>
-        <div className="my-5 mt-8">
+        {vendorShopDetails.productLimit - vendorShopDetails.balanceProduct <=
+          0 &&
+          alertMsg && (
+            <Alert
+              severity={"error"}
+              className="mt-5 cursor-pointer"
+              onClick={() => router.push("/vendor/contact/")}
+            >
+              {alertMsg}
+            </Alert>
+          )}
+        <div className="my-5">
           <div className="text-base sm:text-lg font-semibold mb-3 mt-5 sm:mx-6 text-black ">
             Product
           </div>

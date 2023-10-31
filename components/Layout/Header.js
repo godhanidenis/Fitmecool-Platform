@@ -10,9 +10,11 @@ import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import {
   Avatar,
   Badge,
+  CircularProgress,
   ClickAwayListener,
   DialogContent,
   DialogTitle,
@@ -28,6 +30,7 @@ import {
   OutlinedInput,
   Paper,
   Popper,
+  Tooltip,
 } from "@mui/material";
 import {
   loadUserProfileStart,
@@ -56,6 +59,7 @@ const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -96,6 +100,7 @@ const Header = () => {
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
   const handleAuthButtonClick = () => {
+    setLoading(true);
     localStorage.setItem("last_path", new URL(window.location.href).pathname);
     Router.push("/auth/user-type");
   };
@@ -269,7 +274,20 @@ const Header = () => {
                       onClick={handleAuthButtonClick}
                       className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-colorGreen"
                     >
-                      Login / Register
+                      <span className="flex items-center gap-2 justify-center">
+                        {loading && (
+                          <span className="flex items-center">
+                            <CircularProgress
+                              size={20}
+                              color="primary"
+                              sx={{ color: "white" }}
+                            />
+                          </span>
+                        )}
+                        <span className="flex items-center">
+                          Login / Register
+                        </span>
+                      </span>
                     </button>
 
                     <PersonAddAltIcon
@@ -385,6 +403,11 @@ export const UserProfile = ({ setAccessToken }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
+  const productAbility =
+    vendorShopDetails.productLimit - vendorShopDetails.balanceProduct;
+
+  console.log("productAbility :>> ", productAbility);
+
   const handleProfileToggle = () => {
     setAnchorElUser((prevOpen) => !prevOpen);
   };
@@ -457,8 +480,23 @@ export const UserProfile = ({ setAccessToken }) => {
   return (
     <div className="flex items-center gap-5">
       {userProfile?.userHaveAnyShop && vendorShopDetails && (
+        // <Tooltip title="Product Ability" placement="top">
+        //   <Badge
+        //     badgeContent={
+        //       productAbility === 0 || isNaN(productAbility)
+        //         ? "0"
+        //         : productAbility
+        //     }
+        //     color="error"
+        //   >
+        //     <ProductionQuantityLimitsIcon
+        //       sx={{ color: "white" }}
+        //       fontSize="medium"
+        //     />
+        //   </Badge>
+        // </Tooltip>
         <span className="font-semibold text-colorWhite">
-          Available Product :{" "}
+          Product Ability :{" "}
           {vendorShopDetails.productLimit - vendorShopDetails.balanceProduct ||
             0}
         </span>

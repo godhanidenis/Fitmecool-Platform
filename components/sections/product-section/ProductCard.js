@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useDispatch, useSelector } from "react-redux";
 import { productLikeToggle } from "../../../redux/ducks/userProfile";
 import { productLike } from "../../../graphql/mutations/products";
@@ -247,15 +248,16 @@ const ProductCard = ({ product, onlyCarousal }) => {
   return (
     <>
       <div
-        className={`ps-3 pe-1 pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg  ${
-          onlyCarousal && `mt-2 me-2`
+        className={`ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg  ${
+          onlyCarousal && `m-1`
         }`}
       >
         <div className={`relative cursor-pointer`}>
           {product?.product_listing_type && (
             <div className="absolute top-0">
               <span
-                className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
+                // className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
+                className={`z-[8] absolute w-[7rem] xl:w-40 p-[1px] text-white text-[12px] xl:text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-[7px] xl:top-2 -left-[25px] xl:-left-[40px]  border-[3px] xl:border-[5px] border-[#f5cd79] ${
                   product?.product_listing_type === "rent"
                     ? "bg-[#ff3b3b]"
                     : "bg-[#29977E]"
@@ -263,8 +265,8 @@ const ProductCard = ({ product, onlyCarousal }) => {
               >
                 {product?.product_listing_type === "sell" ? "Sell" : "Rent"}
               </span>
-              <span className="absolute -top-[10px] z-0 left-[98px] p-2 bg-[#f19066]" />
-              <span className="absolute top-[74px] z-0 -left-[15px] p-2 bg-[#f19066]" />
+              <span className="absolute -top-[9px] xl:-top-[10px] z-0 left-[71px] xl:left-[98px] p-[6px] xl:p-2 bg-[#f19066]" />
+              <span className="absolute top-[52px] xl:top-[74px] z-0 -left-[11px] xl:-left-[15px] p-[6px] xl:p-2 bg-[#f19066]" />
             </div>
           )}
 
@@ -346,7 +348,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                   {!productLikeByUser ? (
                     <FavoriteBorderIcon className="!text-white" />
                   ) : (
-                    "❤️"
+                    <FavoriteIcon className="!text-red-600" />
                   )}
                 </button>
                 {onlyCarousal && (
@@ -492,23 +494,23 @@ const ProductCard = ({ product, onlyCarousal }) => {
 
                     {product?.product_price_visible ? (
                       <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
-                        <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold">
+                        <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold line-clamp-1">
                           ₹{Math.round(finalPrice)}
                         </p>
                         {product?.product_discount !== 0 && (
                           <div className="flex gap-2 items-center">
-                            <p className="text-[#9d9d9d] text-sm  font-semibold line-through">
+                            <p className="text-[#9d9d9d] text-sm  font-semibold line-through line-clamp-1">
                               ₹{Math.round(product?.product_price)}
                             </p>
-                            <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium">
-                              ({refactorPrice(product?.product_discount)}% OFF)
+                            <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium line-clamp-1">
+                              ({Math.round(product?.product_discount)}% OFF)
                             </p>
                           </div>
                         )}
                       </div>
                     ) : (
                       <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
-                        <p className="text-black text-sm  font-bold">
+                        <p className="text-black text-sm  font-bold line-clamp-1">
                           No Price Visible !
                         </p>
                         <p className="text-[#fff] text-sm">*</p>

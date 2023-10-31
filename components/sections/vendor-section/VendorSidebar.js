@@ -22,6 +22,8 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
       setSelectedValue("Dashboard");
     } else if (router.pathname === "/vendor/shop-subscription") {
       setSelectedValue("Subscription");
+    } else if (router.pathname === "/vendor/contact") {
+      setSelectedValue("Subscription");
     } else if (withoutLastChunk === "/vendor/shopEdit") {
       setSelectedValue("Shop");
     } else if (

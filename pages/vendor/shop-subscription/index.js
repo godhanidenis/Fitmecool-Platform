@@ -208,7 +208,7 @@
 //                 ?.map((plan, index) => (
 //                   <div
 //                     key={index}
-//                     className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg hover:scale-105 hover:duration-300"
+//                     className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg"
 //                   >
 //                     <p className="text-xl font-medium text-colorBlack">
 //                       {plan?.item?.name}
@@ -321,6 +321,8 @@
 import React, { useState, useEffect } from "react";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 const ShopSubscription = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -355,8 +357,45 @@ const ShopSubscription = () => {
 export default withAuth(ShopSubscription);
 
 const FreePlanCard = () => {
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+  const [remainingDay, setRemainingDay] = useState(0);
+
+  const FreeTrialHandler = () => {
+    const shopCreatedDate = new Date(Number(vendorShopDetails?.createdAt));
+
+    const currentDate = new Date();
+
+    const FreeTrailDay =
+      vendorShopDetails?.shop_type === "individual"
+        ? parseInt(process.env.NEXT_PUBLIC_INDIVIDUAL_SHOP_PRODUCT_VISIBLE_DAYS)
+        : parseInt(process.env.NEXT_PUBLIC_SHOP_PRODUCT_VISIBLE_DAYS);
+
+    let threshold = new Date();
+    threshold.setDate(threshold.getDate() - FreeTrailDay);
+
+    if (vendorShopDetails?.subscriptionDate) {
+      return false;
+    } else {
+      return shopCreatedDate >= threshold && shopCreatedDate <= currentDate;
+    }
+  };
+
+  useEffect(() => {
+    const start = new Date(Number(vendorShopDetails?.createdAt));
+
+    const futureDate = new Date(start);
+    futureDate.setDate(start.getDate() + 30);
+
+    const currentDate = new Date();
+
+    const timeDifference = futureDate - currentDate;
+
+    const daysDifference = Math.round(timeDifference / (1000 * 60 * 60 * 24));
+    setRemainingDay(daysDifference);
+  }, [vendorShopDetails?.createdAt]);
+
   return (
-    <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg hover:scale-105 hover:duration-300">
+    <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg">
       <p className="text-2xl font-semibold text-colorBlack">Free</p>
       <p className="text-colorStone mt-2">
         Powerful essentials for small businesses
@@ -366,9 +405,37 @@ const FreePlanCard = () => {
         Free access to upload products limits may apply
       </p>
 
-      <button className="bg-colorGreen text-white py-2 px-3 mt-4 w-full rounded-md">
+      {/* <button className="bg-colorGreen text-white py-2 px-3 mt-4 w-full rounded-md">
         Get Started Now
-      </button>
+      </button> */}
+      <div className="mt-4">
+        {/* {remainingDay > 1 ? (
+          <span className="text-[#29977E] font-semibold py-2 px-3">
+            {remainingDay} days left
+          </span>
+        ) : remainingDay === 1 ? (
+          <span className="text-red-600 font-semibold py-2 px-3">
+            {remainingDay} day left
+          </span>
+        ) : remainingDay <= 0 ? (
+          <span className="text-red-600 font-semibold py-2 px-3">
+            Free Trail is expired.
+          </span>
+        ) : (
+          <span className="text-[#0000009d] font-normal py-2 px-3">
+            Loading...
+          </span>
+        )} */}
+        {FreeTrialHandler() ? (
+          <span className="text-[#29977E] font-semibold py-2 px-3">
+            Free Trail is active.
+          </span>
+        ) : (
+          <span className="text-red-600 font-semibold py-2 px-3">
+            Free Trail is expired.
+          </span>
+        )}
+      </div>
 
       <div className="mt-4 text-start">
         <span className="text-colorBlack">Free access to:</span>
@@ -389,8 +456,9 @@ const FreePlanCard = () => {
 };
 
 const CustomPlanCard = () => {
+  const router = useRouter();
   return (
-    <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg hover:scale-105 hover:duration-300">
+    <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg">
       <p className="text-2xl font-semibold text-colorBlack">Enterprise</p>
       <p className="text-colorStone mt-2">
         Ultimate control and support for businesses
@@ -400,7 +468,10 @@ const CustomPlanCard = () => {
         Custom contract & additional features Volume-based discounting available
       </p>
 
-      <button className="bg-colorGreen text-white py-2 px-3 mt-4 w-full rounded-md">
+      <button
+        className="bg-colorGreen text-white py-2 px-3 mt-4 w-full rounded-md"
+        onClick={() => router.push("/vendor/contact")}
+      >
         Contact Sales
       </button>
 

@@ -112,6 +112,8 @@ export const getShopDetails = async (payload) => {
       query Shop($shopId: String) {
         shop(id: $shopId) {
           id
+          createdAt
+          subscriptionDate
           user_id
           subscriptionId
           shop_name

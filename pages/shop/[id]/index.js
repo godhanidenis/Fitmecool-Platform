@@ -3,6 +3,7 @@ import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
 import { Pagination } from "@mui/material";
 import Filter from "../../../components/Filters/index";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import {
   getShopDetails,
   getShopFollowers,
@@ -26,11 +27,39 @@ import ShopCommentsSection from "../../../components/sections/shop-section/ShopC
 import ShopReviewSection from "../../../components/sections/shop-section/ShopReviewSection";
 import { useResizeScreenLayout } from "../../../components/core/useScreenResize";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 const ShopDetail = ({ shopDetails }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
+
+  const [videoShow, setVideoShow] = useState(true);
+  const [videoPosition, setVideoPosition] = useState({
+    x: window.innerWidth - 400,
+    y: window.innerHeight - 250,
+  });
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+
+    const initialX = e.clientX - videoPosition.x;
+    const initialY = e.clientY - videoPosition.y;
+
+    const handleDrag = (e) => {
+      const newX = e.clientX - initialX;
+      const newY = e.clientY - initialY;
+      setVideoPosition({ x: newX, y: newY });
+    };
+
+    const handleDragEnd = () => {
+      document.removeEventListener("mousemove", handleDrag);
+      document.removeEventListener("mouseup", handleDragEnd);
+    };
+
+    document.addEventListener("mousemove", handleDrag);
+    document.addEventListener("mouseup", handleDragEnd);
+  };
 
   const router = useRouter();
 
@@ -164,7 +193,7 @@ const ShopDetail = ({ shopDetails }) => {
               >
                 {productsData?.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 place-items-center">
                       {productsData?.map((product) => (
                         <ProductCard product={product} key={product.id} />
                       ))}
@@ -243,6 +272,51 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="relative z-10">
+        {shopDetails?.data?.shop?.shop_video && videoShow && (
+          <div
+            className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
+            style={{ left: videoPosition.x, top: videoPosition.y }}
+            onMouseDown={handleDragStart}
+          >
+            <video
+              controls
+              autoPlay={false}
+              muted
+              className="!rounded-lg w-full bg-black"
+            >
+              <source
+                src={shopDetails?.data?.shop?.shop_video}
+                type="video/mp4"
+              />
+            </video>
+            <div className="absolute p-3">
+              <button
+                className=" p-2 bg-[#00000091] text-[#fff] rounded-full cursor-pointer"
+                onClick={() => setVideoShow(false)}
+              >
+                <CloseOutlined />
+              </button>
+            </div>
+          </div>
+        )}
+        {!videoShow && (
+          <div className="fixed bottom-24 lg:bottom-6 right-6 flex justify-end ">
+            <button
+              className="p-3 bg-colorPrimary rounded-full shadow-xl"
+              onClick={() => {
+                setVideoShow(true);
+                setVideoPosition({
+                  x: window.innerWidth - 400,
+                  y: window.innerHeight - 250,
+                });
+              }}
+            >
+              <PlayArrowIcon className="!text-[#fff] !text-3xl" />
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

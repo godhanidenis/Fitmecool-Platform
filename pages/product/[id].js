@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 // import Magnifier from "react-magnifier";
 
 import Image from "next/image";
@@ -315,6 +316,21 @@ const ProductDetail = ({ productDetails }) => {
                   }
                   key={new Date().getTime()}
                 />
+              ) : productDetails.data.product.data.branchInfo?.shop_info
+                  .shop_logo.length === 0 ? (
+                <Avatar
+                  className="!bg-colorGreen !w-12 !h-12"
+                  sx={{
+                    fontSize: "15px",
+                  }}
+                >
+                  {String(
+                    productDetails.data.product.data.branchInfo?.shop_info
+                      .shop_name
+                  )
+                    ?.split(" ")[0][0]
+                    .toUpperCase()}
+                </Avatar>
               ) : (
                 <ImageLoadingSkeleton
                   variant="circular"
@@ -565,7 +581,7 @@ const ProductDetail = ({ productDetails }) => {
                           {!productLikeByUser ? (
                             <FavoriteBorderIcon className="!text-[rgba(21, 24, 39, 0.4)]" />
                           ) : (
-                            "❤️"
+                            <FavoriteIcon className="!text-red-600" />
                           )}
                           <span>Like</span>
                         </Button>
@@ -683,10 +699,13 @@ const ProductDetail = ({ productDetails }) => {
                       {!productLikeByUser ? (
                         <FavoriteBorderIcon
                           fontSize="large"
-                          className="text-[#151827]"
+                          className="!text-[#151827]"
                         />
                       ) : (
-                        "❤️"
+                        <FavoriteIcon
+                          className="!text-red-600"
+                          fontSize="large"
+                        />
                       )}
                     </button>
                   </div>
@@ -707,7 +726,7 @@ const ProductDetail = ({ productDetails }) => {
                         </p>
                         <p className="text-green-600 text-md font-normal ">
                           (
-                          {refactorPrice(
+                          {Math.round(
                             productDetails.data.product.data?.product_discount
                           )}
                           % OFF)
@@ -722,7 +741,7 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div
                     className={`${
-                      readMore ? "h-[250px] overflow-scroll" : " "
+                      readMore ? "h-[334px] overflow-scroll" : " "
                     } border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px] `}
                   >
                     <div className="font-normal text-lg text-[#888888] leading-6">

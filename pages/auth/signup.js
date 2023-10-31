@@ -324,7 +324,7 @@ const Signup = () => {
           </div>
         </div>
       </form>
-      <div className="flex-grow"></div>
+      <div className="sm:flex-grow"></div>
       <div className="mt-5 w-full">
         <button
           type="submit"
