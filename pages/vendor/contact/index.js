@@ -8,9 +8,8 @@ const index = () => {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
     reset,
-    control,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useForm();
 
   const onSubmit = async (data) => {
