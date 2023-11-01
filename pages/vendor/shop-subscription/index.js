@@ -336,14 +336,11 @@ const ShopSubscription = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[95vh]">
-      <div className="bg-white rounded p-10">
+    <div className="flex items-center justify-center min-h-[70vh]">
+      <div className="">
         <h1 className="text-colorBlack text-center font-semibold text-2xl">
-          Transparent Pricing for Every Stage of Growth
+          Choose the right plan for your business
         </h1>
-        <p className="text-center text-colorStone mt-3">
-          Choose the right plan for your business.
-        </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 mt-10 gap-10">
           <FreePlanCard />
@@ -395,12 +392,12 @@ const FreePlanCard = () => {
   // }, [vendorShopDetails?.createdAt]);
 
   return (
-    <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg">
-      <p className="text-2xl font-semibold text-colorBlack">Free</p>
-      <p className="text-colorStone mt-2">
+    <div className="border rounded py-4 px-10 text-center cursor-pointer shadow-lg">
+      <p className="text-3xl font-semibold text-colorBlack">Free</p>
+      {/* <p className="text-colorStone mt-2">
         Powerful essentials for small businesses
-      </p>
-      <p className="mt-4 text-lg font-semibold text-colorBlack">₹0 / Month</p>
+      </p> */}
+      <p className="mt-4 text-lg font-semibold text-colorBlack">₹0 / Year</p>
       <p className="text-colorStone mt-2">
         Free access to upload products limits may apply
       </p>
@@ -432,18 +429,21 @@ const FreePlanCard = () => {
           </span>
         ) : (
           <span className="text-red-600 font-semibold py-2 px-3">
-            Free Trail is expired.
+            Free trail has been expired.
           </span>
         )}
       </div>
 
-      <div className="mt-4 text-start">
+      <div className="text-start">
+        <br />
+        <br />
         <span className="text-colorBlack">Free access to:</span>
         {[
-          "Limited Product Upload",
-          "Limited Journeys",
-          "Onboarding & 24/7 Support",
-          "Limited User Permissions",
+          "30 Products Upload",
+          "Limited Product Analysis",
+          "Max 3 updates allowed per product",
+          "AI based Auto Product title, description not supported",
+          "24/7 Support",
         ].map((item, index) => (
           <div className="flex items-center gap-2 mt-2" key={index}>
             <CheckCircleIcon color="secondary" />
@@ -458,11 +458,11 @@ const FreePlanCard = () => {
 const CustomPlanCard = () => {
   const router = useRouter();
   return (
-    <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg">
-      <p className="text-2xl font-semibold text-colorBlack">Enterprise</p>
-      <p className="text-colorStone mt-2">
+    <div className="border rounded py-4 px-10 text-center cursor-pointer shadow-lg">
+      <p className="text-3xl font-semibold text-colorBlack">Enterprise</p>
+      {/* <p className="text-colorStone mt-2">
         Ultimate control and support for businesses
-      </p>
+      </p> */}
       <p className="mt-4 text-lg font-semibold text-colorBlack">Custom</p>
       <p className="text-colorStone mt-2">
         Custom contract & additional features Volume-based discounting available
@@ -478,10 +478,11 @@ const CustomPlanCard = () => {
       <div className="mt-4 text-start">
         <span className="text-colorBlack">Custom access to:</span>
         {[
-          "More Advance Product Upload",
-          "More Advanced Journeys",
-          "Onboarding & 24/7 Support",
-          "Advanced User Permissions",
+          "More Advanced Product Upload",
+          "More Advanced Product Analysis",
+          "Unlimited updates allowed per product",
+          "AI based Auto Product title, description supported",
+          "24/7 Support",
         ].map((item, index) => (
           <div className="flex items-center gap-2 mt-2" key={index}>
             <CheckCircleIcon color="secondary" />

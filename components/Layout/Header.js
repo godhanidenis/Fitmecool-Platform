@@ -473,10 +473,12 @@ export const UserProfile = ({ setAccessToken }) => {
   return (
     <div className="flex items-center gap-5">
       {userProfile?.userHaveAnyShop && vendorShopDetails && (
-        <span className="font-semibold text-colorWhite">
-          Product Ability :{" "}
-          {vendorShopDetails.productLimit - vendorShopDetails.balanceProduct ||
-            0}
+        <span className="font-semibold text-yellow-400">
+          Available Products :{" "}
+          <span>
+            {vendorShopDetails.productLimit -
+              vendorShopDetails.balanceProduct || 0}
+          </span>
         </span>
       )}
       <div
