@@ -20,6 +20,8 @@ import { useRouter } from "next/router";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import BannerHero from "../../DirectoryHero/BannerHero";
 import { getShops } from "../../../graphql/queries/shopQueries";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import PeopleIcon from "@mui/icons-material/People";
 
 const responsive = {
   superLargeDesktop: {
@@ -142,6 +144,17 @@ const LandingPage = () => {
     e.target.value = inputValue1;
   };
 
+  const CategoriesTab = [
+    {
+      label: "Customer",
+      icon: <PeopleIcon />,
+    },
+    {
+      label: "Vendor",
+      icon: <AddBusinessIcon />,
+    },
+  ];
+
   useEffect(() => {
     getAllShops();
   }, []);
@@ -166,10 +179,12 @@ const LandingPage = () => {
             onChange={(event, newValue) => setValue(newValue)}
             hometab="true"
           >
-            {["Customer", "Vendor"]?.map((item, index) => (
+            {CategoriesTab?.map((item, index) => (
               <Tab
                 key={index}
-                label={item}
+                label={item.label}
+                icon={item.icon}
+                iconPosition="start"
                 {...a11yProps(index)}
                 className="whitespace-nowrap"
               />
@@ -177,10 +192,10 @@ const LandingPage = () => {
           </CustomTab>
         </div>
         <div>
-          {["Customer", "Vendor"]?.map((item, index) => (
+          {CategoriesTab?.map((item, index) => (
             <React.Fragment key={index}>
               <TabPanel value={value} index={index} className="mt-6 mb-8">
-                {item === "Customer" ? <Customer /> : <Vendor />}
+                {item?.label === "Customer" ? <Customer /> : <Vendor />}
               </TabPanel>
             </React.Fragment>
           ))}

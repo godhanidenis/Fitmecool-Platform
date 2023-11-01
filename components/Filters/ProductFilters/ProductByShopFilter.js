@@ -102,6 +102,7 @@ const ProductByShopFilter = () => {
                     <StyledFormLabelCheckBox
                       key={itm.shop_name}
                       value={itm.shop_name}
+                      className="line-clamp-1"
                       control={
                         <Checkbox
                           checked={selectedData.includes(itm.id)}

@@ -136,6 +136,7 @@ const ProductCategoriesFilter = () => {
                     <StyledFormLabelCheckBox
                       key={itm}
                       value={itm}
+                      className="line-clamp-1"
                       control={
                         <Checkbox
                           checked={selectedMenCat.includes(itm)}
@@ -244,6 +245,7 @@ const ProductCategoriesFilter = () => {
                     <StyledFormLabelCheckBox
                       key={itm}
                       value={itm}
+                      className="line-clamp-1"
                       control={
                         <Checkbox
                           checked={selectedWomenCat.includes(itm)}

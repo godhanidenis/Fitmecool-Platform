@@ -277,16 +277,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
           >
             <div className="cursor-pointer relative top-0 left-0">
               <div className="grid grid-cols-1 place-items-center">
-                <div
-                  className="w-[100%]"
-                  style={{
-                    height: onlyCarousal
-                      ? 420
-                      : themeLayout === "mobileScreen"
-                      ? 250
-                      : 300,
-                  }}
-                >
+                <div className="w-[100%]">
                   <Carousel
                     autoPlay={autoplay}
                     autoPlaySpeed={1500}
@@ -297,7 +288,21 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     responsive={responsive}
                     className={`${onlyCarousal ? `!pb-5` : `rounded-t-lg`}`}
                   >
-                    {productImages}
+                    {photos.length === 0 ? (
+                      <div
+                        className="bg-[#00000031]"
+                        style={{
+                          width: "100%",
+                          height: onlyCarousal
+                            ? 420
+                            : themeLayout === "mobileScreen"
+                            ? 250
+                            : 300,
+                        }}
+                      />
+                    ) : (
+                      productImages
+                    )}
                   </Carousel>
                 </div>
               </div>

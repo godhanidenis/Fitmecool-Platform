@@ -78,6 +78,7 @@ const ProductPriceFilter = () => {
                     <StyledFormLabelRadio
                       value={item.value}
                       label={capitalize(item.label)}
+                      className="line-clamp-1"
                       control={
                         <Radio
                           checked={
