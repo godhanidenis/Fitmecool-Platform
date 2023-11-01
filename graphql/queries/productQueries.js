@@ -21,18 +21,28 @@ export const getProducts = async (payload) => {
           data {
             id
             product_name
+            product_description
+            product_color
+            categoryInfo {
+              id
+              category_name
+              category_type
+              flag
+            }
             product_image {
               front
               back
               side
             }
             branchInfo {
+              id
               shop_id
               shop_info {
                 shop_logo
                 shop_name
               }
             }
+            productLikes
             whatsapp_inquiry
             contact_inquiry
             product_listing_type
@@ -91,6 +101,7 @@ export const getProductDetails = async (payload) => {
               manager_name
               manager_contact
             }
+            productLikes
             product_listing_type
             product_price_visible
             product_price

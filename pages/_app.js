@@ -19,8 +19,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect, useState } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 import Script from "next/script";
-import Image from "next/image";
-import { assets } from "../constants";
+// import Image from "next/image";
+// import { assets } from "../constants";
 
 const theme = createTheme({
   palette: {
@@ -38,19 +38,19 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLogoLoading, setIsLogoLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [isLogoLoading, setIsLogoLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLogoLoading(false);
-    }, 1200);
-  }, []);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 400);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLogoLoading(false);
+  //   }, 1200);
+  // }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 400);
+  // }, []);
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -95,7 +95,7 @@ function MyApp({ Component, pageProps }) {
           <ToastContainer />
 
           <Provider store={store}>
-            {isLogoLoading && (
+            {/* {isLogoLoading && (
               <div className="fixed flex justify-center z-10 bg-[#0000006e] w-full h-full">
                 <div className="flex flex-col justify-center items-center">
                   <div className="flex flex-col justify-center items-center bg-[#ffffff41] p-5 rounded-xl">
@@ -112,9 +112,9 @@ function MyApp({ Component, pageProps }) {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
             {!router.pathname.includes("/auth/") && <Header />}
-            {isLoading && <div className="h-screen" />}
+            {/* {isLoading && <div className="h-screen" />} */}
             <div>
               {router.pathname.includes("/vendor/") &&
               router.pathname !== "/vendor/shop-setup" ? (
