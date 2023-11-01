@@ -358,7 +358,7 @@ export default withAuth(ShopSubscription);
 
 const FreePlanCard = () => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
-  const [remainingDay, setRemainingDay] = useState(0);
+  // const [remainingDay, setRemainingDay] = useState(0);
 
   const FreeTrialHandler = () => {
     const shopCreatedDate = new Date(Number(vendorShopDetails?.createdAt));
@@ -380,19 +380,19 @@ const FreePlanCard = () => {
     }
   };
 
-  useEffect(() => {
-    const start = new Date(Number(vendorShopDetails?.createdAt));
+  // useEffect(() => {
+  //   const start = new Date(Number(vendorShopDetails?.createdAt));
 
-    const futureDate = new Date(start);
-    futureDate.setDate(start.getDate() + 30);
+  //   const futureDate = new Date(start);
+  //   futureDate.setDate(start.getDate() + 30);
 
-    const currentDate = new Date();
+  //   const currentDate = new Date();
 
-    const timeDifference = futureDate - currentDate;
+  //   const timeDifference = futureDate - currentDate;
 
-    const daysDifference = Math.round(timeDifference / (1000 * 60 * 60 * 24));
-    setRemainingDay(daysDifference);
-  }, [vendorShopDetails?.createdAt]);
+  //   const daysDifference = Math.round(timeDifference / (1000 * 60 * 60 * 24));
+  //   setRemainingDay(daysDifference);
+  // }, [vendorShopDetails?.createdAt]);
 
   return (
     <div className="border rounded py-8 px-10 text-center cursor-pointer shadow-lg">

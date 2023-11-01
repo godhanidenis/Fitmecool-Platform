@@ -14,9 +14,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
   EmailShareButton,
   FacebookShareButton,
-  EmailIcon,
   WhatsappIcon,
-  FacebookIcon,
   WhatsappShareButton,
 } from "react-share";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";

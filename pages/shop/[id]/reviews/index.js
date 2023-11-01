@@ -39,7 +39,7 @@ const Reviews = ({ shopDetails }) => {
         </div>
         <div className="bg-[#FFFFFF] sm:mt-5 py-6 xl:px-20 shadow-md shadow-[#18172505]">
           <ShopReviewSection
-            shopDetails={shopDetails}
+            shopName={shopDetails?.data?.shop?.shop_name}
             getAllReviews={getAllReviews}
             shopReviews={shopReviews}
           />

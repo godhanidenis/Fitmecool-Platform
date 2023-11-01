@@ -129,8 +129,8 @@ const ShopCard = ({ shop }) => {
                 </p>
                 <p className="text-[#151827] text-[14px] flex items-center">
                   <StarIcon className="!text-yellow-400 !w-4" />
-                  {shop.shop_rating}{" "}
-                  <span className="text-[#15182766]">
+                  {shop.shop_rating}
+                  <span className="text-[#15182766] ml-1">
                     ({shop.shopReviewCount})
                   </span>
                 </p>

@@ -40,6 +40,8 @@ const ShopDetail = ({ shopDetails }) => {
     y: window.innerHeight - 250,
   });
 
+  const shopDetailsData = shopDetails?.data?.shop;
+
   const handleDragStart = (e) => {
     e.preventDefault();
 
@@ -156,12 +158,12 @@ const ShopDetail = ({ shopDetails }) => {
     <>
       <div className="font-Nova">
         <DirectoryHero
-          title={shopDetails?.data?.shop?.shop_name}
-          bgImg={shopDetails?.data?.shop?.shop_cover_image}
+          title={shopDetailsData?.shop_name}
+          bgImg={shopDetailsData?.shop_cover_image}
         />
         <div className="">
           <ShopHeaderSection
-            shopDetails={shopDetails.data.shop}
+            shopDetails={shopDetailsData}
             totalReview={shopReviews.length}
             totalFollowers={totalFollowers}
             getAllFollowers={getAllFollowers}
@@ -241,7 +243,7 @@ const ShopDetail = ({ shopDetails }) => {
         <div className="shadow-xl my-4">
           <div ref={myDivRef} className="bg-[#FFFFFF] py-8 px-2 sm:px-12">
             <ShopReviewSection
-              shopDetails={shopDetails}
+              shopName={shopDetailsData?.shop_name}
               getAllReviews={getAllReviews}
               shopReviews={shopReviews}
             />
@@ -260,9 +262,7 @@ const ShopDetail = ({ shopDetails }) => {
                   <button
                     className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[8px] px-[8px] bg-[#FAFCFC]"
                     onClick={() =>
-                      router.push(
-                        `/shop/${shopDetails?.data?.shop?.id}/reviews`
-                      )
+                      router.push(`/shop/${shopDetailsData?.id}/reviews`)
                     }
                   >
                     View All
@@ -274,7 +274,7 @@ const ShopDetail = ({ shopDetails }) => {
         </div>
       </div>
       <div className="relative z-10">
-        {shopDetails?.data?.shop?.shop_video && videoShow && (
+        {shopDetailsData?.shop_video && videoShow && (
           <div
             className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
             style={{ left: videoPosition.x, top: videoPosition.y }}
@@ -286,10 +286,7 @@ const ShopDetail = ({ shopDetails }) => {
               muted
               className="!rounded-lg w-full bg-black"
             >
-              <source
-                src={shopDetails?.data?.shop?.shop_video}
-                type="video/mp4"
-              />
+              <source src={shopDetailsData?.shop_video} type="video/mp4" />
             </video>
             <div className="absolute p-3">
               <button

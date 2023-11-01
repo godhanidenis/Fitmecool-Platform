@@ -14,6 +14,8 @@ const Branches = ({ shopDetails, shopId }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
 
+  const shopDetailsData = shopDetails?.data?.shop;
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -36,7 +38,7 @@ const Branches = ({ shopDetails, shopId }) => {
           <div className="flex flex-col sm:flex-row items-center p-8 pt-6 bg-colorPrimary rounded-t-xl gap-[24px]">
             <div className="flex justify-center relative w-[150px] h-[150px]">
               <Image
-                src={shopDetails?.data?.shop?.shop_logo ?? ""}
+                src={shopDetailsData?.shop_logo ?? ""}
                 unoptimized={true}
                 alt="shop logo"
                 layout="fixed"
@@ -68,7 +70,7 @@ const Branches = ({ shopDetails, shopId }) => {
                     height: "100%",
                   }}
                 >
-                  {String(shopDetails?.data?.shop?.shop_name)
+                  {String(shopDetailsData?.shop_name)
                     ?.split(" ")[0][0]
                     .toUpperCase()}
                 </Avatar>
@@ -76,7 +78,7 @@ const Branches = ({ shopDetails, shopId }) => {
             </div>
             <div className="flex flex-col items-center sm:items-start">
               <span className="sm:text-[32px] text-[30px] font-semibold text-white text-center">
-                {shopDetails?.data?.shop?.shop_name}
+                {shopDetailsData?.shop_name}
               </span>
               <span className="text-white text-base font-normal text-center">
                 {
@@ -84,12 +86,12 @@ const Branches = ({ shopDetails, shopId }) => {
                 }
               </span>
               <span className="text-colorGreen text-base sm:text-lg font-semibold">
-                {shopDetails?.data?.shop?.branch_info?.length} Branches
+                {shopDetailsData?.branch_info?.length} Branches
               </span>
             </div>
           </div>
           <div className="pt-8">
-            {shopDetails?.data?.shop?.branch_info?.map((item, index) => {
+            {shopDetailsData?.branch_info?.map((item, index) => {
               return (
                 <div className="mx-8" key={index}>
                   <SeeBranchDropDown

@@ -31,64 +31,18 @@ export const getShops = async (payload) => {
           noOfPages
           data {
             id
-            user_id
-            subscriptionId
-            owner_id
             shop_name
-            shop_time {
-              close_time
-              is_24Hours_open
-              is_close
-              open_time
-              week
-            }
-            shop_email
             shop_logo
             shop_cover_image
             shop_images {
               links
             }
-            shop_video
-            shop_type
-            is_live
-            flag
-            form_steps
-            shop_social_link {
-              facebook
-              instagram
-              website
-            }
             shopFollowerCount
-            shopReviewCount
-            shop_review {
-              id
-              shop_id
-              user_id
-              stars
-              message
-              flag
-            }
             shop_rating
+            shopReviewCount
             branch_info {
-              id
-              shop_id
               branch_address
-              branch_pinCode
-              manager_name
-              manager_contact
-              manager_email
               branch_type
-              flag
-              shop_info {
-                shop_name
-                shop_time {
-                  close_time
-                  is_24Hours_open
-                  is_close
-                  open_time
-                  week
-                }
-              }
             }
           }
         }
@@ -107,6 +61,37 @@ export const getShops = async (payload) => {
 };
 
 export const getShopDetails = async (payload) => {
+  const result = await client.query({
+    query: gql`
+      query Shop($shopId: String) {
+        shop(id: $shopId) {
+          id
+          shop_name
+          shop_logo
+          shop_cover_image
+          shop_video
+          branch_info {
+            id
+            branch_address
+            branch_pinCode
+            branch_city
+            manager_name
+            manager_contact
+            manager_email
+            branch_type
+          }
+        }
+      }
+    `,
+    variables: {
+      shopId: payload.id,
+    },
+    fetchPolicy: "no-cache",
+  });
+  return result;
+};
+
+export const getVendorShopDetails = async (payload) => {
   const result = await client.query({
     query: gql`
       query Shop($shopId: String) {
@@ -131,7 +116,6 @@ export const getShopDetails = async (payload) => {
             owner_lastName
             owner_email
             owner_contact
-            flag
           }
           shop_logo
           shop_cover_image
@@ -140,9 +124,6 @@ export const getShopDetails = async (payload) => {
           }
           shop_video
           shop_type
-          is_live
-          flag
-          form_steps
           shop_social_link {
             facebook
             instagram
@@ -152,17 +133,6 @@ export const getShopDetails = async (payload) => {
           shopReviewCount
           productLimit
           balanceProduct
-          shop_review {
-            id
-            shop_id
-            user_id
-            stars
-            message
-            flag
-            user_name
-            user_type
-          }
-          shop_rating
           branch_info {
             id
             shop_id
@@ -174,10 +144,6 @@ export const getShopDetails = async (payload) => {
             manager_contact
             manager_email
             branch_type
-            flag
-            product_info {
-              id
-            }
           }
         }
       }

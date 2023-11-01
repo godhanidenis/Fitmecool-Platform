@@ -145,12 +145,7 @@ const HomePage = () => {
                     <>
                       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 place-items-center">
                         {productsData?.map((product) => (
-                          // <div
-                          //   key={product.id}
-                          //   className="px-3 pt-2 pb-5 overflow-hidden"
-                          // >
                           <ProductCard product={product} key={product.id} />
-                          // </div>
                         ))}
                       </div>
                       {productsCount > 10 && (
