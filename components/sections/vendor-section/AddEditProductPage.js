@@ -78,7 +78,7 @@ const AddEditProductPage = ({
 
   const [productPriceVisible, setProductPriceVisible] = useState(false);
   const [productListingType, setProductListingType] = useState(false);
-  const [alertMsg, setAlertMsg] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
 
   const router = useRouter();
 
@@ -167,7 +167,7 @@ const AddEditProductPage = ({
   useEffect(() => {
     if (editableProductData) {
       const finalPrice =
-        editableProductData?.product_price -
+        editableProductData?.product_price -  
         editableProductData?.product_price *
           (editableProductData?.product_discount / 100);
       setValue("product_name", editableProductData?.product_name);
@@ -414,7 +414,17 @@ const AddEditProductPage = ({
           (error) => {
             setLoading(false);
             // toast.error(error.message, { theme: "colored" });
-            setAlertMsg(true);
+            // setAlertMsg(true);
+            const targetElement = document.getElementById("AddProduct");
+            if (targetElement) {
+              const targetScrollPosition =
+                targetElement.getBoundingClientRect().top;
+
+              window.scrollTo({
+                top: window.scrollY + targetScrollPosition,
+                behavior: "smooth",
+              });
+            }
             setAlertMsg(error.message);
           }
         );
@@ -455,7 +465,7 @@ const AddEditProductPage = ({
     return null;
   }
   return (
-    <div>
+    <div id="AddProduct">
       <div className="sm:p-0 sm:py-6 p-6">
         <div className="font-semibold text-black flex items-center gap-2 sm:mx-4">
           <span>
@@ -477,17 +487,17 @@ const AddEditProductPage = ({
             {editableProductData ? "Update" : "Add"} Product
           </span>
         </div>
-        {vendorShopDetails.productLimit - vendorShopDetails.balanceProduct <=
-          0 &&
-          alertMsg && (
-            <Alert
-              severity={"error"}
-              className="mt-5 cursor-pointer"
+        {alertMsg && (
+          <Alert severity={"error"} className="mt-5 sm:ml-6">
+            {alertMsg}
+            <span
+              className="cursor-pointer underline font-bold ml-2"
               onClick={() => router.push("/vendor/contact/")}
             >
-              {alertMsg}
-            </Alert>
-          )}
+              Upgrade Your Plan
+            </span>
+          </Alert>
+        )}
         <div className="my-5">
           <div className="text-base sm:text-lg font-semibold mb-3 mt-5 sm:mx-6 text-black ">
             Product

@@ -276,8 +276,14 @@ const ShopDetail = ({ shopDetails }) => {
       <div className="relative z-10">
         {shopDetailsData?.shop_video && videoShow && (
           <div
-            className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
-            style={{ left: videoPosition.x, top: videoPosition.y }}
+            className={`fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end ${
+              window.innerWidth < 640 ? "!left-[20px]" : ""
+            }`}
+            // className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
+            style={{
+              left: videoPosition.x,
+              top: videoPosition.y,
+            }}
             onMouseDown={handleDragStart}
           >
             <video
