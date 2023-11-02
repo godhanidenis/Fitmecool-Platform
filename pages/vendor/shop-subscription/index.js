@@ -323,6 +323,7 @@ import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import moment from "moment/moment";
 
 const ShopSubscription = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -355,91 +356,92 @@ export default withAuth(ShopSubscription);
 
 const FreePlanCard = () => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
-  // const [remainingDay, setRemainingDay] = useState(0);
+  const [productLimit, setProductLimit] = useState(0);
+  const [expiredDate, setExpiredDate] = useState("");
+
+  const { shopConfigurationsData } = useSelector(
+    (state) => state.shopConfigurations
+  );
+
+  const FreeTrailProduct =
+    vendorShopDetails && vendorShopDetails?.shop_type === "individual"
+      ? shopConfigurationsData[0]?.individual_product_limit
+      : shopConfigurationsData[0]?.shop_product_limit;
+
+  const FreeTrailDay =
+    vendorShopDetails && vendorShopDetails?.shop_type === "individual"
+      ? shopConfigurationsData[0]?.individual_days_limit
+      : shopConfigurationsData[0]?.shop_days_limit;
+
+  const shopCreatedDate = new Date(Number(vendorShopDetails?.createdAt));
+
+  const futureDate = new Date(shopCreatedDate);
+  futureDate.setDate(shopCreatedDate.getDate() + FreeTrailDay);
+  const formattedFutureDate = moment(futureDate).format("DD-MM-YYYY");
 
   const FreeTrialHandler = () => {
-    const shopCreatedDate = new Date(Number(vendorShopDetails?.createdAt));
-
     const currentDate = new Date();
-
-    const FreeTrailDay =
-      vendorShopDetails?.shop_type === "individual"
-        ? parseInt(process.env.NEXT_PUBLIC_INDIVIDUAL_SHOP_PRODUCT_VISIBLE_DAYS)
-        : parseInt(process.env.NEXT_PUBLIC_SHOP_PRODUCT_VISIBLE_DAYS);
 
     let threshold = new Date();
     threshold.setDate(threshold.getDate() - FreeTrailDay);
 
     if (vendorShopDetails?.subscriptionDate) {
-      return false;
+      setExpiredDate(false);
     } else {
-      return shopCreatedDate >= threshold && shopCreatedDate <= currentDate;
+      vendorShopDetails?.createdAt &&
+        setExpiredDate(
+          shopCreatedDate >= threshold && shopCreatedDate <= currentDate
+        );
     }
   };
 
-  // useEffect(() => {
-  //   const start = new Date(Number(vendorShopDetails?.createdAt));
+  useEffect(() => {
+    FreeTrialHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vendorShopDetails]);
 
-  //   const futureDate = new Date(start);
-  //   futureDate.setDate(start.getDate() + 30);
-
-  //   const currentDate = new Date();
-
-  //   const timeDifference = futureDate - currentDate;
-
-  //   const daysDifference = Math.round(timeDifference / (1000 * 60 * 60 * 24));
-  //   setRemainingDay(daysDifference);
-  // }, [vendorShopDetails?.createdAt]);
+  useEffect(() => {
+    FreeTrailProduct && setProductLimit(FreeTrailProduct);
+  }, [FreeTrailProduct]);
 
   return (
     <div className="border rounded py-4 px-10 text-center cursor-pointer shadow-lg">
       <p className="text-3xl font-semibold text-colorBlack">Free</p>
-      {/* <p className="text-colorStone mt-2">
-        Powerful essentials for small businesses
-      </p> */}
+
       <p className="mt-4 text-lg font-semibold text-colorBlack">₹0 / Year</p>
       <p className="text-colorStone mt-2">
         Free access to upload products limits may apply
       </p>
 
-      {/* <button className="bg-colorGreen text-white py-2 px-3 mt-4 w-full rounded-md">
-        Get Started Now
-      </button> */}
-      <div className="mt-4">
-        {/* {remainingDay > 1 ? (
+      <div className="flex flex-col gap-0 mt-4">
+        {expiredDate === true ? (
           <span className="text-[#29977E] font-semibold py-2 px-3">
-            {remainingDay} days left
+            Free Trail is expired on {formattedFutureDate}
           </span>
-        ) : remainingDay === 1 ? (
-          <span className="text-red-600 font-semibold py-2 px-3">
-            {remainingDay} day left
-          </span>
-        ) : remainingDay <= 0 ? (
-          <span className="text-red-600 font-semibold py-2 px-3">
-            Free Trail is expired.
-          </span>
-        ) : (
-          <span className="text-[#0000009d] font-normal py-2 px-3">
-            Loading...
-          </span>
-        )} */}
-        {FreeTrialHandler() ? (
-          <span className="text-[#29977E] font-semibold py-2 px-3">
-            Free Trail is active.
-          </span>
-        ) : (
+        ) : expiredDate === false ? (
           <span className="text-red-600 font-semibold py-2 px-3">
             Free trail has been expired.
           </span>
+        ) : (
+          expiredDate === "" && (
+            <span className="text-black font-medium py-2 px-3">loading...</span>
+          )
         )}
       </div>
 
       <div className="text-start">
         <br />
-        <br />
         <span className="text-colorBlack">Free access to:</span>
+        <div className="flex items-center gap-2 mt-2">
+          <CheckCircleIcon color="secondary" />
+          <span className="text-colorBlack">
+            <span className="text-colorGreen font-extrabold">
+              {productLimit}
+            </span>{" "}
+            Products Upload
+          </span>
+        </div>
         {[
-          "30 Products Upload",
           "Limited Product Analysis",
           "Max 3 updates allowed per product",
           "AI based Auto Product title, description not supported",
@@ -460,9 +462,7 @@ const CustomPlanCard = () => {
   return (
     <div className="border rounded py-4 px-10 text-center cursor-pointer shadow-lg">
       <p className="text-3xl font-semibold text-colorBlack">Enterprise</p>
-      {/* <p className="text-colorStone mt-2">
-        Ultimate control and support for businesses
-      </p> */}
+
       <p className="mt-4 text-lg font-semibold text-colorBlack">Custom</p>
       <p className="text-colorStone mt-2">
         Custom contract & additional features Volume-based discounting available

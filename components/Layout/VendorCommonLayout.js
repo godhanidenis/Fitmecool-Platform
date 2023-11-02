@@ -6,6 +6,7 @@ import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails"
 // import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { loadProductsStart } from "../../redux/ducks/product";
+import { loadShopConfigurationsStart } from "../../redux/ducks/shopConfigurations";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -21,6 +22,12 @@ const VendorCommonLayout = ({ children }) => {
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
       dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
+    }
+  }, [dispatch, userProfile?.userCreatedShopId]);
+
+  useEffect(() => {
+    if (userProfile?.userCreatedShopId) {
+      dispatch(loadShopConfigurationsStart());
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
 

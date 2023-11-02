@@ -11,6 +11,8 @@ import { handleGetProducts } from "./handlers/products";
 import { handleGetAllShops, handleGetShops } from "./handlers/shops";
 import { handleGetUserProfile } from "./handlers/userProfile";
 import { handleGetVendorShopDetails } from "./handlers/vendorShopDetails";
+import { LOAD_SHOP_CONFIGURATION_START } from "../ducks/shopConfigurations";
+import { handleGetShopConfigurations } from "./handlers/shopConfigurations";
 
 function* onLoadUserProfile() {
   yield takeLatest(LOAD_USER_PROFILE_START, handleGetUserProfile);
@@ -35,6 +37,9 @@ function* onLoadCategories() {
 function* onLoadAreaLists() {
   yield takeLatest(LOAD_AREA_LIST_START, handleGetAreaLists);
 }
+function* onLoadShopConfigurations() {
+  yield takeLatest(LOAD_SHOP_CONFIGURATION_START, handleGetShopConfigurations);
+}
 
 function* onLoadVendorShopDetails() {
   yield takeLatest(LOAD_VENDOR_SHOP_DETAILS_START, handleGetVendorShopDetails);
@@ -45,6 +50,7 @@ const productSagas = [fork(onLoadProducts)];
 const shopSagas = [fork(onLoadShops), fork(onLoadAllShops)];
 const categorySagas = [fork(onLoadCategories)];
 const areaLists = [fork(onLoadAreaLists)];
+const shopConfigurations = [fork(onLoadShopConfigurations)];
 const vendorShopDetails = [fork(onLoadVendorShopDetails)];
 
 export default function* watcherSaga() {
@@ -54,6 +60,7 @@ export default function* watcherSaga() {
     ...shopSagas,
     ...categorySagas,
     ...areaLists,
+    ...shopConfigurations,
     ...vendorShopDetails,
   ]);
 }
