@@ -848,15 +848,19 @@ const ProductDetail = ({ productDetails }) => {
           </div>
 
           <div
-            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
-              isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
-            } place-items-center mt-4`}
+            className={`w-[100%] flex flex-wrap justify-center md:justify-normal place-items-center mt-4`}
+            // className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
+            //   isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
+            // } place-items-center mt-4`}
           >
             {productDetailsData?.related &&
               productDetailsData?.related
                 .slice(0, isScreenWide ? 5 : 4)
                 ?.map((product, index) => (
-                  <div className="" key={product.id}>
+                  <div
+                    className="w-[50%] md:w-[33%]  lg:w-[25%] xl:w-[20%] 2xl:w-[20%] mb-2 sm:mb-0"
+                    key={product.id}
+                  >
                     <ProductCard product={product} />
                   </div>
                 ))}

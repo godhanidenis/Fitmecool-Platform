@@ -29,7 +29,7 @@ export function screeResizeForViewMoreItems() {
 
   React.useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1441) {
+      if (window.innerWidth >= 1280) {
         // 1023 is the lg breakpoint in Tailwind
         setIsScreenWide(true);
       } else {

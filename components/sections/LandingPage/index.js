@@ -156,6 +156,18 @@ const LandingPage = () => {
   ];
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem("token");
+
+    if (isLoggedIn) {
+      const hasVisitedSecondPage = localStorage.getItem("visitedSecondPage");
+      if (!hasVisitedSecondPage) {
+        localStorage.setItem("visitedSecondPage", "true");
+        router.push("/home");
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     getAllShops();
   }, []);
 
@@ -336,7 +348,7 @@ const LandingPage = () => {
         </div>
 
         <div className="w-full h-[350px] lg:h-[400px] place-items-center pt-5">
-          {!loading && (
+          {!loading && shopsData.length > 0 && (
             <div className="flex justify-end">
               <button
                 className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"

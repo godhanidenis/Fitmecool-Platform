@@ -195,9 +195,13 @@ const ShopDetail = ({ shopDetails }) => {
               >
                 {productsData?.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 place-items-center">
+                    <div className="w-[100%] flex flex-wrap justify-between lg:justify-center xl:justify-normal mb-2 lg:mb-0 lg:gap-3 p-1 place-items-center">
                       {productsData?.map((product) => (
-                        <ProductCard product={product} key={product.id} />
+                        <ProductCard
+                          product={product}
+                          key={product.id}
+                          homepage={true}
+                        />
                       ))}
                     </div>
                     {productsCount > 6 && (

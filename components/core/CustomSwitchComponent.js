@@ -8,7 +8,11 @@ const CustomSwitchComponent = ({ checked, onChange }) => {
       <div className="flex items-center">
         <label className="flex items-center cursor-pointer">
           <input type="checkbox" className="hidden peer" onChange={onChange} />
-          <span className="px-4 py-1 bg-colorGreen peer-checked:text-black peer-checked:bg-colorGrey text-white flex items-center">
+          <span
+            className={`${
+              checked ? "bg-colorGrey text-black" : "bg-colorGreen text-white"
+            } px-4 py-1 flex items-center`}
+          >
             <Image
               src={assets?.cloth}
               alt="cloth"
@@ -21,7 +25,11 @@ const CustomSwitchComponent = ({ checked, onChange }) => {
               }`}
             />
           </span>
-          <span className="px-4 py-1 peer-checked:bg-colorGreen bg-colorGrey peer-checked:text-white text-black flex items-center">
+          <span
+            className={`${
+              checked ? "bg-colorGreen text-white" : "text-black bg-colorGrey"
+            } px-4 py-1  flex items-center`}
+          >
             <Image
               src={assets?.store_Icon}
               alt="stor"
@@ -30,7 +38,7 @@ const CustomSwitchComponent = ({ checked, onChange }) => {
               className={`${
                 checked
                   ? "peer-checked:filter invert grayscale"
-                  : "peer-checked:filter  grayscale"
+                  : "peer-checked:filter grayscale"
               }`}
             />
           </span>

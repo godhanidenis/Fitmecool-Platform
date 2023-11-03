@@ -58,7 +58,7 @@ const responsive = {
   },
 };
 
-const ProductCard = ({ product, onlyCarousal }) => {
+const ProductCard = ({ product, onlyCarousal, homepage }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(null);
   const [autoplay, setAutoplay] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
@@ -185,7 +185,7 @@ const ProductCard = ({ product, onlyCarousal }) => {
                     }
                     unoptimized={true}
                     alt={product?.product_name}
-                    className={`object-cover object-top absolute top-0 left-0  ${
+                    className={`object-cover object-top absolute top-0 left-0 bg-white  ${
                       isProductImagesLoaded ? "opacity-100" : "opacity-0"
                     } ${onlyCarousal && CarouselImage && `object-cover`}`}
                     onLoad={() => setIsProductImagesLoaded(true)}
@@ -248,8 +248,10 @@ const ProductCard = ({ product, onlyCarousal }) => {
   return (
     <>
       <div
-        className={`ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg  ${
-          onlyCarousal && `m-1`
+        className={`${onlyCarousal && `m-1`} ${
+          homepage
+            ? "w-[49%] sm:w-[33%]  lg:w-[23%] xl:w-[24%] mb-2 lg:mb-0 ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden rounded-lg"
+            : "ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg"
         }`}
       >
         <div className={`relative cursor-pointer`}>

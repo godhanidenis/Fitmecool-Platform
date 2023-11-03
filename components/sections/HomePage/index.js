@@ -143,9 +143,13 @@ const HomePage = () => {
                 >
                   {productsData?.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 place-items-center">
+                      <div className="w-[100%] flex flex-wrap justify-between lg:justify-center xl:justify-normal lg:gap-3 p-1 place-items-center">
                         {productsData?.map((product) => (
-                          <ProductCard product={product} key={product.id} />
+                          <ProductCard
+                            product={product}
+                            key={product.id}
+                            homepage={true}
+                          />
                         ))}
                       </div>
                       {productsCount > 10 && (
@@ -209,7 +213,7 @@ const HomePage = () => {
                 >
                   {shopsData?.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 place-items-center">
+                      <div className="w-[100%] flex flex-wrap justify-center lg:justify-center xl:justify-normal sm:gap-3 p-1 place-items-center">
                         {shopsData.map((shop) => (
                           <ShopCard key={shop.id} shop={shop} />
                         ))}
