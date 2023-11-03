@@ -15,10 +15,10 @@ const ProductLikePage = () => {
     (state) => state.userProfile
   );
 
-  console.log(
-    "userProfile.product_like_list :>> ",
-    userProfile.product_like_list
-  );
+  // console.log(
+  //   "userProfile.product_like_list :>> ",
+  //   userProfile.product_like_list
+  // );
 
   useEffect(() => {
     setIsHydrated(true);

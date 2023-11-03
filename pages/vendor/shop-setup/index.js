@@ -334,7 +334,7 @@ const ShopPage = () => {
 
     try {
       const uploadShopImgs = await Promise.all(uploadPromises);
-      console.log("uploadShopImgs :>> ", uploadShopImgs);
+      // console.log("uploadShopImgs :>> ", uploadShopImgs);
       return uploadShopImgs;
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -346,7 +346,7 @@ const ShopPage = () => {
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      console.log("Data To be Submitted !!", data);
+      // console.log("Data To be Submitted !!", data);
       setLoading(true);
 
       let logoResponse = "";
