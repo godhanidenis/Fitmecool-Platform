@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
-import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
-import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
+// import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
+// import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { loadProductsStart } from "../../redux/ducks/product";
+import { loadShopConfigurationsStart } from "../../redux/ducks/shopConfigurations";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -24,6 +25,12 @@ const VendorCommonLayout = ({ children }) => {
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
 
+  useEffect(() => {
+    if (userProfile?.userCreatedShopId) {
+      dispatch(loadShopConfigurationsStart());
+    }
+  }, [dispatch, userProfile?.userCreatedShopId]);
+
   const getAllProducts = () => {
     dispatch(
       loadProductsStart({
@@ -34,6 +41,12 @@ const VendorCommonLayout = ({ children }) => {
         filter: {
           category_id: appliedProductsFilters.categoryId.selectedValue,
           product_color: appliedProductsFilters.productColor.selectedValue,
+          product_price: {
+            min: appliedProductsFilters.productPrice.selectedValue.min,
+            max: appliedProductsFilters.productPrice.selectedValue.max,
+          },
+          product_listing_type:
+            appliedProductsFilters.productListingType.selectedValue,
         },
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
@@ -62,20 +75,20 @@ const VendorCommonLayout = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
-  useEffect(() => {
-    if (userProfile?.subscriptionId) {
-      getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
-        (res) =>
-          dispatch(
-            setSubscriptionStatus(
-              res?.data?.singleSubscription?.status === "active" ? true : false
-            )
-          )
-      );
-    } else {
-      dispatch(setSubscriptionStatus(false));
-    }
-  }, [dispatch, userProfile?.subscriptionId]);
+  // useEffect(() => {
+  //   if (userProfile?.subscriptionId) {
+  //     getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
+  //       (res) =>
+  //         dispatch(
+  //           setSubscriptionStatus(
+  //             res?.data?.singleSubscription?.status === "active" ? true : false
+  //           )
+  //         )
+  //     );
+  //   } else {
+  //     dispatch(setSubscriptionStatus(false));
+  //   }
+  // }, [dispatch, userProfile?.subscriptionId]);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">

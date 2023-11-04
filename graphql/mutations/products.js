@@ -10,12 +10,6 @@ export const productLike = async (payload) => {
             id
             product_name
             product_description
-            product_image {
-              front
-              back
-              side
-            }
-            product_video
             product_color
             categoryInfo {
               id
@@ -23,57 +17,26 @@ export const productLike = async (payload) => {
               category_type
               flag
             }
+            product_image {
+              front
+              back
+              side
+            }
             branchInfo {
               id
               shop_id
               shop_info {
-                id
-                user_id
-                shop_name
-                shop_time {
-                  close_time
-                  is_24Hours_open
-                  is_close
-                  open_time
-                  week
-                }
                 shop_logo
-                shop_cover_image
-                shop_images {
-                  links
-                }
-                shop_video
-                shop_type
-                is_live
-                flag
-                form_steps
-                shop_social_link {
-                  facebook
-                  instagram
-                  website
-                }
-                shopFollowerCount
-                shopReviewCount
-                shop_review {
-                  id
-                  shop_id
-                  user_id
-                  stars
-                  message
-                  flag
-                }
-                shop_rating
+                shop_name
               }
-              branch_address
-              branch_pinCode
-              manager_name
-              manager_contact
-              manager_email
-              branch_type
-              flag
             }
-            flag
             productLikes
+            whatsapp_inquiry
+            contact_inquiry
+            product_listing_type
+            product_price_visible
+            product_price
+            product_discount
           }
           message
         }

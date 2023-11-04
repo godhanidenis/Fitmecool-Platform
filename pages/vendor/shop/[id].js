@@ -55,6 +55,12 @@ const ShopDetailsPage = () => {
         filter: {
           category_id: appliedProductsFilters.categoryId.selectedValue,
           product_color: appliedProductsFilters.productColor.selectedValue,
+          product_price: {
+            min: appliedProductsFilters.productPrice.selectedValue.min,
+            max: appliedProductsFilters.productPrice.selectedValue.max,
+          },
+          product_listing_type:
+            appliedProductsFilters.productListingType.selectedValue,
         },
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
@@ -117,12 +123,16 @@ const ShopDetailsPage = () => {
                   shape="rounded"
                   page={(productPageSkip === 0 && 1) || productPageSkip / 6 + 1}
                   onChange={(e, p) => {
-                    const targetScrollPosition = 0;
+                    const targetElement = document.getElementById("titleName");
+                    if (targetElement) {
+                      const targetScrollPosition =
+                        targetElement.getBoundingClientRect().top;
 
-                    window.scrollTo({
-                      top: targetScrollPosition,
-                      behavior: "smooth",
-                    });
+                      window.scrollTo({
+                        top: window.scrollY + targetScrollPosition,
+                        behavior: "smooth",
+                      });
+                    }
                     dispatch(changeProductPage((p === 1 && 0) || (p - 1) * 6));
                   }}
                 />

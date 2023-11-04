@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useDispatch, useSelector } from "react-redux";
 import { productLikeToggle } from "../../../redux/ducks/userProfile";
 import { productLike } from "../../../graphql/mutations/products";
@@ -23,6 +24,7 @@ import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 import Modal from "@mui/material/Modal";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import { refactorPrice } from "../../../utils/common";
 
 const ContactStyle = {
   position: "absolute",
@@ -56,7 +58,7 @@ const responsive = {
   },
 };
 
-const ProductCard = ({ product, onlyCarousal }) => {
+const ProductCard = ({ product, onlyCarousal, homepage }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(null);
   const [autoplay, setAutoplay] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
@@ -81,6 +83,10 @@ const ProductCard = ({ product, onlyCarousal }) => {
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
+
+  const finalPrice =
+    product?.product_price -
+    product?.product_price * (product?.product_discount / 100);
 
   useEffect(() => {
     if (onlyCarousal) setAutoplay(false);
@@ -177,12 +183,11 @@ const ProductCard = ({ product, onlyCarousal }) => {
                         ? itm?.src
                         : currentImageIndex === 0 && photos[0]?.src
                     }
+                    unoptimized={true}
                     alt={product?.product_name}
-                    className={`object-cover object-top absolute top-0 left-0 ${
-                      onlyCarousal ? `` : `rounded-t-lg`
-                    } ${isProductImagesLoaded ? "opacity-100" : "opacity-0"} ${
-                      onlyCarousal && CarouselImage && `object-cover`
-                    }`}
+                    className={`object-cover object-top absolute top-0 left-0 bg-white  ${
+                      isProductImagesLoaded ? "opacity-100" : "opacity-0"
+                    } ${onlyCarousal && CarouselImage && `object-cover`}`}
                     onLoad={() => setIsProductImagesLoaded(true)}
                     onError={() => {
                       setIsProductImages(true);
@@ -242,224 +247,288 @@ const ProductCard = ({ product, onlyCarousal }) => {
 
   return (
     <>
-      <div className="shadow-xl flex flex-col rounded-lg">
-        <div className="cursor-pointer relative top-0 left-0">
-          <div className="grid grid-cols-1 place-items-center">
-            <div
-              className="w-[100%]"
-              style={{
-                height: onlyCarousal
-                  ? 400
-                  : themeLayout === "mobileScreen"
-                  ? 250
-                  : 300,
-              }}
-            >
-              <Carousel
-                autoPlay={autoplay}
-                autoPlaySpeed={1500}
-                infinite
-                showDots={onlyCarousal ? true : false}
-                customDot={onlyCarousal ? <CustomDot /> : null}
-                arrows={false}
-                responsive={responsive}
-                className={`${onlyCarousal ? `!pb-6` : `rounded-t-lg`}`}
+      <div
+        className={`${onlyCarousal && `m-1`} ${
+          homepage
+            ? "w-[49%] sm:w-[33%]  lg:w-[23%] xl:w-[24%] mb-2 lg:mb-0 ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden rounded-lg"
+            : "ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg"
+        }`}
+      >
+        <div className={`relative cursor-pointer`}>
+          {product?.product_listing_type && (
+            <div className="absolute top-0">
+              <span
+                // className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
+                className={`z-[8] absolute w-[7rem] xl:w-40 p-[1px] text-white text-[12px] xl:text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-[7px] xl:top-2 -left-[25px] xl:-left-[40px]  border-[3px] xl:border-[5px] border-[#f5cd79] ${
+                  product?.product_listing_type === "rent"
+                    ? "bg-[#ff3b3b]"
+                    : "bg-[#29977E]"
+                } `}
               >
-                {productImages}
-              </Carousel>
+                {product?.product_listing_type === "sell" ? "Sell" : "Rent"}
+              </span>
+              <span className="absolute -top-[9px] xl:-top-[10px] z-0 left-[71px] xl:left-[98px] p-[6px] xl:p-2 bg-[#f19066]" />
+              <span className="absolute top-[52px] xl:top-[74px] z-0 -left-[11px] xl:-left-[15px] p-[6px] xl:p-2 bg-[#f19066]" />
             </div>
-          </div>
+          )}
 
-          <div className="flex flex-col absolute top-0 right-[16px]">
-            <button
-              className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
-              style={{
-                backdropFilter: "blur(20px)",
-              }}
-              onClick={() => {
-                if (isAuthenticate) {
-                  productLike({
-                    productInfo: {
-                      product_id: product.id,
-                      user_id: userProfile.id,
-                    },
-                  }).then(
-                    (res) => {
-                      dispatch(
-                        !productLikeByUser
-                          ? productLikeToggle({
-                              productInfo: {
-                                key: "like",
-                                value: res.data.productLike.data,
-                              },
-                            })
-                          : productLikeToggle({
-                              productInfo: {
-                                key: "disLike",
-                                value: product.id,
-                              },
-                            })
-                      );
-                      toast.success(res.data.productLike.message, {
-                        theme: "colored",
-                      });
-                    },
-                    (error) => {
-                      toast.error(error.message, { theme: "colored" });
-                    }
-                  );
-                } else {
-                  Router.push("/auth/user-type");
-                }
-              }}
-            >
-              {!productLikeByUser ? (
-                <FavoriteBorderIcon className="!text-white" />
-              ) : (
-                "❤️"
-              )}
-            </button>
-            {onlyCarousal && (
-              <>
-                <HtmlTooltip
-                  title={
-                    <React.Fragment>
-                      <div className="">
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <FacebookShareButton
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image
-                              src={assets.facebookIcon}
-                              alt="facebookIcon"
-                              width={25}
-                              height={25}
-                            />
-                          </FacebookShareButton>
-                        </div>
-                        <div className="p-2 rounded-lg cursor-pointer">
-                          <WhatsappShareButton
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <WhatsappIcon size={25} round={true} />
-                          </WhatsappShareButton>
-                        </div>
-                        <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                          <EmailShareButton
-                            subject="Product Detail Page"
-                            windowWidth={900}
-                            windowHeight={900}
-                            url={pageShareURL}
-                          >
-                            <Image
-                              src={assets.googleIcon}
-                              width={25}
-                              height={25}
-                              alt="googleIcon"
-                            />
-                          </EmailShareButton>
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  }
-                >
-                  <button
-                    onClick={() => setOpenToolTip(!OpenToolTip)}
-                    className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
-                    style={{
-                      backdropFilter: "blur(20px)",
-                    }}
+          <div
+            className={`${
+              onlyCarousal ? "" : "shadow-md"
+            } flex flex-col rounded-xl`}
+          >
+            <div className="cursor-pointer relative top-0 left-0">
+              <div className="grid grid-cols-1 place-items-center">
+                <div className="w-[100%]">
+                  <Carousel
+                    autoPlay={autoplay}
+                    autoPlaySpeed={1500}
+                    infinite
+                    showDots={onlyCarousal ? true : false}
+                    customDot={onlyCarousal ? <CustomDot /> : null}
+                    arrows={false}
+                    responsive={responsive}
+                    className={`${onlyCarousal ? `!pb-5` : `rounded-t-lg`}`}
                   >
-                    <FileUploadOutlinedIcon className="!text-white" />
-                  </button>
-                </HtmlTooltip>
+                    {photos.length === 0 ? (
+                      <div
+                        className="bg-[#00000031]"
+                        style={{
+                          width: "100%",
+                          height: onlyCarousal
+                            ? 420
+                            : themeLayout === "mobileScreen"
+                            ? 250
+                            : 300,
+                        }}
+                      />
+                    ) : (
+                      productImages
+                    )}
+                  </Carousel>
+                </div>
+              </div>
+
+              <div className="flex flex-col absolute top-0 right-[16px]">
                 <button
-                  className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300`}
+                  className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
                   style={{
                     backdropFilter: "blur(20px)",
                   }}
+                  onClick={() => {
+                    if (isAuthenticate) {
+                      productLike({
+                        productInfo: {
+                          product_id: product.id,
+                          user_id: userProfile.id,
+                        },
+                      }).then(
+                        (res) => {
+                          dispatch(
+                            !productLikeByUser
+                              ? productLikeToggle({
+                                  productInfo: {
+                                    key: "like",
+                                    value: res.data.productLike.data,
+                                  },
+                                })
+                              : productLikeToggle({
+                                  productInfo: {
+                                    key: "disLike",
+                                    value: product.id,
+                                  },
+                                })
+                          );
+                          toast.success(res.data.productLike.message, {
+                            theme: "colored",
+                          });
+                        },
+                        (error) => {
+                          toast.error(error.message, { theme: "colored" });
+                        }
+                      );
+                    } else {
+                      Router.push("/auth/user-type");
+                    }
+                  }}
                 >
-                  <ReportGmailerrorredOutlinedIcon className="!text-white" />
+                  {!productLikeByUser ? (
+                    <FavoriteBorderIcon className="!text-white" />
+                  ) : (
+                    <FavoriteIcon className="!text-red-600" />
+                  )}
                 </button>
-              </>
+                {onlyCarousal && (
+                  <>
+                    <HtmlTooltip
+                      title={
+                        <React.Fragment>
+                          <div className="">
+                            <div className="p-2 rounded-lg cursor-pointer">
+                              <FacebookShareButton
+                                windowWidth={900}
+                                windowHeight={900}
+                                url={pageShareURL}
+                              >
+                                <Image
+                                  src={assets.facebookIcon}
+                                  alt="facebookIcon"
+                                  width={25}
+                                  height={25}
+                                />
+                              </FacebookShareButton>
+                            </div>
+                            <div className="p-2 rounded-lg cursor-pointer">
+                              <WhatsappShareButton
+                                windowWidth={900}
+                                windowHeight={900}
+                                url={pageShareURL}
+                              >
+                                <WhatsappIcon size={25} round={true} />
+                              </WhatsappShareButton>
+                            </div>
+                            <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                              <EmailShareButton
+                                subject="Product Detail Page"
+                                windowWidth={900}
+                                windowHeight={900}
+                                url={pageShareURL}
+                              >
+                                <Image
+                                  src={assets.googleIcon}
+                                  width={25}
+                                  height={25}
+                                  alt="googleIcon"
+                                />
+                              </EmailShareButton>
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      }
+                    >
+                      <button
+                        onClick={() => setOpenToolTip(!OpenToolTip)}
+                        className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 mb-[16px]`}
+                        style={{
+                          backdropFilter: "blur(20px)",
+                        }}
+                      >
+                        <FileUploadOutlinedIcon className="!text-white" />
+                      </button>
+                    </HtmlTooltip>
+                    <button
+                      className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300`}
+                      style={{
+                        backdropFilter: "blur(20px)",
+                      }}
+                    >
+                      <ReportGmailerrorredOutlinedIcon className="!text-white" />
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {!onlyCarousal && (
+              <Link href={`/product/${product.id}`} passHref>
+                <a
+                  className="bg-[#fff] rounded-b-lg shadow-md"
+                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+                  rel="noopener noreferrer"
+                >
+                  <div className="pl-3">
+                    <div>
+                      <span className="line-clamp-1 font-semibold text-black text-base mt-2">
+                        {product?.product_name}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-2 justify-start items-center mt-2 mb-2">
+                      <div className="flex justify-center items-center">
+                        <div className="relative sm:w-6 sm:h-6 w-4 h-4">
+                          {!isShopLogoLoaded && (
+                            <ImageLoadingSkeleton
+                              className="rounded-[50%]"
+                              variant="circular"
+                            />
+                          )}
+                          <Image
+                            alt="Shop Logo"
+                            src={
+                              product?.branchInfo?.shop_info?.shop_logo ?? ""
+                            }
+                            unoptimized={true}
+                            layout="fill"
+                            className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
+                              isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                            }`}
+                            onLoad={() => setIsShopLogoLoaded(true)}
+                            onError={() => {
+                              setIsLogoImage(true);
+                            }}
+                          />
+                          {isLogoImage && (
+                            <Avatar
+                              className="!bg-colorGreen"
+                              sx={{
+                                fontSize: "12px",
+                                width: "100%",
+                                height: "100%",
+                              }}
+                            >
+                              {String(product.branchInfo?.shop_info?.shop_name)
+                                ?.split(" ")[0][0]
+                                .toUpperCase()}
+                            </Avatar>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <Link href={`/shop/${shopId}`} passHref>
+                          <a
+                            target={`${
+                              themeLayout === "webScreen" ? "_blank" : "_self"
+                            }`}
+                            rel="noopener noreferrer"
+                          >
+                            <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
+                              {product.branchInfo?.shop_info?.shop_name}
+                            </span>
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {product?.product_price_visible ? (
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
+                        <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold line-clamp-1">
+                          ₹{Math.round(finalPrice)}
+                        </p>
+                        {product?.product_discount !== 0 && (
+                          <div className="flex gap-2 items-center">
+                            <p className="text-[#9d9d9d] text-sm  font-semibold line-through line-clamp-1">
+                              ₹{Math.round(product?.product_price)}
+                            </p>
+                            <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium line-clamp-1">
+                              ({Math.round(product?.product_discount)}% OFF)
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
+                        <p className="text-black text-sm  font-bold line-clamp-1">
+                          No Price Visible !
+                        </p>
+                        <p className="text-[#fff] text-sm">*</p>
+                      </div>
+                    )}
+                  </div>
+                </a>
+              </Link>
             )}
           </div>
         </div>
-
-        {!onlyCarousal && (
-          <Link href={`/product/${product.id}`} passHref>
-            <a
-              className="bg-[#FFFFFF] rounded-b-lg"
-              target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-              rel="noopener noreferrer"
-            >
-              <div className="pl-3">
-                <div>
-                  <span className="line-clamp-1 font-semibold text-black text-base mt-4">
-                    {product.product_name}
-                  </span>
-                </div>
-
-                <div className="flex gap-2 justify-start items-center sm:mt-3 mt-2 mb-2">
-                  <div className="flex justify-center items-center">
-                    <div className="relative sm:w-6 sm:h-6 w-4 h-4">
-                      {!isShopLogoLoaded && (
-                        <ImageLoadingSkeleton
-                          className="rounded-[50%]"
-                          variant="circular"
-                        />
-                      )}
-                      <Image
-                        alt="Shop Logo"
-                        src={product?.branchInfo?.shop_info?.shop_logo ?? ""}
-                        layout="fill"
-                        className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
-                          isShopLogoLoaded ? "opacity-100" : "opacity-0"
-                        }`}
-                        onLoad={() => setIsShopLogoLoaded(true)}
-                        onError={() => {
-                          setIsLogoImage(true);
-                        }}
-                      />
-                      {isLogoImage && (
-                        <Avatar
-                          className="!bg-colorGreen"
-                          sx={{
-                            fontSize: "12px",
-                            width: "100%",
-                            height: "100%",
-                          }}
-                        >
-                          {String(product.branchInfo?.shop_info?.shop_name)
-                            ?.split(" ")[0][0]
-                            .toUpperCase()}
-                        </Avatar>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <Link href={`/shop/${shopId}`} passHref>
-                      <a
-                        target={`${
-                          themeLayout === "webScreen" ? "_blank" : "_self"
-                        }`}
-                        rel="noopener noreferrer"
-                      >
-                        <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
-                          {product.branchInfo?.shop_info?.shop_name}
-                        </span>
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </Link>
-        )}
       </div>
       {CarouselImage && (
         <CarouselImagesModal

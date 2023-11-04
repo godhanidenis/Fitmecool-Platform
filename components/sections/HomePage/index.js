@@ -12,6 +12,8 @@ import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
 import { assets } from "../../../constants";
 import BannerHero from "../../DirectoryHero/BannerHero";
+// import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+// import { useResizeScreenLayout } from "../../core/useScreenResize";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -64,6 +66,8 @@ const HomePage = () => {
             min: appliedProductsFilters.productPrice.selectedValue.min,
             max: appliedProductsFilters.productPrice.selectedValue.max,
           },
+          product_listing_type:
+            appliedProductsFilters.productListingType.selectedValue,
         },
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
@@ -96,6 +100,20 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedShopsFilters, shopSortFilter, shopPageSkip]);
 
+  // const isScreenWide = useResizeScreenLayout();
+
+  // useEffect(() => {
+  //   !isScreenWide &&
+  //     dispatch(
+  //       changeAppliedProductsFilters({
+  //         key: "shopId",
+  //         value: {
+  //           selectedValue: [],
+  //         },
+  //       })
+  //     );
+  // }, [dispatch, isScreenWide]);
+
   return (
     <>
       <BannerHero carouselItems={carouselItems} />
@@ -125,9 +143,13 @@ const HomePage = () => {
                 >
                   {productsData?.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
+                      <div className="w-[100%] flex flex-wrap justify-between lg:justify-center xl:justify-normal lg:gap-3 p-1 place-items-center">
                         {productsData?.map((product) => (
-                          <ProductCard product={product} key={product.id} />
+                          <ProductCard
+                            product={product}
+                            key={product.id}
+                            homepage={true}
+                          />
                         ))}
                       </div>
                       {productsCount > 10 && (
@@ -140,12 +162,18 @@ const HomePage = () => {
                               productPageSkip / 10 + 1
                             }
                             onChange={(e, p) => {
-                              const targetScrollPosition = 500;
+                              const targetElement =
+                                document.getElementById("titleName");
 
-                              window.scrollTo({
-                                top: targetScrollPosition,
-                                behavior: "smooth",
-                              });
+                              if (targetElement) {
+                                const targetScrollPosition =
+                                  targetElement.getBoundingClientRect().top;
+
+                                window.scrollTo({
+                                  top: window.scrollY + targetScrollPosition,
+                                  behavior: "smooth",
+                                });
+                              }
                               dispatch(
                                 changeProductPage(
                                   (p === 1 && 0) || (p - 1) * 10
@@ -185,7 +213,7 @@ const HomePage = () => {
                 >
                   {shopsData?.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-4 place-items-center">
+                      <div className="w-[100%] flex flex-wrap justify-center lg:justify-center xl:justify-normal sm:gap-3 p-1 place-items-center">
                         {shopsData.map((shop) => (
                           <ShopCard key={shop.id} shop={shop} />
                         ))}
@@ -200,12 +228,17 @@ const HomePage = () => {
                               (shopPageSkip === 0 && 1) || shopPageSkip / 10 + 1
                             }
                             onChange={(e, p) => {
-                              const targetScrollPosition = 500;
+                              const targetElement =
+                                document.getElementById("titleName");
+                              if (targetElement) {
+                                const targetScrollPosition =
+                                  targetElement.getBoundingClientRect().top;
 
-                              window.scrollTo({
-                                top: targetScrollPosition,
-                                behavior: "smooth",
-                              });
+                                window.scrollTo({
+                                  top: window.scrollY + targetScrollPosition,
+                                  behavior: "smooth",
+                                });
+                              }
                               dispatch(
                                 changeShopPage((p === 1 && 0) || (p - 1) * 10)
                               );

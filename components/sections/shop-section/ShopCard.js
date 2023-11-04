@@ -77,6 +77,7 @@ const ShopCard = ({ shop }) => {
                     ? itm?.links
                     : currentImageIndex === 0 && shop.shop_images[0]?.links
                 }
+                unoptimized={true}
                 alt={shop?.shop_name}
                 className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
                   isShopImagesLoaded ? "opacity-100" : "opacity-0"
@@ -96,7 +97,7 @@ const ShopCard = ({ shop }) => {
   });
 
   return (
-    <div className="bg-white shadow-xl h-full rounded-lg">
+    <div className="w-[98%] sm:w-[49%] lg:w-[32%] mb-3 sm:mb-0 bg-white shadow-md h-full rounded-lg ">
       <div className="">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
@@ -145,6 +146,7 @@ const ShopCard = ({ shop }) => {
                     <Image
                       alt="Shop Logo"
                       src={shop?.shop_logo ?? ""}
+                      unoptimized={true}
                       layout="fill"
                       className={`rounded-[50%] absolute top-0 left-0 object-cover object-center ${
                         isShopLogoLoaded ? "opacity-100" : "opacity-0"
@@ -169,7 +171,7 @@ const ShopCard = ({ shop }) => {
                   </div>
                 </div>
                 <div className="flex flex-col align-baseline">
-                  <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                  <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary line-clamp-1">
                     {shop.shop_name}
                   </p>
 

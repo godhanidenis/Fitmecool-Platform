@@ -5,9 +5,11 @@ import { SiHandshake } from "react-icons/si";
 import Router, { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
+import { CircularProgress } from "@mui/material";
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -36,11 +38,10 @@ const UserType = () => {
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
         <ArrowBackIcon
-          onClick={() =>
-            router.pathname === "/auth/user-type"
-              ? router.push("/")
-              : window.history.back()
-          }
+          onClick={() => {
+            router.push(localStorage.getItem("last_path") ?? "/");
+            localStorage.removeItem("last_path");
+          }}
           className="cursor-pointer text-3xl"
         />
         <div className="">
@@ -116,18 +117,28 @@ const UserType = () => {
         </div>
       </div>
 
-      <div className="flex-grow"></div>
+      <div className="sm:flex-grow"></div>
 
       <div className="w-full">
         <button
-          className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm capitalize"
+          className="h-14 text-white w-full bg-colorPrimary rounded-xl text-xl max-[480px]:h-10 max-[480px]:text-sm capitalize flex items-center gap-2 justify-center"
           onClick={() => {
+            setLoading(true);
             localStorage.setItem("user_type_for_auth", selectedUserType);
 
             Router.push("/auth/signin");
           }}
         >
-          continue as {selectedUserType}
+          {loading && (
+            <span>
+              <CircularProgress
+                size={20}
+                color="primary"
+                sx={{ color: "white", mr: 1 }}
+              />
+            </span>
+          )}
+          <span>continue as {selectedUserType}</span>
         </button>
       </div>
     </>

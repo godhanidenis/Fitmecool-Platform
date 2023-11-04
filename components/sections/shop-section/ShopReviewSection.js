@@ -7,7 +7,7 @@ import { shopReview } from "../../../graphql/mutations/shops";
 import { formatDate } from "../../../utils/common";
 import Router, { useRouter } from "next/router";
 
-const ShopReviewSection = ({ shopDetails, getAllReviews, shopReviews }) => {
+const ShopReviewSection = ({ shopName, getAllReviews, shopReviews }) => {
   const [avgShopRating, setAvgShopRating] = useState(0);
   const [stars, setStars] = useState(0);
   const [message, setMessage] = useState("");
@@ -60,8 +60,7 @@ const ShopReviewSection = ({ shopDetails, getAllReviews, shopReviews }) => {
     <div className="container md:flex gap-7">
       <div className="md:w-[50%] rounded-md">
         <p className="text-[#181725] text-xl sm:text-2xl font-semibold">
-          Reviews For {shopDetails.data.shop.shop_name} Shop (
-          {shopReviews?.length})
+          Reviews For {shopName} Shop ({shopReviews?.length})
         </p>
         <div className="flex !flex-col xl:!flex-row gap-3 items-center lg:mt-12">
           <div className="flex w-[30%] items-center flex-col">
@@ -110,7 +109,7 @@ const ShopReviewSection = ({ shopDetails, getAllReviews, shopReviews }) => {
       </div>
       <div className="md:w-[50%] px-0 sm:px-8 border-t sm:border-t-0 sm:border-l">
         <p className="mt-4 sm:mt-0 text-lg font-normal text-[#181725]">
-          Add A Review For {shopDetails.data.shop.shop_name} Shop
+          Add A Review For {shopName} Shop
         </p>
         <div className="flex mt-6 lg:mt-12 items-center">
           <span className="text-sm sm:text-base font-normal text-[#31333E] mr-4">

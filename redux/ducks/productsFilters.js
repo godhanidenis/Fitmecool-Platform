@@ -27,6 +27,9 @@ const initialState = {
         max: 0,
       },
     },
+    productListingType: {
+      selectedValue: "",
+    },
     shopId: {
       selectedValue: [],
     },

@@ -1,11 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TbPhotoPlus } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -13,17 +12,25 @@ import {
   updateProduct,
 } from "../../../graphql/mutations/products";
 import {
+  Alert,
   capitalize,
   CircularProgress,
   Divider,
   FormControl,
   InputLabel,
+  MenuItem,
 } from "@mui/material";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
 import { NativeSelectInput } from "../../core/CustomMUIComponents";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../constants";
 import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import Image from "next/image";
+import { refactorPrice } from "../../../utils/common";
+import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
+import { useRouter } from "next/router";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -43,6 +50,7 @@ const AddEditProductPage = ({
     setValue,
     getValues,
     control,
+    watch,
   } = useForm();
 
   const [SelectImgIndex, setSelectImgIndex] = useState();
@@ -51,6 +59,7 @@ const AddEditProductPage = ({
 
   const ProductImgError = productImages?.filter((item) => item !== undefined);
 
+  const dispatch = useDispatch();
   const [productVideo, setProductVideo] = useState("");
   const [uploadProductVideo, setUploadProductVideo] = useState();
   const [deleteProductVideo, setDeleteProductVideo] = useState();
@@ -66,6 +75,54 @@ const AddEditProductPage = ({
   const [isHydrated, setIsHydrated] = useState(false);
   const [editorDescriptionContent, setEditorDescriptionContent] = useState("");
   const [errorDescription, setErrorDescription] = useState("");
+
+  const [productPriceVisible, setProductPriceVisible] = useState(false);
+  const [productListingType, setProductListingType] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
+
+  const router = useRouter();
+
+  const priceHandle = (e) => {
+    const price = parseFloat(e.target.value);
+    if (!isNaN(price)) {
+      const discount = parseFloat(getValues("product_discount") || 0);
+      const finalPrice = price - price * (discount / 100);
+      setValue("product_final_price", Math.round(finalPrice));
+    } else {
+      setValue("product_final_price", null);
+    }
+  };
+
+  const discountHandle = (e) => {
+    const discount = parseFloat(e.target.value);
+    const price = parseFloat(getValues("product_price") || 0);
+    if (!isNaN(discount)) {
+      const finalPrice = price - price * (discount / 100);
+      setValue("product_final_price", Math.round(finalPrice));
+    } else {
+      setValue("product_final_price", price);
+    }
+  };
+
+  const finalPriceHandle = (e) => {
+    const finalPrice = parseFloat(e.target.value);
+    if (!isNaN(finalPrice)) {
+      const price = parseFloat(getValues("product_price") || 0);
+      if (price !== 0) {
+        const discount = ((price - finalPrice) / price) * 100;
+        setValue("product_discount", discount.toFixed(2));
+      }
+    } else {
+      setValue("product_discount", 0);
+    }
+  };
+
+  const productListingTypeHandler = (event) => {
+    setProductListingType(event.target.checked);
+  };
+  const productPriceVisibleHandler = (event) => {
+    setProductPriceVisible(event.target.checked);
+  };
 
   const createProductImagesChange = (e) => {
     const files = Array.from(e.target.files);
@@ -100,6 +157,7 @@ const AddEditProductPage = ({
     setProductVideo();
     setUploadProductVideo();
     setDeleteProductVideo();
+    setEditableProductData();
   };
 
   useEffect(() => {
@@ -108,14 +166,24 @@ const AddEditProductPage = ({
 
   useEffect(() => {
     if (editableProductData) {
+      const finalPrice =
+        editableProductData?.product_price -
+        editableProductData?.product_price *
+          (editableProductData?.product_discount / 100);
       setValue("product_name", editableProductData?.product_name);
       setEditorDescriptionContent(editableProductData?.product_description);
       setValue("product_color", editableProductData?.product_color);
+      setValue("product_price", Math.round(editableProductData?.product_price));
+      setValue("product_discount", editableProductData?.product_discount);
       setValue("product_type", editableProductData.categoryInfo?.category_type);
       setProductType(editableProductData.categoryInfo?.category_type);
       setValue("product_category", editableProductData?.categoryInfo?.id);
       setValue("product_branch", editableProductData?.branchInfo?.id);
-
+      setValue("product_final_price", finalPrice);
+      setProductListingType(
+        editableProductData?.product_listing_type === "rent" ? false : true
+      );
+      setProductPriceVisible(!editableProductData?.product_price_visible);
       editableProductData?.product_image?.front &&
         setProductImages((old) => [
           ...old,
@@ -257,6 +325,7 @@ const AddEditProductPage = ({
         await updateProduct({
           id: editableProductData?.id,
           productInfo: {
+            shop_id: vendorShopDetails?.id,
             branch_id: data.product_branch,
             category_id: data.product_category,
             product_color: data.product_color,
@@ -272,6 +341,10 @@ const AddEditProductPage = ({
             product_video:
               videoResponse ||
               (deleteProductVideo ? "" : editableProductData.product_video),
+            product_price: Math.round(data.product_price),
+            product_discount: Number(data.product_discount),
+            product_price_visible: !productPriceVisible,
+            product_listing_type: productListingType ? "sell" : "rent",
           },
         }).then(
           (res) => {
@@ -308,6 +381,7 @@ const AddEditProductPage = ({
 
         await createProduct({
           productInfo: {
+            shop_id: vendorShopDetails?.id,
             branch_id: data.product_branch,
             category_id: data.product_category,
             product_color: data.product_color,
@@ -320,6 +394,10 @@ const AddEditProductPage = ({
               side: productImagesRes[2],
             },
             product_video: productVideoRes || "",
+            product_price: Math.round(data.product_price),
+            product_discount: Number(data.product_discount),
+            product_price_visible: !productPriceVisible,
+            product_listing_type: productListingType ? "sell" : "rent",
           },
         }).then(
           (res) => {
@@ -329,14 +407,54 @@ const AddEditProductPage = ({
             });
             setLoading(false);
             getAllProducts();
+            dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
             handleProductListingModalClose();
             setAddEditProductShow(false);
           },
           (error) => {
             setLoading(false);
-            toast.error(error.message, { theme: "colored" });
+            // toast.error(error.message, { theme: "colored" });
+            // setAlertMsg(true);
+            const targetElement = document.getElementById("AddProduct");
+            if (targetElement) {
+              const targetScrollPosition =
+                targetElement.getBoundingClientRect().top;
+
+              window.scrollTo({
+                top: window.scrollY + targetScrollPosition,
+                behavior: "smooth",
+              });
+            }
+            setAlertMsg(error.message);
           }
         );
+      }
+    }
+  };
+
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
+
+    if (inputValue < 0) {
+      e.target.value = 0;
+    }
+    if (e.target.id === "pdiscount") {
+      if (inputValue > 100) {
+        e.target.value = 100;
+      }
+    }
+    if (e.target.id === "pfprice") {
+      const price = parseFloat(getValues("product_price"));
+      if (inputValue > price) {
+        e.target.value = price;
       }
     }
   };
@@ -347,7 +465,7 @@ const AddEditProductPage = ({
     return null;
   }
   return (
-    <div>
+    <div id="AddProduct">
       <div className="sm:p-0 sm:py-6 p-6">
         <div className="font-semibold text-black flex items-center gap-2 sm:mx-4">
           <span>
@@ -369,12 +487,31 @@ const AddEditProductPage = ({
             {editableProductData ? "Update" : "Add"} Product
           </span>
         </div>
-        <div className="my-5 mt-8">
+        {alertMsg && (
+          <Alert severity={"error"} className="mt-5 sm:ml-6">
+            {alertMsg}
+            <span
+              className="cursor-pointer underline font-bold ml-2"
+              onClick={() => router.push("/vendor/shop-subscription/")}
+            >
+              Upgrade Your Plan
+            </span>
+          </Alert>
+        )}
+        <div className="my-5">
           <div className="text-base sm:text-lg font-semibold mb-3 mt-5 sm:mx-6 text-black ">
-            Product Details
+            Product
           </div>
           <div className="sm:flex justify-between">
             <div className={`sm:w-[50%] space-y-6 sm:mx-6`}>
+              <div className="w-full flex gap-3 items-center ">
+                <p className="text-lg font-medium font-Nova">Product Type*</p>
+                <CustomSwitchComponent
+                  onChange={productListingTypeHandler}
+                  type={true}
+                  value={productListingType}
+                />
+              </div>
               <div className="w-full relative">
                 <CustomTextFieldVendor
                   label="Name*"
@@ -398,36 +535,120 @@ const AddEditProductPage = ({
                   )}
                 </div>
               </div>
-              <div className="w-full relative">
-                <FormControl fullWidth>
-                  <Controller
-                    name="product_color"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <InputLabel id="color-id">Product Color*</InputLabel>
-                        <NativeSelectInput
-                          {...field}
-                          native
-                          labelId="color-id"
-                          id=""
-                          label="Product Color"
-                          {...register("product_color", {
-                            required: "Product Color is required",
-                          })}
-                        >
-                          <option value=""></option>
-                          {colorsList?.map((color, index) => (
-                            <option key={index} value={color}>
-                              {capitalize(color)}
-                            </option>
-                          ))}
-                        </NativeSelectInput>
-                      </>
-                    )}
+              <div className="w-full relative sm:flex  sm:gap-5">
+                <div className="sm:w-[50%]">
+                  <CustomTextFieldVendor
+                    label="Price*"
+                    type="number"
+                    id="pprice"
+                    price={true}
+                    isRequired={false}
+                    placeholder="Product Price"
+                    fieldValue={getValues("product_price")}
+                    fieldError={errors?.product_price}
+                    formValue={{
+                      ...register("product_price", {
+                        required: "Product Price is required",
+                        onChange: priceHandle,
+                      }),
+                    }}
+                    onInput={handleInput}
                   />
-                </FormControl>
+                  <div className="mt-2">
+                    {errors.product_price && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_price?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:w-[50%] mt-5 sm:mt-0">
+                  <CustomTextFieldVendor
+                    label="Discount*"
+                    type="number"
+                    id="pdiscount"
+                    discount={true}
+                    isRequired={false}
+                    placeholder="Product Discount "
+                    fieldValue={getValues("product_discount")}
+                    fieldError={errors?.product_discount}
+                    formValue={{
+                      ...register("product_discount", {
+                        required: "Product Discount  is required",
+                        onChange: discountHandle,
+                      }),
+                    }}
+                    onInput={handleInput}
+                  />
+                  <div className="mt-2">
+                    {errors.product_discount && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_discount?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="w-full relative sm:flex  sm:gap-5">
+                <div className="sm:w-[50%] ">
+                  <CustomTextFieldVendor
+                    label="Final Price*"
+                    type="number"
+                    id="pfprice"
+                    price={true}
+                    isRequired={false}
+                    placeholder="Product Final Price"
+                    fieldValue={getValues("product_final_price")}
+                    fieldError={errors?.product_final_price}
+                    formValue={{
+                      ...register("product_final_price", {
+                        required: "Product Final Price  is required",
+                        onChange: finalPriceHandle,
+                      }),
+                    }}
+                    onInput={handleInput}
+                  />
+                  <div className="mt-2">
+                    {errors.product_final_price && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {errors.product_final_price?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:w-[50%] flex gap-3 items-center mt-5 sm:mt-0">
+                  <p className="text-lg font-medium font-Nova">
+                    Price Visibility*
+                  </p>
+                  <CustomSwitchComponent
+                    onChange={productPriceVisibleHandler}
+                    value={productPriceVisible}
+                  />
+                </div>
+              </div>
+              <div className="w-full relative">
+                <CustomTextFieldVendor
+                  label="Product Color*"
+                  select
+                  fullWidth
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fieldValue={getValues("product_color")}
+                  fieldError={errors?.product_color}
+                  formValue={{
+                    ...register("product_color", {
+                      required: "Product Color is required",
+                    }),
+                  }}
+                >
+                  <option value=""></option>
+                  {colorsList?.map((color, index) => (
+                    <option key={index} value={color}>
+                      {capitalize(color)}
+                    </option>
+                  ))}
+                </CustomTextFieldVendor>
 
                 <div className="mt-2">
                   {errors.product_color && (
@@ -438,40 +659,31 @@ const AddEditProductPage = ({
                 </div>
               </div>
               <div className="w-full relative">
-                <FormControl fullWidth>
-                  <Controller
-                    name="product_type"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <InputLabel id="product-Type-id">
-                          Product Type*
-                        </InputLabel>
-                        <NativeSelectInput
-                          {...field}
-                          native
-                          labelId="product-Type-id"
-                          id=""
-                          label="product Type"
-                          {...register("product_type", {
-                            required: "Product Type is required",
-                            onChange: (e) => {
-                              setProductType(e.target.value);
-                            },
-                          })}
-                        >
-                          <option value=""></option>
-                          {["Men", "Women"].map((type, index) => (
-                            <option key={index} value={type}>
-                              {capitalize(type)}
-                            </option>
-                          ))}
-                        </NativeSelectInput>
-                      </>
-                    )}
-                  />
-                </FormControl>
+                <CustomTextFieldVendor
+                  label="Product Category*"
+                  select
+                  fullWidth
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fieldValue={getValues("product_type")}
+                  fieldError={errors?.product_type}
+                  formValue={{
+                    ...register("product_type", {
+                      required: "Product Category is required",
+                      onChange: (e) => {
+                        setProductType(e.target.value);
+                      },
+                    }),
+                  }}
+                >
+                  <option value=""></option>
+                  {["Men", "Women"].map((type, index) => (
+                    <option key={index} value={type}>
+                      {capitalize(type)}
+                    </option>
+                  ))}
+                </CustomTextFieldVendor>
 
                 <div className="mt-2">
                   {errors.product_type && (
@@ -483,44 +695,35 @@ const AddEditProductPage = ({
               </div>
               {productType && (
                 <div className="w-full relative">
-                  <FormControl fullWidth>
-                    <Controller
-                      name="product_category"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <InputLabel id="Category-id">
-                            Select Category*
-                          </InputLabel>
-                          <NativeSelectInput
-                            {...field}
-                            native
-                            labelId="Category-id"
-                            id=""
-                            label="Category"
-                            {...register("product_category", {
-                              required: "Product Category is required",
-                            })}
-                          >
-                            <option value=""></option>
-                            {productType === "Men" &&
-                              menCategoryLabel.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                  {cat.category_name}
-                                </option>
-                              ))}
-                            {productType === "Women" &&
-                              womenCategoryLabel.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                  {cat.category_name}
-                                </option>
-                              ))}
-                          </NativeSelectInput>
-                        </>
-                      )}
-                    />
-                  </FormControl>
+                  <CustomTextFieldVendor
+                    label="Select Sub Category*"
+                    select
+                    fullWidth
+                    SelectProps={{
+                      native: true,
+                    }}
+                    fieldValue={getValues("product_category")}
+                    fieldError={errors?.product_category}
+                    formValue={{
+                      ...register("product_category", {
+                        required: "Product Category is required",
+                      }),
+                    }}
+                  >
+                    <option value=""></option>
+                    {productType === "Men" &&
+                      menCategoryLabel.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.category_name}
+                        </option>
+                      ))}
+                    {productType === "Women" &&
+                      womenCategoryLabel.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.category_name}
+                        </option>
+                      ))}
+                  </CustomTextFieldVendor>
 
                   <div className="mt-2">
                     {errors.product_category && (
@@ -533,39 +736,33 @@ const AddEditProductPage = ({
               )}
 
               <div className="w-full relative">
-                <FormControl fullWidth>
-                  <Controller
-                    name="product_branch"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <InputLabel id="Branch-id">Select Branch*</InputLabel>
-                        <NativeSelectInput
-                          {...field}
-                          native
-                          labelId="Branch-id"
-                          id=""
-                          label="Branch"
-                          {...register("product_branch", {
-                            required: "Product Branch is required",
-                          })}
-                        >
-                          <option value=""></option>
-                          {vendorShopDetails?.branch_info?.map((branch) => (
-                            <option key={branch.id} value={branch.id}>
-                              {branch.branch_address +
-                                " " +
-                                "(" +
-                                branch.branch_type +
-                                ")"}
-                            </option>
-                          ))}
-                        </NativeSelectInput>
-                      </>
-                    )}
-                  />
-                </FormControl>
+                <CustomTextFieldVendor
+                  label="Select Branch*"
+                  select
+                  fullWidth
+                  SelectProps={{
+                    native: true,
+                  }}
+                  fieldValue={getValues("product_branch")}
+                  fieldError={errors?.product_branch}
+                  formValue={{
+                    ...register("product_branch", {
+                      required: "Product Branch is required",
+                    }),
+                  }}
+                >
+                  <option value=""></option>
+                  {vendorShopDetails?.branch_info?.map((branch) => (
+                    <option key={branch.id} value={branch.id}>
+                      {branch.branch_address +
+                        " " +
+                        "(" +
+                        branch.branch_type +
+                        ")"}
+                    </option>
+                  ))}
+                </CustomTextFieldVendor>
+
                 <div className="mt-2">
                   {errors.product_branch && (
                     <span style={{ color: "red" }} className="-mb-6">
@@ -589,7 +786,7 @@ const AddEditProductPage = ({
                 }}
                 setContents={editorDescriptionContent}
                 onChange={handleEditorChange}
-                height={productType ? "280px" : "200px"}
+                height={productType ? "500px" : "420px"}
               />
               <div className="mt-2">
                 {errorDescription && (
@@ -628,10 +825,12 @@ const AddEditProductPage = ({
                   >
                     {productImages[index] ? (
                       <div className="w-full relative h-full">
-                        <img
+                        <Image
                           src={productImages[index] ?? ""}
                           alt="Uploaded Image"
-                          className="object-cover h-full w-full rounded-xl object-top"
+                          className="!object-cover !h-full !w-full !rounded-xl !object-top"
+                          layout="fill"
+                          unoptimized={true}
                         />
                         <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-50 w-8 h-8 flex justify-center items-center">
                           <EditIcon
@@ -808,3 +1007,28 @@ const AddEditProductPage = ({
 };
 
 export default AddEditProductPage;
+
+const CustomSwitchComponent = ({ onChange, type, value }) => {
+  return (
+    <>
+      <div className="flex justify-start items-center">
+        <div className="flex items-center">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="hidden peer"
+              onChange={onChange}
+              checked={value}
+            />
+            <span className="px-4 py-1 bg-colorGreen peer-checked:text-black peer-checked:bg-colorGrey text-white flex items-center">
+              {type ? "Rent" : <VisibilityIcon />}
+            </span>
+            <span className="px-4 py-1 peer-checked:bg-colorGreen bg-colorGrey peer-checked:text-white text-black flex items-center">
+              {type ? "Sell" : <VisibilityOffIcon />}
+            </span>
+          </label>
+        </div>
+      </div>
+    </>
+  );
+};

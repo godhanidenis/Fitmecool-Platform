@@ -4,6 +4,7 @@ import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import BookIcon from "@mui/icons-material/Book";
+import { useRouter } from "next/router";
 
 const iconStyles = {
   fontSize: 24,
@@ -20,7 +21,7 @@ const iconStyles = {
 
 const ShopDashboard = () => {
   const [isHydrated, setIsHydrated] = useState(false);
-  const [totalProducts, setTotalProducts] = useState(0);
+  const router = useRouter();
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
@@ -28,28 +29,24 @@ const ShopDashboard = () => {
     setIsHydrated(true);
   }, []);
 
-  useEffect(() => {
-    var count = 0;
-    vendorShopDetails?.branch_info?.map((itm) =>
-      setTotalProducts((count += itm.product_info?.length))
-    );
-  }, [vendorShopDetails.branch_info]);
-
   const dashboardCards = [
     {
       label: "Total Products",
-      totalNumber: totalProducts,
+      totalNumber: vendorShopDetails?.balanceProduct,
       icon: <ShoppingCartIcon sx={iconStyles} />,
+      path: `/vendor/shop/${vendorShopDetails?.id}`,
     },
     {
       label: "Followers",
       totalNumber: vendorShopDetails?.shopFollowerCount,
       icon: <PersonIcon sx={iconStyles} />,
+      path: null,
     },
     {
       label: "Reviews",
       totalNumber: vendorShopDetails?.shopReviewCount,
       icon: <BookIcon sx={iconStyles} />,
+      path: null,
     },
   ];
 
@@ -64,6 +61,7 @@ const ShopDashboard = () => {
           <div
             key={index}
             className="cursor-pointer h-max w-[300px] flex items-center justify-between px-6 font-semibold text-black rounded-3xl bg-white"
+            onClick={() => card?.path && router.push(card?.path)}
           >
             <div className="py-7">
               <p className="text-base text-[#31333e8f] font-semibold pb-2">

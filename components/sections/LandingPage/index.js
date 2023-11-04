@@ -14,12 +14,14 @@ import MenCollection from "./MenCollection";
 import WomenCollection from "./WomenCollection";
 import { useForm } from "react-hook-form";
 import ShopCard from "./ShopCard";
-import { loadShopsStart } from "../../../redux/ducks/shop";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { assets } from "../../../constants";
 import { useRouter } from "next/router";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import BannerHero from "../../DirectoryHero/BannerHero";
+import { getShops } from "../../../graphql/queries/shopQueries";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import PeopleIcon from "@mui/icons-material/People";
 
 const responsive = {
   superLargeDesktop: {
@@ -64,11 +66,7 @@ const LandingPage = () => {
   const router = useRouter();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { shopPageSkip, shopsData } = useSelector((state) => state.shops);
-
-  const { appliedShopsFilters, sortFilters } = useSelector(
-    (state) => state.shopsFiltersReducer
-  );
+  const [shopsData, setShopsData] = useState([]);
 
   const {
     register,
@@ -108,24 +106,70 @@ const LandingPage = () => {
 
   const getAllShops = () => {
     setLoading(true);
-    dispatch(
-      loadShopsStart({
-        pageData: {
-          skip: shopPageSkip,
-          limit: 10,
-        },
-        area: appliedShopsFilters.locations.selectedValue,
-        sort: sortFilters.sortType.selectedValue,
-        stars: appliedShopsFilters.stars.selectedValue,
-      }),
-      setLoading(false)
+    getShops({
+      pageData: {
+        skip: 0,
+        limit: 10,
+      },
+      area: [],
+      sort: "",
+      stars: "",
+    }).then(
+      (res) => {
+        setShopsData(res?.data?.shopList?.data);
+        setLoading(false);
+      },
+      (err) => {
+        console.log("error >> ", err);
+        setLoading(false);
+      }
     );
   };
 
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    if (inputValue.length > 10) {
+      e.target.value = inputValue.slice(0, 10);
+    } else if (inputValue < 0) {
+      e.target.value = 0;
+    }
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
+  };
+
+  const CategoriesTab = [
+    {
+      label: "Customer",
+      icon: <PeopleIcon />,
+    },
+    {
+      label: "Vendor",
+      icon: <AddBusinessIcon />,
+    },
+  ];
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("token");
+
+    if (isLoggedIn) {
+      const hasVisitedSecondPage = localStorage.getItem("visitedSecondPage");
+      if (!hasVisitedSecondPage) {
+        localStorage.setItem("visitedSecondPage", "true");
+        router.push("/home");
+      }
+    }
+  }, []);
+
   useEffect(() => {
     getAllShops();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedShopsFilters, sortFilters, shopPageSkip]);
+  }, []);
 
   return (
     <>
@@ -147,10 +191,12 @@ const LandingPage = () => {
             onChange={(event, newValue) => setValue(newValue)}
             hometab="true"
           >
-            {["Customer", "Vendor"]?.map((item, index) => (
+            {CategoriesTab?.map((item, index) => (
               <Tab
                 key={index}
-                label={item}
+                label={item.label}
+                icon={item.icon}
+                iconPosition="start"
                 {...a11yProps(index)}
                 className="whitespace-nowrap"
               />
@@ -158,10 +204,10 @@ const LandingPage = () => {
           </CustomTab>
         </div>
         <div>
-          {["Customer", "Vendor"]?.map((item, index) => (
+          {CategoriesTab?.map((item, index) => (
             <React.Fragment key={index}>
               <TabPanel value={value} index={index} className="mt-6 mb-8">
-                {item === "Customer" ? <Customer /> : <Vendor />}
+                {item?.label === "Customer" ? <Customer /> : <Vendor />}
               </TabPanel>
             </React.Fragment>
           ))}
@@ -180,7 +226,7 @@ const LandingPage = () => {
           <MenCollection />
         </div>
       </div>
-      <div className="container flex flex-col justify-center">
+      <div className="container flex flex-col justify-center mt-7">
         <div className="text-center">
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             Women’s Collection
@@ -193,7 +239,7 @@ const LandingPage = () => {
           <WomenCollection />
         </div>
       </div>
-      <div className="bg-[#29977E0A] py-8 mt-0 sm:mt-8">
+      <div className="bg-[#29977E0A] py-8 mt-8">
         <div className="container grid grid-cols-12">
           <div className="w-full flex justify-start col-span-9 sm:col-span-10 lg:col-span-7 lg:col-start-2 items-start">
             <div className=" flex flex-col">
@@ -243,6 +289,7 @@ const LandingPage = () => {
                         message: "Please enter a valid 10-digit mobile number",
                       },
                     })}
+                    onInput={handleInput}
                   />
                   {errors?.mobileNumber && (
                     <p className="text-red-600">
@@ -301,45 +348,46 @@ const LandingPage = () => {
         </div>
 
         <div className="w-full h-[350px] lg:h-[400px] place-items-center pt-5">
-          <div className="flex justify-end">
-            <button
-              className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
-              onClick={() => {
-                dispatch(changeByShopFilters(true));
-                router.push("/home");
-              }}
-            >
-              View All
-            </button>
-          </div>
-          {!loading && shopsData.length > 0 ? (
-            <Carousel
-              responsive={responsive}
-              customTransition="all .5s ease-in-out"
-              removeArrowOnDeviceType={["mobile"]}
-              arrows={false}
-              infinite
-              autoPlay
-              autoPlaySpeed={2000}
-              className="py-5"
-            >
-              {shopsData.map((shop) => (
-                <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
-                  <ShopCard shop={shop} />
-                </div>
-              ))}
-            </Carousel>
-          ) : !loading && shopsData.length === 0 ? (
-            <div className="flex items-center justify-center  pb-8 h-full w-full">
-              No Product Found
+          {!loading && shopsData.length > 0 && (
+            <div className="flex justify-end">
+              <button
+                className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
+                onClick={() => {
+                  dispatch(changeByShopFilters(true));
+                  router.push("/home");
+                }}
+              >
+                View All
+              </button>
             </div>
-          ) : (
-            loading &&
-            shopsData.length === 0 && (
-              <div className="flex justify-center items-center h-full">
-                <CircularProgress color="secondary" />
+          )}
+          {!loading ? (
+            shopsData.length > 0 ? (
+              <Carousel
+                responsive={responsive}
+                customTransition="all .5s ease-in-out"
+                removeArrowOnDeviceType={["mobile"]}
+                arrows={false}
+                infinite
+                autoPlay
+                autoPlaySpeed={2000}
+                className="py-5"
+              >
+                {shopsData.map((shop) => (
+                  <div key={shop.id} className={`pl-2 pr-3 pb-8`}>
+                    <ShopCard shop={shop} />
+                  </div>
+                ))}
+              </Carousel>
+            ) : (
+              <div className="flex items-center justify-center pb-8 h-full w-full">
+                No Shop Found
               </div>
             )
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <CircularProgress color="secondary" />
+            </div>
           )}
         </div>
       </div>

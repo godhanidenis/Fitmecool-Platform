@@ -54,7 +54,7 @@ const ProductByShopFilter = () => {
                 selectedFilterLength={
                   appliedProductsFilters.shopId.selectedValue.length
                 }
-                clearDispatched={() =>
+                clearDispatched={() => {
                   dispatch(
                     changeAppliedProductsFilters({
                       key: "shopId",
@@ -62,8 +62,18 @@ const ProductByShopFilter = () => {
                         selectedValue: [],
                       },
                     })
-                  )
-                }
+                  );
+                  const targetElement = document.getElementById("titleName");
+                  if (targetElement) {
+                    const targetScrollPosition =
+                      targetElement.getBoundingClientRect().top;
+
+                    window.scrollTo({
+                      top: window.scrollY + targetScrollPosition,
+                      behavior: "smooth",
+                    });
+                  }
+                }}
               />
               <FormGroup>
                 <div
@@ -92,6 +102,7 @@ const ProductByShopFilter = () => {
                     <StyledFormLabelCheckBox
                       key={itm.shop_name}
                       value={itm.shop_name}
+                      className="line-clamp-1"
                       control={
                         <Checkbox
                           checked={selectedData.includes(itm.id)}
@@ -104,6 +115,17 @@ const ProductByShopFilter = () => {
                             setSelectedData(updatedSelection);
                             dispatch(changeProductPage(0));
                             setAbc(true);
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
                           }}
                         />
                       }

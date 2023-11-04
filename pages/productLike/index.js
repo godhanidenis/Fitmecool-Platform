@@ -15,6 +15,11 @@ const ProductLikePage = () => {
     (state) => state.userProfile
   );
 
+  // console.log(
+  //   "userProfile.product_like_list :>> ",
+  //   userProfile.product_like_list
+  // );
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -42,7 +47,7 @@ const ProductLikePage = () => {
           </p>
           <button
             className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap"
-            onClick={() => Router.push("/home")}
+            onClick={() => Router.push("/")}
           >
             Explore Now
           </button>
@@ -51,7 +56,7 @@ const ProductLikePage = () => {
         <>
           <div className="w-[95%] mx-auto h-[39px] mt-2 flex items-center">
             <ArrowBackIcon
-              onClick={() => Router.push("/home")}
+              onClick={() => window.history.back()}
               className="cursor-pointer"
             />
             <span className="font-semibold ml-2">Back</span>
@@ -62,7 +67,7 @@ const ProductLikePage = () => {
               Liked Products
             </p>
 
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 sm:gap-10 place-items-center mb-10">
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 place-items-center mb-10">
               {userProfile.product_like_list &&
                 userProfile.product_like_list?.map((product) => (
                   <Link

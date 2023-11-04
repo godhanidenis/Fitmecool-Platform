@@ -127,6 +127,7 @@ const SubHeader = () => {
           anchorEl={anchorEl}
           placement="top-start"
           id="menu-list-grow"
+          className="!z-10"
         >
           <Paper>
             <TabPanel value={value} index={0} className="p-6">

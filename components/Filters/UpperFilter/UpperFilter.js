@@ -34,6 +34,9 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   const [selectedShops, setSelectedShops] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([]);
+  const [selectedProductListingType, setSelectedProductListingType] = useState(
+    []
+  );
   const [searchProducts, setSearchProducts] = useState([]);
 
   const [selectedLocations, setSelectedLocations] = useState([]);
@@ -65,12 +68,14 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       ...(showOnlyShopDetailPage ? [] : selectedShops),
       ...selectedColors,
       ...selectedPrices,
+      ...selectedProductListingType,
       ...searchProducts,
     ]);
   }, [
     searchProducts,
     selectedCategories,
     selectedPrices,
+    selectedProductListingType,
     selectedColors,
     selectedShops,
     showOnlyShopDetailPage,
@@ -122,6 +127,14 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
     );
   }, [appliedProductsFilters.productColor.selectedValue]);
 
+  const priceFilterLabel = (price) => {
+    if (price.min > 0 && price.max === 0) {
+      return `Price: Over ${price.min}`;
+    } else {
+      return `Price: ${price.min} - ${price.max}`;
+    }
+  };
+
   useEffect(() => {
     appliedProductsFilters.productPrice.selectedValue.min === 0 &&
     appliedProductsFilters.productPrice.selectedValue.max === 0
@@ -129,11 +142,25 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       : setSelectedPrices([
           {
             type: "productPrice",
-            label: `Price: ${appliedProductsFilters.productPrice.selectedValue.min} - ${appliedProductsFilters.productPrice.selectedValue.max}`,
+            label: priceFilterLabel(
+              appliedProductsFilters.productPrice.selectedValue
+            ),
             value: appliedProductsFilters.productPrice.selectedValue,
           },
         ]);
   }, [appliedProductsFilters.productPrice.selectedValue]);
+
+  useEffect(() => {
+    appliedProductsFilters.productListingType.selectedValue === ""
+      ? setSelectedProductListingType([])
+      : setSelectedProductListingType([
+          {
+            type: "productListingType",
+            label: `Type: ${appliedProductsFilters.productListingType.selectedValue}`,
+            value: appliedProductsFilters.productListingType.selectedValue,
+          },
+        ]);
+  }, [appliedProductsFilters.productListingType.selectedValue]);
 
   useEffect(() => {
     appliedProductsFilters.searchBarData.selectedValue &&
@@ -170,7 +197,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
       ? setSelectedRatings([
           {
             type: "stars",
-            label: appliedShopsFilters.stars.selectedValue,
+            label: `Rating: ${appliedShopsFilters.stars.selectedValue}`,
             value: appliedShopsFilters.stars.selectedValue,
           },
         ])
@@ -198,6 +225,18 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
         );
   };
 
+  const options = byShop
+    ? [
+        { label: "Default", value: "" },
+        { label: "Rating: high to low", value: "rating" },
+        { label: "Follower: high to low", value: "follower" },
+      ]
+    : [
+        { label: "Default", value: "" },
+        { label: "Price: high to low", value: "high-low" },
+        { label: "Price: low to high", value: "low-high" },
+      ];
+
   const GetSortByName = (value) => {
     if (value === "high-low") {
       return "Price: high to low";
@@ -219,7 +258,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   };
 
   return (
-    <div className="w-full border-b">
+    <div className="w-full border-b" id="titleName">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <span className="text-[#979ca0] text-base">
@@ -280,32 +319,20 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                     }
                     onChange={handleChangeSortType}
                   >
-                    {
-                    // byShop
-                    //   ? [
-                    //       { label: "Default", value: "" },
-                    //       { label: "Rating: high to low", value: "rating" },
-                    //       { label: "Follower: high to low", value: "follower" },
-                    //     ]
-                    //   :
-                       [
-                          { label: "Default", value: "" },
-                          { label: "Price: high to low", value: "high-low" },
-                          { label: "Price: low to high", value: "low-high" },
-                        ]?.map((item, index) => (
-                          <FormControlLabel
-                            key={index}
-                            value={item.value}
-                            control={<Radio className="!text-colorPrimary" />}
-                            label={
-                              <Typography
-                                sx={{ fontWeight: 500, fontSize: "16px" }}
-                              >
-                                {item.label}
-                              </Typography>
-                            }
-                          />
-                        ))}
+                    {options?.map((item, index) => (
+                      <FormControlLabel
+                        key={index}
+                        value={item.value}
+                        control={<Radio className="!text-colorPrimary" />}
+                        label={
+                          <Typography
+                            sx={{ fontWeight: 500, fontSize: "16px" }}
+                          >
+                            {item.label}
+                          </Typography>
+                        }
+                      />
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <Divider />
@@ -346,7 +373,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
             className="underline cursor-pointer text-colorGreen whitespace-nowrap mr-2"
             onClick={() => {
               const passValueForProduct = (itm) => {
-                if (itm === "searchBarData") {
+                if (itm === "searchBarData" || itm === "productListingType") {
                   return "";
                 } else if (itm === "productPrice") {
                   return { min: 0, max: 0 };
@@ -371,6 +398,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                   "categoryId",
                   "productColor",
                   "productPrice",
+                  "productListingType",
                   ...(showOnlyShopDetailPage ? [] : ["shopId"]),
                   "searchBarData",
                 ].map((itm) =>
@@ -405,7 +433,7 @@ const SelectedFilterBadge = ({
   dispatch,
 }) => {
   const passValueForProduct = () => {
-    if (itm.type === "searchBarData") {
+    if (itm.type === "searchBarData" || itm.type === "productListingType") {
       return "";
     } else if (itm.type === "productPrice") {
       return { min: 0, max: 0 };

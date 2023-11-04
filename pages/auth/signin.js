@@ -52,6 +52,7 @@ const Login = () => {
     localStorage.setItem("userId", userId);
     toast.success(message, { theme: "colored" });
     localStorage.removeItem("user_type_for_auth");
+    localStorage.removeItem("last_path");
     localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
     setTimeout(() => {
       Router.push(asVendor ? "/vendor/dashboard" : "/");
@@ -199,7 +200,7 @@ const Login = () => {
           </p>
         </Link>
       </form>
-      <div className="flex-grow"></div>
+      <div className="sm:flex-grow"></div>
       <div className="w-full mt-5">
         <button
           type="submit"
@@ -212,7 +213,7 @@ const Login = () => {
               color="primary"
               sx={{ color: "white", mr: 1 }}
             />
-          )}{" "}
+          )}
           Sign In
         </button>
         <p className="text-base max-[480px]:text-xs text-gray-400 mt-2 flex justify-center">

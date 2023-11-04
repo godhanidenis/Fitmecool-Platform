@@ -3,6 +3,7 @@ import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
 import { Pagination } from "@mui/material";
 import Filter from "../../../components/Filters/index";
 import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import {
   getShopDetails,
   getShopFollowers,
@@ -24,11 +25,43 @@ import { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 import ShopCommentsSection from "../../../components/sections/shop-section/ShopCommentsSection";
 import ShopReviewSection from "../../../components/sections/shop-section/ShopReviewSection";
+import { useResizeScreenLayout } from "../../../components/core/useScreenResize";
+import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 const ShopDetail = ({ shopDetails }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
+
+  const [videoShow, setVideoShow] = useState(true);
+  const [videoPosition, setVideoPosition] = useState({
+    x: window.innerWidth - 400,
+    y: window.innerHeight - 250,
+  });
+
+  const shopDetailsData = shopDetails?.data?.shop;
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+
+    const initialX = e.clientX - videoPosition.x;
+    const initialY = e.clientY - videoPosition.y;
+
+    const handleDrag = (e) => {
+      const newX = e.clientX - initialX;
+      const newY = e.clientY - initialY;
+      setVideoPosition({ x: newX, y: newY });
+    };
+
+    const handleDragEnd = () => {
+      document.removeEventListener("mousemove", handleDrag);
+      document.removeEventListener("mouseup", handleDragEnd);
+    };
+
+    document.addEventListener("mousemove", handleDrag);
+    document.addEventListener("mouseup", handleDragEnd);
+  };
 
   const router = useRouter();
 
@@ -63,6 +96,12 @@ const ShopDetail = ({ shopDetails }) => {
         filter: {
           category_id: appliedProductsFilters.categoryId.selectedValue,
           product_color: appliedProductsFilters.productColor.selectedValue,
+          product_price: {
+            min: appliedProductsFilters.productPrice.selectedValue.min,
+            max: appliedProductsFilters.productPrice.selectedValue.max,
+          },
+          product_listing_type:
+            appliedProductsFilters.productListingType.selectedValue,
         },
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
@@ -95,7 +134,7 @@ const ShopDetail = ({ shopDetails }) => {
   }, [dispatch, router.query.id]);
 
   useEffect(() => {
-    getAllProducts();
+    appliedProductsFilters.shopId.selectedValue?.length > 0 && getAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
@@ -107,6 +146,11 @@ const ShopDetail = ({ shopDetails }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
+  const isScreenWide = useResizeScreenLayout();
+  useEffect(() => {
+    !isScreenWide && dispatch(changeByShopFilters(false));
+  }, [dispatch, isScreenWide]);
+
   if (!isHydrated) {
     return null;
   }
@@ -114,12 +158,12 @@ const ShopDetail = ({ shopDetails }) => {
     <>
       <div className="font-Nova">
         <DirectoryHero
-          title={shopDetails?.data?.shop?.shop_name}
-          bgImg={shopDetails?.data?.shop?.shop_cover_image}
+          title={shopDetailsData?.shop_name}
+          bgImg={shopDetailsData?.shop_cover_image}
         />
         <div className="">
           <ShopHeaderSection
-            shopDetails={shopDetails.data.shop}
+            shopDetails={shopDetailsData}
             totalReview={shopReviews.length}
             totalFollowers={totalFollowers}
             getAllFollowers={getAllFollowers}
@@ -151,9 +195,13 @@ const ShopDetail = ({ shopDetails }) => {
               >
                 {productsData?.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-4 place-items-center">
+                    <div className="w-[100%] flex flex-wrap justify-between lg:justify-center xl:justify-normal mb-2 lg:mb-0 lg:gap-3 p-1 place-items-center">
                       {productsData?.map((product) => (
-                        <ProductCard product={product} key={product.id} />
+                        <ProductCard
+                          product={product}
+                          key={product.id}
+                          homepage={true}
+                        />
                       ))}
                     </div>
                     {productsCount > 6 && (
@@ -199,7 +247,7 @@ const ShopDetail = ({ shopDetails }) => {
         <div className="shadow-xl my-4">
           <div ref={myDivRef} className="bg-[#FFFFFF] py-8 px-2 sm:px-12">
             <ShopReviewSection
-              shopDetails={shopDetails}
+              shopName={shopDetailsData?.shop_name}
               getAllReviews={getAllReviews}
               shopReviews={shopReviews}
             />
@@ -218,9 +266,7 @@ const ShopDetail = ({ shopDetails }) => {
                   <button
                     className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[8px] px-[8px] bg-[#FAFCFC]"
                     onClick={() =>
-                      router.push(
-                        `/shop/${shopDetails?.data?.shop?.id}/reviews`
-                      )
+                      router.push(`/shop/${shopDetailsData?.id}/reviews`)
                     }
                   >
                     View All
@@ -230,6 +276,54 @@ const ShopDetail = ({ shopDetails }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="relative z-10">
+        {shopDetailsData?.shop_video && videoShow && (
+          <div
+            className={`fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end ${
+              window.innerWidth < 640 ? "!left-[20px]" : ""
+            }`}
+            // className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
+            style={{
+              left: videoPosition.x,
+              top: videoPosition.y,
+            }}
+            onMouseDown={handleDragStart}
+          >
+            <video
+              controls
+              autoPlay={false}
+              muted
+              className="!rounded-lg w-full bg-black"
+            >
+              <source src={shopDetailsData?.shop_video} type="video/mp4" />
+            </video>
+            <div className="absolute p-3">
+              <button
+                className=" p-2 bg-[#00000091] text-[#fff] rounded-full cursor-pointer"
+                onClick={() => setVideoShow(false)}
+              >
+                <CloseOutlined />
+              </button>
+            </div>
+          </div>
+        )}
+        {!videoShow && (
+          <div className="fixed bottom-24 lg:bottom-6 right-6 flex justify-end ">
+            <button
+              className="p-3 bg-colorPrimary rounded-full shadow-xl"
+              onClick={() => {
+                setVideoShow(true);
+                setVideoPosition({
+                  x: window.innerWidth - 400,
+                  y: window.innerHeight - 250,
+                });
+              }}
+            >
+              <PlayArrowIcon className="!text-[#fff] !text-3xl" />
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

@@ -98,7 +98,19 @@ const ProductCategoriesFilter = () => {
                       .map((itm) => categories.find((i) => i.id === itm))
                       .filter((ele) => ele.category_type === "Men").length
                   }
-                  clearDispatched={() => setMenSelectedData([])}
+                  clearDispatched={() => {
+                    setMenSelectedData([]);
+                    const targetElement = document.getElementById("titleName");
+                    if (targetElement) {
+                      const targetScrollPosition =
+                        targetElement.getBoundingClientRect().top;
+
+                      window.scrollTo({
+                        top: window.scrollY + targetScrollPosition,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
                 />
                 <div
                   className={`flex flex-col overflow-auto ${
@@ -124,6 +136,7 @@ const ProductCategoriesFilter = () => {
                     <StyledFormLabelCheckBox
                       key={itm}
                       value={itm}
+                      className="line-clamp-1"
                       control={
                         <Checkbox
                           checked={selectedMenCat.includes(itm)}
@@ -144,6 +157,17 @@ const ProductCategoriesFilter = () => {
                                   )?.id
                               )
                             );
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
                           }}
                         />
                       }
@@ -181,7 +205,19 @@ const ProductCategoriesFilter = () => {
                       .map((itm) => categories.find((i) => i.id === itm))
                       .filter((ele) => ele.category_type === "Women").length
                   }
-                  clearDispatched={() => setWomenSelectedData([])}
+                  clearDispatched={() => {
+                    setWomenSelectedData([]);
+                    const targetElement = document.getElementById("titleName");
+                    if (targetElement) {
+                      const targetScrollPosition =
+                        targetElement.getBoundingClientRect().top;
+
+                      window.scrollTo({
+                        top: window.scrollY + targetScrollPosition,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
                 />
                 <div
                   className={`flex flex-col overflow-auto ${
@@ -209,6 +245,7 @@ const ProductCategoriesFilter = () => {
                     <StyledFormLabelCheckBox
                       key={itm}
                       value={itm}
+                      className="line-clamp-1"
                       control={
                         <Checkbox
                           checked={selectedWomenCat.includes(itm)}
@@ -229,6 +266,17 @@ const ProductCategoriesFilter = () => {
                                   )?.id
                               )
                             );
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
                           }}
                         />
                       }

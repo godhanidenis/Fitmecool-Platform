@@ -1,5 +1,5 @@
-import { getShopDetails } from "../../../graphql/queries/shopQueries";
+import { getVendorShopDetails } from "../../../graphql/queries/shopQueries";
 
 export function requestGetVendorShopDetails(shopId) {
-  return getShopDetails({ id: shopId });
+  return getVendorShopDetails({ id: shopId });
 }

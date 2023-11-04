@@ -62,7 +62,6 @@ const MenCollection = () => {
   };
 
   const getAllMenProducts = () => {
-    setMenCategoryData([]);
     setLoading(true);
     getProducts({
       pageData: {
@@ -76,9 +75,10 @@ const MenCollection = () => {
           min: 0,
           max: 0,
         },
+        product_listing_type: "",
       },
       shopId: [],
-      sort: "new",
+      sort: "",
       search: "",
     }).then(
       (res) => {
@@ -113,15 +113,12 @@ const MenCollection = () => {
   }, [menCategoryId]);
 
   useEffect(() => {
-    // Function to update the screenSize state when the window is resized
     const handleResize = () => {
       setScreenSize(window.innerWidth);
     };
 
-    // Add the event listener for the 'resize' event
     window.addEventListener("resize", handleResize);
 
-    // Remove the event listener when the component unmounts
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -182,32 +179,33 @@ const MenCollection = () => {
         <div className="p-3"></div>
       )}
       <TabPanel value={value} index={value}>
-        <div className="w-full h-[360px] lg:h-[416px]">
-          {!loading && menCategoryData.length > 0 ? (
-            <Carousel
-              ref={carouselRef}
-              responsive={responsive}
-              customTransition="all .5s ease-in-out"
-              arrows={false}
-              infinite
-            >
-              {menCategoryData?.map((product, index) => (
-                <div key={product.id} className={`pr-3 pb-8`}>
-                  <ProductCard product={product} landingPage={true} />
-                </div>
-              ))}
-            </Carousel>
-          ) : !loading && menCategoryData.length === 0 ? (
-            <div className="flex items-center justify-center  pb-8 h-full w-full">
-              No Product Found
-            </div>
-          ) : (
-            loading &&
-            menCategoryData.length === 0 && (
-              <div className="flex justify-center items-center h-full">
-                <CircularProgress color="secondary" />
+        <div className="w-full h-[370px] lg:h-[430px]">
+          {!loading ? (
+            menCategoryData.length > 0 ? (
+              <Carousel
+                ref={carouselRef}
+                responsive={responsive}
+                customTransition="all .5s ease-in-out"
+                arrows={false}
+                infinite
+              >
+                {menCategoryData.map((product) => (
+                  <ProductCard
+                    product={product}
+                    landingPage={true}
+                    key={product.id}
+                  />
+                ))}
+              </Carousel>
+            ) : (
+              <div className="flex items-center justify-center pb-8 h-full w-full">
+                No Product Found
               </div>
             )
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <CircularProgress color="secondary" />
+            </div>
           )}
         </div>
       </TabPanel>

@@ -13,6 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {
   Avatar,
   Badge,
+  CircularProgress,
   ClickAwayListener,
   DialogContent,
   DialogTitle,
@@ -56,6 +57,7 @@ const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -95,23 +97,45 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeof window !== "undefined" && localStorage.getItem("token")]);
 
+  const handleAuthButtonClick = () => {
+    setLoading(true);
+    localStorage.setItem("last_path", new URL(window.location.href).pathname);
+    Router.push("/auth/user-type");
+  };
   const handleSearchDialogClose = () => {
     setSearchBarValue("");
     setOpenSearchDialog(false);
   };
 
+  const passValueForProduct = (itm, searchBarData) => {
+    if (itm === "searchBarData") {
+      return searchBarData;
+    } else if (itm === "productPrice") {
+      return { min: 0, max: 0 };
+    } else if (itm === "productListingType") {
+      return "";
+    } else {
+      return [];
+    }
+  };
+
   const handleSearch = (searchData) => {
-    ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
+    [
+      "productColor",
+      "shopId",
+      "categoryId",
+      "searchBarData",
+      "productPrice",
+      "productListingType",
+    ].map((itm) =>
       dispatch(
         changeAppliedProductsFilters({
           key: itm,
           value: {
-            selectedValue:
-              itm === "searchBarData"
-                ? searchData
-                  ? searchData
-                  : searchBarValue
-                : [],
+            selectedValue: passValueForProduct(
+              itm,
+              searchData ? searchData : searchBarValue
+            ),
           },
         })
       )
@@ -245,17 +269,30 @@ const Header = () => {
                 {!accessToken && (
                   <div className="flex text-colorWhite cursor-pointer">
                     <button
-                      onClick={() => Router.push("/auth/user-type")}
+                      onClick={handleAuthButtonClick}
                       className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-colorGreen"
                     >
-                      Login / Register
+                      <span className="flex items-center gap-2 justify-center">
+                        {loading && (
+                          <span className="flex items-center">
+                            <CircularProgress
+                              size={20}
+                              color="primary"
+                              sx={{ color: "white" }}
+                            />
+                          </span>
+                        )}
+                        <span className="flex items-center">
+                          Login / Register
+                        </span>
+                      </span>
                     </button>
 
                     <PersonAddAltIcon
                       sx={{ color: "white" }}
                       fontSize="large"
                       className="lg:!hidden"
-                      onClick={() => Router.push("/auth/user-type")}
+                      onClick={handleAuthButtonClick}
                     />
                   </div>
                 )}
@@ -362,6 +399,7 @@ export const UserProfile = ({ setAccessToken }) => {
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
   const { userProfile } = useSelector((state) => state.userProfile);
+  const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const handleProfileToggle = () => {
     setAnchorElUser((prevOpen) => !prevOpen);
@@ -426,6 +464,7 @@ export const UserProfile = ({ setAccessToken }) => {
         })
       );
     Router.push("/");
+    localStorage.removeItem("visitedSecondPage");
 
     toast.success("Logout Successfully", {
       theme: "colored",
@@ -433,7 +472,16 @@ export const UserProfile = ({ setAccessToken }) => {
   }
 
   return (
-    <>
+    <div className="flex items-center gap-5">
+      {userProfile?.userHaveAnyShop && vendorShopDetails && (
+        <span className="font-semibold text-yellow-400">
+          Available Products :{" "}
+          <span>
+            {vendorShopDetails.productLimit -
+              vendorShopDetails.balanceProduct || 0}
+          </span>
+        </span>
+      )}
       <div
         ref={anchorRef}
         onClick={handleProfileToggle}
@@ -529,6 +577,6 @@ export const UserProfile = ({ setAccessToken }) => {
           </Grow>
         )}
       </Popper>
-    </>
+    </div>
   );
 };

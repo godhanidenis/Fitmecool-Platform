@@ -42,3 +42,11 @@ export const generateRandomNumberString = (length) => {
   }
   return result;
 };
+
+export const refactorPrice = (data) => {
+  if (Number.isInteger(Number(data))) {
+    return Number(data);
+  } else {
+    return Number(Number(data).toFixed(2));
+  }
+};

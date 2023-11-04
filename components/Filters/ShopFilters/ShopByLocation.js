@@ -55,7 +55,7 @@ const ShopByLocation = () => {
                   selectedFilterLength={
                     appliedShopsFilters.locations.selectedValue.length
                   }
-                  clearDispatched={() =>
+                  clearDispatched={() => {
                     dispatch(
                       changeAppliedShopsFilters({
                         key: "locations",
@@ -63,8 +63,18 @@ const ShopByLocation = () => {
                           selectedValue: [],
                         },
                       })
-                    )
-                  }
+                    );
+                    const targetElement = document.getElementById("titleName");
+                    if (targetElement) {
+                      const targetScrollPosition =
+                        targetElement.getBoundingClientRect().top;
+
+                      window.scrollTo({
+                        top: window.scrollY + targetScrollPosition,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
                 />
                 <div
                   className={`flex flex-col overflow-auto ${
@@ -105,6 +115,17 @@ const ShopByLocation = () => {
                             setSelectedData(updatedSelection);
                             dispatch(changeShopPage(0));
                             setAbc(true);
+                            const targetElement =
+                              document.getElementById("titleName");
+                            if (targetElement) {
+                              const targetScrollPosition =
+                                targetElement.getBoundingClientRect().top;
+
+                              window.scrollTo({
+                                top: window.scrollY + targetScrollPosition,
+                                behavior: "smooth",
+                              });
+                            }
                           }}
                         />
                       }
