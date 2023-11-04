@@ -20,25 +20,9 @@ export const getUserProfile = async () => {
             shop_id
             user_id
           }
-          shop_review_list {
-            id
-            shop_id
-            user_id
-            stars
-            message
-            flag
-          }
           product_like_list {
             id
             product_name
-            product_description
-            product_color
-            categoryInfo {
-              id
-              category_name
-              category_type
-              flag
-            }
             product_image {
               front
               back
@@ -52,9 +36,6 @@ export const getUserProfile = async () => {
                 shop_name
               }
             }
-            productLikes
-            whatsapp_inquiry
-            contact_inquiry
             product_listing_type
             product_price_visible
             product_price
