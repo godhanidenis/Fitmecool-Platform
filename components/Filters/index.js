@@ -17,11 +17,11 @@ const Filter = ({ productByShop }) => {
 
       {!byShop ? (
         <div className="px-5 sm:px-12">
-          <ProductTypeFilter />
-          <ProductCategoriesFilter />
+          <ProductTypeFilter productByShop={productByShop} />
+          <ProductCategoriesFilter productByShop={productByShop} />
           {!productByShop && <ProductByShopFilter />}
-          <ProductColorFilter />
-          <ProductPriceFilter />
+          <ProductColorFilter productByShop={productByShop} />
+          <ProductPriceFilter productByShop={productByShop} />
         </div>
       ) : (
         <div className="px-5 sm:px-12">

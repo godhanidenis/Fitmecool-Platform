@@ -5,6 +5,8 @@ import { StyledFormLabelRadio } from "../../core/CustomMUIComponents";
 import { useDispatch, useSelector } from "react-redux";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+import { scrollToTitleName } from "../../../utils/common";
+import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
 
 const priceFilterData = [
   {
@@ -44,23 +46,54 @@ const priceFilterData = [
   },
 ];
 
-const ProductPriceFilter = () => {
+const ProductPriceFilter = ({ productByShop }) => {
   const dispatch = useDispatch();
   const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
+  const { appliedShopProductsFilters } = useSelector(
+    (state) => state.shopProductsFiltersReducer
+  );
 
   const handleCheckboxChange = (value) => {
     dispatch(changeProductPage(0));
+
+    const changeFiltersAction = productByShop
+      ? changeAppliedShopProductsFilters
+      : changeAppliedProductsFilters;
+
     dispatch(
-      changeAppliedProductsFilters({
+      changeFiltersAction({
         key: "productPrice",
         value: {
           selectedValue: value,
         },
       })
     );
+
+    scrollToTitleName();
   };
+
+  const handleClearFilter = () => {
+    const changeFiltersAction = productByShop
+      ? changeAppliedShopProductsFilters
+      : changeAppliedProductsFilters;
+
+    dispatch(
+      changeFiltersAction({
+        key: "productPrice",
+        value: {
+          selectedValue: { min: 0, max: 0 },
+        },
+      })
+    );
+
+    scrollToTitleName();
+  };
+
+  const selectedFilter = productByShop
+    ? appliedShopProductsFilters.productPrice.selectedValue
+    : appliedProductsFilters.productPrice.selectedValue;
 
   return (
     <CardInteractive
@@ -82,55 +115,18 @@ const ProductPriceFilter = () => {
                       control={
                         <Radio
                           checked={
-                            appliedProductsFilters.productPrice.selectedValue
-                              .min === item.value.min &&
-                            appliedProductsFilters.productPrice.selectedValue
-                              .max === item.value.max
+                            selectedFilter.min === item.value.min &&
+                            selectedFilter.max === item.value.max
                           }
-                          onChange={() => {
-                            handleCheckboxChange(item.value);
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
-                          }}
+                          onChange={() => handleCheckboxChange(item.value)}
                         />
                       }
                     />
-                    {appliedProductsFilters.productPrice.selectedValue.min ===
-                      item.value.min &&
-                      appliedProductsFilters.productPrice.selectedValue.max ===
-                        item.value.max && (
+                    {selectedFilter.min === item.value.min &&
+                      selectedFilter.max === item.value.max && (
                         <span
                           className="underline cursor-pointer text-colorGreen"
-                          onClick={() => {
-                            dispatch(
-                              changeAppliedProductsFilters({
-                                key: "productPrice",
-                                value: {
-                                  selectedValue: { min: 0, max: 0 },
-                                },
-                              })
-                            );
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
-                          }}
+                          onClick={handleClearFilter}
                         >
                           Clear
                         </span>
