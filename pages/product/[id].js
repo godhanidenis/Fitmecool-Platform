@@ -67,8 +67,6 @@ const ContactStyle = {
 };
 
 const ProductDetail = ({ productDetails, error }) => {
-  console.log("error :>> ", error);
-
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
