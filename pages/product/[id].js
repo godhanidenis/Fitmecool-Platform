@@ -53,6 +53,7 @@ import { screeResizeForViewMoreItems } from "../../components/core/useScreenResi
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 import { assets } from "../../constants";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import Errors from "../../components/Layout/Errors";
 
 const ContactStyle = {
   position: "absolute",
@@ -454,7 +455,7 @@ const ProductDetail = ({ productDetails, error }) => {
   }
 
   if (error) {
-    return <h1>{error}</h1>;
+    return <Errors error={error} item="product" />;
   }
 
   return (

@@ -58,7 +58,7 @@ const responsive = {
   },
 };
 
-const ProductCard = ({ product, onlyCarousal, homepage }) => {
+const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(null);
   const [autoplay, setAutoplay] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
@@ -151,72 +151,48 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
               ? 250
               : 300,
         }}
-        onMouseEnter={(e) => {
-          if (!onlyCarousal) {
-            setAutoplay(true);
-            // setCurrentImageIndex(null);
-          }
-        }}
-        onMouseLeave={() => {
-          if (!onlyCarousal) {
-            setAutoplay(false);
-            // setCurrentImageIndex(0);
-          }
-        }}
       >
         {!isProductImagesLoaded && (
           <ImageLoadingSkeleton className="object-cover h-full" />
         )}
-        <Link href={`/product/${product.id}`} passHref>
-          <a
-            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-            rel="noopener noreferrer"
-          >
-            {isProductImage.includes(itm) && isProductImages ? (
-              <div className="w-full h-full bg-[#00000031]" />
-            ) : (
-              <>
-                {itm?.type === "image" && (
-                  <Image
-                    src={
-                      // currentImageIndex === null
-                      //   ?
-                      itm?.src ?? ""
-                      // : currentImageIndex === 0 && photos[0]?.src
-                    }
-                    unoptimized={true}
-                    alt={product?.product_name}
-                    className={`object-cover object-top absolute top-0 left-0 bg-white  ${
-                      isProductImagesLoaded ? "opacity-100" : "opacity-0"
-                    } ${onlyCarousal && CarouselImage && `object-cover`}`}
-                    onLoad={() => setIsProductImagesLoaded(true)}
-                    onError={() => {
-                      setIsProductImages(true);
-                      setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
-                    }}
-                    layout="fill"
-                    onClick={() => onlyCarousal && setCarouselImage(true)}
-                  />
-                )}
-                {itm?.type === "video" && (
-                  <video
-                    src={itm?.src}
-                    alt="product video"
-                    onError={() => {
-                      setIsProductImages(true);
-                      setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
-                    }}
-                    className="h-full !object-cover !object-top w-full !cursor-pointer"
-                    autoPlay={true}
-                    controls
-                    muted
-                    loop
-                  />
-                )}
-              </>
+        {isProductImage.includes(itm) && isProductImages ? (
+          <div className="w-full h-full bg-[#00000031]" />
+        ) : (
+          <>
+            {itm?.type === "image" && (
+              <Image
+                src={itm?.src ?? ""}
+                unoptimized={true}
+                alt={product?.product_name}
+                className={`object-cover object-top absolute top-0 left-0 bg-white  ${
+                  isProductImagesLoaded ? "opacity-100" : "opacity-0"
+                } ${onlyCarousal && CarouselImage && `object-cover`}`}
+                onLoad={() => setIsProductImagesLoaded(true)}
+                onError={() => {
+                  setIsProductImages(true);
+                  setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
+                }}
+                layout="fill"
+                onClick={() => onlyCarousal && setCarouselImage(true)}
+              />
             )}
-          </a>
-        </Link>
+            {itm?.type === "video" && (
+              <video
+                src={itm?.src}
+                alt="product video"
+                onError={() => {
+                  setIsProductImages(true);
+                  setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
+                }}
+                className="h-full !object-cover !object-top w-full !cursor-pointer"
+                autoPlay={true}
+                controls
+                muted
+                loop
+              />
+            )}
+          </>
+        )}
       </div>
     );
   });
@@ -246,11 +222,39 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
     );
   };
 
+  const CustomPrevArrow = () => {
+    return (
+      <Link href={`/product/${product.id}`} passHref>
+        <a
+          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+          rel="noopener noreferrer"
+        >
+          <button className="absolute top-1/2 left-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
+        </a>
+      </Link>
+    );
+  };
+
+  const CustomNextArrow = () => {
+    return (
+      <Link href={`/product/${product.id}`} passHref>
+        <a
+          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+          rel="noopener noreferrer"
+        >
+          <button className="absolute top-1/2 right-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
+        </a>
+      </Link>
+    );
+  };
+
   return (
     <>
       <div
         className={`${onlyCarousal && `m-1`} ${
-          homepage
+          likePage
+            ? "w-[49%] sm:w-[33%]  lg:w-[25%] xl:w-[20%] mb-2 lg:mb-0 ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden rounded-lg"
+            : homepage
             ? "w-[49%] sm:w-[33%]  lg:w-[23%] xl:w-[24%] mb-2 lg:mb-0 ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden rounded-lg"
             : "ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden sm:m-1 rounded-lg"
         }`}
@@ -259,7 +263,6 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
           {product?.product_listing_type && (
             <div className="absolute top-0">
               <span
-                // className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
                 className={`z-[8] absolute w-[7rem] xl:w-40 p-[1px] text-white text-[12px] xl:text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-[7px] xl:top-2 -left-[25px] xl:-left-[40px]  border-[3px] xl:border-[5px] border-[#f5cd79] ${
                   product?.product_listing_type === "rent"
                     ? "bg-[#ff3b3b]"
@@ -280,16 +283,76 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
           >
             <div className="cursor-pointer relative top-0 left-0">
               <div className="grid grid-cols-1 place-items-center">
-                <div className="w-[100%]">
+                {!onlyCarousal ? (
+                  <div className="group relative w-full">
+                    <div
+                      className={`relative bg-[#00000031] rounded-t-lg`}
+                      style={{
+                        width: "100%",
+                        height: themeLayout === "mobileScreen" ? 250 : 300,
+                      }}
+                    >
+                      {isProductImagesLoaded && (
+                        <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
+                      )}
+                      {isProductImages ? (
+                        <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
+                      ) : (
+                        <Image
+                          src={product.product_image?.front ?? ""}
+                          unoptimized={true}
+                          alt={product?.product_name}
+                          className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
+                            isProductImagesLoaded ? "opacity-100" : "opacity-0"
+                          }`}
+                          onLoad={() => setIsProductImagesLoaded(true)}
+                          onError={() => {
+                            setIsProductImages(true);
+                          }}
+                          layout="fill"
+                        />
+                      )}
+                    </div>
+                    <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
+                      <Carousel
+                        autoPlay={true}
+                        autoPlaySpeed={1500}
+                        infinite
+                        showDots={false}
+                        customDot={null}
+                        arrows={true}
+                        customLeftArrow={<CustomPrevArrow />}
+                        customRightArrow={<CustomNextArrow />}
+                        responsive={responsive}
+                        className={`rounded-t-lg`}
+                      >
+                        {photos.length === 0 ? (
+                          <div
+                            className="bg-[#00000031]"
+                            style={{
+                              width: "100%",
+                              height: onlyCarousal
+                                ? 420
+                                : themeLayout === "mobileScreen"
+                                ? 250
+                                : 300,
+                            }}
+                          />
+                        ) : (
+                          productImages
+                        )}
+                      </Carousel>
+                    </div>
+                  </div>
+                ) : (
                   <Carousel
-                    autoPlay={autoplay}
-                    autoPlaySpeed={1500}
+                    autoPlay={false}
                     infinite
-                    showDots={onlyCarousal ? true : false}
-                    customDot={onlyCarousal ? <CustomDot /> : null}
+                    showDots={true}
+                    customDot={<CustomDot />}
                     arrows={false}
                     responsive={responsive}
-                    className={`${onlyCarousal ? `!pb-5` : `rounded-t-lg`}`}
+                    className={`!pb-5 w-full`}
                   >
                     {photos.length === 0 ? (
                       <div
@@ -307,9 +370,8 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
                       productImages
                     )}
                   </Carousel>
-                </div>
+                )}
               </div>
-
               <div className="flex flex-col absolute top-0 right-[16px]">
                 <button
                   className={`w-10 h-10 rounded-full transition-colors bg-[#15182730] duration-300 my-[14px]`}
@@ -439,7 +501,7 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
                 >
                   <div className="pl-3">
                     <div>
-                      <span className="line-clamp-1 font-semibold text-black text-base mt-2">
+                      <span className="line-clamp-1 font-semibold text-black text-base mt-2 capitalize">
                         {product?.product_name}
                       </span>
                     </div>

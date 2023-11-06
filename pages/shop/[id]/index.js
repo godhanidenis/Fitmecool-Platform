@@ -28,6 +28,7 @@ import { useResizeScreenLayout } from "../../../components/core/useScreenResize"
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
+import Errors from "../../../components/Layout/Errors";
 
 const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
@@ -189,7 +190,7 @@ const ShopDetail = ({ shopDetails, error }) => {
   }
 
   if (error) {
-    return <h1>{error}</h1>;
+    return <Errors error={error} item="shop" />;
   }
 
   return (
