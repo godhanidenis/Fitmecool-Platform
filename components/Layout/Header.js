@@ -464,7 +464,7 @@ export const UserProfile = ({ setAccessToken }) => {
         })
       );
     Router.push("/");
-    localStorage.removeItem("visitedSecondPage");
+    // localStorage.removeItem("visitedSecondPage");
 
     toast.success("Logout Successfully", {
       theme: "colored",

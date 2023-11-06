@@ -15,11 +15,6 @@ const ProductLikePage = () => {
     (state) => state.userProfile
   );
 
-  // console.log(
-  //   "userProfile.product_like_list :>> ",
-  //   userProfile.product_like_list
-  // );
-
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -47,7 +42,7 @@ const ProductLikePage = () => {
           </p>
           <button
             className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap"
-            onClick={() => Router.push("/")}
+            onClick={() => Router.push("/home")}
           >
             Explore Now
           </button>

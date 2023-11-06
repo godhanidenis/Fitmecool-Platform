@@ -66,17 +66,17 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router]);
 
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      localStorage.removeItem("visitedSecondPage");
-    };
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     localStorage.removeItem("visitedSecondPage");
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
   return (
     <>

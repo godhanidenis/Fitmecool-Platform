@@ -155,17 +155,17 @@ const LandingPage = () => {
     },
   ];
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const isLoggedIn = localStorage.getItem("token");
 
-    if (isLoggedIn) {
-      const hasVisitedSecondPage = localStorage.getItem("visitedSecondPage");
-      if (!hasVisitedSecondPage) {
-        localStorage.setItem("visitedSecondPage", "true");
-        router.push("/home");
-      }
-    }
-  }, []);
+  //   if (isLoggedIn) {
+  //     const hasVisitedSecondPage = localStorage.getItem("visitedSecondPage");
+  //     if (!hasVisitedSecondPage) {
+  //       localStorage.setItem("visitedSecondPage", "true");
+  //       router.push("/home");
+  //     }
+  //   }
+  // }, []);
 
   useEffect(() => {
     getAllShops();

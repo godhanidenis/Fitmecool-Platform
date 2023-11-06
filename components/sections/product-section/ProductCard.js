@@ -154,13 +154,13 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
         onMouseEnter={(e) => {
           if (!onlyCarousal) {
             setAutoplay(true);
-            setCurrentImageIndex(null);
+            // setCurrentImageIndex(null);
           }
         }}
         onMouseLeave={() => {
           if (!onlyCarousal) {
             setAutoplay(false);
-            setCurrentImageIndex(0);
+            // setCurrentImageIndex(0);
           }
         }}
       >
@@ -179,9 +179,10 @@ const ProductCard = ({ product, onlyCarousal, homepage }) => {
                 {itm?.type === "image" && (
                   <Image
                     src={
-                      currentImageIndex === null
-                        ? itm?.src
-                        : currentImageIndex === 0 && photos[0]?.src
+                      // currentImageIndex === null
+                      //   ?
+                      itm?.src ?? ""
+                      // : currentImageIndex === 0 && photos[0]?.src
                     }
                     unoptimized={true}
                     alt={product?.product_name}

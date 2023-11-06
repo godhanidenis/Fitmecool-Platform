@@ -29,7 +29,7 @@ import { useResizeScreenLayout } from "../../../components/core/useScreenResize"
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
-const ShopDetail = ({ shopDetails }) => {
+const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -75,7 +75,7 @@ const ShopDetail = ({ shopDetails }) => {
     productPageSkip,
     productsData,
     loading,
-    error,
+    error: productError,
   } = useSelector((state) => state.products);
 
   const { appliedProductsFilters, sortFilters } = useSelector(
@@ -154,6 +154,11 @@ const ShopDetail = ({ shopDetails }) => {
   if (!isHydrated) {
     return null;
   }
+
+  if (error) {
+    return <h1>{error}</h1>;
+  }
+
   return (
     <>
       <div className="font-Nova">
@@ -338,7 +343,6 @@ export async function getServerSideProps(context) {
 
     return { props: { shopDetails } };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { props: { error: error.message } };
   }
 }
