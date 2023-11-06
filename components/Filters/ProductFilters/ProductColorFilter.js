@@ -14,41 +14,75 @@ import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { colorsList } from "../../../constants";
+import { scrollToTitleName } from "../../../utils/common";
+import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
 
-const ProductColorFilter = () => {
+const ProductColorFilter = ({ productByShop }) => {
   const dispatch = useDispatch();
   const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
+
+  const { appliedShopProductsFilters } = useSelector(
+    (state) => state.shopProductsFiltersReducer
+  );
+
   const [colorSearchValue, setColorSearchValue] = useState("");
 
   const [colorShowMore, setColorShowMore] = useState(true);
 
+  const selectedColors = (value, checked) => {
+    const filters = productByShop
+      ? appliedShopProductsFilters.productColor
+      : appliedProductsFilters.productColor;
+
+    const selectedValue = checked
+      ? [...filters.selectedValue, value]
+      : filters.selectedValue.filter((item) => item !== value);
+
+    return selectedValue;
+  };
+
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     dispatch(changeProductPage(0));
+
+    const changeFiltersAction = productByShop
+      ? changeAppliedShopProductsFilters
+      : changeAppliedProductsFilters;
+
     dispatch(
-      changeAppliedProductsFilters({
+      changeFiltersAction({
         key: "productColor",
         value: {
-          selectedValue: checked
-            ? [...appliedProductsFilters.productColor.selectedValue, value]
-            : appliedProductsFilters.productColor.selectedValue.filter(
-                (item) => item !== value
-              ),
+          selectedValue: selectedColors(value, checked),
         },
       })
     );
-    const targetElement = document.getElementById("titleName");
-    if (targetElement) {
-      const targetScrollPosition = targetElement.getBoundingClientRect().top;
 
-      window.scrollTo({
-        top: window.scrollY + targetScrollPosition,
-        behavior: "smooth",
-      });
-    }
+    scrollToTitleName();
   };
+
+  const handleClearFilter = () => {
+    const changeFiltersAction = productByShop
+      ? changeAppliedShopProductsFilters
+      : changeAppliedProductsFilters;
+
+    dispatch(
+      changeFiltersAction({
+        key: "productColor",
+        value: {
+          selectedValue: [],
+        },
+      })
+    );
+
+    scrollToTitleName();
+  };
+
+  const selectedFilter = productByShop
+    ? appliedShopProductsFilters.productColor.selectedValue
+    : appliedProductsFilters.productColor.selectedValue;
 
   return (
     <>
@@ -61,29 +95,8 @@ const ProductColorFilter = () => {
                 <CommonSearchField
                   value={colorSearchValue}
                   onChange={(e) => setColorSearchValue(e.target.value)}
-                  selectedFilterLength={
-                    appliedProductsFilters.productColor.selectedValue.length
-                  }
-                  clearDispatched={() => {
-                    dispatch(
-                      changeAppliedProductsFilters({
-                        key: "productColor",
-                        value: {
-                          selectedValue: [],
-                        },
-                      })
-                    );
-                    const targetElement = document.getElementById("titleName");
-                    if (targetElement) {
-                      const targetScrollPosition =
-                        targetElement.getBoundingClientRect().top;
-
-                      window.scrollTo({
-                        top: window.scrollY + targetScrollPosition,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
+                  selectedFilterLength={selectedFilter.length}
+                  clearDispatched={handleClearFilter}
                 />
                 <div
                   className={`flex flex-col overflow-auto ${
@@ -114,9 +127,7 @@ const ProductColorFilter = () => {
                       label={capitalize(item)}
                       control={
                         <Checkbox
-                          checked={appliedProductsFilters.productColor.selectedValue.includes(
-                            item
-                          )}
+                          checked={selectedFilter.includes(item)}
                           onChange={handleCheckboxChange}
                         />
                       }

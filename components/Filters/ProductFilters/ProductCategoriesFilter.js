@@ -8,8 +8,10 @@ import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 import { changeProductPage } from "../../../redux/ducks/product";
+import { scrollToTitleName } from "../../../utils/common";
+import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
 
-const ProductCategoriesFilter = () => {
+const ProductCategoriesFilter = ({ productByShop }) => {
   const { categories } = useSelector((state) => state.categories);
 
   const [menCategoryLabel, setMenCategoryLabel] = useState([]);
@@ -36,38 +38,50 @@ const ProductCategoriesFilter = () => {
     (state) => state.productsFiltersReducer
   );
 
+  const { appliedShopProductsFilters } = useSelector(
+    (state) => state.shopProductsFiltersReducer
+  );
+
+  const selectedFilter = productByShop
+    ? appliedShopProductsFilters.categoryId.selectedValue
+    : appliedProductsFilters.categoryId.selectedValue;
+
   useEffect(() => {
     setCategoryId([...menSelectedData, ...womenSelectedData]);
   }, [menSelectedData, setCategoryId, womenSelectedData]);
 
   useEffect(() => {
-    abc &&
+    if (abc) {
+      const changeFiltersAction = productByShop
+        ? changeAppliedShopProductsFilters
+        : changeAppliedProductsFilters;
+
       dispatch(
-        changeAppliedProductsFilters({
+        changeFiltersAction({
           key: "categoryId",
           value: {
             selectedValue: categoryId,
           },
         })
       );
-  }, [abc, categoryId, dispatch]);
+    }
+  }, [abc, categoryId, dispatch, productByShop]);
 
   useEffect(() => {
-    appliedProductsFilters &&
-      setSelectedMenCat(
-        appliedProductsFilters.categoryId.selectedValue
-          .map((itm) => categories.find((i) => i.id === itm))
-          .filter((ele) => ele.category_type === "Men")
-          .map((i) => i.category_name)
-      );
+    setSelectedMenCat(
+      selectedFilter
+        .map((itm) => categories.find((i) => i.id === itm))
+        .filter((ele) => ele.category_type === "Men")
+        .map((i) => i.category_name)
+    );
 
     setSelectedWomenCat(
-      appliedProductsFilters.categoryId.selectedValue
+      selectedFilter
         .map((itm) => categories.find((i) => i.id === itm))
         .filter((ele) => ele.category_type === "Women")
         .map((i) => i.category_name)
     );
-  }, [categories, appliedProductsFilters]);
+  }, [categories, selectedFilter]);
 
   useEffect(() => {
     setMenCategoryLabel(
@@ -94,22 +108,13 @@ const ProductCategoriesFilter = () => {
                   value={menSearchValue}
                   onChange={(e) => setMenSearchValue(e.target.value)}
                   selectedFilterLength={
-                    appliedProductsFilters.categoryId.selectedValue
+                    selectedFilter
                       .map((itm) => categories.find((i) => i.id === itm))
                       .filter((ele) => ele.category_type === "Men").length
                   }
                   clearDispatched={() => {
                     setMenSelectedData([]);
-                    const targetElement = document.getElementById("titleName");
-                    if (targetElement) {
-                      const targetScrollPosition =
-                        targetElement.getBoundingClientRect().top;
-
-                      window.scrollTo({
-                        top: window.scrollY + targetScrollPosition,
-                        behavior: "smooth",
-                      });
-                    }
+                    scrollToTitleName();
                   }}
                 />
                 <div
@@ -157,17 +162,7 @@ const ProductCategoriesFilter = () => {
                                   )?.id
                               )
                             );
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
+                            scrollToTitleName();
                           }}
                         />
                       }
@@ -201,22 +196,13 @@ const ProductCategoriesFilter = () => {
                   value={womenSearchValue}
                   onChange={(e) => setWomenSearchValue(e.target.value)}
                   selectedFilterLength={
-                    appliedProductsFilters.categoryId.selectedValue
+                    selectedFilter
                       .map((itm) => categories.find((i) => i.id === itm))
                       .filter((ele) => ele.category_type === "Women").length
                   }
                   clearDispatched={() => {
                     setWomenSelectedData([]);
-                    const targetElement = document.getElementById("titleName");
-                    if (targetElement) {
-                      const targetScrollPosition =
-                        targetElement.getBoundingClientRect().top;
-
-                      window.scrollTo({
-                        top: window.scrollY + targetScrollPosition,
-                        behavior: "smooth",
-                      });
-                    }
+                    scrollToTitleName();
                   }}
                 />
                 <div
@@ -266,17 +252,7 @@ const ProductCategoriesFilter = () => {
                                   )?.id
                               )
                             );
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
+                            scrollToTitleName();
                           }}
                         />
                       }

@@ -10,6 +10,8 @@ import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilte
 import { useDispatch, useSelector } from "react-redux";
 import { StyledFormLabelRadio } from "../../core/CustomMUIComponents";
 import { changeProductPage } from "../../../redux/ducks/product";
+import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
+import { scrollToTitleName } from "../../../utils/common";
 
 const productListingTypeFilterData = [
   {
@@ -22,23 +24,55 @@ const productListingTypeFilterData = [
   },
 ];
 
-const ProductTypeFilter = () => {
+const ProductTypeFilter = ({ productByShop }) => {
   const dispatch = useDispatch();
   const { appliedProductsFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );
 
+  const { appliedShopProductsFilters } = useSelector(
+    (state) => state.shopProductsFiltersReducer
+  );
+
   const handleCheckboxChange = (value) => {
     dispatch(changeProductPage(0));
+
+    const changeFiltersAction = productByShop
+      ? changeAppliedShopProductsFilters
+      : changeAppliedProductsFilters;
+
     dispatch(
-      changeAppliedProductsFilters({
+      changeFiltersAction({
         key: "productListingType",
         value: {
           selectedValue: value,
         },
       })
     );
+
+    scrollToTitleName();
   };
+
+  const handleClearFilter = () => {
+    const changeFiltersAction = productByShop
+      ? changeAppliedShopProductsFilters
+      : changeAppliedProductsFilters;
+
+    dispatch(
+      changeFiltersAction({
+        key: "productListingType",
+        value: {
+          selectedValue: "",
+        },
+      })
+    );
+
+    scrollToTitleName();
+  };
+
+  const selectedFilter = productByShop
+    ? appliedShopProductsFilters.productListingType.selectedValue
+    : appliedProductsFilters.productListingType.selectedValue;
 
   return (
     <>
@@ -59,52 +93,15 @@ const ProductTypeFilter = () => {
                         label={capitalize(item.label)}
                         control={
                           <Radio
-                            checked={
-                              appliedProductsFilters.productListingType
-                                .selectedValue === item.value
-                            }
-                            onChange={() => {
-                              handleCheckboxChange(item.value);
-                              const targetElement =
-                                document.getElementById("titleName");
-                              if (targetElement) {
-                                const targetScrollPosition =
-                                  targetElement.getBoundingClientRect().top;
-
-                                window.scrollTo({
-                                  top: window.scrollY + targetScrollPosition,
-                                  behavior: "smooth",
-                                });
-                              }
-                            }}
+                            checked={selectedFilter === item.value}
+                            onChange={() => handleCheckboxChange(item.value)}
                           />
                         }
                       />
-                      {appliedProductsFilters.productListingType
-                        .selectedValue === item.value && (
+                      {selectedFilter === item.value && (
                         <span
                           className="underline cursor-pointer text-colorGreen"
-                          onClick={() => {
-                            dispatch(
-                              changeAppliedProductsFilters({
-                                key: "productListingType",
-                                value: {
-                                  selectedValue: "",
-                                },
-                              })
-                            );
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
-                          }}
+                          onClick={handleClearFilter}
                         >
                           Clear
                         </span>
