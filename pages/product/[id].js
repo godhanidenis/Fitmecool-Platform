@@ -210,7 +210,7 @@ const ProductDetail = ({ productDetails }) => {
         {itm ? (
           isProductImage.includes(itm) && isShopImages ? (
             <div
-              className="w-[129px] h-[146px] cursor-pointer rounded-[16px] bg-[#00000031]"
+              className="w-[129px] h-[146px] cursor-pointer bg-[#00000031]"
               style={{ border: images === itm ? "2px solid #29977E" : 0 }}
             />
           ) : (
@@ -222,7 +222,7 @@ const ProductDetail = ({ productDetails }) => {
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,
                   }}
-                  className="object-top rounded-[16px] object-cover cursor-pointer w-[130px] h-[150px]"
+                  className="object-top object-cover cursor-pointer w-[130px] h-[150px]"
                   onError={() => {
                     setIsShopImages(true);
                     setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
@@ -238,7 +238,7 @@ const ProductDetail = ({ productDetails }) => {
                       border:
                         images?.src === itm?.src ? "2px solid #29977E" : 0,
                     }}
-                    className="rounded-[16px] object-cover cursor-pointer w-full h-full"
+                    className="object-cover cursor-pointer w-full h-full"
                     onError={() => {
                       setIsShopImages(true);
                       setIsProductImage(isProductImage.push(itm));
@@ -250,7 +250,7 @@ const ProductDetail = ({ productDetails }) => {
             </>
           )
         ) : (
-          <ImageLoadingSkeleton className="rounded-[16px] !w-[130px] !h-[150px]" />
+          <ImageLoadingSkeleton className="!w-[130px] !h-[150px]" />
         )}
       </div>
     );
@@ -499,35 +499,32 @@ const ProductDetail = ({ productDetails }) => {
                     <div className="p-2 pt-0">{productImages}</div>
                   </div>
                   <div className="col-span-3 relative">
-                    <div className="absolute h-52 w-52 -left-1 2xl:-left-4 -top-1 2xl:-top-4 overflow-hidden">
-                      {productDetailsData?.data?.product_listing_type &&
-                        images?.type === "image" && (
-                          <div className="absolute top-0">
-                            <span
-                              className={`z-[8] absolute w-80 p-[2px] text-white text-[18px] font-semibold uppercase flex items-center justify-center transform -rotate-45 top-14 -left-[80px]  border-[5px] border-[#f5cd79] ${
-                                productDetailsData?.data
-                                  ?.product_listing_type === "rent"
-                                  ? "bg-[#ff3b3b]"
-                                  : "bg-[#29977E]"
-                              } `}
-                            >
-                              {productDetailsData?.data
-                                ?.product_listing_type === "sell"
-                                ? "Sell"
-                                : "Rent"}
-                            </span>
-                            <span className="absolute top-0 z-0 left-[147px] p-5 bg-[#f19066]" />
-                            <span className="absolute top-[147px] z-0 -left-[4px] p-5 bg-[#f19066]" />
-                          </div>
-                        )}
-                    </div>
-                    <div className="border-2 flex justify-center items-center bg-colorWhite h-[700px] bg-cover rounded-2xl">
+                    {productDetailsData?.data?.product_listing_type &&
+                      images?.type === "image" && (
+                        <div className="absolute top-3 z-10">
+                          <span
+                            className={`label-big label-large arrowed-right text-white font-semibold ${
+                              productDetailsData?.data?.product_listing_type ===
+                              "rent"
+                                ? "bg-[#ff0000cc]"
+                                : "bg-[#29977E]"
+                            }`}
+                          >
+                            {productDetailsData?.data?.product_listing_type ===
+                            "sell"
+                              ? "Sell"
+                              : "Rent"}
+                          </span>
+                        </div>
+                      )}
+                    <div className="absolute h-52 w-52 -left-1 2xl:-left-4 -top-1 2xl:-top-4 overflow-hidden"></div>
+                    <div className="flex justify-center items-center bg-colorWhite h-[700px] bg-cover">
                       {images?.type === "image" && (
                         <CustomReactImageMagnify
                           src={images.src}
                           height="700px"
                           width="100%"
-                          className="object-cover rounded-2xl object-top"
+                          className="object-cover object-top"
                         />
                       )}
 
@@ -539,7 +536,7 @@ const ProductDetail = ({ productDetails }) => {
                             setIsShopImages(true);
                             setIsProductImage(images);
                           }}
-                          className="!rounded-2xl h-[700px] w-full !cursor-pointer !object-cover !object-top"
+                          className="h-[700px] w-full !cursor-pointer !object-cover !object-top"
                           autoPlay={true}
                           controls
                           muted
@@ -677,8 +674,8 @@ const ProductDetail = ({ productDetails }) => {
 
               <div className="col-span-2 lg:col-span-1">
                 <Box className="!hidden lg:!block">{shopDetailHeader()}</Box>
-                <div className="mt-5">
-                  <div className="flex justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px]">
+                <div className="mt-3">
+                  <div className="flex items-center  justify-between border-b border-['rgba(0, 0, 0, 0.1)'] pb-[8px]">
                     <span className="font-semibold text-[30px] text-colorGreen leading-9 capitalize">
                       {productDetailsData?.data.product_name}
                     </span>
@@ -727,7 +724,7 @@ const ProductDetail = ({ productDetails }) => {
                   </div>
                   <div
                     className={`${
-                      readMore ? "h-[334px] overflow-scroll" : " "
+                      readMore ? "h-[304px] overflow-scroll" : " "
                     } border-b border-['rgba(0, 0, 0, 0.1)'] pb-[24px] `}
                   >
                     <div className="font-normal text-lg text-[#888888] leading-6">
@@ -742,7 +739,7 @@ const ProductDetail = ({ productDetails }) => {
                       {productDescription.length > 250 && (
                         <span
                           onClick={() => setReadMore(!readMore)}
-                          className="cursor-pointer text-colorBlack"
+                          className="cursor-pointer text-red-500"
                         >
                           {readMore ? "read less" : "read more"}
                         </span>
@@ -754,15 +751,15 @@ const ProductDetail = ({ productDetails }) => {
                       Item Details
                     </p>
                     <div className="flex items-center">
-                      <span className="text-sm">Category :</span>
-                      <span className="text-sm font-semibold mr-2 text-colorBlack ml-[9px]">
+                      <span className="text-base">Category :</span>
+                      <span className="text-base font-semibold mr-2 text-colorBlack ml-[9px]">
                         {productDetailsData?.data.categoryInfo?.category_name}
                       </span>
                     </div>
                     <div className="flex mt-1 items-center">
-                      <span className="text-sm">Color :</span>
+                      <span className="text-base">Color :</span>
                       <span
-                        className={`rounded-[50%] w-3 h-3 ml-[9px]`}
+                        className={`rounded-[50%] w-4 h-4 ml-[9px]`}
                         style={{
                           backgroundColor:
                             productDetailsData?.data.product_color,

@@ -254,19 +254,16 @@ const ProductCard = ({ product, onlyCarousal }) => {
       >
         <div className={`relative cursor-pointer`}>
           {product?.product_listing_type && (
-            <div className="absolute top-0">
+            <div className="absolute top-2 z-10">
               <span
-                // className={`z-[8] absolute w-40 p-[1px] text-white text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-2 -left-[40px]  border-[5px] border-[#f5cd79] ${
-                className={`z-[8] absolute w-[7rem] xl:w-40 p-[1px] text-white text-[12px] xl:text-[16px] font-medium uppercase flex items-center justify-center transform -rotate-[38deg] top-[7px] xl:top-2 -left-[25px] xl:-left-[40px]  border-[3px] xl:border-[5px] border-[#f5cd79] ${
+                className={`label label-large arrowed-right text-white font-semibold ${
                   product?.product_listing_type === "rent"
-                    ? "bg-[#ff3b3b]"
+                    ? "bg-[#ff0000cc]"
                     : "bg-[#29977E]"
-                } `}
+                }`}
               >
                 {product?.product_listing_type === "sell" ? "Sell" : "Rent"}
               </span>
-              <span className="absolute -top-[9px] xl:-top-[10px] z-0 left-[71px] xl:left-[98px] p-[6px] xl:p-2 bg-[#f19066]" />
-              <span className="absolute top-[52px] xl:top-[74px] z-0 -left-[11px] xl:-left-[15px] p-[6px] xl:p-2 bg-[#f19066]" />
             </div>
           )}
 
