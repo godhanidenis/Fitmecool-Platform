@@ -239,11 +239,15 @@ const Header = () => {
                     }}
                     label="Location"
                   >
-                    {cityLists?.map((city, index) => (
-                      <MenuItem value={city?.city} key={index}>
-                        {city?.city}
-                      </MenuItem>
-                    ))}
+                    {/* <div className="w-[60vw] h-[50vh] flex flex-wrap justify-between"> */}
+                      {cityLists?.map((city, index) => (
+                        // <div key={index} className="w-[250px]">
+                        <MenuItem value={city?.city} key={index}>
+                          {city?.city}
+                        </MenuItem>
+                        // </div>
+                      ))}
+                    {/* </div> */}
                   </LocationSelect>
                 </FormControl>
               </div>

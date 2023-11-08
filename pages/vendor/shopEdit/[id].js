@@ -192,6 +192,29 @@ const ShopEdit = () => {
   };
 
   useEffect(() => {
+    const getCityList = async () => {
+      await getCityByStateLists(mainBranch?.branch_state)
+        .then((res) => setGetCityData(res?.data?.cityByState))
+        .catch((err) => console.log("error", err));
+    };
+    if (mainBranch?.branch_state) {
+      mainBranchInfoSetValue("state", mainBranch?.branch_state);
+      getCityList();
+    }
+  }, [mainBranch]);
+
+  useEffect(() => {
+    const getAreaList = async () => {
+      await getAreaByCityLists(mainBranch?.branch_city)
+        .then((res) => setGetAreaData(res?.data?.areaByCity))
+        .catch((err) => console.log("error", err));
+    };
+    if (mainBranch?.branch_city) {
+      getAreaList();
+    }
+  }, [mainBranch]);
+
+  useEffect(() => {
     getApiState();
   }, []);
 
@@ -1199,55 +1222,55 @@ const ShopEdit = () => {
                     )}
                   </div>
                 </div>
-                <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
-                  {/* {getCityData?.length > 0 && ( */}
-                  <div className="sm:w-1/2 relative w-full">
-                    <CustomAutoCompleteTextField
-                      name="city"
-                      label="City"
-                      type="text"
-                      id="city"
-                      isRequired={false}
-                      placeholder="Your city"
-                      control={mainBranchInfoControl}
-                      rules={{ required: "City is required" }}
-                      arrayListItem={getCityData}
-                      onChangeValue={onChangeCity}
-                      cityField={true}
-                    />
-                    <div className="mt-2">
-                      {mainBranchInfoErrors.city && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {mainBranchInfoErrors.city?.message}
-                        </span>
-                      )}
+                <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-2">
+                  {getCityData?.length > 0 && (
+                    <div className="sm:w-1/2 relative w-full">
+                      <CustomAutoCompleteTextField
+                        name="city"
+                        label="City"
+                        type="text"
+                        id="city"
+                        isRequired={false}
+                        placeholder="Your city"
+                        control={mainBranchInfoControl}
+                        rules={{ required: "City is required" }}
+                        arrayListItem={getCityData}
+                        onChangeValue={onChangeCity}
+                        cityField={true}
+                      />
+                      <div className="mt-2">
+                        {mainBranchInfoErrors.city && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {mainBranchInfoErrors.city?.message}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {/* )} */}
-                  {/* {getAreaData?.length > 0 && ( */}
-                  <div className="sm:w-1/2 relative w-full">
-                    <CustomAutoCompleteTextField
-                      name="pin_code"
-                      label="Pincode"
-                      type="text"
-                      id="pincode"
-                      isRequired={false}
-                      placeholder="Your pincode"
-                      rules={{ required: "PinCode is required" }}
-                      pinCodeField={true}
-                      arrayListItem={getAreaData}
-                      control={mainBranchInfoControl}
-                      onChangeValue={onChangePinCode}
-                    />
-                    <div className="mt-2">
-                      {mainBranchInfoErrors.pin_code && (
-                        <span style={{ color: "red" }} className="-mb-6">
-                          {mainBranchInfoErrors.pin_code?.message}
-                        </span>
-                      )}
+                  )}
+                  {getAreaData?.length > 0 && (
+                    <div className="sm:w-1/2 relative w-full">
+                      <CustomAutoCompleteTextField
+                        name="pin_code"
+                        label="Pincode"
+                        type="text"
+                        id="pincode"
+                        isRequired={false}
+                        placeholder="Your pincode"
+                        rules={{ required: "PinCode is required" }}
+                        pinCodeField={true}
+                        arrayListItem={getAreaData}
+                        control={mainBranchInfoControl}
+                        onChangeValue={onChangePinCode}
+                      />
+                      <div className="mt-2">
+                        {mainBranchInfoErrors.pin_code && (
+                          <span style={{ color: "red" }} className="-mb-6">
+                            {mainBranchInfoErrors.pin_code?.message}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {/* )} */}
+                  )}
                 </div>
               </div>
               <div className="flex my-5">
@@ -2396,6 +2419,29 @@ const AddEditSubBranch = ({
     getApiState();
   }, []);
 
+  useEffect(() => {
+    const getCityList = async () => {
+      await getCityByStateLists(editableBranchData?.branch_state)
+        .then((res) => setGetCityData(res?.data?.cityByState))
+        .catch((err) => console.log("error", err));
+    };
+    if (editableBranchData?.branch_state) {
+      setSubManagerState(editableBranchData?.branch_state);
+      getCityList();
+    }
+  }, [editableBranchData]);
+
+  useEffect(() => {
+    const getAreaList = async () => {
+      await getAreaByCityLists(editableBranchData?.branch_city)
+        .then((res) => setGetAreaData(res?.data?.areaByCity))
+        .catch((err) => console.log("error", err));
+    };
+    if (editableBranchData?.branch_city) {
+      getAreaList();
+    }
+  }, [editableBranchData]);
+
   const onChangeSubBranchState = async (data) => {
     await getCityByStateLists(data)
       .then((res) => setGetCityData(res?.data?.cityByState))
@@ -2704,48 +2750,52 @@ const AddEditSubBranch = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row mt-4 sm:gap-4 w-full justify-between items-center">
-                  <div className="w-full flex flex-col gap-2">
-                    <Box>
-                      <CustomAutoCompleteTextField
-                        id="input-with-sx"
-                        label="City"
-                        variant="standard"
-                        className="w-full"
-                        value={subManagerCity}
-                        subBranchSelect={true}
-                        arrayListItem={getCityData}
-                        onChangeValue={onChangeSubBranchCity}
-                        cityField={true}
-                        branchText={subManagerCity}
-                        setBranchText={setSubManagerCity}
-                      />
-                    </Box>
-                    <span style={{ color: "red" }}>
-                      {error.subManagerCityError || ""}
-                    </span>
-                  </div>
-                  <div className="w-full flex flex-col gap-2">
-                    <Box>
-                      <CustomAutoCompleteTextField
-                        id="input-with-sx"
-                        label="Pincode"
-                        variant="standard"
-                        className="w-full"
-                        type="text"
-                        value={subManagerPinCode}
-                        subBranchSelect={true}
-                        arrayListItem={getAreaData}
-                        onChangeValue={onChangeSubBranchPinCode}
-                        pinCodeField={true}
-                        branchText={subManagerPinCode}
-                        setBranchText={setSubManagerPinCode}
-                      />
-                    </Box>
-                    <span style={{ color: "red" }}>
-                      {error.subManagerPinCodeError || ""}
-                    </span>
-                  </div>
+                <div className="flex flex-col sm:flex-row mt-2 gap-2 sm:gap-4 w-full justify-between items-center">
+                  {getCityData?.length > 0 && (
+                    <div className="w-full flex flex-col gap-2">
+                      <Box>
+                        <CustomAutoCompleteTextField
+                          id="input-with-sx"
+                          label="City"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerCity}
+                          subBranchSelect={true}
+                          arrayListItem={getCityData}
+                          onChangeValue={onChangeSubBranchCity}
+                          cityField={true}
+                          branchText={subManagerCity}
+                          setBranchText={setSubManagerCity}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerCityError || ""}
+                      </span>
+                    </div>
+                  )}
+                  {getAreaData?.length > 0 && (
+                    <div className="w-full flex flex-col gap-2">
+                      <Box>
+                        <CustomAutoCompleteTextField
+                          id="input-with-sx"
+                          label="Pincode"
+                          variant="standard"
+                          className="w-full"
+                          type="text"
+                          value={subManagerPinCode}
+                          subBranchSelect={true}
+                          arrayListItem={getAreaData}
+                          onChangeValue={onChangeSubBranchPinCode}
+                          pinCodeField={true}
+                          branchText={subManagerPinCode}
+                          setBranchText={setSubManagerPinCode}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerPinCodeError || ""}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-center items-center">
