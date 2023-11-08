@@ -17,7 +17,8 @@ export const colorsList = [
 ];
 
 export const assets = {
-  appLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/rentblessLogo.png`,
+  // appLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/rentblessLogo.png`,
+  appLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolWhite.png`,
   appBlackLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/BlackLogo.png`,
   emptyCart: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/empty_cart.png`,
   appStore: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/appStore.png`,

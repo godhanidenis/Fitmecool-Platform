@@ -18,6 +18,7 @@ import {
   CircularProgress,
   FormControl,
   IconButton,
+  Autocomplete,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -36,6 +37,12 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
 import { assets } from "../../../constants";
 import { fileUpload } from "../../../services/wasabi";
+import CustomAutoCompleteTextField from "../../../components/core/CustomAutoCompleteTextField";
+import {
+  getAreaByCityLists,
+  getCityByStateLists,
+  getStateLists,
+} from "../../../graphql/queries/areaListsQueries";
 
 const style = {
   position: "absolute",
@@ -150,7 +157,7 @@ const ShopPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
-
+  const [valueAuto, setValueAuto] = useState(null);
   const [selectedOption, setSelectedOption] = useState("Shop");
   const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
@@ -206,6 +213,37 @@ const ShopPage = () => {
     setError,
     control,
   } = useForm();
+
+  const [stateDataLists, setStateDataLists] = useState([]);
+  const [getCityData, setGetCityData] = useState([]);
+  const [getAreaData, setGetAreaData] = useState([]);
+
+  const getApiState = async () => {
+    await getStateLists()
+      .then((res) => setStateDataLists(res?.data?.stateList))
+      .catch((error) => console.log("ee", error));
+  };
+
+  const onChangeState = async (data) => {
+    // console.log("data 1234:>> ", data);
+    await getCityByStateLists(data)
+      .then((res) => setGetCityData(res?.data?.cityByState))
+      .catch((err) => console.log("error", err));
+    setValue("city", "");
+  };
+  const onChangeCity = async (data) => {
+    await getAreaByCityLists(data)
+      .then((res) => setGetAreaData(res?.data?.areaByCity))
+      .catch((err) => console.log("error", err));
+    setValue("pin_code", "");
+  };
+  const onChangePinCode = (data) => {
+    console.log("pincode", data);
+  };
+
+  useEffect(() => {
+    getApiState();
+  }, []);
 
   useEffect(() => {
     if (sameAsOwner === "True") {
@@ -314,7 +352,7 @@ const ShopPage = () => {
     return {
       branch_address: val.subManagerAddress,
       branch_pinCode: val.subManagerPinCode,
-      branch_city: val.city,
+      branch_city: val.subManagerCity,
       manager_name: val.subManagerFirstName + " " + val.subManagerLastName,
       manager_contact: val.subManagerPhone,
       manager_email: val.manager_user_email,
@@ -430,6 +468,7 @@ const ShopPage = () => {
         branchInfo: [
           {
             branch_address: data.address,
+            branch_state: data.state,
             branch_city: data.city,
             branch_pinCode: data.pin_code,
             manager_name:
@@ -1311,51 +1350,78 @@ const ShopPage = () => {
                           </div>
                         )}
                       </div>
+                      <div className="w-full relative">
+                        <CustomAutoCompleteTextField
+                          name="state"
+                          label="State"
+                          type="text"
+                          id="state"
+                          isRequired={true}
+                          control={control}
+                          rules={{ required: "State is required" }}
+                          placeholder="Your state"
+                          arrayListItem={stateDataLists}
+                          onChangeValue={onChangeState}
+                          stateField={true}
+                        />
+
+                        {errors.state && (
+                          <div className="mt-2">
+                            <span style={{ color: "red" }}>
+                              {errors.state?.message}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                       <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-5">
-                        <div className="sm:w-1/2 relative w-full">
-                          <CustomTextFieldVendor
-                            name="city"
-                            label=" City"
-                            type="text"
-                            id="city"
-                            isRequired={true}
-                            placeholder="Your city"
-                            formValue={{
-                              ...register("city", {
-                                required: "City is required",
-                              }),
-                            }}
-                          />
-                          {errors.city && (
-                            <div className="mt-2">
-                              <span style={{ color: "red" }}>
-                                {errors.city?.message}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="sm:w-1/2 relative w-full">
-                          <CustomTextFieldVendor
-                            name="pin_code"
-                            label=" Pincode"
-                            type="number"
-                            id="pincode"
-                            isRequired={true}
-                            placeholder="Your pincode"
-                            formValue={{
-                              ...register("pin_code", {
-                                required: "PinCode is required",
-                              }),
-                            }}
-                          />
-                          {errors.pin_code && (
-                            <div className="mt-2">
-                              <span style={{ color: "red" }}>
-                                {errors.pin_code?.message}
-                              </span>
-                            </div>
-                          )}
-                        </div>
+                        {getCityData?.length > 0 && (
+                          <div className="sm:w-1/2 relative w-full">
+                            <CustomAutoCompleteTextField
+                              name="city"
+                              label="City"
+                              type="text"
+                              id="city"
+                              isRequired={true}
+                              placeholder="Your city"
+                              control={control}
+                              rules={{ required: "City is required" }}
+                              arrayListItem={getCityData}
+                              onChangeValue={onChangeCity}
+                              cityField={true}
+                            />
+                            {errors.city && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.city?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {getAreaData?.length > 0 && (
+                          <div className="sm:w-1/2 relative w-full">
+                            <CustomAutoCompleteTextField
+                              name="pin_code"
+                              label="Pincode"
+                              type="text"
+                              id="pincode"
+                              isRequired={true}
+                              placeholder="Your pincode"
+                              control={control}
+                              rules={{ required: "PinCode is required" }}
+                              pinCodeField={true}
+                              arrayListItem={getAreaData}
+                              onChangeValue={onChangePinCode}
+                            />
+                            {errors.pin_code && (
+                              <div className="mt-2">
+                                <span style={{ color: "red" }}>
+                                  {errors.pin_code?.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1727,6 +1793,14 @@ const ShopPage = () => {
                                     </p>
                                     <p className="text-sm sm:text-base lg:text-base text-colorBlack">
                                       <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
+                                        State :{" "}
+                                      </b>
+                                      <span className="break-all">
+                                        {sub.subManagerState}
+                                      </span>
+                                    </p>
+                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                      <b className="mr-1 text-sm sm:text-base lg:text-base whitespace-nowrap">
                                         City :{" "}
                                       </b>
                                       <span className="break-all">
@@ -1856,16 +1930,17 @@ const SubBranchModal = ({
 
   const [subManagerAddress, setSubManagerAddress] = useState("");
   const [subManagerCity, setSubManagerCity] = useState("");
+  const [subManagerState, setSubManagerState] = useState("");
   const [subManagerPinCode, setSubManagerPinCode] = useState("");
 
   const [subManagerFirstName, setSubManagerFirstName] = useState("");
   const [subManagerLastName, setSubManagerLastName] = useState("");
   const [subManagerEmail, setSubManagerEmail] = useState("");
   const [subManagerPhone, setSubManagerPhone] = useState("");
-
   const [error, setError] = useState({
     subManagerAddressError: "",
     subManagerCityError: "",
+    subManagerStateError: "",
     subManagerPinCodeError: "",
     subManagerFirstNameError: "",
     subManagerLastNameError: "",
@@ -1904,6 +1979,7 @@ const SubBranchModal = ({
     if (subBranchEdit !== undefined) {
       setSubManagerAddress(subBranchEdit.subManagerAddress);
       setSubManagerCity(subBranchEdit.subManagerCity);
+      setSubManagerState(subBranchEdit.subManagerState);
       setSubManagerPinCode(subBranchEdit.subManagerPinCode);
       setSubManagerFirstName(subBranchEdit.subManagerFirstName);
       setSubManagerLastName(subBranchEdit.subManagerLastName);
@@ -1918,6 +1994,11 @@ const SubBranchModal = ({
       allError.subManagerAddressError = "SubManagerAddress is require";
     } else {
       allError.subManagerAddressError = "";
+    }
+    if (!subManagerState) {
+      allError.subManagerStateError = "SubManagerState is require";
+    } else {
+      allError.subManagerStateError = "";
     }
     if (!subManagerCity) {
       allError.subManagerCityError = "SubManagerCity is require";
@@ -1961,6 +2042,7 @@ const SubBranchModal = ({
 
     if (
       !subManagerAddress ||
+      !subManagerState ||
       !subManagerCity ||
       !subManagerPinCode ||
       !subManagerFirstName ||
@@ -1976,6 +2058,7 @@ const SubBranchModal = ({
           {
             id: subBranch.length + 1,
             subManagerAddress,
+            subManagerState,
             subManagerCity,
             subManagerPinCode,
             subManagerFirstName,
@@ -1995,6 +2078,7 @@ const SubBranchModal = ({
         editSelectedSubBranch[editSelectedSubBranchIndex] = {
           id: subBranchEdit.id,
           subManagerAddress,
+          subManagerState,
           subManagerCity,
           subManagerPinCode,
           subManagerFirstName,
@@ -2011,6 +2095,7 @@ const SubBranchModal = ({
 
   const handleSubBranchModalClose = () => {
     setSubManagerAddress("");
+    setSubManagerState("");
     setSubManagerCity("");
     setSubManagerPinCode("");
     setSubManagerFirstName("");
@@ -2028,7 +2113,45 @@ const SubBranchModal = ({
     error.subManagerEmailError = "";
     error.subManagerPhoneError = "";
     error.subManagerAddressError = "";
+    error.subManagerStateError = "";
     error.subManagerCityError = "";
+    error.subManagerPinCodeError = "";
+  };
+
+  const [getCityData, setGetCityData] = useState([]);
+  const [getAreaData, setGetAreaData] = useState([]);
+
+  const [stateDataLists, setStateDataLists] = useState([]);
+
+  const getApiState = async () => {
+    await getStateLists()
+      .then((res) => setStateDataLists(res?.data?.stateList))
+      .catch((error) => console.log("ee", error));
+  };
+  useEffect(() => {
+    getApiState();
+  }, []);
+
+  const onChangeSubBranchState = async (data) => {
+    await getCityByStateLists(data)
+      .then((res) => setGetCityData(res?.data?.cityByState))
+      .catch((err) => console.log("error", err));
+
+    setSubManagerState(data);
+    error.subManagerStateError = "";
+    setSubManagerCity("");
+  };
+  const onChangeSubBranchCity = async (data) => {
+    await getAreaByCityLists(data)
+      .then((res) => setGetAreaData(res?.data?.areaByCity))
+      .catch((err) => console.log("error", err));
+
+    setSubManagerCity(data);
+    error.subManagerCityError = "";
+    setSubManagerPinCode("");
+  };
+  const onChangeSubBranchPinCode = (data) => {
+    setSubManagerPinCode(data);
     error.subManagerPinCodeError = "";
   };
   return (
@@ -2059,45 +2182,75 @@ const SubBranchModal = ({
                       </span>
                     </div>
                   </div>
+                  <div className="flex items-center justify-center gap-20">
+                    <div className="w-full flex flex-col gap-2">
+                      <Box>
+                        <CustomAutoCompleteTextField
+                          id="input-with-sx"
+                          label="State"
+                          variant="standard"
+                          className="w-full"
+                          value={subManagerState}
+                          subBranchSelect={true}
+                          arrayListItem={stateDataLists}
+                          onChangeValue={onChangeSubBranchState}
+                          stateField={true}
+                          branchText={subManagerState}
+                          setBranchText={setSubManagerState}
+                        />
+                      </Box>
+                      <span style={{ color: "red" }}>
+                        {error.subManagerStateError || ""}
+                      </span>
+                    </div>
+                  </div>
 
                   <div className="flex flex-col sm:flex-row sm:gap-4 gap-2.5 w-full justify-between items-center">
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="City"
-                          variant="standard"
-                          className="w-full"
-                          value={subManagerCity}
-                          onChange={(e) => {
-                            setSubManagerCity(e.target.value);
-                            error.subManagerCityError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerCityError || ""}
-                      </span>
-                    </div>
-                    <div className="w-full flex flex-col gap-2">
-                      <Box sx={{ display: "flex" }}>
-                        <CustomTextFieldVendor
-                          id="input-with-sx"
-                          label="PinCode"
-                          variant="standard"
-                          className="w-full"
-                          type="number"
-                          value={subManagerPinCode}
-                          onChange={(e) => {
-                            setSubManagerPinCode(e.target.value);
-                            error.subManagerPinCodeError = "";
-                          }}
-                        />
-                      </Box>
-                      <span style={{ color: "red" }}>
-                        {error.subManagerPinCodeError || ""}
-                      </span>
-                    </div>
+                    {getCityData?.length > 0 && (
+                      <div className="w-full flex flex-col gap-2">
+                        <Box>
+                          <CustomAutoCompleteTextField
+                            id="input-with-sx"
+                            label="City"
+                            variant="standard"
+                            className="w-full"
+                            value={subManagerCity}
+                            subBranchSelect={true}
+                            arrayListItem={getCityData}
+                            onChangeValue={onChangeSubBranchCity}
+                            cityField={true}
+                            branchText={subManagerCity}
+                            setBranchText={setSubManagerCity}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerCityError || ""}
+                        </span>
+                      </div>
+                    )}
+                    {getAreaData?.length > 0 && (
+                      <div className="w-full flex flex-col gap-2">
+                        <Box>
+                          <CustomAutoCompleteTextField
+                            id="input-with-sx"
+                            label="PinCode"
+                            variant="standard"
+                            className="w-full"
+                            type="text"
+                            value={subManagerPinCode}
+                            subBranchSelect={true}
+                            arrayListItem={getAreaData}
+                            onChangeValue={onChangeSubBranchPinCode}
+                            pinCodeField={true}
+                            branchText={subManagerPinCode}
+                            setBranchText={setSubManagerPinCode}
+                          />
+                        </Box>
+                        <span style={{ color: "red" }}>
+                          {error.subManagerPinCodeError || ""}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex justify-center items-center">

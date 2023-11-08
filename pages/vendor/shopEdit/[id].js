@@ -42,6 +42,12 @@ import { HoursModal } from "../shop-setup";
 import { useRouter } from "next/router";
 import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 import Image from "next/image";
+import CustomAutoCompleteTextField from "../../../components/core/CustomAutoCompleteTextField";
+import {
+  getAreaByCityLists,
+  getCityByStateLists,
+  getStateLists,
+} from "../../../graphql/queries/areaListsQueries";
 
 const style = {
   position: "absolute",
@@ -103,6 +109,7 @@ const ShopEdit = () => {
     setValue: mainBranchInfoSetValue,
     getValues: mainBranchInfoGetValue,
     reset: mainBranchInfoReset,
+    control: mainBranchInfoControl,
   } = useForm();
 
   const {
@@ -156,6 +163,37 @@ const ShopEdit = () => {
   const router = useRouter();
 
   const { id } = router.query;
+
+  const [stateDataLists, setStateDataLists] = useState([]);
+  const [getCityData, setGetCityData] = useState([]);
+  const [getAreaData, setGetAreaData] = useState([]);
+
+  const getApiState = async () => {
+    await getStateLists()
+      .then((res) => setStateDataLists(res?.data?.stateList))
+      .catch((error) => console.log("ee", error));
+  };
+
+  const onChangeState = async (data) => {
+    // console.log("data 1234:>> ", data);
+    await getCityByStateLists(data)
+      .then((res) => setGetCityData(res?.data?.cityByState))
+      .catch((err) => console.log("error", err));
+    mainBranchInfoSetValue("city", "");
+  };
+  const onChangeCity = async (data) => {
+    await getAreaByCityLists(data)
+      .then((res) => setGetAreaData(res?.data?.areaByCity))
+      .catch((err) => console.log("error", err));
+    mainBranchInfoSetValue("pin_code", "");
+  };
+  const onChangePinCode = (data) => {
+    console.log("pincode", data);
+  };
+
+  useEffect(() => {
+    getApiState();
+  }, []);
 
   const emptyImageStates = () => {
     setShopLogo("");
@@ -387,8 +425,9 @@ const ShopEdit = () => {
       } else {
         setSameAsOwner("False");
       }
-
+      console.log("mainBranches", mainBranches);
       mainBranchInfoSetValue("address", mainBranches?.branch_address);
+      mainBranchInfoSetValue("state", mainBranches?.branch_state);
       mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
       mainBranchInfoSetValue("city", mainBranches?.branch_city);
     }
@@ -520,6 +559,7 @@ const ShopEdit = () => {
           branch_address: data.address,
           branch_pinCode: data.pin_code,
           branch_city: data.city,
+          branch_state: data.state,
           same_as: sameAsOwner === "True" ? "owner" : "none",
           manager_name: data.manager_first_name + " " + data.manager_last_name,
           manager_contact: data.manager_user_contact,
@@ -1121,7 +1161,7 @@ const ShopEdit = () => {
                     label="Address"
                     type="text"
                     id="address"
-                    isRequired={false}
+                    // isRequired={false}
                     placeholder="Your address"
                     formValue={{
                       ...mainBranchInfoRegister("address", {
@@ -1137,19 +1177,43 @@ const ShopEdit = () => {
                     )}
                   </div>
                 </div>
+                <div className="w-full relative">
+                  <CustomAutoCompleteTextField
+                    name="state"
+                    label="State"
+                    type="text"
+                    id="state"
+                    isRequired={false}
+                    placeholder="Your state"
+                    control={mainBranchInfoControl}
+                    rules={{ required: "State is required" }}
+                    arrayListItem={stateDataLists}
+                    onChangeValue={onChangeState}
+                    stateField={true}
+                  />
+                  <div className="mt-2">
+                    {mainBranchInfoErrors.state && (
+                      <span style={{ color: "red" }} className="-mb-6">
+                        {mainBranchInfoErrors.state?.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
                 <div className="w-full flex sm:flex-row sm:gap-4 flex-col gap-8">
+                  {/* {getCityData?.length > 0 && ( */}
                   <div className="sm:w-1/2 relative w-full">
-                    <CustomTextFieldVendor
-                      label=" City"
+                    <CustomAutoCompleteTextField
+                      name="city"
+                      label="City"
                       type="text"
                       id="city"
                       isRequired={false}
                       placeholder="Your city"
-                      formValue={{
-                        ...mainBranchInfoRegister("city", {
-                          required: "City is required",
-                        }),
-                      }}
+                      control={mainBranchInfoControl}
+                      rules={{ required: "City is required" }}
+                      arrayListItem={getCityData}
+                      onChangeValue={onChangeCity}
+                      cityField={true}
                     />
                     <div className="mt-2">
                       {mainBranchInfoErrors.city && (
@@ -1159,18 +1223,21 @@ const ShopEdit = () => {
                       )}
                     </div>
                   </div>
+                  {/* )} */}
+                  {/* {getAreaData?.length > 0 && ( */}
                   <div className="sm:w-1/2 relative w-full">
-                    <CustomTextFieldVendor
+                    <CustomAutoCompleteTextField
+                      name="pin_code"
                       label="Pincode"
-                      type="number"
+                      type="text"
                       id="pincode"
                       isRequired={false}
                       placeholder="Your pincode"
-                      formValue={{
-                        ...mainBranchInfoRegister("pin_code", {
-                          required: "PinCode is required",
-                        }),
-                      }}
+                      rules={{ required: "PinCode is required" }}
+                      pinCodeField={true}
+                      arrayListItem={getAreaData}
+                      control={mainBranchInfoControl}
+                      onChangeValue={onChangePinCode}
                     />
                     <div className="mt-2">
                       {mainBranchInfoErrors.pin_code && (
@@ -1180,6 +1247,7 @@ const ShopEdit = () => {
                       )}
                     </div>
                   </div>
+                  {/* )} */}
                 </div>
               </div>
               <div className="flex my-5">
@@ -2302,6 +2370,7 @@ const AddEditSubBranch = ({
 
   const [subManagerAddress, setSubManagerAddress] = useState("");
   const [subManagerCity, setSubManagerCity] = useState("");
+  const [subManagerState, setSubManagerState] = useState("");
   const [subManagerPinCode, setSubManagerPinCode] = useState("");
 
   const [subManagerFirstName, setSubManagerFirstName] = useState("");
@@ -2313,8 +2382,46 @@ const AddEditSubBranch = ({
 
   const [loading, setLoading] = useState(false);
 
+  const [getCityData, setGetCityData] = useState([]);
+  const [getAreaData, setGetAreaData] = useState([]);
+
+  const [stateDataLists, setStateDataLists] = useState([]);
+
+  const getApiState = async () => {
+    await getStateLists()
+      .then((res) => setStateDataLists(res?.data?.stateList))
+      .catch((error) => console.log("ee", error));
+  };
+  useEffect(() => {
+    getApiState();
+  }, []);
+
+  const onChangeSubBranchState = async (data) => {
+    await getCityByStateLists(data)
+      .then((res) => setGetCityData(res?.data?.cityByState))
+      .catch((err) => console.log("error", err));
+
+    setSubManagerState(data);
+    error.subManagerStateError = "";
+    setSubManagerCity("");
+  };
+  const onChangeSubBranchCity = async (data) => {
+    await getAreaByCityLists(data)
+      .then((res) => setGetAreaData(res?.data?.areaByCity))
+      .catch((err) => console.log("error", err));
+
+    setSubManagerCity(data);
+    error.subManagerCityError = "";
+    setSubManagerPinCode("");
+  };
+  const onChangeSubBranchPinCode = (data) => {
+    setSubManagerPinCode(data);
+    error.subManagerPinCodeError = "";
+  };
+
   const [error, setError] = useState({
     subManagerAddressError: "",
+    subManagerStateError: "",
     subManagerCityError: "",
     subManagerPinCodeError: "",
     subManagerFirstNameError: "",
@@ -2371,6 +2478,7 @@ const AddEditSubBranch = ({
     if (editableBranchData) {
       setSubManagerAddress(editableBranchData.branch_address);
       setSubManagerCity(editableBranchData.branch_city);
+      setSubManagerState(editableBranchData?.branch_state);
       setSubManagerPinCode(editableBranchData.branch_pinCode);
       setManagerValue(
         (editableBranchData?.same_as === "owner" && "Same as owner") ||
@@ -2432,6 +2540,7 @@ const AddEditSubBranch = ({
       !subManagerAddress ||
       !subManagerCity ||
       !subManagerPinCode ||
+      !subManagerState ||
       !subManagerFirstName ||
       !subManagerLastName ||
       !subManagerEmail ||
@@ -2446,6 +2555,7 @@ const AddEditSubBranch = ({
           branchInfo: {
             branch_address: subManagerAddress,
             branch_city: subManagerCity,
+            branch_state: subManagerState,
             branch_pinCode: subManagerPinCode,
             same_as:
               (managerValue === "Same as owner" && "owner") ||
@@ -2511,6 +2621,7 @@ const AddEditSubBranch = ({
     setAddEditSubBranchShow(false);
     setSubManagerAddress("");
     setSubManagerCity("");
+    setSubManagerState("");
     setSubManagerPinCode("");
     setSubManagerFirstName("");
     setSubManagerLastName("");
@@ -2529,6 +2640,7 @@ const AddEditSubBranch = ({
     error.subManagerPhoneError = "";
     error.subManagerAddressError = "";
     error.subManagerCityError = "";
+    error.subManagerStateError = "";
     error.subManagerPinCodeError = "";
   };
 
@@ -2569,20 +2681,44 @@ const AddEditSubBranch = ({
                     </span>
                   </div>
                 </div>
+                <div className="flex items-center justify-center">
+                  <div className="w-full flex flex-col gap-2">
+                    <Box>
+                      <CustomAutoCompleteTextField
+                        id="input-with-sx"
+                        label="State"
+                        variant="standard"
+                        className="w-full"
+                        value={subManagerState}
+                        subBranchSelect={true}
+                        arrayListItem={stateDataLists}
+                        onChangeValue={onChangeSubBranchState}
+                        stateField={true}
+                        branchText={subManagerState}
+                        setBranchText={setSubManagerState}
+                      />
+                    </Box>
+                    <span style={{ color: "red" }}>
+                      {error.subManagerAddressError || ""}
+                    </span>
+                  </div>
+                </div>
 
                 <div className="flex flex-col sm:flex-row mt-4 sm:gap-4 w-full justify-between items-center">
                   <div className="w-full flex flex-col gap-2">
-                    <Box sx={{ display: "flex" }}>
-                      <CustomTextFieldVendor
+                    <Box>
+                      <CustomAutoCompleteTextField
                         id="input-with-sx"
                         label="City"
                         variant="standard"
                         className="w-full"
                         value={subManagerCity}
-                        onChange={(e) => {
-                          setSubManagerCity(e.target.value);
-                          error.subManagerCityError = "";
-                        }}
+                        subBranchSelect={true}
+                        arrayListItem={getCityData}
+                        onChangeValue={onChangeSubBranchCity}
+                        cityField={true}
+                        branchText={subManagerCity}
+                        setBranchText={setSubManagerCity}
                       />
                     </Box>
                     <span style={{ color: "red" }}>
@@ -2590,18 +2726,20 @@ const AddEditSubBranch = ({
                     </span>
                   </div>
                   <div className="w-full flex flex-col gap-2">
-                    <Box sx={{ display: "flex" }}>
-                      <CustomTextFieldVendor
+                    <Box>
+                      <CustomAutoCompleteTextField
                         id="input-with-sx"
                         label="Pincode"
                         variant="standard"
                         className="w-full"
-                        type="number"
+                        type="text"
                         value={subManagerPinCode}
-                        onChange={(e) => {
-                          setSubManagerPinCode(e.target.value);
-                          error.subManagerPinCodeError = "";
-                        }}
+                        subBranchSelect={true}
+                        arrayListItem={getAreaData}
+                        onChangeValue={onChangeSubBranchPinCode}
+                        pinCodeField={true}
+                        branchText={subManagerPinCode}
+                        setBranchText={setSubManagerPinCode}
                       />
                     </Box>
                     <span style={{ color: "red" }}>
