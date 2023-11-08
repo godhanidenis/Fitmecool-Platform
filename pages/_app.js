@@ -66,6 +66,18 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router]);
 
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     localStorage.removeItem("visitedSecondPage");
+  //   };
+
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
+
   return (
     <>
       <Head>

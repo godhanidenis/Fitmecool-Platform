@@ -6,12 +6,14 @@ import areaListsReducer from "./ducks/areaLists";
 import categoriesReducer from "./ducks/categories";
 import productsReducer from "./ducks/product";
 import productsFiltersReducer from "./ducks/productsFilters";
+import shopProductsFiltersReducer from "./ducks/shopProductsFilters";
 import shopsReducer from "./ducks/shop";
 import shopsFiltersReducer from "./ducks/shopsFilters";
 import themeLayoutReducer from "./ducks/theme";
 import userProfileReducer from "./ducks/userProfile";
 import vendorShopDetailsReducer from "./ducks/vendorShopDetails";
 import watcherSaga from "./sagas/rootSaga";
+import shopConfigurationsReducer from "./ducks/shopConfigurations";
 
 const reducer = combineReducers({
   userProfile: userProfileReducer,
@@ -20,9 +22,11 @@ const reducer = combineReducers({
   categories: categoriesReducer,
   areaLists: areaListsReducer,
   productsFiltersReducer: productsFiltersReducer,
+  shopProductsFiltersReducer: shopProductsFiltersReducer,
   shopsFiltersReducer: shopsFiltersReducer,
   vendorShopDetails: vendorShopDetailsReducer,
   themeLayout: themeLayoutReducer,
+  shopConfigurations: shopConfigurationsReducer,
 });
 
 const sagaMiddleWares = createSagaMiddleware();

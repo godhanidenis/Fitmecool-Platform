@@ -167,7 +167,7 @@ const AddEditProductPage = ({
   useEffect(() => {
     if (editableProductData) {
       const finalPrice =
-        editableProductData?.product_price -  
+        editableProductData?.product_price -
         editableProductData?.product_price *
           (editableProductData?.product_discount / 100);
       setValue("product_name", editableProductData?.product_name);
@@ -492,7 +492,7 @@ const AddEditProductPage = ({
             {alertMsg}
             <span
               className="cursor-pointer underline font-bold ml-2"
-              onClick={() => router.push("/vendor/contact/")}
+              onClick={() => router.push("/vendor/shop-subscription/")}
             >
               Upgrade Your Plan
             </span>

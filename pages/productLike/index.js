@@ -15,11 +15,6 @@ const ProductLikePage = () => {
     (state) => state.userProfile
   );
 
-  console.log(
-    "userProfile.product_like_list :>> ",
-    userProfile.product_like_list
-  );
-
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -41,13 +36,13 @@ const ProductLikePage = () => {
           <h1 className="font-bold animate__animated animate__slideInUp text-3xl">
             Your wishlist is empty!!
           </h1>
-          <p>
+          <p className="text-center">
             Save your favorite items so you <br /> don&apos;t lose sight of
             them.
           </p>
           <button
             className="text-colorWhite text-base px-4 py-2 w-60 bg-black rounded-md  whitespace-nowrap"
-            onClick={() => Router.push("/")}
+            onClick={() => Router.push("/home")}
           >
             Explore Now
           </button>
@@ -67,7 +62,7 @@ const ProductLikePage = () => {
               Liked Products
             </p>
 
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 place-items-center mb-10">
+            <div className="mt-6 w-[100%] flex flex-wrap  xl:justify-between place-items-center mb-10">
               {userProfile.product_like_list &&
                 userProfile.product_like_list?.map((product) => (
                   <Link
@@ -75,7 +70,11 @@ const ProductLikePage = () => {
                     passHref
                     key={product.id}
                   >
-                    <ProductCard product={product} key={product.id} />
+                    <ProductCard
+                      product={product}
+                      key={product.id}
+                      likePage={true}
+                    />
                   </Link>
                 ))}
             </div>

@@ -50,3 +50,14 @@ export const refactorPrice = (data) => {
     return Number(Number(data).toFixed(2));
   }
 };
+
+export const scrollToTitleName = () => {
+  const targetElement = document.getElementById("titleName");
+  if (targetElement) {
+    const targetScrollPosition = targetElement.getBoundingClientRect().top;
+    window.scrollTo({
+      top: window.scrollY + targetScrollPosition,
+      behavior: "smooth",
+    });
+  }
+};

@@ -63,19 +63,14 @@ const ShopCard = ({ shop }) => {
         <Link href={`/shop/${shop.id}`}>
           <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
             {isShopImage.includes(itm) && isShopImages ? (
-              <div
-                className="bg-[#00000031]"
-                style={{
-                  width: "100%",
-                  height: themeLayout === "mobileScreen" ? 250 : 300,
-                }}
-              />
+              <div className="w-full h-full bg-[#00000031]" />
             ) : (
               <Image
                 src={
-                  currentImageIndex === null
-                    ? itm?.links
-                    : currentImageIndex === 0 && shop.shop_images[0]?.links
+                  // currentImageIndex === null
+                  //   ?
+                  itm?.links ?? ""
+                  // : currentImageIndex === 0 && shop.shop_images[0]?.links
                 }
                 unoptimized={true}
                 alt={shop?.shop_name}
@@ -96,33 +91,91 @@ const ShopCard = ({ shop }) => {
     );
   });
 
+  const CustomPrevArrow = () => {
+    return (
+      <Link href={`/shop/${shop.id}`}>
+        <a
+          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+          rel="noopener noreferrer"
+        >
+          <button className="absolute top-1/2 left-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
+        </a>
+      </Link>
+    );
+  };
+
+  const CustomNextArrow = () => {
+    return (
+      <Link href={`/shop/${shop.id}`}>
+        <a
+          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+          rel="noopener noreferrer"
+        >
+          <button className="absolute top-1/2 right-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
+        </a>
+      </Link>
+    );
+  };
+
   return (
-    <div className="bg-white shadow-md h-full rounded-lg">
+    <div className="w-[98%] sm:w-[49%] lg:w-[32%] mb-3 sm:mb-0 bg-white shadow-md h-full rounded-lg ">
       <div className="">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
-            <div className="w-[100%]">
-              <Carousel
-                ref={carouselRef}
-                autoPlay={autoplay}
-                autoPlaySpeed={1500}
-                infinite
-                arrows={false}
-                responsive={responsive}
-                className="rounded-t-lg"
+            <div className="group relative w-full">
+              <div
+                className={`relative bg-[#00000031] rounded-t-lg`}
+                style={{
+                  width: "100%",
+                  height: themeLayout === "mobileScreen" ? 250 : 300,
+                }}
               >
-                {shop?.shop_images?.length === 0 ? (
-                  <div
-                    className="bg-[#00000031]"
-                    style={{
-                      width: "100%",
-                      height: themeLayout === "mobileScreen" ? 250 : 300,
-                    }}
-                  />
-                ) : (
-                  shopImages
+                {!isShopImagesLoaded && (
+                  <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
                 )}
-              </Carousel>
+                {isShopImages ? (
+                  <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
+                ) : (
+                  <Image
+                    src={shop.shop_images[0]?.links ?? ""}
+                    unoptimized={true}
+                    alt={shop?.shop_name}
+                    className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
+                      isShopImagesLoaded ? "opacity-100" : "opacity-0"
+                    }`}
+                    onLoad={() => setShopImagesLoaded(true)}
+                    onError={() => {
+                      setIsShopImages(true);
+                    }}
+                    layout="fill"
+                  />
+                )}
+              </div>
+              <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
+                <Carousel
+                  ref={carouselRef}
+                  autoPlay={true}
+                  autoPlaySpeed={1500}
+                  infinite
+                  arrows={true}
+                  customLeftArrow={<CustomPrevArrow />}
+                  customRightArrow={<CustomNextArrow />}
+                  responsive={responsive}
+                  className={`rounded-t-lg`}
+                >
+                  {shop?.shop_images?.length === 0 ? (
+                    <div
+                      className="bg-[#00000031]"
+                      style={{
+                        width: "100%",
+                        height: themeLayout === "mobileScreen" ? 250 : 300,
+                      }}
+                    />
+                  ) : (
+                    shopImages
+                  )}
+                </Carousel>
+              </div>
             </div>
           </div>
         </div>
@@ -171,7 +224,7 @@ const ShopCard = ({ shop }) => {
                   </div>
                 </div>
                 <div className="flex flex-col align-baseline">
-                  <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary">
+                  <p className="text-[#000000] text-base font-semibold cursor-pointer hover:text-colorPrimary line-clamp-1">
                     {shop.shop_name}
                   </p>
 

@@ -125,7 +125,6 @@ const UserType = () => {
           onClick={() => {
             setLoading(true);
             localStorage.setItem("user_type_for_auth", selectedUserType);
-
             Router.push("/auth/signin");
           }}
         >

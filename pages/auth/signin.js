@@ -56,7 +56,7 @@ const Login = () => {
     localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
     setTimeout(() => {
       Router.push(asVendor ? "/vendor/dashboard" : "/");
-    }, 1000);
+    }, 2000);
   };
 
   const handleAfterSignInError = (message) => {

@@ -17,7 +17,7 @@ const index = () => {
   };
 
   return (
-    <div className="bg-white rounded p-5">
+    <div className="p-5">
       <div>
         <button
           className="p-2 flex justify-center cursor-pointer"
@@ -27,18 +27,6 @@ const index = () => {
         </button>
       </div>
       <div className="flex flex-col items-center justify-center h-[80vh] p-5">
-        <div className="p-5">
-          <h1 className="text-colorBlack text-center font-semibold text-2xl">
-            Enterprise
-          </h1>
-          <p className="text-center text-colorStone mt-3">
-            Enterprise Ultimate control and support for businesses
-          </p>
-          <p className="text-colorStone text-center mt-2">
-            Custom contract & additional features Volume-based discounting
-            available
-          </p>
-        </div>
         <div className="p-5 shadow-md rounded-xl  w-full sm:w-[75%] border">
           <h1 className="text-colorBlack text-center font-semibold text-4xl p-2">
             Contact Us

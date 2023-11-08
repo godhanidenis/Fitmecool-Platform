@@ -33,7 +33,6 @@ import {
 } from "../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
-import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import { TiArrowForwardOutline } from "react-icons/ti";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
@@ -54,7 +53,7 @@ import { screeResizeForViewMoreItems } from "../../components/core/useScreenResi
 import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
 import { assets } from "../../constants";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { refactorPrice } from "../../utils/common";
+import Errors from "../../components/Layout/Errors";
 
 const ContactStyle = {
   position: "absolute",
@@ -68,7 +67,7 @@ const ContactStyle = {
   borderRadius: 4,
 };
 
-const ProductDetail = ({ productDetails }) => {
+const ProductDetail = ({ productDetails, error }) => {
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
@@ -453,6 +452,10 @@ const ProductDetail = ({ productDetails }) => {
 
   if (!isHydrated) {
     return null;
+  }
+
+  if (error) {
+    return <Errors error={error} item="product" />;
   }
 
   return (
@@ -844,16 +847,15 @@ const ProductDetail = ({ productDetails }) => {
               )}
           </div>
 
-          <div
-            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${
-              isScreenWide ? "xl:grid-cols-5" : "xl:grid-cols-4"
-            } place-items-center mt-4`}
-          >
+          <div className="w-[100%] flex flex-wrap justify-center md:justify-normal place-items-center mt-4">
             {productDetailsData?.related &&
               productDetailsData?.related
                 .slice(0, isScreenWide ? 5 : 4)
                 ?.map((product, index) => (
-                  <div className="" key={product.id}>
+                  <div
+                    className="w-[50%] md:w-[33%]  lg:w-[25%] xl:w-[20%] 2xl:w-[20%] mb-2 sm:mb-0"
+                    key={product.id}
+                  >
                     <ProductCard product={product} />
                   </div>
                 ))}
@@ -949,10 +951,8 @@ export async function getServerSideProps(context) {
   try {
     const productId = context.params.id;
     const productDetails = await getProductDetails({ id: productId });
-
     return { props: { productDetails } };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { props: { error: error.message } };
   }
 }

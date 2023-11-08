@@ -20,7 +20,6 @@ import {
   loadProductsStart,
 } from "../../../redux/ducks/product";
 import CircularProgress from "@mui/material/CircularProgress";
-import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 import ShopCommentsSection from "../../../components/sections/shop-section/ShopCommentsSection";
@@ -28,8 +27,10 @@ import ShopReviewSection from "../../../components/sections/shop-section/ShopRev
 import { useResizeScreenLayout } from "../../../components/core/useScreenResize";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
+import Errors from "../../../components/Layout/Errors";
 
-const ShopDetail = ({ shopDetails }) => {
+const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -75,11 +76,11 @@ const ShopDetail = ({ shopDetails }) => {
     productPageSkip,
     productsData,
     loading,
-    error,
+    error: productError,
   } = useSelector((state) => state.products);
 
-  const { appliedProductsFilters, sortFilters } = useSelector(
-    (state) => state.productsFiltersReducer
+  const { appliedShopProductsFilters, shopSortFilters } = useSelector(
+    (state) => state.shopProductsFiltersReducer
   );
 
   useEffect(() => {
@@ -94,18 +95,18 @@ const ShopDetail = ({ shopDetails }) => {
           limit: 6,
         },
         filter: {
-          category_id: appliedProductsFilters.categoryId.selectedValue,
-          product_color: appliedProductsFilters.productColor.selectedValue,
+          category_id: appliedShopProductsFilters.categoryId.selectedValue,
+          product_color: appliedShopProductsFilters.productColor.selectedValue,
           product_price: {
-            min: appliedProductsFilters.productPrice.selectedValue.min,
-            max: appliedProductsFilters.productPrice.selectedValue.max,
+            min: appliedShopProductsFilters.productPrice.selectedValue.min,
+            max: appliedShopProductsFilters.productPrice.selectedValue.max,
           },
           product_listing_type:
-            appliedProductsFilters.productListingType.selectedValue,
+            appliedShopProductsFilters.productListingType.selectedValue,
         },
-        shopId: appliedProductsFilters.shopId.selectedValue,
-        sort: sortFilters.sortType.selectedValue,
-        search: appliedProductsFilters.searchBarData.selectedValue,
+        shopId: appliedShopProductsFilters.shopId.selectedValue,
+        sort: shopSortFilters.sortType.selectedValue,
+        search: appliedShopProductsFilters.searchBarData.selectedValue,
       })
     );
   };
@@ -123,20 +124,53 @@ const ShopDetail = ({ shopDetails }) => {
   };
 
   useEffect(() => {
-    dispatch(
-      changeAppliedProductsFilters({
-        key: "shopId",
-        value: {
-          selectedValue: [router.query.id],
-        },
-      })
-    );
+    if (router.query.id) {
+      const passValueForProduct = (itm) => {
+        if (itm === "searchBarData" || itm === "productListingType") {
+          return "";
+        } else if (itm === "productPrice") {
+          return { min: 0, max: 0 };
+        } else {
+          return [];
+        }
+      };
+
+      [
+        "categoryId",
+        "productColor",
+        "productPrice",
+        "productListingType",
+        "shopId",
+        "searchBarData",
+      ].map((itm) =>
+        dispatch(
+          changeAppliedShopProductsFilters({
+            key: itm,
+            value: {
+              selectedValue: passValueForProduct(itm),
+            },
+          })
+        )
+      );
+      dispatch(changeProductPage(0));
+
+      dispatch(
+        changeAppliedShopProductsFilters({
+          key: "shopId",
+          value: {
+            selectedValue: [router.query.id],
+          },
+        })
+      );
+    }
   }, [dispatch, router.query.id]);
 
   useEffect(() => {
-    appliedProductsFilters.shopId.selectedValue?.length > 0 && getAllProducts();
+    appliedShopProductsFilters.shopId.selectedValue?.length > 0 &&
+      appliedShopProductsFilters.shopId.selectedValue[0] === router.query.id &&
+      getAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
+  }, [dispatch, appliedShopProductsFilters, shopSortFilters, productPageSkip]);
 
   useEffect(() => {
     getAllReviews();
@@ -154,6 +188,11 @@ const ShopDetail = ({ shopDetails }) => {
   if (!isHydrated) {
     return null;
   }
+
+  if (error) {
+    return <Errors error={error} item="shop" />;
+  }
+
   return (
     <>
       <div className="font-Nova">
@@ -195,9 +234,13 @@ const ShopDetail = ({ shopDetails }) => {
               >
                 {productsData?.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 place-items-center">
+                    <div className="w-[100%] flex flex-wrap justify-between lg:justify-center xl:justify-normal mb-2 lg:mb-0 lg:gap-3 p-1 place-items-center">
                       {productsData?.map((product) => (
-                        <ProductCard product={product} key={product.id} />
+                        <ProductCard
+                          product={product}
+                          key={product.id}
+                          homepage={true}
+                        />
                       ))}
                     </div>
                     {productsCount > 6 && (
@@ -334,7 +377,6 @@ export async function getServerSideProps(context) {
 
     return { props: { shopDetails } };
   } catch (error) {
-    console.log(error);
-    throw error;
+    return { props: { error: error.message } };
   }
 }
