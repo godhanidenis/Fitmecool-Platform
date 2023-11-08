@@ -7,11 +7,13 @@ import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 import { changeShopPage } from "../../../redux/ducks/shop";
+import { scrollToTitleName } from "../../../utils/common";
 
 const ShopByLocation = () => {
   const { areaLists } = useSelector((state) => state.areaLists);
 
   const [selectedData, setSelectedData] = useState([]);
+  console.log("selectedData :>> ", selectedData);
 
   const [abc, setAbc] = useState(false);
 
@@ -64,16 +66,7 @@ const ShopByLocation = () => {
                         },
                       })
                     );
-                    const targetElement = document.getElementById("titleName");
-                    if (targetElement) {
-                      const targetScrollPosition =
-                        targetElement.getBoundingClientRect().top;
-
-                      window.scrollTo({
-                        top: window.scrollY + targetScrollPosition,
-                        behavior: "smooth",
-                      });
-                    }
+                    scrollToTitleName();
                   }}
                 />
                 <div
@@ -100,32 +93,31 @@ const ShopByLocation = () => {
                     : areaLists
                   )?.map((itm) => (
                     <StyledFormLabelCheckBox
-                      key={itm.shop_name}
-                      value={itm.shop_name}
+                      key={itm}
+                      value={itm}
                       control={
                         <Checkbox
-                          checked={selectedData.includes(itm.pin)}
+                          checked={selectedData.some(
+                            (item) =>
+                              item.area === itm.area && item.pin === itm.pin
+                          )}
                           onChange={(event) => {
-                            const updatedSelection = selectedData.includes(
-                              itm.pin
+                            const updatedSelection = selectedData.some(
+                              (item) =>
+                                item.area === itm.area && item.pin === itm.pin
                             )
-                              ? selectedData.filter((id) => id !== itm.pin)
-                              : [...selectedData, itm.pin];
+                              ? selectedData.filter(
+                                  (val) => val.pin !== itm.pin
+                                )
+                              : [
+                                  ...selectedData,
+                                  { area: itm.area, pin: itm.pin },
+                                ];
 
                             setSelectedData(updatedSelection);
                             dispatch(changeShopPage(0));
                             setAbc(true);
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
+                            scrollToTitleName();
                           }}
                         />
                       }

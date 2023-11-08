@@ -6,7 +6,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -42,13 +41,16 @@ import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
 import { useResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
-import { loadAreaListsStart } from "../../redux/ducks/areaLists";
-import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
-import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import {
+  changeAppliedShopsFilters,
+  changeByShopFilters,
+} from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
 import AppLogo from "./AppLogo";
 import { assets } from "../../constants";
+import { changeAppliedCityFilters } from "../../redux/ducks/cityFilter";
+import { changeShopPage } from "../../redux/ducks/shop";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
@@ -64,11 +66,20 @@ const Header = () => {
   const isScreenWide = useResizeScreenLayout();
   const router = useRouter();
 
-  const { areaLists } = useSelector((state) => state.areaLists);
+  const { cityLists } = useSelector((state) => state.cityLists);
   const { userProfile } = useSelector((state) => state.userProfile);
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
+
+  const { appliedCityFilter } = useSelector(
+    (state) => state.cityFiltersReducer
+  );
+
+  useEffect(() => {
+    appliedCityFilter &&
+      setSelectedLocation(appliedCityFilter.city.selectedValue);
+  }, [appliedCityFilter]);
 
   useEffect(() => {
     if (!isScreenWide) {
@@ -81,12 +92,6 @@ const Header = () => {
   const handleMobileSidebarClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
-  useEffect(() => {
-    dispatch(loadCategoriesStart());
-    dispatch(loadAreaListsStart());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
 
   useEffect(() => {
     const getAccessToken = localStorage.getItem("token");
@@ -212,14 +217,31 @@ const Header = () => {
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
-                    onChange={(event) =>
-                      setSelectedLocation(event.target.value)
-                    }
+                    onChange={(event) => {
+                      setSelectedLocation(event.target.value);
+                      localStorage.setItem("selected_city", event.target.value);
+                      dispatch(changeProductPage(0));
+                      dispatch(changeShopPage(0));
+                      dispatch(
+                        changeAppliedShopsFilters({
+                          key: "locations",
+                          value: { selectedValue: [] },
+                        })
+                      );
+                      dispatch(
+                        changeAppliedCityFilters({
+                          key: "city",
+                          value: {
+                            selectedValue: event.target.value,
+                          },
+                        })
+                      );
+                    }}
                     label="Location"
                   >
-                    {areaLists?.map((location, index) => (
-                      <MenuItem value={location?.pin} key={index}>
-                        {location?.area}
+                    {cityLists?.map((city, index) => (
+                      <MenuItem value={city?.city} key={index}>
+                        {city?.city}
                       </MenuItem>
                     ))}
                   </LocationSelect>
@@ -413,14 +435,6 @@ export const UserProfile = ({ setAccessToken }) => {
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
 
-  if (userProfile.user_type === "vendor" && userProfile.subscriptionStatus) {
-    options.unshift({
-      icon: <SubscriptionsIcon />,
-      name: "User Subscription",
-      func: subscription,
-    });
-  }
-
   if (userProfile.user_type === "vendor" && userProfile.userHaveAnyShop) {
     options.unshift({
       icon: <DashboardIcon />,
@@ -440,10 +454,6 @@ export const UserProfile = ({ setAccessToken }) => {
 
   function dashboard() {
     Router.push("/vendor/dashboard");
-  }
-
-  function subscription() {
-    Router.push("/vendor/shop-subscription");
   }
 
   function wishList() {

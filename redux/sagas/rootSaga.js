@@ -13,6 +13,10 @@ import { handleGetUserProfile } from "./handlers/userProfile";
 import { handleGetVendorShopDetails } from "./handlers/vendorShopDetails";
 import { LOAD_SHOP_CONFIGURATION_START } from "../ducks/shopConfigurations";
 import { handleGetShopConfigurations } from "./handlers/shopConfigurations";
+import { LOAD_CITY_LIST_START } from "../ducks/cityLists";
+import { handleGetCityLists } from "./handlers/cityLists";
+import { LOAD_SHOP_PRODUCT_START } from "../ducks/shopProduct";
+import { handleGetShopProducts } from "./handlers/shopProducts";
 
 function* onLoadUserProfile() {
   yield takeLatest(LOAD_USER_PROFILE_START, handleGetUserProfile);
@@ -20,6 +24,10 @@ function* onLoadUserProfile() {
 
 function* onLoadProducts() {
   yield takeLatest(LOAD_PRODUCT_START, handleGetProducts);
+}
+
+function* onLoadShopProducts() {
+  yield takeLatest(LOAD_SHOP_PRODUCT_START, handleGetShopProducts);
 }
 
 function* onLoadShops() {
@@ -37,6 +45,11 @@ function* onLoadCategories() {
 function* onLoadAreaLists() {
   yield takeLatest(LOAD_AREA_LIST_START, handleGetAreaLists);
 }
+
+function* onLoadCityLists() {
+  yield takeLatest(LOAD_CITY_LIST_START, handleGetCityLists);
+}
+
 function* onLoadShopConfigurations() {
   yield takeLatest(LOAD_SHOP_CONFIGURATION_START, handleGetShopConfigurations);
 }
@@ -47,9 +60,11 @@ function* onLoadVendorShopDetails() {
 
 const userProfileSagas = [fork(onLoadUserProfile)];
 const productSagas = [fork(onLoadProducts)];
+const shopProductSagas = [fork(onLoadShopProducts)];
 const shopSagas = [fork(onLoadShops), fork(onLoadAllShops)];
 const categorySagas = [fork(onLoadCategories)];
 const areaLists = [fork(onLoadAreaLists)];
+const cityLists = [fork(onLoadCityLists)];
 const shopConfigurations = [fork(onLoadShopConfigurations)];
 const vendorShopDetails = [fork(onLoadVendorShopDetails)];
 
@@ -57,9 +72,11 @@ export default function* watcherSaga() {
   yield all([
     ...userProfileSagas,
     ...productSagas,
+    ...shopProductSagas,
     ...shopSagas,
     ...categorySagas,
     ...areaLists,
+    ...cityLists,
     ...shopConfigurations,
     ...vendorShopDetails,
   ]);

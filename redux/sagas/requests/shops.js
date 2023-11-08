@@ -7,6 +7,6 @@ export function requestGetShops(shop) {
   return getShops(shop);
 }
 
-export function requestGetAllShops() {
-  return getAllShopsList();
+export function requestGetAllShops(shop) {
+  return getAllShopsList(shop);
 }
