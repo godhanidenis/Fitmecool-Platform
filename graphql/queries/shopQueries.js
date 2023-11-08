@@ -1,16 +1,20 @@
 import { gql } from "@apollo/client";
 import client from "../apollo-client";
 
-export const getAllShopsList = async () => {
+export const getAllShopsList = async (payload) => {
   const results = await client.query({
     query: gql`
-      query GetAllShops {
-        getAllShops {
+      query GetAllShops($city: String) {
+        getAllShops(city: $city) {
           id
           shop_name
         }
       }
     `,
+    variables: {
+      city: payload.city,
+    },
+    fetchPolicy: "no-cache",
   });
 
   return results;
@@ -24,8 +28,15 @@ export const getShops = async (payload) => {
         $sort: String
         $pageData: paginationInput
         $stars: String
+        $city: String
       ) {
-        shopList(area: $area, sort: $sort, pageData: $pageData, stars: $stars) {
+        shopList(
+          area: $area
+          sort: $sort
+          pageData: $pageData
+          stars: $stars
+          city: $city
+        ) {
           count
           limit
           noOfPages
@@ -53,6 +64,7 @@ export const getShops = async (payload) => {
       sort: payload.sort,
       pageData: payload.pageData,
       stars: payload.stars,
+      city: payload.city,
     },
     fetchPolicy: "no-cache",
   });
@@ -75,6 +87,7 @@ export const getShopDetails = async (payload) => {
             branch_address
             branch_pinCode
             branch_city
+            branch_state
             manager_name
             manager_contact
             manager_email
@@ -100,7 +113,6 @@ export const getVendorShopDetails = async (payload) => {
           createdAt
           subscriptionDate
           user_id
-          subscriptionId
           shop_name
           shop_time {
             close_time
@@ -140,6 +152,7 @@ export const getVendorShopDetails = async (payload) => {
             branch_address
             branch_pinCode
             branch_city
+            branch_state
             manager_name
             manager_contact
             manager_email

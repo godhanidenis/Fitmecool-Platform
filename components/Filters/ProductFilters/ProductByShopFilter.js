@@ -7,6 +7,7 @@ import { StyledFormLabelCheckBox } from "../../core/CustomMUIComponents";
 import CommonSearchField from "../CommonSearchField";
 import ShowMoreLessFilter from "../ShowMoreLessFilter";
 import { changeProductPage } from "../../../redux/ducks/product";
+import { scrollToTitleName } from "../../../utils/common";
 
 const ProductByShopFilter = () => {
   const { allShopsLists } = useSelector((state) => state.shops);
@@ -63,16 +64,7 @@ const ProductByShopFilter = () => {
                       },
                     })
                   );
-                  const targetElement = document.getElementById("titleName");
-                  if (targetElement) {
-                    const targetScrollPosition =
-                      targetElement.getBoundingClientRect().top;
-
-                    window.scrollTo({
-                      top: window.scrollY + targetScrollPosition,
-                      behavior: "smooth",
-                    });
-                  }
+                  scrollToTitleName();
                 }}
               />
               <FormGroup>
@@ -115,17 +107,7 @@ const ProductByShopFilter = () => {
                             setSelectedData(updatedSelection);
                             dispatch(changeProductPage(0));
                             setAbc(true);
-                            const targetElement =
-                              document.getElementById("titleName");
-                            if (targetElement) {
-                              const targetScrollPosition =
-                                targetElement.getBoundingClientRect().top;
-
-                              window.scrollTo({
-                                top: window.scrollY + targetScrollPosition,
-                                behavior: "smooth",
-                              });
-                            }
+                            scrollToTitleName();
                           }}
                         />
                       }

@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
-// import { getSingleSubscriptionDetails } from "../../graphql/queries/subscriptions";
-// import { setSubscriptionStatus } from "../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { loadProductsStart } from "../../redux/ducks/product";
 import { loadShopConfigurationsStart } from "../../redux/ducks/shopConfigurations";
@@ -74,21 +72,6 @@ const VendorCommonLayout = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
-
-  // useEffect(() => {
-  //   if (userProfile?.subscriptionId) {
-  //     getSingleSubscriptionDetails({ id: userProfile?.subscriptionId }).then(
-  //       (res) =>
-  //         dispatch(
-  //           setSubscriptionStatus(
-  //             res?.data?.singleSubscription?.status === "active" ? true : false
-  //           )
-  //         )
-  //     );
-  //   } else {
-  //     dispatch(setSubscriptionStatus(false));
-  //   }
-  // }, [dispatch, userProfile?.subscriptionId]);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">

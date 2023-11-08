@@ -5,11 +5,15 @@ import {
 } from "../../ducks/areaLists";
 import { requestGetAreaLists } from "../requests/areaLists";
 
-export function* handleGetAreaLists() {
+export function* handleGetAreaLists({ payload }) {
   try {
-    const response = yield call(requestGetAreaLists);
+    const response = yield call(requestGetAreaLists, payload);
 
-    yield put(loadAreaListsSuccess(response.data.areaList));
+    yield put(
+      loadAreaListsSuccess(
+        payload ? response.data.areaByCity : response.data.areaList
+      )
+    );
   } catch (error) {
     yield put(loadAreaListsError(error.message));
   }

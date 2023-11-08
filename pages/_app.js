@@ -16,11 +16,10 @@ import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
-import Script from "next/script";
-// import Image from "next/image";
-// import { assets } from "../constants";
+
+import CustomerCommonLayout from "../components/Layout/CustomerCommonLayout";
 
 const theme = createTheme({
   palette: {
@@ -38,19 +37,6 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [isLogoLoading, setIsLogoLoading] = useState(true);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLogoLoading(false);
-  //   }, 1200);
-  // }, []);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 400);
-  // }, []);
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -65,18 +51,6 @@ function MyApp({ Component, pageProps }) {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, [router]);
-
-  // useEffect(() => {
-  //   const handleBeforeUnload = () => {
-  //     localStorage.removeItem("visitedSecondPage");
-  //   };
-
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // }, []);
 
   return (
     <>
@@ -100,33 +74,14 @@ function MyApp({ Component, pageProps }) {
           content={typeof window !== "undefined" ? window.location.href : ""}
         />
       </Head>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <ToastContainer />
 
           <Provider store={store}>
-            {/* {isLogoLoading && (
-              <div className="fixed flex justify-center z-10 bg-[#0000006e] w-full h-full">
-                <div className="flex flex-col justify-center items-center">
-                  <div className="flex flex-col justify-center items-center bg-[#ffffff41] p-5 rounded-xl">
-                    <Image
-                      src={assets.appBlackLogo}
-                      alt="AppLogo"
-                      width={80}
-                      height={80}
-                      className="animate-bounce"
-                    />
-                    <div className="text-[24px] font-bold text-black tracking-wider font-Nova ">
-                      R<span className="text-[20px]">entbless</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )} */}
             {!router.pathname.includes("/auth/") && <Header />}
-            {/* {isLoading && <div className="h-screen" />} */}
+
             <div>
               {router.pathname.includes("/vendor/") &&
               router.pathname !== "/vendor/shop-setup" ? (
@@ -140,7 +95,9 @@ function MyApp({ Component, pageProps }) {
                   <Component {...pageProps} />
                 </AuthCommonLayout>
               ) : (
-                <Component {...pageProps} />
+                <CustomerCommonLayout>
+                  <Component {...pageProps} />
+                </CustomerCommonLayout>
               )}
             </div>
             {!router.pathname.includes("/auth/") &&

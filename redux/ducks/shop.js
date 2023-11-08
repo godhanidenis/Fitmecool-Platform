@@ -23,8 +23,9 @@ export const loadShopsError = (error) => ({
   payload: error,
 });
 
-export const loadAllShopsListsStart = () => ({
+export const loadAllShopsListsStart = (filter) => ({
   type: LOAD_ALL_SHOP_START,
+  payload: filter,
 });
 
 export const loadAllShopsListsSuccess = (shops) => ({

@@ -8,6 +8,7 @@ export const getBranchLists = async () => {
         branchList {
           branch_address
           branch_city
+          branch_state
           branch_pinCode
           branch_type
           flag
@@ -37,6 +38,7 @@ export const getSingleBranchDetails = async (payload) => {
           branch_address
           branch_pinCode
           branch_city
+          branch_state
           manager_name
           manager_contact
           manager_email

@@ -13,12 +13,6 @@ import ShopHeaderSection from "../../../components/sections/shop-section/ShopHea
 import ProductCard from "../../../components/sections/product-section/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loadCategoriesStart } from "../../../redux/ducks/categories";
-import { loadAreaListsStart } from "../../../redux/ducks/areaLists";
-import {
-  changeProductPage,
-  loadProductsStart,
-} from "../../../redux/ducks/product";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
@@ -29,6 +23,10 @@ import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
 import Errors from "../../../components/Layout/Errors";
+import {
+  changeShopProductPage,
+  loadShopProductsStart,
+} from "../../../redux/ducks/shopProduct";
 
 const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
@@ -77,7 +75,7 @@ const ShopDetail = ({ shopDetails, error }) => {
     productsData,
     loading,
     error: productError,
-  } = useSelector((state) => state.products);
+  } = useSelector((state) => state.shopProducts);
 
   const { appliedShopProductsFilters, shopSortFilters } = useSelector(
     (state) => state.shopProductsFiltersReducer
@@ -89,7 +87,7 @@ const ShopDetail = ({ shopDetails, error }) => {
 
   const getAllProducts = () => {
     dispatch(
-      loadProductsStart({
+      loadShopProductsStart({
         pageData: {
           skip: productPageSkip,
           limit: 6,
@@ -152,7 +150,7 @@ const ShopDetail = ({ shopDetails, error }) => {
           })
         )
       );
-      dispatch(changeProductPage(0));
+      dispatch(changeShopProductPage(0));
 
       dispatch(
         changeAppliedShopProductsFilters({
@@ -175,8 +173,6 @@ const ShopDetail = ({ shopDetails, error }) => {
   useEffect(() => {
     getAllReviews();
     getAllFollowers();
-    dispatch(loadCategoriesStart());
-    dispatch(loadAreaListsStart());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -260,7 +256,9 @@ const ShopDetail = ({ shopDetails, error }) => {
                               behavior: "smooth",
                             });
                             dispatch(
-                              changeProductPage((p === 1 && 0) || (p - 1) * 6)
+                              changeShopProductPage(
+                                (p === 1 && 0) || (p - 1) * 6
+                              )
                             );
                           }}
                         />

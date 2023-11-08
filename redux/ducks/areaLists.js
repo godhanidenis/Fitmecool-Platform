@@ -2,8 +2,9 @@ export const LOAD_AREA_LIST_START = "LOAD_AREA_LIST_START";
 export const LOAD_AREA_LIST_SUCCESS = "LOAD_AREA_LIST_SUCCESS";
 export const LOAD_AREA_LIST_ERROR = "LOAD_AREA_LIST_ERROR";
 
-export const loadAreaListsStart = () => ({
+export const loadAreaListsStart = (filter) => ({
   type: LOAD_AREA_LIST_START,
+  payload: filter,
 });
 
 export const loadAreaListsSuccess = (areas) => ({

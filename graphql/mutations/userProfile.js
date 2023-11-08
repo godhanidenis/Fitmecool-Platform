@@ -41,7 +41,6 @@ export const getUserProfile = async () => {
             product_price
             product_discount
           }
-          subscriptionId
         }
       }
     `,

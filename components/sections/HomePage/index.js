@@ -12,8 +12,6 @@ import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
 import { assets } from "../../../constants";
 import BannerHero from "../../DirectoryHero/BannerHero";
-// import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
-// import { useResizeScreenLayout } from "../../core/useScreenResize";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -46,6 +44,10 @@ const HomePage = () => {
     byShop,
   } = useSelector((state) => state.shopsFiltersReducer);
 
+  const { appliedCityFilter } = useSelector(
+    (state) => state.cityFiltersReducer
+  );
+
   const carouselItems = [
     { imageSrc: assets.bannerImg4, des: "bannerImg4" },
     { imageSrc: assets.bannerImg5, des: "bannerImg5" },
@@ -72,6 +74,7 @@ const HomePage = () => {
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
+        city: appliedCityFilter.city.selectedValue,
       })
     );
   };
@@ -83,9 +86,10 @@ const HomePage = () => {
           skip: shopPageSkip,
           limit: 10,
         },
-        area: appliedShopsFilters.locations.selectedValue,
+        area: appliedShopsFilters.locations.selectedValue.map((itm) => itm.pin),
         sort: shopSortFilter.sortType.selectedValue,
         stars: appliedShopsFilters.stars.selectedValue,
+        city: appliedCityFilter.city.selectedValue,
       })
     );
   };
@@ -93,26 +97,24 @@ const HomePage = () => {
   useEffect(() => {
     getAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
+  }, [
+    dispatch,
+    appliedProductsFilters,
+    appliedCityFilter,
+    sortFilters,
+    productPageSkip,
+  ]);
 
   useEffect(() => {
     getAllShops();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedShopsFilters, shopSortFilter, shopPageSkip]);
-
-  // const isScreenWide = useResizeScreenLayout();
-
-  // useEffect(() => {
-  //   !isScreenWide &&
-  //     dispatch(
-  //       changeAppliedProductsFilters({
-  //         key: "shopId",
-  //         value: {
-  //           selectedValue: [],
-  //         },
-  //       })
-  //     );
-  // }, [dispatch, isScreenWide]);
+  }, [
+    dispatch,
+    appliedShopsFilters,
+    appliedCityFilter,
+    shopSortFilter,
+    shopPageSkip,
+  ]);
 
   return (
     <>

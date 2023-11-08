@@ -239,7 +239,9 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
     const selectedLocationPins = appliedShopsFilters.locations.selectedValue;
 
     const selectedLocations = areaLists.filter((area) =>
-      selectedLocationPins.includes(area.pin)
+      selectedLocationPins.some(
+        (item) => item.area === area.area && item.pin === area.pin
+      )
     );
 
     const mappedLocations = selectedLocations.map((location) => ({
@@ -537,7 +539,7 @@ const SelectedFilterBadge = ({
         itm.type === "stars"
           ? "0"
           : appliedShopsFilters[itm.type].selectedValue.filter(
-              (item) => item !== itm.value
+              (item) => item.pin !== itm.value
             );
       dispatch(
         changeAppliedShopsFilters({ key: itm.type, value: { selectedValue } })

@@ -39,8 +39,7 @@ import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import Router from "next/router";
-import { loadCategoriesStart } from "../../redux/ducks/categories";
-import { loadAreaListsStart } from "../../redux/ducks/areaLists";
+
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -142,11 +141,6 @@ const ProductDetail = ({ productDetails, error }) => {
     productDetailsData?.data.id,
     userProfile,
   ]);
-
-  useEffect(() => {
-    dispatch(loadCategoriesStart());
-    dispatch(loadAreaListsStart());
-  }, [dispatch]);
 
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState({ src: "" });

@@ -1,5 +1,10 @@
-import { getAreaLists } from "../../../graphql/queries/areaListsQueries";
+import {
+  getAreaByCityLists,
+  getAreaLists,
+} from "../../../graphql/queries/areaListsQueries";
 
-export function requestGetAreaLists() {
-  return getAreaLists();
+export function requestGetAreaLists(city) {
+  const query = city ? getAreaByCityLists(city) : getAreaLists();
+  console.log("city", city);
+  return query;
 }

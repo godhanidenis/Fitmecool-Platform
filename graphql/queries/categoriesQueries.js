@@ -13,6 +13,8 @@ export const getCategories = async () => {
         }
       }
     `,
+    fetchPolicy: "no-cache",
+
   });
 
   return results;
