@@ -15,9 +15,11 @@ const ShopCard = ({ shop }) => {
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
 
+  const shopSlug = shop.shop_name.replaceAll(" ", "-");
+
   return (
     <div className="rounded-lg shadow-md flex flex-col w-[100%] cursor-pointer">
-      <Link href={`/shop/${shop.id}`} passHref>
+      <Link href={`/shop/${shopSlug}/${shop.id}`} passHref>
         <a
           target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
           rel="noopener noreferrer"

@@ -33,7 +33,7 @@ const ShopDetail = ({ shopDetails, error }) => {
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [videoShow, setVideoShow] = useState(true);
+  const [videoShow, setVideoShow] = useState(false);
   const [videoPosition, setVideoPosition] = useState({
     x: window.innerWidth - 400,
     y: window.innerHeight - 250,
@@ -181,6 +181,8 @@ const ShopDetail = ({ shopDetails, error }) => {
     !isScreenWide && dispatch(changeByShopFilters(false));
   }, [dispatch, isScreenWide]);
 
+  const shopSlug = shopDetailsData?.shop_name.replaceAll(" ", "-");
+
   if (!isHydrated) {
     return null;
   }
@@ -303,7 +305,9 @@ const ShopDetail = ({ shopDetails, error }) => {
                   <button
                     className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[8px] px-[8px] bg-[#FAFCFC]"
                     onClick={() =>
-                      router.push(`/shop/${shopDetailsData?.id}/reviews`)
+                      router.push(
+                        `/shop/${shopSlug}/${shopDetailsData?.id}/reviews`
+                      )
                     }
                   >
                     View All
@@ -320,7 +324,6 @@ const ShopDetail = ({ shopDetails, error }) => {
             className={`fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end ${
               window.innerWidth < 640 ? "!left-[20px]" : ""
             }`}
-            // className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
             style={{
               left: videoPosition.x,
               top: videoPosition.y,
@@ -345,7 +348,7 @@ const ShopDetail = ({ shopDetails, error }) => {
             </div>
           </div>
         )}
-        {!videoShow && (
+        {shopDetailsData?.shop_video && !videoShow && (
           <div className="fixed bottom-24 lg:bottom-6 right-6 flex justify-end ">
             <button
               className="p-3 bg-colorPrimary rounded-full shadow-xl"

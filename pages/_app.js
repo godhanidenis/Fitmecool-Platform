@@ -56,17 +56,32 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>
-          {pageProps?.productDetails?.data?.product?.data?.product_name}
+          {pageProps?.productDetails?.data?.product?.data?.product_name ||
+            pageProps?.shopDetails?.data?.shop?.shop_name}
         </title>
+
         <meta
           property="og:title"
-          content={pageProps?.productDetails?.data?.product?.data?.product_name}
+          content={
+            pageProps?.productDetails?.data?.product?.data?.product_name ||
+            pageProps?.shopDetails?.data?.shop?.shop_name
+          }
         />
-        {/* <meta property="og:description" content={"Product Description"} /> */}
+        <meta
+          property="og:description"
+          content={
+            pageProps?.productDetails?.data?.product?.data
+              ?.product_description ||
+            pageProps?.shopDetails?.data?.shop.branch_info.find(
+              (branch) => branch?.branch_type === "main"
+            )?.branch_address
+          }
+        />
         <meta
           property="og:image"
           content={
-            pageProps?.productDetails?.data?.product?.data?.product_image?.front
+            pageProps?.productDetails?.data?.product?.data?.product_image
+              ?.front || pageProps?.shopDetails?.data?.shop.shop_logo
           }
         />
         <meta

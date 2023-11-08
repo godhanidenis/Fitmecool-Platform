@@ -61,6 +61,8 @@ const ShopHeaderSection = ({
       : setShopFollowByUser(false);
   }, [isAuthenticate, router.query.id, shopFollowByUser, userProfile]);
 
+  const shopSlug = shopDetails?.shop_name.replaceAll(" ", "-");
+
   return (
     <>
       <div className="flex justify-center font-Nova">
@@ -136,7 +138,9 @@ const ShopHeaderSection = ({
                     <Typography
                       className="text-colorGreen underline pb-2 sm:pb-10 !mt-2 cursor-pointer"
                       onClick={() =>
-                        router.push(`/shop/${shopDetails?.id}/branches`)
+                        router.push(
+                          `/shop/${shopSlug}/${shopDetails?.id}/branches`
+                        )
                       }
                     >
                       See Branches

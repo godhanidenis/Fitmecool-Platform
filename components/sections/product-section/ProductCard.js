@@ -209,6 +209,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
     },
   }));
 
+  const productSlug = product?.product_name.replaceAll(" ", "-");
+  const shopSlug = product?.branchInfo?.shop_info?.shop_name.replaceAll(
+    " ",
+    "-"
+  );
+
   const CustomDot = ({ onClick, active }) => {
     return (
       <li className="" onClick={() => onClick()}>
@@ -225,9 +231,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   const CustomPrevArrow = () => {
     return (
       <Link
-        href={`/product/${product?.product_name.replaceAll(" ", "-")}/${
-          product.id
-        }/${product.id}`}
+        href={`/product/${productSlug}/${product.id}/${product.id}`}
         passHref
       >
         <a
@@ -242,12 +246,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
 
   const CustomNextArrow = () => {
     return (
-      <Link
-        href={`/product/${product?.product_name.replaceAll(" ", "-")}/${
-          product.id
-        }`}
-        passHref
-      >
+      <Link href={`/product/${productSlug}/${product.id}`} passHref>
         <a
           target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
           rel="noopener noreferrer"
@@ -501,12 +500,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             </div>
 
             {!onlyCarousal && (
-              <Link
-                href={`/product/${product?.product_name.replaceAll(" ", "-")}/${
-                  product.id
-                }`}
-                passHref
-              >
+              <Link href={`/product/${productSlug}/${product.id}`} passHref>
                 <a
                   className="bg-[#fff] rounded-b-lg shadow-md"
                   target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
@@ -560,13 +554,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         </div>
                       </div>
                       <div className="flex flex-col justify-center">
-                        <Link
-                          href={`/shop/${product?.branchInfo?.shop_info?.shop_name.replaceAll(
-                            " ",
-                            "-"
-                          )}/${shopId}`}
-                          passHref
-                        >
+                        <Link href={`/shop/${shopSlug}/${shopId}`} passHref>
                           <a
                             target={`${
                               themeLayout === "webScreen" ? "_blank" : "_self"

@@ -290,52 +290,53 @@ const ProductDetail = ({ productDetails, error }) => {
     }
   };
 
+  const shopSlug =
+    productDetailsData?.data?.branchInfo?.shop_info?.shop_name.replaceAll(
+      " ",
+      "-"
+    );
+
   const shopDetailHeader = () => (
     <div className="flex items-center bg-colorPrimary p-3">
       <div className="flex items-center justify-between w-full gap-3">
         <div className="flex gap-3 items-center">
           <div className="flex justify-center items-center">
-            <Link
-              href={`/shop/${productDetailsData?.data.branchInfo?.shop_id}`}
-            >
-              {productDetailsData?.data.branchInfo?.shop_info.shop_logo ? (
-                <Avatar
-                  alt="Shop Logo"
-                  className="!w-12 !h-12 !cursor-pointer"
-                  src={
-                    productDetailsData?.data.branchInfo?.shop_info.shop_logo ??
-                    ""
-                  }
-                  key={new Date().getTime()}
-                />
-              ) : productDetailsData?.data.branchInfo?.shop_info.shop_logo
-                  .length === 0 ? (
-                <Avatar
-                  className="!bg-colorGreen !w-12 !h-12"
-                  sx={{
-                    fontSize: "15px",
-                  }}
-                >
-                  {String(
-                    productDetailsData?.data.branchInfo?.shop_info.shop_name
-                  )
-                    ?.split(" ")[0][0]
-                    .toUpperCase()}
-                </Avatar>
-              ) : (
-                <ImageLoadingSkeleton
-                  variant="circular"
-                  className="!w-12 !h-12"
-                  sx={{
-                    backgroundColor: "#F3F6F6",
-                  }}
-                />
-              )}
-            </Link>
+            {productDetailsData?.data.branchInfo?.shop_info.shop_logo ? (
+              <Avatar
+                alt="Shop Logo"
+                className="!w-12 !h-12 !cursor-pointer"
+                src={
+                  productDetailsData?.data.branchInfo?.shop_info.shop_logo ?? ""
+                }
+                key={new Date().getTime()}
+              />
+            ) : productDetailsData?.data.branchInfo?.shop_info.shop_logo
+                .length === 0 ? (
+              <Avatar
+                className="!bg-colorGreen !w-12 !h-12"
+                sx={{
+                  fontSize: "15px",
+                }}
+              >
+                {String(
+                  productDetailsData?.data.branchInfo?.shop_info.shop_name
+                )
+                  ?.split(" ")[0][0]
+                  .toUpperCase()}
+              </Avatar>
+            ) : (
+              <ImageLoadingSkeleton
+                variant="circular"
+                className="!w-12 !h-12"
+                sx={{
+                  backgroundColor: "#F3F6F6",
+                }}
+              />
+            )}
           </div>
           <div className="flex flex-col justify-start">
             <Link
-              href={`/shop/${productDetailsData?.data.branchInfo?.shop_id}`}
+              href={`/shop/${shopSlug}/${productDetailsData?.data.branchInfo?.shop_id}`}
             >
               <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
                 <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
@@ -827,7 +828,7 @@ const ProductDetail = ({ productDetails, error }) => {
               productDetailsData?.related.length > (isScreenWide ? 5 : 4) && (
                 <div className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] flex items-center">
                   <Link
-                    href={`/shop/${productDetailsData?.data.branchInfo?.shop_id}`}
+                    href={`/shop/${shopSlug}/${productDetailsData?.data.branchInfo?.shop_id}`}
                   >
                     <a
                       target={`${
