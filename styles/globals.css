@@ -67,3 +67,40 @@ input[type="number"] {
 input[type="number"] {
   -ms-inner-appearance: textfield;
 }
+
+.label {
+  border-radius: 0;
+  text-shadow: none;
+  font-size: 14px;
+  font-weight: normal;
+  padding: 5px 8px 5px;
+}
+
+.label-big {
+  border-radius: 0;
+  text-shadow: none;
+  font-size: 16px;
+  font-weight: normal;
+  padding: 10px 18px 10px;
+}
+
+.label-small {
+  border-radius: 0;
+  text-shadow: none;
+  font-size: 12px;
+  font-weight: normal;
+  padding: 3px 6px 3px;
+}
+
+.label[class*="span"][class*="arrow"] {
+  min-height: 0;
+}
+
+.label.arrowed-right {
+  position: relative;
+  margin-right: 9px;
+}
+
+.label-large.arrowed-right {
+  margin-right: 11px;
+}
