@@ -16,28 +16,28 @@ import {
   Rating,
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import { getProductDetails } from "../../graphql/queries/productQueries";
+import { getProductDetails } from "../../../graphql/queries/productQueries";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import ProductCard from "../../components/sections/product-section/ProductCard";
+import ProductCard from "../../../components/sections/product-section/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
-import { shopFollow } from "../../graphql/mutations/shops";
+import { shopFollow } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import {
   productLikeToggle,
   shopFollowToggle,
-} from "../../redux/ducks/userProfile";
+} from "../../../redux/ducks/userProfile";
 import {
   productContactInquiry,
   productLike,
   productWhatsappInquiry,
-} from "../../graphql/mutations/products";
+} from "../../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import { TiArrowForwardOutline } from "react-icons/ti";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
-import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
+import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
+import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 import Router from "next/router";
 
 import {
@@ -48,11 +48,11 @@ import {
 } from "react-share";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
-import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
-import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
-import { assets } from "../../constants";
+import { screeResizeForViewMoreItems } from "../../../components/core/useScreenResize";
+import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
+import { assets } from "../../../constants";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import Errors from "../../components/Layout/Errors";
+import Errors from "../../../components/Layout/Errors";
 
 const ContactStyle = {
   position: "absolute",

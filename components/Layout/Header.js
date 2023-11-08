@@ -460,7 +460,12 @@ export const UserProfile = ({ setAccessToken }) => {
     Router.push("/productLike");
   }
   function logoutUser() {
-    localStorage.clear();
+    for (let key in localStorage) {
+      if (key !== "selected_city") {
+        localStorage.removeItem(key);
+      }
+    }
+
     dispatch(userLogout());
     setAccessToken("");
     handleProfileClose();
@@ -474,7 +479,6 @@ export const UserProfile = ({ setAccessToken }) => {
         })
       );
     Router.push("/");
-    // localStorage.removeItem("visitedSecondPage");
 
     toast.success("Logout Successfully", {
       theme: "colored",

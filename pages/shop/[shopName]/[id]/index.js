@@ -1,32 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
-import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
+import DirectoryHero from "../../../../components/DirectoryHero/DirectoryHero";
 import { Pagination } from "@mui/material";
-import Filter from "../../../components/Filters/index";
-import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
+import Filter from "../../../../components/Filters/index";
+import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import {
   getShopDetails,
   getShopFollowers,
   getShopReviews,
-} from "../../../graphql/queries/shopQueries";
-import ShopHeaderSection from "../../../components/sections/shop-section/ShopHeaderSection";
-import ProductCard from "../../../components/sections/product-section/ProductCard";
+} from "../../../../graphql/queries/shopQueries";
+import ShopHeaderSection from "../../../../components/sections/shop-section/ShopHeaderSection";
+import ProductCard from "../../../../components/sections/product-section/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
-import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
-import ShopCommentsSection from "../../../components/sections/shop-section/ShopCommentsSection";
-import ShopReviewSection from "../../../components/sections/shop-section/ShopReviewSection";
-import { useResizeScreenLayout } from "../../../components/core/useScreenResize";
-import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
+import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
+import ShopCommentsSection from "../../../../components/sections/shop-section/ShopCommentsSection";
+import ShopReviewSection from "../../../../components/sections/shop-section/ShopReviewSection";
+import { useResizeScreenLayout } from "../../../../components/core/useScreenResize";
+import { changeByShopFilters } from "../../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
-import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
-import Errors from "../../../components/Layout/Errors";
+import { changeAppliedShopProductsFilters } from "../../../../redux/ducks/shopProductsFilters";
+import Errors from "../../../../components/Layout/Errors";
 import {
   changeShopProductPage,
   loadShopProductsStart,
-} from "../../../redux/ducks/shopProduct";
+} from "../../../../redux/ducks/shopProduct";
 
 const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
