@@ -1,39 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
-import DirectoryHero from "../../../components/DirectoryHero/DirectoryHero";
+import DirectoryHero from "../../../../components/DirectoryHero/DirectoryHero";
 import { Pagination } from "@mui/material";
-import Filter from "../../../components/Filters/index";
-import UpperFilter from "../../../components/Filters/UpperFilter/UpperFilter";
+import Filter from "../../../../components/Filters/index";
+import UpperFilter from "../../../../components/Filters/UpperFilter/UpperFilter";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import {
   getShopDetails,
   getShopFollowers,
   getShopReviews,
-} from "../../../graphql/queries/shopQueries";
-import ShopHeaderSection from "../../../components/sections/shop-section/ShopHeaderSection";
-import ProductCard from "../../../components/sections/product-section/ProductCard";
+} from "../../../../graphql/queries/shopQueries";
+import ShopHeaderSection from "../../../../components/sections/shop-section/ShopHeaderSection";
+import ProductCard from "../../../../components/sections/product-section/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
-import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
-import ShopCommentsSection from "../../../components/sections/shop-section/ShopCommentsSection";
-import ShopReviewSection from "../../../components/sections/shop-section/ShopReviewSection";
-import { useResizeScreenLayout } from "../../../components/core/useScreenResize";
-import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
+import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
+import ShopCommentsSection from "../../../../components/sections/shop-section/ShopCommentsSection";
+import ShopReviewSection from "../../../../components/sections/shop-section/ShopReviewSection";
+import { useResizeScreenLayout } from "../../../../components/core/useScreenResize";
+import { changeByShopFilters } from "../../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
-import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
-import Errors from "../../../components/Layout/Errors";
+import { changeAppliedShopProductsFilters } from "../../../../redux/ducks/shopProductsFilters";
+import Errors from "../../../../components/Layout/Errors";
 import {
   changeShopProductPage,
   loadShopProductsStart,
-} from "../../../redux/ducks/shopProduct";
+} from "../../../../redux/ducks/shopProduct";
 
 const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [videoShow, setVideoShow] = useState(true);
+  const [videoShow, setVideoShow] = useState(false);
   const [videoPosition, setVideoPosition] = useState({
     x: window.innerWidth - 400,
     y: window.innerHeight - 250,
@@ -181,6 +181,8 @@ const ShopDetail = ({ shopDetails, error }) => {
     !isScreenWide && dispatch(changeByShopFilters(false));
   }, [dispatch, isScreenWide]);
 
+  const shopSlug = shopDetailsData?.shop_name.replaceAll(" ", "-");
+
   if (!isHydrated) {
     return null;
   }
@@ -303,7 +305,9 @@ const ShopDetail = ({ shopDetails, error }) => {
                   <button
                     className="text-colorGreen border border-colorGreen text-xl font-normal rounded-[16px] py-[8px] px-[8px] bg-[#FAFCFC]"
                     onClick={() =>
-                      router.push(`/shop/${shopDetailsData?.id}/reviews`)
+                      router.push(
+                        `/shop/${shopSlug}/${shopDetailsData?.id}/reviews`
+                      )
                     }
                   >
                     View All
@@ -320,7 +324,6 @@ const ShopDetail = ({ shopDetails, error }) => {
             className={`fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end ${
               window.innerWidth < 640 ? "!left-[20px]" : ""
             }`}
-            // className="fixed w-80 sm:w-96 h-48 sm:h-56 flex justify-end"
             style={{
               left: videoPosition.x,
               top: videoPosition.y,
@@ -345,7 +348,7 @@ const ShopDetail = ({ shopDetails, error }) => {
             </div>
           </div>
         )}
-        {!videoShow && (
+        {shopDetailsData?.shop_video && !videoShow && (
           <div className="fixed bottom-24 lg:bottom-6 right-6 flex justify-end ">
             <button
               className="p-3 bg-colorPrimary rounded-full shadow-xl"

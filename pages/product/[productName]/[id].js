@@ -16,28 +16,28 @@ import {
   Rating,
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import { getProductDetails } from "../../graphql/queries/productQueries";
+import { getProductDetails } from "../../../graphql/queries/productQueries";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import ProductCard from "../../components/sections/product-section/ProductCard";
+import ProductCard from "../../../components/sections/product-section/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
-import { shopFollow } from "../../graphql/mutations/shops";
+import { shopFollow } from "../../../graphql/mutations/shops";
 import { toast } from "react-toastify";
 import {
   productLikeToggle,
   shopFollowToggle,
-} from "../../redux/ducks/userProfile";
+} from "../../../redux/ducks/userProfile";
 import {
   productContactInquiry,
   productLike,
   productWhatsappInquiry,
-} from "../../graphql/mutations/products";
+} from "../../../graphql/mutations/products";
 import Link from "next/link";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import { TiArrowForwardOutline } from "react-icons/ti";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import CustomReactImageMagnify from "../../components/Layout/CustomReactImageMagnify";
-import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
+import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
+import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 import Router from "next/router";
 
 import {
@@ -48,11 +48,11 @@ import {
 } from "react-share";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
-import { screeResizeForViewMoreItems } from "../../components/core/useScreenResize";
-import ImageLoadingSkeleton from "../../components/Modal/ImageLoadingSkeleton";
-import { assets } from "../../constants";
+import { screeResizeForViewMoreItems } from "../../../components/core/useScreenResize";
+import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
+import { assets } from "../../../constants";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import Errors from "../../components/Layout/Errors";
+import Errors from "../../../components/Layout/Errors";
 
 const ContactStyle = {
   position: "absolute",
@@ -290,52 +290,53 @@ const ProductDetail = ({ productDetails, error }) => {
     }
   };
 
+  const shopSlug =
+    productDetailsData?.data?.branchInfo?.shop_info?.shop_name.replaceAll(
+      " ",
+      "-"
+    );
+
   const shopDetailHeader = () => (
     <div className="flex items-center bg-colorPrimary p-3">
       <div className="flex items-center justify-between w-full gap-3">
         <div className="flex gap-3 items-center">
           <div className="flex justify-center items-center">
-            <Link
-              href={`/shop/${productDetailsData?.data.branchInfo?.shop_id}`}
-            >
-              {productDetailsData?.data.branchInfo?.shop_info.shop_logo ? (
-                <Avatar
-                  alt="Shop Logo"
-                  className="!w-12 !h-12 !cursor-pointer"
-                  src={
-                    productDetailsData?.data.branchInfo?.shop_info.shop_logo ??
-                    ""
-                  }
-                  key={new Date().getTime()}
-                />
-              ) : productDetailsData?.data.branchInfo?.shop_info.shop_logo
-                  .length === 0 ? (
-                <Avatar
-                  className="!bg-colorGreen !w-12 !h-12"
-                  sx={{
-                    fontSize: "15px",
-                  }}
-                >
-                  {String(
-                    productDetailsData?.data.branchInfo?.shop_info.shop_name
-                  )
-                    ?.split(" ")[0][0]
-                    .toUpperCase()}
-                </Avatar>
-              ) : (
-                <ImageLoadingSkeleton
-                  variant="circular"
-                  className="!w-12 !h-12"
-                  sx={{
-                    backgroundColor: "#F3F6F6",
-                  }}
-                />
-              )}
-            </Link>
+            {productDetailsData?.data.branchInfo?.shop_info.shop_logo ? (
+              <Avatar
+                alt="Shop Logo"
+                className="!w-12 !h-12 !cursor-pointer"
+                src={
+                  productDetailsData?.data.branchInfo?.shop_info.shop_logo ?? ""
+                }
+                key={new Date().getTime()}
+              />
+            ) : productDetailsData?.data.branchInfo?.shop_info.shop_logo
+                .length === 0 ? (
+              <Avatar
+                className="!bg-colorGreen !w-12 !h-12"
+                sx={{
+                  fontSize: "15px",
+                }}
+              >
+                {String(
+                  productDetailsData?.data.branchInfo?.shop_info.shop_name
+                )
+                  ?.split(" ")[0][0]
+                  .toUpperCase()}
+              </Avatar>
+            ) : (
+              <ImageLoadingSkeleton
+                variant="circular"
+                className="!w-12 !h-12"
+                sx={{
+                  backgroundColor: "#F3F6F6",
+                }}
+              />
+            )}
           </div>
           <div className="flex flex-col justify-start">
             <Link
-              href={`/shop/${productDetailsData?.data.branchInfo?.shop_id}`}
+              href={`/shop/${shopSlug}/${productDetailsData?.data.branchInfo?.shop_id}`}
             >
               <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
                 <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
@@ -827,7 +828,7 @@ const ProductDetail = ({ productDetails, error }) => {
               productDetailsData?.related.length > (isScreenWide ? 5 : 4) && (
                 <div className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] flex items-center">
                   <Link
-                    href={`/shop/${productDetailsData?.data.branchInfo?.shop_id}`}
+                    href={`/shop/${shopSlug}/${productDetailsData?.data.branchInfo?.shop_id}`}
                   >
                     <a
                       target={`${

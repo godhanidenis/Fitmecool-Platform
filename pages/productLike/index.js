@@ -65,17 +65,11 @@ const ProductLikePage = () => {
             <div className="mt-6 w-[100%] flex flex-wrap  xl:justify-between place-items-center mb-10">
               {userProfile.product_like_list &&
                 userProfile.product_like_list?.map((product) => (
-                  <Link
-                    href={`/product/${product.id}`}
-                    passHref
+                  <ProductCard
+                    product={product}
                     key={product.id}
-                  >
-                    <ProductCard
-                      product={product}
-                      key={product.id}
-                      likePage={true}
-                    />
-                  </Link>
+                    likePage={true}
+                  />
                 ))}
             </div>
           </div>

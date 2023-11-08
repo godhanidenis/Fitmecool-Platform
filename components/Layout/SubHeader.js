@@ -6,7 +6,6 @@ import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters"
 import { useRouter } from "next/router";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
-// import { loadAllShopsListsStart } from "../../redux/ducks/shop";
 
 const SubHeader = () => {
   const [value, setValue] = useState(0);
@@ -49,10 +48,6 @@ const SubHeader = () => {
     setAnchorEl(null);
   };
 
-  // useEffect(() => {
-  //   dispatch(loadAllShopsListsStart());
-  // }, [dispatch]);
-
   const equalsCheck = (a, b) => {
     return JSON.stringify(a) === JSON.stringify(b);
   };
@@ -66,7 +61,10 @@ const SubHeader = () => {
       )}`}
       onClick={() => {
         if (filterType === "shopId") {
-          window.open(`/shop/${item.id}`, "_blank");
+          window.open(
+            `/shop/${item.shop_name.replaceAll(" ", "-")}/${item.id}`,
+            "_blank"
+          );
         } else {
           ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>
             dispatch(

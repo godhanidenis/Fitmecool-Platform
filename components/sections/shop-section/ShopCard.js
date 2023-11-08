@@ -60,40 +60,39 @@ const ShopCard = ({ shop }) => {
         {!isShopImagesLoaded && (
           <ImageLoadingSkeleton className="object-cover" />
         )}
-        <Link href={`/shop/${shop.id}`}>
-          <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
-            {isShopImage.includes(itm) && isShopImages ? (
-              <div className="w-full h-full bg-[#00000031]" />
-            ) : (
-              <Image
-                src={
-                  // currentImageIndex === null
-                  //   ?
-                  itm?.links ?? ""
-                  // : currentImageIndex === 0 && shop.shop_images[0]?.links
-                }
-                unoptimized={true}
-                alt={shop?.shop_name}
-                className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
-                  isShopImagesLoaded ? "opacity-100" : "opacity-0"
-                }`}
-                onLoad={() => setShopImagesLoaded(true)}
-                onError={() => {
-                  setIsShopImages(true);
-                  setIsShopImage((prevIndexes) => [...prevIndexes, itm]);
-                }}
-                layout="fill"
-              />
-            )}
-          </a>
-        </Link>
+
+        {isShopImage.includes(itm) && isShopImages ? (
+          <div className="w-full h-full bg-[#00000031]" />
+        ) : (
+          <Image
+            src={
+              // currentImageIndex === null
+              //   ?
+              itm?.links ?? ""
+              // : currentImageIndex === 0 && shop.shop_images[0]?.links
+            }
+            unoptimized={true}
+            alt={shop?.shop_name}
+            className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
+              isShopImagesLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            onLoad={() => setShopImagesLoaded(true)}
+            onError={() => {
+              setIsShopImages(true);
+              setIsShopImage((prevIndexes) => [...prevIndexes, itm]);
+            }}
+            layout="fill"
+          />
+        )}
       </div>
     );
   });
 
+  const shopSlug = shop.shop_name.replaceAll(" ", "-");
+
   const CustomPrevArrow = () => {
     return (
-      <Link href={`/shop/${shop.id}`}>
+      <Link href={`/shop/${shopSlug}/${shop.id}`}>
         <a
           target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
           rel="noopener noreferrer"
@@ -106,7 +105,7 @@ const ShopCard = ({ shop }) => {
 
   const CustomNextArrow = () => {
     return (
-      <Link href={`/shop/${shop.id}`}>
+      <Link href={`/shop/${shopSlug}/${shop.id}`}>
         <a
           target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
           rel="noopener noreferrer"
@@ -180,7 +179,7 @@ const ShopCard = ({ shop }) => {
           </div>
         </div>
       </div>
-      <Link href={`/shop/${shop.id}`}>
+      <Link href={`/shop/${shopSlug}/${shop.id}`}>
         <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
           <div className="px-5 py-3">
             <div

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Image from "next/image";
-import { getShopDetails } from "../../../../graphql/queries/shopQueries";
-import SeeBranchDropDown from "../../../../components/Filters/CardInteractive/SeeBranchDropDown";
+import { getShopDetails } from "../../../../../graphql/queries/shopQueries";
+import SeeBranchDropDown from "../../../../../components/Filters/CardInteractive/SeeBranchDropDown";
 import { useRouter } from "next/router";
-import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
-import ImageLoadingSkeleton from "../../../../components/Modal/ImageLoadingSkeleton";
+import { withoutAuth } from "../../../../../components/core/PrivateRouteForVendor";
+import ImageLoadingSkeleton from "../../../../../components/Modal/ImageLoadingSkeleton";
 import { Avatar } from "@mui/material";
 
 const Branches = ({ shopDetails, shopId }) => {
@@ -24,12 +24,14 @@ const Branches = ({ shopDetails, shopId }) => {
     return null;
   }
 
+  const shopSlug = shopDetailsData?.shop_name.replaceAll(" ", "-");
+
   return (
     <>
       <div className="container font-Nova">
         <div className="flex items-center mt-6 mb-6">
           <ArrowBackIcon
-            onClick={() => router.push(`/shop/${shopId}`)}
+            onClick={() => router.push(`/shop/${shopSlug}/${shopId}`)}
             className="cursor-pointer"
           />
           <span className="font-semibold ml-2">Back To Shop</span>

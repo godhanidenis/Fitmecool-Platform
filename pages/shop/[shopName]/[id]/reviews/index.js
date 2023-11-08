@@ -3,12 +3,12 @@ import { useState } from "react";
 import {
   getShopDetails,
   getShopReviews,
-} from "../../../../graphql/queries/shopQueries";
+} from "../../../../../graphql/queries/shopQueries";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ShopCommentsSection from "../../../../components/sections/shop-section/ShopCommentsSection";
-import ShopReviewSection from "../../../../components/sections/shop-section/ShopReviewSection";
+import ShopCommentsSection from "../../../../../components/sections/shop-section/ShopCommentsSection";
+import ShopReviewSection from "../../../../../components/sections/shop-section/ShopReviewSection";
 
 const Reviews = ({ shopDetails }) => {
   const router = useRouter();
@@ -27,12 +27,17 @@ const Reviews = ({ shopDetails }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  const shopSlug = shopDetails?.data?.shop?.shop_name.replaceAll(" ", "-");
+
   return (
     <>
       <div className="pb-20 md:pb-28 font-Nova">
         <div className="container w-[44px] h-[39px] mt-2 ml-[3%] flex items-center">
           <ArrowBackIcon
-            onClick={() => router.push(`/shop/${router?.query?.id}`)}
+            onClick={() =>
+              router.push(`/shop/${shopSlug}/${router?.query?.id}`)
+            }
             className="cursor-pointer"
           />
           <span className="font-semibold ml-2">Back To Shop</span>

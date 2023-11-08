@@ -239,11 +239,15 @@ const Header = () => {
                     }}
                     label="Location"
                   >
-                    {cityLists?.map((city, index) => (
-                      <MenuItem value={city?.city} key={index}>
-                        {city?.city}
-                      </MenuItem>
-                    ))}
+                    {/* <div className="w-[60vw] h-[50vh] flex flex-wrap justify-between"> */}
+                      {cityLists?.map((city, index) => (
+                        // <div key={index} className="w-[250px]">
+                        <MenuItem value={city?.city} key={index}>
+                          {city?.city}
+                        </MenuItem>
+                        // </div>
+                      ))}
+                    {/* </div> */}
                   </LocationSelect>
                 </FormControl>
               </div>
@@ -460,7 +464,12 @@ export const UserProfile = ({ setAccessToken }) => {
     Router.push("/productLike");
   }
   function logoutUser() {
-    localStorage.clear();
+    for (let key in localStorage) {
+      if (key !== "selected_city") {
+        localStorage.removeItem(key);
+      }
+    }
+
     dispatch(userLogout());
     setAccessToken("");
     handleProfileClose();
@@ -474,7 +483,6 @@ export const UserProfile = ({ setAccessToken }) => {
         })
       );
     Router.push("/");
-    // localStorage.removeItem("visitedSecondPage");
 
     toast.success("Logout Successfully", {
       theme: "colored",
