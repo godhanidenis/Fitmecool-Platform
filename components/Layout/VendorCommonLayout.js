@@ -5,6 +5,7 @@ import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails"
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { loadProductsStart } from "../../redux/ducks/product";
 import { loadShopConfigurationsStart } from "../../redux/ducks/shopConfigurations";
+import { loadCategoriesStart } from "../../redux/ducks/categories";
 
 const VendorCommonLayout = ({ children }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
@@ -72,6 +73,10 @@ const VendorCommonLayout = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
+
+  useEffect(() => {
+    dispatch(loadCategoriesStart());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">
