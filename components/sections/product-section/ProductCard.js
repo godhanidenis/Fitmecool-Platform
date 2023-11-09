@@ -8,7 +8,7 @@ import { productLikeToggle } from "../../../redux/ducks/userProfile";
 import { productLike } from "../../../graphql/mutations/products";
 import { toast } from "react-toastify";
 import { Box, Avatar, Tooltip, tooltipClasses } from "@mui/material";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
@@ -78,6 +78,8 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
+
+  const router = useRouter();
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
   const { userProfile, isAuthenticate } = useSelector(
@@ -432,7 +434,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         }
                       );
                     } else {
-                      Router.push("/auth/user-type");
+                      router.push({
+                        pathname: "/auth/user-type",
+                        query: {
+                          redirectPath: new URL(window.location.href).pathname,
+                        },
+                      });
                     }
                   }}
                 >

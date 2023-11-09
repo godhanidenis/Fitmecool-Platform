@@ -38,7 +38,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
 import {
   EmailShareButton,
@@ -83,6 +83,8 @@ const ProductDetail = ({ productDetails, error }) => {
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
@@ -286,7 +288,10 @@ const ProductDetail = ({ productDetails, error }) => {
         }
       );
     } else {
-      Router.push("/auth/user-type");
+      router.push({
+        pathname: "/auth/user-type",
+        query: { redirectPath: new URL(window.location.href).pathname },
+      });
     }
   };
 
@@ -427,7 +432,12 @@ const ProductDetail = ({ productDetails, error }) => {
                   }
                 );
               } else {
-                Router.push("/auth/user-type");
+                router.push({
+                  pathname: "/auth/user-type",
+                  query: {
+                    redirectPath: new URL(window.location.href).pathname,
+                  },
+                });
               }
             }}
           >
@@ -771,15 +781,26 @@ const ProductDetail = ({ productDetails, error }) => {
                   <div
                     className="w-[100%] md:w-[48%]"
                     onClick={() =>
-                      productWhatsappInquiry({
-                        id: productDetailsData?.data.id,
-                      })
+                      isAuthenticate
+                        ? productWhatsappInquiry({
+                            id: productDetailsData?.data.id,
+                          })
+                        : router.push({
+                            pathname: "/auth/user-type",
+                            query: {
+                              redirectPath: new URL(window.location.href)
+                                .pathname,
+                            },
+                          })
                     }
                   >
                     <a
-                      href={`https://api.whatsapp.com/send?phone=${
-                        productDetailsData?.data.branchInfo?.manager_contact
-                      }&text=${encodeURIComponent(window.location.href)}`}
+                      href={
+                        isAuthenticate &&
+                        `https://api.whatsapp.com/send?phone=${
+                          productDetailsData?.data.branchInfo?.manager_contact
+                        }&text=${encodeURIComponent(window.location.href)}`
+                      }
                       target="_blank"
                       className="w-full"
                       rel="noreferrer"
@@ -798,16 +819,26 @@ const ProductDetail = ({ productDetails, error }) => {
                   <div
                     className="w-[100%] md:w-[48%]"
                     onClick={() =>
-                      productContactInquiry({
-                        id: productDetailsData?.data.id,
-                      })
+                      isAuthenticate
+                        ? productContactInquiry({
+                            id: productDetailsData?.data.id,
+                          })
+                        : router.push({
+                            pathname: "/auth/user-type",
+                            query: {
+                              redirectPath: new URL(window.location.href)
+                                .pathname,
+                            },
+                          })
                     }
                   >
                     <button
                       className="bg-[#E8EBEA] text-[#31333E] text-[24px] py-[28px] w-full rounded-xl tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline 
                   shadow-lg flex items-center justify-center gap-3"
-                      onClick={() => setOpenContactInfo(!openContactInfo)}
+                      onClick={() =>
+                        isAuthenticate && setOpenContactInfo(!openContactInfo)
+                      }
                     >
                       <PersonOutlineIcon className="!text-black !w-[35px] !h-[35px]" />
                       {openContactInfo ? "Hide Contact" : "Show Contact"}

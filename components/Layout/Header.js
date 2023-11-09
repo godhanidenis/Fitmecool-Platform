@@ -276,9 +276,15 @@ const Header = () => {
                     <IconButton
                       color="inherit"
                       onClick={() =>
-                        router.push(
-                          accessToken ? "/productLike" : "/auth/user-type"
-                        )
+                        accessToken
+                          ? router.push("/productLike")
+                          : router.push({
+                              pathname: "/auth/user-type",
+                              query: {
+                                redirectPath: new URL(window.location.href)
+                                  .pathname,
+                              },
+                            })
                       }
                     >
                       <Badge

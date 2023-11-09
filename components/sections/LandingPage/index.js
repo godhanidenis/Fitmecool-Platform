@@ -90,7 +90,10 @@ const LandingPage = () => {
       imageSrc: assets.bannerImg2,
       des: "bannerImg2",
       func: () => {
-        router.push(`/auth/user-type/`);
+        router.push({
+          pathname: "/auth/user-type",
+          query: { redirectPath: new URL(window.location.href).pathname },
+        });
         localStorage.setItem("user_type_for_auth", "vendor");
       },
     },
@@ -98,7 +101,10 @@ const LandingPage = () => {
       imageSrc: assets.bannerImg3,
       des: "bannerImg3",
       func: () => {
-        router.push(`/auth/user-type/`);
+        router.push({
+          pathname: "/auth/user-type",
+          query: { redirectPath: new URL(window.location.href).pathname },
+        });
         localStorage.setItem("user_type_for_auth", "vendor");
       },
     },

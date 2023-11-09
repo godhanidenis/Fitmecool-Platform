@@ -183,7 +183,13 @@ const ShopHeaderSection = ({
                             }
                           );
                         } else {
-                          Router.push("/auth/user-type");
+                          router.push({
+                            pathname: "/auth/user-type",
+                            query: {
+                              redirectPath: new URL(window.location.href)
+                                .pathname,
+                            },
+                          });
                         }
                       }}
                     >

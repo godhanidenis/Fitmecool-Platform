@@ -62,7 +62,7 @@ const Signup = () => {
     localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
     setTimeout(() => {
       Router.push(asVendor ? "/vendor/dashboard" : redirectPath ?? "/");
-    }, 2000);
+    }, 1500);
   };
 
   const handleAfterSignUpError = (message) => {
