@@ -291,67 +291,81 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             <div className="cursor-pointer relative top-0 left-0">
               <div className="grid grid-cols-1 place-items-center">
                 {!onlyCarousal ? (
-                  <div className="group relative w-full">
-                    <div
-                      className={`relative bg-[#00000031] rounded-t-lg`}
-                      style={{
-                        width: "100%",
-                        height: themeLayout === "mobileScreen" ? 250 : 300,
-                      }}
+                  // <div className="group relative w-full">
+                  <div
+                    className={`relative rounded-t-lg`}
+                    style={{
+                      width: "100%",
+                      height: themeLayout === "mobileScreen" ? 250 : 300,
+                    }}
+                  >
+                    <Link
+                      href={`/product/${productSlug}/${product.id}`}
+                      passHref
                     >
-                      {isProductImagesLoaded && (
-                        <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
-                      )}
-                      {isProductImages ? (
-                        <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
-                      ) : (
-                        <Image
-                          src={product.product_image?.front ?? ""}
-                          unoptimized={true}
-                          alt={product?.product_name}
-                          className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
-                            isProductImagesLoaded ? "opacity-100" : "opacity-0"
-                          }`}
-                          onLoad={() => setIsProductImagesLoaded(true)}
-                          onError={() => {
-                            setIsProductImages(true);
-                          }}
-                          layout="fill"
-                        />
-                      )}
-                    </div>
-                    <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
-                      <Carousel
-                        autoPlay={true}
-                        autoPlaySpeed={1500}
-                        infinite
-                        showDots={false}
-                        customDot={null}
-                        arrows={true}
-                        customLeftArrow={<CustomPrevArrow />}
-                        customRightArrow={<CustomNextArrow />}
-                        responsive={responsive}
-                        className={`rounded-t-lg`}
+                      <a
+                        target={`${
+                          themeLayout === "webScreen" ? "_blank" : "_self"
+                        }`}
+                        rel="noopener noreferrer"
                       >
-                        {photos.length === 0 ? (
-                          <div
-                            className="bg-[#00000031]"
-                            style={{
-                              width: "100%",
-                              height: onlyCarousal
-                                ? 420
-                                : themeLayout === "mobileScreen"
-                                ? 250
-                                : 300,
-                            }}
-                          />
-                        ) : (
-                          productImages
+                        {isProductImagesLoaded && (
+                          <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
                         )}
-                      </Carousel>
-                    </div>
+                        {isProductImages ? (
+                          <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
+                        ) : (
+                          <Image
+                            src={product.product_image?.front ?? ""}
+                            unoptimized={true}
+                            alt={product?.product_name}
+                            className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
+                              isProductImagesLoaded
+                                ? "opacity-100"
+                                : "opacity-0"
+                            }`}
+                            onLoad={() => setIsProductImagesLoaded(true)}
+                            onError={() => {
+                              setIsProductImages(true);
+                            }}
+                            layout="fill"
+                          />
+                        )}
+                      </a>
+                    </Link>
                   </div>
                 ) : (
+                  // {/* <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
+                  //   <Carousel
+                  //     autoPlay={true}
+                  //     autoPlaySpeed={1500}
+                  //     infinite
+                  //     showDots={false}
+                  //     customDot={null}
+                  //     arrows={true}
+                  //     customLeftArrow={<CustomPrevArrow />}
+                  //     customRightArrow={<CustomNextArrow />}
+                  //     responsive={responsive}
+                  //     className={`rounded-t-lg`}
+                  //   >
+                  //     {photos.length === 0 ? (
+                  //       <div
+                  //         className="bg-[#00000031]"
+                  //         style={{
+                  //           width: "100%",
+                  //           height: onlyCarousal
+                  //             ? 420
+                  //             : themeLayout === "mobileScreen"
+                  //             ? 250
+                  //             : 300,
+                  //         }}
+                  //       />
+                  //     ) : (
+                  //       productImages
+                  //     )}
+                  //   </Carousel>
+                  // </div> */}
+                  // </div>
                   <Carousel
                     autoPlay={false}
                     infinite

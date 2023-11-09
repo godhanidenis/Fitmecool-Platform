@@ -121,36 +121,43 @@ const ShopCard = ({ shop }) => {
       <div className="">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
-            <div className="group relative w-full">
-              <div
-                className={`relative bg-[#00000031] rounded-t-lg`}
-                style={{
-                  width: "100%",
-                  height: themeLayout === "mobileScreen" ? 250 : 300,
-                }}
-              >
-                {!isShopImagesLoaded && (
-                  <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
-                )}
-                {isShopImages ? (
-                  <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
-                ) : (
-                  <Image
-                    src={shop.shop_images[0]?.links ?? ""}
-                    unoptimized={true}
-                    alt={shop?.shop_name}
-                    className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
-                      isShopImagesLoaded ? "opacity-100" : "opacity-0"
-                    }`}
-                    onLoad={() => setShopImagesLoaded(true)}
-                    onError={() => {
-                      setIsShopImages(true);
-                    }}
-                    layout="fill"
-                  />
-                )}
-              </div>
-              <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
+            {/* <div className="group relative w-full"> */}
+            <div
+              className={`relative rounded-t-lg`}
+              style={{
+                width: "100%",
+                height: themeLayout === "mobileScreen" ? 250 : 300,
+              }}
+            >
+              <Link href={`/shop/${shopSlug}/${shop.id}`}>
+                <a
+                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+                  rel="noopener noreferrer"
+                >
+                  {!isShopImagesLoaded && (
+                    <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
+                  )}
+                  {isShopImages ? (
+                    <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
+                  ) : (
+                    <Image
+                      src={shop.shop_images[0]?.links ?? ""}
+                      unoptimized={true}
+                      alt={shop?.shop_name}
+                      className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
+                        isShopImagesLoaded ? "opacity-100" : "opacity-0"
+                      }`}
+                      onLoad={() => setShopImagesLoaded(true)}
+                      onError={() => {
+                        setIsShopImages(true);
+                      }}
+                      layout="fill"
+                    />
+                  )}
+                </a>
+              </Link>
+            </div>
+            {/* <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
                 <Carousel
                   ref={carouselRef}
                   autoPlay={true}
@@ -174,8 +181,8 @@ const ShopCard = ({ shop }) => {
                     shopImages
                   )}
                 </Carousel>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
           </div>
         </div>
       </div>

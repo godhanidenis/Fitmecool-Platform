@@ -58,18 +58,20 @@ const ShopByLocation = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (
-        containerRef.current &&
-        containerRef.current.scrollTop + containerRef.current.clientHeight >=
-          containerRef.current.scrollHeight - 20 &&
+        containerRef?.current &&
+        containerRef?.current?.scrollTop +
+          containerRef?.current?.clientHeight >=
+          containerRef?.current?.scrollHeight - 20 &&
         !fetching
       ) {
         fetchMoreItems();
       }
     };
 
-    containerRef.current.addEventListener("scroll", handleScroll);
+    containerRef?.current?.addEventListener("scroll", handleScroll);
     return () => {
-      containerRef.current.removeEventListener("scroll", handleScroll);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      containerRef?.current?.removeEventListener("scroll", handleScroll);
     };
   }, [fetching]);
 
