@@ -4,17 +4,43 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { assets } from "../../constants";
 
-const AppLogo = () => {
+const AppLogo = ({ onHeader }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
   return (
-    <Link
-      href={`${userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"}`}
-    >
-      <div className="cursor-pointer pt-[5px]">
-        <Image src={assets.appLogo} alt="AppLogo" width={150} height={50} />
-      </div>
-    </Link>
+    <>
+      <Link
+        href={`${
+          userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
+        }`}
+      >
+        <div
+          className={
+            onHeader
+              ? "cursor-pointer hidden sm:visible sm:flex items-center"
+              : "cursor-pointer flex items-center pt-3"
+          }
+        >
+          <Image src={assets.appLogo} alt="AppLogo" width={140} height={35} />
+        </div>
+      </Link>
+      {onHeader && (
+        <Link
+          href={`${
+            userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
+          }`}
+        >
+          <div className="cursor-pointer sm:hidden flex items-center">
+            <Image
+              src={assets.whiteLogoSmall}
+              alt="AppLogo"
+              width={70}
+              height={40}
+            />
+          </div>
+        </Link>
+      )}
+    </>
   );
 };
 

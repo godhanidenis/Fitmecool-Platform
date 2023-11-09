@@ -243,6 +243,24 @@ const ShopPage = () => {
     console.log("pincode", data);
   };
 
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    if (inputValue.length > 10) {
+      e.target.value = inputValue.slice(0, 10);
+    } else if (inputValue < 0) {
+      e.target.value = 0;
+    }
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
+  };
+
   useEffect(() => {
     getApiState();
   }, []);
@@ -756,7 +774,7 @@ const ShopPage = () => {
                       </div>
                       <div className="w-full relative">
                         <CustomTextFieldVendor
-                          label="Email Address"
+                          label="Email Address*"
                           type="email"
                           id="email"
                           name="user_email"
@@ -786,7 +804,7 @@ const ShopPage = () => {
                       <div className="w-full relative">
                         <CustomTextFieldVendor
                           label="Phone Number*"
-                          type="text"
+                          type="number"
                           id="phone"
                           name="user_contact"
                           isRequired={true}
@@ -802,6 +820,7 @@ const ShopPage = () => {
                               },
                             }),
                           }}
+                          onInput={handleInput}
                         />
                         {errors.user_contact && (
                           <div className="mt-2">
@@ -864,7 +883,7 @@ const ShopPage = () => {
                           <div className="w-full relative">
                             <CustomTextFieldVendor
                               name="shop_email"
-                              label="Shop Email"
+                              label="Shop Email*"
                               type="email"
                               id="shopEmail"
                               isRequired={true}
@@ -1701,6 +1720,7 @@ const ShopPage = () => {
                                       getAllValues();
                                     },
                                   })}
+                                  onInput={handleInput}
                                 />
                               </>
                             )}
@@ -2165,6 +2185,24 @@ const SubBranchModal = ({
     setSubManagerPinCode(data);
     error.subManagerPinCodeError = "";
   };
+
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    if (inputValue.length > 10) {
+      e.target.value = inputValue.slice(0, 10);
+    } else if (inputValue < 0) {
+      e.target.value = 0;
+    }
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
+  };
   return (
     <>
       <Box>
@@ -2395,6 +2433,7 @@ const SubBranchModal = ({
                               error.subManagerPhoneError = "";
                             }
                           }}
+                          onInput={handleInput}
                         />
                       </Box>
                       <span style={{ color: "red" }}>

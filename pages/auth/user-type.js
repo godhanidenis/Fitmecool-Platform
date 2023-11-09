@@ -45,7 +45,7 @@ const UserType = () => {
         />
         <div className="">
           <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
-            <span className="sm:text-4xl text-[24px]">R</span>entbless
+            <span className="sm:text-4xl text-[24px]">F</span>itmecool
           </h2>
         </div>
       </div>

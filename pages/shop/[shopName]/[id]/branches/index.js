@@ -41,7 +41,7 @@ const Branches = ({ shopDetails, shopId }) => {
             <div className="flex justify-center relative w-[150px] h-[150px]">
               <Image
                 src={shopDetailsData?.shop_logo ?? ""}
-                unoptimized={true}
+                // unoptimized={true}
                 alt="shop logo"
                 layout="fixed"
                 width={150}

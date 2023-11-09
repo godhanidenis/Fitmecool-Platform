@@ -51,10 +51,12 @@ import AppLogo from "./AppLogo";
 import { assets } from "../../constants";
 import { changeAppliedCityFilters } from "../../redux/ducks/cityFilter";
 import { changeShopPage } from "../../redux/ducks/shop";
+import FmdGoodIcon from "@mui/icons-material/FmdGood";
 
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
+  const [searchCityValue, setSearchCityValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -71,10 +73,33 @@ const Header = () => {
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
+  const [openCityDialog, setOpenCityDialog] = useState(false);
 
   const { appliedCityFilter } = useSelector(
     (state) => state.cityFiltersReducer
   );
+
+  const handleSearchLocation = (location) => {
+    setSelectedLocation(location);
+    localStorage.setItem("selected_city", location);
+    dispatch(changeProductPage(0));
+    dispatch(changeShopPage(0));
+    dispatch(
+      changeAppliedShopsFilters({
+        key: "locations",
+        value: { selectedValue: [] },
+      })
+    );
+    dispatch(
+      changeAppliedCityFilters({
+        key: "city",
+        value: {
+          selectedValue: location,
+        },
+      })
+    );
+    handleCityDialogClose();
+  };
 
   useEffect(() => {
     appliedCityFilter &&
@@ -113,6 +138,11 @@ const Header = () => {
   const handleSearchDialogClose = () => {
     setSearchBarValue("");
     setOpenSearchDialog(false);
+  };
+
+  const handleCityDialogClose = () => {
+    setSearchCityValue("");
+    setOpenCityDialog(false);
   };
 
   const passValueForProduct = (itm, searchBarData) => {
@@ -171,13 +201,13 @@ const Header = () => {
       />
       <header
         className={`${
-          userProfile.user_type === "vendor" ? "py-0" : "py-1 sm:py-0"
+          userProfile.user_type === "vendor" ? "py-3" : "py-1 sm:py-0"
         } w-full bg-colorPrimary shadow-sm z-30 left-0 sticky font-Nova ${
           scrollDirection === "down" ? "-top-32" : "top-0"
         } transition-all duration-500`}
       >
         <div className="container flex items-center justify-between gap-2">
-          <div className="flex items-center justify-start gap-3">
+          <div className="flex items-center justify-start gap-0 sm:gap-3">
             {userProfile.user_type !== "vendor" && (
               <MenuIcon
                 sx={{ color: "white" }}
@@ -195,12 +225,42 @@ const Header = () => {
                   onClick={handleMobileSidebarClick}
                 />
               )}
-            <AppLogo />
+            <AppLogo onHeader={true} />
             {userProfile.user_type !== "vendor" && (
-              <div className="headerLocationDiv ml-2 sm:ml-6">
-                <FormControl
+              <div className="headerLocationDiv sm:ml-6">
+                <div
+                  onClick={() => setOpenCityDialog(true)}
+                  className="flex gap-1 sm:gap-2 items-center cursor-pointer  p-1 sm:p-2 rounded-md"
+                >
+                  <FmdGoodIcon className="!text-white !text-[16px]" />
+                  <span className="text-white text-[14px] sm:text-[16px] line-clamp-1">
+                    {selectedLocation ? selectedLocation : "Find Location.."}
+                  </span>
+                  <button
+                    type="button"
+                    className={`w-2 sm:w-3 h-2 text-white transition-transform duration-300 ${
+                      openCityDialog ? "" : "rotate-180"
+                    }`}
+                  >
+                    <svg
+                      width="14"
+                      height="8"
+                      viewBox="0 0 14 8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-full h-full overflow-visible"
+                    >
+                      <path
+                        d="M7.42958 0.84392L13.4296 6.17724C13.562 6.29403 13.6427 6.4586 13.654 6.63483C13.6652 6.81107 13.6061 6.98456 13.4896 7.11724C13.3728 7.2497 13.2082 7.33041 13.032 7.34166C12.8558 7.35291 12.6823 7.29378 12.5496 7.17724L6.98958 2.23725L1.42958 7.17724C1.2958 7.285 1.12559 7.33695 0.954433 7.32228C0.783282 7.3076 0.624401 7.22742 0.510918 7.09847C0.397435 6.96951 0.338111 6.80172 0.345313 6.63009C0.352516 6.45847 0.42569 6.29624 0.549578 6.17725L6.54958 0.84392C6.67124 0.737041 6.82764 0.678098 6.98958 0.678098C7.15152 0.678098 7.30792 0.737041 7.42958 0.84392Z"
+                        fill="#ffffff"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                {/* <FormControl
                   variant="standard"
                   sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
+                  onClick={() => setOpenCityDialog(true)}
                 >
                   <InputLabel
                     id="demo-simple-select-standard-label"
@@ -220,39 +280,35 @@ const Header = () => {
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
-                    onChange={(event) => {
-                      setSelectedLocation(event.target.value);
-                      localStorage.setItem("selected_city", event.target.value);
-                      dispatch(changeProductPage(0));
-                      dispatch(changeShopPage(0));
-                      dispatch(
-                        changeAppliedShopsFilters({
-                          key: "locations",
-                          value: { selectedValue: [] },
-                        })
-                      );
-                      dispatch(
-                        changeAppliedCityFilters({
-                          key: "city",
-                          value: {
-                            selectedValue: event.target.value,
-                          },
-                        })
-                      );
-                    }}
+                    // onChange={(event) => {
+                    //   setSelectedLocation(event.target.value);
+                    //   localStorage.setItem("selected_city", event.target.value);
+                    //   dispatch(changeProductPage(0));
+                    //   dispatch(changeShopPage(0));
+                    //   dispatch(
+                    //     changeAppliedShopsFilters({
+                    //       key: "locations",
+                    //       value: { selectedValue: [] },
+                    //     })
+                    //   );
+                    //   dispatch(
+                    //     changeAppliedCityFilters({
+                    //       key: "city",
+                    //       value: {
+                    //         selectedValue: event.target.value,
+                    //       },
+                    //     })
+                    //   );
+                    // }}
                     label="Location"
                   >
-                    {/* <div className="w-[60vw] h-[50vh] flex flex-wrap justify-between"> */}
-                    {cityLists?.map((city, index) => (
-                      // <div key={index} className="w-[250px]">
+                    {/* {cityLists?.map((city, index) => (
                       <MenuItem value={city?.city} key={index}>
                         {city?.city}
                       </MenuItem>
-                      // </div>
-                    ))}
-                    {/* </div> */}
-                  </LocationSelect>
-                </FormControl>
+                    ))} */}
+                {/* </LocationSelect>
+                </FormControl> */}{" "}
               </div>
             )}
           </div>
@@ -423,6 +479,84 @@ const Header = () => {
           </CustomDialog>
         </div>
       )}
+
+      {openCityDialog && (
+        <div className="bg-colorPrimary fixed block w-full h-full opacity-50 z-[2] cursor-pointer">
+          <CustomDialog
+            top={75}
+            width="60vw"
+            marginX="auto"
+            borderRadius={12}
+            open={openCityDialog}
+            onClose={handleCityDialogClose}
+          >
+            <DialogContent dividers className="flex justify-center p-0">
+              <Grid container justifyContent="center">
+                <Grid item xs={12}>
+                  <div className="flex gap-2 items-center">
+                    <OutlinedInput
+                      placeholder="Search city....."
+                      size="small"
+                      fullWidth
+                      value={searchCityValue}
+                      onChange={(e) =>
+                        setSearchCityValue(e.currentTarget.value)
+                      }
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <IconButton edge="start">
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                    <div>
+                      <CloseIcon
+                        className="!cursor-pointer"
+                        onClick={() => setOpenCityDialog(false)}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-10 flex items-center justify-between flex-wrap">
+                    <div className="container flex flex-wrap justify-between">
+                      {searchCityValue === "" && (
+                        <div className="w-[125px] lg:w-[250px] p-2  hover:bg-[#00000027] rounded-md cursor-pointer flex items-center">
+                          <span
+                            className="text-[14px] sm:text-[16px] ms-2  font-bold "
+                            onClick={() => handleSearchLocation("")}
+                          >
+                            All Cities
+                          </span>
+                        </div>
+                      )}
+                      {(searchCityValue !== ""
+                        ? cityLists?.filter((i) =>
+                            i?.city
+                              .toLowerCase()
+                              .includes(searchCityValue.toLowerCase())
+                          )
+                        : cityLists.slice(0, 31)
+                      )?.map((city, index) => (
+                        <div
+                          className="w-[125px] lg:w-[250px] p-2  hover:bg-[#00000027] rounded-md cursor-pointer flex items-center"
+                          key={index}
+                        >
+                          <span
+                            className="text-[14px] sm:text-[16px] ms-2  line-clamp-1"
+                            onClick={() => handleSearchLocation(city?.city)}
+                          >
+                            {city?.city}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </CustomDialog>
+        </div>
+      )}
     </>
   );
 };
@@ -501,7 +635,7 @@ export const UserProfile = ({ setAccessToken }) => {
   return (
     <div className="flex items-center gap-5">
       {userProfile?.userCreatedShopId && vendorShopDetails && (
-        <span className="font-semibold text-yellow-400">
+        <span className="font-semibold text-yellow-400 text-[12px] sm:text-[16px]">
           Available Products :{" "}
           <span>
             {vendorShopDetails.productLimit -

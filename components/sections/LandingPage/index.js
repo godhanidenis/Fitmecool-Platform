@@ -252,7 +252,7 @@ const LandingPage = () => {
             <div className=" flex flex-col">
               <div className="flex flex-col pb-4 sm:pb-4 2xl:pb-9">
                 <p className="font-bold text-[20px] sm:text-[22px] md:text-[28px] 2xl:text-[36px] text-[#29977E]">
-                  Download Rentbless app
+                  Download Fitmecool app
                 </p>
                 <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px]  text-[#181725] font-semibold text-[#18172593] flex flex-col">
                   <span className="m-0">

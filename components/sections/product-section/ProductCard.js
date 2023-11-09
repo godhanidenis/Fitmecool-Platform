@@ -163,7 +163,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             {itm?.type === "image" && (
               <Image
                 src={itm?.src ?? ""}
-                unoptimized={true}
+                // unoptimized={true}
                 alt={product?.product_name}
                 className={`object-cover object-top absolute top-0 left-0 bg-white  ${
                   isProductImagesLoaded ? "opacity-100" : "opacity-0"
@@ -318,15 +318,15 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         }`}
                         rel="noopener noreferrer"
                       >
-                        {isProductImagesLoaded && (
-                          <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
-                        )}
+                        {/* {isProductImagesLoaded && ( */}
+                        <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
+                        {/* )} */}
                         {isProductImages ? (
                           <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
                         ) : (
                           <Image
                             src={product.product_image?.front ?? ""}
-                            unoptimized={true}
+                            // unoptimized={true}
                             alt={product?.product_name}
                             className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
                               isProductImagesLoaded
@@ -555,7 +555,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                             src={
                               product?.branchInfo?.shop_info?.shop_logo ?? ""
                             }
-                            unoptimized={true}
+                            // unoptimized={true}
                             layout="fill"
                             className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
                               isShopLogoLoaded ? "opacity-100" : "opacity-0"

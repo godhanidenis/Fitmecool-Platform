@@ -17,9 +17,12 @@ export const colorsList = [
 ];
 
 export const assets = {
+  rentBlessBlackLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolBlack.png`,
+  whiteLogoSmall: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolWhiteSmall.png`,
   // appLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/rentblessLogo.png`,
   appLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolWhite.png`,
-  appBlackLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/BlackLogo.png`,
+  appBlackLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolBlack.png`,
+  // appBlackLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/BlackLogo.png`,
   emptyCart: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/empty_cart.png`,
   appStore: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/appStore.png`,
   playStore: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/playStore.png`,

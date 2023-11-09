@@ -213,24 +213,34 @@ export const StyledFormLabelRadio = styled(FormControlLabel)(
   })
 );
 
-export const CustomDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialog-paper": {
-    top: 0,
-    position: "absolute",
-    height: "50vh",
-    width: "100vw",
-    maxHeight: "100%",
-    maxWidth: "100%",
-    margin: "0px",
-    borderRadius: 0,
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+export const CustomDialog = styled(Dialog)(
+  ({ theme, top, width, marginX, borderRadius }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialog-paper": {
+      top: top ?? 0,
+      position: "absolute",
+      height: "50vh",
+      width: width ?? "100vw",
+      maxHeight: "100%",
+      maxWidth: "100%",
+      margin: "0px",
+      marginX: marginX ?? "0px",
+      borderRadius: borderRadius ?? 0,
+      [theme.breakpoints.down("md")]: {
+        width: "80vw",
+      },
+      [theme.breakpoints.down("sm")]: {
+        width: "100vw",
+        borderRadius: 0,
+      },
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  })
+);
 
 export const LocationSelect = styled(Select)(({ theme }) => ({
   "& .MuiInputBase-input": {

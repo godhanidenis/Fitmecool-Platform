@@ -59,7 +59,7 @@ const HomePage = () => {
       loadProductsStart({
         pageData: {
           skip: productPageSkip,
-          limit: 10,
+          limit: 12,
         },
         filter: {
           category_id: appliedProductsFilters.categoryId.selectedValue,
