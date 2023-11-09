@@ -185,9 +185,9 @@ const LandingPage = () => {
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             How It Works
           </h1>
-          <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
+          {/* <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
             Lorem Ipsum is simply dummy text of the printing
-          </p>
+          </p> */}
         </div>
 
         <div className="w-full mx-auto flex items-center justify-center sm:mt-2 ">
@@ -225,7 +225,8 @@ const LandingPage = () => {
             Men’s Collection
           </h1>
           <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Browse through our dreamy catalog and enrobe your wishes.
+            {`Discover An Awesome Selection Of Men's Fashion For The Perfect
+            Stylish Ensemble.`}
           </p>
         </div>
         <div className="mt-2 sm:mt-5">
@@ -238,7 +239,7 @@ const LandingPage = () => {
             Women’s Collection
           </h1>
           <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Browse through our dreamy catalog and enrobe your wishes.
+            {`Take A Browse Through Our Fabulous Selection Of Women's Fashion.`}
           </p>
         </div>
         <div className="mt-5">
@@ -255,7 +256,7 @@ const LandingPage = () => {
                 </p>
                 <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px]  text-[#181725] font-semibold text-[#18172593] flex flex-col">
                   <span className="m-0">
-                    Plan weddings, book vendors & explore curated ideas
+                    {`Let's Inquire For Trendy Outfits Right Now`}
                   </span>
                 </p>
               </div>
@@ -349,11 +350,12 @@ const LandingPage = () => {
             Featured Vendors
           </h1>
           <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Browse through our dreamy catalog and enrobe your wishes.
+            Explore Incredible Individual Vendors OR Browse Through Trendy
+            Boutiques For The Latest In Fashion.
           </p>
         </div>
 
-        <div className="w-full h-[350px] lg:h-[400px] place-items-center pt-5">
+        <div className="w-full h-[350px] lg:h-[400px] place-items-center">
           {!loading && shopsData.length > 0 && (
             <div className="flex justify-end">
               <button

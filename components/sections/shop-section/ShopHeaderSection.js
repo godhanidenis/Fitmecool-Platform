@@ -216,7 +216,7 @@ const ShopHeaderSection = ({
                     >
                       <div className="text-colorWhite normal-case">
                         {shopFollowByUser ? (
-                          "UnFollow"
+                          "Following"
                         ) : (
                           <div className="flex items-center">
                             <PersonAddIcon sx={{ color: "#ffffff" }} />

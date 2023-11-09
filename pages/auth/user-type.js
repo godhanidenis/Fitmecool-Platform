@@ -52,8 +52,9 @@ const UserType = () => {
         How you would like to join us ?
       </div>
       <p className="text-xl mt-4 text-gray-400 max-[600px]:text-sm">
-        Unlock Fashion Possibilities – Where Customers and Shop Owners Connect,
-        on StyleSwap, Your Trusted Clothing Rental Platform!
+        Unlock Fashion Possibilities – Where Customers And Shop Owners Connect
+        Via WhatsApp/ Phone Calls For Cloth Inquries. Your Trusted Clothing
+        Platform!
       </p>
       <div className="flex my-8 gap-6">
         <div

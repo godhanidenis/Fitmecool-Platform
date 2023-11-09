@@ -141,10 +141,10 @@ const Login = () => {
           As {asVendor ? "Vendor" : "Customer"}
         </span>
       </div>
-      <p className="text-sm sm:text-xl mt-2 text-gray-400">
+      {/* <p className="text-sm sm:text-xl mt-2 text-gray-400">
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry.
-      </p>
+      </p> */}
       <button
         onClick={handleGoogleLogin}
         className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
