@@ -443,7 +443,7 @@ const ProductDetail = ({ productDetails, error }) => {
             }}
           >
             {shopFollowByUser ? (
-              "Unfollow"
+              "Following"
             ) : (
               <div className="flex items-center justify-center">
                 <AddIcon className="text-white" fontSize="small" />

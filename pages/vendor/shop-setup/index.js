@@ -513,10 +513,7 @@ const ShopPage = () => {
     <>
       <div className="w-full">
         <div className="h-[452px] sm:h-[50vh] relative">
-          <div
-            className="absolute inset-0  mix-blend-darken bg-cover bg-repeat-round"
-            style={{ backgroundImage: `url(${assets.homeCoverImage})` }}
-          >
+          <div className="absolute inset-0  mix-blend-darken bg-cover bg-repeat-round">
             <div className="absolute w-full h-full  bg-[#000000a9]" />
           </div>
         </div>
@@ -526,7 +523,7 @@ const ShopPage = () => {
               <span className="text-colorGreen font-semibold">Set Up</span> Your
             </div>
             <div>
-              Rental <span className="text-colorGreen font-semibold">Shop</span>
+              Online <span className="text-colorGreen font-semibold">Shop</span>
             </div>
           </div>
           <div className="flex justify-center mt-10">

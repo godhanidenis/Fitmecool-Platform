@@ -10,10 +10,10 @@ const Customer = () => {
           <Image src={assets.storeImage1} alt="Store1" width={64} height={64} />
           <div className="text-center">
             <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px]  text-[#181725] font-semibold">
-              Choose Cloth For Rent
+              Choose Your Clothes For Rent/Buy
             </p>
             <p className="text-[12px] sm:text-[14px]  md:text-[15px]  2xl:text-[16px] text-[#31333e93]">
-              Choose your rental outfit from different collection
+              Choose Your Outfit From Different Collection
             </p>
           </div>
         </div>
@@ -26,12 +26,12 @@ const Customer = () => {
               Connect With Vendors
             </p>
             <p className="text-[12px] sm:text-[14px]  md:text-[15px]  2xl:text-[16px] text-[#31333e93]">
-              After choosing your desired clothing reach out to the vendor
-              directly through{" "}
-              <span className="text-[#181725]">
-                whatsapp or a direct phone call
+              After Choosing Your Desired Clothing Reach Out To The Vendor
+              Directly Through{" "}
+              <span className="text-[#181725] font-semibold">
+                Whatsapp OR Direct Phone Call
               </span>{" "}
-              to inquire about pricing, availibity and other T&C.
+              To Inquire About Pricing, Availibity And Other T&C.
             </p>
           </div>
         </div>

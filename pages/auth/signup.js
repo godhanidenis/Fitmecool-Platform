@@ -159,10 +159,10 @@ const Signup = () => {
           As {asVendor ? "Vendor" : "Customer"}
         </span>
       </div>
-      <p className="sm:text-xl mt-2 text-gray-400 text-sm">
+      {/* <p className="sm:text-xl mt-2 text-gray-400 text-sm">
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry.
-      </p>
+      </p> */}
       <button
         onClick={handleGoogleSignUp}
         className="xl:text-lg sm:text-sm h-10 border w-full border-black text-colorPrimary rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"
