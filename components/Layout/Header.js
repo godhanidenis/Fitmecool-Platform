@@ -104,8 +104,11 @@ const Header = () => {
 
   const handleAuthButtonClick = () => {
     setLoading(true);
-    localStorage.setItem("last_path", new URL(window.location.href).pathname);
-    Router.push("/auth/user-type");
+
+    router.push({
+      pathname: "/auth/user-type",
+      query: { redirectPath: new URL(window.location.href).pathname },
+    });
   };
   const handleSearchDialogClose = () => {
     setSearchBarValue("");
@@ -240,13 +243,13 @@ const Header = () => {
                     label="Location"
                   >
                     {/* <div className="w-[60vw] h-[50vh] flex flex-wrap justify-between"> */}
-                      {cityLists?.map((city, index) => (
-                        // <div key={index} className="w-[250px]">
-                        <MenuItem value={city?.city} key={index}>
-                          {city?.city}
-                        </MenuItem>
-                        // </div>
-                      ))}
+                    {cityLists?.map((city, index) => (
+                      // <div key={index} className="w-[250px]">
+                      <MenuItem value={city?.city} key={index}>
+                        {city?.city}
+                      </MenuItem>
+                      // </div>
+                    ))}
                     {/* </div> */}
                   </LocationSelect>
                 </FormControl>
@@ -491,7 +494,7 @@ export const UserProfile = ({ setAccessToken }) => {
 
   return (
     <div className="flex items-center gap-5">
-      {userProfile?.userHaveAnyShop && vendorShopDetails && (
+      {userProfile?.userCreatedShopId && vendorShopDetails && (
         <span className="font-semibold text-yellow-400">
           Available Products :{" "}
           <span>

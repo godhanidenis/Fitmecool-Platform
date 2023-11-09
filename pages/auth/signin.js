@@ -3,7 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { CircularProgress } from "@mui/material";
@@ -26,6 +26,9 @@ const Login = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const dispatch = useDispatch();
+
+  const router = useRouter();
+  const { redirectPath } = router.query;
 
   const {
     register,
@@ -52,10 +55,9 @@ const Login = () => {
     localStorage.setItem("userId", userId);
     toast.success(message, { theme: "colored" });
     localStorage.removeItem("user_type_for_auth");
-    localStorage.removeItem("last_path");
     localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
     setTimeout(() => {
-      Router.push(asVendor ? "/vendor/dashboard" : "/");
+      Router.push(asVendor ? "/vendor/dashboard" : redirectPath ?? "/");
     }, 2000);
   };
 
@@ -119,7 +121,12 @@ const Login = () => {
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
         <ArrowBackIcon
-          onClick={() => Router.push("/auth/user-type")}
+          onClick={() =>
+            router.push({
+              pathname: "/auth/user-type",
+              query: { redirectPath: redirectPath },
+            })
+          }
           className="cursor-pointer text-3xl"
         />
         <div className="">
@@ -220,7 +227,12 @@ const Login = () => {
           Don&apos;t have an account?
           <span
             className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
-            onClick={() => Router.push("/auth/signup")}
+            onClick={() =>
+              router.push({
+                pathname: "/auth/signup",
+                query: { redirectPath: redirectPath },
+              })
+            }
           >
             Sign Up
           </span>

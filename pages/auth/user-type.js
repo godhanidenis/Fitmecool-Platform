@@ -12,6 +12,7 @@ const UserType = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { redirectPath } = router.query;
 
   const [selectedUserType, setSelectedUserType] = useState(
     typeof window !== "undefined" &&
@@ -38,10 +39,7 @@ const UserType = () => {
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
         <ArrowBackIcon
-          onClick={() => {
-            router.push(localStorage.getItem("last_path") ?? "/");
-            localStorage.removeItem("last_path");
-          }}
+          onClick={() => router.push(redirectPath ?? "/")}
           className="cursor-pointer text-3xl"
         />
         <div className="">
@@ -125,7 +123,11 @@ const UserType = () => {
           onClick={() => {
             setLoading(true);
             localStorage.setItem("user_type_for_auth", selectedUserType);
-            Router.push("/auth/signin");
+
+            router.push({
+              pathname: "/auth/signin",
+              query: { redirectPath: redirectPath },
+            });
           }}
         >
           {loading && (

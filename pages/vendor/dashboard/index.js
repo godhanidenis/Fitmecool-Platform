@@ -24,6 +24,7 @@ const ShopDashboard = () => {
   const router = useRouter();
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
+  const { productsCount } = useSelector((state) => state.products);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -32,7 +33,7 @@ const ShopDashboard = () => {
   const dashboardCards = [
     {
       label: "Total Products",
-      totalNumber: vendorShopDetails?.balanceProduct,
+      totalNumber: productsCount,
       icon: <ShoppingCartIcon sx={iconStyles} />,
       path: `/vendor/shop/${vendorShopDetails?.id}`,
     },

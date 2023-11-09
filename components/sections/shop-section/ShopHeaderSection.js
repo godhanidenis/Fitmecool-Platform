@@ -118,9 +118,8 @@ const ShopHeaderSection = ({
                       {shopDetails.shop_name}
                     </div>
                     <div className="text-[#FFFFFF] text-[18px] font-normal ">
-                      {
-                        "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
-                      }
+                      Let&apos;s be Effortlessly Cool: Embrace Your Signature
+                      Style with Us
                     </div>
                     <span className="text-[#878A99] text-[16px] font-normal flex">
                       <LocationOnIcon
