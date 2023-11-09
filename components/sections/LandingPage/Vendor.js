@@ -13,7 +13,7 @@ const Vendor = () => {
               Create Your Own Shop
             </p>
             <p className="text-[12px] sm:text-[14px]  md:text-[15px]  2xl:text-[16px] text-[#31333e93]">
-              Create your personalized experience by setting up your own shop
+              Create Your Personalized Experience By Setting Up Your Own Shop
             </p>
           </div>
         </div>
@@ -26,7 +26,7 @@ const Vendor = () => {
               Upload Products
             </p>
             <p className="text-[12px] sm:text-[14px]  md:text-[15px]  2xl:text-[16px] text-[#31333e93]">
-              Upload list of rental products
+              Upload Products For Rent/ Sell
             </p>
           </div>
         </div>
@@ -39,7 +39,10 @@ const Vendor = () => {
               Get Inquiries
             </p>
             <p className="text-[12px] sm:text-[14px]  md:text-[15px]  2xl:text-[16px] text-[#31333e93]">
-              Wait patiently for inquires to arrive via whatsapp or phone calls
+              Wait Patiently For Inquires To Arrive Via{" "}
+              <span className="text-[#181725] font-semibold">
+                Whatsapp OR Direct Phone Call
+              </span>{" "}
             </p>
           </div>
         </div>
