@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Avatar, Button, Grid, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ClickAwayListener,
+  Grid,
+  Typography,
+} from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import { shopFollowToggle } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { shopFollow } from "../../../graphql/mutations/shops";
 import { useDispatch, useSelector } from "react-redux";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -21,6 +27,8 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { ShopHeaderItem } from "../../core/CustomMUIComponents";
 import { assets } from "../../../constants";
+import { styled } from "@mui/material/styles";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -35,6 +43,7 @@ const ShopHeaderSection = ({
   const [shopFollowByUser, setShopFollowByUser] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
+  const [openToolTip, setOpenToolTip] = useState(false);
 
   const router = useRouter();
 
@@ -42,6 +51,18 @@ const ShopHeaderSection = ({
   const { userProfile, isAuthenticate } = useSelector(
     (state) => state.userProfile
   );
+
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip open={openToolTip} {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: "#ffffff",
+      color: "rgba(0, 0, 0, 0.87)",
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      boxShadow: "0 0 10px rgba(0,0,0,.1)",
+    },
+  }));
 
   const handleClick = () => {
     scrollRef.current.scrollIntoView({ behavior: "smooth" });
@@ -66,7 +87,7 @@ const ShopHeaderSection = ({
   return (
     <>
       <div className="flex justify-center font-Nova">
-        <div className="grid-cols-12 mt-[-100px] container bg-[#151827] rounded-lg shadow-xl">
+        <div className="grid-cols-12 mt-[-50px] sm:mt-[-100px] container bg-[#151827] rounded-lg shadow-xl">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row">
               <div className="mt-[-45px] flex justify-center">
@@ -74,9 +95,9 @@ const ShopHeaderSection = ({
                   <Avatar
                     className="!bg-colorGreen"
                     sx={{
-                      fontSize: "70px",
-                      width: "150px",
-                      height: "150px",
+                      fontSize: window.innerWidth >= 640 ? "70px" : "50px",
+                      width: window.innerWidth >= 640 ? 150 : 100,
+                      height: window.innerWidth >= 640 ? 150 : 100,
                     }}
                   >
                     {String(shopDetails.shop_name)
@@ -89,8 +110,8 @@ const ShopHeaderSection = ({
                     unoptimized={true}
                     alt="shop logo"
                     layout="fixed"
-                    width={150}
-                    height={150}
+                    width={window.innerWidth >= 640 ? 150 : 100}
+                    height={window.innerWidth >= 640 ? 150 : 100}
                     className="rounded-[50%] object-cover object-center"
                     onLoad={() => setIsShopLogoLoaded(true)}
                     onError={() => {
@@ -279,61 +300,132 @@ const ShopHeaderSection = ({
                 </ShopHeaderItem>
               </Grid>
               <Grid item xs={3} sm={3}>
-                <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row !p-2">
-                  <div className="lg:flex items-center justify-center w-[100%]">
-                    <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center md:justify-center">
-                      <ShareIcon
-                        fontSize="medium"
-                        className="sm:mr-[8px] mr-[5px]"
-                      />
-                      <p className="text-[10px] sm:text-[16px]">Share</p>
+                {window.innerWidth >= 1024 ? (
+                  <ShopHeaderItem className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex flex-col sm:flex-row !p-2">
+                    <div className="lg:flex items-center justify-center w-[100%]">
+                      <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center md:justify-center">
+                        <ShareIcon
+                          fontSize="medium"
+                          className="sm:mr-[8px] mr-[5px]"
+                        />
+                        <p className="text-[10px] sm:text-[16px]">Share</p>
+                      </div>
+                      <div className="flex pt-2 sm:pt-0 ml-0 sm:ml-6 lg:ml-0 xl:ml-6 gap-1 lg:gap-0 items-center md:justify-center">
+                        <div className="lg:p-2 rounded-lg cursor-pointer">
+                          <FacebookShareButton
+                            windowWidth={900}
+                            windowHeight={900}
+                            url={pageShareURL}
+                          >
+                            <Image
+                              src={assets.facebookIcon}
+                              width={26}
+                              height={26}
+                              alt="facebookIcon"
+                            />
+                          </FacebookShareButton>
+                        </div>
+                        <div className="lg:p-2 !rounded-lg cursor-pointer">
+                          <WhatsappShareButton
+                            windowWidth={900}
+                            windowHeight={900}
+                            url={pageShareURL}
+                          >
+                            <WhatsappIcon
+                              size={26}
+                              round={true}
+                              className="w-full"
+                            />
+                          </WhatsappShareButton>
+                        </div>
+                        <div className="lg:p-2 mt-[2px] rounded-lg cursor-pointer">
+                          <EmailShareButton
+                            subject="Shop Detail"
+                            windowWidth={900}
+                            windowHeight={900}
+                            url={pageShareURL}
+                          >
+                            <Image
+                              src={assets.googleIcon}
+                              width={26}
+                              height={26}
+                              alt="googleIcon"
+                            />
+                          </EmailShareButton>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex pt-2 sm:pt-0 ml-0 sm:ml-6 lg:ml-0 xl:ml-6 gap-1 lg:gap-0 items-center md:justify-center">
-                      <div className="lg:p-2 rounded-lg cursor-pointer">
-                        <FacebookShareButton
-                          windowWidth={900}
-                          windowHeight={900}
-                          url={pageShareURL}
+                  </ShopHeaderItem>
+                ) : (
+                  <ClickAwayListener onClickAway={() => setOpenToolTip(false)}>
+                    <ShopHeaderItem
+                      onClick={() => setOpenToolTip(!openToolTip)}
+                      className="!bg-[#1F2233] !text-[#FFFFFF] !cursor-pointer flex items-center justify-center !p-2 w-full h-full"
+                    >
+                      <div
+                        className="flex items-center justify-center w-full h-full"
+                        onMouseLeave={() => setOpenToolTip(false)}
+                      >
+                        <HtmlTooltip
+                          title={
+                            <div className="flex items-center justify-center">
+                              <div className="p-1.5 sm:p-2 rounded-lg cursor-pointer">
+                                <FacebookShareButton
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
+                                  <Image
+                                    src={assets.facebookIcon}
+                                    width={window.innerWidth >= 640 ? 30 : 22}
+                                    height={window.innerWidth >= 640 ? 30 : 22}
+                                    alt="facebookIcon"
+                                  />
+                                </FacebookShareButton>
+                              </div>
+                              <div className="p-1.5 sm:p-2 !rounded-lg cursor-pointer">
+                                <WhatsappShareButton
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
+                                  <WhatsappIcon
+                                    size={window.innerWidth >= 640 ? 30 : 22}
+                                    round={true}
+                                    className="w-full"
+                                  />
+                                </WhatsappShareButton>
+                              </div>
+                              <div className="p-1.5 sm:p-2 mt-[2px] rounded-lg cursor-pointer">
+                                <EmailShareButton
+                                  subject="Shop Detail"
+                                  windowWidth={900}
+                                  windowHeight={900}
+                                  url={pageShareURL}
+                                >
+                                  <Image
+                                    src={assets.googleIcon}
+                                    width={window.innerWidth >= 640 ? 30 : 22}
+                                    height={window.innerWidth >= 640 ? 30 : 22}
+                                    alt="googleIcon"
+                                  />
+                                </EmailShareButton>
+                              </div>
+                            </div>
+                          }
                         >
-                          <Image
-                            src={assets.facebookIcon}
-                            width={window.innerWidth >= 1024 ? 26 : 15}
-                            height={window.innerWidth >= 1024 ? 26 : 15}
-                            alt="facebookIcon"
-                          />
-                        </FacebookShareButton>
+                          <div className="flex flex-col sm:flex-row gap-1 sm:gap-0 items-center md:justify-center">
+                            <ShareIcon
+                              fontSize="medium"
+                              className="sm:mr-[8px] mr-[5px]"
+                            />
+                            <p className="text-[10px] sm:text-[16px]">Share</p>
+                          </div>
+                        </HtmlTooltip>
                       </div>
-                      <div className="lg:p-2 !rounded-lg cursor-pointer">
-                        <WhatsappShareButton
-                          windowWidth={900}
-                          windowHeight={900}
-                          url={pageShareURL}
-                        >
-                          <WhatsappIcon
-                            size={window.innerWidth >= 1024 ? 26 : 15}
-                            round={true}
-                            className="w-full"
-                          />
-                        </WhatsappShareButton>
-                      </div>
-                      <div className="lg:p-2 mt-[2px] rounded-lg cursor-pointer">
-                        <EmailShareButton
-                          subject="Shop Detail"
-                          windowWidth={900}
-                          windowHeight={900}
-                          url={pageShareURL}
-                        >
-                          <Image
-                            src={assets.googleIcon}
-                            width={window.innerWidth >= 1024 ? 26 : 15}
-                            height={window.innerWidth >= 1024 ? 26 : 15}
-                            alt="googleIcon"
-                          />
-                        </EmailShareButton>
-                      </div>
-                    </div>
-                  </div>
-                </ShopHeaderItem>
+                    </ShopHeaderItem>
+                  </ClickAwayListener>
+                )}
               </Grid>
             </Grid>
           </div>

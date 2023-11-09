@@ -12,6 +12,7 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  ClickAwayListener,
   Divider,
   Rating,
 } from "@mui/material";
@@ -38,7 +39,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 import {
   EmailShareButton,
@@ -74,7 +75,7 @@ const ProductDetail = ({ productDetails, error }) => {
 
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const [OpenToolTip, setOpenToolTip] = useState(false);
+  const [openToolTip, setOpenToolTip] = useState(false);
 
   const [readMore, setReadMore] = useState(false);
 
@@ -99,7 +100,7 @@ const ProductDetail = ({ productDetails, error }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
   const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip open={OpenToolTip} {...props} classes={{ popper: className }} />
+    <Tooltip open={openToolTip} {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
       backgroundColor: "#ffffff",
@@ -581,79 +582,83 @@ const ProductDetail = ({ productDetails, error }) => {
                           <span>Like</span>
                         </Button>
                       </div>
-                      <div
-                        className="w-[30%]"
-                        onMouseLeave={() => setOpenToolTip(false)}
+                      <ClickAwayListener
+                        onClickAway={() => setOpenToolTip(false)}
                       >
-                        <HtmlTooltip
-                          title={
-                            <React.Fragment>
-                              <div className="flex">
-                                <div className="p-2 rounded-lg cursor-pointer">
-                                  <FacebookShareButton
-                                    windowWidth={900}
-                                    windowHeight={900}
-                                    url={pageShareURL}
-                                  >
-                                    <Image
-                                      src={assets.facebookIcon}
-                                      width={25}
-                                      height={25}
-                                      alt="facebookIcon"
-                                    />
-                                  </FacebookShareButton>
-                                </div>
-                                <div className="p-2 rounded-lg cursor-pointer">
-                                  <WhatsappShareButton
-                                    windowWidth={900}
-                                    windowHeight={900}
-                                    url={pageShareURL}
-                                  >
-                                    <WhatsappIcon size={25} round={true} />
-                                  </WhatsappShareButton>
-                                </div>
-                                <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
-                                  <EmailShareButton
-                                    subject="Product Detail Page"
-                                    windowWidth={900}
-                                    windowHeight={900}
-                                    url={pageShareURL}
-                                  >
-                                    <Image
-                                      src={assets.googleIcon}
-                                      width={25}
-                                      height={25}
-                                      alt="googleIcon"
-                                    />
-                                  </EmailShareButton>
-                                </div>
-                              </div>
-                            </React.Fragment>
-                          }
+                        <div
+                          className="w-[30%]"
+                          onMouseLeave={() => setOpenToolTip(false)}
                         >
-                          <Button
-                            onClick={() => setOpenToolTip(!OpenToolTip)}
-                            variant="outlined"
-                            sx={{
-                              textTransform: "none",
-                              width: "100%",
-                              color: "rgba(21, 24, 39, 0.4)",
-                              border: "1px solid rgba(21, 24, 39, 0.4)",
-                              borderRadius: "10px",
-                              paddingTop: "12px",
-                              paddingBottom: "12px",
-                              fontWeight: 600,
-                              fontSize: "18px",
-                              display: "flex",
-                              gap: "5px",
-                              alignItems: "center",
-                            }}
+                          <HtmlTooltip
+                            title={
+                              <React.Fragment>
+                                <div className="flex">
+                                  <div className="p-2 rounded-lg cursor-pointer">
+                                    <FacebookShareButton
+                                      windowWidth={900}
+                                      windowHeight={900}
+                                      url={pageShareURL}
+                                    >
+                                      <Image
+                                        src={assets.facebookIcon}
+                                        width={25}
+                                        height={25}
+                                        alt="facebookIcon"
+                                      />
+                                    </FacebookShareButton>
+                                  </div>
+                                  <div className="p-2 rounded-lg cursor-pointer">
+                                    <WhatsappShareButton
+                                      windowWidth={900}
+                                      windowHeight={900}
+                                      url={pageShareURL}
+                                    >
+                                      <WhatsappIcon size={25} round={true} />
+                                    </WhatsappShareButton>
+                                  </div>
+                                  <div className="p-2 mt-[2px] rounded-lg cursor-pointer">
+                                    <EmailShareButton
+                                      subject="Product Detail Page"
+                                      windowWidth={900}
+                                      windowHeight={900}
+                                      url={pageShareURL}
+                                    >
+                                      <Image
+                                        src={assets.googleIcon}
+                                        width={25}
+                                        height={25}
+                                        alt="googleIcon"
+                                      />
+                                    </EmailShareButton>
+                                  </div>
+                                </div>
+                              </React.Fragment>
+                            }
                           >
-                            <TiArrowForwardOutline className="!text-[24px]" />
-                            <span>Share</span>
-                          </Button>
-                        </HtmlTooltip>
-                      </div>
+                            <Button
+                              onClick={() => setOpenToolTip(!openToolTip)}
+                              variant="outlined"
+                              sx={{
+                                textTransform: "none",
+                                width: "100%",
+                                color: "rgba(21, 24, 39, 0.4)",
+                                border: "1px solid rgba(21, 24, 39, 0.4)",
+                                borderRadius: "10px",
+                                paddingTop: "12px",
+                                paddingBottom: "12px",
+                                fontWeight: 600,
+                                fontSize: "18px",
+                                display: "flex",
+                                gap: "5px",
+                                alignItems: "center",
+                              }}
+                            >
+                              <TiArrowForwardOutline className="!text-[24px]" />
+                              <span>Share</span>
+                            </Button>
+                          </HtmlTooltip>
+                        </div>
+                      </ClickAwayListener>
                       <div className="w-[30%]">
                         <Button
                           variant="outlined"

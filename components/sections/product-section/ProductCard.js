@@ -8,7 +8,7 @@ import { productLikeToggle } from "../../../redux/ducks/userProfile";
 import { productLike } from "../../../graphql/mutations/products";
 import { toast } from "react-toastify";
 import { Box, Avatar, Tooltip, tooltipClasses } from "@mui/material";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
@@ -24,7 +24,6 @@ import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 import Modal from "@mui/material/Modal";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
-import { refactorPrice } from "../../../utils/common";
 
 const ContactStyle = {
   position: "absolute",
@@ -175,7 +174,15 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                   setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
                 }}
                 layout="fill"
-                onClick={() => onlyCarousal && setCarouselImage(true)}
+                onClick={() => {
+                  if (onlyCarousal) {
+                    if (OpenToolTip) {
+                      setOpenToolTip(false);
+                    } else {
+                      setCarouselImage(true);
+                    }
+                  }
+                }}
               />
             )}
             {itm?.type === "video" && (
