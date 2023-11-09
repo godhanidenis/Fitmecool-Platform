@@ -225,8 +225,8 @@ const LandingPage = () => {
             Men’s Collection
           </h1>
           <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Discover An Awesome Selection Of Men's Fashion For The Perfect
-            Stylish Ensemble.
+            {`Discover An Awesome Selection Of Men's Fashion For The Perfect
+            Stylish Ensemble.`}
           </p>
         </div>
         <div className="mt-2 sm:mt-5">
@@ -239,7 +239,7 @@ const LandingPage = () => {
             Women’s Collection
           </h1>
           <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Take A Browse Through Our Fabulous Selection Of Women's Fashion.
+            {`Take A Browse Through Our Fabulous Selection Of Women's Fashion.`}
           </p>
         </div>
         <div className="mt-5">
@@ -256,7 +256,7 @@ const LandingPage = () => {
                 </p>
                 <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px]  text-[#181725] font-semibold text-[#18172593] flex flex-col">
                   <span className="m-0">
-                    Let's Inquire For Trendy Outfits Right Now
+                    {`Let's Inquire For Trendy Outfits Right Now`}
                   </span>
                 </p>
               </div>
