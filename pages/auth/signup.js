@@ -70,6 +70,24 @@ const Signup = () => {
     toast.error(message, { theme: "colored" });
   };
 
+  const handleInput = (e) => {
+    const inputValue = e.target.value;
+
+    if (inputValue.length > 10) {
+      e.target.value = inputValue.slice(0, 10);
+    } else if (inputValue < 0) {
+      e.target.value = 0;
+    }
+
+    let inputValue1 = e.target.value.replace(/[^\d-]/g, "");
+
+    if (inputValue1.startsWith("-")) {
+      inputValue1 = "-" + inputValue1.replace(/-/g, "");
+    }
+
+    e.target.value = inputValue1;
+  };
+
   const onSubmit = (data) => {
     setLoading(true);
     signUp(
@@ -149,7 +167,7 @@ const Signup = () => {
         />
         <div className="">
           <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
-            <span className="sm:text-4xl text-[24px]">R</span>entbless
+            <span className="sm:text-4xl text-[24px]">F</span>itmecool
           </h2>
         </div>
       </div>
@@ -216,7 +234,7 @@ const Signup = () => {
             </div>
           </div>
           <input
-            type="text"
+            type="number"
             placeholder="Connect Mobile Number *"
             {...register("user_contact", {
               required: "Contact number is required",
@@ -230,6 +248,7 @@ const Signup = () => {
               },
             })}
             className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
+            onInput={handleInput}
           />
           {errors.user_contact && (
             <div className="mt-1 ml-1">

@@ -107,7 +107,7 @@ const ShopHeaderSection = ({
                 ) : (
                   <Image
                     src={shopDetails?.shop_logo ?? ""}
-                    unoptimized={true}
+                    // unoptimized={true}
                     alt="shop logo"
                     layout="fixed"
                     width={window.innerWidth >= 640 ? 150 : 100}

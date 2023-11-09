@@ -69,7 +69,7 @@ const ForgotPassword = () => {
           </div>
           <div className="col-span-2.5 flex items-center justify-center">
             <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
-              <span className="text-4xl">R</span>entbless
+              <span className="text-4xl">F</span>itmecool
             </h2>
           </div>
         </div>

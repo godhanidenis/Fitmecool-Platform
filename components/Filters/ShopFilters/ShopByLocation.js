@@ -19,7 +19,6 @@ const ShopByLocation = () => {
   const { areaLists } = useSelector((state) => state.areaLists);
 
   const [selectedData, setSelectedData] = useState([]);
-  console.log("selectedData :>> ", selectedData);
 
   const [abc, setAbc] = useState(false);
 
@@ -35,26 +34,22 @@ const ShopByLocation = () => {
     (state) => state.shopsFiltersReducer
   );
 
-  const [displayedItems, setDisplayedItems] = useState([]); // Items to display
-  const [displayLimit, setDisplayLimit] = useState(10); // Number of items to display initially
-  const [fetching, setFetching] = useState(false); // Flag to prevent multiple fetch calls
+  const [displayedItems, setDisplayedItems] = useState([]);
+  const [displayLimit, setDisplayLimit] = useState(10);
+  const [fetching, setFetching] = useState(false);
 
-  // Function to fetch more items
   const fetchMoreItems = () => {
-    // Simulate fetching data
-    // Replace this with your actual data fetching logic (API call, etc.)
     setFetching(true);
     setTimeout(() => {
       setDisplayLimit((prevLimit) => prevLimit + 10);
       setFetching(false);
-    }, 1000); // Simulate delay
+    }, 1000);
   };
 
   useEffect(() => {
     setDisplayedItems(areaLists.slice(0, displayLimit));
   }, [areaLists, displayLimit]);
 
-  // Add a scroll event listener
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -145,9 +140,9 @@ const ShopByLocation = () => {
                     : locationShowMore
                     ? areaLists.slice(0, 3)
                     : displayedItems
-                  )?.map((itm) => (
+                  )?.map((itm, index) => (
                     <StyledFormLabelCheckBox
-                      key={itm}
+                      key={index}
                       value={itm}
                       control={
                         <Checkbox
