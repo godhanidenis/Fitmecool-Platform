@@ -55,6 +55,7 @@ import { changeShopPage } from "../../redux/ducks/shop";
 const Header = () => {
   const [accessToken, setAccessToken] = useState();
   const [searchBarValue, setSearchBarValue] = useState("");
+  const [searchCityValue, setSearchCityValue] = useState("");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -71,6 +72,7 @@ const Header = () => {
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
+  const [openCityDialog, setOpenCityDialog] = useState(false);
 
   const { appliedCityFilter } = useSelector(
     (state) => state.cityFiltersReducer
@@ -113,6 +115,11 @@ const Header = () => {
   const handleSearchDialogClose = () => {
     setSearchBarValue("");
     setOpenSearchDialog(false);
+  };
+
+  const handleCityDialogClose = () => {
+    setSearchCityValue("");
+    setOpenCityDialog(false);
   };
 
   const passValueForProduct = (itm, searchBarData) => {
@@ -201,6 +208,7 @@ const Header = () => {
                 <FormControl
                   variant="standard"
                   sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
+                  onClick={() => setOpenCityDialog(true)}
                 >
                   <InputLabel
                     id="demo-simple-select-standard-label"
@@ -220,37 +228,33 @@ const Header = () => {
                     labelId="demo-simple-select-standard-label"
                     id="demo-simple-select-standard"
                     value={selectedLocation}
-                    onChange={(event) => {
-                      setSelectedLocation(event.target.value);
-                      localStorage.setItem("selected_city", event.target.value);
-                      dispatch(changeProductPage(0));
-                      dispatch(changeShopPage(0));
-                      dispatch(
-                        changeAppliedShopsFilters({
-                          key: "locations",
-                          value: { selectedValue: [] },
-                        })
-                      );
-                      dispatch(
-                        changeAppliedCityFilters({
-                          key: "city",
-                          value: {
-                            selectedValue: event.target.value,
-                          },
-                        })
-                      );
-                    }}
+                    // onChange={(event) => {
+                    //   setSelectedLocation(event.target.value);
+                    //   localStorage.setItem("selected_city", event.target.value);
+                    //   dispatch(changeProductPage(0));
+                    //   dispatch(changeShopPage(0));
+                    //   dispatch(
+                    //     changeAppliedShopsFilters({
+                    //       key: "locations",
+                    //       value: { selectedValue: [] },
+                    //     })
+                    //   );
+                    //   dispatch(
+                    //     changeAppliedCityFilters({
+                    //       key: "city",
+                    //       value: {
+                    //         selectedValue: event.target.value,
+                    //       },
+                    //     })
+                    //   );
+                    // }}
                     label="Location"
                   >
-                    {/* <div className="w-[60vw] h-[50vh] flex flex-wrap justify-between"> */}
-                    {cityLists?.map((city, index) => (
-                      // <div key={index} className="w-[250px]">
+                    {/* {cityLists?.map((city, index) => (
                       <MenuItem value={city?.city} key={index}>
                         {city?.city}
                       </MenuItem>
-                      // </div>
-                    ))}
-                    {/* </div> */}
+                    ))} */}
                   </LocationSelect>
                 </FormControl>
               </div>
@@ -416,6 +420,81 @@ const Header = () => {
                         </p>
                       ))}
                     </div>
+                  </div>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </CustomDialog>
+        </div>
+      )}
+
+      {openCityDialog && (
+        <div className="bg-colorPrimary fixed block w-full h-full opacity-50 z-[2] cursor-pointer">
+          <CustomDialog
+            top={75}
+            width="60vw"
+            marginX="auto"
+            borderRadius={12}
+            open={openCityDialog}
+            onClose={handleCityDialogClose}
+          >
+            <DialogContent dividers className="flex justify-center p-0">
+              <Grid container justifyContent="center">
+                <Grid item xs={12}>
+                  <OutlinedInput
+                    placeholder="Search city....."
+                    size="small"
+                    fullWidth
+                    value={searchCityValue}
+                    onChange={(e) => setSearchCityValue(e.currentTarget.value)}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <IconButton edge="start">
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                  <div className="mt-10 flex items-center justify-between flex-wrap">
+                    <Grid container justifyContent="center">
+                      {(searchCityValue !== ""
+                        ? cityLists?.filter((i) =>
+                            i?.city
+                              .toLowerCase()
+                              .includes(searchCityValue.toLowerCase())
+                          )
+                        : cityLists.slice(0, 30)
+                      )?.map((city, index) => (
+                        <Grid item xs={12} md={4} key={index}>
+                          <span
+                            className="p-2 cursor-pointer"
+                            onClick={() => {
+                              setSelectedLocation(city?.city);
+                              localStorage.setItem("selected_city", city?.city);
+                              dispatch(changeProductPage(0));
+                              dispatch(changeShopPage(0));
+                              dispatch(
+                                changeAppliedShopsFilters({
+                                  key: "locations",
+                                  value: { selectedValue: [] },
+                                })
+                              );
+                              dispatch(
+                                changeAppliedCityFilters({
+                                  key: "city",
+                                  value: {
+                                    selectedValue: city?.city,
+                                  },
+                                })
+                              );
+                              handleCityDialogClose();
+                            }}
+                          >
+                            {city?.city}
+                          </span>
+                        </Grid>
+                      ))}
+                    </Grid>
                   </div>
                 </Grid>
               </Grid>

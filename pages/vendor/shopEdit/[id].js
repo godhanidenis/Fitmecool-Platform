@@ -99,6 +99,8 @@ const ShopEdit = () => {
     handleSubmit: shopInfoHandleSubmit,
     formState: { errors: shopInfoErrors },
     setValue: shopInfoSetValue,
+    getValues: shopInfoGetValue,
+
     reset: shopInfoReset,
   } = useForm();
 
@@ -201,7 +203,7 @@ const ShopEdit = () => {
       mainBranchInfoSetValue("state", mainBranch?.branch_state);
       getCityList();
     }
-  }, [mainBranch]);
+  }, [mainBranch, mainBranchInfoSetValue]);
 
   useEffect(() => {
     const getAreaList = async () => {
@@ -968,6 +970,8 @@ const ShopEdit = () => {
                     id="shopName"
                     isRequired={false}
                     placeholder="Your shop name"
+                    fieldError={shopInfoErrors?.shop_name}
+                    fieldValue={shopInfoGetValue("shop_name")}
                     formValue={{
                       ...shopInfoRegister("shop_name", {
                         required: "Shop Name is required",
@@ -1184,8 +1188,10 @@ const ShopEdit = () => {
                     label="Address"
                     type="text"
                     id="address"
-                    // isRequired={false}
+                    isRequired={false}
                     placeholder="Your address"
+                    fieldValue={mainBranchInfoGetValue("address")}
+                    fieldError={mainBranchInfoErrors?.address}
                     formValue={{
                       ...mainBranchInfoRegister("address", {
                         required: "Address is required",
@@ -1402,6 +1408,8 @@ const ShopEdit = () => {
                       isRequired={false}
                       placeholder="Manager first name"
                       disabled={sameAsOwner === "True"}
+                      fieldError={mainBranchInfoErrors?.manager_first_name}
+                      fieldValue={mainBranchInfoGetValue("manager_first_name")}
                       formValue={{
                         ...mainBranchInfoRegister("manager_first_name", {
                           required: "Manager FirstName is required",
@@ -1424,6 +1432,8 @@ const ShopEdit = () => {
                       isRequired={false}
                       placeholder="Manager last name"
                       disabled={sameAsOwner === "True"}
+                      fieldError={mainBranchInfoErrors?.manager_last_name}
+                      fieldValue={mainBranchInfoGetValue("manager_last_name")}
                       formValue={{
                         ...mainBranchInfoRegister("manager_last_name", {
                           required: "Manager LastName is required",
@@ -1447,6 +1457,8 @@ const ShopEdit = () => {
                     isRequired={false}
                     placeholder="Manager email address"
                     disabled={sameAsOwner === "True"}
+                    fieldError={mainBranchInfoErrors?.manager_user_email}
+                    fieldValue={mainBranchInfoGetValue("manager_user_email")}
                     formValue={{
                       ...mainBranchInfoRegister("manager_user_email", {
                         required: "Manager Email is required",
@@ -1475,6 +1487,8 @@ const ShopEdit = () => {
                     isRequired={false}
                     placeholder="Manager phone number"
                     disabled={sameAsOwner === "True"}
+                    fieldError={mainBranchInfoErrors?.manager_user_contact}
+                    fieldValue={mainBranchInfoGetValue("manager_user_contact")}
                     formValue={{
                       ...mainBranchInfoRegister("manager_user_contact", {
                         required: "Manager Contact Number is required",
