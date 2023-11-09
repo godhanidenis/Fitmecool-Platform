@@ -35,6 +35,8 @@ import Image from "next/image";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { SiHandshake } from "react-icons/si";
+import { BsShop } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
 import { assets } from "../../../constants";
 import { fileUpload } from "../../../services/wasabi";
 import CustomAutoCompleteTextField from "../../../components/core/CustomAutoCompleteTextField";
@@ -520,61 +522,73 @@ const ShopPage = () => {
         <div className="relative -mt-[calc(50vh-25px)] container">
           <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
             <div>
-              <span className="text-colorGreen font-semibold">Set Up</span> Your
+              <span className="text-colorGreen font-semibold">Join</span> Us
             </div>
             <div>
-              Online <span className="text-colorGreen font-semibold">Shop</span>
-            </div>
-          </div>
-          <div className="flex justify-center mt-10">
-            <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
-              {["Shop", "Individual"].map((userType, index) => (
-                <div
-                  key={index}
-                  className={`py-2 px-4 cursor-pointer rounded-2xl ${
-                    selectedOption === userType
-                      ? "border-2 border-yellow-500"
-                      : "border"
-                  }`}
-                  onClick={() =>
-                    handleClickIndividual(
-                      userType,
-                      userType === "Individual" ? true : false
-                    )
-                  }
-                >
-                  <div className="flex justify-between">
-                    <div className="flex items-center">
-                      <SiHandshake
-                        className={`${
-                          selectedOption === userType
-                            ? "text-yellow-500"
-                            : "text-white"
-                        }`}
-                        fontSize="25px"
-                      />
-                      <div
-                        className={`${
-                          selectedOption === userType
-                            ? "text-yellow-500"
-                            : "text-white"
-                        } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
-                      >
-                        {userType}
-                      </div>
-                    </div>
-                    <div>
-                      {selectedOption === userType && (
-                        <CheckCircleIcon className="text-yellow-500" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+              As <span className="text-colorGreen font-semibold">?</span>
             </div>
           </div>
 
-          <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto my-16 p-5 sm:p-10 rounded-md">
+          <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto mt-8 mb-16 p-5 sm:p-10 sm:pt-5 rounded-md">
+            <div className="flex justify-center mb-5">
+              <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
+                {["Shop", "Single Person"].map((userType, index) => (
+                  <div
+                    key={index}
+                    className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                      selectedOption === userType
+                        ? "border-2 border-yellow-500"
+                        : "border"
+                    }`}
+                    onClick={() =>
+                      handleClickIndividual(
+                        userType,
+                        userType === "Single Person" ? true : false
+                      )
+                    }
+                  >
+                    <div className="flex justify-between">
+                      <div className="flex items-center">
+                        {userType === "Shop" && (
+                          <BsShop
+                            fontSize="25px"
+                            className={`${
+                              selectedOption === userType
+                                ? "text-yellow-500"
+                                : "text-white"
+                            }`}
+                          />
+                        )}
+                        {userType === "Single Person" && (
+                          <FaUser
+                            className={`${
+                              selectedOption === userType
+                                ? "text-yellow-500"
+                                : "text-white"
+                            }`}
+                            fontSize="25px"
+                          />
+                        )}
+                        <div
+                          className={`${
+                            selectedOption === userType
+                              ? "text-yellow-500"
+                              : "text-white"
+                          } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                        >
+                          {userType}
+                        </div>
+                      </div>
+                      <div>
+                        {selectedOption === userType && (
+                          <CheckCircleIcon className="text-yellow-500" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className="md:mx-10">
               <div className="flex justify-evenly mb-3 sm:mb-5">
                 <div className="uppercase font-semibold text-sm sm:text-xl">

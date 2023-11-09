@@ -156,7 +156,7 @@ const LandingPage = () => {
       icon: <PeopleIcon />,
     },
     {
-      label: "Vendor",
+      label: "Seller",
       icon: <AddBusinessIcon />,
     },
   ];
@@ -347,10 +347,10 @@ const LandingPage = () => {
       <div className="container flex flex-col justify-center mt-10 mb-0 lg:mb-8">
         <div className="text-center">
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
-            Featured Vendors
+            Featured Sellers
           </h1>
           <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Explore Incredible Individual Vendors OR Browse Through Trendy
+            Explore Incredible Individual sellers OR Browse Through Trendy
             Boutiques For The Latest In Fashion.
           </p>
         </div>

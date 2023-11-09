@@ -222,7 +222,7 @@ const Sidebar = ({
                   filterType: "categoryId",
                 },
                 {
-                  label: "Shops",
+                  label: "Sellers",
                   value: allShopsLists?.data,
                   filterType: "shopId",
                 },

@@ -138,7 +138,7 @@ const Login = () => {
       <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
         Login{" "}
         <span className="text-colorGreen">
-          As {asVendor ? "Vendor" : "Customer"}
+          As {asVendor ? "Seller" : "Customer"}
         </span>
       </div>
       {/* <p className="text-sm sm:text-xl mt-2 text-gray-400">

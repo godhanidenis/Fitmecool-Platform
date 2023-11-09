@@ -6,6 +6,7 @@ import Router, { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
 import { CircularProgress } from "@mui/material";
+import { BsShop } from "react-icons/bs";
 
 const UserType = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -49,7 +50,7 @@ const UserType = () => {
         </div>
       </div>
       <div className="text-2xl font-semibold mt-8 max-[600px]:text-3xl text-colorPrimary">
-        How you would like to join us ?
+        How would you like to join us ?
       </div>
       <p className="text-xl mt-4 text-gray-400 max-[600px]:text-sm">
         Unlock Fashion Possibilities – Where Customers And Shop Owners Connect
@@ -95,7 +96,7 @@ const UserType = () => {
           onClick={() => handleUserType("vendor")}
         >
           <div className="flex justify-between">
-            <SiHandshake
+            <BsShop
               className={`${
                 selectedUserType === "vendor"
                   ? "text-colorGreen"
@@ -108,10 +109,10 @@ const UserType = () => {
             )}
           </div>
           <div className="font-semibold mt-10 text-xl text-colorPrimary max-[600px]:text-lg max-[480px]:text-sm max-[480px]:mt-5">
-            Vendor
+            Seller
           </div>
           <div className="text-sm text-[#15182766] my-1 max-[480px]:text-[10px]">
-            Continue As a Vendor
+            Continue As a Seller
           </div>
         </div>
       </div>
@@ -140,7 +141,9 @@ const UserType = () => {
               />
             </span>
           )}
-          <span>continue as {selectedUserType}</span>
+          <span>
+            continue as {selectedUserType === "vendor" ? "Seller" : "Customer"}
+          </span>
         </button>
       </div>
     </>

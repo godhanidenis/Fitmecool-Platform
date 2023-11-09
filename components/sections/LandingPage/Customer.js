@@ -23,10 +23,10 @@ const Customer = () => {
           <Image src={assets.storeImage2} alt="Store2" width={64} height={64} />
           <div className="text-center">
             <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px] text-[#181725] font-semibold">
-              Connect With Vendors
+              Connect With Sellers
             </p>
             <p className="text-[12px] sm:text-[14px]  md:text-[15px]  2xl:text-[16px] text-[#31333e93]">
-              After Choosing Your Desired Clothing Reach Out To The Vendor
+              After Choosing Your Desired Clothing Reach Out To The Seller
               Directly Through{" "}
               <span className="text-[#181725] font-semibold">
                 Whatsapp OR Direct Phone Call

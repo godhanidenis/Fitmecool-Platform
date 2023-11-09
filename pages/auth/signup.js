@@ -156,7 +156,7 @@ const Signup = () => {
       <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
         Create an account{" "}
         <span className="text-colorGreen">
-          As {asVendor ? "Vendor" : "Customer"}
+          As {asVendor ? "Seller" : "Customer"}
         </span>
       </div>
       {/* <p className="sm:text-xl mt-2 text-gray-400 text-sm">

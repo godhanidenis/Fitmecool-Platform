@@ -108,7 +108,7 @@ const SubHeader = () => {
         onClick={() => setOpen(!open)}
       >
         <CustomTab value={value} subheader="true">
-          {["men's", "women's", "shops"].map((item, index) => (
+          {["men's", "women's", "sellers"].map((item, index) => (
             <Tab
               key={index}
               onMouseEnter={handleMenuOpen.bind(this, index)}
