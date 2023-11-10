@@ -21,7 +21,7 @@ const AppLogo = ({ onHeader }) => {
               : "cursor-pointer flex items-center pt-3"
           }
         >
-          <Image src={assets.appLogo} alt="AppLogo" width={140} height={35} />
+          <Image src={assets.appLogo} alt="AppLogo" width={160} height={32} />
         </div>
       </Link>
       {onHeader && (

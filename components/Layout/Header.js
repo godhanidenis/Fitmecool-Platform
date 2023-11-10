@@ -520,7 +520,7 @@ const Header = () => {
                   <div className="mt-10 flex items-center justify-between flex-wrap">
                     <div className="container flex flex-wrap justify-between">
                       {searchCityValue === "" && (
-                        <div className="w-[125px] lg:w-[250px] p-2  hover:bg-[#00000027] rounded-md cursor-pointer flex items-center">
+                        <div className="w-[125px] lg:w-[180px] xl:w-[200px] 2xl:w-[250px] p-2 hover:bg-[#00000027] rounded-md cursor-pointer flex items-center">
                           <span
                             className="text-[14px] sm:text-[16px] ms-2  font-bold "
                             onClick={() => handleSearchLocation("")}
@@ -538,7 +538,7 @@ const Header = () => {
                         : cityLists.slice(0, 31)
                       )?.map((city, index) => (
                         <div
-                          className="w-[125px] lg:w-[250px] p-2  hover:bg-[#00000027] rounded-md cursor-pointer flex items-center"
+                          className="w-[125px] lg:w-[180px] xl:w-[200px] 2xl:w-[250px] p-2 hover:bg-[#00000027] rounded-md cursor-pointer flex items-center"
                           key={index}
                         >
                           <span
