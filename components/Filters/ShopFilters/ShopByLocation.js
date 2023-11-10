@@ -91,6 +91,10 @@ const ShopByLocation = () => {
     !locationShowMore && setDisplayLimit(10);
   }, [locationShowMore]);
 
+  const filterData = areaLists?.filter((i) =>
+    i?.area.toLowerCase().includes(locationSearchValue.toLowerCase())
+  );
+
   return (
     <>
       <CardInteractive
@@ -125,18 +129,8 @@ const ShopByLocation = () => {
                 >
                   {(locationSearchValue !== ""
                     ? locationShowMore
-                      ? areaLists
-                          ?.filter((i) =>
-                            i?.area
-                              .toLowerCase()
-                              .includes(locationSearchValue.toLowerCase())
-                          )
-                          .slice(0, 3)
-                      : areaLists?.filter((i) =>
-                          i?.area
-                            .toLowerCase()
-                            .includes(locationSearchValue.toLowerCase())
-                        )
+                      ? filterData.slice(0, 3)
+                      : filterData.slice(0, displayLimit)
                     : locationShowMore
                     ? areaLists.slice(0, 3)
                     : displayedItems

@@ -12,6 +12,7 @@ import Filter from "../../Filters";
 import { CircularProgress, Pagination } from "@mui/material";
 import { assets } from "../../../constants";
 import BannerHero from "../../DirectoryHero/BannerHero";
+import { scrollToTitleName } from "../../../utils/common";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -84,7 +85,7 @@ const HomePage = () => {
       loadShopsStart({
         pageData: {
           skip: shopPageSkip,
-          limit: 10,
+          limit: 12,
         },
         area: appliedShopsFilters.locations.selectedValue.map((itm) => itm.pin),
         sort: shopSortFilter.sortType.selectedValue,
@@ -154,31 +155,20 @@ const HomePage = () => {
                           />
                         ))}
                       </div>
-                      {productsCount > 10 && (
+                      {productsCount > 12 && (
                         <div className="flex justify-center py-4 sm:py-8">
                           <Pagination
                             color="primary"
-                            count={Math.ceil(productsCount / 10)}
+                            count={Math.ceil(productsCount / 12)}
                             page={
                               (productPageSkip === 0 && 1) ||
-                              productPageSkip / 10 + 1
+                              productPageSkip / 12 + 1
                             }
                             onChange={(e, p) => {
-                              const targetElement =
-                                document.getElementById("titleName");
-
-                              if (targetElement) {
-                                const targetScrollPosition =
-                                  targetElement.getBoundingClientRect().top;
-
-                                window.scrollTo({
-                                  top: window.scrollY + targetScrollPosition,
-                                  behavior: "smooth",
-                                });
-                              }
+                              scrollToTitleName();
                               dispatch(
                                 changeProductPage(
-                                  (p === 1 && 0) || (p - 1) * 10
+                                  (p === 1 && 0) || (p - 1) * 12
                                 )
                               );
                             }}
@@ -221,28 +211,18 @@ const HomePage = () => {
                         ))}
                       </div>
 
-                      {shopsCount > 10 && (
+                      {shopsCount > 12 && (
                         <div className="flex justify-center py-4 sm:py-8">
                           <Pagination
                             color="primary"
-                            count={Math.ceil(shopsCount / 10)}
+                            count={Math.ceil(shopsCount / 12)}
                             page={
-                              (shopPageSkip === 0 && 1) || shopPageSkip / 10 + 1
+                              (shopPageSkip === 0 && 1) || shopPageSkip / 12 + 1
                             }
                             onChange={(e, p) => {
-                              const targetElement =
-                                document.getElementById("titleName");
-                              if (targetElement) {
-                                const targetScrollPosition =
-                                  targetElement.getBoundingClientRect().top;
-
-                                window.scrollTo({
-                                  top: window.scrollY + targetScrollPosition,
-                                  behavior: "smooth",
-                                });
-                              }
+                              scrollToTitleName();
                               dispatch(
-                                changeShopPage((p === 1 && 0) || (p - 1) * 10)
+                                changeShopPage((p === 1 && 0) || (p - 1) * 12)
                               );
                             }}
                           />
