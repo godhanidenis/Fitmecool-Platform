@@ -318,9 +318,9 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         }`}
                         rel="noopener noreferrer"
                       >
-                        {/* {isProductImagesLoaded && ( */}
-                        <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
-                        {/* )} */}
+                        {isProductImagesLoaded && (
+                          <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
+                        )}
                         {isProductImages ? (
                           <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
                         ) : (
@@ -344,37 +344,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                     </Link>
                   </div>
                 ) : (
-                  // {/* <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
-                  //   <Carousel
-                  //     autoPlay={true}
-                  //     autoPlaySpeed={1500}
-                  //     infinite
-                  //     showDots={false}
-                  //     customDot={null}
-                  //     arrows={true}
-                  //     customLeftArrow={<CustomPrevArrow />}
-                  //     customRightArrow={<CustomNextArrow />}
-                  //     responsive={responsive}
-                  //     className={`rounded-t-lg`}
-                  //   >
-                  //     {photos.length === 0 ? (
-                  //       <div
-                  //         className="bg-[#00000031]"
-                  //         style={{
-                  //           width: "100%",
-                  //           height: onlyCarousal
-                  //             ? 420
-                  //             : themeLayout === "mobileScreen"
-                  //             ? 250
-                  //             : 300,
-                  //         }}
-                  //       />
-                  //     ) : (
-                  //       productImages
-                  //     )}
-                  //   </Carousel>
-                  // </div> */}
-                  // </div>
                   <Carousel
                     autoPlay={false}
                     infinite

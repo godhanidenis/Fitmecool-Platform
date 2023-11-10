@@ -127,11 +127,11 @@ const Login = () => {
               query: { redirectPath: redirectPath },
             })
           }
-          className="cursor-pointer text-3xl"
+          className="cursor-pointer !text-3xl"
         />
         <div className="">
           <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
-            <span className="sm:text-4xl text-[24px]">F</span>itmecool
+            <span className="sm:text-4xl text-[30px]">F</span>itmecool
           </h2>
         </div>
       </div>

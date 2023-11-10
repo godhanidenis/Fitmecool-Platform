@@ -142,7 +142,17 @@ const VenderProductTable = ({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell align="center">{item?.product_color}</TableCell>
+                  <TableCell align="center">
+                    <div className="flex items-center justify-center">
+                      <span
+                        className={`rounded-[50%] w-4 h-4 me-2 border `}
+                        style={{
+                          backgroundColor: item?.product_color,
+                        }}
+                      />
+                      {item?.product_color}
+                    </div>
+                  </TableCell>
 
                   <TableCell align="center">
                     <div className="flex flex-col items-center">

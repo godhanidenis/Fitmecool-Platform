@@ -772,12 +772,15 @@ const ProductDetail = ({ productDetails, error }) => {
                     <div className="flex mt-1 items-center">
                       <span className="text-base">Color :</span>
                       <span
-                        className={`rounded-[50%] w-4 h-4 ml-[9px]`}
+                        className={`rounded-[50%] w-4 h-4 ml-[9px] border`}
                         style={{
                           backgroundColor:
                             productDetailsData?.data.product_color,
                         }}
                       />
+                      <span className="text-base font-normal mr-2 text-colorBlack ml-[9px]">
+                        ({productDetailsData?.data.product_color})
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -878,7 +881,7 @@ const ProductDetail = ({ productDetails, error }) => {
               )}
           </div>
 
-          <div className="w-[100%] flex flex-wrap justify-center md:justify-normal place-items-center mt-4">
+          <div className="w-[100%] flex flex-wrap justify-start place-items-center mt-4">
             {productDetailsData?.related &&
               productDetailsData?.related
                 .slice(0, isScreenWide ? 5 : 4)

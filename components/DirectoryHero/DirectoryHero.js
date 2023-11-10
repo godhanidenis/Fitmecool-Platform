@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ImageLoadingSkeleton from "../Modal/ImageLoadingSkeleton";
+import { assets } from "../../constants";
 
 const DirectoryHero = ({ title, bgImg }) => {
   const [loaded, setLoaded] = useState(false);
@@ -19,14 +20,12 @@ const DirectoryHero = ({ title, bgImg }) => {
   return (
     <>
       {isShopImages ? (
-        <section className="bg-[#00000079]">
-          <div className="h-[192px] md:h-[288px] flex justify-center pt-2 md:pt-20">
-            {/* <h1 className="text-center font-semibold  text-2xl md:text-5xl bg-gradient-to-r from-[#29977E] to-[#fff]  inline-block text-transparent bg-clip-text"> */}
-            {/* <h1 className="text-center font-nova text-4xl md:text-5xl text-[#fff]">
-              {title}
-            </h1> */}
-          </div>
-        </section>
+        <section
+          className={`py-24 md:py-36 bg-cover bg-repeat-round`}
+          style={{
+            backgroundImage: `url(${assets.shopBackgroundCover3})`,
+          }}
+        />
       ) : loaded && !isShopImages ? (
         <section
           className="py-24 md:py-36 bg-cover bg-repeat-round"

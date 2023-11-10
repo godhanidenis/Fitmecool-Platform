@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Image from "next/image";
 import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
@@ -17,12 +16,10 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
   Grid,
   Grow,
   IconButton,
   InputAdornment,
-  InputLabel,
   MenuItem,
   MenuList,
   OutlinedInput,
@@ -48,7 +45,6 @@ import {
 } from "../../redux/ducks/shopsFilters";
 import { changeProductPage } from "../../redux/ducks/product";
 import AppLogo from "./AppLogo";
-import { assets } from "../../constants";
 import { changeAppliedCityFilters } from "../../redux/ducks/cityFilter";
 import { changeShopPage } from "../../redux/ducks/shop";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
@@ -257,58 +253,6 @@ const Header = () => {
                     </svg>
                   </button>
                 </div>
-                {/* <FormControl
-                  variant="standard"
-                  sx={{ minWidth: 110, borderBottom: "1px solid gray" }}
-                  onClick={() => setOpenCityDialog(true)}
-                >
-                  <InputLabel
-                    id="demo-simple-select-standard-label"
-                    className="!flex !items-center !gap-1"
-                  >
-                    <Image
-                      width={20}
-                      height={20}
-                      src={assets.locationIcon}
-                      alt="locationIcon"
-                    />
-                    <span className="text-[#878A99] text-[14px] font-normal">
-                      Location
-                    </span>
-                  </InputLabel>
-                  <LocationSelect
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    value={selectedLocation}
-                    // onChange={(event) => {
-                    //   setSelectedLocation(event.target.value);
-                    //   localStorage.setItem("selected_city", event.target.value);
-                    //   dispatch(changeProductPage(0));
-                    //   dispatch(changeShopPage(0));
-                    //   dispatch(
-                    //     changeAppliedShopsFilters({
-                    //       key: "locations",
-                    //       value: { selectedValue: [] },
-                    //     })
-                    //   );
-                    //   dispatch(
-                    //     changeAppliedCityFilters({
-                    //       key: "city",
-                    //       value: {
-                    //         selectedValue: event.target.value,
-                    //       },
-                    //     })
-                    //   );
-                    // }}
-                    label="Location"
-                  >
-                    {/* {cityLists?.map((city, index) => (
-                      <MenuItem value={city?.city} key={index}>
-                        {city?.city}
-                      </MenuItem>
-                    ))} */}
-                {/* </LocationSelect>
-                </FormControl> */}{" "}
               </div>
             )}
           </div>
@@ -520,11 +464,13 @@ const Header = () => {
                   <div className="mt-10 flex items-center justify-between flex-wrap">
                     <div className="container flex flex-wrap justify-between">
                       {searchCityValue === "" && (
-                        <div className="w-[125px] lg:w-[180px] xl:w-[200px] 2xl:w-[250px] p-2 hover:bg-[#00000027] rounded-md cursor-pointer flex items-center">
-                          <span
-                            className="text-[14px] sm:text-[16px] ms-2  font-bold "
-                            onClick={() => handleSearchLocation("")}
-                          >
+                        <div
+                          className={`${
+                            selectedLocation === "" ? "bg-[#00000027]" : ""
+                          } w-[125px] lg:w-[180px] xl:w-[200px] 2xl:w-[250px] p-2 mt-1 hover:bg-[#00000027] rounded-md cursor-pointer flex items-center`}
+                          onClick={() => handleSearchLocation("")}
+                        >
+                          <span className="text-[14px] sm:text-[16px] ms-2  font-bold ">
                             All Cities
                           </span>
                         </div>
@@ -538,13 +484,15 @@ const Header = () => {
                         : cityLists.slice(0, 31)
                       )?.map((city, index) => (
                         <div
-                          className="w-[125px] lg:w-[180px] xl:w-[200px] 2xl:w-[250px] p-2 hover:bg-[#00000027] rounded-md cursor-pointer flex items-center"
+                          className={`${
+                            selectedLocation === city?.city
+                              ? "bg-[#00000027]"
+                              : ""
+                          } w-[125px] lg:w-[180px] xl:w-[200px] 2xl:w-[250px] p-2 mt-1 hover:bg-[#00000027] rounded-md cursor-pointer flex items-center`}
                           key={index}
+                          onClick={() => handleSearchLocation(city?.city)}
                         >
-                          <span
-                            className="text-[14px] sm:text-[16px] ms-2  line-clamp-1"
-                            onClick={() => handleSearchLocation(city?.city)}
-                          >
+                          <span className="text-[14px] sm:text-[16px] ms-2  line-clamp-1">
                             {city?.city}
                           </span>
                         </div>

@@ -232,7 +232,7 @@ const ShopDetail = ({ shopDetails, error }) => {
               >
                 {productsData?.length > 0 ? (
                   <>
-                    <div className="w-[100%] flex flex-wrap justify-between lg:justify-center xl:justify-normal mb-2 lg:mb-0 lg:gap-3 p-1 place-items-center">
+                    <div className="w-[100%] flex flex-wrap justify-start mb-2 lg:mb-0 lg:gap-3 p-1 place-items-center">
                       {productsData?.map((product) => (
                         <ProductCard
                           product={product}

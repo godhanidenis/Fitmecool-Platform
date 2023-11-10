@@ -120,16 +120,27 @@ const ProductColorFilter = ({ productByShop }) => {
                     : colorShowMore
                     ? colorsList.slice(0, 3)
                     : colorsList
-                  )?.map((item) => (
+                  )?.map((item, index) => (
                     <StyledFormLabelCheckBox
-                      key={item}
+                      className="flex items-center"
+                      key={index}
                       value={item}
                       label={capitalize(item)}
                       control={
-                        <Checkbox
-                          checked={selectedFilter.includes(item)}
-                          onChange={handleCheckboxChange}
-                        />
+                        <div className="flex items-center">
+                          <Checkbox
+                            checked={selectedFilter.includes(item)}
+                            onChange={handleCheckboxChange}
+                          />
+                          <div className="flex items-center">
+                            <span
+                              className={`rounded-[50%] w-4 h-4 me-2 border `}
+                              style={{
+                                backgroundColor: item,
+                              }}
+                            />
+                          </div>
+                        </div>
                       }
                     />
                   ))}

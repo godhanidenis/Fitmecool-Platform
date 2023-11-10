@@ -11,17 +11,8 @@ import {
   createProduct,
   updateProduct,
 } from "../../../graphql/mutations/products";
-import {
-  Alert,
-  capitalize,
-  CircularProgress,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
+import { Alert, capitalize, CircularProgress, Divider } from "@mui/material";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
-import { NativeSelectInput } from "../../core/CustomMUIComponents";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../constants";
 import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
