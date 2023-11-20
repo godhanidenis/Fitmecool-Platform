@@ -62,7 +62,7 @@ const ShopCard = ({ shop }) => {
         )}
 
         {isShopImage.includes(itm) && isShopImages ? (
-          <div className="w-full h-full bg-[#00000031]" />
+          <div className="w-full h-full bg-[#00000031] absolute top-0" />
         ) : (
           <Image
             src={
@@ -138,7 +138,7 @@ const ShopCard = ({ shop }) => {
                     <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
                   )}
                   {isShopImages ? (
-                    <div className="w-full h-full bg-[#00000031] rounded-t-lg" />
+                    <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
                   ) : (
                     <Image
                       src={shop.shop_images[0]?.links ?? ""}
