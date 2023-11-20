@@ -465,12 +465,15 @@ const ShopEdit = () => {
     }
 
     if (vendorShopDetails && individual ? value === 3 : value === 4) {
-      setShopLogo(vendorShopDetails?.shop_logo);
+      vendorShopDetails?.shop_logo && setShopLogo(vendorShopDetails?.shop_logo);
 
-      setShopBackground(vendorShopDetails?.shop_cover_image);
+      vendorShopDetails?.shop_cover_image &&
+        setShopBackground(vendorShopDetails?.shop_cover_image);
 
-      setShopImageWasabiUrl([...vendorShopDetails?.shop_images]);
-      setShopImages([...vendorShopDetails?.shop_images]);
+      vendorShopDetails?.shop_images &&
+        setShopImageWasabiUrl([...vendorShopDetails?.shop_images]);
+      vendorShopDetails?.shop_images &&
+        setShopImages([...vendorShopDetails?.shop_images]);
 
       vendorShopDetails?.shop_video &&
         setShopVideo(vendorShopDetails?.shop_video);
