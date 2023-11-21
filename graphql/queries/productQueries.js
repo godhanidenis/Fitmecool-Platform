@@ -98,6 +98,7 @@ export const getProductDetails = async (payload) => {
                 shop_name
                 shop_logo
                 shop_rating
+                createdAt
               }
               branch_address
               manager_name

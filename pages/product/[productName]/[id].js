@@ -81,6 +81,16 @@ const ProductDetail = ({ productDetails, error }) => {
 
   const [photos, setPhotos] = useState([]);
 
+  const [date, setDate] = useState(
+    new Date(
+      Number(
+        productDetails?.data?.product?.data.branchInfo?.shop_info?.createdAt
+      )
+    )
+  );
+
+  const [shopOldDate, setShopOldDate] = useState("");
+
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
@@ -116,6 +126,15 @@ const ProductDetail = ({ productDetails, error }) => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const differenceInMilliseconds = currentDate - date;
+    const differenceInDays = Math.floor(
+      differenceInMilliseconds / (24 * 60 * 60 * 1000)
+    );
+    setShopOldDate(differenceInDays);
+  }, [date]);
 
   useEffect(() => {
     if (!isAuthenticate) {
@@ -351,7 +370,7 @@ const ProductDetail = ({ productDetails, error }) => {
               </a>
             </Link>
             <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal line-clamp-1">
-              25 days ago
+              {shopOldDate} days ago
             </p>
           </div>
         </div>
