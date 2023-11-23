@@ -1089,7 +1089,7 @@ const ShopPage = () => {
                     <div className="col-span-3 sm:col-span-1">
                       <div className="flex flex-col justify-center items-center border">
                         <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
-                          Shop Logo
+                          Shop Logo (Optional)
                         </div>
                         <div className="p-6">
                           <div
@@ -1145,7 +1145,7 @@ const ShopPage = () => {
                     <div className="col-span-3 sm:col-span-2">
                       <div className="flex flex-col justify-center items-center border">
                         <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full flex justify-center p-2 text-white">
-                          Shop Cover Image
+                          Shop Cover Image (Optional)
                         </div>
                         <div className="p-6 w-full flex justify-center">
                           <div
@@ -1200,7 +1200,7 @@ const ShopPage = () => {
                   <div className="mt-10">
                     <div className="flex flex-col border">
                       <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
-                        Shop Images
+                        Shop Images (Optional)
                       </div>
                       <div className="p-6">
                         <div className="sm:mx-auto flex xl:gap-8 xl:flex-row flex-col gap-4">
@@ -1266,7 +1266,7 @@ const ShopPage = () => {
                       <div className="col-span-4 sm:col-span-2">
                         <div className="flex flex-col justify-center items-center border">
                           <div className="sm:text-xl text-lg font-semibold bg-colorPrimary w-full p-2 pl-6 text-white">
-                            Shop Video
+                            Shop Video (Optional)
                           </div>
                           <div className="w-full p-6">
                             <div
