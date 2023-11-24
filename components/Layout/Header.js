@@ -230,7 +230,7 @@ const Header = () => {
                 >
                   <FmdGoodIcon className="!text-white !text-[16px]" />
                   <span className="text-white text-[14px] sm:text-[16px] line-clamp-1">
-                    {selectedLocation ? selectedLocation : "Find Location.."}
+                    {selectedLocation ? selectedLocation : "All Cities"}
                   </span>
                   <button
                     type="button"

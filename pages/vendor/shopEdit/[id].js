@@ -501,7 +501,7 @@ const ShopEdit = () => {
         owner_lastName: data.last_name,
         owner_email: data.user_email,
         owner_contact: data.user_contact,
-        user_id: userProfile?.id, 
+        user_id: userProfile?.id,
       },
     }).then(
       (res) => {
@@ -2560,6 +2560,11 @@ const AddEditSubBranch = ({
     } else {
       allError.subManagerAddressError = "";
     }
+    if (!subManagerState) {
+      allError.subManagerStateError = "SubManagerState is require";
+    } else {
+      allError.subManagerStateError = "";
+    }
     if (!subManagerCity) {
       allError.subManagerCityError = "SubManagerCity is require";
     } else {
@@ -2651,6 +2656,7 @@ const AddEditSubBranch = ({
           branchInfo: {
             branch_address: subManagerAddress,
             branch_city: subManagerCity,
+            branch_state: subManagerState,
             branch_pinCode: subManagerPinCode,
             same_as:
               (managerValue === "Same as owner" && "owner") ||
@@ -2763,7 +2769,7 @@ const AddEditSubBranch = ({
                       />
                     </Box>
                     <span style={{ color: "red" }}>
-                      {error.subManagerAddressError || ""}
+                      {error.subManagerStateError || ""}
                     </span>
                   </div>
                 </div>
