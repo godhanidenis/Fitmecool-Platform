@@ -74,7 +74,7 @@ const VendorCommonLayout = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
-  useEffect(() => {
+  useEffect(() => { 
     dispatch(loadCategoriesStart());
   }, [dispatch]);
 
