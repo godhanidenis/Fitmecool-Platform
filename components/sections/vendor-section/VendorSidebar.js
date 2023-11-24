@@ -9,6 +9,7 @@ import DeleteAccountConfirmationModal from "../../Modal/DeleteAccountConfirmatio
 import { deleteAccount } from "../../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
 import { userLogout } from "../../../redux/ducks/userProfile";
+import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 
 const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
   const router = useRouter();
