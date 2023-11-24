@@ -842,7 +842,7 @@ const ShopEdit = () => {
                       fieldError={ownerInfoErrors?.first_name}
                       formValue={{
                         ...ownerInfoRegister("first_name", {
-                          required: "FirstName is required",
+                          required: "FirstName is required.",
                         }),
                       }}
                     />
