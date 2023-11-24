@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { vendorSidebarTabs } from "../../../constants";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteAccountConfirmationModal from "../../Modal/DeleteAccountConfirmationModal";
-import { deleteAccount } from "../../../graphql/mutations/branch";
+import { deleteAccount } from "../../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
-import { loadCategoriesStart } from "../../../redux/ducks/categories";
+import { userLogout } from "../../../redux/ducks/userProfile";
 
 const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
   const router = useRouter();
@@ -133,15 +133,29 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         setDeleteSelected={setDeleteSelected}
         deleteModalOpen={productDeleteModalOpen}
         setDeleteModalOpen={setProductDeleteModalOpen}
-        onClickItemDelete={() => {
-          deleteAccount({ id: vendorShopDetails?.user_id }).then(
+        onClickItemDelete={async () => {
+          await deleteAccount({ id: vendorShopDetails?.user_id }).then(
             (res) => {
+              for (let key in localStorage) {
+                if (key !== "selected_city") {
+                  localStorage.removeItem(key);
+                }
+              }
+
+              dispatch(userLogout());
+              dispatch(
+                changeAppliedProductsFilters({
+                  key: "shopId",
+                  value: {
+                    selectedValue: [],
+                  },
+                })
+              );
+              router.push("/");
+
               toast.success(res?.data?.deleteAccount, {
                 theme: "colored",
               });
-              localStorage.clear();
-              dispatch(loadCategoriesStart());
-              router.push("/");
             },
             (error) => {
               toast.error(error.message, { theme: "colored" });
