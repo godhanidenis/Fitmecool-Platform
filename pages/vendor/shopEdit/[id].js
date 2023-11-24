@@ -501,7 +501,7 @@ const ShopEdit = () => {
         owner_lastName: data.last_name,
         owner_email: data.user_email,
         owner_contact: data.user_contact,
-        user_id: userProfile?.userCreatedShopId,
+        user_id: userProfile.id,
       },
     }).then(
       (res) => {
