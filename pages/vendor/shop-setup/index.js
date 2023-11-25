@@ -376,7 +376,7 @@ const ShopPage = () => {
       branch_city: val.subManagerCity,
       manager_name: val.subManagerFirstName + " " + val.subManagerLastName,
       manager_contact: val.subManagerPhone,
-      manager_email: val.manager_user_email,
+      manager_email: val.subManagerEmail,
       branch_type: "sub",
       same_as:
         (val.managerValue === "Same as owner" && "owner") ||
