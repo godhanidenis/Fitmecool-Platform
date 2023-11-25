@@ -372,6 +372,7 @@ const ShopPage = () => {
     return {
       branch_address: val.subManagerAddress,
       branch_pinCode: val.subManagerPinCode,
+      branch_state: val.subManagerState,
       branch_city: val.subManagerCity,
       manager_name: val.subManagerFirstName + " " + val.subManagerLastName,
       manager_contact: val.subManagerPhone,
