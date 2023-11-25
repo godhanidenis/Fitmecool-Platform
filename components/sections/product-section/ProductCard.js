@@ -269,7 +269,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   return (
     <>
       <div
-        className={`${onlyCarousal && `m-1`} ${
+        className={`${onlyCarousal && `!p-0 !rounded-none`} ${
           likePage
             ? "w-[49%] sm:w-[33%]  lg:w-[25%] xl:w-[20%] mb-2 lg:mb-0 ps-[4px] xl:ps-3 pe-1  pt-[4px] xl:pt-3 pb-2 overflow-hidden rounded-lg"
             : homepage

@@ -372,10 +372,11 @@ const ShopPage = () => {
     return {
       branch_address: val.subManagerAddress,
       branch_pinCode: val.subManagerPinCode,
+      branch_state: val.subManagerState,
       branch_city: val.subManagerCity,
       manager_name: val.subManagerFirstName + " " + val.subManagerLastName,
       manager_contact: val.subManagerPhone,
-      manager_email: val.manager_user_email,
+      manager_email: val.subManagerEmail,
       branch_type: "sub",
       same_as:
         (val.managerValue === "Same as owner" && "owner") ||
@@ -1979,7 +1980,6 @@ const SubBranchModal = ({
     subManagerEmailError: "",
     subManagerPhoneError: "",
   });
-
   useEffect(() => {
     if (managerValue === "Same as owner") {
       setSubManagerFirstName(getValues("first_name"));
@@ -2021,6 +2021,7 @@ const SubBranchModal = ({
   }, [subBranchEdit]);
 
   const subBranchSubmit = () => {
+    console.log("subBranch :>> ", subBranch);
     let allError = {};
     if (!subManagerAddress) {
       allError.subManagerAddressError = "SubManagerAddress is require";
