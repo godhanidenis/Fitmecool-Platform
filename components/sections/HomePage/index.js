@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeProductPage,
@@ -13,6 +13,8 @@ import { CircularProgress, Pagination } from "@mui/material";
 import { assets } from "../../../constants";
 import BannerHero from "../../DirectoryHero/BannerHero";
 import { scrollToTitleName } from "../../../utils/common";
+import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
+import CustomSwitchComponent from "../../core/CustomSwitchComponent";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -48,6 +50,17 @@ const HomePage = () => {
   const { appliedCityFilter } = useSelector(
     (state) => state.cityFiltersReducer
   );
+
+  const [checked, setChecked] = useState(byShop);
+
+  const switchHandler = (event) => {
+    setChecked(event.target.checked);
+    dispatch(changeByShopFilters(event.target.checked));
+  };
+
+  useEffect(() => {
+    setChecked(byShop);
+  }, [byShop]);
 
   const carouselItems = [
     { imageSrc: assets.bannerImg4, des: "bannerImg4" },
@@ -124,6 +137,10 @@ const HomePage = () => {
       <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
         <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
           <Filter />
+        </div>
+
+        <div className="fixed bottom-7 right-[40%] z-10 lg:hidden">
+          <CustomSwitchComponent checked={checked} onChange={switchHandler} />
         </div>
 
         <div className="col-span-12 lg:col-span-9 px-4 bg-white shadow-xl">

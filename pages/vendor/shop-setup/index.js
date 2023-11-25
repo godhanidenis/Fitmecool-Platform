@@ -1979,7 +1979,6 @@ const SubBranchModal = ({
     subManagerEmailError: "",
     subManagerPhoneError: "",
   });
-
   useEffect(() => {
     if (managerValue === "Same as owner") {
       setSubManagerFirstName(getValues("first_name"));
@@ -2021,6 +2020,7 @@ const SubBranchModal = ({
   }, [subBranchEdit]);
 
   const subBranchSubmit = () => {
+    console.log("subBranch :>> ", subBranch);
     let allError = {};
     if (!subManagerAddress) {
       allError.subManagerAddressError = "SubManagerAddress is require";

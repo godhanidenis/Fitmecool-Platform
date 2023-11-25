@@ -25,7 +25,9 @@ const FilterActions = ({ productByShop }) => {
       <div className="pt-5 pb-2 px-5 sm:px-10 flex items-center justify-between w-full">
         <span className="text-black text-[22px] font-bold">Filters</span>
         {!productByShop && (
-          <CustomSwitchComponent checked={checked} onChange={switchHandler} />
+          <div className="hidden lg:block">
+            <CustomSwitchComponent checked={checked} onChange={switchHandler} />
+          </div>
         )}
       </div>
       <Divider className="!mx-6" />
