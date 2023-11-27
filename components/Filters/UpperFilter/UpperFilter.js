@@ -479,7 +479,10 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                   "productColor",
                   "productPrice",
                   "productListingType",
-                  ...(showOnlyShopDetailPage ? [] : ["shopId"]),
+                  ...(showOnlyShopDetailPage ||
+                  localStorage.getItem("user_type") === "vendor"
+                    ? []
+                    : ["shopId"]),
                   "searchBarData",
                 ].map((itm) =>
                   dispatch(

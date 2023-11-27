@@ -456,7 +456,7 @@ const AddEditProductPage = ({
     return null;
   }
   return (
-    <div id="AddProduct">
+    <div id="AddProduct" className="h-full overflow-scroll hideScroll">
       <div className="sm:p-0 sm:py-6 p-6">
         <div className="font-semibold text-black flex items-center gap-2 sm:mx-4">
           <span>

@@ -50,6 +50,7 @@ const VendorCommonLayout = ({ children }) => {
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
+        forDashboard: true,
       })
     );
   };
@@ -74,12 +75,12 @@ const VendorCommonLayout = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
-  useEffect(() => { 
+  useEffect(() => {
     dispatch(loadCategoriesStart());
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">
+    <div className="flex flex-col md:flex-row font-Nova h-[calc(100vh-64px)] overflow-scroll">
       <div className="lg:w-[300px] relative sm:bg-white shadow-xl">
         <VendorSidebar />
       </div>

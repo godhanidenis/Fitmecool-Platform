@@ -8,14 +8,17 @@ import { useSelector } from "react-redux";
 const DrawerFilters = ({ showOnlyShopDetailPage }) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [userType, setUserType] = useState("");
+
   const toggleFilterMenu = () => {
     setFilterOpen(!filterOpen);
   };
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
+
   useEffect(() => {
     setUserType(localStorage.getItem("user_type"));
   }, []);
+
   return (
     <>
       {((userType === "vendor" && !filterOpen) ||
@@ -45,11 +48,8 @@ const DrawerFilters = ({ showOnlyShopDetailPage }) => {
         <div className="h-[90%] pb-10 overflow-y-scroll">
           <div className="max-w-md mx-auto">
             <Filter
-              productByShop={
-                userType === "vendor" || showOnlyShopDetailPage === true
-                  ? true
-                  : false
-              }
+              productByShop={showOnlyShopDetailPage}
+              userType={userType}
             />
           </div>
         </div>

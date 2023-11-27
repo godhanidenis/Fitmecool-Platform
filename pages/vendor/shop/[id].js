@@ -65,6 +65,7 @@ const ShopDetailsPage = () => {
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
+        forDashboard: true,
       })
     );
   };
@@ -74,7 +75,7 @@ const ShopDetailsPage = () => {
   }
 
   return !addEditProductShow ? (
-    <div className="flex flex-col px-6 sm:px-0">
+    <div className="flex flex-col px-6 sm:px-0 h-full overflow-scroll hideScroll">
       <div className="flex flex-row-reverse mb-2">
         <button
           onClick={() => setAddEditProductShow(true)}
@@ -86,7 +87,7 @@ const ShopDetailsPage = () => {
       </div>
 
       <div className="">
-        <UpperFilter showOnlyShopDetailPage={true} />
+        <UpperFilter showOnlyShopDetailPage={false} />
 
         <div
           className={`w-full relative ${

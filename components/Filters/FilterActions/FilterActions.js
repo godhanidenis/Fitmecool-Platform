@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import CustomSwitchComponent from "../../core/CustomSwitchComponent";
 
-const FilterActions = ({ productByShop }) => {
+const FilterActions = ({ productByShop, userType }) => {
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
   const [checked, setChecked] = useState(byShop);
@@ -24,7 +24,7 @@ const FilterActions = ({ productByShop }) => {
     <div>
       <div className="pt-5 pb-2 px-5 sm:px-10 flex items-center justify-between w-full">
         <span className="text-black text-[22px] font-bold">Filters</span>
-        {!productByShop && (
+        {!productByShop && userType !== "vendor" && (
           <div className="hidden lg:block">
             <CustomSwitchComponent checked={checked} onChange={switchHandler} />
           </div>

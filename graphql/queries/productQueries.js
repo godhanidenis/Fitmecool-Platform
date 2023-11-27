@@ -11,6 +11,7 @@ export const getProducts = async (payload) => {
         $sort: String
         $shopId: [String]
         $city: String
+        $forDashboard: Boolean
       ) {
         productList(
           pageData: $pageData
@@ -19,6 +20,7 @@ export const getProducts = async (payload) => {
           sort: $sort
           shop_id: $shopId
           city: $city
+          forDashboard: $forDashboard
         ) {
           data {
             id
@@ -65,6 +67,7 @@ export const getProducts = async (payload) => {
       shopId: payload.shopId,
       sort: payload.sort,
       city: payload.city,
+      forDashboard: payload.forDashboard,
     },
     fetchPolicy: "no-cache",
   });

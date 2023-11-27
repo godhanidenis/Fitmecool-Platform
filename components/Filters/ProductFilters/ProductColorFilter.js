@@ -31,20 +31,21 @@ const ProductColorFilter = ({ productByShop }) => {
 
   const [colorShowMore, setColorShowMore] = useState(true);
 
-  const selectedColors = (value, checked) => {
+  const selectedColors = (value) => {
+    const updatedSelection = selectedFilter.includes(value);
+
     const filters = productByShop
       ? appliedShopProductsFilters.productColor
       : appliedProductsFilters.productColor;
 
-    const selectedValue = checked
-      ? [...filters.selectedValue, value]
-      : filters.selectedValue.filter((item) => item !== value);
+    const selectedValue = updatedSelection
+      ? filters.selectedValue.filter((item) => item !== value)
+      : [...filters.selectedValue, value];
 
     return selectedValue;
   };
 
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
+  const handleCheckboxChange = (item) => {
     dispatch(changeProductPage(0));
 
     const changeFiltersAction = productByShop
@@ -55,7 +56,7 @@ const ProductColorFilter = ({ productByShop }) => {
       changeFiltersAction({
         key: "productColor",
         value: {
-          selectedValue: selectedColors(value, checked),
+          selectedValue: selectedColors(item),
         },
       })
     );
@@ -130,7 +131,7 @@ const ProductColorFilter = ({ productByShop }) => {
                         <div className="flex items-center">
                           <Checkbox
                             checked={selectedFilter.includes(item)}
-                            onChange={handleCheckboxChange}
+                            onChange={() => handleCheckboxChange(item)}
                           />
                           <div className="flex items-center">
                             <span

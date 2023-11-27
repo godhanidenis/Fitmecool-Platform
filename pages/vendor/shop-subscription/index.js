@@ -17,7 +17,7 @@ const ShopSubscription = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[90vh]">
+    <div className="flex items-center justify-center h-full">
       <div className="">
         <h1 className="text-colorBlack text-center font-semibold text-2xl">
           Choose the right plan for your business
