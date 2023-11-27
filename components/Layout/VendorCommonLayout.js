@@ -80,7 +80,7 @@ const VendorCommonLayout = ({ children }) => {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen  font-Nova ">
+    <div className="flex flex-col md:flex-row font-Nova h-[calc(100vh-64px)] overflow-scroll">
       <div className="lg:w-[300px] relative sm:bg-white shadow-xl">
         <VendorSidebar />
       </div>

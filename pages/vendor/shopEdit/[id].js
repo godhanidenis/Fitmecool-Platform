@@ -835,7 +835,7 @@ const ShopEdit = () => {
   }
   return (
     <>
-      <div className="">
+      <div className="h-full overflow-scroll hideScroll">
         <div className="">
           <div className="">
             <Box className="bg-colorPrimary rounded-md">

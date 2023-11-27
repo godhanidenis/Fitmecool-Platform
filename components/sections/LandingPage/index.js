@@ -22,6 +22,7 @@ import BannerHero from "../../DirectoryHero/BannerHero";
 import { getShops } from "../../../graphql/queries/shopQueries";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import PeopleIcon from "@mui/icons-material/People";
+import Link from "next/link";
 
 const responsive = {
   superLargeDesktop: {
@@ -314,14 +315,19 @@ const LandingPage = () => {
                 </div>
               </form>
               <div className="flex -ms-3">
-                <Image
-                  src={assets.playStore}
-                  alt="playStore"
-                  width={175}
-                  height={62}
-                  objectFit="cover"
-                  className="cursor-pointer"
-                />
+                <Link
+                  href={`https://play.google.com/store/apps/details?id=com.fot.fitmecool`}
+                  passHref
+                >
+                  <Image
+                    src={assets.playStore}
+                    alt="playStore"
+                    width={175}
+                    height={62}
+                    objectFit="cover"
+                    className="cursor-pointer"
+                  />
+                </Link>
                 <Image
                   src={assets.appStore}
                   alt="appStore"

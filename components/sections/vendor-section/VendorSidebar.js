@@ -45,7 +45,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
 
   return (
     <>
-      <div className="flex flex-col justify-between h-full">
+      <div className="flex flex-col justify-between lg:h-full">
         <div
           className={`lg:p-6 p-5 sm:py-10 ${
             forHeader ? "flex" : "hidden"

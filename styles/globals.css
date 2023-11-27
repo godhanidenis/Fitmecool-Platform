@@ -104,3 +104,7 @@ input[type="number"] {
 .label-large.arrowed-right {
   margin-right: 11px;
 }
+
+.hideScroll::-webkit-scrollbar {
+  display: none;
+}
