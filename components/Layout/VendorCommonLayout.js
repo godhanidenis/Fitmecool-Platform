@@ -50,6 +50,7 @@ const VendorCommonLayout = ({ children }) => {
         shopId: appliedProductsFilters.shopId.selectedValue,
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
+        forDashboard: true,
       })
     );
   };
@@ -74,7 +75,7 @@ const VendorCommonLayout = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
 
-  useEffect(() => { 
+  useEffect(() => {
     dispatch(loadCategoriesStart());
   }, [dispatch]);
 

@@ -107,8 +107,8 @@ export const getShopDetails = async (payload) => {
 export const getVendorShopDetails = async (payload) => {
   const result = await client.query({
     query: gql`
-      query Shop($shopId: String) {
-        shop(id: $shopId) {
+      query Shop($shopId: String, $forDashboard: Boolean) {
+        shop(id: $shopId, forDashboard: $forDashboard) {
           id
           createdAt
           subscriptionDate
@@ -163,6 +163,7 @@ export const getVendorShopDetails = async (payload) => {
     `,
     variables: {
       shopId: payload.id,
+      forDashboard: payload.forDashboard,
     },
     fetchPolicy: "no-cache",
   });

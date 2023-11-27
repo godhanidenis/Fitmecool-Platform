@@ -13,7 +13,7 @@ const Filter = ({ productByShop, userType }) => {
 
   return (
     <div className="flex flex-col space-y-4 mb-5">
-      <FilterActions productByShop={productByShop} />
+      <FilterActions productByShop={productByShop} userType={userType} />
 
       {!byShop ? (
         <div className="px-5 sm:px-12">
