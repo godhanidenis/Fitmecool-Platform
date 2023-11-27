@@ -48,6 +48,7 @@ import {
   getCityByStateLists,
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
+import { loadProductsStart } from "../../../redux/ducks/product";
 
 const style = {
   position: "absolute",
@@ -169,6 +170,10 @@ const ShopEdit = () => {
   const [stateDataLists, setStateDataLists] = useState([]);
   const [getCityData, setGetCityData] = useState([]);
   const [getAreaData, setGetAreaData] = useState([]);
+
+  const { appliedProductsFilters, sortFilters } = useSelector(
+    (state) => state.productsFiltersReducer
+  );
 
   const getApiState = async () => {
     await getStateLists()
@@ -320,6 +325,30 @@ const ShopEdit = () => {
 
   const updateVendorShopDetailStore = () => {
     dispatch(loadVendorShopDetailsStart(userProfile?.userCreatedShopId));
+  };
+
+  const getAllProducts = () => {
+    dispatch(
+      loadProductsStart({
+        pageData: {
+          skip: 0,
+          limit: 6,
+        },
+        filter: {
+          category_id: appliedProductsFilters.categoryId.selectedValue,
+          product_color: appliedProductsFilters.productColor.selectedValue,
+          product_price: {
+            min: appliedProductsFilters.productPrice.selectedValue.min,
+            max: appliedProductsFilters.productPrice.selectedValue.max,
+          },
+          product_listing_type:
+            appliedProductsFilters.productListingType.selectedValue,
+        },
+        shopId: appliedProductsFilters.shopId.selectedValue,
+        sort: sortFilters.sortType.selectedValue,
+        search: appliedProductsFilters.searchBarData.selectedValue,
+      })
+    );
   };
 
   useEffect(() => {
@@ -2053,6 +2082,7 @@ const ShopEdit = () => {
                 theme: "colored",
               });
               updateVendorShopDetailStore();
+              getAllProducts();
             },
             (error) => {
               toast.error(error.message, { theme: "colored" });

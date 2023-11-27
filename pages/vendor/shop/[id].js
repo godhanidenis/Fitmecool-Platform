@@ -86,7 +86,7 @@ const ShopDetailsPage = () => {
       </div>
 
       <div className="">
-        <UpperFilter showOnlyShopDetailPage={true} />
+        <UpperFilter showOnlyShopDetailPage={false} />
 
         <div
           className={`w-full relative ${
