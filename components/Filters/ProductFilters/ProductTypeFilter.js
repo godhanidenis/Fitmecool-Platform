@@ -12,6 +12,7 @@ import { StyledFormLabelRadio } from "../../core/CustomMUIComponents";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
 import { scrollToTitleName } from "../../../utils/common";
+import { changeShopProductPage } from "../../../redux/ducks/shopProduct";
 
 const productListingTypeFilterData = [
   {
@@ -35,7 +36,9 @@ const ProductTypeFilter = ({ productByShop }) => {
   );
 
   const handleCheckboxChange = (value) => {
-    dispatch(changeProductPage(0));
+    productByShop
+      ? dispatch(changeShopProductPage(0))
+      : dispatch(changeProductPage(0));
 
     const changeFiltersAction = productByShop
       ? changeAppliedShopProductsFilters
