@@ -58,12 +58,10 @@ input[type="number"]::-webkit-outer-spin-button {
   appearance: none;
 }
 
-/* For Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* For Internet Explorer */
 input[type="number"] {
   -ms-inner-appearance: textfield;
 }

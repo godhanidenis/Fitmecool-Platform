@@ -9,24 +9,24 @@ import { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ShopCommentsSection from "../../../../../components/sections/shop-section/ShopCommentsSection";
 import ShopReviewSection from "../../../../../components/sections/shop-section/ShopReviewSection";
+import { useCallback } from "react";
 
 const Reviews = ({ shopDetails }) => {
   const router = useRouter();
 
   const [shopReviews, setShopReviews] = useState([]);
 
-  const getAllReviews = () => {
+  const getAllReviews = useCallback(() => {
     getShopReviews({ id: router.query.id }).then((res) =>
       setShopReviews(res.data.shopReview)
     );
-  };
+  }, [router.query.id, setShopReviews]);
 
   useEffect(() => {
     if (router.query.id) {
       getAllReviews();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
+  }, [router, getAllReviews]);
 
   const shopSlug = shopDetails?.data?.shop?.shop_name.replaceAll(" ", "-");
 

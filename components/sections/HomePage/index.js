@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeProductPage,
@@ -18,24 +18,15 @@ import CustomSwitchComponent from "../../core/CustomSwitchComponent";
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const {
-    productsLimit,
-    productsCount,
-    numOfPages,
-    productPageSkip,
-    productsData,
-    loading,
-    error,
-  } = useSelector((state) => state.products);
+  const { productsCount, productPageSkip, productsData, loading } = useSelector(
+    (state) => state.products
+  );
 
   const {
-    shopsLimit,
     shopsCount,
-    numOfPages: shopNumOfPages,
     shopPageSkip,
     shopsData,
     loading: shopLoading,
-    error: shopError,
   } = useSelector((state) => state.shops);
 
   const { appliedProductsFilters, sortFilters } = useSelector(
@@ -68,7 +59,7 @@ const HomePage = () => {
     { imageSrc: assets.bannerImg6, des: "bannerImg6" },
   ];
 
-  const getAllProducts = () => {
+  const getAllProducts = useCallback(() => {
     dispatch(
       loadProductsStart({
         pageData: {
@@ -91,9 +82,15 @@ const HomePage = () => {
         city: appliedCityFilter.city.selectedValue,
       })
     );
-  };
+  }, [
+    dispatch,
+    sortFilters.sortType.selectedValue,
+    appliedProductsFilters,
+    appliedCityFilter.city.selectedValue,
+    productPageSkip,
+  ]);
 
-  const getAllShops = () => {
+  const getAllShops = useCallback(() => {
     dispatch(
       loadShopsStart({
         pageData: {
@@ -106,28 +103,34 @@ const HomePage = () => {
         city: appliedCityFilter.city.selectedValue,
       })
     );
-  };
+  }, [
+    dispatch,
+    shopPageSkip,
+    shopSortFilter.sortType.selectedValue,
+    appliedShopsFilters,
+    appliedCityFilter.city.selectedValue,
+  ]);
 
   useEffect(() => {
     getAllProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     appliedProductsFilters,
     appliedCityFilter,
     sortFilters,
     productPageSkip,
+    getAllProducts,
   ]);
 
   useEffect(() => {
     getAllShops();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     appliedShopsFilters,
     appliedCityFilter,
     shopSortFilter,
     shopPageSkip,
+    getAllShops,
   ]);
 
   return (

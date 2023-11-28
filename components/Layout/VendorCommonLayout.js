@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import VendorSidebar from "../sections/vendor-section/VendorSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
@@ -30,7 +30,7 @@ const VendorCommonLayout = ({ children }) => {
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
 
-  const getAllProducts = () => {
+  const getAllProducts = useCallback(() => {
     dispatch(
       loadProductsStart({
         pageData: {
@@ -53,7 +53,12 @@ const VendorCommonLayout = ({ children }) => {
         forDashboard: true,
       })
     );
-  };
+  }, [
+    dispatch,
+    appliedProductsFilters,
+    sortFilters.sortType.selectedValue,
+    productPageSkip,
+  ]);
 
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
@@ -72,8 +77,13 @@ const VendorCommonLayout = ({ children }) => {
     if (appliedProductsFilters.shopId.selectedValue.length > 0) {
       getAllProducts();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedProductsFilters, sortFilters, productPageSkip]);
+  }, [
+    dispatch,
+    appliedProductsFilters,
+    sortFilters,
+    productPageSkip,
+    getAllProducts,
+  ]);
 
   useEffect(() => {
     dispatch(loadCategoriesStart());

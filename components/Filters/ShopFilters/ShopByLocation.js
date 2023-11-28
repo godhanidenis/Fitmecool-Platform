@@ -51,22 +51,21 @@ const ShopByLocation = () => {
   }, [areaLists, displayLimit]);
 
   useEffect(() => {
+    const currentContainerRef = containerRef.current;
     const handleScroll = () => {
       if (
-        containerRef?.current &&
-        containerRef?.current?.scrollTop +
-          containerRef?.current?.clientHeight >=
-          containerRef?.current?.scrollHeight - 20 &&
+        currentContainerRef &&
+        currentContainerRef?.scrollTop + currentContainerRef?.clientHeight >=
+          currentContainerRef?.scrollHeight - 20 &&
         !fetching
       ) {
         fetchMoreItems();
       }
     };
 
-    containerRef?.current?.addEventListener("scroll", handleScroll);
+    currentContainerRef?.addEventListener("scroll", handleScroll);
     return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      containerRef?.current?.removeEventListener("scroll", handleScroll);
+      currentContainerRef?.removeEventListener("scroll", handleScroll);
     };
   }, [fetching]);
 

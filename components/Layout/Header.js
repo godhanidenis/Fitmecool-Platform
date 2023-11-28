@@ -36,9 +36,9 @@ import Router, { useRouter } from "next/router";
 import { useScrollDirection } from "../core/useScrollDirection";
 import Sidebar from "./MobileMenu/Sidebar";
 import { changeThemeLayout } from "../../redux/ducks/theme";
-import { useResizeScreenLayout } from "../core/useScreenResize";
+import { UseResizeScreenLayout } from "../core/useScreenResize";
 import SubHeader from "./SubHeader";
-import { CustomDialog, LocationSelect } from "../core/CustomMUIComponents";
+import { CustomDialog } from "../core/CustomMUIComponents";
 import {
   changeAppliedShopsFilters,
   changeByShopFilters,
@@ -61,7 +61,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
 
-  const isScreenWide = useResizeScreenLayout();
+  const isScreenWide = UseResizeScreenLayout();
   const router = useRouter();
 
   const { cityLists } = useSelector((state) => state.cityLists);
@@ -117,11 +117,11 @@ const Header = () => {
   useEffect(() => {
     const getAccessToken = localStorage.getItem("token");
     setAccessToken(getAccessToken);
-
-    localStorage.getItem("userId") &&
-      dispatch(loadUserProfileStart({ id: localStorage.getItem("userId") }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typeof window !== "undefined" && localStorage.getItem("token")]);
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      dispatch(loadUserProfileStart({ id: userId }));
+    }
+  }, [dispatch]);
 
   const handleAuthButtonClick = () => {
     setLoading(true);

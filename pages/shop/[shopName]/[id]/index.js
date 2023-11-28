@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
 import ShopCommentsSection from "../../../../components/sections/shop-section/ShopCommentsSection";
 import ShopReviewSection from "../../../../components/sections/shop-section/ShopReviewSection";
-import { useResizeScreenLayout } from "../../../../components/core/useScreenResize";
+import { UseResizeScreenLayout } from "../../../../components/core/useScreenResize";
 import { changeByShopFilters } from "../../../../redux/ducks/shopsFilters";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import { changeAppliedShopProductsFilters } from "../../../../redux/ducks/shopProductsFilters";
@@ -27,6 +27,7 @@ import {
   changeShopProductPage,
   loadShopProductsStart,
 } from "../../../../redux/ducks/shopProduct";
+import { useCallback } from "react";
 
 const ShopDetail = ({ shopDetails, error }) => {
   const [shopReviews, setShopReviews] = useState([]);
@@ -67,15 +68,9 @@ const ShopDetail = ({ shopDetails, error }) => {
   const dispatch = useDispatch();
   const myDivRef = useRef(null);
 
-  const {
-    productsLimit,
-    productsCount,
-    numOfPages,
-    productPageSkip,
-    productsData,
-    loading,
-    error: productError,
-  } = useSelector((state) => state.shopProducts);
+  const { productsCount, productPageSkip, productsData, loading } = useSelector(
+    (state) => state.shopProducts
+  );
 
   const { appliedShopProductsFilters, shopSortFilters } = useSelector(
     (state) => state.shopProductsFiltersReducer
@@ -85,7 +80,7 @@ const ShopDetail = ({ shopDetails, error }) => {
     setIsHydrated(true);
   }, []);
 
-  const getAllProducts = () => {
+  const getAllProducts = useCallback(() => {
     dispatch(
       loadShopProductsStart({
         pageData: {
@@ -107,19 +102,24 @@ const ShopDetail = ({ shopDetails, error }) => {
         search: appliedShopProductsFilters.searchBarData.selectedValue,
       })
     );
-  };
+  }, [
+    dispatch,
+    shopSortFilters.sortType.selectedValue,
+    appliedShopProductsFilters,
+    productPageSkip,
+  ]);
 
-  const getAllReviews = () => {
+  const getAllReviews = useCallback(() => {
     getShopReviews({ id: router.query.id }).then((res) =>
       setShopReviews(res.data.shopReview)
     );
-  };
+  }, [router.query.id, setShopReviews]);
 
-  const getAllFollowers = () => {
+  const getAllFollowers = useCallback(() => {
     getShopFollowers({ id: router.query.id }).then((res) =>
       setTotalFollowers(res.data.shopFollower?.length)
     );
-  };
+  }, [router.query.id, setTotalFollowers]);
 
   useEffect(() => {
     if (router.query.id) {
@@ -167,16 +167,21 @@ const ShopDetail = ({ shopDetails, error }) => {
     appliedShopProductsFilters.shopId.selectedValue?.length > 0 &&
       appliedShopProductsFilters.shopId.selectedValue[0] === router.query.id &&
       getAllProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, appliedShopProductsFilters, shopSortFilters, productPageSkip]);
+  }, [
+    dispatch,
+    appliedShopProductsFilters,
+    shopSortFilters,
+    productPageSkip,
+    getAllProducts,
+    router.query.id,
+  ]);
 
   useEffect(() => {
     getAllReviews();
     getAllFollowers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [dispatch, getAllReviews, getAllFollowers]);
 
-  const isScreenWide = useResizeScreenLayout();
+  const isScreenWide = UseResizeScreenLayout();
   useEffect(() => {
     !isScreenWide && dispatch(changeByShopFilters(false));
   }, [dispatch, isScreenWide]);

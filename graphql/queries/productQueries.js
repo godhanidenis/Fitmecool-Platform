@@ -38,6 +38,7 @@ export const getProducts = async (payload) => {
               back
               side
             }
+            product_video
             branchInfo {
               id
               shop_id

@@ -35,7 +35,7 @@ export const fileUpload = (selectedFile) => {
     s3.upload(params, (err, data) => {
       if (err) {
         console.error("Error during file upload:", err);
-        reject(err); // Reject the promise on error
+        reject(err);
       } else {
         resolve(data.Location);
       }
@@ -84,7 +84,7 @@ export const fileUpdate = (link, type, selectedFile) => {
     s3.upload(params, (err, data) => {
       if (err) {
         console.error("Error during file upload:", err);
-        reject(err); // Reject the promise on error
+        reject(err);
       } else {
         resolve(data.Location);
       }

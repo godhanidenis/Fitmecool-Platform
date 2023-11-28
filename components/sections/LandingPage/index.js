@@ -31,27 +31,27 @@ const responsive = {
     slidesToSlide: 1,
   },
   desktop: {
-    breakpoint: { max: 1600, min: 1367 }, // Desktop screens
+    breakpoint: { max: 1600, min: 1367 },
     items: 4,
     slidesToSlide: 1,
   },
   mediumDesktop: {
-    breakpoint: { max: 1366, min: 1280 }, // Medium-sized desktop screens
+    breakpoint: { max: 1366, min: 1280 },
     items: 4,
     slidesToSlide: 1,
   },
   laptop: {
-    breakpoint: { max: 1279, min: 1024 }, // Laptop screens
+    breakpoint: { max: 1279, min: 1024 },
     items: 3,
     slidesToSlide: 1,
   },
   tablet: {
-    breakpoint: { max: 1024, min: 768 }, // Example: New breakpoint for larger tablets
+    breakpoint: { max: 1024, min: 768 },
     items: 3,
     slidesToSlide: 1,
   },
   largerMobile: {
-    breakpoint: { max: 767, min: 480 }, // Larger mobile devices
+    breakpoint: { max: 767, min: 480 },
     items: 2,
     slidesToSlide: 1,
   },
@@ -162,18 +162,6 @@ const LandingPage = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   const isLoggedIn = localStorage.getItem("token");
-
-  //   if (isLoggedIn) {
-  //     const hasVisitedSecondPage = localStorage.getItem("visitedSecondPage");
-  //     if (!hasVisitedSecondPage) {
-  //       localStorage.setItem("visitedSecondPage", "true");
-  //       router.push("/home");
-  //     }
-  //   }
-  // }, []);
-
   useEffect(() => {
     getAllShops();
   }, []);
@@ -186,9 +174,6 @@ const LandingPage = () => {
           <h1 className="text-[#181725] font-bold text-[24px] sm:text-[24px] md:text-[28px] 2xl:text-[36px]">
             How It Works
           </h1>
-          {/* <p className="text-[12px] sm:text-[16px] 2xl:text-[16px] text-[#31333e93]">
-            Lorem Ipsum is simply dummy text of the printing
-          </p> */}
         </div>
 
         <div className="w-full mx-auto flex items-center justify-center sm:mt-2 ">
@@ -293,7 +278,7 @@ const LandingPage = () => {
                     {...register("mobileNumber", {
                       required: "Mobile number is required",
                       pattern: {
-                        value: /^\d{10}$/, // Ensure exactly 10 digits
+                        value: /^\d{10}$/,
                         message: "Please enter a valid 10-digit mobile number",
                       },
                     })}

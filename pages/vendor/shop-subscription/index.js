@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useRouter } from "next/router";
@@ -53,13 +53,16 @@ const FreePlanCard = () => {
       ? shopConfigurationsData[0]?.individual_days_limit
       : shopConfigurationsData[0]?.shop_days_limit;
 
-  const shopCreatedDate = new Date(Number(vendorShopDetails?.createdAt));
+  const shopCreatedDate = useMemo(
+    () => new Date(Number(vendorShopDetails?.createdAt)),
+    [vendorShopDetails?.createdAt]
+  );
 
   const futureDate = new Date(shopCreatedDate);
   futureDate.setDate(shopCreatedDate.getDate() + FreeTrailDay);
   const formattedFutureDate = moment(futureDate).format("DD-MM-YYYY");
 
-  const FreeTrialHandler = () => {
+  const FreeTrialHandler = useCallback(() => {
     const currentDate = new Date();
 
     let threshold = new Date();
@@ -73,12 +76,11 @@ const FreePlanCard = () => {
           shopCreatedDate >= threshold && shopCreatedDate <= currentDate
         );
     }
-  };
+  }, [vendorShopDetails, shopCreatedDate, setExpiredDate, FreeTrailDay]);
 
   useEffect(() => {
     FreeTrialHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vendorShopDetails]);
+  }, [vendorShopDetails, FreeTrialHandler]);
 
   useEffect(() => {
     FreeTrailProduct && setProductLimit(FreeTrailProduct);

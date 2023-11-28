@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { SiHandshake } from "react-icons/si";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
 import { CircularProgress } from "@mui/material";

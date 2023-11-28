@@ -9,11 +9,6 @@ const ShopCommentsSection = ({ review, isEven }) => {
         <div className="col-span-12">
           <div className="flex gap-2">
             <div className="flex justify-center">
-              {/* <UserProfileAvatar
-                name={review?.user_name}
-                width={56}
-                height={56}
-              /> */}
               <Avatar
                 className={`!w-16 !h-16 ${
                   isEven ? "!bg-[#29977d9a]" : "!bg-[#29977E]"
