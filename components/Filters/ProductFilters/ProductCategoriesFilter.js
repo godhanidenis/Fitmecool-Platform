@@ -10,6 +10,7 @@ import ShowMoreLessFilter from "../ShowMoreLessFilter";
 import { changeProductPage } from "../../../redux/ducks/product";
 import { scrollToTitleName } from "../../../utils/common";
 import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
+import { changeShopProductPage } from "../../../redux/ducks/shopProduct";
 
 const ProductCategoriesFilter = ({ productByShop }) => {
   const { categories } = useSelector((state) => state.categories);
@@ -152,7 +153,9 @@ const ProductCategoriesFilter = ({ productByShop }) => {
                               ? selectedMenCat.filter((cat) => cat !== itm)
                               : [...selectedMenCat, itm];
                             setSelectedMenCat(updatedSelection);
-                            dispatch(changeProductPage(0));
+                            productByShop
+                              ? dispatch(changeShopProductPage(0))
+                              : dispatch(changeProductPage(0));
                             setAbc(true);
                             setMenSelectedData(
                               updatedSelection.map(
@@ -242,7 +245,9 @@ const ProductCategoriesFilter = ({ productByShop }) => {
                               ? selectedWomenCat.filter((cat) => cat !== itm)
                               : [...selectedWomenCat, itm];
                             setSelectedWomenCat(updatedSelection);
-                            dispatch(changeProductPage(0));
+                            productByShop
+                              ? dispatch(changeShopProductPage(0))
+                              : dispatch(changeProductPage(0));
                             setAbc(true);
                             setWomenSelectedData(
                               updatedSelection.map(

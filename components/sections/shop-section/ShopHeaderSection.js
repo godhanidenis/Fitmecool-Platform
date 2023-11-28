@@ -91,46 +91,48 @@ const ShopHeaderSection = ({
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row">
               <div className="mt-[-45px] flex justify-center">
-                {isLogoImage ? (
-                  <Avatar
-                    className="!bg-colorGreen"
-                    sx={{
-                      fontSize: window.innerWidth >= 640 ? "70px" : "50px",
-                      width: window.innerWidth >= 640 ? 150 : 100,
-                      height: window.innerWidth >= 640 ? 150 : 100,
-                    }}
-                  >
-                    {String(shopDetails.shop_name)
-                      ?.split(" ")[0][0]
-                      .toUpperCase()}
-                  </Avatar>
-                ) : (
-                  <Image
-                    src={shopDetails?.shop_logo ?? ""}
-                    // unoptimized={true}
-                    alt="shop logo"
-                    layout="fixed"
-                    width={window.innerWidth >= 640 ? 150 : 100}
-                    height={window.innerWidth >= 640 ? 150 : 100}
-                    className="rounded-[50%] object-cover object-center"
-                    onLoad={() => setIsShopLogoLoaded(true)}
-                    onError={() => {
-                      setIsLogoImage(true);
-                    }}
-                  />
-                )}
-
-                {!isShopLogoLoaded && (
-                  <ImageLoadingSkeleton
-                    className="rounded-[50%]"
-                    variant="circular"
-                    width={150}
-                    height={150}
-                    sx={{
-                      backgroundColor: "#F3F6F6",
-                    }}
-                  />
-                )}
+                <div className="relative">
+                  <div>
+                    {isLogoImage ? (
+                      <Avatar
+                        className="!bg-colorGreen"
+                        sx={{
+                          fontSize: window.innerWidth >= 640 ? "70px" : "50px",
+                          width: window.innerWidth >= 640 ? 150 : 100,
+                          height: window.innerWidth >= 640 ? 150 : 100,
+                        }}
+                      >
+                        {String(shopDetails.shop_name)
+                          ?.split(" ")[0][0]
+                          .toUpperCase()}
+                      </Avatar>
+                    ) : (
+                      <Image
+                        src={shopDetails?.shop_logo ?? ""}
+                        alt="shop logo"
+                        layout="fixed"
+                        width={window.innerWidth >= 640 ? 150 : 100}
+                        height={window.innerWidth >= 640 ? 150 : 100}
+                        className="rounded-[50%] object-cover object-center"
+                        onLoad={() => setIsShopLogoLoaded(true)}
+                        onError={() => {
+                          setIsLogoImage(true);
+                        }}
+                      />
+                    )}
+                  </div>
+                  {!isShopLogoLoaded && (
+                    <ImageLoadingSkeleton
+                      className="rounded-[50%] absolute top-0"
+                      variant="circular"
+                      width={window.innerWidth >= 640 ? 150 : 100}
+                      height={window.innerWidth >= 640 ? 150 : 100}
+                      sx={{
+                        backgroundColor: "#ffffffb5",
+                      }}
+                    />
+                  )}
+                </div>
               </div>
               <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="flex justify-between flex-nowrap">

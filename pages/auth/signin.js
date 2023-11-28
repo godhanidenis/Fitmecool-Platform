@@ -18,6 +18,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
 import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
+import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -56,6 +57,7 @@ const Login = () => {
     toast.success(message, { theme: "colored" });
     localStorage.removeItem("user_type_for_auth");
     localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
+    asVendor && dispatch(changeByShopFilters(false));
     setTimeout(() => {
       Router.push(asVendor ? "/vendor/dashboard" : redirectPath ?? "/");
     }, 1500);
@@ -141,10 +143,6 @@ const Login = () => {
           As {asVendor ? "Seller" : "Customer"}
         </span>
       </div>
-      {/* <p className="text-sm sm:text-xl mt-2 text-gray-400">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry.
-      </p> */}
       <button
         onClick={handleGoogleLogin}
         className="xl:text-lg sm:text-sm h-10 border border-black text-colorPrimary w-full rounded-xl mt-6 flex items-center justify-center gap-2 font-medium"

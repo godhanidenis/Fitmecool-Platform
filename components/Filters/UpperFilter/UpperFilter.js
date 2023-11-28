@@ -67,6 +67,11 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   } = useSelector((state) => state.shopsFiltersReducer);
 
   const { productsCount } = useSelector((state) => state.products);
+
+  const { productsCount: shopProductsCount } = useSelector(
+    (state) => state.shopProducts
+  );
+
   const { allShopsLists, shopsCount } = useSelector((state) => state.shops);
   const { categories } = useSelector((state) => state.categories);
   const { areaLists } = useSelector((state) => state.areaLists);
@@ -120,9 +125,10 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   ]);
 
   useEffect(() => {
-    const selectedShopIds = showOnlyShopDetailPage
-      ? []
-      : appliedProductsFilters.shopId.selectedValue;
+    const selectedShopIds =
+      showOnlyShopDetailPage || localStorage.getItem("user_type") === "vendor"
+        ? []
+        : appliedProductsFilters.shopId.selectedValue;
 
     const selectedShopsData = allShopsLists?.data.filter((shop) =>
       selectedShopIds.includes(shop.id)
@@ -333,7 +339,13 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
             <span className="text-black font-bold text-[16px]">
               {byShop ? "Shops" : "Products"}&nbsp;
             </span>
-            ({byShop ? shopsCount : productsCount})
+            (
+            {byShop
+              ? shopsCount
+              : showOnlyShopDetailPage
+              ? shopProductsCount
+              : productsCount}
+            )
           </span>
         </div>
 

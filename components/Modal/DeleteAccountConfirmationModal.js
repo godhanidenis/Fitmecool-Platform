@@ -19,7 +19,6 @@ const style = {
 const DeleteAccountConfirmationModal = ({
   deleteModalOpen,
   setDeleteModalOpen,
-  deleteId,
   onClickItemDelete,
   setDeleteSelected,
 }) => {

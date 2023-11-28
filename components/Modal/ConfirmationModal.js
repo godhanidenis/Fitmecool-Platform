@@ -20,7 +20,6 @@ const ConfirmationModal = ({
   type,
   deleteModalOpen,
   setDeleteModalOpen,
-  deleteId,
   onClickItemDelete,
 }) => {
   return (

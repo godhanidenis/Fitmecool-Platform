@@ -16,6 +16,7 @@ import { changeProductPage } from "../../../redux/ducks/product";
 import { colorsList } from "../../../constants";
 import { scrollToTitleName } from "../../../utils/common";
 import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
+import { changeShopProductPage } from "../../../redux/ducks/shopProduct";
 
 const ProductColorFilter = ({ productByShop }) => {
   const dispatch = useDispatch();
@@ -46,7 +47,9 @@ const ProductColorFilter = ({ productByShop }) => {
   };
 
   const handleCheckboxChange = (item) => {
-    dispatch(changeProductPage(0));
+    productByShop
+      ? dispatch(changeShopProductPage(0))
+      : dispatch(changeProductPage(0));
 
     const changeFiltersAction = productByShop
       ? changeAppliedShopProductsFilters

@@ -7,6 +7,7 @@ import { changeProductPage } from "../../../redux/ducks/product";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { scrollToTitleName } from "../../../utils/common";
 import { changeAppliedShopProductsFilters } from "../../../redux/ducks/shopProductsFilters";
+import { changeShopProductPage } from "../../../redux/ducks/shopProduct";
 
 const priceFilterData = [
   {
@@ -56,7 +57,9 @@ const ProductPriceFilter = ({ productByShop }) => {
   );
 
   const handleCheckboxChange = (value) => {
-    dispatch(changeProductPage(0));
+    productByShop
+      ? dispatch(changeShopProductPage(0))
+      : dispatch(changeProductPage(0));
 
     const changeFiltersAction = productByShop
       ? changeAppliedShopProductsFilters

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import Link from "next/link";
 import ProductCard from "../../components/sections/product-section/ProductCard";
 import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
 import Router from "next/router";
@@ -67,7 +66,7 @@ const ProductLikePage = () => {
                 userProfile.product_like_list?.map((product) => (
                   <ProductCard
                     product={product}
-                    key={product.id}
+                    key={product?.id}
                     likePage={true}
                   />
                 ))}

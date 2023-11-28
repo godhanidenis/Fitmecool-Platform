@@ -40,7 +40,6 @@ const ShopCard = ({ shop }) => {
                 <>
                   <Image
                     src={assets.shopBackgroundCover3 ?? ""}
-                    // unoptimized={true}
                     alt={shop?.shop_name}
                     className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
                       isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -55,7 +54,6 @@ const ShopCard = ({ shop }) => {
               ) : (
                 <Image
                   src={shop?.shop_cover_image ?? ""}
-                  // unoptimized={true}
                   alt={shop?.shop_name}
                   className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
                     isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -73,7 +71,7 @@ const ShopCard = ({ shop }) => {
                   isShopImagesLoaded ? "opacity-100" : "opacity-0 "
                 }`}
                 style={{
-                  opacity: isShopImagesLoaded ? 0.2 : 0, // Set the opacity value as needed
+                  opacity: isShopImagesLoaded ? 0.2 : 0,
                 }}
               />
             </div>
@@ -99,7 +97,6 @@ const ShopCard = ({ shop }) => {
                 )}
                 <Image
                   src={shop?.shop_logo ?? ""}
-                  // unoptimized={true}
                   alt="Shop Logo"
                   objectFit="cover"
                   className={`rounded-full absolute top-0 left-0  ${

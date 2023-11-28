@@ -1,22 +1,18 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-// resizes the screen size hook
+import { useEffect, useState } from "react";
 
-import React from "react";
+export function UseResizeScreenLayout() {
+  const [isScreenWide, setIsScreenWide] = useState(false);
 
-export function useResizeScreenLayout() {
-  const [isScreenWide, setIsScreenWide] = React.useState(false);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1023) {
-        // 1023 is the lg breakpoint in Tailwind
         setIsScreenWide(true);
       } else {
         setIsScreenWide(false);
       }
     };
 
-    handleResize(); // Check on component mount
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -24,20 +20,19 @@ export function useResizeScreenLayout() {
   return isScreenWide;
 }
 
-export function screeResizeForViewMoreItems() {
-  const [isScreenWide, setIsScreenWide] = React.useState(false);
+export function ScreeResizeForViewMoreItems() {
+  const [isScreenWide, setIsScreenWide] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1280) {
-        // 1023 is the lg breakpoint in Tailwind
         setIsScreenWide(true);
       } else {
         setIsScreenWide(false);
       }
     };
 
-    handleResize(); // Check on component mount
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);

@@ -58,10 +58,7 @@ const responsive = {
 };
 
 const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(null);
-  const [autoplay, setAutoplay] = useState(false);
   const [productLikeByUser, setProductLikeByUser] = useState(false);
-
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isProductImagesLoaded, setIsProductImagesLoaded] = useState(false);
   const [OpenToolTip, setOpenToolTip] = useState(false);
@@ -73,7 +70,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
 
   const handleCloseCarouselImage = () => setCarouselImage(false);
 
-  const shopId = product.branchInfo?.shop_id;
+  const shopId = product?.branchInfo?.shop_id;
   const pageShareURL = window.location.href;
 
   const dispatch = useDispatch();
@@ -90,16 +87,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
     product?.product_price * (product?.product_discount / 100);
 
   useEffect(() => {
-    if (onlyCarousal) setAutoplay(false);
-  }, [onlyCarousal]);
-
-  useEffect(() => {
     if (!isAuthenticate) {
       setProductLikeByUser(false);
     }
 
     const likedProductByUser = userProfile?.product_like_list?.find(
-      (itm) => itm.id === product.id
+      (itm) => itm?.id === product?.id
     );
 
     likedProductByUser
@@ -108,7 +101,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   }, [isAuthenticate, product.id, userProfile]);
 
   useEffect(() => {
-    // Initialize the photos array with initial values
     const initialPhotos = [
       {
         src: product.product_image?.front,
@@ -125,14 +117,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
     ];
 
     if (onlyCarousal && product.product_video) {
-      // If there's a video, add it to the initialPhotos array
       initialPhotos.push({
         src: product.product_video,
         type: "video",
       });
     }
 
-    // Set the initial photos state
     setPhotos(initialPhotos);
   }, [onlyCarousal, product.product_image, product.product_video]);
 
@@ -163,7 +153,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             {itm?.type === "image" && (
               <Image
                 src={itm?.src ?? ""}
-                // unoptimized={true}
                 alt={product?.product_name}
                 className={`object-cover object-top absolute top-0 left-0 bg-white  ${
                   isProductImagesLoaded ? "opacity-100" : "opacity-0"
@@ -237,35 +226,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
     );
   };
 
-  const CustomPrevArrow = () => {
-    return (
-      <Link
-        href={`/product/${productSlug}/${product.id}/${product.id}`}
-        passHref
-      >
-        <a
-          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-          rel="noopener noreferrer"
-        >
-          <button className="absolute top-1/2 left-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
-        </a>
-      </Link>
-    );
-  };
-
-  const CustomNextArrow = () => {
-    return (
-      <Link href={`/product/${productSlug}/${product.id}`} passHref>
-        <a
-          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-          rel="noopener noreferrer"
-        >
-          <button className="absolute top-1/2 right-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
-        </a>
-      </Link>
-    );
-  };
-
   return (
     <>
       <div
@@ -300,7 +260,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             <div className="cursor-pointer relative top-0 left-0">
               <div className="grid grid-cols-1 place-items-center">
                 {!onlyCarousal ? (
-                  // <div className="group relative w-full">
                   <div
                     className={`relative rounded-t-lg`}
                     style={{
@@ -326,7 +285,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         ) : (
                           <Image
                             src={product.product_image?.front ?? ""}
-                            // unoptimized={true}
                             alt={product?.product_name}
                             className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
                               isProductImagesLoaded
@@ -524,7 +482,6 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                             src={
                               product?.branchInfo?.shop_info?.shop_logo ?? ""
                             }
-                            // unoptimized={true}
                             layout="fill"
                             className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
                               isShopLogoLoaded ? "opacity-100" : "opacity-0"

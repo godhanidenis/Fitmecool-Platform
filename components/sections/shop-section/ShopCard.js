@@ -4,124 +4,24 @@ import Link from "next/link";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
 import { useSelector } from "react-redux";
-import Carousel from "react-multi-carousel";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
-const responsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 1,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
-};
-
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
-  const [currentImageIndex, setCurrentImageIndex] = useState(null);
-  const [autoplay, setAutoplay] = useState(false);
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
   const [isShopImagesLoaded, setShopImagesLoaded] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
-  const [isShopImage, setIsShopImage] = useState([]);
-  const carouselRef = useRef(null);
-
-  const shopImages = shop.shop_images.map((itm, index) => {
-    return (
-      <div
-        className="relative"
-        key={index}
-        style={{
-          width: "100%",
-          height: themeLayout === "mobileScreen" ? 250 : 300,
-        }}
-        onMouseEnter={() => {
-          setAutoplay(true);
-          setCurrentImageIndex(null);
-        }}
-        onMouseLeave={() => {
-          setAutoplay(false);
-          setCurrentImageIndex(0);
-        }}
-      >
-        {!isShopImagesLoaded && (
-          <ImageLoadingSkeleton className="object-cover" />
-        )}
-
-        {isShopImage.includes(itm) && isShopImages ? (
-          <div className="w-full h-full bg-[#00000031] absolute top-0" />
-        ) : (
-          <Image
-            src={
-              // currentImageIndex === null
-              //   ?
-              itm?.links ?? ""
-              // : currentImageIndex === 0 && shop.shop_images[0]?.links
-            }
-            // unoptimized={true}
-            alt={shop?.shop_name}
-            className={`object-cover object-top absolute top-0 left-0 rounded-t-lg  ${
-              isShopImagesLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            onLoad={() => setShopImagesLoaded(true)}
-            onError={() => {
-              setIsShopImages(true);
-              setIsShopImage((prevIndexes) => [...prevIndexes, itm]);
-            }}
-            layout="fill"
-          />
-        )}
-      </div>
-    );
-  });
 
   const shopSlug = shop.shop_name.replaceAll(" ", "-");
-
-  const CustomPrevArrow = () => {
-    return (
-      <Link href={`/shop/${shopSlug}/${shop.id}`}>
-        <a
-          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-          rel="noopener noreferrer"
-        >
-          <button className="absolute top-1/2 left-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
-        </a>
-      </Link>
-    );
-  };
-
-  const CustomNextArrow = () => {
-    return (
-      <Link href={`/shop/${shopSlug}/${shop.id}`}>
-        <a
-          target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-          rel="noopener noreferrer"
-        >
-          <button className="absolute top-1/2 right-0 transform -translate-y-1/2 w-full h-full bg-[#fff0] text-[#fff0] z-[10px]" />
-        </a>
-      </Link>
-    );
-  };
 
   return (
     <div className="w-[98%] sm:w-[49%] lg:w-[32%] mb-3 sm:mb-0 bg-white shadow-md h-full rounded-lg ">
       <div className="">
         <div className="cursor-pointer relative top-0 left-0">
           <div className="grid grid-cols-1 place-items-center">
-            {/* <div className="group relative w-full"> */}
             <div
               className={`relative rounded-t-lg`}
               style={{
@@ -142,7 +42,6 @@ const ShopCard = ({ shop }) => {
                   ) : (
                     <Image
                       src={shop.shop_images[0]?.links ?? ""}
-                      // unoptimized={true}
                       alt={shop?.shop_name}
                       className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
                         isShopImagesLoaded ? "opacity-100" : "opacity-0"
@@ -157,32 +56,6 @@ const ShopCard = ({ shop }) => {
                 </a>
               </Link>
             </div>
-            {/* <div className="invisible group-hover:visible absolute top-0 left-0 w-full h-full rounded-t-lg">
-                <Carousel
-                  ref={carouselRef}
-                  autoPlay={true}
-                  autoPlaySpeed={1500}
-                  infinite
-                  arrows={true}
-                  customLeftArrow={<CustomPrevArrow />}
-                  customRightArrow={<CustomNextArrow />}
-                  responsive={responsive}
-                  className={`rounded-t-lg`}
-                >
-                  {shop?.shop_images?.length === 0 ? (
-                    <div
-                      className="bg-[#00000031]"
-                      style={{
-                        width: "100%",
-                        height: themeLayout === "mobileScreen" ? 250 : 300,
-                      }}
-                    />
-                  ) : (
-                    shopImages
-                  )}
-                </Carousel>
-              </div> */}
-            {/* </div> */}
           </div>
         </div>
       </div>
@@ -205,7 +78,6 @@ const ShopCard = ({ shop }) => {
                     <Image
                       alt="Shop Logo"
                       src={shop?.shop_logo ?? ""}
-                      // unoptimized={true}
                       layout="fill"
                       className={`rounded-[50%] absolute top-0 left-0 object-cover object-center ${
                         isShopLogoLoaded ? "opacity-100" : "opacity-0"

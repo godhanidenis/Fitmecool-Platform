@@ -124,6 +124,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
             onClick={() => {
               setDeleteSelected(true);
               setProductDeleteModalOpen(true);
+              forHeader && handleMobileSidebarClick();
             }}
           >
             <DeleteIcon /> Delete Account

@@ -11,6 +11,7 @@ import { withAuth } from "../../../components/core/PrivateRouteForVendor";
 import AddIcon from "@mui/icons-material/Add";
 import VenderProductTable from "../../../components/Layout/VenderProductTable";
 import AddEditProductPage from "../../../components/sections/vendor-section/AddEditProductPage";
+import { scrollToTitleName } from "../../../utils/common";
 
 const ShopDetailsPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -124,16 +125,7 @@ const ShopDetailsPage = () => {
                   shape="rounded"
                   page={(productPageSkip === 0 && 1) || productPageSkip / 6 + 1}
                   onChange={(e, p) => {
-                    const targetElement = document.getElementById("titleName");
-                    if (targetElement) {
-                      const targetScrollPosition =
-                        targetElement.getBoundingClientRect().top;
-
-                      window.scrollTo({
-                        top: window.scrollY + targetScrollPosition,
-                        behavior: "smooth",
-                      });
-                    }
+                    scrollToTitleName();
                     dispatch(changeProductPage((p === 1 && 0) || (p - 1) * 6));
                   }}
                 />

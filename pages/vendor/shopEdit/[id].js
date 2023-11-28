@@ -182,7 +182,6 @@ const ShopEdit = () => {
   };
 
   const onChangeState = async (data) => {
-    // console.log("data 1234:>> ", data);
     await getCityByStateLists(data)
       .then((res) => setGetCityData(res?.data?.cityByState))
       .catch((err) => console.log("error", err));
@@ -1165,7 +1164,7 @@ const ShopEdit = () => {
                 </>
               )}
               <div className="flex items-center justify-center">
-                <Box className="flex w-full sm:justify-end justify-center mb-6">
+                <Box className="flex w-full sm:justify-end justify-center mt-6 lg:mt-0 mb-6">
                   <button
                     type="submit"
                     onClick={shopInfoHandleSubmit(
@@ -1627,7 +1626,7 @@ const ShopEdit = () => {
                       {shopLogo !== "" ? (
                         shopLogo ? (
                           <>
-                            <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
+                            <span className="absolute right-4 sm:bottom-2 bottom-0 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[10]">
                               <EditIcon
                                 sx={{
                                   "@media (max-width: 768px)": {
@@ -1645,7 +1644,7 @@ const ShopEdit = () => {
                                 setUploadShopLogo("");
                                 setDeleteShopLogo(vendorShopDetails?.shop_logo);
                               }}
-                              className="absolute left-4 sm:bottom-2 bottom-0 border border-red-600 rounded-full p-2 bg-red-600 text-white z-[9999]"
+                              className="absolute left-4 sm:bottom-2 bottom-0 border border-red-600 rounded-full p-2 bg-red-600 text-white z-[10]"
                             >
                               <DeleteIcon
                                 sx={{
@@ -1718,7 +1717,7 @@ const ShopEdit = () => {
                       {shopBackground !== "" ? (
                         shopBackground ? (
                           <>
-                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[10]">
                               <EditIcon
                                 sx={{
                                   "@media (max-width: 768px)": {
@@ -1740,7 +1739,7 @@ const ShopEdit = () => {
                                   vendorShopDetails?.shop_cover_image
                                 );
                               }}
-                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[9999]"
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[10]"
                             >
                               <DeleteIcon
                                 sx={{
@@ -1827,7 +1826,7 @@ const ShopEdit = () => {
                               >
                                 {shopImages[index] ? (
                                   <>
-                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
+                                    <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[10]">
                                       <EditIcon
                                         sx={{
                                           "@media (max-width: 768px)": {
@@ -1872,7 +1871,7 @@ const ShopEdit = () => {
                                           ...shopImagesData,
                                         ]);
                                       }}
-                                      className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[99999]"
+                                      className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[10]"
                                     >
                                       <DeleteIcon
                                         sx={{
@@ -1974,7 +1973,7 @@ const ShopEdit = () => {
                               src={shopVideo}
                             ></video>
 
-                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[9999]">
+                            <span className="absolute right-4 top-4 border border-black rounded-full lg:p-2 px-2 py-1 bg-black text-white z-[10]">
                               <EditIcon
                                 onClick={() => {
                                   document
@@ -2001,7 +2000,7 @@ const ShopEdit = () => {
                                   fontSize: 16,
                                 },
                               }}
-                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[9999]"
+                              className="absolute right-4 top-[70px] border border-red-600 rounded-full p-2 bg-red-600 text-white z-[10]"
                             >
                               <DeleteIcon />
                             </span>
@@ -2075,7 +2074,6 @@ const ShopEdit = () => {
         type="branch"
         deleteModalOpen={branchDeleteModalOpen}
         setDeleteModalOpen={setBranchDeleteModalOpen}
-        deleteId={deleteBranchId}
         onClickItemDelete={() => {
           deleteBranch({ id: deleteBranchId }).then(
             (res) => {

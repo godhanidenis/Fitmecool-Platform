@@ -3,13 +3,12 @@ import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendo
 import { useForm } from "react-hook-form";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-const index = () => {
+const ContactPage = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-    // eslint-disable-next-line react-hooks/rules-of-hooks
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -100,4 +99,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ContactPage;

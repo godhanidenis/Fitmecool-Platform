@@ -18,7 +18,6 @@ import {
   CircularProgress,
   FormControl,
   IconButton,
-  Autocomplete,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -34,10 +33,8 @@ import Carousel from "react-multi-carousel";
 import Image from "next/image";
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { SiHandshake } from "react-icons/si";
 import { BsShop } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
-import { assets } from "../../../constants";
 import { fileUpload } from "../../../services/wasabi";
 import CustomAutoCompleteTextField from "../../../components/core/CustomAutoCompleteTextField";
 import {
@@ -45,6 +42,7 @@ import {
   getCityByStateLists,
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
+import { useCallback } from "react";
 
 const style = {
   position: "absolute",
@@ -60,7 +58,6 @@ const style = {
 
 const responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 2,
   },
@@ -159,7 +156,6 @@ const ShopPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
-  const [valueAuto, setValueAuto] = useState(null);
   const [selectedOption, setSelectedOption] = useState("Shop");
   const [currentStep, setCurrentStep] = useState(1);
   const [ownerDetails, setOwnerDetails] = useState("Show");
@@ -209,10 +205,7 @@ const ShopPage = () => {
     handleSubmit,
     formState: { errors, isDirty, isValid },
     setValue,
-    reset,
-    watch,
     getValues,
-    setError,
     control,
   } = useForm();
 
@@ -227,7 +220,6 @@ const ShopPage = () => {
   };
 
   const onChangeState = async (data) => {
-    // console.log("data 1234:>> ", data);
     await getCityByStateLists(data)
       .then((res) => setGetCityData(res?.data?.cityByState))
       .catch((err) => console.log("error", err));
@@ -281,7 +273,7 @@ const ShopPage = () => {
 
   const [subBranchButtonShow, setSubBranchButtonShow] = useState(false);
 
-  const getAllValues = () => {
+  const getAllValues = useCallback(() => {
     if (
       getValues("manager_first_name") === "" ||
       getValues("manager_last_name") === "" ||
@@ -292,12 +284,11 @@ const ShopPage = () => {
     } else {
       setSubBranchButtonShow(true);
     }
-  };
+  }, [getValues, setSubBranchButtonShow]);
 
   useEffect(() => {
     getAllValues();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getValues, sameAsOwner, setValue, currentStep]);
+  }, [getValues, sameAsOwner, setValue, currentStep, getAllValues]);
 
   const onShopLogoPreviewImage = (e) => {
     setUploadShopLogo(e.target.files[0]);
@@ -393,7 +384,6 @@ const ShopPage = () => {
 
     try {
       const uploadShopImgs = await Promise.all(uploadPromises);
-      // console.log("uploadShopImgs :>> ", uploadShopImgs);
       return uploadShopImgs;
     } catch (error) {
       console.error("Error during file upload:", error);
@@ -405,7 +395,6 @@ const ShopPage = () => {
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      // console.log("Data To be Submitted !!", data);
       setLoading(true);
 
       let logoResponse = "";
@@ -835,7 +824,6 @@ const ShopPage = () => {
                     </div>
                   </div>
 
-                  {/* Shop info */}
                   <div className="border mt-10">
                     <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
                       <div className="uppercase font-semibold sm:text-lg text-sm text-white">
@@ -918,9 +906,7 @@ const ShopPage = () => {
                               isRequired={false}
                               placeholder="Personal Website Link"
                               formValue={{
-                                ...register("personal_website", {
-                                  // required: "Personal Website is required",
-                                }),
+                                ...register("personal_website", {}),
                               }}
                             />
                             {errors.personal_website && (
@@ -941,9 +927,7 @@ const ShopPage = () => {
                                 isRequired={false}
                                 placeholder="Your facebook link"
                                 formValue={{
-                                  ...register("facebook_link", {
-                                    // required: "Facebook Link is required",
-                                  }),
+                                  ...register("facebook_link", {}),
                                 }}
                               />
                               {errors.facebook_link && (
@@ -963,9 +947,7 @@ const ShopPage = () => {
                                 isRequired={false}
                                 placeholder="Your instagram link"
                                 formValue={{
-                                  ...register("instagram_link", {
-                                    // required: "Instagram Link is required",
-                                  }),
+                                  ...register("instagram_link", {}),
                                 }}
                               />
                               {errors.instagram_link && (
@@ -981,8 +963,6 @@ const ShopPage = () => {
                       )}
                     </div>
                   </div>
-
-                  {/* Shop Open/Close Time */}
 
                   <div className="my-10">
                     {!individual && (
@@ -1337,7 +1317,6 @@ const ShopPage = () => {
             {currentStep === 3 && (
               <>
                 <div className="mt-8 sm:mx-10">
-                  {/* Main Branch */}
                   <div className="border mt-5">
                     <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
                       <div className="uppercase font-semibold sm:text-lg text-sm text-white">
@@ -1458,7 +1437,6 @@ const ShopPage = () => {
                     </div>
                   </div>
 
-                  {/* Manager Details */}
                   <div className="border mt-5">
                     <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
                       <div className="uppercase font-semibold sm:text-lg text-sm text-white">
@@ -1588,7 +1566,7 @@ const ShopPage = () => {
                             <Controller
                               name="manager_first_name"
                               control={control}
-                              defaultValue="" // Set the initial value here
+                              defaultValue=""
                               render={({ field }) => (
                                 <>
                                   <TextField
@@ -1623,7 +1601,7 @@ const ShopPage = () => {
                             <Controller
                               name="manager_last_name"
                               control={control}
-                              defaultValue="" // Set the initial value here
+                              defaultValue=""
                               render={({ field }) => (
                                 <>
                                   <TextField
@@ -1659,7 +1637,7 @@ const ShopPage = () => {
                           <Controller
                             name="manager_user_email"
                             control={control}
-                            defaultValue="" // Set the initial value here
+                            defaultValue=""
                             render={({ field }) => (
                               <>
                                 <TextField
@@ -1700,7 +1678,7 @@ const ShopPage = () => {
                           <Controller
                             name="manager_user_contact"
                             control={control}
-                            defaultValue="" // Set the initial value here
+                            defaultValue=""
                             render={({ field }) => (
                               <>
                                 <TextField
@@ -1739,7 +1717,6 @@ const ShopPage = () => {
                     </div>
                   </div>
 
-                  {/* Sub Branch */}
                   {!individual && (
                     <div className="border mt-5">
                       <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
@@ -1765,7 +1742,6 @@ const ShopPage = () => {
                             <div className="p-4 pt-2 pb-0 md:p-10 md:pt-4 md:pb-0">
                               <Carousel
                                 responsive={responsive}
-                                // showDots={true}
                                 arrows={true}
                                 removeArrowOnDeviceType={["mobile"]}
                                 customLeftArrow={
@@ -2306,10 +2282,6 @@ const SubBranchModal = ({
 
                   <div className="flex justify-center items-center">
                     <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
-                      {/* <span className="font-semibold text-lg text-[#11142D] mt-5">
-                          Manager:
-                        </span> */}
-
                       <CustomTextFieldVendor
                         label="Manager"
                         variant="standard"
@@ -2331,9 +2303,6 @@ const SubBranchModal = ({
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:gap-4 gap-2.5 w-full justify-between items-center">
-                    {/* <p className="mt-2 hidden sm:flex items-center text-colorBlack text-lg">
-                        Name:
-                      </p> */}
                     <div className="w-full flex flex-col gap-2">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextFieldVendor
@@ -2381,9 +2350,6 @@ const SubBranchModal = ({
                   </div>
 
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Email:
-                      </p> */}
                     <div className="w-full flex flex-col gap-2">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextFieldVendor
@@ -2410,9 +2376,6 @@ const SubBranchModal = ({
                   </div>
 
                   <div className="flex items-center justify-center gap-10 sm:gap-20">
-                    {/* <p className="mt-2 hidden sm:flex items-center justify-between  text-colorBlack text-lg">
-                        Phone:
-                      </p> */}
                     <div className="w-full flex flex-col gap-2">
                       <Box sx={{ display: "flex" }}>
                         <CustomTextFieldVendor
@@ -2475,11 +2438,8 @@ export const HoursModal = ({
   setHoursModalOpen,
   setDaysTimeModalOpen,
   hours,
-  selectedDay,
   setSelectedDay,
   setSelectedWeek,
-  selectedWeek,
-  selectedAllHours,
   setSelectedAllHours,
   ShopEdit,
 }) => {
@@ -2925,9 +2885,6 @@ const DaysTimeModal = ({
       >
         <Box sx={style} className="!w-[80%] lg:!w-[40%]">
           <div className="p-5 pb-0">
-            {/* <p className="flex items-center text-colorBlack text-xl font-semibold justify-center">
-              Select days & time
-            </p> */}
             <div className="flex justify-between items-center">
               <div className="sm:text-[22px] text-[16px] font-bold">
                 Select days & time

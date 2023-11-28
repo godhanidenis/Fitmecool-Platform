@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TbPhotoPlus } from "react-icons/tb";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -19,7 +19,6 @@ import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
-import { refactorPrice } from "../../../utils/common";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
 
@@ -40,8 +39,6 @@ const AddEditProductPage = ({
     reset,
     setValue,
     getValues,
-    control,
-    watch,
   } = useForm();
 
   const [SelectImgIndex, setSelectImgIndex] = useState();
@@ -404,8 +401,6 @@ const AddEditProductPage = ({
           },
           (error) => {
             setLoading(false);
-            // toast.error(error.message, { theme: "colored" });
-            // setAlertMsg(true);
             const targetElement = document.getElementById("AddProduct");
             if (targetElement) {
               const targetScrollPosition =

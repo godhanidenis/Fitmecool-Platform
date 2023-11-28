@@ -8,6 +8,7 @@ import { getProducts } from "../../../graphql/queries/productQueries";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Link from "next/link";
+import { useCallback } from "react";
 
 const responsive = {
   superLargeDesktop: {
@@ -16,17 +17,17 @@ const responsive = {
     slidesToSlide: 2,
   },
   desktop: {
-    breakpoint: { max: 1600, min: 1367 }, // Desktop screens
+    breakpoint: { max: 1600, min: 1367 },
     items: 5,
     slidesToSlide: 2,
   },
   laptop: {
-    breakpoint: { max: 1366, min: 1024 }, // Laptop screens
+    breakpoint: { max: 1366, min: 1024 },
     items: 4,
     slidesToSlide: 1,
   },
   tablet: {
-    breakpoint: { max: 1024, min: 464 }, // Example: New breakpoint for larger tablets
+    breakpoint: { max: 1024, min: 464 },
     items: 3,
     slidesToSlide: 1,
   },
@@ -61,7 +62,7 @@ const MenCollection = () => {
     }
   };
 
-  const getAllMenProducts = () => {
+  const getAllMenProducts = useCallback(() => {
     setLoading(true);
     getProducts({
       pageData: {
@@ -90,7 +91,7 @@ const MenCollection = () => {
         setLoading(false);
       }
     );
-  };
+  }, [menCategoryId, setMenCategoryData, setLoading]);
 
   const shouldShowButtons = (minScreenSize, maxScreenSize, minDataLength) => {
     return (
@@ -109,8 +110,7 @@ const MenCollection = () => {
 
   useEffect(() => {
     menCategoryId?.length > 0 && getAllMenProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [menCategoryId]);
+  }, [menCategoryId, getAllMenProducts]);
 
   useEffect(() => {
     const handleResize = () => {

@@ -40,9 +40,7 @@ const ShopReviewSection = ({ shopName, getAllReviews, shopReviews }) => {
   }, [router.query.id, userProfile.id, shopReviews]);
 
   useEffect(() => {
-    // Ensure that reviews data is not empty
     if (shopReviews.length > 0) {
-      // Convert timestamp strings to Date objects and sort by updatedAt in descending order
       const sortedReviews = shopReviews
         .map((review) => ({
           ...review,
@@ -50,7 +48,6 @@ const ShopReviewSection = ({ shopName, getAllReviews, shopReviews }) => {
         }))
         .sort((a, b) => b.updatedAt - a.updatedAt);
 
-      // Get the latest review
       const latest = sortedReviews[0];
       setLatestReview(latest);
     }

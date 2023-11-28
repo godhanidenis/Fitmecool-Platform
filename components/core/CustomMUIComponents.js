@@ -42,7 +42,6 @@ export const CustomIconTextField = styled(TextField)(({ theme }) => ({
     paddingBottom: "20px",
     paddingTop: "20px",
     [theme.breakpoints.down("sm")]: {
-      // Add your styles for the 'sm' breakpoint and up here
       fontSize: "10px",
       gap: "5px",
       paddingBottom: "12px",

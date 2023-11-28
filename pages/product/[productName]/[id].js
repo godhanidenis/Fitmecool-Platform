@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-// import Magnifier from "react-magnifier";
 
 import Image from "next/image";
 import {
@@ -49,7 +48,7 @@ import {
 } from "react-share";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
-import { screeResizeForViewMoreItems } from "../../../components/core/useScreenResize";
+import { ScreeResizeForViewMoreItems } from "../../../components/core/useScreenResize";
 import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton";
 import { assets } from "../../../constants";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -80,14 +79,6 @@ const ProductDetail = ({ productDetails, error }) => {
   const [readMore, setReadMore] = useState(false);
 
   const [photos, setPhotos] = useState([]);
-
-  const [date, setDate] = useState(
-    new Date(
-      Number(
-        productDetails?.data?.product?.data.branchInfo?.shop_info?.createdAt
-      )
-    )
-  );
 
   const [shopOldDate, setShopOldDate] = useState("");
 
@@ -127,14 +118,22 @@ const ProductDetail = ({ productDetails, error }) => {
     setIsHydrated(true);
   }, []);
 
+  const createdAtDate = useMemo(() => {
+    return new Date(
+      Number(
+        productDetails?.data?.product?.data.branchInfo?.shop_info?.createdAt
+      )
+    );
+  }, [productDetails]);
+
   useEffect(() => {
     const currentDate = new Date();
-    const differenceInMilliseconds = currentDate - date;
+    const differenceInMilliseconds = currentDate - createdAtDate;
     const differenceInDays = Math.floor(
       differenceInMilliseconds / (24 * 60 * 60 * 1000)
     );
     setShopOldDate(differenceInDays);
-  }, [date]);
+  }, [createdAtDate]);
 
   useEffect(() => {
     if (!isAuthenticate) {
@@ -170,7 +169,6 @@ const ProductDetail = ({ productDetails, error }) => {
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
   useEffect(() => {
-    // Initialize the photos array with initial values
     const initialPhotos = [
       {
         src: productDetailsData?.data.product_image?.front,
@@ -187,14 +185,12 @@ const ProductDetail = ({ productDetails, error }) => {
     ];
 
     if (productDetailsData?.data.product_video) {
-      // If there's a video, add it to the initialPhotos array
       initialPhotos.push({
         src: productDetailsData?.data.product_video,
         type: "video",
       });
     }
 
-    // Set the initial photos state
     setPhotos(initialPhotos);
   }, [
     productDetailsData?.data.product_image,
@@ -203,8 +199,7 @@ const ProductDetail = ({ productDetails, error }) => {
 
   useEffect(() => {
     if (photos?.length > 0) setImages(photos[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [photos?.length]);
+  }, [photos]);
 
   const selectImage = (img) => {
     setImages(img);
@@ -271,7 +266,7 @@ const ProductDetail = ({ productDetails, error }) => {
     );
   });
 
-  const isScreenWide = screeResizeForViewMoreItems();
+  const isScreenWide = ScreeResizeForViewMoreItems();
 
   const handleProductLike = () => {
     if (isAuthenticate) {
