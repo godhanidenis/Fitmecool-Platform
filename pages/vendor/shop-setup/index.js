@@ -1106,7 +1106,7 @@ const ShopPage = () => {
                             <input
                               id="file-input-0"
                               type="file"
-                              accept="image/*,video/*"
+                              accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                               className="hidden"
                               {...register("shopLogo", {
                                 onChange: (e) => {
@@ -1161,7 +1161,7 @@ const ShopPage = () => {
                             <input
                               id="file-input-1"
                               type="file"
-                              accept="image/*,video/*"
+                              accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                               className="hidden"
                               {...register("shopBackground", {
                                 onChange: (e) => {
@@ -1227,7 +1227,7 @@ const ShopPage = () => {
                                   <input
                                     id={`shopImage${item}`}
                                     type="file"
-                                    accept="image/*,video/*"
+                                    accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                                     className="hidden"
                                     {...register("shopImages", {
                                       onChange: (e) => {
@@ -1282,7 +1282,7 @@ const ShopPage = () => {
                               <input
                                 id="file-input-5"
                                 type="file"
-                                accept="image/*,video/*"
+                                accept="video/*"
                                 className="hidden"
                                 controls
                                 onClick={(e) => (e.target.value = null)}

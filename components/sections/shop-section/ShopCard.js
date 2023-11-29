@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import { assets } from "../../../constants";
 
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
@@ -38,7 +39,21 @@ const ShopCard = ({ shop }) => {
                     <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
                   )}
                   {isShopImages ? (
-                    <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
+                    <>
+                      <Image
+                        src={assets.shopBackgroundCover3 ?? ""}
+                        alt={shop?.shop_name}
+                        className={`object-cover absolute top-0 left-0 rounded-t-lg bg-[#00000031]  ${
+                          isShopImagesLoaded ? "opacity-100" : "opacity-0 "
+                        }`}
+                        onLoad={() => setShopImagesLoaded(true)}
+                        layout="fill"
+                        onError={() => {
+                          setIsShopImages(true);
+                        }}
+                      />
+                      <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
+                    </>
                   ) : (
                     <Image
                       src={shop.shop_images[0]?.links ?? ""}

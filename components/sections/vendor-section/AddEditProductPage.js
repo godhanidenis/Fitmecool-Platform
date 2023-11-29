@@ -852,7 +852,7 @@ const AddEditProductPage = ({
                               : "Side Image"}
                           </p>
                           <p className="sm:text-sm text-xs text-gray-400 text-center">
-                            We Support JPG & PNG
+                            We Support JPG, PNG, HEIC, WEBP & JPEG
                           </p>
                         </div>
                       </div>
@@ -861,7 +861,7 @@ const AddEditProductPage = ({
                       id={`productImage${item}`}
                       name="productImages"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                       className="hidden"
                       {...register("productImages", {
                         required: !ProductImgError[index]

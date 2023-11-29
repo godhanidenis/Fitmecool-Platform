@@ -53,9 +53,9 @@ const ShopCard = ({ shop }) => {
                 </>
               ) : (
                 <Image
-                  src={shop?.shop_cover_image ?? ""}
+                  src={shop.shop_images[0]?.links ?? ""}
                   alt={shop?.shop_name}
-                  className={`object-cover absolute top-0 left-0 rounded-t-lg  ${
+                  className={`object-cover absolute top-0 left-0 rounded-t-lg ${
                     isShopImagesLoaded ? "opacity-100" : "opacity-0 "
                   }`}
                   onLoad={() => setShopImagesLoaded(true)}
