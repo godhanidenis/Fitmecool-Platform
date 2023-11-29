@@ -470,7 +470,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
 
                     <div className="flex gap-2 justify-start items-center mt-2 mb-2">
                       <div className="flex justify-center items-center">
-                        <div className="relative sm:w-6 sm:h-6 w-4 h-4">
+                        <div className="flex justify-center items-center relative sm:w-6 sm:h-6 w-4 h-4">
                           {!isShopLogoLoaded && (
                             <ImageLoadingSkeleton
                               className="rounded-[50%]"

@@ -1695,7 +1695,7 @@ const ShopEdit = () => {
                         type="file"
                         id="shopLogo"
                         name="shopLogo"
-                        accept="image/*"
+                        accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                         className="hidden"
                         {...shopLayoutRegister("shopLogo", {
                           onChange: (e) => {
@@ -1789,7 +1789,7 @@ const ShopEdit = () => {
                         id="shopBackground"
                         name="shopBackground"
                         type="file"
-                        accept="image/*"
+                        accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                         className="hidden"
                         {...shopLayoutRegister("shopBackground", {
                           onChange: (e) => {
@@ -1923,7 +1923,7 @@ const ShopEdit = () => {
                                 <input
                                   id="shopEditId"
                                   type="file"
-                                  accept="image/*"
+                                  accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
                                   multiple
                                   className="hidden"
                                   {...shopLayoutRegister("shopImages", {
