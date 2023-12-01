@@ -1085,6 +1085,7 @@ const ShopPage = () => {
                                   alt="Uploaded Image"
                                   layout="fill"
                                   objectFit="contain"
+                                  className="!object-cover !h-full !w-full !rounded-full !object-center"
                                   objectPosition="center"
                                 />
                               </div>
@@ -1140,6 +1141,7 @@ const ShopPage = () => {
                                   src={shopBackground}
                                   alt="Uploaded Image"
                                   layout="fill"
+                                  className="!object-cover !h-full !w-full !rounded-xl !object-top"
                                   objectFit="contain"
                                 />
                               </div>
@@ -1205,8 +1207,7 @@ const ShopPage = () => {
                                         src={shopImages[index] ?? ""}
                                         alt="Uploaded Image"
                                         layout="fill"
-                                        objectFit="cover"
-                                        objectPosition="center top"
+                                        className="!object-cover !h-full !w-full !rounded-xl !object-top"
                                       />
                                     </div>
                                   ) : (
