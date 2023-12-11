@@ -21,7 +21,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
-import { generateRandomNumberString } from "../../../utils/common";
 import {
   handleUpdateImage,
   handleUploadImage,
