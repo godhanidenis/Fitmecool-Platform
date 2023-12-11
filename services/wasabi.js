@@ -35,10 +35,13 @@ export const fileUpload = (selectedFile) => {
 
 export const fileDelete = async (link, type) => {
   let objectKey =
-    type === "image" ? link.split("/images/")[1] : link.split("/videos/")[1];
+    type === "image"
+      ? link.split("/test-img/")[1]
+      : link.split("/test-videos/")[1];
 
   const params = {
-    Bucket: destinationBucketName + (type === "image" ? "/images" : "/videos"),
+    Bucket:
+      destinationBucketName + (type === "image" ? "/test-img" : "/test-videos"),
     Key: objectKey,
   };
 

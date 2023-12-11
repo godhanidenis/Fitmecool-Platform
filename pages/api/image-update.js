@@ -36,9 +36,9 @@ export default async function handler(req, res) {
         .resize({ width: variant.width, fit: sharp.fit.cover })
         .toBuffer();
 
-      const key = imageUrl?.split("/images/")[1];
+      const key = imageUrl?.split("/test-img/")[1];
 
-      const Bucket = destinationBucketName + "/images";
+      const Bucket = destinationBucketName + "/test-img";
 
       const uploadParams = {
         Bucket: Bucket,

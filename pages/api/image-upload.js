@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         generateRandomNumberString(5) +
         generateFileType(files.image.type);
 
-      const Bucket = destinationBucketName + "/images";
+      const Bucket = destinationBucketName + "/test-img";
 
       const uploadParams = {
         Bucket: Bucket,
