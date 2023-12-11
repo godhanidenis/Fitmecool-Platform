@@ -21,6 +21,11 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
+import { generateRandomNumberString } from "../../../utils/common";
+import {
+  handleUpdateImage,
+  handleUploadImage,
+} from "../../../services/imageApis";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -172,20 +177,20 @@ const AddEditProductPage = ({
         editableProductData?.product_listing_type === "rent" ? false : true
       );
       setProductPriceVisible(!editableProductData?.product_price_visible);
-      editableProductData?.product_image?.front &&
+      editableProductData?.product_image?.front?.medium &&
         setProductImages((old) => [
           ...old,
-          editableProductData?.product_image?.front,
+          editableProductData?.product_image?.front?.medium,
         ]);
-      editableProductData?.product_image?.back &&
+      editableProductData?.product_image?.back?.medium &&
         setProductImages((old) => [
           ...old,
-          editableProductData?.product_image?.back,
+          editableProductData?.product_image?.back?.medium,
         ]);
-      editableProductData?.product_image?.side &&
+      editableProductData?.product_image?.side?.medium &&
         setProductImages((old) => [
           ...old,
-          editableProductData?.product_image?.side,
+          editableProductData?.product_image?.side?.medium,
         ]);
 
       editableProductData?.product_video &&
@@ -217,7 +222,7 @@ const AddEditProductPage = ({
 
   const multipleImageUploadFile = async (uploadProductImages) => {
     const uploadPromises = uploadProductImages.map((uploadProduct) => {
-      return fileUpload(uploadProduct);
+      return handleUploadImage(uploadProduct);
     });
 
     try {
@@ -234,6 +239,7 @@ const AddEditProductPage = ({
 
     if (productImage) {
       const keyMap = ["front", "back", "side"];
+
       return productImage[keyMap[index]];
     }
   };
@@ -267,9 +273,8 @@ const AddEditProductPage = ({
           const uploadPromises = uploadProductImages.map(
             (uploadProduct, index) => {
               if (uploadProduct) {
-                return fileUpdate(
+                return handleUpdateImage(
                   updateProductKey(index),
-                  "image",
                   uploadProduct
                 );
               }
@@ -310,6 +315,19 @@ const AddEditProductPage = ({
           }
         }
 
+        // Function to remove the "__typename" key from the object
+        const removeTypenameKey = (obj) => {
+          const newObj = { ...obj }; // Create a shallow copy of the original object
+          Object.keys(newObj).forEach((key) => {
+            delete newObj[key].__typename; // Remove "__typename" from nested objects
+          });
+          return newObj;
+        };
+
+        const oldImageData = removeTypenameKey(
+          editableProductData.product_image
+        );
+
         await updateProduct({
           id: editableProductData?.id,
           productInfo: {
@@ -321,10 +339,9 @@ const AddEditProductPage = ({
             product_name: data.product_name,
             product_type: data.product_type,
             product_image: {
-              front:
-                imagesResponse[0] || editableProductData.product_image.front,
-              back: imagesResponse[1] || editableProductData.product_image.back,
-              side: imagesResponse[2] || editableProductData.product_image.side,
+              front: imagesResponse[0] || oldImageData?.front,
+              back: imagesResponse[1] || oldImageData?.back,
+              side: imagesResponse[2] || oldImageData?.side,
             },
             product_video:
               videoResponse ||
@@ -336,7 +353,6 @@ const AddEditProductPage = ({
           },
         }).then(
           (res) => {
-            console.log("res:::", res);
             toast.success(res.data.updateProduct.message, {
               theme: "colored",
             });
@@ -359,6 +375,7 @@ const AddEditProductPage = ({
             (res) => (productImagesRes = res)
           );
         }
+
         if (uploadProductVideo) {
           await fileUpload(uploadProductVideo)
             .then((res) => (productVideoRes = res))
@@ -389,7 +406,6 @@ const AddEditProductPage = ({
           },
         }).then(
           (res) => {
-            console.log("res:::", res);
             toast.success(res.data.createProduct.message, {
               theme: "colored",
             });

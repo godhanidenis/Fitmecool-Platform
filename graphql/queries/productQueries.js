@@ -34,9 +34,21 @@ export const getProducts = async (payload) => {
               flag
             }
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             product_video
             branchInfo {
@@ -86,9 +98,21 @@ export const getProductDetails = async (payload) => {
             product_name
             product_description
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             product_video
             product_color
@@ -118,9 +142,21 @@ export const getProductDetails = async (payload) => {
             id
             product_name
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             branchInfo {
               shop_id

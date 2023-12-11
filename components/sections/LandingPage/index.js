@@ -23,6 +23,7 @@ import { getShops } from "../../../graphql/queries/shopQueries";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "next/link";
+import { generateRandomNumberString } from "../../../utils/common";
 
 const responsive = {
   superLargeDesktop: {
@@ -75,6 +76,84 @@ const LandingPage = () => {
     formState: { errors },
     reset,
   } = useForm();
+
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+  };
+
+  const handleSubmit1 = async (event) => {
+    event.preventDefault();
+
+    if (!file) {
+      alert("Please choose a file");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append(
+      "shop_name",
+      `bhargesh-test-shop-${generateRandomNumberString(5)}`
+    );
+    formData.append(
+      "product_name",
+      `bhargesh-test-product-${generateRandomNumberString(5)}`
+    );
+
+    try {
+      const response = await fetch("/api/image-upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log("Image uploaded successfully:", response);
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("result :>> ", result.imageUrls);
+      } else {
+        console.error("Error uploading image:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error.message);
+    }
+  };
+
+  // const handleSubmit1 = async (event) => {
+  //   event.preventDefault();
+
+  //   if (!file) {
+  //     alert("Please choose a file");
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("image", file);
+  //   formData.append(
+  //     "link",
+  //     "https://s3.us-east-1.wasabisys.com/rentbless-dev/test-img1/170226916374543800.png"
+  //   );
+  //   formData.append("type", "image");
+
+  //   try {
+  //     const response = await fetch("/api/image-update", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       console.log("Image uploaded successfully:", result.imagePath);
+  //     } else {
+  //       console.error("Error uploading image:", response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error.message);
+  //   }
+  // };
 
   const onSubmit = async (data) => {
     console.log("data", data);
@@ -168,6 +247,10 @@ const LandingPage = () => {
 
   return (
     <>
+      <form onSubmit={handleSubmit1}>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <button type="submit">Upload Image</button>
+      </form>
       <BannerHero carouselItems={carouselItems} className="cursor-pointer" />
       <div className="flex flex-col justify-center mt-1 md:mt-8">
         <div className="text-center">

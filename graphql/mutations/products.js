@@ -18,9 +18,21 @@ export const productLike = async (payload) => {
               flag
             }
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             branchInfo {
               id

@@ -118,7 +118,7 @@ const VenderProductTable = ({
                         <Image
                           objectFit="cover"
                           objectPosition="center top"
-                          src={item?.product_image?.front ?? ""}
+                          src={item?.product_image?.front?.small ?? ""}
                           unoptimized={true}
                           width={"100%"}
                           height={"100%"}
@@ -221,7 +221,13 @@ const VenderProductTable = ({
           deleteModalOpen={productDeleteModalOpen}
           setDeleteModalOpen={setProductDeleteModalOpen}
           onClickItemDelete={async () => {
-            await deleteImageFiles(deletableProductsImages, "image");
+            await deleteImageFiles(
+              deletableProductsImages.flatMap((image) => {
+                const { __typename, ...restOfImage } = image;
+                return Object.values(restOfImage);
+              }),
+              "image"
+            );
 
             if (deletableProductVideo) {
               await deleteImageFiles([deletableProductVideo], "video");

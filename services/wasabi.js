@@ -1,21 +1,5 @@
-import { generateRandomNumberString } from "../utils/common";
+import { generateFileType, generateRandomNumberString } from "../utils/common";
 import { destinationBucketName, s3 } from "../wasabi/config";
-
-const generateFileType = (fileType) => {
-  if (fileType === "image/png") {
-    return ".png";
-  } else if (fileType === "image/jpeg") {
-    return ".jpeg";
-  } else if (fileType === "image/jpg") {
-    return ".jpg";
-  } else if (fileType === "image/webp") {
-    return ".webp";
-  } else if (fileType === "image/heic") {
-    return ".heic";
-  } else if (fileType === "video/mp4") {
-    return ".mp4";
-  }
-};
 
 export const fileUpload = (selectedFile) => {
   return new Promise((resolve, reject) => {
@@ -51,13 +35,10 @@ export const fileUpload = (selectedFile) => {
 
 export const fileDelete = async (link, type) => {
   let objectKey =
-    type === "image"
-      ? link.split("/test-img/")[1]
-      : link.split("/test-videos/")[1];
+    type === "image" ? link.split("/images/")[1] : link.split("/videos/")[1];
 
   const params = {
-    Bucket:
-      destinationBucketName + (type === "image" ? "/test-img" : "/test-videos"),
+    Bucket: destinationBucketName + (type === "image" ? "/images" : "/videos"),
     Key: objectKey,
   };
 

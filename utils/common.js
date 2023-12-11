@@ -61,3 +61,19 @@ export const scrollToTitleName = () => {
     });
   }
 };
+
+export const generateFileType = (fileType) => {
+  if (fileType === "image/png") {
+    return ".png";
+  } else if (fileType === "image/jpeg") {
+    return ".jpeg";
+  } else if (fileType === "image/jpg") {
+    return ".jpg";
+  } else if (fileType === "image/webp") {
+    return ".webp";
+  } else if (fileType === "image/heic") {
+    return ".heic";
+  } else if (fileType === "video/mp4") {
+    return ".mp4";
+  }
+};

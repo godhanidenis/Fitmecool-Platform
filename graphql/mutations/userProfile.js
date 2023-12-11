@@ -24,9 +24,21 @@ export const getUserProfile = async () => {
             id
             product_name
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             branchInfo {
               id
