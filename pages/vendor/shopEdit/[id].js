@@ -49,6 +49,10 @@ import {
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
 import { loadProductsStart } from "../../../redux/ducks/product";
+import {
+  handleUpdateImage,
+  handleUploadImage,
+} from "../../../services/imageApis";
 
 const style = {
   position: "absolute",
@@ -151,6 +155,8 @@ const ShopEdit = () => {
   const [deleteShopBackground, setDeleteShopBackground] = useState("");
 
   const [shopImages, setShopImages] = useState([]);
+
+  console.log("shopImages :>> ", shopImages);
   const [shopImagesWasabiUrl, setShopImageWasabiUrl] = useState([]);
   const [editableShopImages, setEditableShopImages] = useState([]);
   const [ShopEditImg, setShopEditImg] = useState("");
@@ -494,10 +500,11 @@ const ShopEdit = () => {
     }
 
     if (vendorShopDetails && individual ? value === 3 : value === 4) {
-      vendorShopDetails?.shop_logo && setShopLogo(vendorShopDetails?.shop_logo);
+      vendorShopDetails?.shop_logo?.large &&
+        setShopLogo(vendorShopDetails?.shop_logo?.large);
 
-      vendorShopDetails?.shop_cover_image &&
-        setShopBackground(vendorShopDetails?.shop_cover_image);
+      vendorShopDetails?.shop_cover_image?.small &&
+        setShopBackground(vendorShopDetails?.shop_cover_image?.small);
 
       vendorShopDetails?.shop_images &&
         setShopImageWasabiUrl([...vendorShopDetails?.shop_images]);
@@ -652,7 +659,7 @@ const ShopEdit = () => {
       console.error("Error deleting files:", error);
     }
   };
-
+  console.log("editableShopImages :>> ", editableShopImages);
   const shopLayoutOnSubmit = async (data) => {
     setShopLayoutLoading(true);
 
@@ -662,16 +669,33 @@ const ShopEdit = () => {
     let videoResponse = null;
 
     if (deleteShopLogo) {
-      await deleteImageFiles([deleteShopLogo], "image");
+      await deleteImageFiles(
+        [deleteShopLogo].flatMap((image) => {
+          const { __typename, ...restOfImage } = image;
+          return Object.values(restOfImage);
+        }),
+        "image"
+      );
     }
 
     if (deleteShopBackground) {
-      await deleteImageFiles([deleteShopBackground], "image");
+      await deleteImageFiles(
+        [deleteShopBackground].flatMap((image) => {
+          const { __typename, ...restOfImage } = image;
+          return Object.values(restOfImage);
+        }),
+        "image"
+      );
     }
 
     if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
       await deleteImageFiles(
-        deleteShopImages?.filter((itm) => itm !== undefined),
+        deleteShopImages
+          ?.filter((itm) => itm !== undefined)
+          .flatMap((image) => {
+            const { __typename, ...restOfImage } = image;
+            return Object.values(restOfImage);
+          }),
         "image"
       );
     }
@@ -681,12 +705,12 @@ const ShopEdit = () => {
     }
 
     if (uploadShopLogo) {
-      if (vendorShopDetails?.shop_logo) {
+      if (vendorShopDetails?.shop_logo?.large) {
         try {
-          const shopLogoRes = await fileUpdate(
+          const shopLogoRes = await handleUpdateImage(
             vendorShopDetails?.shop_logo,
-            "image",
-            uploadShopLogo
+            uploadShopLogo,
+            "shop-logo"
           );
           logoResponse = shopLogoRes;
         } catch (error) {
@@ -695,7 +719,10 @@ const ShopEdit = () => {
         }
       } else {
         try {
-          const shopLogoRes = await fileUpload(uploadShopLogo);
+          const shopLogoRes = await handleUploadImage(
+            uploadShopLogo,
+            "shop-logo"
+          );
           logoResponse = shopLogoRes;
         } catch (error) {
           console.error("Error during file upload:", error);
@@ -705,12 +732,12 @@ const ShopEdit = () => {
     }
 
     if (uploadShopBackground) {
-      if (vendorShopDetails?.shop_cover_image) {
+      if (vendorShopDetails?.shop_cover_image?.small) {
         try {
-          const shopCoverRes = await fileUpdate(
+          const shopCoverRes = await handleUpdateImage(
             vendorShopDetails?.shop_cover_image,
-            "image",
-            uploadShopBackground
+            uploadShopBackground,
+            "shop-cover"
           );
           backgroundResponse = shopCoverRes;
         } catch (error) {
@@ -719,7 +746,10 @@ const ShopEdit = () => {
         }
       } else {
         try {
-          const shopCoverRes = await fileUpload(uploadShopBackground);
+          const shopCoverRes = await handleUploadImage(
+            uploadShopBackground,
+            "shop-cover"
+          );
           backgroundResponse = shopCoverRes;
         } catch (error) {
           console.error("Error during file upload:", error);
@@ -733,9 +763,13 @@ const ShopEdit = () => {
         ?.filter((itm) => itm !== undefined)
         ?.map((shopImage) => {
           if (shopImage?.oldLink) {
-            return fileUpdate(shopImage?.oldLink, "image", shopImage?.newData);
+            return handleUpdateImage(
+              shopImage?.oldLink,
+              shopImage?.newData,
+              "shop-image"
+            );
           } else {
-            return fileUpload(shopImage?.newData);
+            return handleUploadImage(shopImage?.newData, "shop-image");
           }
         });
 
@@ -772,10 +806,41 @@ const ShopEdit = () => {
       }
     }
 
-    const existingLinks = shopImagesWasabiUrl.map((item) => item.links);
+    // Remove "__typename" key from each object
+    const newShopImagesWasabiUrl = shopImagesWasabiUrl.map((item) => {
+      const updatedItem = { ...item };
+
+      // Remove "__typename" property from every key
+      Object.keys(updatedItem).forEach((key) => {
+        if (key === "__typename") {
+          delete updatedItem[key];
+        } else if (
+          typeof updatedItem[key] === "object" &&
+          updatedItem[key] !== null
+        ) {
+          // If the property is an object, apply the same process recursively
+          updatedItem[key] = Object.keys(updatedItem[key]).reduce(
+            (acc, innerKey) => {
+              if (innerKey !== "__typename") {
+                acc[innerKey] = updatedItem[key][innerKey];
+              }
+              return acc;
+            },
+            {}
+          );
+        }
+      });
+
+      return updatedItem;
+    });
+
+    const existingLinks = newShopImagesWasabiUrl.map((item) => item.links);
 
     const filteredImageResponse = imagesResponse.filter(
-      (item) => !existingLinks.includes(item)
+      (item) =>
+        !existingLinks.some(
+          (link) => link.medium === item.medium && link.small === item.small
+        )
     );
 
     let combinedLinks = [
@@ -791,15 +856,49 @@ const ShopEdit = () => {
       });
     }
 
+    const { __typename: shopLogoTypename, ...newShopLogoVariants } =
+      vendorShopDetails?.shop_logo;
+
+    const { __typename: shopCoverTypename, ...newShopCoverVariants } =
+      vendorShopDetails?.shop_cover_image;
+
+    // Remove "__typename" key from each object
+    const newCombineData = combinedLinks.map((item) => {
+      const updatedItem = { ...item };
+
+      // Remove "__typename" property from every key
+      Object.keys(updatedItem).forEach((key) => {
+        if (key === "__typename") {
+          delete updatedItem[key];
+        } else if (
+          typeof updatedItem[key] === "object" &&
+          updatedItem[key] !== null
+        ) {
+          // If the property is an object, apply the same process recursively
+          updatedItem[key] = Object.keys(updatedItem[key]).reduce(
+            (acc, innerKey) => {
+              if (innerKey !== "__typename") {
+                acc[innerKey] = updatedItem[key][innerKey];
+              }
+              return acc;
+            },
+            {}
+          );
+        }
+      });
+
+      return updatedItem;
+    });
+
+    console.log("combinedLinks newCombineData :>> ", newCombineData);
     await shopUpdate({
       shopLayout: {
         id: userProfile?.userCreatedShopId,
-        shop_logo:
-          logoResponse || (deleteShopLogo ? "" : vendorShopDetails?.shop_logo),
+        shop_logo: logoResponse || (deleteShopLogo ? {} : newShopLogoVariants),
         shop_cover_image:
           backgroundResponse ||
-          (deleteShopBackground ? "" : vendorShopDetails?.shop_cover_image),
-        shop_images: combinedLinks?.map((item) => ({
+          (deleteShopBackground ? {} : newShopCoverVariants),
+        shop_images: newCombineData?.map((item) => ({
           links: item.links,
         })),
         shop_video:
@@ -1884,7 +1983,9 @@ const ShopEdit = () => {
 
                                     <div className="w-full relative h-full">
                                       <Image
-                                        src={image?.links}
+                                        src={
+                                          image?.links?.medium || image?.links
+                                        }
                                         alt="Uploaded Image"
                                         className="!object-cover !h-full !w-full !rounded-xl !object-top"
                                         layout="fill"

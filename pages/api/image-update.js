@@ -2,6 +2,12 @@ import sharp from "sharp";
 import formidable from "formidable-serverless";
 import fs from "fs";
 import { destinationBucketName, s3 } from "../../wasabi/config";
+import {
+  productImageSizeVariants,
+  shopCoverSizeVariants,
+  shopImageSizeVariants,
+  shopLogoSizeVariants,
+} from "../../utils/common";
 
 export const config = {
   api: {
@@ -19,12 +25,15 @@ export default async function handler(req, res) {
     }
 
     // Define an array of size variants
-    const sizeVariants = [
-      { width: 126, size: "small" },
-      { width: 300, size: "medium" },
-      { width: 600, size: "large" },
-      // Add more size variants as needed
-    ];
+    const sizeVariants =
+      (fields?.uploadImageSectionType === "product-image" &&
+        productImageSizeVariants) ||
+      (fields?.uploadImageSectionType === "shop-logo" &&
+        shopLogoSizeVariants) ||
+      (fields?.uploadImageSectionType === "shop-cover" &&
+        shopCoverSizeVariants) ||
+      (fields?.uploadImageSectionType === "shop-image" &&
+        shopImageSizeVariants);
 
     const uploadPromises = sizeVariants.map(async (variant) => {
       const imageUrl = JSON.parse(fields.links)[variant.size];
@@ -36,9 +45,9 @@ export default async function handler(req, res) {
         .resize({ width: variant.width, fit: sharp.fit.cover })
         .toBuffer();
 
-      const key = imageUrl?.split("/test-img/")[1];
+      const key = imageUrl?.split("/test-img1/")[1];
 
-      const Bucket = destinationBucketName + "/test-img";
+      const Bucket = destinationBucketName + "/test-img1";
 
       const uploadParams = {
         Bucket: Bucket,

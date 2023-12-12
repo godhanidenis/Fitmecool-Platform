@@ -43,6 +43,7 @@ import {
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
 import { useCallback } from "react";
+import { handleUploadImage } from "../../../services/imageApis";
 
 const style = {
   position: "absolute",
@@ -379,7 +380,7 @@ const ShopPage = () => {
 
   const multipleImageUploadFile = async (uploadShopImages) => {
     const uploadPromises = uploadShopImages?.map((uploadShopImg) => {
-      return fileUpload(uploadShopImg);
+      return handleUploadImage(uploadShopImg, "shop-image");
     });
 
     try {
@@ -403,7 +404,7 @@ const ShopPage = () => {
       let videoResponse = null;
 
       if (uploadShopLogo) {
-        await fileUpload(uploadShopLogo)
+        await handleUploadImage(uploadShopLogo, "shop-logo")
           .then((res) => (logoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -411,7 +412,7 @@ const ShopPage = () => {
       }
 
       if (uploadShopBackground) {
-        await fileUpload(uploadShopBackground)
+        await handleUploadImage(uploadShopBackground, "shop-cover")
           .then((res) => (backgroundResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);

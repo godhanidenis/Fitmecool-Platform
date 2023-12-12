@@ -4,6 +4,10 @@ import fs from "fs";
 import {
   generateFileType,
   generateRandomNumberString,
+  productImageSizeVariants,
+  shopCoverSizeVariants,
+  shopImageSizeVariants,
+  shopLogoSizeVariants,
 } from "../../utils/common";
 import { destinationBucketName, s3 } from "../../wasabi/config";
 
@@ -25,12 +29,15 @@ export default async function handler(req, res) {
     const imageBuffer = fs.readFileSync(files.image.path);
 
     // Define an array of size variants
-    const sizeVariants = [
-      { width: 126, size: "small" },
-      { width: 300, size: "medium" },
-      { width: 600, size: "large" },
-      // Add more size variants as needed
-    ];
+    const sizeVariants =
+      (fields?.uploadImageSectionType === "product-image" &&
+        productImageSizeVariants) ||
+      (fields?.uploadImageSectionType === "shop-logo" &&
+        shopLogoSizeVariants) ||
+      (fields?.uploadImageSectionType === "shop-cover" &&
+        shopCoverSizeVariants) ||
+      (fields?.uploadImageSectionType === "shop-image" &&
+        shopImageSizeVariants);
 
     // Process each size variant
     const uploadPromises = sizeVariants.map(async (variant) => {
@@ -43,7 +50,7 @@ export default async function handler(req, res) {
         generateRandomNumberString(5) +
         generateFileType(files.image.type);
 
-      const Bucket = destinationBucketName + "/test-img";
+      const Bucket = destinationBucketName + "/test-img1";
 
       const uploadParams = {
         Bucket: Bucket,

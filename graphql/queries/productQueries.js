@@ -55,7 +55,12 @@ export const getProducts = async (payload) => {
               id
               shop_id
               shop_info {
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_name
               }
             }
@@ -124,7 +129,12 @@ export const getProductDetails = async (payload) => {
               shop_id
               shop_info {
                 shop_name
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_rating
                 createdAt
               }
@@ -161,7 +171,12 @@ export const getProductDetails = async (payload) => {
             branchInfo {
               shop_id
               shop_info {
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_name
               }
             }

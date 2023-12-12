@@ -81,7 +81,7 @@ function MyApp({ Component, pageProps }) {
           property="og:image"
           content={
             pageProps?.productDetails?.data?.product?.data?.product_image?.front
-              ?.small || pageProps?.shopDetails?.data?.shop.shop_logo
+              ?.small || pageProps?.shopDetails?.data?.shop.shop_logo?.small
           }
         />
         <meta

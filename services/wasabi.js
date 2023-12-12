@@ -11,7 +11,7 @@ export const fileUpload = (selectedFile) => {
         selectedFile?.type === "image/jpg" ||
         selectedFile?.type === "image/webp" ||
         selectedFile?.type === "image/heic"
-          ? "/test-img"
+          ? "/test-img1"
           : "/test-videos"),
       Key:
         new Date().getTime().toString() +
@@ -36,12 +36,12 @@ export const fileUpload = (selectedFile) => {
 export const fileDelete = async (link, type) => {
   let objectKey =
     type === "image"
-      ? link.split("/test-img/")[1]
+      ? link.split("/test-img1/")[1]
       : link.split("/test-videos/")[1];
 
   const params = {
     Bucket:
-      destinationBucketName + (type === "image" ? "/test-img" : "/test-videos"),
+      destinationBucketName + (type === "image" ? "/test-img1" : "/test-videos"),
     Key: objectKey,
   };
 
@@ -58,13 +58,13 @@ export const fileUpdate = (link, type, selectedFile) => {
   return new Promise((resolve, reject) => {
     let objectKey =
       type === "image"
-        ? link?.split("/test-img/")[1]
+        ? link?.split("/test-img1/")[1]
         : link?.split("/test-videos/")[1];
 
     const params = {
       Bucket:
         destinationBucketName +
-        (type === "image" ? "/test-img" : "/test-videos"),
+        (type === "image" ? "/test-img1" : "/test-videos"),
       Key: objectKey,
       Body: selectedFile,
       ContentEncoding: "base64",

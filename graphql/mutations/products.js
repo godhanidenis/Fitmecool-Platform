@@ -38,7 +38,12 @@ export const productLike = async (payload) => {
               id
               shop_id
               shop_info {
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_name
               }
             }

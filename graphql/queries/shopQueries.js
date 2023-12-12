@@ -43,10 +43,22 @@ export const getShops = async (payload) => {
           data {
             id
             shop_name
-            shop_logo
-            shop_cover_image
+            shop_logo {
+              extraSmall
+              small
+              medium
+              large
+            }
+            shop_cover_image {
+              large
+              medium
+              small
+            }
             shop_images {
-              links
+              links {
+                medium
+                small
+              }
             }
             shopFollowerCount
             shop_rating
@@ -79,8 +91,17 @@ export const getShopDetails = async (payload) => {
         shop(id: $shopId) {
           id
           shop_name
-          shop_logo
-          shop_cover_image
+          shop_logo {
+            extraSmall
+            small
+            medium
+            large
+          }
+          shop_cover_image {
+            large
+            medium
+            small
+          }
           shop_video
           branch_info {
             id
@@ -129,10 +150,22 @@ export const getVendorShopDetails = async (payload) => {
             owner_email
             owner_contact
           }
-          shop_logo
-          shop_cover_image
+          shop_logo {
+            extraSmall
+            small
+            medium
+            large
+          }
+          shop_cover_image {
+            large
+            medium
+            small
+          }
           shop_images {
-            links
+            links {
+              medium
+              small
+            }
           }
           shop_video
           shop_type

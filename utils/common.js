@@ -77,3 +77,63 @@ export const generateFileType = (fileType) => {
     return ".mp4";
   }
 };
+
+export const productImageSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_PRODUCT_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_PRODUCT_MEDIUM_VARIANT),
+    size: "medium",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_PRODUCT_LARGE_VARIANT),
+    size: "large",
+  },
+];
+
+export const shopLogoSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_EXTRA_SMALL_VARIANT),
+    size: "extraSmall",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_MEDIUM_VARIANT),
+    size: "medium",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_LARGE_VARIANT),
+    size: "large",
+  },
+];
+
+export const shopCoverSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_COVER_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_COVER_MEDIUM_VARIANT),
+    size: "medium",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_COVER_LARGE_VARIANT),
+    size: "large",
+  },
+];
+
+export const shopImageSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_MEDIUM_VARIANT),
+    size: "medium",
+  },
+];

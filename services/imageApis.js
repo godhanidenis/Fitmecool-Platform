@@ -1,6 +1,7 @@
-export const handleUploadImage = async (file) => {
+export const handleUploadImage = async (file, uploadImageSectionType) => {
   const formData = new FormData();
   formData.append("image", file);
+  formData.append("uploadImageSectionType", uploadImageSectionType);
 
   try {
     const response = await fetch("/api/image-upload", {
@@ -19,10 +20,15 @@ export const handleUploadImage = async (file) => {
   }
 };
 
-export const handleUpdateImage = async (links, file) => {
+export const handleUpdateImage = async (
+  links,
+  file,
+  uploadImageSectionType
+) => {
   const formData = new FormData();
   formData.append("image", file);
   formData.append("links", JSON.stringify(links));
+  formData.append("uploadImageSectionType", uploadImageSectionType);
 
   try {
     const response = await fetch("/api/image-update", {

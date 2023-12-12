@@ -221,7 +221,7 @@ const AddEditProductPage = ({
 
   const multipleImageUploadFile = async (uploadProductImages) => {
     const uploadPromises = uploadProductImages.map((uploadProduct) => {
-      return handleUploadImage(uploadProduct);
+      return handleUploadImage(uploadProduct, "product-image");
     });
 
     try {
@@ -274,7 +274,8 @@ const AddEditProductPage = ({
               if (uploadProduct) {
                 return handleUpdateImage(
                   updateProductKey(index),
-                  uploadProduct
+                  uploadProduct,
+                  "product-image"
                 );
               }
             }
