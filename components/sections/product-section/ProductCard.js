@@ -103,15 +103,15 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   useEffect(() => {
     const initialPhotos = [
       {
-        src: product.product_image?.front,
+        src: product.product_image?.front?.medium,
         type: "image",
       },
       {
-        src: product.product_image?.back,
+        src: product.product_image?.back?.medium,
         type: "image",
       },
       {
-        src: product.product_image?.side,
+        src: product.product_image?.side?.medium,
         type: "image",
       },
     ];
@@ -284,7 +284,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                           <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
                         ) : (
                           <Image
-                            src={product.product_image?.front ?? ""}
+                            src={product.product_image?.front?.medium ?? ""}
                             alt={product?.product_name}
                             className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
                               isProductImagesLoaded
@@ -480,7 +480,8 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                           <Image
                             alt="Shop Logo"
                             src={
-                              product?.branchInfo?.shop_info?.shop_logo ?? ""
+                              product?.branchInfo?.shop_info?.shop_logo
+                                ?.extraSmall ?? ""
                             }
                             layout="fill"
                             className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
