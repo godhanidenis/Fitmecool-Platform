@@ -10,6 +10,7 @@ import { deleteAccount } from "../../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
 import { userLogout } from "../../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+import { deleteObjectsInFolder } from "../../../services/wasabi";
 
 const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
   const router = useRouter();
@@ -137,7 +138,10 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         setDeleteModalOpen={setProductDeleteModalOpen}
         onClickItemDelete={async () => {
           await deleteAccount({ id: vendorShopDetails?.user_id }).then(
-            (res) => {
+            async (res) => {
+              const folderStructure = `user_${vendorShopDetails?.user_id}`;
+              await deleteObjectsInFolder(folderStructure);
+
               for (let key in localStorage) {
                 if (key !== "selected_city") {
                   localStorage.removeItem(key);

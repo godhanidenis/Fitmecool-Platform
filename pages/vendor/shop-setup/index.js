@@ -44,6 +44,7 @@ import {
 } from "../../../graphql/queries/areaListsQueries";
 import { useCallback } from "react";
 import { handleUploadImage } from "../../../services/imageApis";
+import { generateRandomNumberString } from "../../../utils/common";
 
 const style = {
   position: "absolute",
@@ -380,7 +381,10 @@ const ShopPage = () => {
 
   const multipleImageUploadFile = async (uploadShopImages) => {
     const uploadPromises = uploadShopImages?.map((uploadShopImg) => {
-      return handleUploadImage(uploadShopImg, "shop-image");
+      const folderStructure = `user_${userProfile.id}/shop/shop_img/${
+        new Date().getTime().toString() + generateRandomNumberString(5)
+      }`;
+      return handleUploadImage(uploadShopImg, "shop-image", folderStructure);
     });
 
     try {
@@ -404,7 +408,8 @@ const ShopPage = () => {
       let videoResponse = null;
 
       if (uploadShopLogo) {
-        await handleUploadImage(uploadShopLogo, "shop-logo")
+        const folderStructure = `user_${userProfile.id}/shop/logo`;
+        await handleUploadImage(uploadShopLogo, "shop-logo", folderStructure)
           .then((res) => (logoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -412,7 +417,12 @@ const ShopPage = () => {
       }
 
       if (uploadShopBackground) {
-        await handleUploadImage(uploadShopBackground, "shop-cover")
+        const folderStructure = `user_${userProfile.id}/shop/cover `;
+        await handleUploadImage(
+          uploadShopBackground,
+          "shop-cover",
+          folderStructure
+        )
           .then((res) => (backgroundResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -426,7 +436,8 @@ const ShopPage = () => {
       }
 
       if (uploadShopVideo) {
-        await fileUpload(uploadShopVideo)
+        const folderStructure = `user_${userProfile.id}/shop/video`;
+        await fileUpload(uploadShopVideo, folderStructure)
           .then((res) => (videoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -443,8 +454,8 @@ const ShopPage = () => {
           user_id: userProfile.id,
         },
         shopInfo: {
-          shop_logo: logoResponse || "",
-          shop_cover_image: backgroundResponse || "",
+          shop_logo: logoResponse || {},
+          shop_cover_image: backgroundResponse || {},
           shop_images:
             imagesResponse?.map((itm) => {
               return { links: itm };
@@ -494,7 +505,6 @@ const ShopPage = () => {
         ],
       }).then(
         (res) => {
-          console.log("res:::", res);
           dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
           toast.success(res.data.createShop.message, {
             theme: "colored",
@@ -1999,7 +2009,6 @@ const SubBranchModal = ({
   }, [subBranchEdit]);
 
   const subBranchSubmit = () => {
-    console.log("subBranch :>> ", subBranch);
     let allError = {};
     if (!subManagerAddress) {
       allError.subManagerAddressError = "SubManagerAddress is require";

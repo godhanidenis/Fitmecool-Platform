@@ -2,8 +2,6 @@ import sharp from "sharp";
 import formidable from "formidable-serverless";
 import fs from "fs";
 import {
-  generateFileType,
-  generateRandomNumberString,
   productImageSizeVariants,
   shopCoverSizeVariants,
   shopImageSizeVariants,
@@ -45,12 +43,19 @@ export default async function handler(req, res) {
         .resize({ width: variant.width, fit: sharp.fit.cover })
         .toBuffer();
 
-      const key =
-        new Date().getTime().toString() +
-        generateRandomNumberString(5) +
-        generateFileType(files.image.type);
+      let extensionIndex = files.image.name.lastIndexOf(".");
+      let newName =
+        files.image.name.substring(0, extensionIndex) +
+        "_" +
+        variant.size +
+        files.image.name.substring(extensionIndex);
 
-      const Bucket = destinationBucketName + "/test-img1";
+      console.log(newName);
+
+      const key = newName.replaceAll(" ", "_");
+
+      const Bucket =
+        destinationBucketName + "/seller/" + fields?.folderStructure;
 
       const uploadParams = {
         Bucket: Bucket,
@@ -60,9 +65,8 @@ export default async function handler(req, res) {
       };
 
       try {
-        await s3.upload(uploadParams).promise();
-        const imageUrl = `https://s3.us-east-1.wasabisys.com/${Bucket}/${key}`;
-        return { success: true, size: variant.size, imageUrl };
+        const data = await s3.upload(uploadParams).promise();
+        return { success: true, size: variant.size, imageUrl: data?.Location };
       } catch (uploadError) {
         console.error("Error uploading image to S3:", uploadError);
         return {

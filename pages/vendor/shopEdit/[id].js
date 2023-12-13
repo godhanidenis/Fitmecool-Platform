@@ -40,7 +40,7 @@ import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import { HoursModal } from "../shop-setup";
 import { useRouter } from "next/router";
-import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
+import { deleteObjectsInFolder, fileUpload } from "../../../services/wasabi";
 import Image from "next/image";
 import CustomAutoCompleteTextField from "../../../components/core/CustomAutoCompleteTextField";
 import {
@@ -49,10 +49,8 @@ import {
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
 import { loadProductsStart } from "../../../redux/ducks/product";
-import {
-  handleUpdateImage,
-  handleUploadImage,
-} from "../../../services/imageApis";
+import { handleUploadImage } from "../../../services/imageApis";
+import { generateRandomNumberString } from "../../../utils/common";
 
 const style = {
   position: "absolute",
@@ -156,8 +154,8 @@ const ShopEdit = () => {
 
   const [shopImages, setShopImages] = useState([]);
 
-  console.log("shopImages :>> ", shopImages);
   const [shopImagesWasabiUrl, setShopImageWasabiUrl] = useState([]);
+
   const [editableShopImages, setEditableShopImages] = useState([]);
   const [ShopEditImg, setShopEditImg] = useState("");
   const [deleteShopImages, setDeleteShopImages] = useState([]);
@@ -315,6 +313,11 @@ const ShopEdit = () => {
     };
 
     setEditableShopImages(() => [...editableShopImagesData]);
+
+    let updatedShopImagesWasabiUrl = shopImagesWasabiUrl;
+    updatedShopImagesWasabiUrl[ShopEditImg] = {};
+
+    setShopImageWasabiUrl(() => [...updatedShopImagesWasabiUrl]);
 
     files.forEach((file) => {
       shopImagesData[ShopEditImg] = { links: URL.createObjectURL(file) };
@@ -485,7 +488,7 @@ const ShopEdit = () => {
       } else {
         setSameAsOwner("False");
       }
-      console.log("mainBranches", mainBranches);
+
       mainBranchInfoSetValue("address", mainBranches?.branch_address);
       mainBranchInfoSetValue("state", mainBranches?.branch_state);
       mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
@@ -649,17 +652,11 @@ const ShopEdit = () => {
   const mainBranchInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
-  const deleteImageFiles = async (deletableProducts, type) => {
-    try {
-      const deletionPromises = deletableProducts.map((deleteProduct) =>
-        fileDelete(deleteProduct, type)
-      );
-      await Promise.all(deletionPromises);
-    } catch (error) {
-      console.error("Error deleting files:", error);
-    }
+  const deleteWasabiFolder = async (folderName) => {
+    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    await deleteObjectsInFolder(folderStructure);
   };
-  console.log("editableShopImages :>> ", editableShopImages);
+
   const shopLayoutOnSubmit = async (data) => {
     setShopLayoutLoading(true);
 
@@ -669,113 +666,60 @@ const ShopEdit = () => {
     let videoResponse = null;
 
     if (deleteShopLogo) {
-      await deleteImageFiles(
-        [deleteShopLogo].flatMap((image) => {
-          const { __typename, ...restOfImage } = image;
-          return Object.values(restOfImage);
-        }),
-        "image"
-      );
+      deleteWasabiFolder("logo");
     }
 
     if (deleteShopBackground) {
-      await deleteImageFiles(
-        [deleteShopBackground].flatMap((image) => {
-          const { __typename, ...restOfImage } = image;
-          return Object.values(restOfImage);
-        }),
-        "image"
-      );
-    }
-
-    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
-      await deleteImageFiles(
-        deleteShopImages
-          ?.filter((itm) => itm !== undefined)
-          .flatMap((image) => {
-            const { __typename, ...restOfImage } = image;
-            return Object.values(restOfImage);
-          }),
-        "image"
-      );
+      deleteWasabiFolder("cover");
     }
 
     if (deleteShopVideo) {
-      await deleteImageFiles([deleteShopVideo], "video");
+      deleteWasabiFolder("video");
+    }
+
+    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
+      deleteShopImages
+        ?.filter((itm) => itm !== undefined)
+        ?.map(async (item) => {
+          const splitStringAfterShop = item?.medium?.split("/shop/")[1];
+          const urlParts = splitStringAfterShop.split("/");
+          const lastPart = urlParts.pop();
+          const stringWithoutLastWord = urlParts.join("/");
+          await deleteWasabiFolder(stringWithoutLastWord);
+        });
     }
 
     if (uploadShopLogo) {
       if (vendorShopDetails?.shop_logo?.large) {
-        try {
-          const shopLogoRes = await handleUpdateImage(
-            vendorShopDetails?.shop_logo,
-            uploadShopLogo,
-            "shop-logo"
-          );
-          logoResponse = shopLogoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
-      } else {
-        try {
-          const shopLogoRes = await handleUploadImage(
-            uploadShopLogo,
-            "shop-logo"
-          );
-          logoResponse = shopLogoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
+        deleteWasabiFolder("logo");
+      }
+      try {
+        const folderStructure = `user_${userProfile.id}/shop/logo`;
+        const shopLogoRes = await handleUploadImage(
+          uploadShopLogo,
+          "shop-logo",
+          folderStructure
+        );
+        logoResponse = shopLogoRes;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
       }
     }
 
     if (uploadShopBackground) {
       if (vendorShopDetails?.shop_cover_image?.small) {
-        try {
-          const shopCoverRes = await handleUpdateImage(
-            vendorShopDetails?.shop_cover_image,
-            uploadShopBackground,
-            "shop-cover"
-          );
-          backgroundResponse = shopCoverRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
-      } else {
-        try {
-          const shopCoverRes = await handleUploadImage(
-            uploadShopBackground,
-            "shop-cover"
-          );
-          backgroundResponse = shopCoverRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
+        deleteWasabiFolder("cover");
       }
-    }
-
-    if (editableShopImages?.length > 0) {
-      const uploadPromises = editableShopImages
-        ?.filter((itm) => itm !== undefined)
-        ?.map((shopImage) => {
-          if (shopImage?.oldLink) {
-            return handleUpdateImage(
-              shopImage?.oldLink,
-              shopImage?.newData,
-              "shop-image"
-            );
-          } else {
-            return handleUploadImage(shopImage?.newData, "shop-image");
-          }
-        });
 
       try {
-        const updateShopImgs = await Promise.all(uploadPromises);
-        imagesResponse = updateShopImgs;
+        const folderStructure = `user_${userProfile.id}/shop/cover`;
+        const shopCoverRes = await handleUploadImage(
+          uploadShopBackground,
+          "shop-cover",
+          folderStructure
+        );
+        backgroundResponse = shopCoverRes;
       } catch (error) {
         console.error("Error during file upload:", error);
         return;
@@ -784,25 +728,48 @@ const ShopEdit = () => {
 
     if (uploadShopVideo) {
       if (vendorShopDetails?.shop_video) {
-        try {
-          const shopVideoRes = await fileUpdate(
-            vendorShopDetails?.shop_video,
-            "video",
-            uploadShopVideo
+        deleteWasabiFolder("video");
+      }
+
+      try {
+        const folderStructure = `user_${userProfile.id}/shop/video`;
+        const shopVideoRes = await fileUpload(uploadShopVideo, folderStructure);
+        videoResponse = shopVideoRes;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
+      }
+    }
+
+    if (editableShopImages?.length > 0) {
+      const uploadPromises = editableShopImages
+        ?.filter((itm) => itm !== undefined)
+        ?.map(async (shopImage) => {
+          if (shopImage?.oldLink) {
+            const splitStringAfterShop =
+              shopImage?.oldLink?.medium?.split("/shop/")[1];
+            const urlParts = splitStringAfterShop.split("/");
+            const lastPart = urlParts.pop();
+            const stringWithoutLastWord = urlParts.join("/");
+
+            await deleteWasabiFolder(stringWithoutLastWord);
+          }
+          const folderStructure = `user_${userProfile.id}/shop/shop_img/${
+            new Date().getTime().toString() + generateRandomNumberString(5)
+          }`;
+          return handleUploadImage(
+            shopImage?.newData,
+            "shop-image",
+            folderStructure
           );
-          videoResponse = shopVideoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
-      } else {
-        try {
-          const shopVideoRes = await fileUpload(uploadShopVideo);
-          videoResponse = shopVideoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
+        });
+
+      try {
+        const updateShopImgs = await Promise.all(uploadPromises);
+        imagesResponse = updateShopImgs;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
       }
     }
 
@@ -834,27 +801,10 @@ const ShopEdit = () => {
       return updatedItem;
     });
 
-    const existingLinks = newShopImagesWasabiUrl.map((item) => item.links);
-
-    const filteredImageResponse = imagesResponse.filter(
-      (item) =>
-        !existingLinks.some(
-          (link) => link.medium === item.medium && link.small === item.small
-        )
-    );
-
     let combinedLinks = [
-      ...shopImagesWasabiUrl,
-      ...filteredImageResponse.map((links) => ({ links })),
+      ...newShopImagesWasabiUrl,
+      ...imagesResponse?.map((itm) => ({ links: itm })),
     ];
-
-    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
-      combinedLinks = combinedLinks.filter((linkObj) => {
-        return !deleteShopImages
-          ?.filter((itm) => itm !== undefined)
-          .includes(linkObj.links);
-      });
-    }
 
     const { __typename: shopLogoTypename, ...newShopLogoVariants } =
       vendorShopDetails?.shop_logo;
@@ -862,35 +812,6 @@ const ShopEdit = () => {
     const { __typename: shopCoverTypename, ...newShopCoverVariants } =
       vendorShopDetails?.shop_cover_image;
 
-    // Remove "__typename" key from each object
-    const newCombineData = combinedLinks.map((item) => {
-      const updatedItem = { ...item };
-
-      // Remove "__typename" property from every key
-      Object.keys(updatedItem).forEach((key) => {
-        if (key === "__typename") {
-          delete updatedItem[key];
-        } else if (
-          typeof updatedItem[key] === "object" &&
-          updatedItem[key] !== null
-        ) {
-          // If the property is an object, apply the same process recursively
-          updatedItem[key] = Object.keys(updatedItem[key]).reduce(
-            (acc, innerKey) => {
-              if (innerKey !== "__typename") {
-                acc[innerKey] = updatedItem[key][innerKey];
-              }
-              return acc;
-            },
-            {}
-          );
-        }
-      });
-
-      return updatedItem;
-    });
-
-    console.log("combinedLinks newCombineData :>> ", newCombineData);
     await shopUpdate({
       shopLayout: {
         id: userProfile?.userCreatedShopId,
@@ -898,9 +819,9 @@ const ShopEdit = () => {
         shop_cover_image:
           backgroundResponse ||
           (deleteShopBackground ? {} : newShopCoverVariants),
-        shop_images: newCombineData?.map((item) => ({
-          links: item.links,
-        })),
+        shop_images: combinedLinks.filter(
+          (item) => Object.keys(item).length > 0
+        ),
         shop_video:
           videoResponse ||
           (deleteShopVideo ? "" : vendorShopDetails?.shop_video),
@@ -1932,12 +1853,12 @@ const ShopEdit = () => {
                                             fontSize: 16,
                                           },
                                         }}
-                                        onClick={() => (
+                                        onClick={() => {
                                           setShopEditImg(index),
-                                          document
-                                            .getElementById("shopEditId")
-                                            .click()
-                                        )}
+                                            document
+                                              .getElementById("shopEditId")
+                                              .click();
+                                        }}
                                       />
                                     </span>
 
@@ -1962,6 +1883,14 @@ const ShopEdit = () => {
                                           shopImagesWasabiUrl[index]?.links;
                                         setDeleteShopImages(() => [
                                           ...deleteShopImagesData,
+                                        ]);
+
+                                        let updatedShopImagesWasabiUrl =
+                                          shopImagesWasabiUrl;
+                                        updatedShopImagesWasabiUrl[index] = {};
+
+                                        setShopImageWasabiUrl(() => [
+                                          ...updatedShopImagesWasabiUrl,
                                         ]);
 
                                         let shopImagesData = shopImages;
