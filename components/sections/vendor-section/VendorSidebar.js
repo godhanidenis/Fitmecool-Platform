@@ -54,14 +54,18 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         >
           <div className="flex justify-center">
             <div className="w-[120px] h-[120px] mb-4 rounded-full">
-              {vendorShopDetails?.shop_logo ? (
+              {vendorShopDetails?.shop_logo?.large ? (
                 <Avatar
-                  src={vendorShopDetails?.shop_logo ?? ""}
+                  src={vendorShopDetails?.shop_logo?.large ?? ""}
                   key={new Date().getTime()}
                   alt="Shop Logo"
-                  className="!object-cover !w-full !h-full"
-                />
-              ) : vendorShopDetails?.shop_logo?.length === 0 ? (
+                  className="!object-cover !w-full !h-full !text-[70px]"
+                >
+                  {String(vendorShopDetails?.shop_name)
+                    ?.split(" ")[0][0]
+                    .toUpperCase()}
+                </Avatar>
+              ) : !vendorShopDetails?.shop_logo?.large ? (
                 <Avatar
                   className="!bg-colorGreen"
                   sx={{

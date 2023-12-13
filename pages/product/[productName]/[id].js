@@ -227,7 +227,7 @@ const ProductDetail = ({ productDetails, error }) => {
             <>
               {itm?.type === "image" && (
                 <img
-                  src={itm?.src}
+                  src={itm?.src?.small}
                   alt="Product Images"
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,
@@ -321,17 +321,24 @@ const ProductDetail = ({ productDetails, error }) => {
       <div className="flex items-center justify-between w-full gap-3">
         <div className="flex gap-3 items-center">
           <div className="flex justify-center items-center">
-            {productDetailsData?.data.branchInfo?.shop_info.shop_logo ? (
+            {productDetailsData?.data.branchInfo?.shop_info.shop_logo?.small ? (
               <Avatar
                 alt="Shop Logo"
                 className="!w-12 !h-12 !cursor-pointer"
                 src={
-                  productDetailsData?.data.branchInfo?.shop_info.shop_logo ?? ""
+                  productDetailsData?.data.branchInfo?.shop_info.shop_logo
+                    ?.small ?? ""
                 }
                 key={new Date().getTime()}
-              />
-            ) : productDetailsData?.data.branchInfo?.shop_info.shop_logo
-                .length === 0 ? (
+              >
+                {String(
+                  productDetailsData?.data.branchInfo?.shop_info.shop_name
+                )
+                  ?.split(" ")[0][0]
+                  .toUpperCase()}
+              </Avatar>
+            ) : !productDetailsData?.data.branchInfo?.shop_info.shop_logo
+                ?.small ? (
               <Avatar
                 className="!bg-colorGreen !w-12 !h-12"
                 sx={{
@@ -544,7 +551,7 @@ const ProductDetail = ({ productDetails, error }) => {
                     <div className="flex justify-center items-center bg-colorWhite h-[700px] bg-cover">
                       {images?.type === "image" && (
                         <CustomReactImageMagnify
-                          src={images.src}
+                          src={images.src?.large}
                           height="700px"
                           width="100%"
                           className="object-cover object-top"
