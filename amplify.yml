@@ -4,7 +4,6 @@ frontend:
     preBuild:
       commands:
         - npm ci
-        - npm install --force @img/sharp-linux-x64 --no-save
     build:
       commands:
         - npm run build
