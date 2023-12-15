@@ -1050,7 +1050,7 @@ const ShopEdit = () => {
                         placeholder="Your shop email"
                         formValue={{
                           ...shopInfoRegister("shop_email", {
-                            required: "Shop Email is required",
+                            // required: "Shop Email is required",
 
                             pattern: {
                               value:

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -180,7 +180,7 @@ const ShopPage = () => {
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
-  const [sameAsOwner, setSameAsOwner] = useState("False");
+  const [sameAsOwner, setSameAsOwner] = useState("True");
   const [individual, setIndividual] = useState(false);
   const [subBranch, setSubBranch] = useState([]);
   const [subBranchEdit, setSubBranchEdit] = useState();
@@ -214,6 +214,8 @@ const ShopPage = () => {
   const [stateDataLists, setStateDataLists] = useState([]);
   const [getCityData, setGetCityData] = useState([]);
   const [getAreaData, setGetAreaData] = useState([]);
+
+  const resultRef = useRef(null);
 
   const getApiState = async () => {
     await getStateLists()
@@ -397,6 +399,8 @@ const ShopPage = () => {
   };
 
   const onSubmit = async (data) => {
+    resultRef.current &&
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -540,7 +544,10 @@ const ShopPage = () => {
           </div>
         </div>
         <div className="relative -mt-[calc(50vh-25px)] container">
-          <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
+          <div
+            className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4"
+            ref={resultRef}
+          >
             <div>
               <span className="text-colorGreen font-semibold">Join</span> Us
             </div>
@@ -548,7 +555,6 @@ const ShopPage = () => {
               As <span className="text-colorGreen font-semibold">?</span>
             </div>
           </div>
-
           <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto mt-8 mb-16 p-5 sm:p-10 sm:pt-5 rounded-md">
             <div className="flex justify-center mb-5">
               <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
@@ -887,11 +893,11 @@ const ShopPage = () => {
                               label="Shop Email*"
                               type="email"
                               id="shopEmail"
-                              isRequired={true}
+                              isRequired={false}
                               placeholder="Your shop email"
                               formValue={{
                                 ...register("shop_email", {
-                                  required: "*Shop email is required",
+                                  // required: "*Shop email is required",
                                   pattern: {
                                     value:
                                       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
