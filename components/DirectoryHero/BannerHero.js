@@ -63,7 +63,7 @@ const BannerHero = ({ carouselItems, className }) => {
             />
 
             {!isBannerImagesLoaded && (
-              <ImageLoadingSkeleton className="object-cover" />
+              <ImageLoadingSkeleton className="!object-cover" />
             )}
           </div>
         ))}

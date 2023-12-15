@@ -353,6 +353,7 @@ const ProductDetail = ({ productDetails, error }) => {
               </Avatar>
             ) : (
               <ImageLoadingSkeleton
+                validClassName={true}
                 variant="circular"
                 className="!w-12 !h-12"
                 sx={{

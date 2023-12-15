@@ -1686,7 +1686,7 @@ const ShopEdit = () => {
                           </>
                         ) : (
                           <ImageLoadingSkeleton
-                            className="rounded-full"
+                            className="!rounded-full"
                             variant="circular"
                           />
                         )
@@ -1715,7 +1715,7 @@ const ShopEdit = () => {
                         type="file"
                         id="shopLogo"
                         name="shopLogo"
-                        accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                        accept="image/jpg, image/jpeg, image/png , image/heic"
                         className="hidden"
                         {...shopLayoutRegister("shopLogo", {
                           onChange: (e) => {
@@ -1780,7 +1780,7 @@ const ShopEdit = () => {
                             </div>
                           </>
                         ) : (
-                          <ImageLoadingSkeleton className="rounded-3xl" />
+                          <ImageLoadingSkeleton className="!rounded-3xl" />
                         )
                       ) : (
                         <div
@@ -1809,7 +1809,7 @@ const ShopEdit = () => {
                         id="shopBackground"
                         name="shopBackground"
                         type="file"
-                        accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                        accept="image/jpg, image/jpeg, image/png , image/heic"
                         className="hidden"
                         {...shopLayoutRegister("shopBackground", {
                           onChange: (e) => {
@@ -1955,7 +1955,7 @@ const ShopEdit = () => {
                                 <input
                                   id="shopEditId"
                                   type="file"
-                                  accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                                  accept="image/jpg, image/jpeg, image/png , image/heic"
                                   multiple
                                   className="hidden"
                                   {...shopLayoutRegister("shopImages", {
@@ -1977,7 +1977,7 @@ const ShopEdit = () => {
                                 : "col-start-2"
                             } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full`}
                           >
-                            <ImageLoadingSkeleton className="rounded-3xl" />
+                            <ImageLoadingSkeleton className="!rounded-3xl" />
                           </div>
                         ))}
                   </div>
@@ -2038,7 +2038,7 @@ const ShopEdit = () => {
                             </span>
                           </>
                         ) : (
-                          <ImageLoadingSkeleton className="rounded-3xl" />
+                          <ImageLoadingSkeleton className="!rounded-3xl" />
                         )}
                       </div>
                     ) : (

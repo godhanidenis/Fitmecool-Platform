@@ -144,7 +144,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
         }}
       >
         {!isProductImagesLoaded && (
-          <ImageLoadingSkeleton className="object-cover h-full" />
+          <ImageLoadingSkeleton className="!object-cover !h-full" />
         )}
         {isProductImage.includes(itm) && isProductImages ? (
           <div className="w-full h-full bg-[#00000031] absolute top-0" />
@@ -278,7 +278,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         rel="noopener noreferrer"
                       >
                         {isProductImagesLoaded && (
-                          <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
+                          <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
                         )}
                         {isProductImages ? (
                           <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
@@ -473,7 +473,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         <div className="flex justify-center items-center relative sm:w-6 sm:h-6 w-4 h-4">
                           {!isShopLogoLoaded && (
                             <ImageLoadingSkeleton
-                              className="rounded-[50%]"
+                              className="!rounded-[50%]"
                               variant="circular"
                             />
                           )}

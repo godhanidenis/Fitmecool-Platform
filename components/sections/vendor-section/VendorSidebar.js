@@ -18,6 +18,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
 
   const [selectedValue, setSelectedValue] = useState("");
   const [deleteSelected, setDeleteSelected] = useState(false);
+  const [deleteLoader, setDeleteLoader] = useState(false);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
@@ -80,7 +81,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
                 </Avatar>
               ) : (
                 <ImageLoadingSkeleton
-                  className="rounded-full"
+                  className="!rounded-full"
                   variant="circular"
                 />
               )}
@@ -137,10 +138,12 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         </div>
       </div>
       <DeleteAccountConfirmationModal
+        deleteLoader={deleteLoader}
         setDeleteSelected={setDeleteSelected}
         deleteModalOpen={productDeleteModalOpen}
         setDeleteModalOpen={setProductDeleteModalOpen}
         onClickItemDelete={async () => {
+          setDeleteLoader(true);
           await deleteAccount({ id: vendorShopDetails?.user_id }).then(
             async (res) => {
               const folderStructure = `user_${vendorShopDetails?.user_id}`;
@@ -166,9 +169,11 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
               toast.success(res?.data?.deleteAccount, {
                 theme: "colored",
               });
+              setDeleteLoader(false);
             },
             (error) => {
               toast.error(error.message, { theme: "colored" });
+              setDeleteLoader(false);
             }
           );
           setProductDeleteModalOpen(false);

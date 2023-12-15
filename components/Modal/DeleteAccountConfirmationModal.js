@@ -1,6 +1,6 @@
 import React from "react";
 import { CustomAuthModal } from "../core/CustomMUIComponents";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -21,6 +21,7 @@ const DeleteAccountConfirmationModal = ({
   setDeleteModalOpen,
   onClickItemDelete,
   setDeleteSelected,
+  deleteLoader,
 }) => {
   return (
     <CustomAuthModal
@@ -60,10 +61,15 @@ const DeleteAccountConfirmationModal = ({
             </Button>
             <Button
               variant="contained"
-              className="rounded-md capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"
+              className={`${
+                deleteLoader && "flex gap-3"
+              } "rounded-md capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"`}
               onClick={onClickItemDelete}
             >
-              Delete
+              {deleteLoader && (
+                <CircularProgress className="!text-white !h-5 !w-5" />
+              )}
+              <span>Delete</span>
             </Button>
           </div>
         </div>

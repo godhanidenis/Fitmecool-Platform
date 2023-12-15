@@ -53,7 +53,7 @@ const Branches = ({ shopDetails, shopId }) => {
               />
               {!isImageLoaded && (
                 <ImageLoadingSkeleton
-                  className="rounded-[50%] absolute"
+                  className="!rounded-[50%] !absolute"
                   variant="circular"
                   width="100%"
                   height="100%"

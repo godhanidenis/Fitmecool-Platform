@@ -36,7 +36,7 @@ const ShopCard = ({ shop }) => {
                   rel="noopener noreferrer"
                 >
                   {!isShopImagesLoaded && (
-                    <ImageLoadingSkeleton className="object-cover h-full rounded-t-lg" />
+                    <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
                   )}
                   {isShopImages ? (
                     <>
@@ -86,7 +86,7 @@ const ShopCard = ({ shop }) => {
                   <div className="flex justify-center items-center relative w-[50px] h-[50px]">
                     {!isShopLogoLoaded && (
                       <ImageLoadingSkeleton
-                        className="rounded-[50%]"
+                        className="!rounded-[50%]"
                         variant="circular"
                       />
                     )}

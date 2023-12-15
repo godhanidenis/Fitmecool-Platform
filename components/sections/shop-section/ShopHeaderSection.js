@@ -6,7 +6,6 @@ import {
   Button,
   ClickAwayListener,
   Grid,
-  Skeleton,
   Typography,
 } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
@@ -29,6 +28,7 @@ import { ShopHeaderItem } from "../../core/CustomMUIComponents";
 import { assets } from "../../../constants";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -122,8 +122,8 @@ const ShopHeaderSection = ({
                     )}
                   </div>
                   {!isShopLogoLoaded && (
-                    <Skeleton
-                      animation="wave"
+                    <ImageLoadingSkeleton
+                      validClassName={true}
                       variant="circular"
                       className={`!object-cover !absolute !top-0 ${
                         window.innerWidth >= 640

@@ -69,8 +69,6 @@ export const generateFileType = (fileType) => {
     return ".jpeg";
   } else if (fileType === "image/jpg") {
     return ".jpg";
-  } else if (fileType === "image/webp") {
-    return ".webp";
   } else if (fileType === "image/heic") {
     return ".heic";
   } else if (fileType === "video/mp4") {
