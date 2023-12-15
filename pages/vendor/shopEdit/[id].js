@@ -1880,7 +1880,9 @@ const ShopEdit = () => {
                                           deleteShopImages;
 
                                         deleteShopImagesData[index] =
-                                          shopImagesWasabiUrl[index]?.links;
+                                          vendorShopDetails?.shop_images[
+                                            index
+                                          ]?.links;
                                         setDeleteShopImages(() => [
                                           ...deleteShopImagesData,
                                         ]);
