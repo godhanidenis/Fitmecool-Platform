@@ -39,11 +39,7 @@ export default async function handler(req, res) {
 
     // Process each size variant
     const uploadPromises = sizeVariants.map(async (variant) => {
-      const resizedImageBuffer = await resizeImage(
-        imageBuffer,
-        variant.width,
-        variant.height
-      );
+      const resizedImageBuffer = await resizeImage(imageBuffer, variant.width);
 
       let extensionIndex = files.image.name.lastIndexOf(".");
       let newName =
