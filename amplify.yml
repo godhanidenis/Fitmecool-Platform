@@ -3,10 +3,9 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install --force
+        - npm install
     build:
       commands:
-        - npm install --force @img/sharp-linux-x64
         - npm run build
   artifacts:
     baseDirectory: .next

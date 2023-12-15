@@ -13,8 +13,8 @@ const dependencies = isWindows
 // Install the appropriate dependency
 dependencies.forEach((dependency) => {
   try {
-    console.log("Installing :-", `npm install --force ${dependency} --no-save`);
-    execSync(`npm install --force ${dependency} --no-save`);
+    console.log("Installing :-", `npm install ${dependency} --no-save`);
+    execSync(`npm install ${dependency} --no-save`);
   } catch (error) {
     console.error(`Failed to install ${dependency}: ${error.message}`);
     process.exit(1);
