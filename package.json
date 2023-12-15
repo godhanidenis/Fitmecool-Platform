@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "node ./scripts/install-sharp.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@apollo/client": "^3.8.5",
@@ -45,7 +44,6 @@
     "react-toastify": "^9.0.8",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.1",
-    "sharp": "^0.33.0",
     "suneditor": "^2.45.1",
     "suneditor-react": "^3.6.1",
     "tailwindcss": "^3.1.8"
