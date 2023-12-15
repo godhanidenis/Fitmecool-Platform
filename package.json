@@ -35,7 +35,18 @@
     "postcss-import": "^15.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "redux-logger": "^3.0.6"
+    "react-hook-form": "^7.38.0",
+    "react-icons": "^4.9.0",
+    "react-multi-carousel": "^2.8.4",
+    "react-redux": "^8.0.4",
+    "react-share": "^4.4.1",
+    "react-toastify": "^9.0.8",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.2.1",
+    "sharp": "^0.33.0",
+    "suneditor": "^2.45.1",
+    "suneditor-react": "^3.6.1",
+    "tailwindcss": "^3.1.8"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.18.6",
