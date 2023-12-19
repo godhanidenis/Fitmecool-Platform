@@ -61,3 +61,77 @@ export const scrollToTitleName = () => {
     });
   }
 };
+
+export const generateFileType = (fileType) => {
+  if (fileType === "image/png") {
+    return ".png";
+  } else if (fileType === "image/jpeg") {
+    return ".jpeg";
+  } else if (fileType === "image/jpg") {
+    return ".jpg";
+  } else if (fileType === "image/heic") {
+    return ".heic";
+  } else if (fileType === "video/mp4") {
+    return ".mp4";
+  }
+};
+
+export const productImageSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_PRODUCT_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_PRODUCT_MEDIUM_VARIANT),
+    size: "medium",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_PRODUCT_LARGE_VARIANT),
+    size: "large",
+  },
+];
+
+export const shopLogoSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_EXTRA_SMALL_VARIANT),
+    size: "extraSmall",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_MEDIUM_VARIANT),
+    size: "medium",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_LOGO_LARGE_VARIANT),
+    size: "large",
+  },
+];
+
+export const shopCoverSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_COVER_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_COVER_MEDIUM_VARIANT),
+    size: "medium",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_COVER_LARGE_VARIANT),
+    size: "large",
+  },
+];
+
+export const shopImageSizeVariants = [
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_SMALL_VARIANT),
+    size: "small",
+  },
+  {
+    width: Number(process.env.NEXT_PUBLIC_SHOP_MEDIUM_VARIANT),
+    size: "medium",
+  },
+];

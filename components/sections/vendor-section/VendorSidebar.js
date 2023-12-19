@@ -10,6 +10,7 @@ import { deleteAccount } from "../../../graphql/mutations/authMutations";
 import { toast } from "react-toastify";
 import { userLogout } from "../../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
+import { deleteObjectsInFolder } from "../../../services/wasabi";
 
 const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
 
   const [selectedValue, setSelectedValue] = useState("");
   const [deleteSelected, setDeleteSelected] = useState(false);
+  const [deleteLoader, setDeleteLoader] = useState(false);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
@@ -53,14 +55,18 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         >
           <div className="flex justify-center">
             <div className="w-[120px] h-[120px] mb-4 rounded-full">
-              {vendorShopDetails?.shop_logo ? (
+              {vendorShopDetails?.shop_logo?.large ? (
                 <Avatar
-                  src={vendorShopDetails?.shop_logo ?? ""}
+                  src={vendorShopDetails?.shop_logo?.large ?? ""}
                   key={new Date().getTime()}
                   alt="Shop Logo"
-                  className="!object-cover !w-full !h-full"
-                />
-              ) : vendorShopDetails?.shop_logo?.length === 0 ? (
+                  className="!object-cover !w-full !h-full !text-[70px]"
+                >
+                  {String(vendorShopDetails?.shop_name)
+                    ?.split(" ")[0][0]
+                    .toUpperCase()}
+                </Avatar>
+              ) : !vendorShopDetails?.shop_logo?.large ? (
                 <Avatar
                   className="!bg-colorGreen"
                   sx={{
@@ -75,7 +81,7 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
                 </Avatar>
               ) : (
                 <ImageLoadingSkeleton
-                  className="rounded-full"
+                  className="!rounded-full"
                   variant="circular"
                 />
               )}
@@ -132,12 +138,17 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
         </div>
       </div>
       <DeleteAccountConfirmationModal
+        deleteLoader={deleteLoader}
         setDeleteSelected={setDeleteSelected}
         deleteModalOpen={productDeleteModalOpen}
         setDeleteModalOpen={setProductDeleteModalOpen}
         onClickItemDelete={async () => {
+          setDeleteLoader(true);
           await deleteAccount({ id: vendorShopDetails?.user_id }).then(
-            (res) => {
+            async (res) => {
+              const folderStructure = `user_${vendorShopDetails?.user_id}`;
+              await deleteObjectsInFolder(folderStructure);
+
               for (let key in localStorage) {
                 if (key !== "selected_city") {
                   localStorage.removeItem(key);
@@ -158,9 +169,11 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
               toast.success(res?.data?.deleteAccount, {
                 theme: "colored",
               });
+              setDeleteLoader(false);
             },
             (error) => {
               toast.error(error.message, { theme: "colored" });
+              setDeleteLoader(false);
             }
           );
           setProductDeleteModalOpen(false);

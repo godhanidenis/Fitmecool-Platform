@@ -34,7 +34,7 @@ const ShopCard = ({ shop }) => {
               }}
             >
               {!isShopImagesLoaded && (
-                <ImageLoadingSkeleton className="object-cover" />
+                <ImageLoadingSkeleton className="!object-cover" />
               )}
               {isShopImages ? (
                 <>
@@ -53,7 +53,7 @@ const ShopCard = ({ shop }) => {
                 </>
               ) : (
                 <Image
-                  src={shop.shop_images[0]?.links ?? ""}
+                  src={shop.shop_images[0]?.links?.small ?? ""}
                   alt={shop?.shop_name}
                   className={`object-cover absolute top-0 left-0 rounded-t-lg ${
                     isShopImagesLoaded ? "opacity-100" : "opacity-0 "
@@ -96,7 +96,7 @@ const ShopCard = ({ shop }) => {
                   </Avatar>
                 )}
                 <Image
-                  src={shop?.shop_logo ?? ""}
+                  src={shop?.shop_logo?.medium ?? ""}
                   alt="Shop Logo"
                   objectFit="cover"
                   className={`rounded-full absolute top-0 left-0  ${
@@ -111,7 +111,7 @@ const ShopCard = ({ shop }) => {
                 />
                 {!isShopLogoLoaded && (
                   <ImageLoadingSkeleton
-                    className="rounded-[50%] absolute"
+                    className="!rounded-[50%] !absolute"
                     variant="circular"
                     width="100%"
                     height="100%"

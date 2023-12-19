@@ -24,11 +24,11 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { ShopHeaderItem } from "../../core/CustomMUIComponents";
 import { assets } from "../../../constants";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -108,7 +108,7 @@ const ShopHeaderSection = ({
                       </Avatar>
                     ) : (
                       <Image
-                        src={shopDetails?.shop_logo ?? ""}
+                        src={shopDetails?.shop_logo?.large ?? ""}
                         alt="shop logo"
                         layout="fixed"
                         width={window.innerWidth >= 640 ? 150 : 100}
@@ -123,10 +123,13 @@ const ShopHeaderSection = ({
                   </div>
                   {!isShopLogoLoaded && (
                     <ImageLoadingSkeleton
-                      className="rounded-[50%] absolute top-0"
+                      validClassName={true}
                       variant="circular"
-                      width={window.innerWidth >= 640 ? 150 : 100}
-                      height={window.innerWidth >= 640 ? 150 : 100}
+                      className={`!object-cover !absolute !top-0 ${
+                        window.innerWidth >= 640
+                          ? "!w-[150px] !h-[150px]"
+                          : "!w-[100px] !h-[100px]"
+                      }`}
                       sx={{
                         backgroundColor: "#ffffffb5",
                       }}

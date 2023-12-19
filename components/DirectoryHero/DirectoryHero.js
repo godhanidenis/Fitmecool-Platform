@@ -36,7 +36,7 @@ const DirectoryHero = ({ title, bgImg }) => {
         />
       ) : (
         !loaded && (
-          <ImageLoadingSkeleton className="py-24 md:py-36 bg-cover bg-repeat-round" />
+          <ImageLoadingSkeleton className="!py-24 md:!py-36 !bg-cover !bg-repeat-round" />
         )
       )}
     </>

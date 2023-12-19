@@ -40,7 +40,7 @@ import ImageLoadingSkeleton from "../../../components/Modal/ImageLoadingSkeleton
 import CustomTextFieldVendor from "../../../components/core/CustomTextFieldVendor";
 import { HoursModal } from "../shop-setup";
 import { useRouter } from "next/router";
-import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
+import { deleteObjectsInFolder, fileUpload } from "../../../services/wasabi";
 import Image from "next/image";
 import CustomAutoCompleteTextField from "../../../components/core/CustomAutoCompleteTextField";
 import {
@@ -49,6 +49,8 @@ import {
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
 import { loadProductsStart } from "../../../redux/ducks/product";
+import { handleUploadImage } from "../../../services/imageApis";
+import { generateRandomNumberString } from "../../../utils/common";
 
 const style = {
   position: "absolute",
@@ -151,7 +153,9 @@ const ShopEdit = () => {
   const [deleteShopBackground, setDeleteShopBackground] = useState("");
 
   const [shopImages, setShopImages] = useState([]);
+
   const [shopImagesWasabiUrl, setShopImageWasabiUrl] = useState([]);
+
   const [editableShopImages, setEditableShopImages] = useState([]);
   const [ShopEditImg, setShopEditImg] = useState("");
   const [deleteShopImages, setDeleteShopImages] = useState([]);
@@ -309,6 +313,11 @@ const ShopEdit = () => {
     };
 
     setEditableShopImages(() => [...editableShopImagesData]);
+
+    let updatedShopImagesWasabiUrl = shopImagesWasabiUrl;
+    updatedShopImagesWasabiUrl[ShopEditImg] = {};
+
+    setShopImageWasabiUrl(() => [...updatedShopImagesWasabiUrl]);
 
     files.forEach((file) => {
       shopImagesData[ShopEditImg] = { links: URL.createObjectURL(file) };
@@ -479,7 +488,7 @@ const ShopEdit = () => {
       } else {
         setSameAsOwner("False");
       }
-      console.log("mainBranches", mainBranches);
+
       mainBranchInfoSetValue("address", mainBranches?.branch_address);
       mainBranchInfoSetValue("state", mainBranches?.branch_state);
       mainBranchInfoSetValue("pin_code", mainBranches?.branch_pinCode);
@@ -494,10 +503,11 @@ const ShopEdit = () => {
     }
 
     if (vendorShopDetails && individual ? value === 3 : value === 4) {
-      vendorShopDetails?.shop_logo && setShopLogo(vendorShopDetails?.shop_logo);
+      vendorShopDetails?.shop_logo?.large &&
+        setShopLogo(vendorShopDetails?.shop_logo?.large);
 
-      vendorShopDetails?.shop_cover_image &&
-        setShopBackground(vendorShopDetails?.shop_cover_image);
+      vendorShopDetails?.shop_cover_image?.small &&
+        setShopBackground(vendorShopDetails?.shop_cover_image?.small);
 
       vendorShopDetails?.shop_images &&
         setShopImageWasabiUrl([...vendorShopDetails?.shop_images]);
@@ -642,15 +652,9 @@ const ShopEdit = () => {
   const mainBranchInfoOError = (errors) =>
     console.log("Errors Occurred !! :", errors);
 
-  const deleteImageFiles = async (deletableProducts, type) => {
-    try {
-      const deletionPromises = deletableProducts.map((deleteProduct) =>
-        fileDelete(deleteProduct, type)
-      );
-      await Promise.all(deletionPromises);
-    } catch (error) {
-      console.error("Error deleting files:", error);
-    }
+  const deleteWasabiFolder = async (folderName) => {
+    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    await deleteObjectsInFolder(folderStructure);
   };
 
   const shopLayoutOnSubmit = async (data) => {
@@ -662,81 +666,102 @@ const ShopEdit = () => {
     let videoResponse = null;
 
     if (deleteShopLogo) {
-      await deleteImageFiles([deleteShopLogo], "image");
+      deleteWasabiFolder("logo");
     }
 
     if (deleteShopBackground) {
-      await deleteImageFiles([deleteShopBackground], "image");
-    }
-
-    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
-      await deleteImageFiles(
-        deleteShopImages?.filter((itm) => itm !== undefined),
-        "image"
-      );
+      deleteWasabiFolder("cover");
     }
 
     if (deleteShopVideo) {
-      await deleteImageFiles([deleteShopVideo], "video");
+      deleteWasabiFolder("video");
+    }
+
+    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
+      deleteShopImages
+        ?.filter((itm) => itm !== undefined)
+        ?.map(async (item) => {
+          const splitStringAfterShop = item?.medium?.split("/shop/")[1];
+          const urlParts = splitStringAfterShop.split("/");
+          const lastPart = urlParts.pop();
+          const stringWithoutLastWord = urlParts.join("/");
+          await deleteWasabiFolder(stringWithoutLastWord);
+        });
     }
 
     if (uploadShopLogo) {
-      if (vendorShopDetails?.shop_logo) {
-        try {
-          const shopLogoRes = await fileUpdate(
-            vendorShopDetails?.shop_logo,
-            "image",
-            uploadShopLogo
-          );
-          logoResponse = shopLogoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
-      } else {
-        try {
-          const shopLogoRes = await fileUpload(uploadShopLogo);
-          logoResponse = shopLogoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
+      if (vendorShopDetails?.shop_logo?.large) {
+        deleteWasabiFolder("logo");
+      }
+      try {
+        const folderStructure = `user_${userProfile.id}/shop/logo`;
+        const shopLogoRes = await handleUploadImage(
+          uploadShopLogo,
+          "shop-logo",
+          folderStructure
+        );
+        logoResponse = shopLogoRes;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
       }
     }
 
     if (uploadShopBackground) {
-      if (vendorShopDetails?.shop_cover_image) {
-        try {
-          const shopCoverRes = await fileUpdate(
-            vendorShopDetails?.shop_cover_image,
-            "image",
-            uploadShopBackground
-          );
-          backgroundResponse = shopCoverRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
-      } else {
-        try {
-          const shopCoverRes = await fileUpload(uploadShopBackground);
-          backgroundResponse = shopCoverRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
+      if (vendorShopDetails?.shop_cover_image?.small) {
+        deleteWasabiFolder("cover");
+      }
+
+      try {
+        const folderStructure = `user_${userProfile.id}/shop/cover`;
+        const shopCoverRes = await handleUploadImage(
+          uploadShopBackground,
+          "shop-cover",
+          folderStructure
+        );
+        backgroundResponse = shopCoverRes;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
+      }
+    }
+
+    if (uploadShopVideo) {
+      if (vendorShopDetails?.shop_video) {
+        deleteWasabiFolder("video");
+      }
+
+      try {
+        const folderStructure = `user_${userProfile.id}/shop/video`;
+        const shopVideoRes = await fileUpload(uploadShopVideo, folderStructure);
+        videoResponse = shopVideoRes;
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        return;
       }
     }
 
     if (editableShopImages?.length > 0) {
       const uploadPromises = editableShopImages
         ?.filter((itm) => itm !== undefined)
-        ?.map((shopImage) => {
+        ?.map(async (shopImage) => {
           if (shopImage?.oldLink) {
-            return fileUpdate(shopImage?.oldLink, "image", shopImage?.newData);
-          } else {
-            return fileUpload(shopImage?.newData);
+            const splitStringAfterShop =
+              shopImage?.oldLink?.medium?.split("/shop/")[1];
+            const urlParts = splitStringAfterShop.split("/");
+            const lastPart = urlParts.pop();
+            const stringWithoutLastWord = urlParts.join("/");
+
+            await deleteWasabiFolder(stringWithoutLastWord);
           }
+          const folderStructure = `user_${userProfile.id}/shop/shop_img/${
+            new Date().getTime().toString() + generateRandomNumberString(5)
+          }`;
+          return handleUploadImage(
+            shopImage?.newData,
+            "shop-image",
+            folderStructure
+          );
         });
 
       try {
@@ -748,60 +773,55 @@ const ShopEdit = () => {
       }
     }
 
-    if (uploadShopVideo) {
-      if (vendorShopDetails?.shop_video) {
-        try {
-          const shopVideoRes = await fileUpdate(
-            vendorShopDetails?.shop_video,
-            "video",
-            uploadShopVideo
+    // Remove "__typename" key from each object
+    const newShopImagesWasabiUrl = shopImagesWasabiUrl.map((item) => {
+      const updatedItem = { ...item };
+
+      // Remove "__typename" property from every key
+      Object.keys(updatedItem).forEach((key) => {
+        if (key === "__typename") {
+          delete updatedItem[key];
+        } else if (
+          typeof updatedItem[key] === "object" &&
+          updatedItem[key] !== null
+        ) {
+          // If the property is an object, apply the same process recursively
+          updatedItem[key] = Object.keys(updatedItem[key]).reduce(
+            (acc, innerKey) => {
+              if (innerKey !== "__typename") {
+                acc[innerKey] = updatedItem[key][innerKey];
+              }
+              return acc;
+            },
+            {}
           );
-          videoResponse = shopVideoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
         }
-      } else {
-        try {
-          const shopVideoRes = await fileUpload(uploadShopVideo);
-          videoResponse = shopVideoRes;
-        } catch (error) {
-          console.error("Error during file upload:", error);
-          return;
-        }
-      }
-    }
+      });
 
-    const existingLinks = shopImagesWasabiUrl.map((item) => item.links);
-
-    const filteredImageResponse = imagesResponse.filter(
-      (item) => !existingLinks.includes(item)
-    );
+      return updatedItem;
+    });
 
     let combinedLinks = [
-      ...shopImagesWasabiUrl,
-      ...filteredImageResponse.map((links) => ({ links })),
+      ...newShopImagesWasabiUrl,
+      ...imagesResponse?.map((itm) => ({ links: itm })),
     ];
 
-    if (deleteShopImages?.filter((itm) => itm !== undefined).length > 0) {
-      combinedLinks = combinedLinks.filter((linkObj) => {
-        return !deleteShopImages
-          ?.filter((itm) => itm !== undefined)
-          .includes(linkObj.links);
-      });
-    }
+    const { __typename: shopLogoTypename, ...newShopLogoVariants } =
+      vendorShopDetails?.shop_logo;
+
+    const { __typename: shopCoverTypename, ...newShopCoverVariants } =
+      vendorShopDetails?.shop_cover_image;
 
     await shopUpdate({
       shopLayout: {
         id: userProfile?.userCreatedShopId,
-        shop_logo:
-          logoResponse || (deleteShopLogo ? "" : vendorShopDetails?.shop_logo),
+        shop_logo: logoResponse || (deleteShopLogo ? {} : newShopLogoVariants),
         shop_cover_image:
           backgroundResponse ||
-          (deleteShopBackground ? "" : vendorShopDetails?.shop_cover_image),
-        shop_images: combinedLinks?.map((item) => ({
-          links: item.links,
-        })),
+          (deleteShopBackground ? {} : newShopCoverVariants),
+        shop_images: combinedLinks.filter(
+          (item) => Object.keys(item).length > 0
+        ),
         shop_video:
           videoResponse ||
           (deleteShopVideo ? "" : vendorShopDetails?.shop_video),
@@ -1030,7 +1050,7 @@ const ShopEdit = () => {
                         placeholder="Your shop email"
                         formValue={{
                           ...shopInfoRegister("shop_email", {
-                            required: "Shop Email is required",
+                            // required: "Shop Email is required",
 
                             pattern: {
                               value:
@@ -1666,7 +1686,7 @@ const ShopEdit = () => {
                           </>
                         ) : (
                           <ImageLoadingSkeleton
-                            className="rounded-full"
+                            className="!rounded-full"
                             variant="circular"
                           />
                         )
@@ -1695,7 +1715,7 @@ const ShopEdit = () => {
                         type="file"
                         id="shopLogo"
                         name="shopLogo"
-                        accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                        accept="image/jpg, image/jpeg, image/png , image/heic"
                         className="hidden"
                         {...shopLayoutRegister("shopLogo", {
                           onChange: (e) => {
@@ -1760,7 +1780,7 @@ const ShopEdit = () => {
                             </div>
                           </>
                         ) : (
-                          <ImageLoadingSkeleton className="rounded-3xl" />
+                          <ImageLoadingSkeleton className="!rounded-3xl" />
                         )
                       ) : (
                         <div
@@ -1789,7 +1809,7 @@ const ShopEdit = () => {
                         id="shopBackground"
                         name="shopBackground"
                         type="file"
-                        accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                        accept="image/jpg, image/jpeg, image/png , image/heic"
                         className="hidden"
                         {...shopLayoutRegister("shopBackground", {
                           onChange: (e) => {
@@ -1833,12 +1853,12 @@ const ShopEdit = () => {
                                             fontSize: 16,
                                           },
                                         }}
-                                        onClick={() => (
+                                        onClick={() => {
                                           setShopEditImg(index),
-                                          document
-                                            .getElementById("shopEditId")
-                                            .click()
-                                        )}
+                                            document
+                                              .getElementById("shopEditId")
+                                              .click();
+                                        }}
                                       />
                                     </span>
 
@@ -1860,9 +1880,19 @@ const ShopEdit = () => {
                                           deleteShopImages;
 
                                         deleteShopImagesData[index] =
-                                          shopImagesWasabiUrl[index]?.links;
+                                          vendorShopDetails?.shop_images[
+                                            index
+                                          ]?.links;
                                         setDeleteShopImages(() => [
                                           ...deleteShopImagesData,
+                                        ]);
+
+                                        let updatedShopImagesWasabiUrl =
+                                          shopImagesWasabiUrl;
+                                        updatedShopImagesWasabiUrl[index] = {};
+
+                                        setShopImageWasabiUrl(() => [
+                                          ...updatedShopImagesWasabiUrl,
                                         ]);
 
                                         let shopImagesData = shopImages;
@@ -1884,7 +1914,9 @@ const ShopEdit = () => {
 
                                     <div className="w-full relative h-full">
                                       <Image
-                                        src={image?.links}
+                                        src={
+                                          image?.links?.medium || image?.links
+                                        }
                                         alt="Uploaded Image"
                                         className="!object-cover !h-full !w-full !rounded-xl !object-top"
                                         layout="fill"
@@ -1923,7 +1955,7 @@ const ShopEdit = () => {
                                 <input
                                   id="shopEditId"
                                   type="file"
-                                  accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                                  accept="image/jpg, image/jpeg, image/png , image/heic"
                                   multiple
                                   className="hidden"
                                   {...shopLayoutRegister("shopImages", {
@@ -1945,7 +1977,7 @@ const ShopEdit = () => {
                                 : "col-start-2"
                             } col-span-10   flex h-[300px] sm:h-[300px] items-center justify-center lg:col-span-3  md:col-span-6 relative  sm:col-span-6  w-full`}
                           >
-                            <ImageLoadingSkeleton className="rounded-3xl" />
+                            <ImageLoadingSkeleton className="!rounded-3xl" />
                           </div>
                         ))}
                   </div>
@@ -2006,7 +2038,7 @@ const ShopEdit = () => {
                             </span>
                           </>
                         ) : (
-                          <ImageLoadingSkeleton className="rounded-3xl" />
+                          <ImageLoadingSkeleton className="!rounded-3xl" />
                         )}
                       </div>
                     ) : (

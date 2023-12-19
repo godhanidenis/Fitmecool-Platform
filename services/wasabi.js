@@ -1,38 +1,10 @@
-import { generateRandomNumberString } from "../utils/common";
 import { destinationBucketName, s3 } from "../wasabi/config";
 
-const generateFileType = (fileType) => {
-  if (fileType === "image/png") {
-    return ".png";
-  } else if (fileType === "image/jpeg") {
-    return ".jpeg";
-  } else if (fileType === "image/jpg") {
-    return ".jpg";
-  } else if (fileType === "image/webp") {
-    return ".webp";
-  } else if (fileType === "image/heic") {
-    return ".heic";
-  } else if (fileType === "video/mp4") {
-    return ".mp4";
-  }
-};
-
-export const fileUpload = (selectedFile) => {
+export const fileUpload = (selectedFile, folderStructure) => {
   return new Promise((resolve, reject) => {
     const params = {
-      Bucket:
-        destinationBucketName +
-        (selectedFile?.type === "image/png" ||
-        selectedFile?.type === "image/jpeg" ||
-        selectedFile?.type === "image/jpg" ||
-        selectedFile?.type === "image/webp" ||
-        selectedFile?.type === "image/heic"
-          ? "/test-img"
-          : "/test-videos"),
-      Key:
-        new Date().getTime().toString() +
-        generateRandomNumberString(5) +
-        generateFileType(selectedFile?.type),
+      Bucket: destinationBucketName + "/seller/" + folderStructure,
+      Key: selectedFile.name.replaceAll(" ", "_"),
       Body: selectedFile,
       ContentEncoding: "base64",
       ContentType: selectedFile?.type,
@@ -49,51 +21,34 @@ export const fileUpload = (selectedFile) => {
   });
 };
 
-export const fileDelete = async (link, type) => {
-  let objectKey =
-    type === "image"
-      ? link.split("/test-img/")[1]
-      : link.split("/test-videos/")[1];
-
+export const deleteObjectsInFolder = async (folderPrefix) => {
   const params = {
-    Bucket:
-      destinationBucketName + (type === "image" ? "/test-img" : "/test-videos"),
-    Key: objectKey,
+    Bucket: destinationBucketName,
+    Prefix: "seller/" + folderPrefix,
   };
 
   try {
-    await s3.deleteObject(params).promise();
-    return `Image "${objectKey}" deleted successfully!`;
-  } catch (error) {
-    console.error(`Error deleting image "${objectKey}":`, error);
-    throw error;
-  }
-};
+    const data = await s3.listObjectsV2(params).promise();
 
-export const fileUpdate = (link, type, selectedFile) => {
-  return new Promise((resolve, reject) => {
-    let objectKey =
-      type === "image"
-        ? link?.split("/test-img/")[1]
-        : link?.split("/test-videos/")[1];
+    const objects = data.Contents;
 
-    const params = {
-      Bucket:
-        destinationBucketName +
-        (type === "image" ? "/test-img" : "/test-videos"),
-      Key: objectKey,
-      Body: selectedFile,
-      ContentEncoding: "base64",
-      ContentType: selectedFile?.type,
+    if (objects.length === 0) {
+      console.log("No objects found in the specified folder.");
+      return;
+    }
+
+    const deleteParams = {
+      Bucket: destinationBucketName,
+      Delete: {
+        Objects: objects.map(({ Key }) => ({ Key })),
+        Quiet: false,
+      },
     };
 
-    s3.upload(params, (err, data) => {
-      if (err) {
-        console.error("Error during file upload:", err);
-        reject(err);
-      } else {
-        resolve(data.Location);
-      }
-    });
-  });
+    await s3.deleteObjects(deleteParams).promise();
+
+    console.log(`Objects in folder '${folderPrefix}' deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting objects:", error);
+  }
 };

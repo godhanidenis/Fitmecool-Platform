@@ -34,16 +34,33 @@ export const getProducts = async (payload) => {
               flag
             }
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             product_video
             branchInfo {
               id
               shop_id
               shop_info {
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_name
               }
             }
@@ -86,9 +103,21 @@ export const getProductDetails = async (payload) => {
             product_name
             product_description
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             product_video
             product_color
@@ -100,7 +129,12 @@ export const getProductDetails = async (payload) => {
               shop_id
               shop_info {
                 shop_name
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_rating
                 createdAt
               }
@@ -118,14 +152,31 @@ export const getProductDetails = async (payload) => {
             id
             product_name
             product_image {
-              front
-              back
-              side
+              back {
+                large
+                medium
+                small
+              }
+              front {
+                small
+                medium
+                large
+              }
+              side {
+                small
+                medium
+                large
+              }
             }
             branchInfo {
               shop_id
               shop_info {
-                shop_logo
+                shop_logo {
+                  extraSmall
+                  small
+                  medium
+                  large
+                }
                 shop_name
               }
             }

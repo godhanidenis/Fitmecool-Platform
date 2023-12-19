@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -43,6 +43,8 @@ import {
   getStateLists,
 } from "../../../graphql/queries/areaListsQueries";
 import { useCallback } from "react";
+import { handleUploadImage } from "../../../services/imageApis";
+import { generateRandomNumberString } from "../../../utils/common";
 
 const style = {
   position: "absolute",
@@ -178,7 +180,7 @@ const ShopPage = () => {
   const [shopVideo, setShopVideo] = useState("");
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
-  const [sameAsOwner, setSameAsOwner] = useState("False");
+  const [sameAsOwner, setSameAsOwner] = useState("True");
   const [individual, setIndividual] = useState(false);
   const [subBranch, setSubBranch] = useState([]);
   const [subBranchEdit, setSubBranchEdit] = useState();
@@ -212,6 +214,8 @@ const ShopPage = () => {
   const [stateDataLists, setStateDataLists] = useState([]);
   const [getCityData, setGetCityData] = useState([]);
   const [getAreaData, setGetAreaData] = useState([]);
+
+  const resultRef = useRef(null);
 
   const getApiState = async () => {
     await getStateLists()
@@ -379,7 +383,10 @@ const ShopPage = () => {
 
   const multipleImageUploadFile = async (uploadShopImages) => {
     const uploadPromises = uploadShopImages?.map((uploadShopImg) => {
-      return fileUpload(uploadShopImg);
+      const folderStructure = `user_${userProfile.id}/shop/shop_img/${
+        new Date().getTime().toString() + generateRandomNumberString(5)
+      }`;
+      return handleUploadImage(uploadShopImg, "shop-image", folderStructure);
     });
 
     try {
@@ -392,6 +399,8 @@ const ShopPage = () => {
   };
 
   const onSubmit = async (data) => {
+    resultRef.current &&
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -403,7 +412,8 @@ const ShopPage = () => {
       let videoResponse = null;
 
       if (uploadShopLogo) {
-        await fileUpload(uploadShopLogo)
+        const folderStructure = `user_${userProfile.id}/shop/logo`;
+        await handleUploadImage(uploadShopLogo, "shop-logo", folderStructure)
           .then((res) => (logoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -411,7 +421,12 @@ const ShopPage = () => {
       }
 
       if (uploadShopBackground) {
-        await fileUpload(uploadShopBackground)
+        const folderStructure = `user_${userProfile.id}/shop/cover `;
+        await handleUploadImage(
+          uploadShopBackground,
+          "shop-cover",
+          folderStructure
+        )
           .then((res) => (backgroundResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -425,7 +440,8 @@ const ShopPage = () => {
       }
 
       if (uploadShopVideo) {
-        await fileUpload(uploadShopVideo)
+        const folderStructure = `user_${userProfile.id}/shop/video`;
+        await fileUpload(uploadShopVideo, folderStructure)
           .then((res) => (videoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -442,8 +458,8 @@ const ShopPage = () => {
           user_id: userProfile.id,
         },
         shopInfo: {
-          shop_logo: logoResponse || "",
-          shop_cover_image: backgroundResponse || "",
+          shop_logo: logoResponse || {},
+          shop_cover_image: backgroundResponse || {},
           shop_images:
             imagesResponse?.map((itm) => {
               return { links: itm };
@@ -493,7 +509,6 @@ const ShopPage = () => {
         ],
       }).then(
         (res) => {
-          console.log("res:::", res);
           dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
           toast.success(res.data.createShop.message, {
             theme: "colored",
@@ -529,7 +544,10 @@ const ShopPage = () => {
           </div>
         </div>
         <div className="relative -mt-[calc(50vh-25px)] container">
-          <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
+          <div
+            className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4"
+            ref={resultRef}
+          >
             <div>
               <span className="text-colorGreen font-semibold">Join</span> Us
             </div>
@@ -537,7 +555,6 @@ const ShopPage = () => {
               As <span className="text-colorGreen font-semibold">?</span>
             </div>
           </div>
-
           <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto mt-8 mb-16 p-5 sm:p-10 sm:pt-5 rounded-md">
             <div className="flex justify-center mb-5">
               <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
@@ -876,11 +893,11 @@ const ShopPage = () => {
                               label="Shop Email*"
                               type="email"
                               id="shopEmail"
-                              isRequired={true}
+                              isRequired={false}
                               placeholder="Your shop email"
                               formValue={{
                                 ...register("shop_email", {
-                                  required: "*Shop email is required",
+                                  // required: "*Shop email is required",
                                   pattern: {
                                     value:
                                       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -1107,7 +1124,7 @@ const ShopPage = () => {
                             <input
                               id="file-input-0"
                               type="file"
-                              accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                              accept="image/jpg, image/jpeg, image/png , image/heic"
                               className="hidden"
                               {...register("shopLogo", {
                                 onChange: (e) => {
@@ -1163,7 +1180,7 @@ const ShopPage = () => {
                             <input
                               id="file-input-1"
                               type="file"
-                              accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                              accept="image/jpg, image/jpeg, image/png , image/heic"
                               className="hidden"
                               {...register("shopBackground", {
                                 onChange: (e) => {
@@ -1228,7 +1245,7 @@ const ShopPage = () => {
                                   <input
                                     id={`shopImage${item}`}
                                     type="file"
-                                    accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                                    accept="image/jpg, image/jpeg, image/png , image/heic"
                                     className="hidden"
                                     {...register("shopImages", {
                                       onChange: (e) => {
@@ -1998,7 +2015,6 @@ const SubBranchModal = ({
   }, [subBranchEdit]);
 
   const subBranchSubmit = () => {
-    console.log("subBranch :>> ", subBranch);
     let allError = {};
     if (!subManagerAddress) {
       allError.subManagerAddressError = "SubManagerAddress is require";

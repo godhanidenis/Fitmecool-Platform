@@ -201,7 +201,7 @@ const ShopDetail = ({ shopDetails, error }) => {
       <div className="font-Nova">
         <DirectoryHero
           title={shopDetailsData?.shop_name}
-          bgImg={shopDetailsData?.shop_cover_image}
+          bgImg={shopDetailsData?.shop_cover_image?.large}
         />
         <div className="">
           <ShopHeaderSection

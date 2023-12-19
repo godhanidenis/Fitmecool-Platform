@@ -20,8 +20,8 @@ import { styled } from "@mui/material/styles";
 import Image from "next/image";
 import { changeProductPage } from "../../redux/ducks/product";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
-import { fileDelete } from "../../services/wasabi";
 import { refactorPrice } from "../../utils/common";
+import { deleteObjectsInFolder } from "../../services/wasabi";
 
 const StyledTableCell = styled(TableCell)(({ theme, index }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -50,24 +50,19 @@ const VenderProductTable = ({
   setEditableProductData,
   getAllProducts,
 }) => {
+  const { userProfile } = useSelector((state) => state.userProfile);
+
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [productDeleteModalOpen, setProductDeleteModalOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState();
-
-  const [deletableProductsImages, setDeletableProductsImages] = useState([]);
-  const [deletableProductVideo, setDeletableProductVideo] = useState();
+  const [deletableProductFolderName, setDeletableProductFolderName] =
+    useState();
 
   const dispatch = useDispatch();
 
-  const deleteImageFiles = async (deletableProducts, type) => {
-    try {
-      const deletionPromises = deletableProducts.map((deleteProduct) =>
-        fileDelete(deleteProduct, type)
-      );
-      await Promise.all(deletionPromises);
-    } catch (error) {
-      console.error("Error deleting files:", error);
-    }
+  const deleteWasabiFolder = async (folderName) => {
+    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    await deleteObjectsInFolder(folderStructure);
   };
 
   return (
@@ -118,7 +113,7 @@ const VenderProductTable = ({
                         <Image
                           objectFit="cover"
                           objectPosition="center top"
-                          src={item?.product_image?.front ?? ""}
+                          src={item?.product_image?.front?.small ?? ""}
                           unoptimized={true}
                           width={"100%"}
                           height={"100%"}
@@ -186,16 +181,11 @@ const VenderProductTable = ({
                         onClick={() => {
                           setProductDeleteModalOpen(true);
                           setDeleteProductId(item?.id);
-
-                          setDeletableProductsImages(
-                            ["front", "back", "side"].map(
-                              (key) => item?.product_image[key]
-                            )
+                          setDeletableProductFolderName(
+                            item?.product_image?.front?.small
+                              ?.split("/products/")[1]
+                              .split("/")[0]
                           );
-
-                          if (item?.product_video) {
-                            setDeletableProductVideo(item?.product_video);
-                          }
                         }}
                       >
                         <DeleteIcon
@@ -221,11 +211,7 @@ const VenderProductTable = ({
           deleteModalOpen={productDeleteModalOpen}
           setDeleteModalOpen={setProductDeleteModalOpen}
           onClickItemDelete={async () => {
-            await deleteImageFiles(deletableProductsImages, "image");
-
-            if (deletableProductVideo) {
-              await deleteImageFiles([deletableProductVideo], "video");
-            }
+            await deleteWasabiFolder(`products/${deletableProductFolderName}`);
 
             deleteProduct({ id: deleteProductId }).then(
               (res) => {

@@ -40,7 +40,7 @@ const Branches = ({ shopDetails, shopId }) => {
           <div className="flex flex-col sm:flex-row items-center p-8 pt-6 bg-colorPrimary rounded-t-xl gap-[24px]">
             <div className="flex justify-center relative w-[150px] h-[150px]">
               <Image
-                src={shopDetailsData?.shop_logo ?? ""}
+                src={shopDetailsData?.shop_logo?.large ?? ""}
                 alt="shop logo"
                 layout="fixed"
                 width={150}
@@ -53,7 +53,7 @@ const Branches = ({ shopDetails, shopId }) => {
               />
               {!isImageLoaded && (
                 <ImageLoadingSkeleton
-                  className="rounded-[50%] absolute"
+                  className="!rounded-[50%] !absolute"
                   variant="circular"
                   width="100%"
                   height="100%"

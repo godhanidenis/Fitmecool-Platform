@@ -15,12 +15,14 @@ import { Alert, capitalize, CircularProgress, Divider } from "@mui/material";
 import CustomTextFieldVendor from "../../core/CustomTextFieldVendor";
 import dynamic from "next/dynamic";
 import { colorsList } from "../../../constants";
-import { fileDelete, fileUpdate, fileUpload } from "../../../services/wasabi";
+import { deleteObjectsInFolder, fileUpload } from "../../../services/wasabi";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
+import { handleUploadImage } from "../../../services/imageApis";
+import { generateRandomNumberString } from "../../../utils/common";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -29,8 +31,8 @@ const SunEditor = dynamic(() => import("suneditor-react"), {
 const AddEditProductPage = ({
   setAddEditProductShow,
   editableProductData,
-  setEditableProductData,
   getAllProducts,
+  setEditableProductData,
 }) => {
   const {
     register,
@@ -58,6 +60,7 @@ const AddEditProductPage = ({
   const [menCategoryLabel, setMenCategoryLabel] = useState([]);
   const [womenCategoryLabel, setWomenCategoryLabel] = useState([]);
   const { categories } = useSelector((state) => state.categories);
+  const { userProfile } = useSelector((state) => state.userProfile);
 
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -172,20 +175,20 @@ const AddEditProductPage = ({
         editableProductData?.product_listing_type === "rent" ? false : true
       );
       setProductPriceVisible(!editableProductData?.product_price_visible);
-      editableProductData?.product_image?.front &&
+      editableProductData?.product_image?.front?.medium &&
         setProductImages((old) => [
           ...old,
-          editableProductData?.product_image?.front,
+          editableProductData?.product_image?.front?.medium,
         ]);
-      editableProductData?.product_image?.back &&
+      editableProductData?.product_image?.back?.medium &&
         setProductImages((old) => [
           ...old,
-          editableProductData?.product_image?.back,
+          editableProductData?.product_image?.back?.medium,
         ]);
-      editableProductData?.product_image?.side &&
+      editableProductData?.product_image?.side?.medium &&
         setProductImages((old) => [
           ...old,
-          editableProductData?.product_image?.side,
+          editableProductData?.product_image?.side?.medium,
         ]);
 
       editableProductData?.product_video &&
@@ -215,9 +218,18 @@ const AddEditProductPage = ({
     return trimmedContent === "" || trimmedContent === "<p><br></p>";
   };
 
-  const multipleImageUploadFile = async (uploadProductImages) => {
-    const uploadPromises = uploadProductImages.map((uploadProduct) => {
-      return fileUpload(uploadProduct);
+  const multipleImageUploadFile = async (
+    uploadProductImages,
+    productFolderName
+  ) => {
+    const keyMap = ["front", "back", "side"];
+    const folderStructure = `user_${userProfile.id}/shop/products/${productFolderName}/product_img`;
+    const uploadPromises = uploadProductImages.map((uploadProduct, index) => {
+      return handleUploadImage(
+        uploadProduct,
+        "product-image",
+        `${folderStructure}/${keyMap[index]}`
+      );
     });
 
     try {
@@ -234,19 +246,14 @@ const AddEditProductPage = ({
 
     if (productImage) {
       const keyMap = ["front", "back", "side"];
+
       return productImage[keyMap[index]];
     }
   };
 
-  const deleteImageFiles = async (deletableProducts, type) => {
-    try {
-      const deletionPromises = deletableProducts.map((deleteProduct) =>
-        fileDelete(deleteProduct, type)
-      );
-      await Promise.all(deletionPromises);
-    } catch (error) {
-      console.error("Error deleting files:", error);
-    }
+  const deleteWasabiFolder = async (folderName) => {
+    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    await deleteObjectsInFolder(folderStructure);
   };
 
   const onSubmit = async (data) => {
@@ -259,18 +266,34 @@ const AddEditProductPage = ({
         let imagesResponse = [];
         let videoResponse = null;
 
+        const productFolderName =
+          editableProductData?.product_image?.front?.small
+            ?.split("/products/")[1]
+            .split("/")[0];
+
         if (deleteProductVideo) {
-          await deleteImageFiles([deleteProductVideo], "video");
+          deleteWasabiFolder(`products/${productFolderName}/video`);
         }
 
         if (uploadProductImages.some((img) => img)) {
           const uploadPromises = uploadProductImages.map(
-            (uploadProduct, index) => {
+            async (uploadProduct, index) => {
               if (uploadProduct) {
-                return fileUpdate(
-                  updateProductKey(index),
-                  "image",
-                  uploadProduct
+                const data = updateProductKey(index);
+                const splitStringAfterShop = data?.small?.split("/shop/")[1];
+
+                const urlParts = splitStringAfterShop.split("/");
+                const lastPart = urlParts.pop();
+                const stringWithoutLastWord = urlParts.join("/");
+
+                await deleteWasabiFolder(stringWithoutLastWord);
+
+                const folderStructure = `user_${userProfile.id}/shop/${stringWithoutLastWord}`;
+
+                return handleUploadImage(
+                  uploadProduct,
+                  "product-image",
+                  folderStructure
                 );
               }
             }
@@ -278,7 +301,6 @@ const AddEditProductPage = ({
 
           try {
             const updateProductImgs = await Promise.all(uploadPromises);
-
             imagesResponse = updateProductImgs;
           } catch (error) {
             console.error("Error during file upload:", error);
@@ -288,27 +310,35 @@ const AddEditProductPage = ({
 
         if (uploadProductVideo) {
           if (editableProductData.product_video) {
-            try {
-              const productVideoRes = await fileUpdate(
-                editableProductData.product_video,
-                "video",
-                uploadProductVideo
-              );
-              videoResponse = productVideoRes;
-            } catch (error) {
-              console.error("Error during file upload:", error);
-              return;
-            }
-          } else {
-            try {
-              const productVideoRes = await fileUpload(uploadProductVideo);
-              videoResponse = productVideoRes;
-            } catch (error) {
-              console.error("Error during file upload:", error);
-              return;
-            }
+            deleteWasabiFolder(`products/${productFolderName}/video`);
+          }
+
+          try {
+            const folderStructure = `user_${userProfile.id}/shop/products/${productFolderName}/video`;
+
+            const productVideoRes = await fileUpload(
+              uploadProductVideo,
+              folderStructure
+            );
+            videoResponse = productVideoRes;
+          } catch (error) {
+            console.error("Error during file upload:", error);
+            return;
           }
         }
+
+        // Function to remove the "__typename" key from the object
+        const removeTypenameKey = (obj) => {
+          const newObj = { ...obj }; // Create a shallow copy of the original object
+          Object.keys(newObj).forEach((key) => {
+            delete newObj[key].__typename; // Remove "__typename" from nested objects
+          });
+          return newObj;
+        };
+
+        const oldImageData = removeTypenameKey(
+          editableProductData.product_image
+        );
 
         await updateProduct({
           id: editableProductData?.id,
@@ -321,10 +351,9 @@ const AddEditProductPage = ({
             product_name: data.product_name,
             product_type: data.product_type,
             product_image: {
-              front:
-                imagesResponse[0] || editableProductData.product_image.front,
-              back: imagesResponse[1] || editableProductData.product_image.back,
-              side: imagesResponse[2] || editableProductData.product_image.side,
+              front: imagesResponse[0] || oldImageData?.front,
+              back: imagesResponse[1] || oldImageData?.back,
+              side: imagesResponse[2] || oldImageData?.side,
             },
             product_video:
               videoResponse ||
@@ -336,7 +365,6 @@ const AddEditProductPage = ({
           },
         }).then(
           (res) => {
-            console.log("res:::", res);
             toast.success(res.data.updateProduct.message, {
               theme: "colored",
             });
@@ -353,14 +381,19 @@ const AddEditProductPage = ({
       } else {
         let productImagesRes = [];
         let productVideoRes = null;
+        const productFolderName =
+          new Date().getTime().toString() + generateRandomNumberString(5);
 
         if (uploadProductImages) {
-          await multipleImageUploadFile(uploadProductImages).then(
-            (res) => (productImagesRes = res)
-          );
+          await multipleImageUploadFile(
+            uploadProductImages,
+            productFolderName
+          ).then((res) => (productImagesRes = res));
         }
+
         if (uploadProductVideo) {
-          await fileUpload(uploadProductVideo)
+          const folderStructure = `user_${userProfile.id}/shop/products/${productFolderName}/video`;
+          await fileUpload(uploadProductVideo, folderStructure)
             .then((res) => (productVideoRes = res))
             .catch((error) => {
               console.error("Error during file upload:", error);
@@ -389,7 +422,6 @@ const AddEditProductPage = ({
           },
         }).then(
           (res) => {
-            console.log("res:::", res);
             toast.success(res.data.createProduct.message, {
               theme: "colored",
             });
@@ -852,7 +884,7 @@ const AddEditProductPage = ({
                               : "Side Image"}
                           </p>
                           <p className="sm:text-sm text-xs text-gray-400 text-center">
-                            We Support JPG, PNG, HEIC, WEBP & JPEG
+                            We Support JPG, PNG, HEIC & JPEG
                           </p>
                         </div>
                       </div>
@@ -861,7 +893,7 @@ const AddEditProductPage = ({
                       id={`productImage${item}`}
                       name="productImages"
                       type="file"
-                      accept="image/jpg, image/jpeg, image/png , image/heic , image/webp"
+                      accept="image/jpg, image/jpeg, image/png , image/heic"
                       className="hidden"
                       {...register("productImages", {
                         required: !ProductImgError[index]
