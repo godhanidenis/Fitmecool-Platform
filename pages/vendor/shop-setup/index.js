@@ -217,6 +217,53 @@ const ShopPage = () => {
 
   const resultRef = useRef(null);
 
+  const { imageVariantsData } = useSelector((state) => state.imageVariants);
+
+  const shopLogoSizeVariants = [
+    {
+      width: imageVariantsData?.shop_logo_variants?.extraSmall,
+      size: "extraSmall",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.large,
+      size: "large",
+    },
+  ];
+
+  const shopCoverSizeVariants = [
+    {
+      width: imageVariantsData?.shop_cover_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_cover_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.shop_cover_variants?.large,
+      size: "large",
+    },
+  ];
+
+  const shopImageSizeVariants = [
+    {
+      width: imageVariantsData?.shop_image_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_image_variants?.medium,
+      size: "medium",
+    },
+  ];
+
   const getApiState = async () => {
     await getStateLists()
       .then((res) => setStateDataLists(res?.data?.stateList))
@@ -386,7 +433,11 @@ const ShopPage = () => {
       const folderStructure = `user_${userProfile.id}/shop/shop_img/${
         new Date().getTime().toString() + generateRandomNumberString(5)
       }`;
-      return handleUploadImage(uploadShopImg, "shop-image", folderStructure);
+      return handleUploadImage(
+        uploadShopImg,
+        folderStructure,
+        shopImageSizeVariants
+      );
     });
 
     try {
@@ -413,7 +464,11 @@ const ShopPage = () => {
 
       if (uploadShopLogo) {
         const folderStructure = `user_${userProfile.id}/shop/logo`;
-        await handleUploadImage(uploadShopLogo, "shop-logo", folderStructure)
+        await handleUploadImage(
+          uploadShopLogo,
+          folderStructure,
+          shopLogoSizeVariants
+        )
           .then((res) => (logoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -424,8 +479,8 @@ const ShopPage = () => {
         const folderStructure = `user_${userProfile.id}/shop/cover `;
         await handleUploadImage(
           uploadShopBackground,
-          "shop-cover",
-          folderStructure
+          folderStructure,
+          shopLogoSizeVariants
         )
           .then((res) => (backgroundResponse = res))
           .catch((error) => {

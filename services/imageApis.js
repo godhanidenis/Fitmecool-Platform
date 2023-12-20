@@ -1,11 +1,11 @@
 export const handleUploadImage = async (
   file,
-  uploadImageSectionType,
-  folderStructure
+  folderStructure,
+  imageSizesVariants
 ) => {
   const formData = new FormData();
   formData.append("image", file);
-  formData.append("uploadImageSectionType", uploadImageSectionType);
+  formData.append("imageSizesVariants", JSON.stringify(imageSizesVariants));
   formData.append("folderStructure", folderStructure);
 
   try {

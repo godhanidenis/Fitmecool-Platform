@@ -17,6 +17,8 @@ import { LOAD_CITY_LIST_START } from "../ducks/cityLists";
 import { handleGetCityLists } from "./handlers/cityLists";
 import { LOAD_SHOP_PRODUCT_START } from "../ducks/shopProduct";
 import { handleGetShopProducts } from "./handlers/shopProducts";
+import { LOAD_IMAGE_VARIANTS_START } from "../ducks/imageVariants";
+import { handleGetImageVariants } from "./handlers/imageVariants";
 
 function* onLoadUserProfile() {
   yield takeLatest(LOAD_USER_PROFILE_START, handleGetUserProfile);
@@ -54,6 +56,10 @@ function* onLoadShopConfigurations() {
   yield takeLatest(LOAD_SHOP_CONFIGURATION_START, handleGetShopConfigurations);
 }
 
+function* onLoadImageVariants() {
+  yield takeLatest(LOAD_IMAGE_VARIANTS_START, handleGetImageVariants);
+}
+
 function* onLoadVendorShopDetails() {
   yield takeLatest(LOAD_VENDOR_SHOP_DETAILS_START, handleGetVendorShopDetails);
 }
@@ -66,6 +72,7 @@ const categorySagas = [fork(onLoadCategories)];
 const areaLists = [fork(onLoadAreaLists)];
 const cityLists = [fork(onLoadCityLists)];
 const shopConfigurations = [fork(onLoadShopConfigurations)];
+const imageVariants = [fork(onLoadImageVariants)];
 const vendorShopDetails = [fork(onLoadVendorShopDetails)];
 
 export default function* watcherSaga() {
@@ -78,6 +85,7 @@ export default function* watcherSaga() {
     ...areaLists,
     ...cityLists,
     ...shopConfigurations,
+    ...imageVariants,
     ...vendorShopDetails,
   ]);
 }
