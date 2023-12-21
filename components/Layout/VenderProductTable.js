@@ -57,6 +57,7 @@ const VenderProductTable = ({
   const [deleteProductId, setDeleteProductId] = useState();
   const [deletableProductFolderName, setDeletableProductFolderName] =
     useState();
+  const [deleteLoader, setDeleteLoader] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -209,8 +210,10 @@ const VenderProductTable = ({
         <ConfirmationModal
           type="product"
           deleteModalOpen={productDeleteModalOpen}
+          deleteLoader={deleteLoader}
           setDeleteModalOpen={setProductDeleteModalOpen}
           onClickItemDelete={async () => {
+            setDeleteLoader(true);
             await deleteWasabiFolder(`products/${deletableProductFolderName}`);
 
             deleteProduct({ id: deleteProductId }).then(
@@ -221,9 +224,11 @@ const VenderProductTable = ({
                 dispatch(changeProductPage(0));
                 getAllProducts();
                 dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
+                setDeleteLoader(false);
               },
               (error) => {
                 toast.error(error.message, { theme: "colored" });
+                setDeleteLoader(false);
               }
             );
             setProductDeleteModalOpen(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -215,7 +215,52 @@ const ShopPage = () => {
   const [getCityData, setGetCityData] = useState([]);
   const [getAreaData, setGetAreaData] = useState([]);
 
-  const resultRef = useRef(null);
+  const { imageVariantsData } = useSelector((state) => state.imageVariants);
+
+  const shopLogoSizeVariants = [
+    {
+      width: imageVariantsData?.shop_logo_variants?.extraSmall,
+      size: "extraSmall",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.large,
+      size: "large",
+    },
+  ];
+
+  const shopCoverSizeVariants = [
+    {
+      width: imageVariantsData?.shop_cover_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_cover_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.shop_cover_variants?.large,
+      size: "large",
+    },
+  ];
+
+  const shopImageSizeVariants = [
+    {
+      width: imageVariantsData?.shop_image_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_image_variants?.medium,
+      size: "medium",
+    },
+  ];
 
   const getApiState = async () => {
     await getStateLists()
@@ -386,7 +431,11 @@ const ShopPage = () => {
       const folderStructure = `user_${userProfile.id}/shop/shop_img/${
         new Date().getTime().toString() + generateRandomNumberString(5)
       }`;
-      return handleUploadImage(uploadShopImg, "shop-image", folderStructure);
+      return handleUploadImage(
+        uploadShopImg,
+        folderStructure,
+        shopImageSizeVariants
+      );
     });
 
     try {
@@ -399,8 +448,8 @@ const ShopPage = () => {
   };
 
   const onSubmit = async (data) => {
-    resultRef.current &&
-      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -413,7 +462,11 @@ const ShopPage = () => {
 
       if (uploadShopLogo) {
         const folderStructure = `user_${userProfile.id}/shop/logo`;
-        await handleUploadImage(uploadShopLogo, "shop-logo", folderStructure)
+        await handleUploadImage(
+          uploadShopLogo,
+          folderStructure,
+          shopLogoSizeVariants
+        )
           .then((res) => (logoResponse = res))
           .catch((error) => {
             console.error("Error during file upload:", error);
@@ -424,8 +477,8 @@ const ShopPage = () => {
         const folderStructure = `user_${userProfile.id}/shop/cover `;
         await handleUploadImage(
           uploadShopBackground,
-          "shop-cover",
-          folderStructure
+          folderStructure,
+          shopLogoSizeVariants
         )
           .then((res) => (backgroundResponse = res))
           .catch((error) => {
@@ -544,10 +597,7 @@ const ShopPage = () => {
           </div>
         </div>
         <div className="relative -mt-[calc(50vh-25px)] container">
-          <div
-            className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4"
-            ref={resultRef}
-          >
+          <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
             <div>
               <span className="text-colorGreen font-semibold">Join</span> Us
             </div>
@@ -1921,6 +1971,7 @@ const ActionButtons = ({
     <div className="flex justify-end sm:gap-4 gap-2 mt-8">
       <button
         onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
           currentStep > 1 && setCurrentStep(currentStep - 1);
         }}
         className="bg-[#FAFCFC] sm:py-3 sm:px-12 font-semibold sm:text-lg text-sm px-8 py-2 rounded-[4px] border"

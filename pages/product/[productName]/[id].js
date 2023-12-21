@@ -39,6 +39,7 @@ import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
 import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
 import { useRouter } from "next/router";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import {
   EmailShareButton,
@@ -164,7 +165,9 @@ const ProductDetail = ({ productDetails, error }) => {
   ]);
 
   const [openContactInfo, setOpenContactInfo] = useState(false);
-  const [images, setImages] = useState({ src: "" });
+  const [images, setImages] = useState({});
+
+  console.log("images 123:>> ", images?.src?.small);
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
@@ -366,7 +369,7 @@ const ProductDetail = ({ productDetails, error }) => {
             <Link
               href={`/shop/${shopSlug}/${productDetailsData?.data.branchInfo?.shop_id}`}
             >
-              <a target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}>
+              <a target="_self">
                 <p className="line-clamp-1 text-white text-[15px] xl:text-sm sm:text-base font-semibold cursor-pointer hover:text-colorGreen">
                   {productDetailsData?.data.branchInfo?.shop_info.shop_name}
                 </p>
@@ -489,7 +492,11 @@ const ProductDetail = ({ productDetails, error }) => {
   return (
     <>
       <div className="font-Nova container">
-        <div className="py-2 sm:py-4 !w-[100%] pl-[14px] sm:pl-[10px]   ">
+        <div className="py-2 sm:py-4 !w-[100%] pl-[14px] sm:pl-[10px] flex gap-3 items-center">
+          <ArrowBackIcon
+            onClick={() => router.back()}
+            className="cursor-pointer"
+          />
           <Breadcrumbs aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
               <div className="text-colorGreen font-semibold">Product</div>

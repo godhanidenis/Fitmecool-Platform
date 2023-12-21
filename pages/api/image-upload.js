@@ -1,11 +1,5 @@
 import formidable from "formidable-serverless";
 import fs from "fs";
-import {
-  productImageSizeVariants,
-  shopCoverSizeVariants,
-  shopImageSizeVariants,
-  shopLogoSizeVariants,
-} from "../../utils/common";
 import { destinationBucketName, s3 } from "../../wasabi/config";
 import { resizeImage } from "../../utils/image-jimp";
 
@@ -26,52 +20,50 @@ export default async function handler(req, res) {
 
     const imageBuffer = fs.readFileSync(files.image.path);
 
-    // Define an array of size variants
-    const sizeVariants =
-      (fields?.uploadImageSectionType === "product-image" &&
-        productImageSizeVariants) ||
-      (fields?.uploadImageSectionType === "shop-logo" &&
-        shopLogoSizeVariants) ||
-      (fields?.uploadImageSectionType === "shop-cover" &&
-        shopCoverSizeVariants) ||
-      (fields?.uploadImageSectionType === "shop-image" &&
-        shopImageSizeVariants);
-
     // Process each size variant
-    const uploadPromises = sizeVariants.map(async (variant) => {
-      const resizedImageBuffer = await resizeImage(imageBuffer, variant.width);
+    const uploadPromises = JSON.parse(fields?.imageSizesVariants)?.map(
+      async (variant) => {
+        const resizedImageBuffer = await resizeImage(
+          imageBuffer,
+          variant.width
+        );
 
-      let extensionIndex = files.image.name.lastIndexOf(".");
-      let newName =
-        files.image.name.substring(0, extensionIndex) +
-        "_" +
-        variant.size +
-        files.image.name.substring(extensionIndex);
+        let extensionIndex = files.image.name.lastIndexOf(".");
+        let newName =
+          files.image.name.substring(0, extensionIndex) +
+          "_" +
+          variant.size +
+          files.image.name.substring(extensionIndex);
 
-      const key = newName.replaceAll(" ", "_");
+        const key = newName.replaceAll(" ", "_");
 
-      const Bucket =
-        destinationBucketName + "/seller/" + fields?.folderStructure;
+        const Bucket =
+          destinationBucketName + "/seller/" + fields?.folderStructure;
 
-      const uploadParams = {
-        Bucket: Bucket,
-        Key: key,
-        Body: resizedImageBuffer,
-        ContentType: files.image.type,
-      };
-
-      try {
-        const data = await s3.upload(uploadParams).promise();
-        return { success: true, size: variant.size, imageUrl: data?.Location };
-      } catch (uploadError) {
-        console.error("Error uploading image to S3:", uploadError);
-        return {
-          success: false,
-          size: variant.size,
-          error: "Error uploading image to S3",
+        const uploadParams = {
+          Bucket: Bucket,
+          Key: key,
+          Body: resizedImageBuffer,
+          ContentType: files.image.type,
         };
+
+        try {
+          const data = await s3.upload(uploadParams).promise();
+          return {
+            success: true,
+            size: variant.size,
+            imageUrl: data?.Location,
+          };
+        } catch (uploadError) {
+          console.error("Error uploading image to S3:", uploadError);
+          return {
+            success: false,
+            size: variant.size,
+            error: "Error uploading image to S3",
+          };
+        }
       }
-    });
+    );
 
     // Wait for all uploads to complete
     const results = await Promise.all(uploadPromises);

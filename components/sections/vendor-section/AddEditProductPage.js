@@ -72,6 +72,22 @@ const AddEditProductPage = ({
   const [alertMsg, setAlertMsg] = useState("");
 
   const router = useRouter();
+  const { imageVariantsData } = useSelector((state) => state.imageVariants);
+
+  const productImageSizeVariants = [
+    {
+      width: imageVariantsData?.product_image_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.product_image_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.product_image_variants?.large,
+      size: "large",
+    },
+  ];
 
   const priceHandle = (e) => {
     const price = parseFloat(e.target.value);
@@ -227,8 +243,8 @@ const AddEditProductPage = ({
     const uploadPromises = uploadProductImages.map((uploadProduct, index) => {
       return handleUploadImage(
         uploadProduct,
-        "product-image",
-        `${folderStructure}/${keyMap[index]}`
+        `${folderStructure}/${keyMap[index]}`,
+        productImageSizeVariants
       );
     });
 
@@ -292,8 +308,8 @@ const AddEditProductPage = ({
 
                 return handleUploadImage(
                   uploadProduct,
-                  "product-image",
-                  folderStructure
+                  folderStructure,
+                  productImageSizeVariants
                 );
               }
             }

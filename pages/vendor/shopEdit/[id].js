@@ -179,6 +179,53 @@ const ShopEdit = () => {
     (state) => state.productsFiltersReducer
   );
 
+  const { imageVariantsData } = useSelector((state) => state.imageVariants);
+
+  const shopLogoSizeVariants = [
+    {
+      width: imageVariantsData?.shop_logo_variants?.extraSmall,
+      size: "extraSmall",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.shop_logo_variants?.large,
+      size: "large",
+    },
+  ];
+
+  const shopCoverSizeVariants = [
+    {
+      width: imageVariantsData?.shop_cover_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_cover_variants?.medium,
+      size: "medium",
+    },
+    {
+      width: imageVariantsData?.shop_cover_variants?.large,
+      size: "large",
+    },
+  ];
+
+  const shopImageSizeVariants = [
+    {
+      width: imageVariantsData?.shop_image_variants?.small,
+      size: "small",
+    },
+    {
+      width: imageVariantsData?.shop_image_variants?.medium,
+      size: "medium",
+    },
+  ];
+
   const getApiState = async () => {
     await getStateLists()
       .then((res) => setStateDataLists(res?.data?.stateList))
@@ -697,8 +744,8 @@ const ShopEdit = () => {
         const folderStructure = `user_${userProfile.id}/shop/logo`;
         const shopLogoRes = await handleUploadImage(
           uploadShopLogo,
-          "shop-logo",
-          folderStructure
+          folderStructure,
+          shopLogoSizeVariants
         );
         logoResponse = shopLogoRes;
       } catch (error) {
@@ -716,8 +763,8 @@ const ShopEdit = () => {
         const folderStructure = `user_${userProfile.id}/shop/cover`;
         const shopCoverRes = await handleUploadImage(
           uploadShopBackground,
-          "shop-cover",
-          folderStructure
+          folderStructure,
+          shopCoverSizeVariants
         );
         backgroundResponse = shopCoverRes;
       } catch (error) {
@@ -759,8 +806,8 @@ const ShopEdit = () => {
           }`;
           return handleUploadImage(
             shopImage?.newData,
-            "shop-image",
-            folderStructure
+            folderStructure,
+            shopImageSizeVariants
           );
         });
 

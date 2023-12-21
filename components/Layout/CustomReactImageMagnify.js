@@ -60,7 +60,7 @@ const CustomReactImageMagnify = ({
           backgroundColor: "white",
           backgroundImage: `url('${src}')`,
           backgroundRepeat: "no-repeat",
-
+          objectFit: "cover",
           backgroundSize: `${imgWidth * zoomLevel}px ${
             imgHeight * zoomLevel
           }px`,
