@@ -49,8 +49,7 @@ import { changeAppliedCityFilters } from "../../redux/ducks/cityFilter";
 import { changeShopPage } from "../../redux/ducks/shop";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 
-const Header = () => {
-  const [accessToken, setAccessToken] = useState();
+const Header = ({ accessToken, setAccessToken }) => {
   const [searchBarValue, setSearchBarValue] = useState("");
   const [searchCityValue, setSearchCityValue] = useState("");
 

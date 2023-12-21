@@ -8,7 +8,7 @@ import { loadShopConfigurationsStart } from "../../redux/ducks/shopConfiguration
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { loadImageVariantsStart } from "../../redux/ducks/imageVariants";
 
-const VendorCommonLayout = ({ children }) => {
+const VendorCommonLayout = ({ children, setAccessToken }) => {
   const { userProfile } = useSelector((state) => state.userProfile);
 
   const { appliedProductsFilters, sortFilters } = useSelector(
@@ -94,7 +94,7 @@ const VendorCommonLayout = ({ children }) => {
   return (
     <div className="flex flex-col md:flex-row font-Nova h-[calc(100vh-64px)] overflow-scroll">
       <div className="lg:w-[300px] relative sm:bg-white shadow-xl">
-        <VendorSidebar />
+        <VendorSidebar setAccessToken={setAccessToken} />
       </div>
       <div className="w-full lg:w-[73%] xl:w-[83%] sm:mt-6 px-4 py-4 sm:my-5 sm:px-10 sm:py-0">
         {children}
