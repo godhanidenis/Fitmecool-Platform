@@ -45,6 +45,7 @@ import {
 import { useCallback } from "react";
 import { handleUploadImage } from "../../../services/imageApis";
 import { generateRandomNumberString } from "../../../utils/common";
+import { loadImageVariantsStart } from "../../../redux/ducks/imageVariants";
 
 const style = {
   position: "absolute",
@@ -216,6 +217,10 @@ const ShopPage = () => {
   const [getAreaData, setGetAreaData] = useState([]);
 
   const { imageVariantsData } = useSelector((state) => state.imageVariants);
+
+  useEffect(() => {
+    dispatch(loadImageVariantsStart());
+  }, [dispatch]);
 
   const shopLogoSizeVariants = [
     {
@@ -478,7 +483,7 @@ const ShopPage = () => {
         await handleUploadImage(
           uploadShopBackground,
           folderStructure,
-          shopLogoSizeVariants
+          shopCoverSizeVariants
         )
           .then((res) => (backgroundResponse = res))
           .catch((error) => {
@@ -940,7 +945,7 @@ const ShopPage = () => {
                           <div className="w-full relative">
                             <CustomTextFieldVendor
                               name="shop_email"
-                              label="Shop Email*"
+                              label="Shop Email"
                               type="email"
                               id="shopEmail"
                               isRequired={false}

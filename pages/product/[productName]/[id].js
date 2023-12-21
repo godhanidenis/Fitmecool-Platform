@@ -167,8 +167,6 @@ const ProductDetail = ({ productDetails, error }) => {
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState({});
 
-  console.log("images 123:>> ", images?.src?.small);
-
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 
   useEffect(() => {
@@ -231,6 +229,57 @@ const ProductDetail = ({ productDetails, error }) => {
               {itm?.type === "image" && (
                 <img
                   src={itm?.src?.small}
+                  alt="Product Images"
+                  style={{
+                    border: images?.src === itm?.src ? "2px solid #29977E" : 0,
+                  }}
+                  className="object-top object-cover cursor-pointer w-[130px] h-[150px]"
+                  onError={() => {
+                    setIsShopImages(true);
+                    setIsProductImage((prevIndexes) => [...prevIndexes, itm]);
+                  }}
+                />
+              )}
+              {itm?.type === "video" && (
+                <div className="relative w-[130px] h-[150px]">
+                  <video
+                    src={itm?.src}
+                    alt="Product Video"
+                    style={{
+                      border:
+                        images?.src === itm?.src ? "2px solid #29977E" : 0,
+                    }}
+                    className="object-cover cursor-pointer w-full h-full"
+                    onError={() => {
+                      setIsShopImages(true);
+                      setIsProductImage(isProductImage.push(itm));
+                    }}
+                  />
+                  <PlayCircleIcon className="!absolute !top-2 !right-2 !text-colorPrimary" />
+                </div>
+              )}
+            </>
+          )
+        ) : (
+          <ImageLoadingSkeleton className="!w-[130px] !h-[150px]" />
+        )}
+      </div>
+    );
+  });
+  const productImages1 = photos?.map((itm, i) => {
+    return (
+      <div className="mx-auto mb-[24px] relative" key={i}>
+        {itm ? (
+          isProductImage.includes(itm) && isShopImages ? (
+            <div
+              className="w-[129px] h-[146px] cursor-pointer bg-[#00000031]"
+              style={{ border: images === itm ? "2px solid #29977E" : 0 }}
+            />
+          ) : (
+            <>
+              {itm?.type === "image" && (
+                <img
+                  src={itm?.src?.large}
                   alt="Product Images"
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,
@@ -533,8 +582,11 @@ const ProductDetail = ({ productDetails, error }) => {
             <div className="grid grid-cols-2 p-2 gap-8">
               <div className="col-span-2 lg:col-span-1 hidden sm:flex">
                 <div className="grid grid-cols-4 w-full h-full">
-                  <div className="col-span-1">
-                    <div className="p-2 pt-0">{productImages}</div>
+                  <div className="col-span-1 relative">
+                    <div className="p-2 pt-0 ">{productImages}</div>
+                    <div className="p-2 pt-0 absolute top-0 -z-[10] ">
+                      {productImages1}
+                    </div>
                   </div>
                   <div className="col-span-3 relative">
                     {productDetailsData?.data?.product_listing_type &&
