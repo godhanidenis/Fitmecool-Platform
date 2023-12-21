@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -214,8 +214,6 @@ const ShopPage = () => {
   const [stateDataLists, setStateDataLists] = useState([]);
   const [getCityData, setGetCityData] = useState([]);
   const [getAreaData, setGetAreaData] = useState([]);
-
-  const resultRef = useRef(null);
 
   const { imageVariantsData } = useSelector((state) => state.imageVariants);
 
@@ -450,8 +448,8 @@ const ShopPage = () => {
   };
 
   const onSubmit = async (data) => {
-    resultRef.current &&
-      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     if (currentStep !== 3) {
       setCurrentStep(currentStep + 1);
     } else {
@@ -599,10 +597,7 @@ const ShopPage = () => {
           </div>
         </div>
         <div className="relative -mt-[calc(50vh-25px)] container">
-          <div
-            className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4"
-            ref={resultRef}
-          >
+          <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
             <div>
               <span className="text-colorGreen font-semibold">Join</span> Us
             </div>
@@ -1976,6 +1971,7 @@ const ActionButtons = ({
     <div className="flex justify-end sm:gap-4 gap-2 mt-8">
       <button
         onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
           currentStep > 1 && setCurrentStep(currentStep - 1);
         }}
         className="bg-[#FAFCFC] sm:py-3 sm:px-12 font-semibold sm:text-lg text-sm px-8 py-2 rounded-[4px] border"
