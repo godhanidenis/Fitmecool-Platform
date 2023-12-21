@@ -167,7 +167,7 @@ const ProductDetail = ({ productDetails, error }) => {
   const [openContactInfo, setOpenContactInfo] = useState(false);
   const [images, setImages] = useState({});
 
-  console.log("images :>> ", images);
+  console.log("images 123:>> ", images?.src?.small);
 
   const handleCloseContactInfo = () => setOpenContactInfo(false);
 

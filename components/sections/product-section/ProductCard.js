@@ -266,36 +266,35 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       width: "100%",
                       height: themeLayout === "mobileScreen" ? 250 : 300,
                     }}
-                    onClick={() =>
-                      router.push(`/product/${productSlug}/${product.id}`)
-                    }
                   >
-                    {/* <Link
+                    <Link
                       href={`/product/${productSlug}/${product.id}`}
                       passHref
                     >
-                      <a target="_self" rel="noopener noreferrer"> */}
-                    {isProductImagesLoaded && (
-                      <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
-                    )}
-                    {isProductImages ? (
-                      <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
-                    ) : (
-                      <Image
-                        src={product.product_image?.front?.medium ?? ""}
-                        alt={product?.product_name}
-                        className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
-                          isProductImagesLoaded ? "opacity-100" : "opacity-0"
-                        }`}
-                        onLoad={() => setIsProductImagesLoaded(true)}
-                        onError={() => {
-                          setIsProductImages(true);
-                        }}
-                        layout="fill"
-                      />
-                    )}
-                    {/* </a>
-                    </Link> */}
+                      <a target="_self" rel="noopener noreferrer">
+                        {isProductImagesLoaded && (
+                          <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
+                        )}
+                        {isProductImages ? (
+                          <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
+                        ) : (
+                          <Image
+                            src={product.product_image?.front?.medium ?? ""}
+                            alt={product?.product_name}
+                            className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
+                              isProductImagesLoaded
+                                ? "opacity-100"
+                                : "opacity-0"
+                            }`}
+                            onLoad={() => setIsProductImagesLoaded(true)}
+                            onError={() => {
+                              setIsProductImages(true);
+                            }}
+                            layout="fill"
+                          />
+                        )}
+                      </a>
+                    </Link>
                   </div>
                 ) : (
                   <Carousel
@@ -451,107 +450,102 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             </div>
 
             {!onlyCarousal && (
-              // <Link href={`/product/${productSlug}/${product.id}`} passHref>
-              //   <a
-              //     className="bg-[#fff] rounded-b-lg shadow-md"
-              //     target="_self"
-              //     rel="noopener noreferrer"
-              //   >
-              <div
-                className="pl-3"
-                onClick={() =>
-                  router.push(`/product/${productSlug}/${product.id}`)
-                }
-              >
-                <div>
-                  <span className="line-clamp-1 font-semibold text-black text-base mt-2 capitalize">
-                    {product?.product_name}
-                  </span>
-                </div>
-
-                <div className="flex gap-2 justify-start items-center mt-2 mb-2">
-                  <div className="flex justify-center items-center">
-                    <div className="flex justify-center items-center relative sm:w-6 sm:h-6 w-4 h-4">
-                      {!isShopLogoLoaded && (
-                        <ImageLoadingSkeleton
-                          className="!rounded-[50%]"
-                          variant="circular"
-                        />
-                      )}
-                      <Image
-                        alt="Shop Logo"
-                        src={
-                          product?.branchInfo?.shop_info?.shop_logo
-                            ?.extraSmall ?? ""
-                        }
-                        layout="fill"
-                        className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
-                          isShopLogoLoaded ? "opacity-100" : "opacity-0"
-                        }`}
-                        onLoad={() => setIsShopLogoLoaded(true)}
-                        onError={() => {
-                          setIsLogoImage(true);
-                        }}
-                      />
-                      {isLogoImage && (
-                        <Avatar
-                          className="!bg-colorGreen"
-                          sx={{
-                            fontSize: "12px",
-                            width: "100%",
-                            height: "100%",
-                          }}
-                        >
-                          {String(product.branchInfo?.shop_info?.shop_name)
-                            ?.split(" ")[0][0]
-                            .toUpperCase()}
-                        </Avatar>
-                      )}
+              <Link href={`/product/${productSlug}/${product.id}`} passHref>
+                <a
+                  className="bg-[#fff] rounded-b-lg shadow-md"
+                  target="_self"
+                  rel="noopener noreferrer"
+                >
+                  <div className="pl-3">
+                    <div>
+                      <span className="line-clamp-1 font-semibold text-black text-base mt-2 capitalize">
+                        {product?.product_name}
+                      </span>
                     </div>
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <Link href={`/shop/${shopSlug}/${shopId}`} passHref>
-                      <a
-                        target={`${
-                          themeLayout === "webScreen" ? "_blank" : "_self"
-                        }`}
-                        rel="noopener noreferrer"
-                      >
-                        <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
-                          {product.branchInfo?.shop_info?.shop_name}
-                        </span>
-                      </a>
-                    </Link>
-                  </div>
-                </div>
 
-                {product?.product_price_visible ? (
-                  <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
-                    <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold line-clamp-1">
-                      ₹{Math.round(finalPrice)}
-                    </p>
-                    {product?.product_discount !== 0 && (
-                      <div className="flex gap-2 items-center">
-                        <p className="text-[#9d9d9d] text-sm  font-semibold line-through line-clamp-1">
-                          ₹{Math.round(product?.product_price)}
+                    <div className="flex gap-2 justify-start items-center mt-2 mb-2">
+                      <div className="flex justify-center items-center">
+                        <div className="flex justify-center items-center relative sm:w-6 sm:h-6 w-4 h-4">
+                          {!isShopLogoLoaded && (
+                            <ImageLoadingSkeleton
+                              className="!rounded-[50%]"
+                              variant="circular"
+                            />
+                          )}
+                          <Image
+                            alt="Shop Logo"
+                            src={
+                              product?.branchInfo?.shop_info?.shop_logo
+                                ?.extraSmall ?? ""
+                            }
+                            layout="fill"
+                            className={`rounded-[50%] absolute top-0 left-0 object-cover object-center  ${
+                              isShopLogoLoaded ? "opacity-100" : "opacity-0"
+                            }`}
+                            onLoad={() => setIsShopLogoLoaded(true)}
+                            onError={() => {
+                              setIsLogoImage(true);
+                            }}
+                          />
+                          {isLogoImage && (
+                            <Avatar
+                              className="!bg-colorGreen"
+                              sx={{
+                                fontSize: "12px",
+                                width: "100%",
+                                height: "100%",
+                              }}
+                            >
+                              {String(product.branchInfo?.shop_info?.shop_name)
+                                ?.split(" ")[0][0]
+                                .toUpperCase()}
+                            </Avatar>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <Link href={`/shop/${shopSlug}/${shopId}`} passHref>
+                          <a
+                            target={`${
+                              themeLayout === "webScreen" ? "_blank" : "_self"
+                            }`}
+                            rel="noopener noreferrer"
+                          >
+                            <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
+                              {product.branchInfo?.shop_info?.shop_name}
+                            </span>
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {product?.product_price_visible ? (
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
+                        <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold line-clamp-1">
+                          ₹{Math.round(finalPrice)}
                         </p>
-                        <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium line-clamp-1">
-                          ({Math.round(product?.product_discount)}% OFF)
+                        {product?.product_discount !== 0 && (
+                          <div className="flex gap-2 items-center">
+                            <p className="text-[#9d9d9d] text-sm  font-semibold line-through line-clamp-1">
+                              ₹{Math.round(product?.product_price)}
+                            </p>
+                            <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium line-clamp-1">
+                              ({Math.round(product?.product_discount)}% OFF)
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
+                        <p className="text-black text-sm  font-bold line-clamp-1">
+                          No Price Visible !
                         </p>
+                        <p className="text-[#fff] text-sm">*</p>
                       </div>
                     )}
                   </div>
-                ) : (
-                  <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
-                    <p className="text-black text-sm  font-bold line-clamp-1">
-                      No Price Visible !
-                    </p>
-                    <p className="text-[#fff] text-sm">*</p>
-                  </div>
-                )}
-              </div>
-              //   </a>
-              // </Link>
+                </a>
+              </Link>
             )}
           </div>
         </div>

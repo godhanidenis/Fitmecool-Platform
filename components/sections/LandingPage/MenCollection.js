@@ -9,7 +9,6 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Link from "next/link";
 import { useCallback } from "react";
-import { useRouter } from "next/router";
 
 const responsive = {
   superLargeDesktop: {
@@ -50,8 +49,6 @@ const MenCollection = () => {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
 
   const carouselRef = useRef(null);
-
-  const router = useRouter();
 
   const nextSlide = () => {
     if (carouselRef.current) {
@@ -148,19 +145,13 @@ const MenCollection = () => {
             ))}
           </CustomTab>
         </div>
-        {/* <Link href={`/home`} passHref>
-          <a
-            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-            rel="noopener noreferrer"
-          > */}
-        <button
-          className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]"
-          onClick={() => router.push("/home")}
-        >
-          View All
-        </button>
-        {/* </a>
-        </Link> */}
+        <Link href={`/home`} passHref>
+          <a target="_self" rel="noopener noreferrer">
+            <button className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]">
+              View All
+            </button>
+          </a>
+        </Link>
       </div>
       {shouldShowButtons(1600, 4000, 6) ||
       shouldShowButtons(1367, 1600, 5) ||

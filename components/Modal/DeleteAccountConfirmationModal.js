@@ -63,7 +63,7 @@ const DeleteAccountConfirmationModal = ({
               variant="contained"
               className={`${
                 deleteLoader && "flex gap-3"
-              } "rounded-md capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5"`}
+              } rounded-md capitalize !text-colorWhite !bg-red-600 hover:!bg-red-600 py-2 px-5`}
               onClick={onClickItemDelete}
             >
               {deleteLoader && (
