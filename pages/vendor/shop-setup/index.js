@@ -23,7 +23,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import { TbPhotoPlus } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import { CustomAuthModal } from "../../../components/core/CustomMUIComponents";
-import { shopRegistration } from "../../../graphql/mutations/shops";
+import { shopRegistration, shopUpdate } from "../../../graphql/mutations/shops";
 import { setShopRegisterId } from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,6 +45,8 @@ import {
 import { useCallback } from "react";
 import { handleUploadImage } from "../../../services/imageApis";
 import { generateRandomNumberString } from "../../../utils/common";
+import { loadImageVariantsStart } from "../../../redux/ducks/imageVariants";
+import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 
 const style = {
   position: "absolute",
@@ -264,6 +266,10 @@ const ShopPage = () => {
     },
   ];
 
+  useEffect(() => {
+    dispatch(loadImageVariantsStart());
+  }, [dispatch]);
+
   const getApiState = async () => {
     await getStateLists()
       .then((res) => setStateDataLists(res?.data?.stateList))
@@ -457,53 +463,8 @@ const ShopPage = () => {
     } else {
       setLoading(true);
 
-      let logoResponse = "";
-      let backgroundResponse = "";
-      let imagesResponse = [];
-      let videoResponse = null;
-
-      if (uploadShopLogo) {
-        const folderStructure = `user_${userProfile.id}/shop/logo`;
-        await handleUploadImage(
-          uploadShopLogo,
-          folderStructure,
-          shopLogoSizeVariants
-        )
-          .then((res) => (logoResponse = res))
-          .catch((error) => {
-            console.error("Error during file upload:", error);
-          });
-      }
-
-      if (uploadShopBackground) {
-        const folderStructure = `user_${userProfile.id}/shop/cover `;
-        await handleUploadImage(
-          uploadShopBackground,
-          folderStructure,
-          shopLogoSizeVariants
-        )
-          .then((res) => (backgroundResponse = res))
-          .catch((error) => {
-            console.error("Error during file upload:", error);
-          });
-      }
-
-      if (uploadShopImages.filter((item) => item !== undefined).length > 0) {
-        await multipleImageUploadFile(
-          uploadShopImages.filter((item) => item !== undefined)
-        ).then((res) => (imagesResponse = res));
-      }
-
-      if (uploadShopVideo) {
-        const folderStructure = `user_${userProfile.id}/shop/video`;
-        await fileUpload(uploadShopVideo, folderStructure)
-          .then((res) => (videoResponse = res))
-          .catch((error) => {
-            console.error("Error during file upload:", error);
-          });
-      }
-
-      await shopRegistration({
+      let shopId = "";
+      const shopRegistrationPromise = shopRegistration({
         userId: userProfile.id,
         ownerInfo: {
           owner_firstName: data.first_name,
@@ -513,13 +474,10 @@ const ShopPage = () => {
           user_id: userProfile.id,
         },
         shopInfo: {
-          shop_logo: logoResponse || {},
-          shop_cover_image: backgroundResponse || {},
-          shop_images:
-            imagesResponse?.map((itm) => {
-              return { links: itm };
-            }) || [],
-          shop_video: videoResponse || "",
+          shop_logo: {},
+          shop_cover_image: {},
+          shop_images: [],
+          shop_video: "",
           shop_social_link: {
             facebook: individual ? "" : data.facebook_link,
             instagram: individual ? "" : data.instagram_link,
@@ -564,6 +522,7 @@ const ShopPage = () => {
         ],
       }).then(
         (res) => {
+          shopId = res.data.createShop.shopInfo.id;
           dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
           toast.success(res.data.createShop.message, {
             theme: "colored",
@@ -577,6 +536,82 @@ const ShopPage = () => {
           toast.error(error.message, { theme: "colored" });
         }
       );
+
+      let logoResponse = "";
+      let backgroundResponse = "";
+      let imagesResponse = [];
+      let videoResponse = null;
+
+      const uploadShopLogoPromise = uploadShopLogo
+        ? handleUploadImage(
+            uploadShopLogo,
+            `user_${userProfile.id}/shop/logo`,
+            shopLogoSizeVariants
+          )
+            .then((res) => (logoResponse = res))
+            .catch((error) => {
+              console.error("Error during file upload:", error);
+            })
+        : Promise.resolve();
+
+      const uploadShopBackgroundPromise = uploadShopBackground
+        ? handleUploadImage(
+            uploadShopBackground,
+            `user_${userProfile.id}/shop/cover `,
+            shopCoverSizeVariants
+          )
+            .then((res) => (backgroundResponse = res))
+            .catch((error) => {
+              console.error("Error during file upload:", error);
+            })
+        : Promise.resolve();
+
+      const uploadShopImagesPromise =
+        uploadShopImages.filter((item) => item !== undefined).length > 0
+          ? multipleImageUploadFile(
+              uploadShopImages.filter((item) => item !== undefined)
+            ).then((res) => (imagesResponse = res))
+          : Promise.resolve();
+
+      const uploadShopVideoPromise = uploadShopVideo
+        ? fileUpload(uploadShopVideo, `user_${userProfile.id}/shop/video`)
+            .then((res) => (videoResponse = res))
+            .catch((error) => {
+              console.error("Error during file upload:", error);
+            })
+        : Promise.resolve();
+
+      await Promise.all([
+        shopRegistrationPromise,
+        Promise.all([
+          uploadShopLogoPromise,
+          uploadShopBackgroundPromise,
+          uploadShopImagesPromise,
+          uploadShopVideoPromise,
+        ]),
+      ]);
+
+      if (shopId) {
+        await shopUpdate({
+          shopLayout: {
+            id: shopId,
+            shop_logo: logoResponse || {},
+            shop_cover_image: backgroundResponse || {},
+            shop_images:
+              imagesResponse?.map((itm) => {
+                return { links: itm };
+              }) || [],
+            shop_video: videoResponse || "",
+          },
+        }).then(
+          (res) => {
+            dispatch(loadVendorShopDetailsStart(shopId));
+          },
+          (error) => {
+            console.log("error", error);
+          }
+        );
+      }
     }
   };
 

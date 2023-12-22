@@ -17,6 +17,7 @@ const ShopDetailsPage = () => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const [addEditProductShow, setAddEditProductShow] = useState(false);
+  const [addEditProductLoading, setAddEditProductLoading] = useState(false);
 
   const [editableProductData, setEditableProductData] = useState();
 
@@ -92,12 +93,17 @@ const ShopDetailsPage = () => {
 
         <div
           className={`w-full relative ${
-            loading && productsData?.length === 0 && "h-screen"
+            loading &&
+            !addEditProductLoading &&
+            productsData?.length === 0 &&
+            "h-screen"
           }`}
         >
           <div
             className={`mt-4 ${
-              productsData?.length > 0 && loading ? "opacity-50" : "opacity-100"
+              productsData?.length > 0 && loading && !addEditProductLoading
+                ? "opacity-50"
+                : "opacity-100"
             }`}
           >
             {productsData.length > 0 ? (
@@ -132,7 +138,7 @@ const ShopDetailsPage = () => {
               </div>
             )}
           </div>
-          {loading && (
+          {loading && !addEditProductLoading && (
             <div className="absolute top-1/2 left-1/2">
               <CircularProgress color="secondary" />
             </div>
@@ -146,6 +152,7 @@ const ShopDetailsPage = () => {
       editableProductData={editableProductData}
       setEditableProductData={setEditableProductData}
       getAllProducts={getAllProducts}
+      setAddEditProductLoading={setAddEditProductLoading}
     />
   );
 };

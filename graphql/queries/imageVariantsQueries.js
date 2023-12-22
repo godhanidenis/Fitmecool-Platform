@@ -13,6 +13,7 @@ export const getImageVariants = async () => {
             large
           }
           shop_logo_variants {
+            extraSmall
             small
             medium
             large

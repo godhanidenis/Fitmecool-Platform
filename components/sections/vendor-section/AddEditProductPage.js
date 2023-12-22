@@ -33,6 +33,7 @@ const AddEditProductPage = ({
   editableProductData,
   getAllProducts,
   setEditableProductData,
+  setAddEditProductLoading,
 }) => {
   const {
     register,
@@ -395,28 +396,9 @@ const AddEditProductPage = ({
           }
         );
       } else {
-        let productImagesRes = [];
-        let productVideoRes = null;
-        const productFolderName =
-          new Date().getTime().toString() + generateRandomNumberString(5);
+        let updateProductId = "";
 
-        if (uploadProductImages) {
-          await multipleImageUploadFile(
-            uploadProductImages,
-            productFolderName
-          ).then((res) => (productImagesRes = res));
-        }
-
-        if (uploadProductVideo) {
-          const folderStructure = `user_${userProfile.id}/shop/products/${productFolderName}/video`;
-          await fileUpload(uploadProductVideo, folderStructure)
-            .then((res) => (productVideoRes = res))
-            .catch((error) => {
-              console.error("Error during file upload:", error);
-            });
-        }
-
-        await createProduct({
+        const createProductPromise = createProduct({
           productInfo: {
             shop_id: vendorShopDetails?.id,
             branch_id: data.product_branch,
@@ -426,11 +408,11 @@ const AddEditProductPage = ({
             product_name: data.product_name,
             product_type: data.product_type,
             product_image: {
-              front: productImagesRes[0],
-              back: productImagesRes[1],
-              side: productImagesRes[2],
+              front: {},
+              back: {},
+              side: {},
             },
-            product_video: productVideoRes || "",
+            product_video: "",
             product_price: Math.round(data.product_price),
             product_discount: Number(data.product_discount),
             product_price_visible: !productPriceVisible,
@@ -438,14 +420,15 @@ const AddEditProductPage = ({
           },
         }).then(
           (res) => {
+            updateProductId = res.data.createProduct.productInfo.id;
             toast.success(res.data.createProduct.message, {
               theme: "colored",
             });
             setLoading(false);
             getAllProducts();
             dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
-            handleProductListingModalClose();
             setAddEditProductShow(false);
+            return updateProductId;
           },
           (error) => {
             setLoading(false);
@@ -462,6 +445,58 @@ const AddEditProductPage = ({
             setAlertMsg(error.message);
           }
         );
+
+        let productImagesRes = [];
+        let productVideoRes = null;
+        const productFolderName =
+          new Date().getTime().toString() + generateRandomNumberString(5);
+
+        const uploadImagesPromise = uploadProductImages
+          ? multipleImageUploadFile(
+              uploadProductImages,
+              productFolderName
+            ).then((res) => (productImagesRes = res))
+          : Promise.resolve();
+
+        const uploadVideoPromise = uploadProductVideo
+          ? fileUpload(
+              uploadProductVideo,
+              `user_${userProfile.id}/shop/products/${productFolderName}/video`
+            )
+              .then((res) => (productVideoRes = res))
+              .catch((error) => {
+                console.error("Error during file upload:", error);
+              })
+          : Promise.resolve();
+
+        await Promise.all([
+          createProductPromise,
+          Promise.all([uploadImagesPromise, uploadVideoPromise]),
+        ]);
+
+        if (updateProductId) {
+          await updateProduct({
+            id: updateProductId,
+            productInfo: {
+              product_image: {
+                front: productImagesRes[0],
+                back: productImagesRes[1],
+                side: productImagesRes[2],
+              },
+              product_video: productVideoRes || "",
+            },
+          }).then(
+            (res) => {
+              getAllProducts();
+              handleProductListingModalClose();
+              setAddEditProductLoading(true);
+            },
+            (error) => {
+              setLoading(false);
+              toast.error(error.message, { theme: "colored" });
+            }
+          );
+        }
       }
     }
   };
