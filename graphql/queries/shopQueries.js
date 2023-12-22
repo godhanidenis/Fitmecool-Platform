@@ -8,6 +8,7 @@ export const getAllShopsList = async (payload) => {
         getAllShops(city: $city) {
           id
           shop_name
+          shop_status
         }
       }
     `,
@@ -42,6 +43,7 @@ export const getShops = async (payload) => {
           noOfPages
           data {
             id
+            shop_status
             shop_name
             shop_logo {
               extraSmall
@@ -90,6 +92,7 @@ export const getShopDetails = async (payload) => {
       query Shop($shopId: String) {
         shop(id: $shopId) {
           id
+          shop_status
           shop_name
           shop_logo {
             extraSmall
@@ -131,6 +134,7 @@ export const getVendorShopDetails = async (payload) => {
       query Shop($shopId: String, $forDashboard: Boolean) {
         shop(id: $shopId, forDashboard: $forDashboard) {
           id
+          shop_status
           createdAt
           subscriptionDate
           user_id

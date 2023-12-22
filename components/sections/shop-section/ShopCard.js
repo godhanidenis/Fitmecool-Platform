@@ -8,6 +8,8 @@ import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import { Avatar } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { assets } from "../../../constants";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
@@ -71,6 +73,24 @@ const ShopCard = ({ shop }) => {
                 </a>
               </Link>
             </div>
+          </div>
+
+          <div className="absolute top-2 z-10">
+            <span
+              className={`flex items-center justify-center gap-1 label label-large arrowed-right text-white font-semibold ${
+                shop?.shop_status ? "bg-[#29977E]" : "bg-[#ff0000cc]"
+              }`}
+            >
+              {shop?.shop_status ? (
+                <>
+                  <VerifiedIcon /> Verified
+                </>
+              ) : (
+                <>
+                  <AccessibilityNewIcon /> HandPicked
+                </>
+              )}
+            </span>
           </div>
         </div>
       </div>

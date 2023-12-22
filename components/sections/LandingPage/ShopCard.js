@@ -8,6 +8,8 @@ import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
 import Link from "next/link";
 import { Avatar } from "@mui/material";
 import { assets } from "../../../constants";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
@@ -26,6 +28,23 @@ const ShopCard = ({ shop }) => {
           rel="noopener noreferrer"
         >
           <div className="relative top-0 left-0">
+            <div className="absolute top-2 z-10">
+              <span
+                className={`label label-large arrowed-right text-white font-semibold ${
+                  shop?.shop_status ? "bg-[#29977E]" : "bg-[#ff0000cc]"
+                }`}
+              >
+                {shop?.shop_status ? (
+                  <>
+                    <VerifiedIcon /> Verified
+                  </>
+                ) : (
+                  <>
+                    <AccessibilityNewIcon /> HandPicked
+                  </>
+                )}
+              </span>
+            </div>
             <div
               className="relative"
               style={{
