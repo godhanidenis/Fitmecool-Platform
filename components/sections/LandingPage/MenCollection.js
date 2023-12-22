@@ -146,10 +146,7 @@ const MenCollection = () => {
           </CustomTab>
         </div>
         <Link href={`/home`} passHref>
-          <a
-            target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
-            rel="noopener noreferrer"
-          >
+          <a target="_self" rel="noopener noreferrer">
             <button className="underline text-[#29977E] font-semibold text-[16px] sm:text-[18px] md:text-[18px] lg-text-[18px] 2xl:text-[18px]">
               View All
             </button>

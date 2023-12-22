@@ -103,15 +103,15 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   useEffect(() => {
     const initialPhotos = [
       {
-        src: product.product_image?.front?.medium,
+        src: product.product_image?.front?.large,
         type: "image",
       },
       {
-        src: product.product_image?.back?.medium,
+        src: product.product_image?.back?.large,
         type: "image",
       },
       {
-        src: product.product_image?.side?.medium,
+        src: product.product_image?.side?.large,
         type: "image",
       },
     ];
@@ -271,12 +271,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       href={`/product/${productSlug}/${product.id}`}
                       passHref
                     >
-                      <a
-                        target={`${
-                          themeLayout === "webScreen" ? "_blank" : "_self"
-                        }`}
-                        rel="noopener noreferrer"
-                      >
+                      <a target="_self" rel="noopener noreferrer">
                         {isProductImagesLoaded && (
                           <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
                         )}
@@ -458,7 +453,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
               <Link href={`/product/${productSlug}/${product.id}`} passHref>
                 <a
                   className="bg-[#fff] rounded-b-lg shadow-md"
-                  target={`${themeLayout === "webScreen" ? "_blank" : "_self"}`}
+                  target="_self"
                   rel="noopener noreferrer"
                 >
                   <div className="pl-3">

@@ -12,7 +12,11 @@ import { userLogout } from "../../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { deleteObjectsInFolder } from "../../../services/wasabi";
 
-const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
+const VendorSidebar = ({
+  forHeader,
+  handleMobileSidebarClick,
+  setAccessToken,
+}) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -164,8 +168,8 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
                   },
                 })
               );
+              setAccessToken("");
               router.push("/");
-
               toast.success(res?.data?.deleteAccount, {
                 theme: "colored",
               });

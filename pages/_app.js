@@ -16,7 +16,7 @@ import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
 import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 
 import CustomerCommonLayout from "../components/Layout/CustomerCommonLayout";
@@ -37,6 +37,8 @@ const theme = createTheme({
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+
+  const [accessToken, setAccessToken] = useState();
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -95,12 +97,17 @@ function MyApp({ Component, pageProps }) {
           <ToastContainer />
 
           <Provider store={store}>
-            {!router.pathname.includes("/auth/") && <Header />}
+            {!router.pathname.includes("/auth/") && (
+              <Header
+                setAccessToken={setAccessToken}
+                accessToken={accessToken}
+              />
+            )}
 
             <div>
               {router.pathname.includes("/vendor/") &&
               router.pathname !== "/vendor/shop-setup" ? (
-                <VendorCommonLayout>
+                <VendorCommonLayout setAccessToken={setAccessToken}>
                   <Component {...pageProps} />
                 </VendorCommonLayout>
               ) : router.pathname === "/auth/user-type" ||
