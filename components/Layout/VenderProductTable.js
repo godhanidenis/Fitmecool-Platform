@@ -22,6 +22,7 @@ import { changeProductPage } from "../../redux/ducks/product";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
 import { refactorPrice } from "../../utils/common";
 import { deleteObjectsInFolder } from "../../services/wasabi";
+import ImageLoadingSkeleton from "../Modal/ImageLoadingSkeleton";
 
 const StyledTableCell = styled(TableCell)(({ theme, index }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -111,15 +112,26 @@ const VenderProductTable = ({
                           </div>
                         )}
 
-                        <Image
-                          objectFit="cover"
-                          objectPosition="center top"
-                          src={item?.product_image?.front?.small ?? ""}
-                          unoptimized={true}
-                          width={"100%"}
-                          height={"100%"}
-                          alt="Product Image"
-                        />
+                        {item?.product_image?.front?.small ? (
+                          <Image
+                            objectFit="cover"
+                            objectPosition="center top"
+                            src={item?.product_image?.front?.small ?? ""}
+                            unoptimized={true}
+                            width={"100%"}
+                            height={"100%"}
+                            alt="Product Image"
+                          />
+                        ) : (
+                          <ImageLoadingSkeleton
+                            sx={{
+                              backgroundColor: "gray",
+                              width: "80px",
+                              height: "80px",
+                            }}
+                            validClassName={true}
+                          />
+                        )}
                       </div>
                     </div>
                   </TableCell>

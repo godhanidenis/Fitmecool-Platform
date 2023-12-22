@@ -72,6 +72,9 @@ export const createProduct = async (payload) => {
       mutation CreateProduct($productInfo: createProductInput) {
         createProduct(productInfo: $productInfo) {
           message
+          productInfo {
+            id
+          }
         }
       }
     `,
