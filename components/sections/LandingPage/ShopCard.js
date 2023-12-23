@@ -30,7 +30,7 @@ const ShopCard = ({ shop }) => {
           <div className="relative top-0 left-0">
             <div className="absolute top-2 z-10">
               <span
-                className={`label label-large arrowed-right text-white font-semibold ${
+                className={`flex items-center justify-center gap-1 label label-large arrowed-right text-white font-semibold ${
                   shop?.shop_status ? "bg-[#29977E]" : "bg-[#ff0000cc]"
                 }`}
               >

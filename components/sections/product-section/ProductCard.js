@@ -60,7 +60,7 @@ const responsive = {
 const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
   const [productLikeByUser, setProductLikeByUser] = useState(false);
   const [isShopLogoLoaded, setIsShopLogoLoaded] = useState(false);
-  const [isProductImagesLoaded, setIsProductImagesLoaded] = useState(false);
+  const [isProductImagesLoaded, setIsProductImagesLoaded] = useState(true);
   const [OpenToolTip, setOpenToolTip] = useState(false);
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isProductImages, setIsProductImages] = useState(false);
@@ -272,23 +272,24 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       passHref
                     >
                       <a target="_self" rel="noopener noreferrer">
-                        {isProductImagesLoaded && (
-                          <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
-                        )}
-                        {isProductImages ? (
-                          <div className="w-full h-full bg-[#00000031] rounded-t-lg absolute top-0" />
+                        {!isProductImages ||
+                          (isProductImagesLoaded && (
+                            <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg !bg-[#00000049]" />
+                          ))}
+                        {!product?.product_image?.front?.medium ||
+                        isProductImages ? (
+                          <div className="w-full h-full bg-[#00000021] rounded-t-lg absolute top-0" />
                         ) : (
                           <Image
-                            src={product.product_image?.front?.medium ?? ""}
+                            src={product?.product_image?.front?.medium ?? ""}
                             alt={product?.product_name}
-                            className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
-                              isProductImagesLoaded
-                                ? "opacity-100"
-                                : "opacity-0"
-                            }`}
-                            onLoad={() => setIsProductImagesLoaded(true)}
+                            className={`object-cover object-top absolute top-0 left-0 rounded-t-lg`}
+                            onLoad={() => {
+                              setIsProductImagesLoaded(false);
+                            }}
                             onError={() => {
                               setIsProductImages(true);
+                              setIsProductImagesLoaded(false);
                             }}
                             layout="fill"
                           />

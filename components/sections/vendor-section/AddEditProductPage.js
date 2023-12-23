@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -71,6 +71,8 @@ const AddEditProductPage = ({
   const [productPriceVisible, setProductPriceVisible] = useState(false);
   const [productListingType, setProductListingType] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
+
+  const targetRef = useRef(null);
 
   const router = useRouter();
   const { imageVariantsData } = useSelector((state) => state.imageVariants);
@@ -432,15 +434,9 @@ const AddEditProductPage = ({
           },
           (error) => {
             setLoading(false);
-            const targetElement = document.getElementById("AddProduct");
+            const targetElement = targetRef.current;
             if (targetElement) {
-              const targetScrollPosition =
-                targetElement.getBoundingClientRect().top;
-
-              window.scrollTo({
-                top: window.scrollY + targetScrollPosition,
-                behavior: "smooth",
-              });
+              targetElement.scrollIntoView({ behavior: "smooth" });
             }
             setAlertMsg(error.message);
           }
@@ -534,7 +530,7 @@ const AddEditProductPage = ({
     return null;
   }
   return (
-    <div id="AddProduct" className="h-full overflow-scroll hideScroll">
+    <div className="h-full overflow-scroll hideScroll">
       <div className="sm:p-0 sm:py-6 p-6">
         <div className="font-semibold text-black flex items-center gap-2 sm:mx-4">
           <span>
@@ -552,7 +548,7 @@ const AddEditProductPage = ({
               }}
             />
           </span>
-          <span className="text-xl">
+          <span className="text-xl" ref={targetRef}>
             {editableProductData ? "Update" : "Add"} Product
           </span>
         </div>

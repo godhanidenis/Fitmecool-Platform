@@ -38,16 +38,15 @@ const ShopCard = ({ shop }) => {
                   rel="noopener noreferrer"
                 >
                   {!isShopImagesLoaded && (
-                    <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg" />
+                    <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg !bg-[#00000049]" />
                   )}
-                  {isShopImages ? (
+                  {!shop?.shop_images[0]?.links?.medium || isShopImages ? (
                     <>
                       <Image
                         src={assets.shopBackgroundCover3 ?? ""}
                         alt={shop?.shop_name}
-                        className={`object-cover absolute top-0 left-0 rounded-t-lg bg-[#00000031]  ${
-                          isShopImagesLoaded ? "opacity-100" : "opacity-0 "
-                        }`}
+                        className={`object-cover absolute top-0 left-0 rounded-t-lg
+                        `}
                         onLoad={() => setShopImagesLoaded(true)}
                         layout="fill"
                         onError={() => {
@@ -58,11 +57,9 @@ const ShopCard = ({ shop }) => {
                     </>
                   ) : (
                     <Image
-                      src={shop.shop_images[0]?.links?.medium ?? ""}
+                      src={shop?.shop_images[0]?.links?.medium ?? ""}
                       alt={shop?.shop_name}
-                      className={`object-cover object-top absolute top-0 left-0 bg-white rounded-t-lg ${
-                        isShopImagesLoaded ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`object-cover object-top absolute top-0 left-0 rounded-t-lg`}
                       onLoad={() => setShopImagesLoaded(true)}
                       onError={() => {
                         setIsShopImages(true);
