@@ -94,8 +94,8 @@ const VenderProductTable = ({
                 <StyledTableRow key={index}>
                   <TableCell align="center">{index + 1}</TableCell>
                   <TableCell>
-                    <div className="relative flex justify-center ">
-                      <div className="relative cursor-pointer pt-1 ps-1 overflow-hidden ">
+                    <div className="relative flex justify-center items-center">
+                      <div className="relative cursor-pointer pt-1 ps-1 overflow-hidden">
                         {item?.product_listing_type && (
                           <div className="absolute top-2 z-10">
                             <span
@@ -126,8 +126,8 @@ const VenderProductTable = ({
                           <ImageLoadingSkeleton
                             sx={{
                               backgroundColor: "gray",
-                              width: "80px",
-                              height: "80px",
+                              width: "100px",
+                              height: "100px",
                             }}
                             validClassName={true}
                           />

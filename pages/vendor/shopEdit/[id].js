@@ -1666,14 +1666,24 @@ const ShopEdit = () => {
               ) : (
                 <>
                   <div className="mt-4">
-                    <VendorBranchTable
-                      subBranchList={subBranchList}
-                      updateVendorShopDetailStore={updateVendorShopDetailStore}
-                      setAddEditSubBranchShow={setAddEditSubBranchShow}
-                      setEditableBranchData={setEditableBranchData}
-                      setBranchDeleteModalOpen={setBranchDeleteModalOpen}
-                      setDeleteBranchId={setDeleteBranchId}
-                    />
+                    {subBranchList.length > 0 ? (
+                      <VendorBranchTable
+                        subBranchList={subBranchList}
+                        updateVendorShopDetailStore={
+                          updateVendorShopDetailStore
+                        }
+                        setAddEditSubBranchShow={setAddEditSubBranchShow}
+                        setEditableBranchData={setEditableBranchData}
+                        setBranchDeleteModalOpen={setBranchDeleteModalOpen}
+                        setDeleteBranchId={setDeleteBranchId}
+                      />
+                    ) : (
+                      subBranchList.length === 0 && (
+                        <span className="flex items-center justify-center">
+                          No sub branch found!
+                        </span>
+                      )
+                    )}
                   </div>
                 </>
               )}
