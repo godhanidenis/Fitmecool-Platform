@@ -18,6 +18,15 @@ import CustomSwitchComponent from "../../core/CustomSwitchComponent";
 
 const HomePage = () => {
   const dispatch = useDispatch();
+
+  const productPerPageCount = parseInt(
+    process.env.NEXT_PUBLIC_PRODUCTS_PER_PAGE_LISTING
+  );
+
+  const shopPerPageCount = parseInt(
+    process.env.NEXT_PUBLIC_SHOPS_PER_PAGE_LISTING
+  );
+
   const { productsCount, productPageSkip, productsData, loading } = useSelector(
     (state) => state.products
   );
@@ -64,7 +73,7 @@ const HomePage = () => {
       loadProductsStart({
         pageData: {
           skip: productPageSkip,
-          limit: 12,
+          limit: productPerPageCount,
         },
         filter: {
           category_id: appliedProductsFilters.categoryId.selectedValue,
@@ -95,7 +104,7 @@ const HomePage = () => {
       loadShopsStart({
         pageData: {
           skip: shopPageSkip,
-          limit: 12,
+          limit: shopPerPageCount,
         },
         area: appliedShopsFilters.locations.selectedValue.map((itm) => itm.pin),
         sort: shopSortFilter.sortType.selectedValue,
@@ -105,6 +114,7 @@ const HomePage = () => {
     );
   }, [
     dispatch,
+    shopPerPageCount,
     shopPageSkip,
     shopSortFilter.sortType.selectedValue,
     appliedShopsFilters,
@@ -175,20 +185,23 @@ const HomePage = () => {
                           />
                         ))}
                       </div>
-                      {productsCount > 12 && (
+                      {productsCount > productPerPageCount && (
                         <div className="flex justify-center py-4 sm:py-8">
                           <Pagination
                             color="primary"
-                            count={Math.ceil(productsCount / 12)}
+                            count={Math.ceil(
+                              productsCount / productPerPageCount
+                            )}
                             page={
                               (productPageSkip === 0 && 1) ||
-                              productPageSkip / 12 + 1
+                              productPageSkip / productPerPageCount + 1
                             }
                             onChange={(e, p) => {
                               scrollToTitleName();
                               dispatch(
                                 changeProductPage(
-                                  (p === 1 && 0) || (p - 1) * 12
+                                  (p === 1 && 0) ||
+                                    (p - 1) * productPerPageCount
                                 )
                               );
                             }}
@@ -231,18 +244,21 @@ const HomePage = () => {
                         ))}
                       </div>
 
-                      {shopsCount > 12 && (
+                      {shopsCount > shopPerPageCount && (
                         <div className="flex justify-center py-4 sm:py-8">
                           <Pagination
                             color="primary"
-                            count={Math.ceil(shopsCount / 12)}
+                            count={Math.ceil(shopsCount / shopPerPageCount)}
                             page={
-                              (shopPageSkip === 0 && 1) || shopPageSkip / 12 + 1
+                              (shopPageSkip === 0 && 1) ||
+                              shopPageSkip / shopPerPageCount + 1
                             }
                             onChange={(e, p) => {
                               scrollToTitleName();
                               dispatch(
-                                changeShopPage((p === 1 && 0) || (p - 1) * 12)
+                                changeShopPage(
+                                  (p === 1 && 0) || (p - 1) * shopPerPageCount
+                                )
                               );
                             }}
                           />

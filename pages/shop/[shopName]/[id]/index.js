@@ -30,6 +30,9 @@ import {
 import { useCallback } from "react";
 
 const ShopDetail = ({ shopDetails, error }) => {
+  const productsPerPageCount = parseInt(
+    process.env.NEXT_PUBLIC_PRODUCTS_PER_PAGE_SHOP
+  );
   const [shopReviews, setShopReviews] = useState([]);
   const [totalFollowers, setTotalFollowers] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -85,7 +88,7 @@ const ShopDetail = ({ shopDetails, error }) => {
       loadShopProductsStart({
         pageData: {
           skip: productPageSkip,
-          limit: 6,
+          limit: productsPerPageCount,
         },
         filter: {
           category_id: appliedShopProductsFilters.categoryId.selectedValue,
@@ -104,6 +107,7 @@ const ShopDetail = ({ shopDetails, error }) => {
     );
   }, [
     dispatch,
+    productsPerPageCount,
     shopSortFilters.sortType.selectedValue,
     appliedShopProductsFilters,
     productPageSkip,
@@ -246,14 +250,16 @@ const ShopDetail = ({ shopDetails, error }) => {
                         />
                       ))}
                     </div>
-                    {productsCount > 6 && (
+                    {productsCount > productsPerPageCount && (
                       <div className="flex justify-center py-4 sm:py-8">
                         <Pagination
                           color="primary"
-                          count={Math.ceil(productsCount / 6)}
+                          count={Math.ceil(
+                            productsCount / productsPerPageCount
+                          )}
                           page={
                             (productPageSkip === 0 && 1) ||
-                            productPageSkip / 6 + 1
+                            productPageSkip / productsPerPageCount + 1
                           }
                           onChange={(e, p) => {
                             const targetScrollPosition = 500;
@@ -264,7 +270,7 @@ const ShopDetail = ({ shopDetails, error }) => {
                             });
                             dispatch(
                               changeShopProductPage(
-                                (p === 1 && 0) || (p - 1) * 6
+                                (p === 1 && 0) || (p - 1) * productsPerPageCount
                               )
                             );
                           }}
