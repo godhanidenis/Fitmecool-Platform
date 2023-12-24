@@ -72,11 +72,12 @@ function MyApp({ Component, pageProps }) {
         <meta
           property="og:description"
           content={
-            pageProps?.productDetails?.data?.product?.data
-              ?.product_description ||
-            pageProps?.shopDetails?.data?.shop.branch_info.find(
-              (branch) => branch?.branch_type === "main"
-            )?.branch_address
+            "Hellozz"
+            // pageProps?.productDetails?.data?.product?.data
+            //   ?.product_description ||
+            // pageProps?.shopDetails?.data?.shop.branch_info.find(
+            //   (branch) => branch?.branch_type === "main"
+            // )?.branch_address
           }
         />
         <meta
