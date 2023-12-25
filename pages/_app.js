@@ -18,6 +18,7 @@ import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useEffect, useState } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
+import { assets } from "../constants";
 
 import CustomerCommonLayout from "../components/Layout/CustomerCommonLayout";
 
@@ -59,32 +60,36 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>
           {pageProps?.productDetails?.data?.product?.data?.product_name ||
-            pageProps?.shopDetails?.data?.shop?.shop_name}
+            pageProps?.shopDetails?.data?.shop?.shop_name ||
+            "FitMeCool"}
         </title>
 
         <meta
           property="og:title"
           content={
             pageProps?.productDetails?.data?.product?.data?.product_name ||
-            pageProps?.shopDetails?.data?.shop?.shop_name
+            pageProps?.shopDetails?.data?.shop?.shop_name ||
+            "FitMeCool"
           }
         />
         <meta
           property="og:description"
           content={
-            "Hellozz"
-            // pageProps?.productDetails?.data?.product?.data
-            //   ?.product_description ||
-            // pageProps?.shopDetails?.data?.shop.branch_info.find(
-            //   (branch) => branch?.branch_type === "main"
-            // )?.branch_address
+            pageProps?.productDetails?.data?.product?.data
+              ?.product_description ||
+            pageProps?.shopDetails?.data?.shop.branch_info.find(
+              (branch) => branch?.branch_type === "main"
+            )?.branch_address ||
+            "Clothe Rent/ Sell Inquiry Platform"
           }
         />
         <meta
           property="og:image"
           content={
             pageProps?.productDetails?.data?.product?.data?.product_image?.front
-              ?.small || pageProps?.shopDetails?.data?.shop.shop_logo?.small
+              ?.small ||
+            pageProps?.shopDetails?.data?.shop.shop_logo?.small ||
+            assets?.appLogo
           }
         />
         <meta
