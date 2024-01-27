@@ -87,7 +87,7 @@ function MyApp({ Component, pageProps }) {
           property="og:image"
           content={
             pageProps?.productDetails?.data?.product?.data?.product_image
-              ?.medium?.large ||
+              ?.large ||
             pageProps?.shopDetails?.data?.shop.shop_logo?.small ||
             assets?.appLogo
           }
