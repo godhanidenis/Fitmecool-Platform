@@ -228,7 +228,7 @@ const ProductDetail = ({ productDetails, error }) => {
             <>
               {itm?.type === "image" && (
                 <img
-                  src={itm?.src?.small}
+                  src={itm?.src?.medium}
                   alt="Product Images"
                   style={{
                     border: images?.src === itm?.src ? "2px solid #29977E" : 0,

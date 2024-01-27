@@ -276,12 +276,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                           (isProductImagesLoaded && (
                             <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg !bg-[#00000049]" />
                           ))}
-                        {!product?.product_image?.front?.medium ||
+                        {!product?.product_image?.front?.large ||
                         isProductImages ? (
                           <div className="w-full h-full bg-[#00000021] rounded-t-lg absolute top-0" />
                         ) : (
                           <Image
-                            src={product?.product_image?.front?.medium ?? ""}
+                            src={product?.product_image?.front?.large ?? ""}
                             alt={product?.product_name}
                             className={`object-cover object-top absolute top-0 left-0 rounded-t-lg`}
                             onLoad={() => {
