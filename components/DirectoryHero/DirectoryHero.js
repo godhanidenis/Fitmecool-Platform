@@ -21,14 +21,14 @@ const DirectoryHero = ({ title, bgImg }) => {
     <>
       {isShopImages ? (
         <section
-          className={`py-24 md:py-36 bg-cover bg-repeat-round`}
+          className={`py-12 md:py-36 bg-cover bg-repeat-round`}
           style={{
             backgroundImage: `url(${assets.shopBackgroundCover3})`,
           }}
         />
       ) : loaded && !isShopImages ? (
         <section
-          className="py-24 md:py-36 bg-cover bg-repeat-round"
+          className="py-12 md:py-36 bg-cover bg-repeat-round"
           style={{
             backgroundImage: `url(${loaded && bgImg})`,
             display: !loaded && "none",
@@ -36,7 +36,7 @@ const DirectoryHero = ({ title, bgImg }) => {
         />
       ) : (
         !loaded && (
-          <ImageLoadingSkeleton className="!py-24 md:!py-36 !bg-cover !bg-repeat-round" />
+          <ImageLoadingSkeleton className="!py-12 md:!py-36 !bg-cover !bg-repeat-round" />
         )
       )}
     </>
