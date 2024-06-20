@@ -20,7 +20,10 @@ import { useEffect, useState } from "react";
 import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 import { assets } from "../constants";
 
+const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID; // Replace with your GA Tracking ID
+
 import CustomerCommonLayout from "../components/Layout/CustomerCommonLayout";
+import Script from "next/script";
 
 const theme = createTheme({
   palette: {
@@ -97,6 +100,24 @@ function MyApp({ Component, pageProps }) {
           content={typeof window !== "undefined" ? window.location.href : ""}
         />
       </Head>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+        }}
+      />
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
