@@ -271,7 +271,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       href={`/product/${productSlug}/${product.id}`}
                       passHref
                     >
-                      <a target="_self" rel="noopener noreferrer">
+                      <a
+                        target={`${
+                          themeLayout === "webScreen" ? "_blank" : "_self"
+                        }`}
+                        rel="noopener noreferrer"
+                      >
                         {!isProductImages ||
                           (isProductImagesLoaded && (
                             <ImageLoadingSkeleton className="!object-cover !h-full !rounded-t-lg !bg-[#00000049]" />
@@ -451,19 +456,28 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
             </div>
 
             {!onlyCarousal && (
-              <Link href={`/product/${productSlug}/${product.id}`} passHref>
-                <a
-                  className="bg-[#fff] rounded-b-lg shadow-md"
-                  target="_self"
-                  rel="noopener noreferrer"
-                >
-                  <div className="pl-3">
-                    <div>
-                      <span className="line-clamp-1 font-semibold text-black text-base mt-2 capitalize">
-                        {product?.product_name}
-                      </span>
-                    </div>
+              <div className="pl-3">
+                <Link href={`/product/${productSlug}/${product.id}`} passHref>
+                  <a
+                    className="bg-[#fff] rounded-b-lg shadow-md"
+                    target={`${
+                      themeLayout === "webScreen" ? "_blank" : "_self"
+                    }`}
+                    rel="noopener noreferrer"
+                  >
+                    <span className="line-clamp-1 font-semibold text-black text-base mt-2 capitalize">
+                      {product?.product_name}
+                    </span>
+                  </a>
+                </Link>
 
+                <Link href={`/shop/${shopSlug}/${shopId}`} passHref>
+                  <a
+                    target={`${
+                      themeLayout === "webScreen" ? "_blank" : "_self"
+                    }`}
+                    rel="noopener noreferrer"
+                  >
                     <div className="flex gap-2 justify-start items-center mt-2 mb-2">
                       <div className="flex justify-center items-center">
                         <div className="flex justify-center items-center relative sm:w-6 sm:h-6 w-4 h-4">
@@ -505,48 +519,39 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                         </div>
                       </div>
                       <div className="flex flex-col justify-center">
-                        <Link href={`/shop/${shopSlug}/${shopId}`} passHref>
-                          <a
-                            target={`${
-                              themeLayout === "webScreen" ? "_blank" : "_self"
-                            }`}
-                            rel="noopener noreferrer"
-                          >
-                            <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
-                              {product.branchInfo?.shop_info?.shop_name}
-                            </span>
-                          </a>
-                        </Link>
+                        <span className="line-clamp-1 text-[#9d9d9d] font-semibold cursor-pointer hover:text-colorPrimary text-xs sm:text-sm">
+                          {product.branchInfo?.shop_info?.shop_name}
+                        </span>
                       </div>
                     </div>
+                  </a>
+                </Link>
 
-                    {product?.product_price_visible ? (
-                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
-                        <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold line-clamp-1">
-                          ₹{Math.round(finalPrice)}
+                {product?.product_price_visible ? (
+                  <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-0 sm:gap-2 lg:gap-0 xl:gap-2 mb-2  items-start sm:items-center lg:items-start xl:items-center">
+                    <p className="text-black text-sm sm:text-md xl:text-md 2xl:text-lg font-bold line-clamp-1">
+                      ₹{Math.round(finalPrice)}
+                    </p>
+                    {product?.product_discount !== 0 && (
+                      <div className="flex gap-2 items-center">
+                        <p className="text-[#9d9d9d] text-sm  font-semibold line-through line-clamp-1">
+                          ₹{Math.round(product?.product_price)}
                         </p>
-                        {product?.product_discount !== 0 && (
-                          <div className="flex gap-2 items-center">
-                            <p className="text-[#9d9d9d] text-sm  font-semibold line-through line-clamp-1">
-                              ₹{Math.round(product?.product_price)}
-                            </p>
-                            <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium line-clamp-1">
-                              ({Math.round(product?.product_discount)}% OFF)
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
-                        <p className="text-black text-sm  font-bold line-clamp-1">
-                          No Price Visible !
+                        <p className="text-green-600 text-sm sm:text-md xl:text-sm 2xl:text-md font-medium line-clamp-1">
+                          ({Math.round(product?.product_discount)}% OFF)
                         </p>
-                        <p className="text-[#fff] text-sm">*</p>
                       </div>
                     )}
                   </div>
-                </a>
-              </Link>
+                ) : (
+                  <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row 2xl:flex-col mb-2 2xl:-mb-1  items-start sm:items-center lg:items-start xl:items-center 2xl:items-start">
+                    <p className="text-black text-sm  font-bold line-clamp-1">
+                      No Price Visible !
+                    </p>
+                    <p className="text-[#fff] text-sm">*</p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>

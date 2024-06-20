@@ -200,28 +200,13 @@ export const footerData = {
   socialMediaList: [
     {
       id: 1,
-      logo: assets.facebookLogo,
-      link: "https://facebook.com/",
+      logo: assets.youtubeLogo,
+      link: "https://www.youtube.com/watch?v=B-cZCGNev0o",
     },
     {
       id: 2,
-      logo: assets.youtubeLogo,
-      link: "https://youtube.com/",
-    },
-    {
-      id: 3,
-      logo: assets.twitterLogo,
-      link: "https://twitter.com/",
-    },
-    {
-      id: 4,
-      logo: assets.linkedinLogo,
-      link: "https://linkedin.com/",
-    },
-    {
-      id: 5,
       logo: assets.instagramLogo,
-      link: "https://instagram.com/",
+      link: "https://www.instagram.com/fit_me_cool",
     },
   ],
   dataList: [

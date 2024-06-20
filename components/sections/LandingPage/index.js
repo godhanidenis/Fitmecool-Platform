@@ -313,14 +313,14 @@ const LandingPage = () => {
                     className="cursor-pointer"
                   />
                 </Link>
-                <Image
+                {/* <Image
                   src={assets.appStore}
                   alt="appStore"
                   width={175}
                   height={62}
                   objectFit="cover"
                   className="cursor-pointer"
-                />
+                /> */}
               </div>
             </div>
           </div>

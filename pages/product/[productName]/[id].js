@@ -424,9 +424,9 @@ const ProductDetail = ({ productDetails, error }) => {
                 </p>
               </a>
             </Link>
-            <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal line-clamp-1">
+            {/* <p className="text-[#888888] text-[10px] md:text-ms 2xl:text-sm font-normal line-clamp-1">
               {shopOldDate} days ago
-            </p>
+            </p> */}
           </div>
         </div>
         <div className="flex flex-col">

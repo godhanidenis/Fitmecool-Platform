@@ -10,11 +10,11 @@ const Footer = () => {
         <div className="pt-[24px] sm:pt-20 flex flex-col lg:flex-row flex-wrap items-start justify-between gap-8 ml-[5.5%]">
           <div className="flex flex-col sm:items-center md:items-start max-w-[420px] -mt-6">
             <AppLogo />
-            <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px] mt-2">
+            {/* <div className="text-[16px] font-normal text-[#FAFCFC] mb-[25px] mt-2">
               Best information about the company gies here but now lorem ipsum
               is
-            </div>
-            <ul className="flex items-center">
+            </div> */}
+            <ul className="flex items-center mt-6">
               {footerData.socialMediaList.map((social) => (
                 <Link key={social.id} href={social.link}>
                   <a target="_blank">

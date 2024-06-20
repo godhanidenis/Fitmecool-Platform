@@ -140,13 +140,13 @@ const ShopHeaderSection = ({
               <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-3">
-                    <div className="font-semibold text-[30px] text-[#FFFFFF] line-clamp-1">
+                    <div className="font-semibold text-[30px] text-[#FFFFFF] line-clamp-1 mb-4">
                       {shopDetails.shop_name}
                     </div>
-                    <div className="text-[#FFFFFF] text-[18px] font-normal ">
+                    {/* <div className="text-[#FFFFFF] text-[18px] font-normal ">
                       Let&apos;s be Effortlessly Cool: Embrace Your Signature
                       Style with Us
-                    </div>
+                    </div> */}
                     <span className="text-[#878A99] text-[16px] font-normal flex">
                       <LocationOnIcon
                         fontSize="small"
@@ -161,7 +161,7 @@ const ShopHeaderSection = ({
                     </span>
 
                     <Typography
-                      className="text-colorGreen underline pb-2 sm:pb-10 !mt-2 cursor-pointer"
+                      className="text-colorGreen underline pb-2 sm:pb-10 !mt-1 cursor-pointer"
                       onClick={() =>
                         router.push(
                           `/shop/${shopSlug}/${shopDetails?.id}/branches`

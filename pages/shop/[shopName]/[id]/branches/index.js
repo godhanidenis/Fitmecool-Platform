@@ -81,11 +81,11 @@ const Branches = ({ shopDetails, shopId }) => {
               <span className="sm:text-[32px] text-[30px] font-semibold text-white text-center">
                 {shopDetailsData?.shop_name}
               </span>
-              <span className="text-white text-base font-normal text-center">
+              {/* <span className="text-white text-base font-normal text-center">
                 {
                   "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
                 }
-              </span>
+              </span> */}
               <span className="text-colorGreen text-base sm:text-lg font-semibold">
                 {shopDetailsData?.branch_info?.length} Branches
               </span>
