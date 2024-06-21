@@ -105,7 +105,7 @@ const ShopHeaderSection = ({
                         {/* {String(shopDetails.shop_name)
                           ?.split(" ")[0][0]
                           .toUpperCase()} */}
-                        <StorefrontIcon className="text-[64px]" />
+                        <StorefrontIcon className="!text-[64px]" />
                       </Avatar>
                     ) : (
                       <Image

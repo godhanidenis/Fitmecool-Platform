@@ -10,6 +10,7 @@ import { Avatar } from "@mui/material";
 import { assets } from "../../../constants";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
 const ShopCard = ({ shop }) => {
   const { themeLayout } = useSelector((state) => state.themeLayout);
@@ -104,14 +105,15 @@ const ShopCard = ({ shop }) => {
               >
                 {isLogoImage && (
                   <Avatar
-                    className="!bg-colorGreen"
+                    className="!bg-colorGreen border-2 border-white"
                     sx={{
                       fontSize: "40px",
                       width: "100%",
                       height: "100%",
                     }}
                   >
-                    {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()}
+                    {/* {String(shop.shop_name)?.split(" ")[0][0].toUpperCase()} */}
+                    <StorefrontIcon className="!text-[32px] sm:!text-[64px]" />
                   </Avatar>
                 )}
                 <Image

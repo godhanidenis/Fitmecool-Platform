@@ -86,7 +86,7 @@ const Branches = ({ shopDetails, shopId }) => {
                   {/* {String(shopDetailsData?.shop_name)
                     ?.split(" ")[0][0]
                     .toUpperCase()} */}
-                  <StorefrontIcon className="text-[64px]" />
+                  <StorefrontIcon className="!text-[64px]" />
                 </Avatar>
               )}
             </Box>
