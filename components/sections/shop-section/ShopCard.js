@@ -18,7 +18,7 @@ const ShopCard = ({ shop }) => {
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
 
-  const shopSlug = shop.shop_name.replaceAll(" ", "-");
+  const shopSlug = shop.shop_name?.toLowerCase()?.replaceAll(" ", "-");
 
   return (
     <div className="w-[98%] sm:w-[49%] lg:w-[32%] mb-3 sm:mb-0 bg-white shadow-md h-full rounded-lg ">

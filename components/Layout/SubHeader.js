@@ -62,7 +62,9 @@ const SubHeader = () => {
       onClick={() => {
         if (filterType === "shopId") {
           window.open(
-            `/shop/${item.shop_name.replaceAll(" ", "-")}/${item.id}`,
+            `/shop/${item.shop_name?.toLowerCase()?.replaceAll(" ", "-")}/${
+              item.id
+            }`,
             "_blank"
           );
         } else {

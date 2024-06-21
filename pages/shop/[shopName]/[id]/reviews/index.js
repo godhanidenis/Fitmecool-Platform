@@ -28,7 +28,9 @@ const Reviews = ({ shopDetails }) => {
     }
   }, [router, getAllReviews]);
 
-  const shopSlug = shopDetails?.data?.shop?.shop_name.replaceAll(" ", "-");
+  const shopSlug = shopDetails?.data?.shop?.shop_name
+    ?.toLowerCase()
+    ?.replaceAll(" ", "-");
 
   return (
     <>

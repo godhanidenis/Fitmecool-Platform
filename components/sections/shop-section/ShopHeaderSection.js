@@ -29,6 +29,7 @@ import { assets } from "../../../constants";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import ImageLoadingSkeleton from "../../Modal/ImageLoadingSkeleton";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
 const ShopHeaderSection = ({
   shopDetails,
@@ -82,7 +83,7 @@ const ShopHeaderSection = ({
       : setShopFollowByUser(false);
   }, [isAuthenticate, router.query.id, shopFollowByUser, userProfile]);
 
-  const shopSlug = shopDetails?.shop_name.replaceAll(" ", "-");
+  const shopSlug = shopDetails?.shop_name?.toLowerCase()?.replaceAll(" ", "-");
 
   return (
     <>
@@ -90,30 +91,30 @@ const ShopHeaderSection = ({
         <div className="grid-cols-12 mt-[-50px] sm:mt-[-100px] container bg-[#151827] rounded-lg shadow-xl">
           <div className="col-span-12 pl-[4%] pr-[4%]">
             <div className="flex flex-col	sm:flex-row">
-              <div className="mt-[-45px] flex justify-center">
+              <div className="mt-[-50px] flex justify-center">
                 <div className="relative">
                   <div>
                     {isLogoImage ? (
                       <Avatar
-                        className="!bg-colorGreen"
+                        className="!bg-colorGreen border-2 border-white"
                         sx={{
-                          fontSize: window.innerWidth >= 640 ? "70px" : "50px",
-                          width: window.innerWidth >= 640 ? 150 : 100,
-                          height: window.innerWidth >= 640 ? 150 : 100,
+                          width: window.innerWidth >= 640 ? 130 : 110,
+                          height: window.innerWidth >= 640 ? 130 : 110,
                         }}
                       >
-                        {String(shopDetails.shop_name)
+                        {/* {String(shopDetails.shop_name)
                           ?.split(" ")[0][0]
-                          .toUpperCase()}
+                          .toUpperCase()} */}
+                        <StorefrontIcon className="text-[64px]" />
                       </Avatar>
                     ) : (
                       <Image
                         src={shopDetails?.shop_logo?.large ?? ""}
                         alt="shop logo"
                         layout="fixed"
-                        width={window.innerWidth >= 640 ? 150 : 100}
-                        height={window.innerWidth >= 640 ? 150 : 100}
-                        className="rounded-[50%] object-cover object-center"
+                        width={window.innerWidth >= 640 ? 130 : 110}
+                        height={window.innerWidth >= 640 ? 130 : 110}
+                        className="rounded-[50%] object-cover object-center border-2 border-white"
                         onLoad={() => setIsShopLogoLoaded(true)}
                         onError={() => {
                           setIsLogoImage(true);
@@ -127,8 +128,8 @@ const ShopHeaderSection = ({
                       variant="circular"
                       className={`!object-cover !absolute !top-0 ${
                         window.innerWidth >= 640
-                          ? "!w-[150px] !h-[150px]"
-                          : "!w-[100px] !h-[100px]"
+                          ? "!w-[130px] !h-[130px]"
+                          : "!w-[110px] !h-[110px]"
                       }`}
                       sx={{
                         backgroundColor: "#ffffffb5",
@@ -140,7 +141,7 @@ const ShopHeaderSection = ({
               <div className="flex flex-col w-full sm:ml-[2%]">
                 <div className="flex justify-between flex-nowrap">
                   <div className="flex flex-col sm:mt-3">
-                    <div className="font-semibold text-[30px] text-[#FFFFFF] line-clamp-1 mb-4">
+                    <div className="font-semibold text-[26px] sm:text-[30px] text-[#FFFFFF] mb-4 mt-2 sm:mt-1">
                       {shopDetails.shop_name}
                     </div>
                     {/* <div className="text-[#FFFFFF] text-[18px] font-normal ">
@@ -152,7 +153,7 @@ const ShopHeaderSection = ({
                         fontSize="small"
                         className="-ml-1 !mr-1 text-[red] mb-1"
                       />
-                      <span className="line-clamp-1">
+                      <span className="">
                         {shopDetails.branch_info.map(
                           (itm) =>
                             itm.branch_type === "main" && itm.branch_address

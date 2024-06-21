@@ -207,11 +207,12 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
     },
   }));
 
-  const productSlug = product?.product_name.replaceAll(" ", "-");
-  const shopSlug = product?.branchInfo?.shop_info?.shop_name.replaceAll(
-    " ",
-    "-"
-  );
+  const productSlug = product?.product_name
+    ?.toLowerCase()
+    ?.replaceAll(" ", "-");
+  const shopSlug = product?.branchInfo?.shop_info?.shop_name
+    ?.toLowerCase()
+    ?.replaceAll(" ", "-");
 
   const CustomDot = ({ onClick, active }) => {
     return (

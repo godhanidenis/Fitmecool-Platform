@@ -86,7 +86,9 @@ const Sidebar = ({
       onClick={() => {
         if (filterType === "shopId") {
           router.push(
-            `/shop/${item.shop_name.replaceAll(" ", "-")}/${item.id}`
+            `/shop/${item.shop_name?.toLowerCase()?.replaceAll(" ", "-")}/${
+              item.id
+            }`
           );
         } else {
           ["productColor", "shopId", "categoryId", "searchBarData"].map((itm) =>

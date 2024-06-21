@@ -362,11 +362,9 @@ const ProductDetail = ({ productDetails, error }) => {
     }
   };
 
-  const shopSlug =
-    productDetailsData?.data?.branchInfo?.shop_info?.shop_name.replaceAll(
-      " ",
-      "-"
-    );
+  const shopSlug = productDetailsData?.data?.branchInfo?.shop_info?.shop_name
+    ?.toLowerCase()
+    ?.replaceAll(" ", "-");
 
   const shopDetailHeader = () => (
     <div className="flex items-center bg-colorPrimary p-3">

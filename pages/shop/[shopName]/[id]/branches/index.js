@@ -6,7 +6,8 @@ import SeeBranchDropDown from "../../../../../components/Filters/CardInteractive
 import { useRouter } from "next/router";
 import { withoutAuth } from "../../../../../components/core/PrivateRouteForVendor";
 import ImageLoadingSkeleton from "../../../../../components/Modal/ImageLoadingSkeleton";
-import { Avatar } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
 const Branches = ({ shopDetails, shopId }) => {
   const router = useRouter();
@@ -24,7 +25,9 @@ const Branches = ({ shopDetails, shopId }) => {
     return null;
   }
 
-  const shopSlug = shopDetailsData?.shop_name.replaceAll(" ", "-");
+  const shopSlug = shopDetailsData?.shop_name
+    ?.toLowerCase()
+    ?.replaceAll(" ", "-");
 
   return (
     <>
@@ -38,13 +41,19 @@ const Branches = ({ shopDetails, shopId }) => {
         </div>
         <div className="bg-white shadow-xl rounded-lg pb-4 mb-8">
           <div className="flex flex-col sm:flex-row items-center p-8 pt-6 bg-colorPrimary rounded-t-xl gap-[24px]">
-            <div className="flex justify-center relative w-[150px] h-[150px]">
+            <Box
+              className="flex justify-center relative"
+              sx={{
+                width: window.innerWidth >= 640 ? 130 : 110,
+                height: window.innerWidth >= 640 ? 130 : 110,
+              }}
+            >
               <Image
                 src={shopDetailsData?.shop_logo?.large ?? ""}
                 alt="shop logo"
                 layout="fixed"
-                width={150}
-                height={150}
+                width={window.innerWidth >= 640 ? 130 : 110}
+                height={window.innerWidth >= 640 ? 130 : 110}
                 className="rounded-[50%] object-cover object-center"
                 onLoad={() => setIsImageLoaded(true)}
                 onError={() => {
@@ -53,30 +62,34 @@ const Branches = ({ shopDetails, shopId }) => {
               />
               {!isImageLoaded && (
                 <ImageLoadingSkeleton
-                  className="!rounded-[50%] !absolute"
+                  validClassName={true}
                   variant="circular"
-                  width="100%"
-                  height="100%"
+                  className={`!object-cover !absolute !top-0 ${
+                    window.innerWidth >= 640
+                      ? "!w-[130px] !h-[130px]"
+                      : "!w-[110px] !h-[110px]"
+                  }`}
                   sx={{
-                    backgroundColor: "dimgray",
+                    backgroundColor: "#ffffffb5",
                   }}
                 />
               )}
               {isLogoImage && (
                 <Avatar
-                  className="!bg-colorGreen"
+                  className="!bg-colorGreen border-2 border-white"
                   sx={{
                     fontSize: "72px",
                     width: "100%",
                     height: "100%",
                   }}
                 >
-                  {String(shopDetailsData?.shop_name)
+                  {/* {String(shopDetailsData?.shop_name)
                     ?.split(" ")[0][0]
-                    .toUpperCase()}
+                    .toUpperCase()} */}
+                  <StorefrontIcon className="text-[64px]" />
                 </Avatar>
               )}
-            </div>
+            </Box>
             <div className="flex flex-col items-center sm:items-start">
               <span className="sm:text-[32px] text-[30px] font-semibold text-white text-center">
                 {shopDetailsData?.shop_name}

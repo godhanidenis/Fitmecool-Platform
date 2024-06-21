@@ -190,7 +190,9 @@ const ShopDetail = ({ shopDetails, error }) => {
     !isScreenWide && dispatch(changeByShopFilters(false));
   }, [dispatch, isScreenWide]);
 
-  const shopSlug = shopDetailsData?.shop_name.replaceAll(" ", "-");
+  const shopSlug = shopDetailsData?.shop_name
+    ?.toLowerCase()
+    ?.replaceAll(" ", "-");
 
   if (!isHydrated) {
     return null;

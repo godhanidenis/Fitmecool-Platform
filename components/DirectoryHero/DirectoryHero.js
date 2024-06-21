@@ -21,7 +21,7 @@ const DirectoryHero = ({ title, bgImg }) => {
     <>
       {isShopImages ? (
         <section
-          className={`py-12 md:py-36 bg-cover bg-repeat-round`}
+          className={`py-16 md:py-36 bg-cover bg-repeat-round`}
           style={{
             backgroundImage: `url(${assets.shopBackgroundCover3})`,
           }}

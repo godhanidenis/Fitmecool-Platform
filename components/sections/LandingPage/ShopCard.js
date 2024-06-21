@@ -18,7 +18,7 @@ const ShopCard = ({ shop }) => {
   const [isLogoImage, setIsLogoImage] = useState(false);
   const [isShopImages, setIsShopImages] = useState(false);
 
-  const shopSlug = shop.shop_name.replaceAll(" ", "-");
+  const shopSlug = shop.shop_name?.toLowerCase()?.replaceAll(" ", "-");
 
   return (
     <div className="rounded-lg shadow-md flex flex-col w-[100%] cursor-pointer">
