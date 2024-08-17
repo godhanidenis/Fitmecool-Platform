@@ -175,7 +175,8 @@ const SignUp = () => {
             {loginType === 'vendor' ? 'Seller' : 'Customer'}
           </Text>
         </Text>
-        <View style={{marginBottom: 16, width: '100%'}}>
+        {/* <View style={{marginBottom: 16, width: '100%'}}> */}
+        <View style={{marginBottom: 4, width: '100%'}}>
           <TouchableOpacity
             onPress={() => GoogleSignUPPress()}
             style={styles.socialBtnMain}>
@@ -183,7 +184,7 @@ const SignUp = () => {
             <Text style={styles.socialText}>Continue to Google</Text>
           </TouchableOpacity>
         </View>
-        <View style={{width: '100%'}}>
+        {/* <View style={{width: '100%'}}>
           <TouchableOpacity style={styles.socialBtnMain}>
             <Image
               source={{uri: facebookIcon}}
@@ -191,7 +192,7 @@ const SignUp = () => {
             />
             <Text style={styles.socialText}>Continue to Facebook</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <Text style={styles.orText}>OR</Text>
 
