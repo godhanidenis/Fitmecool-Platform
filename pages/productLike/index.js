@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import ProductCard from "../../components/sections/product-section/ProductCard";
-import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
+import { customerPrivateGaurd } from "../../components/core/CustomerAuthGaurd";
 import Router from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { assets } from "../../constants";
@@ -78,4 +78,4 @@ const ProductLikePage = () => {
   );
 };
 
-export default withoutAuth(ProductLikePage);
+export default customerPrivateGaurd(ProductLikePage);

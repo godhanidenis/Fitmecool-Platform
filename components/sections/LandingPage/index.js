@@ -92,10 +92,9 @@ const LandingPage = () => {
       des: "bannerImg2",
       func: () => {
         router.push({
-          pathname: "/auth/user-type",
+          pathname: "/auth/signup",
           query: { redirectPath: new URL(window.location.href).pathname },
         });
-        localStorage.setItem("user_type_for_auth", "vendor");
       },
     },
     {
@@ -103,10 +102,9 @@ const LandingPage = () => {
       des: "bannerImg3",
       func: () => {
         router.push({
-          pathname: "/auth/user-type",
+          pathname: "/auth/signup",
           query: { redirectPath: new URL(window.location.href).pathname },
         });
-        localStorage.setItem("user_type_for_auth", "vendor");
       },
     },
   ];
@@ -238,15 +236,15 @@ const LandingPage = () => {
             <div className=" flex flex-col">
               <div className="flex flex-col pb-4 sm:pb-4 2xl:pb-9">
                 <p className="font-bold text-[20px] sm:text-[22px] md:text-[28px] 2xl:text-[36px] text-[#29977E]">
-                  Download Fitmecool app
+                  Download FitMeCool App
                 </p>
                 <p className="text-[14px] sm:text-[18px]  md:text-[18px]  2xl:text-[24px]  text-[#181725] font-semibold text-[#18172593] flex flex-col">
                   <span className="m-0">
-                    {`Let's Inquire For Trendy Outfits Right Now`}
+                    {`Let's Inquire For Trendy Ethnic Outfits Right Now`}
                   </span>
                 </p>
               </div>
-              <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
+              {/* <form onSubmit={handleSubmit(onSubmit, onError)} onReset={reset}>
                 <div className="flex flex-col gap-2">
                   <p className="text-[10px] sm:text-[12px] md:text-[17px] lg:text-[18px] 2xl:text-[16px]">
                     You will receive an SMS with a link to download the App
@@ -298,7 +296,7 @@ const LandingPage = () => {
                     Download App
                   </button>
                 </div>
-              </form>
+              </form> */}
               <div className="flex -ms-3">
                 <Link
                   href={`https://play.google.com/store/apps/details?id=com.fot.fitmecool`}

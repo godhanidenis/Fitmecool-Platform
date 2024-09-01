@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { withoutAuth } from "../components/core/PrivateRouteForVendor";
+import { customerPublicGaurd } from "../components/core/CustomerAuthGaurd";
 import LandingPage from "../components/sections/LandingPage";
 
 const Home = () => {
@@ -15,4 +15,4 @@ const Home = () => {
   return <LandingPage />;
 };
 
-export default withoutAuth(Home);
+export default customerPublicGaurd(Home);

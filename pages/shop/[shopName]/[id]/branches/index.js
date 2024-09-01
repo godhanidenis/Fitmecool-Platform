@@ -4,7 +4,7 @@ import Image from "next/image";
 import { getShopDetails } from "../../../../../graphql/queries/shopQueries";
 import SeeBranchDropDown from "../../../../../components/Filters/CardInteractive/SeeBranchDropDown";
 import { useRouter } from "next/router";
-import { withoutAuth } from "../../../../../components/core/PrivateRouteForVendor";
+import { customerPublicGaurd } from "../../../../../components/core/CustomerAuthGaurd";
 import ImageLoadingSkeleton from "../../../../../components/Modal/ImageLoadingSkeleton";
 import { Avatar, Box } from "@mui/material";
 import StorefrontIcon from "@mui/icons-material/Storefront";
@@ -205,7 +205,7 @@ const Branches = ({ shopDetails, shopId }) => {
   );
 };
 
-export default withoutAuth(Branches);
+export default customerPublicGaurd(Branches);
 
 export async function getServerSideProps(context) {
   try {

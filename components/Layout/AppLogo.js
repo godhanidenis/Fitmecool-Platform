@@ -3,16 +3,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { assets } from "../../constants";
+import useUserType from "../../hooks/useUserType";
 
 const AppLogo = ({ onHeader }) => {
-  const { userProfile } = useSelector((state) => state.userProfile);
+  const { currentUserType } = useUserType();
 
   return (
     <>
       <Link
-        href={`${
-          userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
-        }`}
+        href={`${currentUserType === "vendor" ? "/vendor/dashboard" : "/"}`}
       >
         <div
           className={
@@ -26,9 +25,7 @@ const AppLogo = ({ onHeader }) => {
       </Link>
       {onHeader && (
         <Link
-          href={`${
-            userProfile.user_type === "vendor" ? "/vendor/dashboard" : "/"
-          }`}
+          href={`${currentUserType === "vendor" ? "/vendor/dashboard" : "/"}`}
         >
           <div className="cursor-pointer sm:hidden flex items-center">
             <Image

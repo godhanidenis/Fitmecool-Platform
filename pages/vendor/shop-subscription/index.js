@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -32,7 +32,7 @@ const ShopSubscription = () => {
   );
 };
 
-export default withAuth(ShopSubscription);
+export default vendorPrivateGaurd(ShopSubscription);
 
 const FreePlanCard = () => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);

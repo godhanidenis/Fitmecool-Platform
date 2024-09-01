@@ -28,7 +28,7 @@ import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { deleteBranch, updateBranch } from "../../../graphql/mutations/branch";
 import { createBranch } from "../../../graphql/mutations/branch";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TbPhotoPlus } from "react-icons/tb";
@@ -2183,7 +2183,7 @@ const ShopEdit = () => {
   );
 };
 
-export default withAuth(ShopEdit);
+export default vendorPrivateGaurd(ShopEdit);
 
 const DaysTimeModal = ({
   daysTimeModalOpen,

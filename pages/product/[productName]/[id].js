@@ -37,7 +37,7 @@ import { TiArrowForwardOutline } from "react-icons/ti";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
-import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
+import { customerPublicGaurd } from "../../../components/core/CustomerAuthGaurd";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -356,7 +356,7 @@ const ProductDetail = ({ productDetails, error }) => {
       );
     } else {
       router.push({
-        pathname: "/auth/user-type",
+        pathname: "/auth/signup",
         query: { redirectPath: new URL(window.location.href).pathname },
       });
     }
@@ -506,7 +506,7 @@ const ProductDetail = ({ productDetails, error }) => {
                 );
               } else {
                 router.push({
-                  pathname: "/auth/user-type",
+                  pathname: "/auth/signup",
                   query: {
                     redirectPath: new URL(window.location.href).pathname,
                   },
@@ -873,7 +873,7 @@ const ProductDetail = ({ productDetails, error }) => {
                             id: productDetailsData?.data.id,
                           })
                         : router.push({
-                            pathname: "/auth/user-type",
+                            pathname: "/auth/signup",
                             query: {
                               redirectPath: new URL(window.location.href)
                                 .pathname,
@@ -911,7 +911,7 @@ const ProductDetail = ({ productDetails, error }) => {
                             id: productDetailsData?.data.id,
                           })
                         : router.push({
-                            pathname: "/auth/user-type",
+                            pathname: "/auth/signup",
                             query: {
                               redirectPath: new URL(window.location.href)
                                 .pathname,
@@ -985,7 +985,7 @@ const ProductDetail = ({ productDetails, error }) => {
   );
 };
 
-export default withoutAuth(ProductDetail);
+export default customerPublicGaurd(ProductDetail);
 
 const ContactDetailsModal = ({
   productDetailsData,

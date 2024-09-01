@@ -19,6 +19,7 @@ import { changeProductPage } from "../../../redux/ducks/product";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import VendorSidebar from "../../sections/vendor-section/VendorSidebar";
 import CloseIcon from "@mui/icons-material/Close";
+import useUserType from "../../../hooks/useUserType";
 
 const Sidebar = ({
   className = "",
@@ -41,6 +42,8 @@ const Sidebar = ({
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { currentUserType } = useUserType();
 
   useEffect(() => {
     setMenCategory(categories.filter((itm) => itm.category_type === "Men"));
@@ -170,7 +173,7 @@ const Sidebar = ({
           </div>
         </div>
 
-        {userProfile.user_type !== "vendor" && (
+        {currentUserType !== "vendor" && (
           <ul className="flex flex-col pb-5">
             <li className="px-8 py-4 border-b">
               <OutlinedInput
@@ -241,7 +244,7 @@ const Sidebar = ({
           </ul>
         )}
 
-        {userProfile.user_type === "vendor" &&
+        {currentUserType === "vendor" &&
           Router.pathname !== "/vendor/shop-setup" && (
             <VendorSidebar
               forHeader={true}

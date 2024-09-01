@@ -16,11 +16,13 @@ import { CircularProgress } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
-import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
+import { authAuthGaurd } from "../../components/core/AuthAuthGaurd";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import Link from "next/link";
+import Image from "next/image";
+import { assets } from "../../constants";
 
 const Signup = () => {
-  const [asVendor, setAsVendor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -46,25 +48,20 @@ const Signup = () => {
     setIsHydrated(true);
   }, []);
 
-  useEffect(() => {
-    localStorage.getItem("user_type_for_auth") === "vendor"
-      ? setAsVendor(true)
-      : setAsVendor(false);
-  }, []);
-
   const handleAfterSignUpResponse = (userId, token, message) => {
     setLoading(false);
     dispatch(loginUserId(userId));
     dispatch(loadUserProfileStart({ id: userId }));
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
+    localStorage.setItem(
+      "user_type",
+      localStorage?.getItem("user_type")
+        ? localStorage?.getItem("user_type")
+        : "customer"
+    );
     toast.success(message, { theme: "colored" });
-    localStorage.removeItem("user_type_for_auth");
-    localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-    asVendor && dispatch(changeByShopFilters(false));
-    setTimeout(() => {
-      Router.push(asVendor ? "/vendor/dashboard" : redirectPath ?? "/");
-    }, 1500);
+    Router.push("/");
   };
 
   const handleAfterSignUpError = (message) => {
@@ -92,24 +89,13 @@ const Signup = () => {
 
   const onSubmit = (data) => {
     setLoading(true);
-    signUp(
-      asVendor
-        ? {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            user_contact: data.user_contact,
-            user_password: data.user_password,
-            user_type: "vendor",
-            user_email: data.user_email,
-          }
-        : {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            user_contact: data.user_contact,
-            user_password: data.user_password,
-            user_type: "customer",
-          }
-    ).then(
+    signUp({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      user_contact: data.user_contact,
+      user_password: data.user_password,
+      user_email: data.user_email,
+    }).then(
       (res) =>
         handleAfterSignUpResponse(
           res.data.signUp.user,
@@ -133,7 +119,6 @@ const Signup = () => {
         googleSignUp({
           first_name: given_name || "",
           last_name: family_name || "",
-          user_type: asVendor ? "vendor" : "customer",
           user_email: email,
         }).then(
           (res) =>
@@ -158,26 +143,21 @@ const Signup = () => {
   return (
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
-        <ArrowBackIcon
-          onClick={() =>
-            router.push({
-              pathname: "/auth/user-type",
-              query: { redirectPath: redirectPath },
-            })
-          }
-          className="cursor-pointer !text-3xl"
-        />
         <div className="">
-          <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
-            <span className="sm:text-4xl text-[30px]">F</span>itmecool
-          </h2>
+          <Link href="/">
+            <div className="cursor-pointer flex items-center relative">
+              <Image
+                src={assets.appBlackLogo}
+                alt="AppLogo"
+                width={160}
+                height={32}
+              />
+            </div>
+          </Link>
         </div>
       </div>
       <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
-        Create an account{" "}
-        <span className="text-colorGreen">
-          As {asVendor ? "Seller" : "Customer"}
-        </span>
+        Create an account
       </div>
       <button
         onClick={handleGoogleSignUp}
@@ -255,31 +235,25 @@ const Signup = () => {
               </span>
             </div>
           )}
-          {asVendor && (
-            <>
-              <input
-                type="text"
-                placeholder="Email Address *"
-                {...register("user_email", {
-                  required: "Email is required",
+          <input
+            type="text"
+            placeholder="Email Address *"
+            {...register("user_email", {
+              required: "Email is required",
 
-                  pattern: {
-                    value:
-                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                    message: "Please enter a valid email",
-                  },
-                })}
-                className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
-              />
+              pattern: {
+                value:
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: "Please enter a valid email",
+              },
+            })}
+            className="rounded-xl p-3 w-full border focus:border focus:border-colorGreen focus:outline-none focus:placeholder:text-colorGreen "
+          />
 
-              {errors.user_email && (
-                <div className="mt-1 ml-1">
-                  <span style={{ color: "red" }}>
-                    {errors.user_email?.message}
-                  </span>
-                </div>
-              )}
-            </>
+          {errors.user_email && (
+            <div className="mt-1 ml-1">
+              <span style={{ color: "red" }}>{errors.user_email?.message}</span>
+            </div>
           )}
           <div className="flex flex-col sm:flex-row  w-full gap-2">
             <div className="relative w-full">
@@ -383,4 +357,4 @@ const Signup = () => {
   );
 };
 
-export default withoutAuthAndUserType(Signup);
+export default authAuthGaurd(Signup);

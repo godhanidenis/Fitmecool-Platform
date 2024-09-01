@@ -371,7 +371,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       );
                     } else {
                       router.push({
-                        pathname: "/auth/user-type",
+                        pathname: "/auth/signup",
                         query: {
                           redirectPath: new URL(window.location.href).pathname,
                         },

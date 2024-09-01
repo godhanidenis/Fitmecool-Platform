@@ -8,8 +8,10 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Alert } from "@mui/material";
 import { forgotPassword } from "../../graphql/mutations/authMutations";
-import { withoutAuthForUserType } from "../../components/core/PrivateRouteForAuth";
+import { authAuthGaurd } from "../../components/core/AuthAuthGaurd";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import Image from "next/image";
+import { assets } from "../../constants";
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -60,17 +62,17 @@ const ForgotPassword = () => {
 
       <div className="block p-4 rounded-lg shadow-lg bg-white text-center col-span-10 sm:col-span-8 md:col-span-8 lg:col-span-6 xl:col-span-4">
         <div className="grid grid-cols-3">
-          <div className="text-start">
-            <Link href="/auth/user-type">
-              <button className="rounded-lg text-center p-2 flex items-center border">
-                <ArrowBackIosIcon className="!text-colorStone !w-4 !h-4 !ml-1" />
-              </button>
+          <div className="col-span-3 flex items-center justify-center">
+            <Link href="/">
+              <div className="cursor-pointer flex items-center relative">
+                <Image
+                  src={assets.appBlackLogo}
+                  alt="AppLogo"
+                  width={160}
+                  height={32}
+                />
+              </div>
             </Link>
-          </div>
-          <div className="col-span-2.5 flex items-center justify-center">
-            <h2 className="text-2xl font-normal uppercase cursor-pointer text-colorPrimary">
-              <span className="text-4xl">F</span>itmecool
-            </h2>
           </div>
         </div>
 
@@ -140,10 +142,18 @@ const ForgotPassword = () => {
               </button>
             </div>
           </form>
+          <div className="flex justify-center mt-4">
+            Back To&nbsp;
+            <Link href="/auth/signin">
+              <span className="text-colorGreen font-semibold underline cursor-pointer">
+                Login
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default withoutAuthForUserType(ForgotPassword);
+export default authAuthGaurd(ForgotPassword);

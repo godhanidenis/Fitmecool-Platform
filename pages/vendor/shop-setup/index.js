@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { withAuthWithoutShop } from "../../../components/core/PrivateRouteForVendor";
+import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import EditIcon from "@mui/icons-material/Edit";
@@ -47,6 +47,7 @@ import { handleUploadImage } from "../../../services/imageApis";
 import { generateRandomNumberString } from "../../../utils/common";
 import { loadImageVariantsStart } from "../../../redux/ducks/imageVariants";
 import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 const style = {
   position: "absolute",
@@ -183,7 +184,7 @@ const ShopPage = () => {
   const [uploadShopVideo, setUploadShopVideo] = useState("");
 
   const [sameAsOwner, setSameAsOwner] = useState("True");
-  const [individual, setIndividual] = useState(false);
+  const [shopType, setShopType] = useState("");
   const [subBranch, setSubBranch] = useState([]);
   const [subBranchEdit, setSubBranchEdit] = useState();
 
@@ -196,8 +197,8 @@ const ShopPage = () => {
 
   const [hours, setHours] = useState([
     { key: "Sunday", value: ["09:00 AM - 08:00 PM"] },
-    { key: "Monday", value: ["09:00 AM - 10:00 PM"] },
-    { key: "Tuesday", value: ["07:00 AM - 08:00 PM"] },
+    { key: "Monday", value: ["09:00 AM - 08:00 PM"] },
+    { key: "Tuesday", value: ["09:00 AM - 08:00 PM"] },
     { key: "Wednesday", value: ["09:00 AM - 08:00 PM"] },
     { key: "Thursday", value: ["09:00 AM - 08:00 PM"] },
     { key: "Friday", value: ["09:00 AM - 08:00 PM"] },
@@ -399,11 +400,6 @@ const ShopPage = () => {
     setShopTimeDetails(option);
   };
 
-  const handleClickIndividual = (option, active) => {
-    setSelectedOption(option);
-    setIndividual(active);
-  };
-
   const handleBrowseClick = (boxIndex) => {
     document.getElementById(`file-input-${boxIndex}`).click();
   };
@@ -481,13 +477,13 @@ const ShopPage = () => {
           shop_images: [],
           shop_video: "",
           shop_social_link: {
-            facebook: individual ? "" : data.facebook_link,
-            instagram: individual ? "" : data.instagram_link,
-            website: individual ? "" : data.personal_website,
+            facebook: shopType === "NoShop" ? "" : data.facebook_link,
+            instagram: shopType === "NoShop" ? "" : data.instagram_link,
+            website: shopType === "NoShop" ? "" : data.personal_website,
           },
           shop_name: data.shop_name,
           shop_email: data.shop_email,
-          shop_type: individual ? "individual" : "shop",
+          shop_type: shopType === "NoShop" ? "individual" : "shop",
           shop_time: hours?.map((day) => {
             return {
               week: day["key"],
@@ -632,93 +628,42 @@ const ShopPage = () => {
       <div className="w-full">
         <div className="h-[452px] sm:h-[50vh] relative">
           <div className="absolute inset-0  mix-blend-darken bg-cover bg-repeat-round">
-            <div className="absolute w-full h-full  bg-[#000000a9]" />
+            <div className="absolute w-full h-full  bg-colorPrimary" />
           </div>
         </div>
         <div className="relative -mt-[calc(50vh-25px)] container">
           <div className="text-white sm:text-5xl text-3xl flex items-center flex-col gap-4">
             <div>
-              <span className="text-colorGreen font-semibold">Join</span> Us
+              <span className="text-colorGreen font-semibold">Create</span> Your
             </div>
             <div>
-              As <span className="text-colorGreen font-semibold">?</span>
+              Shop{" "}
+              <span className="text-colorGreen font-semibold">With Us!</span>
             </div>
           </div>
           <div className="w-[95%] sm:w-[90%] lg:w-[85%] bg-white mx-auto mt-8 mb-16 p-5 sm:p-10 sm:pt-5 rounded-md">
-            <div className="flex justify-center mb-5">
-              <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
-                {["Shop", "Single Person"].map((userType, index) => (
-                  <div
-                    key={index}
-                    className={`py-2 px-4 cursor-pointer rounded-2xl ${
-                      selectedOption === userType
-                        ? "border-2 border-yellow-500"
-                        : "border"
-                    }`}
-                    onClick={() =>
-                      handleClickIndividual(
-                        userType,
-                        userType === "Single Person" ? true : false
-                      )
-                    }
-                  >
-                    <div className="flex justify-between">
-                      <div className="flex items-center">
-                        {userType === "Shop" && (
-                          <BsShop
-                            fontSize="25px"
-                            className={`${
-                              selectedOption === userType
-                                ? "text-yellow-500"
-                                : "text-white"
-                            }`}
-                          />
-                        )}
-                        {userType === "Single Person" && (
-                          <FaUser
-                            className={`${
-                              selectedOption === userType
-                                ? "text-yellow-500"
-                                : "text-white"
-                            }`}
-                            fontSize="25px"
-                          />
-                        )}
-                        <div
-                          className={`${
-                            selectedOption === userType
-                              ? "text-yellow-500"
-                              : "text-white"
-                          } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
-                        >
-                          {userType}
-                        </div>
-                      </div>
-                      <div>
-                        {selectedOption === userType && (
-                          <CheckCircleIcon className="text-yellow-500" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
             <div className="md:mx-10">
               <div className="flex justify-evenly mb-3 sm:mb-5">
                 <div className="uppercase font-semibold text-sm sm:text-xl">
-                  Details
+                  Type
                 </div>
                 <div
                   className={`uppercase text-sm sm:text-xl ${
                     currentStep >= 2 ? "font-semibold" : "text-gray-400"
                   }`}
                 >
-                  Photos
+                  Details
                 </div>
                 <div
                   className={`uppercase text-sm sm:text-xl ${
                     currentStep >= 3 ? "font-semibold" : "text-gray-400"
+                  }`}
+                >
+                  Photos
+                </div>
+                <div
+                  className={`uppercase text-sm sm:text-xl ${
+                    currentStep >= 4 ? "font-semibold" : "text-gray-400"
                   }`}
                 >
                   Branches
@@ -726,7 +671,7 @@ const ShopPage = () => {
               </div>
 
               <div className="flex items-center">
-                <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
+                <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/5" />
                 {currentStep > 1 ? (
                   <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen">
                     <span className="hidden sm:inline">
@@ -743,58 +688,232 @@ const ShopPage = () => {
                     </span>
                   </span>
                 ) : (
-                  <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px]  border-colorGreen"></span>
+                  <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
                 )}
 
-                {currentStep === 3 ? (
+                {currentStep >= 2 ? (
                   <>
-                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
-                    <span className="sm:h-8 sm:w-8 h-4 w-4  rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
-                  </>
-                ) : currentStep > 2 ? (
-                  <>
-                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
+                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/5" />
                     <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen">
-                      <span className="hidden sm:inline">
-                        <DoneIcon
-                          className="text-colorGreen mb-2"
-                          fontSize="small"
-                        />
-                      </span>
-                      <span className="sm:hidden">
-                        <DoneIcon
-                          className="text-colorGreen sm:mb-2 mb-10"
-                          sx={{ fontSize: 10 }}
-                        />
-                      </span>
+                      {currentStep > 2 ? (
+                        <>
+                          <span className="hidden sm:inline">
+                            <DoneIcon
+                              className="text-colorGreen mb-2"
+                              fontSize="small"
+                            />
+                          </span>
+                          <span className="sm:hidden">
+                            <DoneIcon
+                              className="text-colorGreen sm:mb-2 mb-10"
+                              sx={{ fontSize: 10 }}
+                            />
+                          </span>
+                        </>
+                      ) : null}
                     </span>
                   </>
                 ) : (
                   <>
-                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
+                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/5" />
                     <span className="flex justify-center items-center sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
                       2
                     </span>
                   </>
                 )}
-                {currentStep === 3 ? (
+
+                {currentStep >= 3 ? (
                   <>
-                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/4" />
-                    <span className="sm:h-8 sm:w-8 h-4 w-4  rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
+                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/5" />
+                    <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen">
+                      {currentStep > 3 ? (
+                        <>
+                          <span className="hidden sm:inline">
+                            <DoneIcon
+                              className="text-colorGreen mb-2"
+                              fontSize="small"
+                            />
+                          </span>
+                          <span className="sm:hidden">
+                            <DoneIcon
+                              className="text-colorGreen sm:mb-2 mb-10"
+                              sx={{ fontSize: 10 }}
+                            />
+                          </span>
+                        </>
+                      ) : null}
+                    </span>
                   </>
                 ) : (
                   <>
-                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
-                    <span className="flex justify-center items-center  sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
+                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/5" />
+                    <span className="flex justify-center items-center sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
                       3
                     </span>
                   </>
                 )}
-                <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/4" />
+
+                {currentStep === 4 ? (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-colorGreen w-1/5" />
+                    <span className="sm:h-8 sm:w-8 h-4 w-4 rounded-full bg-white text-center border-[3px] sm:border-[6px] border-colorGreen"></span>
+                  </>
+                ) : (
+                  <>
+                    <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/5" />
+                    <span className="flex justify-center items-center sm:h-8 sm:w-8 h-6 w-6 font-semibold rounded-full bg-gray-200 text-center sm:text-sm text-[10px]">
+                      4
+                    </span>
+                  </>
+                )}
+                <hr className="sm:h-1 h-[3px] bg-gray-200 w-1/5" />
               </div>
             </div>
 
             {currentStep === 1 && (
+              <>
+                {/* <div className="flex justify-center mb-5">
+                  <div className="flex gap-2 bg-colorPrimary rounded-2xl p-2">
+                    {["Shop", "Single Person"].map((userType, index) => (
+                      <div
+                        key={index}
+                        className={`py-2 px-4 cursor-pointer rounded-2xl ${
+                          selectedOption === userType
+                            ? "border-2 border-yellow-500"
+                            : "border"
+                        }`}
+                        onClick={() =>
+                          handleClickIndividual(
+                            userType,
+                            userType === "Single Person" ? true : false
+                          )
+                        }
+                      >
+                        <div className="flex justify-between">
+                          <div className="flex items-center">
+                            {userType === "Shop" && (
+                              <BsShop
+                                fontSize="25px"
+                                className={`${
+                                  selectedOption === userType
+                                    ? "text-yellow-500"
+                                    : "text-white"
+                                }`}
+                              />
+                            )}
+                            {userType === "Single Person" && (
+                              <FaUser
+                                className={`${
+                                  selectedOption === userType
+                                    ? "text-yellow-500"
+                                    : "text-white"
+                                }`}
+                                fontSize="25px"
+                              />
+                            )}
+                            <div
+                              className={`${
+                                selectedOption === userType
+                                  ? "text-yellow-500"
+                                  : "text-white"
+                              } ml-1 mr-4 font-semibold text-xl max-[600px]:text-lg max-[480px]:text-sm`}
+                            >
+                              {userType}
+                            </div>
+                          </div>
+                          <div>
+                            {selectedOption === userType && (
+                              <CheckCircleIcon className="text-yellow-500" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div> */}
+                <div className="flex my-8 gap-6 md:mx-10">
+                  <div
+                    className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
+                      shopType === "NoShop"
+                        ? "border-2 border-colorGreen rounded-2xl"
+                        : "border-2 border-[#7e7e7e48] rounded-2xl"
+                    }`}
+                    onClick={() => {
+                      setShopType("NoShop");
+                      setTimeout(() => setCurrentStep(2), [300]);
+                    }}
+                  >
+                    <div className="flex justify-between">
+                      <GroupsIcon
+                        className={`${
+                          shopType === "NoShop"
+                            ? "text-colorGreen"
+                            : "text-colorPrimary"
+                        }`}
+                        fontSize="large"
+                      />
+
+                      {shopType === "NoShop" && (
+                        <CheckCircleIcon className="text-colorGreen" />
+                      )}
+                    </div>
+                    <div
+                      className={`${
+                        shopType === "NoShop"
+                          ? "text-colorGreen"
+                          : "text-colorPrimary"
+                      } font-semibold mt-8 text-xl max-[600px]:text-lg max-[480px]:text-sm max-[480px]:mt-5`}
+                    >
+                      No Shop
+                    </div>
+                    <div className="text-sm text-[#15182766] my-1 max-[480px]:text-[10px]">
+                      Continue As a Individual Seller
+                    </div>
+                  </div>
+                  <div
+                    className={`py-2 px-4 w-[250px] h-[160px] max-[600px]:w-[200px] max-[600px]:h-[140px] cursor-pointer max-[480px]:w-[150px] max-[480px]:h-[120px] ${
+                      shopType === "Shop"
+                        ? "border-2 border-colorGreen rounded-2xl"
+                        : "border-2 border-[#7e7e7e48] rounded-2xl"
+                    }`}
+                    onClick={() => {
+                      setShopType("Shop");
+                      setTimeout(() => setCurrentStep(2), [300]);
+                    }}
+                  >
+                    <div className="flex justify-between">
+                      <BsShop
+                        className={`${
+                          shopType === "Shop"
+                            ? "text-colorGreen"
+                            : "text-colorPrimary"
+                        }`}
+                        fontSize="25px"
+                      />
+                      {shopType === "Shop" && (
+                        <CheckCircleIcon className="text-colorGreen" />
+                      )}
+                    </div>
+                    <div
+                      className={`${
+                        shopType === "Shop"
+                          ? "text-colorGreen"
+                          : "text-colorPrimary"
+                      } font-semibold mt-10 text-xl max-[600px]:text-lg max-[480px]:text-sm max-[480px]:mt-5`}
+                    >
+                      Shop
+                    </div>
+                    <div
+                      className={`text-[#15182766] text-sm my-1 max-[480px]:text-[10px]`}
+                    >
+                      Continue As a Shop Seller
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {currentStep === 2 && (
               <>
                 <div className="md:mx-10 mt-8">
                   <div className="border mt-5">
@@ -974,7 +1093,7 @@ const ShopPage = () => {
                           </div>
                         )}
                       </div>
-                      {!individual && (
+                      {shopType === "Shop" && (
                         <>
                           <div className="w-full relative">
                             <CustomTextFieldVendor
@@ -1071,7 +1190,7 @@ const ShopPage = () => {
                   </div>
 
                   <div className="my-10">
-                    {!individual && (
+                    {shopType === "Shop" && (
                       <>
                         <div className="border">
                           <div className="flex justify-between items-center px-3 md:px-5 py-2 bg-colorPrimary">
@@ -1170,7 +1289,7 @@ const ShopPage = () => {
               </>
             )}
 
-            {currentStep === 2 && (
+            {currentStep === 3 && (
               <>
                 <div className="sm:mx-10 mt-8">
                   <div className="grid grid-cols-3 items-center gap-4">
@@ -1421,7 +1540,7 @@ const ShopPage = () => {
               </>
             )}
 
-            {currentStep === 3 && (
+            {currentStep === 4 && (
               <>
                 <div className="mt-8 sm:mx-10">
                   <div className="border mt-5">
@@ -1824,7 +1943,7 @@ const ShopPage = () => {
                     </div>
                   </div>
 
-                  {!individual && (
+                  {shopType === "Shop" && (
                     <div className="border mt-5">
                       <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
                         <div className="uppercase font-semibold sm:text-lg text-sm text-white">
@@ -3117,4 +3236,4 @@ const DaysTimeModal = ({
   );
 };
 
-export default withAuthWithoutShop(ShopPage);
+export default vendorPrivateGaurd(ShopPage);

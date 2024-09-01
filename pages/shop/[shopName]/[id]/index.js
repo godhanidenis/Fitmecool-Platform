@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
-import { withoutAuth } from "../../../../components/core/PrivateRouteForVendor";
+import { customerPublicGaurd } from "../../../../components/core/CustomerAuthGaurd";
 import ShopCommentsSection from "../../../../components/sections/shop-section/ShopCommentsSection";
 import ShopReviewSection from "../../../../components/sections/shop-section/ShopReviewSection";
 import { UseResizeScreenLayout } from "../../../../components/core/useScreenResize";
@@ -381,7 +381,7 @@ const ShopDetail = ({ shopDetails, error }) => {
     </>
   );
 };
-export default withoutAuth(ShopDetail);
+export default customerPublicGaurd(ShopDetail);
 
 export async function getServerSideProps(context) {
   try {

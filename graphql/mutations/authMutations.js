@@ -10,7 +10,6 @@ export const signUp = async (payload) => {
         $user_email: String
         $user_contact: String!
         $user_password: String!
-        $user_type: String!
       ) {
         signUp(
           userInfo: {
@@ -19,7 +18,6 @@ export const signUp = async (payload) => {
             user_email: $user_email
             user_contact: $user_contact
             user_password: $user_password
-            user_type: $user_type
           }
         ) {
           token
@@ -34,7 +32,6 @@ export const signUp = async (payload) => {
       user_email: payload.user_email,
       user_contact: payload.user_contact,
       user_password: payload.user_password,
-      user_type: payload.user_type,
     },
   });
   return results;
@@ -43,10 +40,8 @@ export const signUp = async (payload) => {
 export const signIn = async (payload) => {
   const results = await client.mutate({
     mutation: gql`
-      mutation signIn($username: String!, $password: String!, $type: String!) {
-        signIn(
-          userInfo: { username: $username, password: $password, type: $type }
-        ) {
+      mutation signIn($username: String!, $password: String!) {
+        signIn(userInfo: { username: $username, password: $password }) {
           token
           message
           user
@@ -69,14 +64,12 @@ export const googleSignUp = async (payload) => {
         $first_name: String!
         $last_name: String!
         $user_email: String
-        $user_type: String!
       ) {
         googleSignUp(
           userInfo: {
             first_name: $first_name
             last_name: $last_name
             user_email: $user_email
-            user_type: $user_type
           }
         ) {
           token
@@ -89,7 +82,6 @@ export const googleSignUp = async (payload) => {
       first_name: payload.first_name,
       last_name: payload.last_name,
       user_email: payload.user_email,
-      user_type: payload.user_type,
     },
   });
   return results;
@@ -98,8 +90,8 @@ export const googleSignUp = async (payload) => {
 export const googleSignIn = async (payload) => {
   const results = await client.mutate({
     mutation: gql`
-      mutation googleSignIn($username: String!, $type: String!) {
-        googleSignIn(userInfo: { username: $username, type: $type }) {
+      mutation googleSignIn($username: String!) {
+        googleSignIn(userInfo: { username: $username }) {
           token
           message
           user

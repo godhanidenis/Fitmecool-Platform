@@ -7,7 +7,7 @@ import {
   changeProductPage,
   loadProductsStart,
 } from "../../../redux/ducks/product";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import AddIcon from "@mui/icons-material/Add";
 import VenderProductTable from "../../../components/Layout/VenderProductTable";
 import AddEditProductPage from "../../../components/sections/vendor-section/AddEditProductPage";
@@ -157,4 +157,4 @@ const ShopDetailsPage = () => {
   );
 };
 
-export default withAuth(ShopDetailsPage);
+export default vendorPrivateGaurd(ShopDetailsPage);

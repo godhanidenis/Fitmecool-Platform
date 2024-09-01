@@ -50,6 +50,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
   const openSortByAnchor = Boolean(sortByAnchor);
 
   const dispatch = useDispatch();
+  const { currentUserType } = useUserType();
 
   const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
@@ -126,7 +127,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
 
   useEffect(() => {
     const selectedShopIds =
-      showOnlyShopDetailPage || localStorage.getItem("user_type") === "vendor"
+      showOnlyShopDetailPage || currentUserType === "vendor"
         ? []
         : appliedProductsFilters.shopId.selectedValue;
 
@@ -145,6 +146,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
     appliedProductsFilters.shopId.selectedValue,
     allShopsLists?.data,
     showOnlyShopDetailPage,
+    currentUserType,
   ]);
 
   useEffect(() => {
@@ -491,8 +493,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
                   "productColor",
                   "productPrice",
                   "productListingType",
-                  ...(showOnlyShopDetailPage ||
-                  localStorage.getItem("user_type") === "vendor"
+                  ...(showOnlyShopDetailPage || currentUserType === "vendor"
                     ? []
                     : ["shopId"]),
                   "searchBarData",
