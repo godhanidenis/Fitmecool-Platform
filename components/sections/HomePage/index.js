@@ -145,7 +145,7 @@ const HomePage = () => {
 
   return (
     <>
-      <BannerHero carouselItems={carouselItems} />
+      {/* <BannerHero carouselItems={carouselItems} /> */}
 
       <div className="grid grid-cols-12 container-full 2xl:container mb-4 font-Nova py-4 gap-2">
         <div className="lg:col-span-3 hidden lg:block bg-white shadow-xl">
