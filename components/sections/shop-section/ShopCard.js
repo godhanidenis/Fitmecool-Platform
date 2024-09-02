@@ -43,7 +43,7 @@ const ShopCard = ({ shop }) => {
                   {!shop?.shop_images[0]?.links?.medium || isShopImages ? (
                     <>
                       <Image
-                        src={assets.shopBackgroundCover3 ?? ""}
+                        src={assets.shopBackgroundCover4 ?? ""}
                         alt={shop?.shop_name}
                         className={`object-cover absolute top-0 left-0 rounded-t-lg
                         `}
