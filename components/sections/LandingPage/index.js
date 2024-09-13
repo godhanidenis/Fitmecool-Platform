@@ -98,17 +98,6 @@ const LandingPage = () => {
         localStorage.setItem("user_type_for_auth", "vendor");
       },
     },
-    {
-      imageSrc: assets.bannerImg3,
-      des: "bannerImg3",
-      func: () => {
-        router.push({
-          pathname: "/auth/user-type",
-          query: { redirectPath: new URL(window.location.href).pathname },
-        });
-        localStorage.setItem("user_type_for_auth", "vendor");
-      },
-    },
   ];
 
   const getAllShops = () => {
