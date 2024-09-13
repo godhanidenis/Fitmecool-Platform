@@ -4,6 +4,7 @@ import Filter from "./index";
 import CloseIcon from "@mui/icons-material/Close";
 import { Fab } from "@mui/material";
 import { useSelector } from "react-redux";
+import useUserType from "../../hooks/useUserType";
 
 const DrawerFilters = ({ showOnlyShopDetailPage }) => {
   const [filterOpen, setFilterOpen] = useState(false);

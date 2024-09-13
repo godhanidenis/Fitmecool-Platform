@@ -29,6 +29,7 @@ import {
   changeAppliedShopProductsFilters,
   changeSortShopProductsFilters,
 } from "../../../redux/ducks/shopProductsFilters";
+import useUserType from "../../../hooks/useUserType";
 
 const UpperFilter = ({ showOnlyShopDetailPage }) => {
   const [selectedProductFilters, setSelectedProductFilters] = useState([]);
