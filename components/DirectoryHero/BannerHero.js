@@ -47,19 +47,23 @@ const BannerHero = ({ carouselItems, className }) => {
       customTransition="all .5s ease-in-out"
       infinite
       autoPlay
-      autoPlaySpeed={3000}
+      autoPlaySpeed={5000}
       className="!pb-8"
     >
       {carouselItems &&
         carouselItems.map((item, index) => (
-          <div key={index} className="flex w-full h-[150px] md:h-[400px]">
+          <div
+            key={index}
+            className="flex w-full h-[150px] md:h-[400px] relative"
+          >
             <Image
               src={item.imageSrc}
               alt="banner"
-              layout="fill"
               onLoad={() => setBannerImagesLoaded(true)}
               onClick={item?.func}
               className={className}
+              layout="fill"
+              objectFit="cover"
             />
 
             {!isBannerImagesLoaded && (
