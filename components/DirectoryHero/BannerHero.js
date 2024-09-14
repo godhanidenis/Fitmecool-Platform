@@ -63,7 +63,7 @@ const BannerHero = ({ carouselItems, className }) => {
               onClick={item?.func}
               className={className}
               layout="fill"
-              objectFit="cover"
+              // objectFit="cover"
             />
 
             {!isBannerImagesLoaded && (
