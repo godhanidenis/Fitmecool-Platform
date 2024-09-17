@@ -312,14 +312,6 @@ const ShopEdit = () => {
   }, []);
 
   useEffect(() => {
-    if (id && vendorShopDetails?.id) {
-      if (id !== vendorShopDetails?.id) {
-        router.push("/vendor/dashboard");
-      }
-    }
-  }, [id, router, vendorShopDetails?.id]);
-
-  useEffect(() => {
     ownerInfoReset();
     mainBranchInfoReset();
   }, [mainBranchInfoReset, ownerInfoReset, value]);
@@ -700,7 +692,7 @@ const ShopEdit = () => {
     console.log("Errors Occurred !! :", errors);
 
   const deleteWasabiFolder = async (folderName) => {
-    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    const folderStructure = `user_${userProfile?.id}/shop/${folderName}`;
     await deleteObjectsInFolder(folderStructure);
   };
 
@@ -741,7 +733,7 @@ const ShopEdit = () => {
         deleteWasabiFolder("logo");
       }
       try {
-        const folderStructure = `user_${userProfile.id}/shop/logo`;
+        const folderStructure = `user_${userProfile?.id}/shop/logo`;
         const shopLogoRes = await handleUploadImage(
           uploadShopLogo,
           folderStructure,
@@ -760,7 +752,7 @@ const ShopEdit = () => {
       }
 
       try {
-        const folderStructure = `user_${userProfile.id}/shop/cover`;
+        const folderStructure = `user_${userProfile?.id}/shop/cover`;
         const shopCoverRes = await handleUploadImage(
           uploadShopBackground,
           folderStructure,
@@ -779,7 +771,7 @@ const ShopEdit = () => {
       }
 
       try {
-        const folderStructure = `user_${userProfile.id}/shop/video`;
+        const folderStructure = `user_${userProfile?.id}/shop/video`;
         const shopVideoRes = await fileUpload(uploadShopVideo, folderStructure);
         videoResponse = shopVideoRes;
       } catch (error) {
@@ -801,7 +793,7 @@ const ShopEdit = () => {
 
             await deleteWasabiFolder(stringWithoutLastWord);
           }
-          const folderStructure = `user_${userProfile.id}/shop/shop_img/${
+          const folderStructure = `user_${userProfile?.id}/shop/shop_img/${
             new Date().getTime().toString() + generateRandomNumberString(5)
           }`;
           return handleUploadImage(
@@ -1379,7 +1371,7 @@ const ShopEdit = () => {
                   )}
                 </div>
               </div>
-              <div className="flex my-5">
+              {/* <div className="flex my-5">
                 {managerDetails === "Show" ? (
                   <KeyboardArrowUpIcon
                     onClick={() => handleManagerDetails("Hide")}
@@ -1611,7 +1603,7 @@ const ShopEdit = () => {
                     )}
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="flex items-center justify-center">
                 <Box className="flex w-full sm:justify-end justify-center mt-4 mb-6">
                   <button
@@ -2525,7 +2517,7 @@ const AddEditSubBranch = ({
   editableBranchData,
   setEditableBranchData,
 }) => {
-  const [managerValue, setManagerValue] = useState("");
+  const [managerValue, setManagerValue] = useState("Same as owner");
 
   const [subManagerAddress, setSubManagerAddress] = useState("");
   const [subManagerCity, setSubManagerCity] = useState("");
@@ -2940,7 +2932,7 @@ const AddEditSubBranch = ({
                   )}
                 </div>
 
-                <div className="flex justify-center items-center">
+                {/* <div className="flex justify-center items-center">
                   <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
                     <CustomTextFieldVendor
                       label="Select Manager"
@@ -3064,7 +3056,7 @@ const AddEditSubBranch = ({
                       {error.subManagerPhoneError || ""}
                     </span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </form>
           </div>

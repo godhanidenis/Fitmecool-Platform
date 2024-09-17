@@ -6,12 +6,13 @@ import CustomerCommonLayout from "./CustomerCommonLayout";
 import Footer from "./Footer";
 import Header from "./Header";
 import VendorCommonLayout from "./VendorCommonLayout";
+import { useDispatch } from "react-redux";
+import { loadUserProfileStart } from "../../redux/ducks/userProfile";
 
 const RootLayout = ({ children }) => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
-
-  const [accessToken, setAccessToken] = useState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -25,10 +26,14 @@ const RootLayout = ({ children }) => {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, [router]);
+  }, [dispatch, router]);
 
   useEffect(() => {
     setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    dispatch(loadUserProfileStart());
   }, []);
 
   if (!isHydrated) {
@@ -38,16 +43,11 @@ const RootLayout = ({ children }) => {
   return (
     <>
       <UserTypeProvider>
-        {!router.pathname.includes("/auth/") && (
-          <Header setAccessToken={setAccessToken} accessToken={accessToken} />
-        )}
-
+        {!router.pathname.includes("/auth/") && <Header />}
         <div>
           {router.pathname.includes("/vendor/") &&
           router.pathname !== "/vendor/shop-setup" ? (
-            <VendorCommonLayout setAccessToken={setAccessToken}>
-              {children}
-            </VendorCommonLayout>
+            <VendorCommonLayout>{children}</VendorCommonLayout>
           ) : router.pathname === "/auth/signup" ||
             router.pathname === "/auth/signin" ? (
             <AuthCommonLayout>{children}</AuthCommonLayout>

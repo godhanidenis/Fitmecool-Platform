@@ -142,7 +142,7 @@ const ProductDetail = ({ productDetails, error }) => {
       setProductLikeByUser(false);
     }
 
-    const followedShopsByUser = userProfile.shop_follower_list?.find(
+    const followedShopsByUser = userProfile?.shop_follower_list?.find(
       (itm) => itm.shop_id === productDetailsData?.data.branchInfo?.shop_id
     );
 
@@ -150,7 +150,7 @@ const ProductDetail = ({ productDetails, error }) => {
       ? setShopFollowByUser(true)
       : setShopFollowByUser(false);
 
-    const likedProductByUser = userProfile.product_like_list?.find(
+    const likedProductByUser = userProfile?.product_like_list?.find(
       (itm) => itm.id === productDetailsData?.data.id
     );
 
@@ -325,7 +325,7 @@ const ProductDetail = ({ productDetails, error }) => {
       productLike({
         productInfo: {
           product_id: productDetailsData?.data.id,
-          user_id: userProfile.id,
+          user_id: userProfile?.id,
         },
       }).then(
         (res) => {
@@ -474,7 +474,7 @@ const ProductDetail = ({ productDetails, error }) => {
                 shopFollow({
                   shopInfo: {
                     shop_id: productDetailsData?.data.branchInfo?.shop_id,
-                    user_id: userProfile.id,
+                    user_id: userProfile?.id,
                   },
                 }).then(
                   (res) => {

@@ -1,9 +1,7 @@
 import { useContext } from "react";
 import { UserTypeContext } from "../contexts/usertypecontext";
-import { useRouter } from "next/router";
 
 const useUserType = () => {
-  const router = useRouter();
   const context = useContext(UserTypeContext);
   if (!context) {
     throw new Error("useUserType must be used within a UserTypeProvider");
@@ -23,6 +21,7 @@ const useUserType = () => {
 
   return {
     currentUserType,
+    setUserType,
     getUserType,
     switchUserType,
   };

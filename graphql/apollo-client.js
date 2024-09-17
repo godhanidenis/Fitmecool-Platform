@@ -23,7 +23,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     graphQLErrors.forEach(({ message }) => {
       if (message === "Invalid/Expired token") {
         localStorage.clear();
-        Router.push("/");
+        Router.reload();
         toast.success("User Logout Successfully!!", { theme: "colored" });
       }
     });

@@ -21,6 +21,7 @@ import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import Link from "next/link";
 import Image from "next/image";
 import { assets } from "../../constants";
+import useUserType from "../../hooks/useUserType";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +30,6 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const { redirectPath } = router.query;
@@ -50,18 +50,10 @@ const Signup = () => {
 
   const handleAfterSignUpResponse = (userId, token, message) => {
     setLoading(false);
-    dispatch(loginUserId(userId));
-    dispatch(loadUserProfileStart({ id: userId }));
     localStorage.setItem("token", token);
-    localStorage.setItem("userId", userId);
-    localStorage.setItem(
-      "user_type",
-      localStorage?.getItem("user_type")
-        ? localStorage?.getItem("user_type")
-        : "customer"
-    );
+    localStorage.setItem("user_type", "customer");
+    window.location.href = redirectPath; // Forces a hard reload with the URL
     toast.success(message, { theme: "colored" });
-    Router.push("/");
   };
 
   const handleAfterSignUpError = (message) => {

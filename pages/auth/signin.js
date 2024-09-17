@@ -21,13 +21,12 @@ import { authAuthGaurd } from "../../components/core/AuthAuthGaurd";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
 import { assets } from "../../constants";
 import Image from "next/image";
+import useUserType from "../../hooks/useUserType";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-
-  const dispatch = useDispatch();
 
   const router = useRouter();
   const { redirectPath } = router.query;
@@ -45,18 +44,10 @@ const Login = () => {
 
   const handleAfterSignInResponse = (userId, token, message) => {
     setLoading(false);
-    dispatch(loginUserId(userId));
-    dispatch(loadUserProfileStart({ id: userId }));
     localStorage.setItem("token", token);
-    localStorage.setItem("userId", userId);
-    localStorage.setItem(
-      "user_type",
-      localStorage?.getItem("user_type")
-        ? localStorage?.getItem("user_type")
-        : "customer"
-    );
+    localStorage.setItem("user_type", "customer");
     toast.success(message, { theme: "colored" });
-    Router.push("/");
+    window.location.href = redirectPath; // Forces a hard reload with the URL
   };
 
   const handleAfterSignInError = (message) => {

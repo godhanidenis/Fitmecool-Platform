@@ -35,14 +35,6 @@ const ShopDetailsPage = () => {
     setIsHydrated(true);
   }, []);
 
-  useEffect(() => {
-    if (id && vendorShopDetails?.id) {
-      if (id !== vendorShopDetails?.id) {
-        router.push("/vendor/dashboard");
-      }
-    }
-  }, [id, router, vendorShopDetails?.id]);
-
   const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
   );

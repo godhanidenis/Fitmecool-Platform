@@ -26,10 +26,7 @@ import {
   Paper,
   Popper,
 } from "@mui/material";
-import {
-  loadUserProfileStart,
-  userLogout,
-} from "../../redux/ducks/userProfile";
+import { userLogout } from "../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { toast } from "react-toastify";
 import Router, { useRouter } from "next/router";
@@ -50,7 +47,7 @@ import { changeShopPage } from "../../redux/ducks/shop";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import useUserType from "../../hooks/useUserType";
 
-const Header = ({ accessToken, setAccessToken }) => {
+const Header = () => {
   const [searchBarValue, setSearchBarValue] = useState("");
   const [searchCityValue, setSearchCityValue] = useState("");
 
@@ -65,7 +62,7 @@ const Header = ({ accessToken, setAccessToken }) => {
   const { currentUserType } = useUserType();
 
   const { cityLists } = useSelector((state) => state.cityLists);
-  const { userProfile } = useSelector((state) => state.userProfile);
+  const { userProfile, loading } = useSelector((state) => state.userProfile);
   const { byShop } = useSelector((state) => state.shopsFiltersReducer);
 
   const [openSearchDialog, setOpenSearchDialog] = useState(false);
@@ -113,15 +110,6 @@ const Header = ({ accessToken, setAccessToken }) => {
   const handleMobileSidebarClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
-  useEffect(() => {
-    const getAccessToken = localStorage.getItem("token");
-    setAccessToken(getAccessToken);
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      dispatch(loadUserProfileStart({ id: userId }));
-    }
-  }, [dispatch]);
 
   const handleAuthButtonClick = () => {
     router.push({
@@ -185,14 +173,16 @@ const Header = ({ accessToken, setAccessToken }) => {
   const scrollDirection = useScrollDirection();
   const mobileSidebarStyle = sidebarOpen ? "" : "-translate-x-full";
 
+  useEffect(() => {
+    console.log("Header CurrentUserType :-", currentUserType);
+  }, [currentUserType]);
+
   return (
     <>
       <Sidebar
         className={`${mobileSidebarStyle}`}
         handleMobileSidebarClick={handleMobileSidebarClick}
         sidebarOpen={sidebarOpen}
-        accessToken={accessToken}
-        setAccessToken={setAccessToken}
       />
       <header
         className={`${
@@ -221,7 +211,7 @@ const Header = ({ accessToken, setAccessToken }) => {
                 />
               )}
             <AppLogo onHeader={true} />
-            {currentUserType !== "vendor" && (
+            {currentUserType !== "vendor" && cityLists && (
               <div className="headerLocationDiv sm:ml-6">
                 <div
                   onClick={() => setOpenCityDialog(true)}
@@ -275,7 +265,7 @@ const Header = ({ accessToken, setAccessToken }) => {
                     <IconButton
                       color="inherit"
                       onClick={() =>
-                        accessToken
+                        userProfile
                           ? router.push("/productLike")
                           : router.push({
                               pathname: "/auth/signup",
@@ -300,7 +290,7 @@ const Header = ({ accessToken, setAccessToken }) => {
                 </>
               )}
               <li>
-                {!accessToken && (
+                {!loading && !userProfile && (
                   <div className="flex text-colorWhite cursor-pointer">
                     <button
                       onClick={handleAuthButtonClick}
@@ -319,12 +309,9 @@ const Header = ({ accessToken, setAccessToken }) => {
                     />
                   </div>
                 )}
-                {accessToken && (
+                {!loading && userProfile && (
                   <>
-                    <UserProfile
-                      setAccessToken={setAccessToken}
-                      accessToken={accessToken}
-                    />
+                    <UserProfile />
                   </>
                 )}
               </li>
@@ -502,7 +489,7 @@ const Header = ({ accessToken, setAccessToken }) => {
 
 export default Header;
 
-export const UserProfile = ({ setAccessToken, accessToken }) => {
+export const UserProfile = () => {
   const [anchorElUser, setAnchorElUser] = useState(false);
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
@@ -523,7 +510,7 @@ export const UserProfile = ({ setAccessToken, accessToken }) => {
     { icon: <ExitToAppIcon />, name: "Logout", func: logoutUser },
   ];
 
-  if (currentUserType === "vendor" && userProfile.userHaveAnyShop) {
+  if (currentUserType === "vendor" && userProfile?.userHaveAnyShop) {
     options.unshift({
       icon: <DashboardIcon />,
       name: "Dashboard",
@@ -548,25 +535,8 @@ export const UserProfile = ({ setAccessToken, accessToken }) => {
     Router.push("/productLike");
   }
   function logoutUser() {
-    for (let key in localStorage) {
-      if (key !== "selected_city") {
-        localStorage.removeItem(key);
-      }
-    }
-
-    dispatch(userLogout());
-    setAccessToken("");
-    handleProfileClose();
-    currentUserType === "vendor" &&
-      dispatch(
-        changeAppliedProductsFilters({
-          key: "shopId",
-          value: {
-            selectedValue: [],
-          },
-        })
-      );
-    Router.push("/");
+    localStorage.clear();
+    Router.reload();
 
     toast.success("Logout Successfully", {
       theme: "colored",
@@ -579,7 +549,7 @@ export const UserProfile = ({ setAccessToken, accessToken }) => {
 
   return (
     <div className="flex items-center gap-5">
-      {userProfile?.userCreatedShopId && vendorShopDetails && (
+      {currentUserType === "vendor" && userProfile?.userHaveAnyShop && (
         <span className="font-semibold text-yellow-400 text-[12px] sm:text-[16px]">
           Available Products :{" "}
           <span>
@@ -588,41 +558,43 @@ export const UserProfile = ({ setAccessToken, accessToken }) => {
           </span>
         </span>
       )}
-      {currentUserType !== "vendor" && (
-        <div className="flex text-colorWhite cursor-pointer">
+      {currentUserType === "customer" && userProfile && (
+        <div className="flex text-colorWhite cursor-pointer ml-4">
           <button
             onClick={handleSwitchButtonClick}
             className="text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-yellow-500"
           >
-            <span className="flex items-center gap-2 justify-center">
+            <span className="flex items-center gap-2 justify-center whitespace-nowrap">
               Switch To Seller
             </span>
           </button>
         </div>
       )}
 
-      <div
-        ref={anchorRef}
-        onClick={handleProfileToggle}
-        className="flex items-center justify-between gap-2 cursor-pointer"
-      >
-        <Avatar
-          className="!bg-colorGreen"
-          sx={{
-            fontSize: "14px",
-          }}
+      {userProfile && (
+        <div
+          ref={anchorRef}
+          onClick={handleProfileToggle}
+          className="flex items-center justify-between gap-2 cursor-pointer"
         >
-          {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
-            String(userProfile?.last_name?.charAt(0).toUpperCase())}
-        </Avatar>
-        {currentUserType === "vendor" && (
-          <span className="font-semibold hidden text-colorWhite sm:flex">
-            {userProfile?.first_name + " " + userProfile?.last_name}
-          </span>
-        )}
+          <Avatar
+            className="!bg-colorGreen"
+            sx={{
+              fontSize: "14px",
+            }}
+          >
+            {String(userProfile?.first_name)?.charAt(0).toUpperCase() +
+              String(userProfile?.last_name?.charAt(0).toUpperCase())}
+          </Avatar>
+          {currentUserType === "vendor" && (
+            <span className="font-semibold hidden text-colorWhite sm:flex">
+              {userProfile?.first_name + " " + userProfile?.last_name}
+            </span>
+          )}
 
-        <KeyboardArrowDownIcon className="!hidden !text-colorWhite sm:!flex" />
-      </div>
+          <KeyboardArrowDownIcon className="!hidden !text-colorWhite sm:!flex" />
+        </div>
+      )}
       <Popper
         open={anchorElUser}
         anchorEl={anchorRef.current}
@@ -681,9 +653,9 @@ export const UserProfile = ({ setAccessToken, accessToken }) => {
                     <div className="flex text-colorWhite cursor-pointer m-4">
                       <button
                         onClick={handleSwitchButtonClick}
-                        className="hidden lg:block text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-yellow-500"
+                        className="w-full text-white px-3 py-1 sm:px-5 lg:px-3 sm:py-2 lg:py-1 sm:text-lg text-sm rounded-[4px] lg:rounded-md bg-yellow-500"
                       >
-                        <span className="flex items-center gap-2 justify-center">
+                        <span className="flex items-center gap-2 justify-center whitespace-nowrap">
                           Switch To Customer
                         </span>
                       </button>

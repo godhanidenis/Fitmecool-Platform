@@ -24,7 +24,10 @@ import { TbPhotoPlus } from "react-icons/tb";
 import { Controller, useForm } from "react-hook-form";
 import { CustomAuthModal } from "../../../components/core/CustomMUIComponents";
 import { shopRegistration, shopUpdate } from "../../../graphql/mutations/shops";
-import { setShopRegisterId } from "../../../redux/ducks/userProfile";
+import {
+  loadUserProfileStart,
+  setShopRegisterId,
+} from "../../../redux/ducks/userProfile";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -434,7 +437,7 @@ const ShopPage = () => {
 
   const multipleImageUploadFile = async (uploadShopImages) => {
     const uploadPromises = uploadShopImages?.map((uploadShopImg) => {
-      const folderStructure = `user_${userProfile.id}/shop/shop_img/${
+      const folderStructure = `user_${userProfile?.id}/shop/shop_img/${
         new Date().getTime().toString() + generateRandomNumberString(5)
       }`;
       return handleUploadImage(
@@ -456,20 +459,20 @@ const ShopPage = () => {
   const onSubmit = async (data) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    if (currentStep !== 3) {
+    if (currentStep !== 4) {
       setCurrentStep(currentStep + 1);
     } else {
       setLoading(true);
 
       let shopId = "";
       const shopRegistrationPromise = shopRegistration({
-        userId: userProfile.id,
+        userId: userProfile?.id,
         ownerInfo: {
           owner_firstName: data.first_name,
           owner_lastName: data.last_name,
           owner_email: data.user_email,
           owner_contact: data.user_contact,
-          user_id: userProfile.id,
+          user_id: userProfile?.id,
         },
         shopInfo: {
           shop_logo: {},
@@ -522,12 +525,12 @@ const ShopPage = () => {
         (res) => {
           shopId = res.data.createShop.shopInfo.id;
           dispatch(setShopRegisterId(res.data.createShop.shopInfo.id));
+          // TODO : Dispatch User Profile
+          dispatch(loadUserProfileStart());
           toast.success(res.data.createShop.message, {
             theme: "colored",
           });
           setLoading(false);
-          localStorage.setItem("userHaveAnyShop", "true");
-          router.push("/vendor/dashboard");
         },
         (error) => {
           setLoading(false);
@@ -543,7 +546,7 @@ const ShopPage = () => {
       const uploadShopLogoPromise = uploadShopLogo
         ? handleUploadImage(
             uploadShopLogo,
-            `user_${userProfile.id}/shop/logo`,
+            `user_${userProfile?.id}/shop/logo`,
             shopLogoSizeVariants
           )
             .then((res) => (logoResponse = res))
@@ -555,7 +558,7 @@ const ShopPage = () => {
       const uploadShopBackgroundPromise = uploadShopBackground
         ? handleUploadImage(
             uploadShopBackground,
-            `user_${userProfile.id}/shop/cover `,
+            `user_${userProfile?.id}/shop/cover `,
             shopCoverSizeVariants
           )
             .then((res) => (backgroundResponse = res))
@@ -572,7 +575,7 @@ const ShopPage = () => {
           : Promise.resolve();
 
       const uploadShopVideoPromise = uploadShopVideo
-        ? fileUpload(uploadShopVideo, `user_${userProfile.id}/shop/video`)
+        ? fileUpload(uploadShopVideo, `user_${userProfile?.id}/shop/video`)
             .then((res) => (videoResponse = res))
             .catch((error) => {
               console.error("Error during file upload:", error);
@@ -614,6 +617,16 @@ const ShopPage = () => {
   };
 
   const onError = (errors) => console.log("Errors Occurred !! :", errors);
+
+  useEffect(() => {
+    console.log("userProfile :-", userProfile);
+    if (userProfile) {
+      setValue("first_name", userProfile?.first_name ?? "");
+      setValue("last_name", userProfile?.last_name ?? "");
+      setValue("user_email", userProfile?.user_email ?? "");
+      setValue("user_contact", userProfile?.user_contact ?? "");
+    }
+  }, [setValue, userProfile]);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -1663,7 +1676,7 @@ const ShopPage = () => {
                     </div>
                   </div>
 
-                  <div className="border mt-5">
+                  {/* <div className="border mt-5">
                     <div className="flex px-3 md:px-5 py-2 bg-colorPrimary justify-between">
                       <div className="uppercase font-semibold sm:text-lg text-sm text-white">
                         Manager Details
@@ -1941,7 +1954,7 @@ const ShopPage = () => {
                         )}
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   {shopType === "Shop" && (
                     <div className="border mt-5">
@@ -2050,7 +2063,7 @@ const ShopPage = () => {
                                         {sub.subManagerPinCode}
                                       </span>
                                     </p>
-                                    <p className="text-sm sm:text-base lg:text-base text-colorBlack">
+                                    {/* <p className="text-sm sm:text-base lg:text-base text-colorBlack">
                                       <b className="mr-1 text-sm sm:text-base lg:text-base">
                                         Manager Name :
                                       </b>
@@ -2075,7 +2088,7 @@ const ShopPage = () => {
                                       <span className="break-all">
                                         {sub.subManagerPhone}
                                       </span>
-                                    </p>
+                                    </p> */}
                                   </div>
                                 ))}
                               </Carousel>
@@ -2147,7 +2160,7 @@ const ActionButtons = ({
             sx={{ color: "white", mr: 1 }}
           />
         )}
-        {currentStep === 3 ? "Submit" : "Next"}
+        {currentStep === 4 ? "Submit" : "Next"}
       </button>
     </div>
   );
@@ -2162,7 +2175,7 @@ const SubBranchModal = ({
   subBranchEdit,
   subBranchButtonShow,
 }) => {
-  const [managerValue, setManagerValue] = useState("");
+  const [managerValue, setManagerValue] = useState("Same as owner");
 
   const [subManagerAddress, setSubManagerAddress] = useState("");
   const [subManagerCity, setSubManagerCity] = useState("");
@@ -2506,7 +2519,7 @@ const SubBranchModal = ({
                     )}
                   </div>
 
-                  <div className="flex justify-center items-center">
+                  {/* <div className="flex justify-center items-center">
                     <div className="w-full flex justify-between items-center gap-5 sm:gap-10">
                       <CustomTextFieldVendor
                         label="Manager"
@@ -2631,7 +2644,7 @@ const SubBranchModal = ({
                         {error.subManagerPhoneError || ""}
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </form>
             </div>

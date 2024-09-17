@@ -342,7 +342,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       productLike({
                         productInfo: {
                           product_id: product.id,
-                          user_id: userProfile.id,
+                          user_id: userProfile?.id,
                         },
                       }).then(
                         (res) => {

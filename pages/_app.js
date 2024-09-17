@@ -102,17 +102,20 @@ function MyApp({ Component, pageProps }) {
           `,
         }}
       />
-      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <ToastContainer />
-          <Provider store={store}>
+      <Provider store={store}>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        >
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <ToastContainer />
+
             <RootLayout>
               <Component {...pageProps} />
             </RootLayout>
-          </Provider>
-        </ThemeProvider>
-      </GoogleOAuthProvider>
+          </ThemeProvider>
+        </GoogleOAuthProvider>
+      </Provider>
     </>
   );
 }

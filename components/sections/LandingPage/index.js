@@ -197,7 +197,7 @@ const LandingPage = () => {
           {CategoriesTab?.map((item, index) => (
             <React.Fragment key={index}>
               <TabPanel value={value} index={index} className="mt-6 mb-8">
-                {item?.label === "Customer" ? <Customer /> : <Vendor />}
+                {item?.label !== "Customer" ? <Customer /> : <Vendor />}
               </TabPanel>
             </React.Fragment>
           ))}

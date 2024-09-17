@@ -32,12 +32,12 @@ const ShopReviewSection = ({ shopName, getAllReviews, shopReviews }) => {
 
   useEffect(() => {
     const reviewedShopsByUser = shopReviews.find(
-      (itm) => itm.user_id === userProfile.id
+      (itm) => itm.user_id === userProfile?.id
     );
     reviewedShopsByUser
       ? setSubmitButtonDisable(true)
       : setSubmitButtonDisable(false);
-  }, [router.query.id, userProfile.id, shopReviews]);
+  }, [router.query.id, userProfile?.id, shopReviews]);
 
   useEffect(() => {
     if (shopReviews.length > 0) {
@@ -147,7 +147,7 @@ const ShopReviewSection = ({ shopName, getAllReviews, shopReviews }) => {
                       message: message,
                       shop_id: router.query.id,
                       stars: stars,
-                      user_id: userProfile.id,
+                      user_id: userProfile?.id,
                     },
                   }).then(
                     (res) => {
