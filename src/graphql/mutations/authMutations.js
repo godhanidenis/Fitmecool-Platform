@@ -8,7 +8,10 @@ export const signUp = async payload => {
         signUp(userInfo: $userInfo) {
           token
           message
-          user
+          user{
+            id,
+            userHaveAnyShop
+          }
         }
       }
     `,
@@ -26,7 +29,10 @@ export const signIn = async payload => {
         signIn(userInfo: $userInfo) {
           token
           message
-          user
+          user{
+            id,
+            userHaveAnyShop
+          }
         }
       }
     `,
@@ -44,27 +50,27 @@ export const googleSignUp = async payload => {
         $first_name: String!
         $last_name: String!
         $user_email: String
-        $user_type: String!
       ) {
         googleSignUp(
           userInfo: {
             first_name: $first_name
             last_name: $last_name
             user_email: $user_email
-            user_type: $user_type
           }
         ) {
           token
           message
-          user
+          user{
+            id,
+            userHaveAnyShop
+          }
         }
       }
     `,
     variables: {
       first_name: payload.first_name,
       last_name: payload.last_name,
-      user_email: payload.user_email,
-      user_type: payload.user_type,
+      user_email: payload.user_email
     },
   });
   return results;
@@ -77,7 +83,10 @@ export const googleSignIn = async payload => {
         googleSignIn(userInfo: {username: $username, type: $type}) {
           token
           message
-          user
+          user{
+            id,
+            userHaveAnyShop
+          }
         }
       }
     `,

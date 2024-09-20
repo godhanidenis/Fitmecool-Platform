@@ -15,12 +15,12 @@ const FilterScreen = ({
   return (
     <View
       style={{backgroundColor: '#FFF', height: '100%', position: 'relative'}}>
-      <View style={[styles.headerMain, {height: '10%'}]}>
+      <View style={[styles.headerMain, {height: 60}]}>
         <View style={styles.innerHeaderLeft}>
           <Text style={styles.filterHeaderText}>Filters</Text>
         </View>
         <TouchableOpacity onPress={() => handleFilterModelClose()}>
-          <Icon name="close" size={20} color="black" />
+          <Icon name="close" size={25} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -49,9 +49,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
+    paddingHorizontal: 20,
     borderBottomColor: 'rgba(24, 23, 37, 0.10)',
     borderBottomWidth: 1,
+    backgroundColor:'#151827',
   },
   innerHeaderLeft: {
     flexDirection: 'row',
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   filterHeaderText: {
-    color: '#000',
+    color: '#fff',
     fontWeight: '600',
     fontSize: 22,
   },

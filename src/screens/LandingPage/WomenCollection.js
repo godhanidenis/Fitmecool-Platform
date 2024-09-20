@@ -65,11 +65,8 @@ const WomenCollection = () => {
   }, [selectedWomenCat]);
 
   return (
-    <View style={{marginBottom: 40}}>
+    <View style={{marginBottom: 40, alignSelf:'center'}}>
       <Text style={styles.headingText}>Women’s Collection</Text>
-      <Text style={styles.descriptionText}>
-        Take A Browse Through Our Fabulous Selection Of Women's Fashion.
-      </Text>
 
       <View style={styles.menSlideColMain}>
         <View style={styles.leftMain}>
@@ -94,7 +91,7 @@ const WomenCollection = () => {
           <TouchableOpacity
             onPress={() => navigation.navigate('CustomerHomePage')}>
             <Text
-              style={[styles.viewAllBtn, {textDecorationLine: 'underline'}]}>
+              style={[styles.viewAllBtn]}>
               View All
             </Text>
           </TouchableOpacity>
@@ -131,23 +128,15 @@ const styles = StyleSheet.create({
   headingText: {
     alignSelf: 'center',
     color: '#181725',
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: '700',
     fontFamily: FontStyle,
-    paddingBottom: 5,
-  },
-  descriptionText: {
-    alignSelf: 'center',
-    textAlign: 'center',
-    color: 'rgba(24, 23, 37, 0.56)',
-    fontSize: 16,
-    fontWeight: '500',
-    fontFamily: FontStyle,
     paddingBottom: 30,
-    width: '80%',
+    paddingTop: 10,
+    textDecorationLine: 'underline',
   },
   menSlideColMain: {
-    width: '100%',
+    width: '90%',
     flexDirection: 'row',
     gap: 10,
   },
@@ -157,23 +146,27 @@ const styles = StyleSheet.create({
   activeColText: {
     color: '#181725',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: FontStyle,
     paddingBottom: 10,
   },
   inActiveColText: {
     color: 'rgba(24, 23, 37, 0.56)',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: FontStyle,
     paddingBottom: 10,
   },
-  viewAllBtn: {
-    color: '#29977E',
-    fontWeight: '600',
-    fontSize: 18,
-    paddingBottom: 10,
-  },
+    viewAllBtn: {
+      color: '#fff',
+      fontWeight: '600',
+      fontSize: 18,
+      backgroundColor:'#29977E',
+      borderRadius:10,
+      paddingVertical:10,
+      paddingHorizontal:10,
+      textAlign:'center'
+    },
   rightSliderMain: {
     alignItems: 'center',
     width: '70%',

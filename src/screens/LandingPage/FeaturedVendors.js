@@ -45,10 +45,6 @@ const FeaturedVendors = () => {
   return (
     <View style={{marginBottom: 10}}>
       <Text style={styles.worksH1Text}>Featured Sellers</Text>
-      <Text style={styles.worksH2Text}>
-        Explore Incredible Individual sellers OR Browse Through Trendy Boutiques
-        For The Latest In Fashion.
-      </Text>
 
       {shopData?.length > 0 ? (
         <View style={styles.featuredMain}>
@@ -71,7 +67,7 @@ const FeaturedVendors = () => {
                       width: '100%',
                       borderTopLeftRadius: 8,
                       borderTopRightRadius: 8,
-                      objectFit: 'fill',
+                      objectFit: 'cover',
                     }}
                     source={{
                       uri: shop?.shop_images[0]?.links?.large,
@@ -91,23 +87,13 @@ const FeaturedVendors = () => {
                         height: 120,
                         borderTopLeftRadius: 8,
                         borderTopRightRadius: 8,
+                        objectFit: 'cover',
                       }}
                       source={{
                         uri: shopBackgroundCover3,
                         cache: FastImage.cacheControl.web,
                       }}
-                      resizeMode="stretch"
                     />
-                    <View
-                      style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                        width: '100%',
-                        height: 120,
-                        borderTopLeftRadius: 8,
-                        borderTopRightRadius: 8,
-                        position: 'absolute',
-                        top: 0,
-                      }}></View>
                   </View>
                 )}
               </TouchableOpacity>
@@ -115,33 +101,54 @@ const FeaturedVendors = () => {
                 disabled
                 style={{
                   position: 'absolute',
-                  bottom: 0,
+                  top: 75,
                   width: '100%',
                 }}>
                 {shop?.shop_logo?.medium ? (
-                  <FastImage
-                    source={{
-                      uri: shop?.shop_logo?.medium,
-                      cache: FastImage.cacheControl.web,
-                    }}
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 25,
-                      alignSelf: 'center',
-                      marginBottom: 10,
-                    }}
-                  />
+                    <View
+                        style={{
+                          width: 80,
+                          height: 80,
+                          position: 'relative',
+                          alignSelf: 'center',
+                          marginBottom: 10,
+                        }}>
+                            <FastImage
+                                source={{
+                                  uri: shop?.shop_logo?.medium,
+                                  cache: FastImage.cacheControl.web,
+                                }}
+                                style={{
+                                  width: 80,
+                                  height: 80,
+                                  borderRadius: 50,
+                                  objectFit:'cover'
+                                }}
+                              />
+                    </View>
                 ) : (
-                  <Avatar.Text
+                <View
                     style={{
+                      width: 80,
+                      height: 80,
+                      position: 'relative',
                       alignSelf: 'center',
                       marginBottom: 10,
-                    }}
-                    size={50}
-                    label={shop?.shop_name?.charAt(0)}
-                    backgroundColor="#29977E"
-                  />
+                    }}>
+                        <FastImage
+                          source={{
+                            uri: shopBackgroundCover3,
+                            cache: FastImage.cacheControl.web,
+                          }}
+                          style={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 50,
+                            alignSelf: 'center',
+                          }}
+                        />
+                </View>
+
                 )}
                 <View>
                   <Text style={styles.shopNameText} numberOfLines={1}>
@@ -212,33 +219,25 @@ const styles = StyleSheet.create({
   worksH1Text: {
     alignSelf: 'center',
     color: '#181725',
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: '700',
     fontFamily: FontStyle,
-    paddingBottom: 8,
-  },
-  worksH2Text: {
-    alignSelf: 'center',
-    textAlign: 'center',
-    color: 'rgba(24, 23, 37, 0.56)',
-    fontSize: 16,
-    fontWeight: '500',
-    fontFamily: FontStyle,
-    width: '80%',
+    paddingBottom: 10,
+    paddingTop: 10,
+    textDecorationLine: 'underline',
   },
 
   featuredMain: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: '100%',
-    justifyContent: 'space-between',
-    marginTop: 30,
+    flexDirection: 'column',
+    width: '80%',
+    marginTop: 10,
+    alignSelf:'center'
   },
 
   mainContainer: {
     backgroundColor: 'white',
-    width: '47%',
-    height: 230,
+    width: '100%',
+    height: 250,
     borderRadius: 8,
     elevation: 2,
     marginBottom: 20,
@@ -246,8 +245,8 @@ const styles = StyleSheet.create({
   },
   shopNameText: {
     color: '#151827',
-    fontWeight: '600',
-    fontSize: 14,
+    fontWeight: '700',
+    fontSize: 20,
     paddingBottom: 5,
     alignSelf: 'center',
   },
@@ -287,12 +286,16 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   viewAllBtn: {
-    color: '#29977E',
-    fontWeight: '600',
-    fontSize: 18,
-    paddingBottom: 10,
-    textDecorationLine: 'underline',
-    alignSelf: 'center',
+    color: '#fff',
+      fontWeight: '600',
+      fontSize: 18,
+      backgroundColor:'#29977E',
+      borderRadius:10,
+      paddingVertical:10,
+      paddingHorizontal:10,
+      textAlign:'center',
+      width:100,
+      alignSelf:'center'
   },
   noDataText: {
     fontSize: 20,

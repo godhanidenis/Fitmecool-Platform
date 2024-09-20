@@ -226,7 +226,7 @@ const UpperAllListFilter = ({showOnlyShopDetailPage, setShowBottomLoader}) => {
       setSelectedProductListingType([
         {
           type: 'productListingType',
-          label: `Type: ${selectedValue}`,
+          label: `${selectedValue}`,
           value: selectedValue,
         },
       ]);
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     backgroundColor: '#29977E',
-    padding: 6,
+    padding: 8,
     borderRadius: 20,
   },
   filterItemText: {
@@ -412,9 +412,11 @@ const styles = StyleSheet.create({
     // paddingBottom: 4,
   },
   clearAllText: {
-    textDecorationLine: 'underline',
-    color: '#151827',
+    color: '#fff',
     fontWeight: '700',
     fontSize: 14,
+    backgroundColor:'red',
+    padding:4,
+    borderRadius:4
   },
 });

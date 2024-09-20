@@ -177,8 +177,8 @@ const paginationStyles = StyleSheet.create({
     fontWeight: '600',
   },
   currPageStyleMain: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
     borderRadius: 6,
     backgroundColor: '#151827',
   },

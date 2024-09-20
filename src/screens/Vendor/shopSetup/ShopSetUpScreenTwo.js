@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
   },
   uploadText: {
     color: '#29977E',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
     fontFamily: FontStyle,
     paddingTop: 6,
@@ -472,8 +472,10 @@ const styles = StyleSheet.create({
   },
   shopImgText: {
     color: '#151827',
-    fontSize: 16,
     fontWeight: '700',
+    fontSize: 20,
+    fontFamily: FontStyle,
+    textDecorationLine: 'underline',
     paddingVertical: 16,
   },
   shopImagesMain: {

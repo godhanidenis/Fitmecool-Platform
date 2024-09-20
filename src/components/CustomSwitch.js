@@ -28,8 +28,8 @@ const CustomSwitch = ({
           <Image
             source={{uri: imgLeftIcon}}
             style={{
-              width: 18,
-              height: 18,
+              width: 30,
+              height: 30,
               tintColor: switchVisibility ? 'black' : 'white',
             }}
           />
@@ -37,7 +37,7 @@ const CustomSwitch = ({
         {switchIcon && (
           <Icon
             name={IconLeft}
-            size={18}
+            size={30}
             color={switchVisibility ? 'black' : 'white'}
           />
         )}
@@ -61,8 +61,8 @@ const CustomSwitch = ({
           <Image
             source={{uri: imgRightIcon}}
             style={{
-              width: 18,
-              height: 18,
+              width: 30,
+              height: 30,
               tintColor: switchVisibility ? 'white' : 'black',
             }}
           />
@@ -70,7 +70,7 @@ const CustomSwitch = ({
         {switchIcon && (
           <Icon
             name={IconRight}
-            size={18}
+            size={30}
             color={switchVisibility ? 'white' : 'black'}
           />
         )}
@@ -97,14 +97,14 @@ const styles = StyleSheet.create({
   filterButtonShop: {
     backgroundColor: 'lightgrey',
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
   },
   filterButtonPro: {
     backgroundColor: '#151827',
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 16,
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
   },

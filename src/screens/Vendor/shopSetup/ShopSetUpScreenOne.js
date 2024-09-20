@@ -17,6 +17,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 
 const ShopSetUpScreenOne = ({control, errors, individual, hours, setHours}) => {
   const [ownerDetailShow, setOwnerDetailShow] = useState(true);
@@ -284,8 +285,9 @@ const styles = StyleSheet.create({
   labelStyle: {
     color: '#151827',
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: FontStyle,
+    textDecorationLine: 'underline',
   },
   labelMain: {
     display: 'flex',

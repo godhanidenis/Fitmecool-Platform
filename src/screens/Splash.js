@@ -14,6 +14,7 @@ import {loadAreaListsStart} from '../redux/AreaSlice/AreaListSlice';
 import {loadAllShopsListsStart} from '../redux/ShopSlice/ShopSlice';
 import {loadCategoriesStart} from '../redux/CategorySlice/CategoryListSlice';
 import {loadCityListsStart} from '../redux/CityListSlice/CityListSlice';
+import {loadUserProfileStart} from '../redux/LoginUserProfileSlice/userSlice';
 
 const Splash = () => {
   const navigation = useNavigation();
@@ -26,77 +27,33 @@ const Splash = () => {
 
   const {appliedCityFilter} = useSelector(state => state.cityFiltersReducer);
 
-  const AreaListApiCall = async () => {
-    const storedLocation = await AsyncStorage.getItem('selected_city');
-    if (storedLocation) {
-      if (storedLocation !== appliedCityFilter?.city?.selectedValue) {
-        dispatch(
-          changeAppliedCityFilters({
-            key: 'city',
-            value: {
-              selectedValue: storedLocation,
-            },
-          }),
-        );
-      }
-      dispatch(loadAreaListsStart(storedLocation));
-    } else {
-      dispatch(loadAreaListsStart());
-    }
-  };
-
   useEffect(() => {
-    dispatch(
-      loadAllShopsListsStart({city: appliedCityFilter?.city?.selectedValue}),
-    );
-  }, [appliedCityFilter?.city?.selectedValue, dispatch]);
-
-  useEffect(() => {
-    AreaListApiCall();
-  }, [appliedCityFilter?.city?.selectedValue, dispatch]);
-
-  useEffect(() => {
-    dispatch(loadCategoriesStart());
-    dispatch(loadCityListsStart());
-  }, [dispatch]);
-
-  const retrieveLocalData = async () => {
-    if (isConnected) {
-      const dataQuery = await getAppVersionLists();
-      const data = dataQuery?.data?.appVersionList[0];
-      const loginType = await AsyncStorage.getItem('loginType');
-      const Token = await AsyncStorage.getItem('token');
-      setNetWarningShow(false);
-      if (loginType === 'vendor' && Token) {
-        setTimeout(() => {
-          if (currVersion !== data?.version) {
-            dispatch(appVersionAction({...data, versionModelVisible: true}));
-            navigation.navigate('VendorMain');
-          } else {
-            dispatch(appVersionAction({...data, versionModelVisible: false}));
-            navigation.navigate('VendorMain');
-          }
-        }, 1000);
+    const AreaListApiCall = async () => {
+      const storedLocation = await AsyncStorage.getItem('selected_city');
+      if (storedLocation) {
+        if (storedLocation !== appliedCityFilter?.city?.selectedValue) {
+          dispatch(
+            changeAppliedCityFilters({
+              key: 'city',
+              value: {
+                selectedValue: storedLocation,
+              },
+            }),
+          );
+        }
+        dispatch(loadAreaListsStart(storedLocation));
       } else {
-        setTimeout(() => {
-          const loginAccessToken = {
-            key: Token,
-          };
-          if (currVersion !== data?.version) {
-            dispatch(appVersionAction({...data, versionModelVisible: true}));
-            navigation.navigate('CustomerMain', {data: loginAccessToken});
-          } else {
-            dispatch(appVersionAction({...data, versionModelVisible: false}));
-            navigation.navigate('CustomerMain', {data: loginAccessToken});
-          }
-        }, 1500);
+        dispatch(loadAreaListsStart());
       }
-    } else {
-      setTimeout(() => {
-        setNetWarningShow(true);
-      }, 1500);
+    };
+
+    if (isConnected) {
+      AreaListApiCall();
+      dispatch(
+        loadAllShopsListsStart({city: appliedCityFilter?.city?.selectedValue}),
+      );
     }
-  };
+  }, [isConnected, appliedCityFilter?.city?.selectedValue, dispatch]);
 
   useEffect(() => {
     LogBox.ignoreLogs([
@@ -105,12 +62,53 @@ const Splash = () => {
   }, []);
 
   useEffect(() => {
-    retrieveLocalData();
-  }, [isConnected, isFocused]);
+    const retrieveLocalData = async () => {
+      const dataQuery = await getAppVersionLists();
+      const data = dataQuery?.data?.appVersionList[0];
+      const loginType = await AsyncStorage.getItem('loginType');
+      const token = await AsyncStorage.getItem('token');
+      const userHaveAnyShop = await AsyncStorage.getItem('userHaveAnyShop');
 
-  // useEffect(() => {
-  //   updateVersionData(currVersion);
-  // }, []);
+      console.log(
+        'currVersion loginType, token, userHaveAnyShop, data :-',
+        currVersion,
+        loginType,
+        token,
+        userHaveAnyShop,
+        data,
+      );
+
+      if (currVersion !== data?.version) {
+        dispatch(appVersionAction({...data, versionModelVisible: true}));
+      } else {
+        dispatch(appVersionAction({...data, versionModelVisible: false}));
+      }
+
+      if (token) {
+        dispatch(loadUserProfileStart());
+        if (loginType === 'vendor') {
+          if (userHaveAnyShop) {
+            navigation.navigate('VendorMain');
+          } else {
+            navigation.navigate('ShopSetUp');
+          }
+        } else {
+          navigation.navigate('CustomerMain');
+        }
+      } else {
+        navigation.navigate('CustomerMain');
+      }
+    };
+
+    if (isConnected) {
+      setNetWarningShow(false);
+      dispatch(loadCategoriesStart());
+      dispatch(loadCityListsStart());
+      retrieveLocalData();
+    } else {
+      setNetWarningShow(true);
+    }
+  }, [isConnected, isFocused, dispatch]);
 
   return netWarningShow ? (
     <NoInternetScreen />

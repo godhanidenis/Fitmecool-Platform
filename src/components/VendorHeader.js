@@ -10,7 +10,6 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {
-  loadUserProfileStart,
   userLogout,
 } from '../redux/LoginUserProfileSlice/userSlice';
 import {useDispatch, useSelector} from 'react-redux';
@@ -56,24 +55,20 @@ const VendorHeader = () => {
     }, 1000);
   };
 
-  const CallUserProfile = async () => {
-    (await AsyncStorage.getItem('userId')) && dispatch(loadUserProfileStart());
-  };
-
-  useEffect(() => {
-    CallUserProfile();
-  }, []);
+  const switchLoginType = async () => {
+      await AsyncStorage.setItem('loginType', 'customer');
+      navigation.navigate('Splash');
+      setLogoutTooltipVisible(false);
+  }
 
   return (
     <View style={styles.mainDiv}>
       <View style={styles.innerMain}>
         <View style={styles.leftMainDiv}>
           {useProfileData?.userCreatedShopId &&
-            useProfileData?.user_type === 'vendor' && (
-              <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                <Icon name="bars" size={22} color="white" />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                            <Icon name="bars" size={22} color="white" />
+                          </TouchableOpacity>}
           <FastImage
             style={{width: 80, height: 50, alignSelf: 'center'}}
             source={{
@@ -93,7 +88,7 @@ const VendorHeader = () => {
         <View>
           <TouchableOpacity
             onPress={() => setLogoutTooltipVisible(!isLogoutTooltipVisible)}>
-            <Avatar.Text size={35} label={logoName} backgroundColor="#29977E" />
+            <Avatar.Text size={50} label={logoName} backgroundColor="#29977E" />
           </TouchableOpacity>
 
           <Modal
@@ -110,19 +105,23 @@ const VendorHeader = () => {
                       marginTop: 15,
                     }}>
                     <Avatar.Text
-                      size={35}
+                      size={40}
                       label={logoName}
                       backgroundColor="#29977E"
                     />
                   </View>
-                  <Text style={[styles.logoutText]}>
+                  <Text style={[styles.fullName]}>
                     {useProfileData?.first_name} {useProfileData?.last_name}
                   </Text>
-                  <Divider bold={true} />
+                <Text
+                  onPress={() => switchLoginType()}
+                  style={[styles.switchText, {paddingHorizontal: 25}]}>
+                  Switch To Customer
+                </Text>
                   <Text
                     onPress={() => LogOut()}
                     style={[styles.logoutText, {paddingHorizontal: 25}]}>
-                    <Icon name="power-off" size={14} color="#151827" /> {''}
+                    <Icon name="power-off" size={14} color="#fff" size={18} /> {''}
                     Logout
                   </Text>
                 </View>
@@ -167,22 +166,40 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
   },
-  logoutText: {
+  fullName: {
     color: 'black',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '600',
     paddingVertical: 10,
-    borderBottomColor: 'gray',
+    borderBottomColor: 'light-grey',
     borderBottomWidth: 0.5,
   },
+  switchText: {
+      color: 'white',
+      fontSize: 18,
+      fontWeight: '600',
+      paddingVertical: 10,
+      backgroundColor:'red',
+      borderRadius:6,
+      marginVertical:8,
+  },
+  logoutText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
+    paddingVertical: 10,
+    backgroundColor:'#29977E',
+    borderRadius:6,
+    marginVertical:10,
+  },
   modelLogoutMain: {
-    width: '35%',
+    width: '60%',
     position: 'absolute',
-    top: 52,
-    right: 5,
+    top: 70,
+    right:5,
     backgroundColor: 'white',
     elevation: 5,
-    borderRadius: 6,
+    borderRadius: 2,
     alignItems: 'center',
   },
 });

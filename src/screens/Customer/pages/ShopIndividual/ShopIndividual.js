@@ -199,7 +199,7 @@ const ShopIndividual = () => {
         },
       );
     } else {
-      navigation.navigate('LoginMainScreen');
+      navigation.navigate('Login');
     }
   };
 
@@ -266,7 +266,7 @@ const ShopIndividual = () => {
         <TouchableOpacity
           onPress={() => setFilterModelOpen(true)}
           style={styles.filterButton}>
-          <Icon name="filter" size={18} color="white" />
+          <Icon name="filter" size={20} color="#fff" />
           <Text style={styles.filterBtnText}>Filters</Text>
         </TouchableOpacity>
       </View>
@@ -279,7 +279,7 @@ const ShopIndividual = () => {
                 uri: shopDetails?.shop_cover_image?.large,
                 // cache: FastImage.cacheControl.web,
               }}
-              resizeMode="stretch"
+              resizeMode="cover"
             />
           ) : (
             <View
@@ -297,19 +297,19 @@ const ShopIndividual = () => {
                   uri: shopBackgroundCover3,
                   cache: FastImage.cacheControl.web,
                 }}
-                resizeMode="stretch"
+                resizeMode="cover"
               />
             </View>
           )}
 
           <TouchableOpacity
-            style={{position: 'absolute', top: 10, left: 14}}
+            style={{position: 'absolute', top: 10, left: 14, backgroundColor:'#FFF', paddingHorizontal:10, paddingVertical:5, borderRadius:10}}
             onPress={() =>
               navigation.navigate('CustomerHomePage', {
                 state: {resetFilter: true},
               })
             }>
-            <Icon name="angle-left" size={30} color="black" />
+            <Icon name="angle-left" size={40} color="black" />
           </TouchableOpacity>
           <View style={{marginTop: -30}}>
             <View style={styles.mainHeaderContainer}>
@@ -330,7 +330,7 @@ const ShopIndividual = () => {
                   />
                 ) : shopDetails?.shop_name ? (
                   <Avatar.Text
-                    size={64}
+                    size={100}
                     label={shopDetails?.shop_name?.charAt(0)}
                     backgroundColor="#29977E"
                   />
@@ -346,13 +346,8 @@ const ShopIndividual = () => {
               </View>
               <View style={styles.topInnerMain}>
                 <View style={{width: '70%'}}>
-                  <Text numberOfLines={2} style={styles.firstText}>
+                  <Text style={styles.firstText}>
                     {shopDetails?.shop_name}
-                  </Text>
-                  <Text numberOfLines={2} style={styles.secText}>
-                    {
-                      "Let's be Effortlessly Cool: Embrace Your Signature Style with Us"
-                    }
                   </Text>
                   <View
                     style={{
@@ -361,13 +356,14 @@ const ShopIndividual = () => {
                     <Image
                       source={{uri: locationIcon}}
                       style={{
-                        width: 10,
-                        height: 10,
+                        width: 15,
+                        height: 15,
                         tintColor: 'red',
                         marginTop: 4,
+                        marginRight:4
                       }}
                     />
-                    <Text numberOfLines={2} style={styles.thirdText}>
+                    <Text style={styles.thirdText}>
                       {shopDetails?.branch_info?.map(
                         itm =>
                           itm?.branch_type === 'main' && itm?.branch_address,
@@ -385,19 +381,26 @@ const ShopIndividual = () => {
                 </View>
                 <View style={styles.followBtnMain}>
                   <View style={{width: '100%'}}>
-                    <CustomButton
-                      name={shopFollowByUser ? 'Following' : 'Follow'}
+                    {!shopFollowByUser && <CustomButton
+                      name={'Follow'}
+                      color="white"
+                      backgroundColor="#29977E"
+                      borderColor="#29977E"
+                      onPress={() => clickedByFollow()}
+                      icon={true}
+                      iconName="plus"
+                    />}
+                    {shopFollowByUser && <CustomButton
+                      name={'Following'}
                       color="white"
                       backgroundColor="#29977E"
                       borderColor="#29977E"
                       onPress={() => {
-                        shopFollowByUser
-                          ? setFollowModalVisible(true)
-                          : clickedByFollow();
+                        setFollowModalVisible(true)
                       }}
-                      icon={!shopFollowByUser && true}
-                      iconName="plus"
-                    />
+                      icon={true}
+                      iconName="minus"
+                    />}
                   </View>
                   {followModalVisible && (
                     <FollowConfirmationModel
@@ -485,7 +488,7 @@ const ShopIndividual = () => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'center',
-                      marginBottom: 15,
+                      marginVertical: 15,
                     }}>
                     <TablePagination
                       // totalItems={productsCount}
@@ -541,7 +544,7 @@ const styles = StyleSheet.create({
   },
   firstText: {
     color: '#FFF',
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
     fontFamily: FontStyle,
     paddingBottom: 3,
@@ -556,10 +559,10 @@ const styles = StyleSheet.create({
   },
   thirdText: {
     color: 'rgba(255, 255, 255, 0.64)',
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: '400',
     fontFamily: FontStyle,
-    width: 190,
+    width: 200,
   },
 
   followBtnMain: {
@@ -578,7 +581,7 @@ const styles = StyleSheet.create({
   },
   bottomTitleText: {
     color: '#FFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '400',
   },
   numText: {
@@ -616,15 +619,16 @@ const styles = StyleSheet.create({
     width: '30%',
     alignItems: 'center',
     alignSelf: 'center',
-    paddingVertical: 10,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 5,
   },
   filterBtnText: {
-    color: 'white',
-    fontSize: 18,
+    color: '#fff',
+    fontSize: 20,
     fontWeight: '600',
   },
   loaderFilterDiv: {
@@ -641,6 +645,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     paddingTop: 5,
+    paddingLeft:20
   },
   noProductText: {
     color: '#151827',

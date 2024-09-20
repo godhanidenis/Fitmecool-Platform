@@ -6,10 +6,7 @@ export const loadUserProfileStart = createAsyncThunk(
   'user/fetchUser',
   async () => {
     const response = await getUserProfile();
-    await AsyncStorage.setItem(
-      'userHaveAnyShop',
-      JSON.stringify(response?.data?.user?.userHaveAnyShop),
-    );
+    console.log('Actual Response ::-', response);
     return response;
   },
 );
@@ -86,6 +83,7 @@ const userProfileSlice = createSlice({
       };
     });
     builder.addCase(loadUserProfileStart.fulfilled, (state, action) => {
+    console.log('UserProfile Success :-', action.payload.data.user)
       return {
         ...state,
         userLoading: false,
@@ -94,6 +92,7 @@ const userProfileSlice = createSlice({
       };
     });
     builder.addCase(loadUserProfileStart.rejected, (state, action) => {
+      console.log('UserProfile Error :-', action.payload)
       return {
         ...state,
         userLoading: false,

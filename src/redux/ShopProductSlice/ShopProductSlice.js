@@ -48,7 +48,7 @@ const ShopProductSlice = createSlice({
     productPageSkip: 0,
     productsData: [],
     productLoading: false,
-    PaginationProductLimit: 5,
+    PaginationProductLimit: 12,
     error: '',
   },
   reducers: {

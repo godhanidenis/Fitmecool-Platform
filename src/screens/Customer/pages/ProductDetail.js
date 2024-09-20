@@ -33,7 +33,8 @@ import {Share} from 'react-native';
 import {Avatar, Divider} from 'react-native-paper';
 import {locationIcon} from '../../../common/AllLiveImageLink';
 import FastImage from 'react-native-fast-image';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
+// import Carousel, {Pagination} from 'react-native-snap-carousel';
+import Carousel from 'react-native-reanimated-carousel';
 import Video from 'react-native-video';
 
 const ProductDetail = () => {
@@ -102,7 +103,7 @@ const ProductDetail = () => {
         },
       );
     } else {
-      navigation.navigate('LoginMainScreen');
+      navigation.navigate('Login');
     }
   };
 
@@ -182,7 +183,7 @@ const ProductDetail = () => {
         },
       );
     } else {
-      navigation.navigate('LoginMainScreen');
+      navigation.navigate('Login');
     }
   };
 
@@ -284,8 +285,15 @@ const ProductDetail = () => {
       id: productDetails?.data?.product?.data.id,
     });
 
+    const productLink = `https://www.fitmecool.com/product/${productDetails?.data?.product?.data?.product_name?.replaceAll(
+      ' ',
+      '-',
+    )}/${productId}/`;
+
+    const message = `Hello there 🙂,\n\nI'm interested in this product.\n\n${productLink}\n\nInquire via FitMeCool 🎉`;
+
     const phoneNumber = `+91${productDetails?.data?.product?.data?.branchInfo?.manager_contact}`;
-    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}`;
+    const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
     Linking.openURL(url);
   };
 
@@ -350,13 +358,12 @@ const ProductDetail = () => {
                 },
               })
             }>
-            <Text numberOfLines={1} style={styles.productHeadNameText}>
+            <Text style={styles.productHeadNameText}>
               {
                 productDetails?.data?.product?.data?.branchInfo?.shop_info
                   ?.shop_name
               }
             </Text>
-            <Text style={styles.dayText}>{shopOldDate} days ago</Text>
           </TouchableOpacity>
         </View>
 
@@ -393,8 +400,9 @@ const ProductDetail = () => {
             onPress={() => clickedByFollow()}
             style={styles.followBtn}>
             {!shopFollowByUser && <Icon name="plus" size={14} color="white" />}
+            {shopFollowByUser && <Icon name="minus" size={14} color="white" />}
             <Text style={styles.followBtnText}>
-              {shopFollowByUser ? 'UnFollow' : 'Follow'}
+              {shopFollowByUser ? 'Following' : 'Follow'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -404,13 +412,20 @@ const ProductDetail = () => {
           <View style={styles.carouselMain}>
             <View style={{position: 'relative'}}>
               {productDetails?.data?.product?.data?.product_image?.front ? (
+                // <Carousel
+                //   data={TopCarouselData}
+                //   renderItem={CarouselRenderItem}
+                //   sliderWidth={screenWidth}
+                //   itemWidth={screenWidth}
+                //   onSnapToItem={index => setActiveSlide(index)}
+                //   {...autoplayConfig}
+                // />
                 <Carousel
+                  loop
+                  width={300}
+                  height={200}
                   data={TopCarouselData}
                   renderItem={CarouselRenderItem}
-                  sliderWidth={screenWidth}
-                  itemWidth={screenWidth}
-                  onSnapToItem={index => setActiveSlide(index)}
-                  {...autoplayConfig}
                 />
               ) : (
                 <Skeleton
@@ -419,12 +434,12 @@ const ProductDetail = () => {
                   height={460}
                 />
               )}
-              <View style={styles.sliderPagination}>
+              {/* <View style={styles.sliderPagination}>
                 <Pagination
                   dotsLength={TopCarouselData?.length}
                   activeDotIndex={activeSlide}
                 />
-              </View>
+              </View> */}
             </View>
             <View style={styles.threeIconMain}>
               <TouchableOpacity
@@ -432,17 +447,14 @@ const ProductDetail = () => {
                 style={styles.iconBG}>
                 <Icon
                   name={productLikeByUser ? 'heart' : 'heart-o'}
-                  size={22}
-                  color={productLikeByUser ? 'red' : 'black'}
+                  size={25}
+                  color={productLikeByUser ? 'red' : '#29977E'}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => shareContent()}
                 style={styles.iconBG}>
-                <Icon name="share-alt" size={22} color="black" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconBG}>
-                <Icon name="exclamation-circle" size={22} color="black" />
+                <Icon name="share-alt" size={25} color="#29977E" />
               </TouchableOpacity>
             </View>
             {productDetails?.data?.product?.data?.product_listing_type && (
@@ -472,7 +484,7 @@ const ProductDetail = () => {
               <TouchableOpacity onPress={() => clickedByLike()}>
                 <Icon
                   name={productLikeByUser ? 'heart' : 'heart-o'}
-                  size={22}
+                  size={30}
                   color={productLikeByUser ? 'red' : 'black'}
                 />
               </TouchableOpacity>
@@ -504,7 +516,7 @@ const ProductDetail = () => {
             <Text style={[styles.aboutNameText, {paddingBottom: 0}]}>
               About
             </Text>
-            <View style={{width: '100%'}}>
+            <View style={{width: '100%', marginBottom: 10}}>
               <RenderHTML
                 contentWidth={300}
                 source={{
@@ -512,22 +524,22 @@ const ProductDetail = () => {
                     ?.product_description,
                 }}
                 tagsStyles={{
-                  p: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  span: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  div: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  h1: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  h2: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  h3: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  li: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  ul: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
-                  b: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 14},
+                  p: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  span: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  div: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  h1: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  h2: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  h3: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  li: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  ul: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
+                  b: {color: 'rgba(21, 24, 39, 0.56)', fontSize: 20},
                 }}
               />
             </View>
             <Text style={styles.aboutNameText}>Item Details</Text>
             <Text style={[styles.aboutText, {paddingBottom: 6}]}>
               Category :{' '}
-              <Text style={{color: '#151827'}}>
+              <Text style={{color: '#151827', fontWeight: 700}}>
                 {
                   productDetails?.data?.product?.data?.categoryInfo
                     ?.category_name
@@ -558,7 +570,7 @@ const ProductDetail = () => {
                   style={styles.wpSendBtnMain}
                   onPress={openWhatsAppChat}>
                   <Icon name="whatsapp" size={25} color="#FFFFFF" />
-                  <Text style={styles.wpSendBtnText}>Send Messages</Text>
+                  <Text style={styles.wpSendBtnText}>Send Message</Text>
                 </TouchableOpacity>
               </View>
               <View style={{width: '48%'}}>
@@ -602,7 +614,7 @@ const ProductDetail = () => {
             <TouchableOpacity
               onPress={() => setShowContactModalOpen(false)}
               style={styles.modelClose}>
-              <Icon name="close" size={22} color="black" />
+              <Icon name="close" size={24} color="black" />
             </TouchableOpacity>
             <View style={{padding: 20}}>
               <View style={{flexDirection: 'row', gap: 15, marginBottom: 18}}>
@@ -633,15 +645,18 @@ const ProductDetail = () => {
                   />
                 )}
                 <View>
-                  <Text numberOfLines={1} style={styles.modelTitleName}>
+                  <Text style={styles.modelTitleName}>
                     {
                       productDetails?.data?.product?.data?.branchInfo?.shop_info
                         ?.shop_name
                     }
                   </Text>
                   <Text
-                    numberOfLines={2}
-                    style={{color: 'rgba(21, 24, 39, 0.56)', width: 200}}>
+                    style={{
+                      color: 'rgba(21, 24, 39, 0.56)',
+                      width: 200,
+                      fontSize: 18,
+                    }}>
                     {
                       productDetails?.data?.product?.data?.branchInfo
                         ?.branch_address
@@ -665,14 +680,14 @@ const ProductDetail = () => {
                   backgroundColor="#29977E"
                 />
                 <View>
-                  <Text numberOfLines={1} style={styles.modelTitleName}>
+                  <Text style={styles.modelTitleName}>
                     {
                       productDetails?.data?.product?.data?.branchInfo
                         ?.manager_name
                     }
                   </Text>
 
-                  <Text style={{color: 'rgba(21, 24, 39, 0.56)'}}>
+                  <Text style={{color: 'rgba(21, 24, 39, 0.56)', fontSize: 18}}>
                     {
                       productDetails?.data?.product?.data?.branchInfo
                         ?.manager_contact
@@ -773,11 +788,11 @@ const styles = StyleSheet.create({
   },
   iconBG: {
     backgroundColor: 'white',
-    height: 32,
-    width: 32,
+    height: 40,
+    width: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 16,
+    borderRadius: 50,
     elevation: 3,
   },
   shareMainContent: {
@@ -798,7 +813,7 @@ const styles = StyleSheet.create({
   },
   proNameText: {
     color: '#29977E',
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: '700',
     fontFamily: FontStyle,
     width: '90%',
@@ -811,15 +826,15 @@ const styles = StyleSheet.create({
   },
   aboutNameText: {
     color: '#151827',
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: '700',
     fontFamily: FontStyle,
     paddingBottom: 10,
   },
   aboutText: {
     color: 'rgba(21, 24, 39, 0.56)',
-    fontWeight: '400',
-    fontSize: 14,
+    fontWeight: 300,
+    fontSize: 20,
     fontFamily: FontStyle,
   },
   btnMainDev: {
@@ -852,7 +867,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   modelTitleName: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
     color: 'black',
     width: 200,
@@ -877,7 +892,7 @@ const styles = StyleSheet.create({
   wpSendBtnText: {
     paddingVertical: 15,
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '600',
     fontFamily: FontStyle,
   },
@@ -895,7 +910,7 @@ const styles = StyleSheet.create({
   showConBtnText: {
     paddingVertical: 15,
     color: '#151827',
-    fontSize: 15,
+    fontSize: 20,
     fontWeight: '600',
     fontFamily: FontStyle,
   },
@@ -908,18 +923,18 @@ const styles = StyleSheet.create({
   },
   finalPriceText: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: '600',
   },
   productPriceText: {
     color: '#9d9d9d',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
     textDecorationLine: 'line-through',
   },
   percentageText: {
     color: '#29977E',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
   },
   rentSellRebinMain: {

@@ -80,18 +80,18 @@ const SideBarContent = ({AccessToken}) => {
         <View style={styles.authUserMain}>
           <Avatar.Text size={55} label={logoName} backgroundColor="#29977E" />
           <View>
-            <Text style={styles.userNameText} numberOfLines={1}>
+            <Text style={styles.userNameText}>
               {userProfile?.first_name} {userProfile?.last_name}
             </Text>
-            <Text style={styles.userEmailText} numberOfLines={1}>
-              {userProfile?.user_email || 'Undefined..'}
+            <Text style={styles.userEmailText}>
+              {userProfile?.user_email || ''}
             </Text>
           </View>
         </View>
       ) : (
         <TouchableOpacity
           style={styles.loginEventMain}
-          onPress={() => navigation.navigate('LoginMainScreen')}>
+          onPress={() => navigation.navigate('Login')}>
           <Icon name="user-plus" size={22} color="#151827" />
           <Text style={styles.signInText}>SignIn/SignUp</Text>
         </TouchableOpacity>
@@ -103,7 +103,7 @@ const SideBarContent = ({AccessToken}) => {
           value={searchTerm}
           onChangeText={text => setSearchTerm(text)}
           style={{width: '100%', color: 'black'}}
-          placeholder="Search  Hear.."
+          placeholder="Search..."
           placeholderTextColor="rgba(21, 24, 39, 0.40)"
         />
       </View>
@@ -162,14 +162,14 @@ const styles = StyleSheet.create({
     gap: 5,
     borderWidth: 0.5,
     marginHorizontal: 30,
-    marginVertical: 30,
+    marginVertical: 15,
   },
   wishMain: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
     marginHorizontal: 30,
-    marginVertical: 30,
+    marginVertical: 15,
   },
   logoutMain: {
     flexDirection: 'row',

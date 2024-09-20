@@ -70,7 +70,7 @@ const Branches = () => {
         },
       );
     } else {
-      navigation.navigate('LoginMainScreen');
+      navigation.navigate('Login');
     }
   };
 
@@ -93,9 +93,9 @@ const Branches = () => {
       <View style={styles.headerMain}>
         <View style={styles.backMain}>
           <TouchableOpacity
-            style={{padding: 10}}
+            style={{backgroundColor:'#151827', paddingHorizontal:10, paddingVertical:5, borderRadius:10}}
             onPress={() => navigation.goBack()}>
-            <Icon name="angle-left" size={24} color="white" />
+            <Icon name="angle-left" size={40} color="white" />
           </TouchableOpacity>
           {shopDetails?.shop_logo?.small ? (
             <FastImage
@@ -124,19 +124,26 @@ const Branches = () => {
           </View>
         </View>
         <View style={{width: '25%'}}>
-          <CustomButton
-            name={shopFollowByUser ? 'Following' : 'Follow'}
+          {!shopFollowByUser && <CustomButton
+            name={'Follow'}
             color="white"
-            backgroundColor="#151827"
-            borderColor="white"
-            onPress={() => {
-              shopFollowByUser
-                ? setFollowModalVisible(true)
-                : clickedByFollow();
-            }}
-            icon={!shopFollowByUser && true}
+            backgroundColor="#29977E"
+            borderColor="#29977E"
+            onPress={() => clickedByFollow()}
+            icon={true}
             iconName="plus"
-          />
+          />}
+          {shopFollowByUser && <CustomButton
+            name={'Following'}
+            color="white"
+            backgroundColor="#29977E"
+            borderColor="#29977E"
+            onPress={() => {
+              setFollowModalVisible(true)
+            }}
+            icon={true}
+            iconName="minus"
+          />}
         </View>
         <FollowConfirmationModel
           followModalVisible={followModalVisible}
@@ -199,7 +206,7 @@ const styles = StyleSheet.create({
     width: '75%',
   },
   headerMain: {
-    paddingVertical: 15,
+    paddingVertical: 5,
     backgroundColor: '#151827',
     flexDirection: 'row',
     alignItems: 'center',
@@ -216,20 +223,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 8,
     width: '100%',
   },
   titleLeftText: {
     color: 'rgba(21, 24, 39, 0.56)',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
-    width: '35%',
+    width: '40%',
   },
   titleRightText: {
     color: '#151827',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
-    width: '65%',
+    width: '60%',
   },
   branchListContainer: {
     marginHorizontal: 20,

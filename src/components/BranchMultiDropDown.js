@@ -29,7 +29,7 @@ const BranchMultiDropDown = ({
           <Icon
             name={show ? 'angle-up' : 'angle-down'}
             size={24}
-            color="black"
+            color="#fff"
           />
           <Text style={styles.textBranchName}>{cardTitle}</Text>
         </TouchableOpacity>
@@ -77,12 +77,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: '#F3F6F6',
+    backgroundColor: '#151827',
   },
   textBranchName: {
-    color: '#151827',
+    color: '#fff',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 16,
   },
 
   editPencil: {

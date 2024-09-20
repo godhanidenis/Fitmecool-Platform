@@ -33,24 +33,24 @@ const ShopCard = ({shop}) => {
                 // cache: FastImage.cacheControl.web,
               }}
               style={{
-                height: 128,
+                height: 150,
                 width: '100%',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
               }}
-              resizeMode="stretch"
+              resizeMode="cover"
             />
           ) : (
             <View
               style={{
                 width: '100%',
-                height: 128,
+                height: 150,
                 position: 'relative',
               }}>
               <FastImage
                 style={{
                   width: '100%',
-                  height: 128,
+                  height: 150,
                   borderTopLeftRadius: 8,
                   borderTopRightRadius: 8,
                 }}
@@ -58,13 +58,13 @@ const ShopCard = ({shop}) => {
                   uri: shopBackgroundCover3,
                   // cache: FastImage.cacheControl.web,
                 }}
-                resizeMode="stretch"
+                resizeMode="cover"
               />
               <View
                 style={{
                   backgroundColor: 'rgba(0, 0, 0, 0.1)',
                   width: '100%',
-                  height: 128,
+                  height: 150,
                   borderTopLeftRadius: 8,
                   borderTopRightRadius: 8,
                   position: 'absolute',
@@ -86,33 +86,32 @@ const ShopCard = ({shop}) => {
                 uri: shop?.shop_logo?.medium,
                 // cache: FastImage.cacheControl.web,
               }}
-              style={{width: 35, height: 35, borderRadius: 17}}
+              style={{width: 40, height: 40, borderRadius: 17}}
               resizeMode="cover"
             />
           ) : (
             <Avatar.Text
-              size={35}
+              size={40}
               label={shop?.shop_name?.charAt(0)}
               backgroundColor="#29977E"
             />
           )}
 
           <View>
-            <Text style={styles.shopNameText} numberOfLines={1}>
+            <Text style={styles.shopNameText}>
               {capitalizeString(shop?.shop_name)}
             </Text>
             <View
               style={{
                 display: 'flex',
                 flexDirection: 'row',
-                alignItems: 'center',
                 gap: 2,
               }}>
               <Image
                 source={{uri: locationIcon}}
-                style={{width: 12, height: 12}}
+                style={{width: 12, height: 12, marginTop:4}}
               />
-              <Text style={styles.addressNameText} numberOfLines={1}>
+              <Text style={styles.addressNameText} numberOfLines={2}>
                 {shop?.branch_info?.length > 1
                   ? shop?.branch_info?.map(
                       itm => itm.branch_type === 'main' && itm.branch_address,
@@ -154,8 +153,7 @@ export default ShopCard;
 const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: 'white',
-    width: '48%',
-    height: 220,
+    width: '100%',
     borderRadius: 8,
     elevation: 2,
     marginBottom: 15,
@@ -163,14 +161,12 @@ const styles = StyleSheet.create({
   shopNameText: {
     color: '#151827',
     fontWeight: '600',
-    fontSize: 14,
-    width: 120,
+    fontSize: 20,
   },
   addressNameText: {
     color: 'rgba(21, 24, 39, 0.40)',
     fontWeight: '600',
     fontSize: 14,
-    width: 100,
   },
   shopMain: {
     display: 'flex',

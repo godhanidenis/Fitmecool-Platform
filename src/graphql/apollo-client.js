@@ -26,18 +26,20 @@ const authLink = setContext(async (_, {headers}) => {
 const handleNavigation = () => {
   const navigation = useNavigation();
   useEffect(() => {
-    navigation.navigate('LoginMainScreen');
+    navigation.navigate('Login');
   }, []);
 };
 
 const errorLink = onError(({graphQLErrors, networkError}) => {
   // const navigation = useNavigation();
 
+  console.log('Some Error Occured !!', graphQLErrors, networkError);
+
   if (graphQLErrors) {
     graphQLErrors.forEach(async ({message}) => {
       if (message === 'Invalid/Expired token') {
         await AsyncStorage.clear();
-        // navigation.navigate('LoginMainScreen');
+        // navigation.navigate('Login');
         handleNavigation();
         alert('User Logout Successfully!!');
       }

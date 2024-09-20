@@ -67,7 +67,7 @@ const ShopAllReviewSection = ({shopReviews, viewAllBtn, shopDetails}) => {
           <Text style={styles.avgTotalRatingText}>/5</Text>
         </View>
         <StarRating
-          starSize={22}
+          starSize={30}
           starStyle={{marginHorizontal: 0}}
           rating={avgShopRating}
           maxStars={5}
@@ -81,8 +81,8 @@ const ShopAllReviewSection = ({shopReviews, viewAllBtn, shopDetails}) => {
         {shopReviews?.length > 0
           ? [5, 4, 3, 2, 1]?.map?.((star, index) => (
               <View key={star} style={styles.progressBarMain}>
-                <Text style={{color: '#31333E', fontWeight: '400'}}>
-                  {star} {''} <Icon name="star" size={12} color="black" />
+                <Text style={{color: '#31333E', fontWeight: '400', fontSize:20}}>
+                  {star} {''} <Icon name="star" size={18} color="black" />
                 </Text>
                 <ProgressBar
                   style={{width: 220}}
@@ -92,7 +92,7 @@ const ShopAllReviewSection = ({shopReviews, viewAllBtn, shopDetails}) => {
                   }
                   color="green"
                 />
-                <Text style={{color: '#31333E', fontWeight: '400'}}>
+                <Text style={{color: '#31333E', fontWeight: '400', fontSize:16}}>
                   {shopReviews?.filter(itm => itm.stars === star)?.length}{' '}
                   Reviews
                 </Text>
@@ -141,7 +141,7 @@ const ShopAllReviewSection = ({shopReviews, viewAllBtn, shopDetails}) => {
                     style={{
                       color: 'rgba(21, 24, 39, 0.56)',
                       fontWeight: '400',
-                      fontSize: 14,
+                      fontSize: 16,
                     }}>
                     {getReviewedTimeString(review?.updatedAt)}
                   </Text>
@@ -187,18 +187,18 @@ const styles = StyleSheet.create({
   reText: {
     color: '#151827',
     fontWeight: '600',
-    fontSize: 18,
+    fontSize: 24,
   },
   reBoText: {
     color: 'rgba(21, 24, 39, 0.40)',
     fontWeight: '400',
-    fontSize: 13,
+    fontSize: 16,
     paddingBottom: 16,
   },
   writeReText: {
     color: '#29977E',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 16,
     textDecorationLine: 'underline',
     paddingBottom: 2,
   },
@@ -213,18 +213,18 @@ const styles = StyleSheet.create({
   },
   avgRatingText: {
     color: 'black',
-    fontSize: 32,
+    fontSize: 54,
     fontWeight: '600',
   },
   avgTotalRatingText: {
     color: 'black',
-    fontSize: 22,
+    fontSize: 30,
     fontWeight: '400',
   },
   fiveStarText: {
     color: '#151827',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 18,
   },
   cardTopDiv: {
     flexDirection: 'row',
@@ -233,25 +233,25 @@ const styles = StyleSheet.create({
   countStarMain: {
     backgroundColor: '#29977E',
     borderRadius: 5,
-    width: 50,
-    height: 25,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal:10,
+    paddingVertical:5
   },
   reviewNameText: {
     color: '#151827',
     fontWeight: '600',
-    fontSize: 18,
+    fontSize: 20,
   },
   revDesText: {
     paddingTop: 18,
     color: 'rgba(21, 24, 39, 0.56)',
     fontWeight: '400',
-    fontSize: 14,
+    fontSize: 18,
   },
   DistributionText: {
     color: '#31333E',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,
   },

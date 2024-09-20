@@ -40,45 +40,23 @@ const SignUp = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const [loginType, setLoginType] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordHide, setPasswordHide] = useState(true);
   const [confirmPasswordHide, setConfirmPasswordHide] = useState(true);
 
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('loginType');
-      if (value !== null) {
-        setLoginType(value);
-      } else {
-        console.log('Value not found in storage.');
-      }
-    } catch (error) {
-      console.error('Error retrieving data:', error);
-    }
-  };
-
-  const handleAfterSignUpResponse = async (userId, token, message) => {
+  const handleAfterSignUpResponse = async (user, token, message) => {
     setLoading(false);
-    dispatch(loadUserProfileStart());
     await AsyncStorage.setItem('token', token);
-    await AsyncStorage.setItem('userId', userId);
+    await AsyncStorage.setItem('loginType', 'customer');
+    await AsyncStorage.setItem('userId', user.id);
+    await AsyncStorage.setItem('userHaveAnyShop', user.userHaveAnyShop ?? '');
     toast.show({
       title: message,
       placement: 'top',
       backgroundColor: 'green.600',
       variant: 'solid',
     });
-    if (loginType === 'vendor') {
-      setTimeout(() => {
-        navigation.navigate('VendorMain');
-      }, 1000);
-    } else if (loginType === 'customer') {
-      setTimeout(() => {
-        navigation.navigate('CustomerMain');
-      }, 1000);
-    }
+    navigation.navigate('Splash')
   };
 
   const handleAfterSignUpError = message => {
@@ -94,22 +72,13 @@ const SignUp = () => {
   const onSubmit = data => {
     setLoading(true);
     signUp(
-      loginType === 'vendor'
-        ? {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            user_contact: data.user_contact,
-            user_password: data.user_password,
-            user_type: 'vendor',
-            user_email: data.user_email,
+          {
+          first_name: data.first_name,
+          last_name: data.last_name,
+          user_contact: data.user_contact,
+          user_password: data.user_password,
+          user_email: data.user_email,
           }
-        : {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            user_contact: data.user_contact,
-            user_password: data.user_password,
-            user_type: 'customer',
-          },
     ).then(
       async res => {
         handleAfterSignUpResponse(
@@ -125,10 +94,6 @@ const SignUp = () => {
     );
   };
 
-  useEffect(() => {
-    retrieveData();
-  }, []);
-
   const GoogleSignUPPress = async () => {
     GoogleSignin.signOut();
 
@@ -139,12 +104,11 @@ const SignUp = () => {
       googleSignUp({
         first_name: userInfo?.user?.name.split(' ')[0] || '',
         last_name: userInfo?.user?.name.split(' ')[1] || '',
-        user_type: loginType === 'vendor' ? 'vendor' : 'customer',
         user_email: userInfo?.user?.email,
       }).then(
         res =>
           handleAfterSignUpResponse(
-            res.data.googleSignUp.user,
+            res.data.googleSignUp.user.id,
             res.data.googleSignUp.token,
             res.data.googleSignUp.message,
           ),
@@ -162,19 +126,19 @@ const SignUp = () => {
     <View
       style={{flex: 1, backgroundColor: BackGroundStyle, position: 'relative'}}>
       <View style={styles.headerMain}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={22} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.appNameText}>FitMeCool</Text>
-      </View>
+                <View style={styles.backMain}>
+                  <TouchableOpacity
+                    style={{backgroundColor:'#151827', paddingHorizontal:10, paddingVertical:5, borderRadius:10}}
+                    onPress={() => navigation.goBack()}>
+                    <Icon name="angle-left" size={40} color="white" />
+                  </TouchableOpacity>
+                </View>
+            </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.main}>
-        <Text style={styles.joinText}>
-          Create an account As{' '}
-          <Text style={{color: '#29977E'}}>
-            {loginType === 'vendor' ? 'Seller' : 'Customer'}
-          </Text>
-        </Text>
+        <View style={{marginTop:20}}>
+                <Text style={styles.registerText}>Register</Text>
+                <Text style={styles.registerSubText}>Please create a new account to continue.</Text>
         {/* <View style={{marginBottom: 16, width: '100%'}}> */}
         <View style={{marginBottom: 4, width: '100%'}}>
           <TouchableOpacity
@@ -255,31 +219,29 @@ const SignUp = () => {
             </Text>
           )}
         </View>
-        {loginType === 'vendor' && (
-          <View style={{marginTop: 10}}>
-            <CustomTextInput
-              outlineStyle={{borderRadius: 12}}
-              activeOutlineColor="#151827"
-              label="Email"
-              mode="outlined"
-              name="user_email"
-              control={control}
-              rules={{
-                required: 'Email is required *',
-                pattern: {
-                  value:
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  message: 'Please enter a valid email',
-                },
-              }}
-            />
-            {errors?.user_email && (
-              <Text style={{color: 'red', marginTop: 4}}>
-                {errors.user_email.message}
-              </Text>
-            )}
-          </View>
-        )}
+        <View style={{marginTop: 10}}>
+                    <CustomTextInput
+                      outlineStyle={{borderRadius: 12}}
+                      activeOutlineColor="#151827"
+                      label="Email"
+                      mode="outlined"
+                      name="user_email"
+                      control={control}
+                      rules={{
+                        required: 'Email is required *',
+                        pattern: {
+                          value:
+                            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                          message: 'Please enter a valid email',
+                        },
+                      }}
+                    />
+                    {errors?.user_email && (
+                      <Text style={{color: 'red', marginTop: 4}}>
+                        {errors.user_email.message}
+                      </Text>
+                    )}
+                  </View>
 
         <View style={{marginTop: 10, position: 'relative'}}>
           <CustomTextInput
@@ -343,7 +305,7 @@ const SignUp = () => {
         <View style={styles.buttonMainContainer}>
           <View style={{width: '100%'}}>
             <CustomButton
-              name="Sign Up"
+              name="Register"
               color="#FFFFFF"
               backgroundColor="#151827"
               onPress={handleSubmit(onSubmit, onError)}
@@ -354,11 +316,12 @@ const SignUp = () => {
             Already have an account?
             <Text
               onPress={() => navigation.navigate('Login')}
-              style={{color: '#151827', fontWeight: '600'}}>
+              style={{color: '#29977E', fontWeight: '700'}}>
               {' '}
               Login
             </Text>
           </Text>
+        </View>
         </View>
       </ScrollView>
     </View>
@@ -385,6 +348,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     paddingVertical: 20,
   },
+  registerText:{
+      fontFamily: FontStyle,
+      fontWeight:'700',
+      color: '#151827',
+      fontSize: 30,
+  },
+  registerSubText:{
+      fontFamily: FontStyle,
+      fontWeight:'700',
+      color: 'grey',
+      fontSize: 14,
+      marginBottom:10
+  },
   childText: {
     color: 'rgba(21, 24, 39, 0.56)',
     fontFamily: FontStyle,
@@ -399,12 +375,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     fontFamily: FontStyle,
-    color: '#31333E',
-    marginVertical: 10,
+    color: '#29977E',
+    marginVertical: 6,
   },
   bottomText: {
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 50,
     fontFamily: FontStyle,
     color: 'rgba(21, 24, 39, 0.56)',
@@ -412,10 +388,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   headerMain: {
+    paddingVertical: 10,
     flexDirection: 'row',
-    gap: 20,
     alignItems: 'center',
-    margin: 20,
+    width: '100%',
+    paddingHorizontal: 20,
   },
   appNameText: {
     textTransform: 'uppercase',

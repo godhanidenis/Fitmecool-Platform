@@ -63,8 +63,8 @@ const DrawerCustomer = ({loginToken}) => {
         </DrawerContentScrollView>
         {AccessToken && (
           <TouchableOpacity onPress={() => LogOut()} style={styles.logoutMain}>
-            <Icon name="power-off" size={20} color="#151827" />
-            <Text style={styles.wishText}>logout</Text>
+            <Icon name="power-off" size={24} color="#fff" />
+            <Text style={styles.wishText}>Logout</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -95,12 +95,12 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     bottom: 0,
     position: 'absolute',
-    borderTopWidth: 1,
     width: '100%',
+    backgroundColor:'#29977E'
   },
   wishText: {
-    color: '#151827',
+    color: '#fff',
     fontWeight: '400',
-    fontSize: 18,
+    fontSize: 20,
   },
 });

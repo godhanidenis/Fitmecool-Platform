@@ -64,7 +64,7 @@ const ProductCard = ({product, landingPageCardWith}) => {
         },
       );
     } else {
-      navigation.navigate('LoginMainScreen');
+      navigation.navigate('Login');
     }
   };
 
@@ -86,7 +86,7 @@ const ProductCard = ({product, landingPageCardWith}) => {
     <View
       style={{
         position: 'relative',
-        width: landingPageCardWith ? 200 : '48%',
+        width: landingPageCardWith ? 200 : '49%',
         // overflow: 'hidden',
       }}>
       {product?.product_listing_type && (
@@ -114,7 +114,7 @@ const ProductCard = ({product, landingPageCardWith}) => {
                 },
               })
             }>
-            <View style={{height: 210, width: '100%'}}>
+            <View style={{height: 260, width: '100%'}}>
               <FastImage
                 source={{
                   uri: product?.product_image?.front?.large,
@@ -149,7 +149,7 @@ const ProductCard = ({product, landingPageCardWith}) => {
               },
             })
           }>
-          <Text style={styles.productNameText} numberOfLines={1}>
+          <Text style={styles.productNameText} numberOfLines={2}>
             {capitalizeString(product?.product_name)}
           </Text>
         </TouchableOpacity>
@@ -166,12 +166,12 @@ const ProductCard = ({product, landingPageCardWith}) => {
                   uri: product?.branchInfo?.shop_info?.shop_logo?.medium,
                   // cache: FastImage.cacheControl.web,
                 }}
-                style={{width: 25, height: 25, borderRadius: 12}}
+                style={{width: 30, height: 30, borderRadius: 50}}
                 resizeMode="cover"
               />
             ) : (
               <Avatar.Text
-                size={25}
+                size={30}
                 label={product?.branchInfo?.shop_info?.shop_name?.charAt(0)}
                 backgroundColor="#29977E"
               />
@@ -208,22 +208,22 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: 'white',
     // width: '47%',
-    height: 335,
+    height: 420,
     borderRadius: 8,
     elevation: 2,
-    marginBottom: 15,
+    marginBottom: '4%',
   },
   productNameText: {
     color: '#151827',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 20,
     paddingVertical: 4,
     paddingHorizontal: 8,
   },
   shopNameText: {
     color: 'rgba(21, 24, 39, 0.40)',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 16,
     width: 120,
   },
   shopMain: {
@@ -251,18 +251,18 @@ const styles = StyleSheet.create({
   },
   finalPriceText: {
     color: 'black',
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: '600',
   },
   productPriceText: {
     color: '#9d9d9d',
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '600',
     textDecorationLine: 'line-through',
   },
   percentageText: {
     color: '#29977E',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
   },
   priceInnerDiv: {

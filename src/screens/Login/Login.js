@@ -37,45 +37,24 @@ const Login = () => {
     formState: {errors},
   } = useForm();
 
-  const [loginType, setLoginType] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordHide, setPasswordHide] = useState(true);
 
   const onError = errors => console.log('Errors Occurred !! :', errors);
 
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('loginType');
-      if (value !== null) {
-        setLoginType(value);
-      } else {
-        console.log('Value not found in storage.');
-      }
-    } catch (error) {
-      console.error('Error retrieving data:', error);
-    }
-  };
-
-  const handleAfterSignInResponse = async (userId, token, message) => {
+  const handleAfterSignInResponse = async (user, token, message) => {
     setLoading(false);
-    dispatch(loadUserProfileStart());
     await AsyncStorage.setItem('token', token);
-    await AsyncStorage.setItem('userId', userId);
+    await AsyncStorage.setItem('loginType', 'customer');
+    await AsyncStorage.setItem('userId', user.id);
+    await AsyncStorage.setItem('userHaveAnyShop', user.userHaveAnyShop ?? '');
     toast.show({
       title: message,
       placement: 'top',
       backgroundColor: 'green.600',
       variant: 'solid',
     });
-    if (loginType === 'vendor') {
-      setTimeout(() => {
-        navigation.navigate('VendorMain');
-      }, 1000);
-    } else if (loginType === 'customer') {
-      setTimeout(() => {
-        navigation.navigate('CustomerMain');
-      }, 1000);
-    }
+    navigation.navigate('Splash')
   };
 
   const handleAfterSignInError = message => {
@@ -93,10 +72,10 @@ const Login = () => {
     signIn({
       username: data.username,
       password: data.password,
-      type: loginType === 'vendor' ? 'vendor' : 'customer',
     })
       .then(
         async res => {
+        console.log('Response :-', res.data.signIn.user)
           handleAfterSignInResponse(
             res.data.signIn.user,
             res.data.signIn.token,
@@ -112,10 +91,6 @@ const Login = () => {
       });
   };
 
-  useEffect(() => {
-    retrieveData();
-  }, []);
-
   const GoogleSignInPress = async () => {
     GoogleSignin.signOut();
 
@@ -123,8 +98,7 @@ const Login = () => {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       const userInfo = await GoogleSignin.signIn();
       googleSignIn({
-        username: userInfo?.user?.email,
-        type: loginType === 'vendor' ? 'vendor' : 'customer',
+        username: userInfo?.user?.email
       }).then(
         res =>
           handleAfterSignInResponse(
@@ -143,54 +117,37 @@ const Login = () => {
     <View
       style={{flex: 1, backgroundColor: BackGroundStyle, position: 'relative'}}>
       <View style={styles.headerMain}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={22} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.appNameText}>FitMeCool</Text>
+          <View style={styles.backMain}>
+            <TouchableOpacity
+              style={{backgroundColor:'#151827', paddingHorizontal:10, paddingVertical:5, borderRadius:10}}
+              onPress={() => navigation.goBack()}>
+              <Icon name="angle-left" size={40} color="white" />
+            </TouchableOpacity>
+          </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.main}>
-        <Text style={styles.joinText}>
-          Login As{' '}
-          <Text style={{color: '#29977E'}}>
-            {loginType === 'vendor' ? 'Seller' : 'Customer'}
-          </Text>{' '}
-          !
-        </Text>
-        {/* <View style={{marginBottom: 16, width: '100%'}}> */}
-        <View style={{marginBottom: 4, width: '100%'}}>
-          <TouchableOpacity
-            onPress={() => GoogleSignInPress()}
-            style={styles.socialBtnMain}>
-            <Image source={{uri: googleIcon}} style={{width: 20, height: 20}} />
-            <Text style={styles.socialText}>Continue to Google</Text>
-          </TouchableOpacity>
-        </View>
-        {/* <View style={{width: '100%'}}>
-          <TouchableOpacity style={styles.socialBtnMain}>
-            <Image
-              source={{uri: facebookIcon}}
-              style={{width: 22, height: 22}}
-            />
-            <Text style={styles.socialText}>Continue to Facebook</Text>
-          </TouchableOpacity>
-        </View> */}
 
-        <Text style={styles.orText}>OR</Text>
 
-        <View>
+        <View style={{marginTop:20}}>
+        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.loginSubText}>Please sign in to continue.</Text>
+
+        <View style={{marginVertical: 10, width: '100%'}}>
+                          <TouchableOpacity
+                            onPress={() => GoogleSignInPress()}
+                            style={styles.socialBtnMain}>
+                            <Image source={{uri: googleIcon}} style={{width: 20, height: 20}} />
+                            <Text style={styles.socialText}>Continue To Google</Text>
+                          </TouchableOpacity>
+                        </View>
+
+                         <Text style={styles.orText}>OR</Text>
           <CustomTextInput
-            label={
-              loginType === 'customer'
-                ? 'Contact Number'
-                : 'Email/Contact Number'
-            }
+            label={'Email/Contact Number'}
             mode="outlined"
-            keyboardType={
-              loginType === 'customer' ? 'phone-pad' : 'email-address'
-            }
             name="username"
             control={control}
-            rules={{required: 'Username is required *'}}
+            rules={{required: 'Email/Contact Number is required *'}}
             activeOutlineColor="#151827"
             outlineStyle={{borderRadius: 12}}
           />
@@ -230,11 +187,10 @@ const Login = () => {
         <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
           <Text style={styles.fpText}>Forgot Password?</Text>
         </TouchableOpacity>
-
         <View style={styles.buttonMainContainer}>
           <View style={{width: '100%'}}>
             <CustomButton
-              name="Sign In"
+              name="Login"
               color="#FFFFFF"
               backgroundColor="#151827"
               onPress={handleSubmit(onSubmit, onError)}
@@ -245,9 +201,9 @@ const Login = () => {
             Don’t have an account?
             <Text
               onPress={() => navigation.navigate('SignUp')}
-              style={{color: '#151827', fontWeight: '600'}}>
+              style={{color: '#29977E', fontWeight: '700', }}>
               {' '}
-              Sign Up
+              Register
             </Text>
           </Text>
         </View>
@@ -259,12 +215,35 @@ const Login = () => {
 export default Login;
 
 const styles = StyleSheet.create({
-  main: {
-    marginHorizontal: 20,
-  },
+    backMain: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      width: '75%',
+    },
+    headerMain: {
+      paddingVertical: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      paddingHorizontal: 20,
+    },
+    loginText:{
+    fontFamily: FontStyle,
+    fontWeight:'700',
+    color: '#151827',
+    fontSize: 24,
+    },
+    loginSubText:{
+        fontFamily: FontStyle,
+        fontWeight:'700',
+        color: 'grey',
+        fontSize: 14,
+        marginBottom:10
+    },
   buttonMainContainer: {
     width: '100%',
-    paddingTop: 30,
+    paddingTop: 20,
   },
 
   joinText: {
@@ -290,30 +269,24 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: FontStyle,
     color: 'rgba(21, 24, 39, 0.56)',
-    marginTop: 15,
+    marginTop: 8,
   },
   orText: {
     alignSelf: 'center',
     fontSize: 18,
     fontWeight: '700',
     fontFamily: FontStyle,
-    color: '#31333E',
-    marginVertical: 10,
+    color: '#29977E',
+    marginBottom: 5,
   },
   bottomText: {
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 50,
     fontFamily: FontStyle,
     color: 'rgba(21, 24, 39, 0.56)',
     fontSize: 16,
     fontWeight: '400',
-  },
-  headerMain: {
-    flexDirection: 'row',
-    gap: 20,
-    alignItems: 'center',
-    margin: 20,
   },
   appNameText: {
     textTransform: 'uppercase',
@@ -335,10 +308,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   socialText: {
-    paddingVertical: 9,
+    paddingVertical: 12,
     color: '#151827',
     fontSize: 16,
     fontWeight: '600',
     fontFamily: FontStyle,
   },
+    main: {
+      marginHorizontal: 20,
+    },
 });

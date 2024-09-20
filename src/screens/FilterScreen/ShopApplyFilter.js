@@ -189,9 +189,8 @@ const ShopApplyFilter = ({handleFilterModelClose, setShowBottomLoader}) => {
         <View style={{width: '36%'}}>
           {clearAllBtnShow && (
             <CustomButton
-              name="Clear all"
-              color="black"
-              borderColor="gray"
+              name="Clear All"
+              color="#151827"
               backgroundColor="#FFF"
               onPress={() => clearAllShopFilter()}
             />
@@ -202,9 +201,7 @@ const ShopApplyFilter = ({handleFilterModelClose, setShowBottomLoader}) => {
             <Button
               disabled={applyBtnDisable ? true : false}
               style={{
-                backgroundColor: !applyBtnDisable
-                  ? '#29977E'
-                  : 'rgba(21, 24, 39, 0.10)',
+                backgroundColor: '#29977E',
                 borderRadius: 8,
                 paddingVertical: 1,
               }}
@@ -230,12 +227,12 @@ const styles = StyleSheet.create({
   },
   mainLeftList: {
     width: '35%',
-    backgroundColor: 'rgba(21, 24, 39, 0.10)',
+    backgroundColor:'#151827'
   },
   mainRightList: {
     width: '65%',
-    paddingBottom: 17,
-    paddingHorizontal: 20,
+    paddingBottom: 15,
+    paddingHorizontal: 8,
     position: 'relative',
   },
   catSelNameMain: {
@@ -243,10 +240,10 @@ const styles = StyleSheet.create({
     paddingLeft: 17,
     borderLeftWidth: 3,
     borderLeftColor: '#29977E',
-    backgroundColor: '#FFF',
+    backgroundColor: '#29977E',
   },
   selCatName: {
-    color: '#000',
+    color: '#fff',
     fontWeight: '600',
     fontSize: 16,
   },
@@ -255,7 +252,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   CatName: {
-    color: '#rgba(0, 0, 0, 0.80)',
+    color: '#fff',
     fontWeight: '400',
     fontSize: 16,
   },
@@ -269,11 +266,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   clearText: {
-    color: '#181725',
+    color: '#29977E',
     fontWeight: '500',
     fontSize: 16,
     textDecorationLine: 'underline',
-    color: 'blue',
   },
   bottomButtonMain: {
     position: 'absolute',
@@ -282,9 +278,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    borderTopColor: 'rgba(24, 23, 37, 0.10)',
+    borderTopColor: '#151827',
     borderTopWidth: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: '#151827',
     paddingVertical: 15,
   },
 });

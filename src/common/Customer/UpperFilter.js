@@ -111,7 +111,7 @@ const UpperFilter = ({
           alignItems: 'center',
         }}>
         <Text style={styles.productText}>
-          {byShop ? `Shop (${shopsCount})` : `Product (${productsCount})`}
+          {byShop ? `Shops (${shopsCount})` : `Products (${productsCount})`}
         </Text>
         <TouchableOpacity style={{marginRight: -12}}>
           <Popover
@@ -152,7 +152,7 @@ const UpperFilter = ({
                       </Text>
                     )}
 
-                    <Icon name="angle-down" size={16} color="black" />
+                    <Icon name="angle-down" size={16} color="gray" />
                   </View>
                 </Button>
               );
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   },
   latestText: {
     // color: 'gray',
-    fontSize: 14,
+    fontSize: 20,
     // fontWeight: '600',
     fontFamily: FontStyle,
   },
@@ -249,6 +249,6 @@ const styles = StyleSheet.create({
   productText: {
     color: '#151827',
     fontWeight: '600',
-    fontSize: 18,
+    fontSize: 20,
   },
 });

@@ -519,7 +519,7 @@ const SubBranchModel = ({
   const [subManagerLastName, setSubManagerLastName] = useState('');
   const [subManagerEmail, setSubManagerEmail] = useState('');
   const [subManagerPhone, setSubManagerPhone] = useState('');
-  const [managerValue, setManagerValue] = useState('');
+  const [managerValue, setManagerValue] = useState('Same as owner');
 
   const [error, setError] = useState({
     subManagerAddressError: '',

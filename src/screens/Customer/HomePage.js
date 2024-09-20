@@ -303,7 +303,7 @@ const HomePage = () => {
         <TouchableOpacity
           onPress={() => setFilterModelOpen(true)}
           style={styles.filterButton}>
-          <Icon name="filter" size={18} color="white" />
+          <Icon name="filter" size={20} color="#fff" />
           <Text style={styles.filterBtnText}>Filters</Text>
         </TouchableOpacity>
         <CustomSwitch
@@ -327,25 +327,6 @@ const HomePage = () => {
           onScroll={handleProductScroll}
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}>
-          <View>
-            <Carousel
-              ref={carouselRef}
-              data={TopCarouselData}
-              renderItem={CarouselRenderItem}
-              sliderWidth={screenWidth}
-              itemWidth={screenWidth}
-              onSnapToItem={index => setActiveSlide(index)}
-              {...autoplayConfig}
-            />
-            <Pagination
-              dotsLength={TopCarouselData?.length}
-              activeDotIndex={activeSlide}
-              containerStyle={{
-                paddingTop: 10,
-                paddingBottom: 0,
-              }}
-            />
-          </View>
           <View style={styles.mainContainer}>
             <View>
               <UpperFilter
@@ -360,7 +341,7 @@ const HomePage = () => {
               {!byShop ? (
                 productLoading && productsData?.length === 0 ? (
                   <View style={styles.loaderDiv}>
-                    <ActivityIndicator color="green" />
+                    <ActivityIndicator color="#29977E" />
                   </View>
                 ) : productsData?.length > 0 ? (
                   <View style={[styles.productCardMain]}>
@@ -372,14 +353,14 @@ const HomePage = () => {
                       productCurrentPage !== numOfPages &&
                       showBottomLoader && (
                         <View style={styles.loaderBottomDiv}>
-                          <ActivityIndicator color="green" />
+                          <ActivityIndicator color="#29977E" />
                         </View>
                       )}
                     {productLoading &&
                       productsData?.length > 0 &&
                       !showBottomLoader && (
                         <View style={styles.loaderFilterDiv}>
-                          <ActivityIndicator color="green" />
+                          <ActivityIndicator color="#29977E" />
                         </View>
                       )}
 
@@ -397,14 +378,14 @@ const HomePage = () => {
                       )}
                   </View>
                 ) : (
-                  <Text style={styles.noDataText}>No Product Available</Text>
+                  <Text style={styles.noDataText}>No Products Available</Text>
                 )
               ) : shopLoading && shopsData?.length === 0 ? (
                 <View style={styles.loaderDiv}>
-                  <ActivityIndicator color="green" />
+                  <ActivityIndicator color="#29977E" />
                 </View>
               ) : shopsData?.length > 0 ? (
-                <View style={[styles.productCardMain]}>
+                <View style={[styles.shopCardMain]}>
                   {shopsData?.map((shop, index) => (
                     <ShopCard key={shop?.id} shop={shop} />
                   ))}
@@ -413,14 +394,14 @@ const HomePage = () => {
                     shopCurrentPage !== shopNumOfPages &&
                     showBottomLoader && (
                       <View style={styles.loaderBottomDiv}>
-                        <ActivityIndicator color="green" />
+                        <ActivityIndicator color="#29977E" />
                       </View>
                     )}
                   {shopLoading &&
                     shopsData?.length > 0 &&
                     !showBottomLoader && (
                       <View style={styles.loaderFilterDiv}>
-                        <ActivityIndicator color="green" />
+                        <ActivityIndicator color="#29977E" />
                       </View>
                     )}
 
@@ -438,7 +419,7 @@ const HomePage = () => {
                     )}
                 </View>
               ) : (
-                <Text style={styles.noDataText}>No Shop Available</Text>
+                <Text style={styles.noDataText}>No Shops Available</Text>
               )}
             </View>
           </View>
@@ -471,6 +452,17 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
   },
+    shopCardMain: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      marginBottom: 30,
+      marginTop: 4,
+      justifyContent: 'space-between',
+      alignSelf: 'center',
+      width: '100%',
+      position: 'relative',
+    },
   loaderDiv: {
     marginVertical: 100,
   },
@@ -503,16 +495,16 @@ const styles = StyleSheet.create({
   filterButton: {
     backgroundColor: '#29977E',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 5,
   },
   filterBtnText: {
-    color: 'white',
-    fontSize: 18,
+    color: '#fff',
+    fontSize: 20,
     fontWeight: '600',
   },
   sliderMainView: {

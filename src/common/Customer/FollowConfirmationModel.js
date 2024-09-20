@@ -65,7 +65,7 @@ const FollowConfirmationModel = ({
       );
     } else {
       setFollowModalVisible(false);
-      navigation.navigate('LoginMainScreen');
+      navigation.navigate('Login');
     }
   };
 
@@ -98,8 +98,8 @@ const FollowConfirmationModel = ({
             <Divider bold={true} />
             <View>
               <Text style={styles.bodyText}>
-                You are about to {shopFollowByUser ? 'Unfollow' : 'Follow'}{' '}
-                {shopDetails?.shop_name}
+                Are you sure you want to {shopFollowByUser ? 'unfollow' : 'follow'}{' '}
+                {shopDetails?.shop_name} ?
               </Text>
             </View>
             <Divider bold={true} />

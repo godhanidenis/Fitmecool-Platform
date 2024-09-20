@@ -5,13 +5,14 @@ import {
   Image,
   ScrollView,
   BackHandler,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import VendorHeader from '../../../components/VendorHeader';
 import {FontStyle} from '../../../../CommonStyle';
 import CustomButton from '../../../common/CustomButton';
-import StepIndicator from 'react-native-step-indicator';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {useForm} from 'react-hook-form';
 import ShopSetUpScreenOne from './ShopSetUpScreenOne';
 import ShopSetUpScreenTwo from './ShopSetUpScreenTwo';
@@ -21,15 +22,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setShopRegisterId} from '../../../redux/LoginUserProfileSlice/userSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {useToast} from 'native-base';
-import {homeCoverImage} from '../../../common/AllLiveImageLink';
+import {
+  homeCoverImage,
+  shop_vendorIcon,
+} from '../../../common/AllLiveImageLink';
 import VersionAppModel from '../../AppVersionModel/VersionApp';
 import {fileUpload} from '../../../wasabi';
 import {getStateLists} from '../../../graphql/queries/areaListsQueries';
 import {generateRandomNumberString} from '../../../utils';
+import StepIndicator from 'react-native-step-indicator';
 
 const customStyles = {
   stepIndicatorSize: 25,
-  currentStepIndicatorSize: 30,
+  currentStepIndicatorSize: 25,
   separatorStrokeWidth: 2,
   currentStepStrokeWidth: 3,
 
@@ -43,13 +48,11 @@ const customStyles = {
   stepIndicatorFinishedColor: '#29977E', // green
   stepIndicatorUnFinishedColor: '#ffffff',
   stepIndicatorCurrentColor: '#ffffff',
-  stepIndicatorLabelFontSize: 13,
-  currentStepIndicatorLabelFontSize: 13,
   stepIndicatorLabelCurrentColor: 'black',
   stepIndicatorLabelFinishedColor: '#ffffff',
   stepIndicatorLabelUnFinishedColor: '#1518271a', //gray
   labelColor: 'black',
-  labelSize: 13,
+  labelSize: 18,
   currentStepLabelColor: 'black',
 };
 
@@ -70,7 +73,7 @@ const ShopSetUp = () => {
 
   const [currentPosition, setCurrentPosition] = useState(0);
   const [individual, setIndividual] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Shop');
+  const [selectedOption, setSelectedOption] = useState('');
 
   const [resizeShopLogoFile, setResizeShopLogoFile] = useState([]);
   const [resizeShopCoverImageFile, setResizeShopCoverImageFile] = useState([]);
@@ -79,7 +82,9 @@ const ShopSetUp = () => {
   const [uploadShopVideo, setUploadShopVideo] = useState('');
   const [loading, setLoading] = useState(false);
   const [subBranch, setSubBranch] = useState([]);
-  const [sameAsOwner, setSameAsOwner] = useState('False');
+  const [sameAsOwner, setSameAsOwner] = useState('True');
+
+  const [stateDataLists, setStateDataLists] = useState([]);
 
   const [hours, setHours] = useState([
     {key: 'Sunday', value: ['09:00 AM - 10:00 PM']},
@@ -92,19 +97,28 @@ const ShopSetUp = () => {
   ]);
 
   useEffect(() => {
+    console.log('userProfile :-', userProfile);
+    if (userProfile) {
+      setValue('first_name', userProfile?.first_name ?? '');
+      setValue('last_name', userProfile?.last_name ?? '');
+      setValue('user_email', userProfile?.user_email ?? '');
+      setValue('user_contact', userProfile?.user_contact ?? '');
+    }
+  }, [setValue, userProfile]);
+
+  useEffect(() => {
     const handleBackButton = () => {
       // BackHandler.exitApp();
       navigation.navigate('Splash');
       return true;
     };
     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    getApiState();
 
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
     };
   }, []);
-
-  const [stateDataLists, setStateDataLists] = useState([]);
 
   const getApiState = async () => {
     await getStateLists()
@@ -112,14 +126,11 @@ const ShopSetUp = () => {
       .catch(error => console.log('ee', error));
   };
 
-  useEffect(() => {
-    getApiState();
-  }, []);
-
   const handleClickIndividual = (option, active) => {
     setSelectedOption(option);
     setIndividual(active);
   };
+
   const returnSubBranchData = val => {
     return {
       branch_address: val.subManagerAddress,
@@ -193,7 +204,7 @@ const ShopSetUp = () => {
   };
 
   const onSubmit = async data => {
-    if (currentPosition !== 2) {
+    if (currentPosition !== 3) {
       setCurrentPosition(currentPosition + 1);
     } else {
       setLoading(true);
@@ -326,9 +337,6 @@ const ShopSetUp = () => {
             backgroundColor: 'green.600',
             variant: 'solid',
           });
-          setTimeout(() => {
-            navigation.navigate('MainDashboard');
-          }, 1000);
         },
         error => {
           setLoading(false);
@@ -344,19 +352,11 @@ const ShopSetUp = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}>
+    <View>
       <VendorHeader />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{position: 'relative'}}>
           <View style={styles.imageContainer}>
-            <Image
-              source={{uri: homeCoverImage}}
-              style={[styles.imageDark, {width: '100%', height: 250}]}
-            />
-            <View style={styles.overlay}></View>
             <View style={styles.imgOverTextMain}>
               <Text style={styles.imgOverText}>
                 Join{' '}
@@ -371,77 +371,33 @@ const ShopSetUp = () => {
             </View>
           </View>
 
-          <View
-            style={[
-              styles.mainBottomContainer,
-              {
-                backgroundColor: 'white',
-                marginHorizontal: 20,
-                paddingBottom: 30,
-              },
-            ]}>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                width: '100%',
-                gap: 10,
-                marginTop: 24,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <View style={{width: '40%'}}>
-                <CustomButton
-                  icon={true}
-                  iconName="building-o"
-                  name="Shop"
-                  color={selectedOption === 'Shop' ? 'white' : 'black'}
-                  backgroundColor={
-                    selectedOption === 'Shop'
-                      ? '#29977E'
-                      : 'rgba(255, 255, 255, 0.00)'
-                  }
-                  borderColor={selectedOption === 'Shop' ? '#29977E' : 'gray'}
-                  onPress={() => handleClickIndividual('Shop', false)}
-                />
-              </View>
-              <View style={{width: '40%'}}>
-                <CustomButton
-                  icon={true}
-                  iconName="user-o"
-                  name="Single Person"
-                  color={selectedOption === 'Individual' ? 'white' : 'black'}
-                  backgroundColor={
-                    selectedOption === 'Individual'
-                      ? '#29977E'
-                      : 'rgba(255, 255, 255, 0.00)'
-                  }
-                  borderColor={
-                    selectedOption === 'Individual' ? '#29977E' : 'gray'
-                  }
-                  onPress={() => handleClickIndividual('Individual', true)}
-                />
-              </View>
-            </View>
+          <View style={styles.mainBottomContainer}>
             <View style={styles.labelContainer}>
               <Text
                 style={[
                   styles.labelText,
-                  0 === currentPosition && styles.currentLabel,
+                  currentPosition >= 0 && styles.currentLabel,
+                ]}>
+                Type
+              </Text>
+              <Text
+                style={[
+                  styles.labelText,
+                  currentPosition >= 1 && styles.currentLabel,
                 ]}>
                 Details
               </Text>
               <Text
                 style={[
                   styles.labelText,
-                  1 === currentPosition && styles.currentLabel,
+                  currentPosition >= 2 && styles.currentLabel,
                 ]}>
                 Photos
               </Text>
               <Text
                 style={[
                   styles.labelText,
-                  2 === currentPosition && styles.currentLabel,
+                  currentPosition >= 3 && styles.currentLabel,
                   {
                     paddingRight: 2,
                   },
@@ -449,14 +405,103 @@ const ShopSetUp = () => {
                 Branches
               </Text>
             </View>
-            <View style={{paddingRight: 10}}>
+            <View style={{paddingRight: 30}}>
               <StepIndicator
-                stepCount={3}
+                stepCount={4}
                 customStyles={customStyles}
                 currentPosition={currentPosition}
               />
             </View>
             {currentPosition === 0 && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                  gap: 10,
+                  marginTop: 30,
+                  marginHorizontal: 10,
+                }}>
+                <View
+                  style={[
+                    styles.noShopMain,
+                    {
+                      borderColor:
+                        selectedOption === 'Individual'
+                          ? '#29977E'
+                          : 'rgba(21, 24, 39, 0.10)',
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleClickIndividual('Individual', true);
+                      setTimeout(() => {
+                        setCurrentPosition(1);
+                      }, 300);
+                    }}>
+                    <View style={styles.shopIcons}>
+                      <Icon
+                        name="users"
+                        size={20}
+                        color={
+                          selectedOption === 'Individual' ? '#29977E' : 'gray'
+                        }
+                      />
+                      {selectedOption === 'Individual' && (
+                        <Icon name="check-circle" size={25} color="#29977E" />
+                      )}
+                    </View>
+                    <View style={styles.bottomMain}>
+                      <Text style={styles.mainTitleText}>No Shop</Text>
+                      <Text style={styles.subTitleText}>
+                        Continue As Individual Seller
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={[
+                    styles.shopMain,
+                    {
+                      borderColor:
+                        selectedOption === 'Shop'
+                          ? '#29977E'
+                          : 'rgba(21, 24, 39, 0.10)',
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleClickIndividual('Shop', false);
+                      setTimeout(() => {
+                        setCurrentPosition(1);
+                      }, 300);
+                    }}>
+                    <View style={styles.shopIcons}>
+                      <Image
+                        source={{uri: shop_vendorIcon}}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          tintColor:
+                            selectedOption === 'Shop' ? '#29977E' : 'gray',
+                        }}
+                      />
+                      {selectedOption === 'Shop' && (
+                        <Icon name="check-circle" size={25} color="#29977E" />
+                      )}
+                    </View>
+                    <View style={styles.bottomMain}>
+                      <Text style={styles.mainTitleText}>Shop</Text>
+                      <Text style={styles.subTitleText}>
+                        Continue As Shop Seller
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+            {currentPosition === 1 && (
               <ShopSetUpScreenOne
                 control={control}
                 handleSubmit={handleSubmit}
@@ -468,7 +513,7 @@ const ShopSetUp = () => {
                 setHours={setHours}
               />
             )}
-            {currentPosition === 1 && (
+            {currentPosition === 2 && (
               <ShopSetUpScreenTwo
                 setUploadShopVideo={setUploadShopVideo}
                 setResizeShopLogoFile={setResizeShopLogoFile}
@@ -477,7 +522,7 @@ const ShopSetUp = () => {
                 setResizeShopImagesFile={setResizeShopImagesFile}
               />
             )}
-            {currentPosition === 2 && (
+            {currentPosition === 3 && (
               <ShopSetUpScreenThree
                 control={control}
                 handleSubmit={handleSubmit}
@@ -495,16 +540,16 @@ const ShopSetUp = () => {
                 stateDataLists={stateDataLists}
               />
             )}
-            <View
-              style={{
-                marginTop: 40,
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                paddingHorizontal: 10,
-              }}>
-              {currentPosition !== 0 && (
+            {currentPosition !== 0 && (
+              <View
+                style={{
+                  marginTop: 40,
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  paddingHorizontal: 10,
+                }}>
                 <View style={{width: '45%'}}>
                   <CustomButton
                     name="Back"
@@ -514,19 +559,19 @@ const ShopSetUp = () => {
                     onPress={() => setCurrentPosition(currentPosition - 1)}
                   />
                 </View>
-              )}
 
-              <View style={{width: '45%'}}>
-                <CustomButton
-                  name={currentPosition === 2 ? 'Save' : 'Next'}
-                  color="#FFFFFF"
-                  backgroundColor="#29977E"
-                  borderColor="#29977E"
-                  onPress={handleSubmit(onSubmit)}
-                  loading={loading}
-                />
+                <View style={{width: '45%'}}>
+                  <CustomButton
+                    name={currentPosition === 3 ? 'Save' : 'Next'}
+                    color="#FFFFFF"
+                    backgroundColor="#29977E"
+                    borderColor="#29977E"
+                    onPress={handleSubmit(onSubmit)}
+                    loading={loading}
+                  />
+                </View>
               </View>
-            </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -545,15 +590,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     height: 250,
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000000',
-    opacity: 0.5,
+    backgroundColor: '#151827',
   },
   imgOverTextMain: {
     position: 'absolute',
@@ -568,6 +605,7 @@ const styles = StyleSheet.create({
     fontFamily: FontStyle,
     alignSelf: 'center',
   },
+
   imgOverTextInner: {
     fontSize: 40,
     fontWeight: '300',
@@ -577,8 +615,12 @@ const styles = StyleSheet.create({
 
   mainBottomContainer: {
     position: 'relative',
-    bottom: '8%',
+    bottom: 100,
     borderRadius: 4,
+    backgroundColor: 'white',
+    marginHorizontal: 10,
+    paddingBottom: 30,
+    height: '100%',
   },
 
   labelContainer: {
@@ -586,15 +628,53 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%', // You can adjust this width as needed
     marginTop: 20, // Adjust the margin as needed
-    paddingHorizontal: 39,
+    paddingHorizontal: 10,
   },
   labelText: {
     textAlign: 'center',
-    fontSize: 15,
-    color: 'black', // Set the label color as needed
+    fontSize: 18,
+    color: 'grey', // Set the label color as needed
     marginBottom: 10,
   },
   currentLabel: {
+    color: '#29977E',
     fontWeight: '900', // Highlight the current label if needed
+  },
+  noShopMain: {
+    width: '47%',
+    height: 104,
+    borderWidth: 1,
+    borderRadius: 16,
+  },
+  shopMain: {
+    width: '47%',
+    height: 104,
+    borderWidth: 1,
+    borderRadius: 16,
+  },
+  shopIcons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginTop: 10,
+  },
+  mainTitleText: {
+    color: '#151827',
+    fontSize: 18,
+    fontFamily: FontStyle,
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+  },
+  subTitleText: {
+    color: 'rgba(21, 24, 39, 0.56)',
+    fontSize: 12,
+    fontFamily: FontStyle,
+    fontStyle: 'normal',
+    fontWeight: '500',
+  },
+  bottomMain: {
+    marginLeft: 10,
+    marginVertical: 10,
   },
 });

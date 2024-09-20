@@ -4,7 +4,6 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {
-  loadUserProfileStart,
   userLogout,
 } from '../redux/LoginUserProfileSlice/userSlice';
 import {useDispatch, useSelector} from 'react-redux';
@@ -32,8 +31,12 @@ const CustomerHeader = ({homeScreen}) => {
   const toast = useToast();
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [selectedLocation, setSelectedLocation] = useState('');
+
   const dispatch = useDispatch();
+
   const {userProfile} = useSelector(state => state?.user);
+  const {appliedCityFilter} = useSelector(state => state.cityFiltersReducer);
 
   const {cityLists} = useSelector(state => state.cityLists);
 
@@ -49,9 +52,9 @@ const CustomerHeader = ({homeScreen}) => {
   };
 
   const LogOut = async () => {
-    clearGoogleSignInCaches();
-    AsyncStorage.clear();
     setLogoutTooltipVisible(false);
+    AsyncStorage.clear();
+    clearGoogleSignInCaches();
     dispatch(userLogout());
     setAccessToken('');
     toast.show({
@@ -60,31 +63,18 @@ const CustomerHeader = ({homeScreen}) => {
       backgroundColor: 'green.600',
       variant: 'solid',
     });
-    setTimeout(() => {
-      navigation.navigate('Splash');
-    }, 1000);
+    navigation.navigate('Splash');
   };
 
   const retrieveLocalData = async () => {
-    const Token = await AsyncStorage.getItem('token');
-    setAccessToken(Token);
+    const token = await AsyncStorage.getItem('token');
+    setAccessToken(token);
   };
 
   useEffect(() => {
     retrieveLocalData();
-  }, [isFocused]);
+  }, []);
 
-  const CallUserProfile = async () => {
-    (await AsyncStorage.getItem('userId')) && dispatch(loadUserProfileStart());
-  };
-
-  useEffect(() => {
-    CallUserProfile();
-  }, [isFocused]);
-
-  const [selectedLocation, setSelectedLocation] = useState('');
-
-  const {appliedCityFilter} = useSelector(state => state.cityFiltersReducer);
   useEffect(() => {
     appliedCityFilter &&
       setSelectedLocation(appliedCityFilter.city.selectedValue);
@@ -133,6 +123,11 @@ const CustomerHeader = ({homeScreen}) => {
       }),
     );
   };
+
+
+  useEffect(()=>{
+    console.log('UserProfile :-', userProfile);
+  },[userProfile])
 
   return (
     <View style={homeScreen ? styles.mainDiv : styles.mainDivOther}>
@@ -219,7 +214,7 @@ const CustomerHeader = ({homeScreen}) => {
           </View>
         ) : (
           <TouchableOpacity
-            onPress={() => navigation.navigate('LoginMainScreen')}>
+            onPress={() => navigation.navigate('Login')}>
             <Icon name="user-plus" size={22} color="white" />
           </TouchableOpacity>
         )}
@@ -295,13 +290,11 @@ const styles = StyleSheet.create({
     width: 150,
     borderBottomColor: 'gray',
     borderBottomWidth: 0.5,
-    paddingHorizontal: 8,
   },
 
   label: {
     position: 'absolute',
     top: 0,
-    paddingHorizontal: 8,
     fontSize: 14,
     color: 'white',
   },

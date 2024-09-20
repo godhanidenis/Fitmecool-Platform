@@ -67,7 +67,7 @@ const WriteReview = () => {
           });
         }
       } else {
-        navigation.navigate('LoginMainScreen');
+        navigation.navigate('Login');
       }
     }
   };
@@ -85,17 +85,17 @@ const WriteReview = () => {
     <View style={{flex: 1, backgroundColor: BackGroundStyle}}>
       <View style={styles.mainTopHeader}>
         <TouchableOpacity
-          style={{width: 25, height: 25}}
+          style={{backgroundColor:'#151827', paddingHorizontal:10, paddingVertical:5, borderRadius:10}}
           onPress={() => navigation.goBack()}>
-          <Icon name="angle-left" size={24} color="black" />
+          <Icon name="angle-left" size={40} color="white" />
         </TouchableOpacity>
-        <Text style={styles.hederTitleText}>Rate & Review Vendor</Text>
+        <Text style={styles.hederTitleText}>Rate & Review Seller</Text>
       </View>
       <View style={styles.mainContainer}>
         <Text style={styles.reviewShopNameText}>
           Review {shopDetails?.shop_name} Shop
         </Text>
-        <Text style={styles.rateOurText}>Rate Our Of 5*</Text>
+        <Text style={styles.rateOurText}>Rate Out Of 5*</Text>
         <View style={{marginLeft: -10, paddingBottom: 15}}>
           <StarRating
             enableHalfStar={false}
@@ -112,7 +112,7 @@ const WriteReview = () => {
           <TextArea
             style={{backgroundColor: 'white', fontSize: 16}}
             h={150}
-            placeholder="Tell us about experience"
+            placeholder="Tell us about your experience..."
             w="100%"
             onChangeText={value => setMessage(value)}
           />
@@ -120,7 +120,6 @@ const WriteReview = () => {
         <View
           style={{
             width: '40%',
-            marginTop: 20,
             opacity: submitButtonDisable ? 0.5 : 1,
             alignSelf: 'flex-end',
           }}>
@@ -145,13 +144,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
     alignItems: 'center',
-    marginTop: 28,
-    marginLeft: 20,
+    paddingVertical:10,
+    paddingLeft:10,
+    backgroundColor:'#151827'
   },
   hederTitleText: {
-    color: '#151827',
+    color: '#fff',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 24,
     fontFamily: FontStyle,
   },
   mainContainer: {
@@ -160,20 +160,20 @@ const styles = StyleSheet.create({
   reviewShopNameText: {
     color: '#181725',
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: 24,
     fontFamily: FontStyle,
     paddingBottom: 15,
   },
   rateOurText: {
     color: '#31333E',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 20,
     paddingBottom: 8,
   },
   yourRevText: {
     color: '#31333E',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 20,
     paddingBottom: 16,
   },
 });

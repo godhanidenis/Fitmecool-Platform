@@ -33,7 +33,6 @@ export const shopReview = async payload => {
           message
           flag
           user_name
-          user_type
         }
       }
     `,
