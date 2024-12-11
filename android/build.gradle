@@ -10,6 +10,9 @@ buildscript {
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "23.1.7779620"
         googlePlayServicesAuthVersion = "19.2.0"
+
+        // Kotlin Version
+        kotlin_version = '1.8.0'  // Add the Kotlin version here
     }
     repositories {
         google()
@@ -18,9 +21,11 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
-         // ... other dependencies
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}") // Kotlin Gradle Plugin
+        // ... other dependencies
     }
 }
+
 allprojects {
     repositories {
         mavenLocal()
@@ -29,6 +34,20 @@ allprojects {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
+        }
+    }
+}
+
+subprojects {
+    project -> project.afterEvaluate {
+        if (project.hasProperty("android")) {
+            android {
+                // Set Java/Kotlin compatibility to Java 17
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
+            }
         }
     }
 }

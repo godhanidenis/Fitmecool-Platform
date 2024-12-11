@@ -421,11 +421,12 @@ const ProductDetail = () => {
                 //   {...autoplayConfig}
                 // />
                 <Carousel
-                  loop
-                  width={300}
-                  height={200}
                   data={TopCarouselData}
                   renderItem={CarouselRenderItem}
+                  sliderWidth={screenWidth}
+                  itemWidth={screenWidth}
+                  onSnapToItem={index => setActiveSlide(index)}
+                  {...autoplayConfig}
                 />
               ) : (
                 <Skeleton
@@ -434,12 +435,12 @@ const ProductDetail = () => {
                   height={460}
                 />
               )}
-              {/* <View style={styles.sliderPagination}>
+              <View style={styles.sliderPagination}>
                 <Pagination
                   dotsLength={TopCarouselData?.length}
                   activeDotIndex={activeSlide}
                 />
-              </View> */}
+              </View>
             </View>
             <View style={styles.threeIconMain}>
               <TouchableOpacity
