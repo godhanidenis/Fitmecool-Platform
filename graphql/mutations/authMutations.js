@@ -22,7 +22,6 @@ export const signUp = async (payload) => {
         ) {
           token
           message
-          user
         }
       }
     `,
@@ -44,7 +43,6 @@ export const signIn = async (payload) => {
         signIn(userInfo: { username: $username, password: $password }) {
           token
           message
-          user
         }
       }
     `,

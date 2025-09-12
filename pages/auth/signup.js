@@ -48,7 +48,7 @@ const Signup = () => {
     setIsHydrated(true);
   }, []);
 
-  const handleAfterSignUpResponse = (userId, token, message) => {
+  const handleAfterSignUpResponse = (token, message) => {
     setLoading(false);
     localStorage.setItem("token", token);
     localStorage.setItem("user_type", "customer");
@@ -90,7 +90,6 @@ const Signup = () => {
     }).then(
       (res) =>
         handleAfterSignUpResponse(
-          res.data.signUp.user,
           res.data.signUp.token,
           res.data.signUp.message
         ),
@@ -115,7 +114,6 @@ const Signup = () => {
         }).then(
           (res) =>
             handleAfterSignUpResponse(
-              res.data.googleSignUp.user,
               res.data.googleSignUp.token,
               res.data.googleSignUp.message
             ),
