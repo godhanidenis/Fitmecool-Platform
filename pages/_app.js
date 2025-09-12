@@ -67,7 +67,7 @@ function MyApp({ Component, pageProps }) {
             pageProps?.shopDetails?.data?.shop.branch_info.find(
               (branch) => branch?.branch_type === "main"
             )?.branch_address ||
-            "Clothe Rent/ Sell Inquiry Platform"
+            "Upload Your Clothes For Rent/ Sell & Get More Inquiry With FitMeCool!"
           }
         />
         <meta
@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }) {
             pageProps?.productDetails?.data?.product?.data?.product_image?.front
               ?.medium ||
             pageProps?.shopDetails?.data?.shop.shop_logo?.small ||
-            assets?.appLogo
+            assets?.shopBackgroundCover4
           }
         />
         <meta

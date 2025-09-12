@@ -158,6 +158,7 @@ export const assets = {
   shopBackgroundCover1: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/shopBackgroundCover1.png`,
   shopBackgroundCover2: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/shopBackgroundCover2.png`,
   shopBackgroundCover3: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/shopBackgroundCover3.png`,
+  shopBackgroundCover4: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/shopBackgroundCover4.png`,
   rentBlessBlackLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolBlack.png`,
   whiteLogoSmall: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolWhiteSmall.png`,
   appLogo: `${process.env.NEXT_PUBLIC_WASABI_URL}/imgs/fitMeCoolWhite.png`,
