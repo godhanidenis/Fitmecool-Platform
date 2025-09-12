@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { UserTypeProvider } from "../../contexts/usertypecontext";
 import AuthCommonLayout from "./AuthCommonLayout";
 import CustomerCommonLayout from "./CustomerCommonLayout";
 import Footer from "./Footer";
@@ -8,6 +7,7 @@ import Header from "./Header";
 import VendorCommonLayout from "./VendorCommonLayout";
 import { useDispatch } from "react-redux";
 import { loadUserProfileStart } from "../../redux/ducks/userProfile";
+import { UserTypeProvider } from "../../contexts/userTypeContext2";
 
 const RootLayout = ({ children }) => {
   const router = useRouter();
