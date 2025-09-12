@@ -342,7 +342,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       productLike({
                         productInfo: {
                           product_id: product.id,
-                          user_id: userProfile.id,
+                          user_id: userProfile?.id,
                         },
                       }).then(
                         (res) => {
@@ -371,7 +371,7 @@ const ProductCard = ({ product, onlyCarousal, homepage, likePage }) => {
                       );
                     } else {
                       router.push({
-                        pathname: "/auth/user-type",
+                        pathname: "/auth/signup",
                         query: {
                           redirectPath: new URL(window.location.href).pathname,
                         },

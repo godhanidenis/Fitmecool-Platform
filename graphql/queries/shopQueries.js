@@ -219,7 +219,6 @@ export const getShopReviews = async (payload) => {
           message
           flag
           user_name
-          user_type
           createdAt
           updatedAt
         }

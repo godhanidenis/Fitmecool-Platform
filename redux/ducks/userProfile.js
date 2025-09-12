@@ -51,7 +51,7 @@ export const setShopRegisterId = (id) => ({
 });
 
 const initialState = {
-  userProfile: {},
+  userProfile: null,
   loggedInUserId: "",
   isAuthenticate: false,
   loading: false,
@@ -90,11 +90,11 @@ const userProfileReducer = (state = initialState, action) => {
           ["shop_follower_list"]:
             action.payload.shopInfo.key === "follow"
               ? [
-                  ...state.userProfile.shop_follower_list.concat(
+                  ...state.userProfile?.shop_follower_list.concat(
                     action.payload.shopInfo.value
                   ),
                 ]
-              : state.userProfile.shop_follower_list.filter(
+              : state.userProfile?.shop_follower_list.filter(
                   (shop) => shop.shop_id !== action.payload.shopInfo.value
                 ),
         },
@@ -108,11 +108,11 @@ const userProfileReducer = (state = initialState, action) => {
           ["product_like_list"]:
             action.payload.productInfo.key === "like"
               ? [
-                  ...state.userProfile.product_like_list.concat(
+                  ...state.userProfile?.product_like_list.concat(
                     action.payload.productInfo.value
                   ),
                 ]
-              : state.userProfile.product_like_list.filter(
+              : state.userProfile?.product_like_list.filter(
                   (product) => product.id !== action.payload.productInfo.value
                 ),
         },
@@ -130,7 +130,7 @@ const userProfileReducer = (state = initialState, action) => {
     case USER_LOGOUT:
       return {
         ...state,
-        userProfile: {},
+        userProfile: null,
         loggedInUserId: "",
         isAuthenticate: false,
         loading: false,

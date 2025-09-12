@@ -37,7 +37,7 @@ import { TiArrowForwardOutline } from "react-icons/ti";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import CustomReactImageMagnify from "../../../components/Layout/CustomReactImageMagnify";
-import { withoutAuth } from "../../../components/core/PrivateRouteForVendor";
+import { customerPublicGaurd } from "../../../components/core/CustomerAuthGaurd";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -142,7 +142,7 @@ const ProductDetail = ({ productDetails, error }) => {
       setProductLikeByUser(false);
     }
 
-    const followedShopsByUser = userProfile.shop_follower_list?.find(
+    const followedShopsByUser = userProfile?.shop_follower_list?.find(
       (itm) => itm.shop_id === productDetailsData?.data.branchInfo?.shop_id
     );
 
@@ -150,7 +150,7 @@ const ProductDetail = ({ productDetails, error }) => {
       ? setShopFollowByUser(true)
       : setShopFollowByUser(false);
 
-    const likedProductByUser = userProfile.product_like_list?.find(
+    const likedProductByUser = userProfile?.product_like_list?.find(
       (itm) => itm.id === productDetailsData?.data.id
     );
 
@@ -325,7 +325,7 @@ const ProductDetail = ({ productDetails, error }) => {
       productLike({
         productInfo: {
           product_id: productDetailsData?.data.id,
-          user_id: userProfile.id,
+          user_id: userProfile?.id,
         },
       }).then(
         (res) => {
@@ -356,7 +356,7 @@ const ProductDetail = ({ productDetails, error }) => {
       );
     } else {
       router.push({
-        pathname: "/auth/user-type",
+        pathname: "/auth/signup",
         query: { redirectPath: new URL(window.location.href).pathname },
       });
     }
@@ -474,7 +474,7 @@ const ProductDetail = ({ productDetails, error }) => {
                 shopFollow({
                   shopInfo: {
                     shop_id: productDetailsData?.data.branchInfo?.shop_id,
-                    user_id: userProfile.id,
+                    user_id: userProfile?.id,
                   },
                 }).then(
                   (res) => {
@@ -506,7 +506,7 @@ const ProductDetail = ({ productDetails, error }) => {
                 );
               } else {
                 router.push({
-                  pathname: "/auth/user-type",
+                  pathname: "/auth/signup",
                   query: {
                     redirectPath: new URL(window.location.href).pathname,
                   },
@@ -873,7 +873,7 @@ const ProductDetail = ({ productDetails, error }) => {
                             id: productDetailsData?.data.id,
                           })
                         : router.push({
-                            pathname: "/auth/user-type",
+                            pathname: "/auth/signup",
                             query: {
                               redirectPath: new URL(window.location.href)
                                 .pathname,
@@ -911,7 +911,7 @@ const ProductDetail = ({ productDetails, error }) => {
                             id: productDetailsData?.data.id,
                           })
                         : router.push({
-                            pathname: "/auth/user-type",
+                            pathname: "/auth/signup",
                             query: {
                               redirectPath: new URL(window.location.href)
                                 .pathname,
@@ -985,7 +985,7 @@ const ProductDetail = ({ productDetails, error }) => {
   );
 };
 
-export default withoutAuth(ProductDetail);
+export default customerPublicGaurd(ProductDetail);
 
 const ContactDetailsModal = ({
   productDetailsData,

@@ -242,7 +242,7 @@ const AddEditProductPage = ({
     productFolderName
   ) => {
     const keyMap = ["front", "back", "side"];
-    const folderStructure = `user_${userProfile.id}/shop/products/${productFolderName}/product_img`;
+    const folderStructure = `user_${userProfile?.id}/shop/products/${productFolderName}/product_img`;
     const uploadPromises = uploadProductImages.map((uploadProduct, index) => {
       return handleUploadImage(
         uploadProduct,
@@ -271,7 +271,7 @@ const AddEditProductPage = ({
   };
 
   const deleteWasabiFolder = async (folderName) => {
-    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    const folderStructure = `user_${userProfile?.id}/shop/${folderName}`;
     await deleteObjectsInFolder(folderStructure);
   };
 
@@ -307,7 +307,7 @@ const AddEditProductPage = ({
 
                 await deleteWasabiFolder(stringWithoutLastWord);
 
-                const folderStructure = `user_${userProfile.id}/shop/${stringWithoutLastWord}`;
+                const folderStructure = `user_${userProfile?.id}/shop/${stringWithoutLastWord}`;
 
                 return handleUploadImage(
                   uploadProduct,
@@ -333,7 +333,7 @@ const AddEditProductPage = ({
           }
 
           try {
-            const folderStructure = `user_${userProfile.id}/shop/products/${productFolderName}/video`;
+            const folderStructure = `user_${userProfile?.id}/shop/products/${productFolderName}/video`;
 
             const productVideoRes = await fileUpload(
               uploadProductVideo,
@@ -457,7 +457,7 @@ const AddEditProductPage = ({
         const uploadVideoPromise = uploadProductVideo
           ? fileUpload(
               uploadProductVideo,
-              `user_${userProfile.id}/shop/products/${productFolderName}/video`
+              `user_${userProfile?.id}/shop/products/${productFolderName}/video`
             )
               .then((res) => (productVideoRes = res))
               .catch((error) => {

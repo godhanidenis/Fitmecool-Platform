@@ -19,14 +19,9 @@ import { changeProductPage } from "../../../redux/ducks/product";
 import { changeByShopFilters } from "../../../redux/ducks/shopsFilters";
 import VendorSidebar from "../../sections/vendor-section/VendorSidebar";
 import CloseIcon from "@mui/icons-material/Close";
+import useUserType from "../../../hooks/useUserType";
 
-const Sidebar = ({
-  className = "",
-  handleMobileSidebarClick,
-  accessToken,
-  setAccessToken,
-  sidebarOpen,
-}) => {
+const Sidebar = ({ className = "", handleMobileSidebarClick, sidebarOpen }) => {
   const [searchBarValue, setSearchBarValue] = useState("");
 
   const [menCategory, setMenCategory] = useState([]);
@@ -41,6 +36,8 @@ const Sidebar = ({
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { currentUserType } = useUserType();
 
   useEffect(() => {
     setMenCategory(categories.filter((itm) => itm.category_type === "Men"));
@@ -137,7 +134,7 @@ const Sidebar = ({
         <div className="px-8 py-5 flex items-center gap-2.5 border-b">
           <div className="flex justify-between w-full items-center">
             <div>
-              {!accessToken ? (
+              {!userProfile ? (
                 <div className="flex gap-2">
                   <PersonAddAltIcon sx={{ color: "black" }} fontSize="medium" />
                   <div className="text-base flex items-center font-semibold text-[#4a4a4a]">
@@ -170,7 +167,7 @@ const Sidebar = ({
           </div>
         </div>
 
-        {userProfile.user_type !== "vendor" && (
+        {currentUserType !== "vendor" && (
           <ul className="flex flex-col pb-5">
             <li className="px-8 py-4 border-b">
               <OutlinedInput
@@ -241,7 +238,7 @@ const Sidebar = ({
           </ul>
         )}
 
-        {userProfile.user_type === "vendor" &&
+        {currentUserType === "vendor" &&
           Router.pathname !== "/vendor/shop-setup" && (
             <VendorSidebar
               forHeader={true}
@@ -249,17 +246,13 @@ const Sidebar = ({
             />
           )}
 
-        {accessToken && (
+        {userProfile && (
           <div className="fixed bottom-0 w-[90%] sm:w-[50%] left-0 border-t py-4 px-8 bg-colorWhite">
             <p
               className="text-[#4a4a4a]"
               onClick={() => {
                 localStorage.clear();
-                dispatch(userLogout());
-                setAccessToken("");
-                Router.push("/");
-                handleMobileSidebarClick();
-
+                Router.reload();
                 toast.success("Logout Successfully", {
                   theme: "colored",
                 });

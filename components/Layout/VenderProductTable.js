@@ -63,7 +63,7 @@ const VenderProductTable = ({
   const dispatch = useDispatch();
 
   const deleteWasabiFolder = async (folderName) => {
-    const folderStructure = `user_${userProfile.id}/shop/${folderName}`;
+    const folderStructure = `user_${userProfile?.id}/shop/${folderName}`;
     await deleteObjectsInFolder(folderStructure);
   };
 

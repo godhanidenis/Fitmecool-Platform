@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HomePage from "../../components/sections/HomePage";
-import { withoutAuth } from "../../components/core/PrivateRouteForVendor";
+import { customerPublicGaurd } from "../../components/core/CustomerAuthGaurd";
 
 const HomePagDetail = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -15,4 +15,4 @@ const HomePagDetail = () => {
   return <HomePage />;
 };
 
-export default withoutAuth(HomePagDetail);
+export default customerPublicGaurd(HomePagDetail);

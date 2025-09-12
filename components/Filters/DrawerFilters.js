@@ -4,10 +4,11 @@ import Filter from "./index";
 import CloseIcon from "@mui/icons-material/Close";
 import { Fab } from "@mui/material";
 import { useSelector } from "react-redux";
+import useUserType from "../../hooks/useUserType";
 
 const DrawerFilters = ({ showOnlyShopDetailPage }) => {
   const [filterOpen, setFilterOpen] = useState(false);
-  const [userType, setUserType] = useState("");
+  const { currentUserType } = useUserType();
 
   const toggleFilterMenu = () => {
     setFilterOpen(!filterOpen);
@@ -15,13 +16,9 @@ const DrawerFilters = ({ showOnlyShopDetailPage }) => {
 
   const { themeLayout } = useSelector((state) => state.themeLayout);
 
-  useEffect(() => {
-    setUserType(localStorage.getItem("user_type"));
-  }, []);
-
   return (
     <>
-      {((userType === "vendor" && !filterOpen) ||
+      {((currentUserType === "vendor" && !filterOpen) ||
         (themeLayout === "mobileScreen" && !filterOpen)) && (
         <Fab
           color="primary"
@@ -35,7 +32,7 @@ const DrawerFilters = ({ showOnlyShopDetailPage }) => {
 
       <div
         className={`p-4 py-4 lg:w-3/12 w-10/12 lg:${
-          userType === "vendor" ? "block" : "hidden"
+          currentUserType === "vendor" ? "block" : "hidden"
         } fixed top-0 right-0 z-[1035] h-screen overflow-hidden shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] transition-transform duration-300 bg-colorWhite border-l ${
           !filterOpen ? "translate-x-full" : "-translate-x-0"
         }`}
@@ -49,7 +46,7 @@ const DrawerFilters = ({ showOnlyShopDetailPage }) => {
           <div className="max-w-md mx-auto">
             <Filter
               productByShop={showOnlyShopDetailPage}
-              userType={userType}
+              userType={currentUserType}
             />
           </div>
         </div>

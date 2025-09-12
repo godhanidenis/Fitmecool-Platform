@@ -24,6 +24,8 @@ const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID; // Replace with y
 
 import CustomerCommonLayout from "../components/Layout/CustomerCommonLayout";
 import Script from "next/script";
+import { UserTypeProvider } from "../contexts/usertypecontext";
+import RootLayout from "../components/Layout/RootLayout";
 
 const theme = createTheme({
   palette: {
@@ -40,24 +42,6 @@ const theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter();
-
-  const [accessToken, setAccessToken] = useState();
-
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === "token" || e.key === null) {
-        router.reload();
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [router]);
-
   return (
     <>
       <Head>
@@ -118,42 +102,20 @@ function MyApp({ Component, pageProps }) {
           `,
         }}
       />
-      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <ToastContainer />
+      <Provider store={store}>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        >
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <ToastContainer />
 
-          <Provider store={store}>
-            {!router.pathname.includes("/auth/") && (
-              <Header
-                setAccessToken={setAccessToken}
-                accessToken={accessToken}
-              />
-            )}
-
-            <div>
-              {router.pathname.includes("/vendor/") &&
-              router.pathname !== "/vendor/shop-setup" ? (
-                <VendorCommonLayout setAccessToken={setAccessToken}>
-                  <Component {...pageProps} />
-                </VendorCommonLayout>
-              ) : router.pathname === "/auth/user-type" ||
-                router.pathname === "/auth/signup" ||
-                router.pathname === "/auth/signin" ? (
-                <AuthCommonLayout>
-                  <Component {...pageProps} />
-                </AuthCommonLayout>
-              ) : (
-                <CustomerCommonLayout>
-                  <Component {...pageProps} />
-                </CustomerCommonLayout>
-              )}
-            </div>
-            {!router.pathname.includes("/auth/") &&
-              !router.pathname.includes("/vendor/") && <Footer />}
-          </Provider>
-        </ThemeProvider>
-      </GoogleOAuthProvider>
+            <RootLayout>
+              <Component {...pageProps} />
+            </RootLayout>
+          </ThemeProvider>
+        </GoogleOAuthProvider>
+      </Provider>
     </>
   );
 }

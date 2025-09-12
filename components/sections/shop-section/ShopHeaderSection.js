@@ -74,7 +74,7 @@ const ShopHeaderSection = ({
       setShopFollowByUser(false);
     }
 
-    const followedShopsByUser = userProfile.shop_follower_list?.find(
+    const followedShopsByUser = userProfile?.shop_follower_list?.find(
       (itm) => itm.shop_id === router.query.id
     );
 
@@ -181,7 +181,7 @@ const ShopHeaderSection = ({
                           shopFollow({
                             shopInfo: {
                               shop_id: router.query.id,
-                              user_id: userProfile.id,
+                              user_id: userProfile?.id,
                             },
                           }).then(
                             (res) => {
@@ -211,7 +211,7 @@ const ShopHeaderSection = ({
                           );
                         } else {
                           router.push({
-                            pathname: "/auth/user-type",
+                            pathname: "/auth/signup",
                             query: {
                               redirectPath: new URL(window.location.href)
                                 .pathname,

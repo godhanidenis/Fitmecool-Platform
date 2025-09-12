@@ -17,16 +17,16 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useGoogleLogin } from "@react-oauth/google";
 import { getGoogleUserInfo } from "../../services/googleUserInfo";
-import { withoutAuthAndUserType } from "../../components/core/PrivateRouteForAuth";
+import { authAuthGaurd } from "../../components/core/AuthAuthGaurd";
 import { changeByShopFilters } from "../../redux/ducks/shopsFilters";
+import { assets } from "../../constants";
+import Image from "next/image";
+import useUserType from "../../hooks/useUserType";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [asVendor, setAsVendor] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-
-  const dispatch = useDispatch();
 
   const router = useRouter();
   const { redirectPath } = router.query;
@@ -42,25 +42,12 @@ const Login = () => {
     setIsHydrated(true);
   }, []);
 
-  useEffect(() => {
-    localStorage.getItem("user_type_for_auth") === "vendor"
-      ? setAsVendor(true)
-      : setAsVendor(false);
-  }, []);
-
   const handleAfterSignInResponse = (userId, token, message) => {
     setLoading(false);
-    dispatch(loginUserId(userId));
-    dispatch(loadUserProfileStart({ id: userId }));
     localStorage.setItem("token", token);
-    localStorage.setItem("userId", userId);
+    localStorage.setItem("user_type", "customer");
     toast.success(message, { theme: "colored" });
-    localStorage.removeItem("user_type_for_auth");
-    localStorage.setItem("user_type", asVendor ? "vendor" : "customer");
-    asVendor && dispatch(changeByShopFilters(false));
-    setTimeout(() => {
-      Router.push(asVendor ? "/vendor/dashboard" : redirectPath ?? "/");
-    }, 1500);
+    window.location.href = redirectPath; // Forces a hard reload with the URL
   };
 
   const handleAfterSignInError = (message) => {
@@ -73,7 +60,6 @@ const Login = () => {
     signIn({
       username: data.username,
       password: data.password,
-      type: asVendor ? "vendor" : "customer",
     }).then(
       (res) =>
         handleAfterSignInResponse(
@@ -95,7 +81,6 @@ const Login = () => {
 
         googleSignIn({
           username: email,
-          type: asVendor ? "vendor" : "customer",
         }).then(
           (res) =>
             handleAfterSignInResponse(
@@ -122,26 +107,21 @@ const Login = () => {
   return (
     <>
       <div className="sm:text-3xl font-bold text-xl text-colorPrimary flex items-center gap-2">
-        <ArrowBackIcon
-          onClick={() =>
-            router.push({
-              pathname: "/auth/user-type",
-              query: { redirectPath: redirectPath },
-            })
-          }
-          className="cursor-pointer !text-3xl"
-        />
         <div className="">
-          <h2 className="text-2xl sm:text-3xl font-bold  text-colorPrimary uppercase">
-            <span className="sm:text-4xl text-[30px]">F</span>itmecool
-          </h2>
+          <Link href="/">
+            <div className="cursor-pointer flex items-center relative">
+              <Image
+                src={assets.appBlackLogo}
+                alt="AppLogo"
+                width={160}
+                height={32}
+              />
+            </div>
+          </Link>
         </div>
       </div>
       <div className="text-xl sm:text-2xl font-semibold mt-6 sm:mt-8 text-colorPrimary">
-        Login{" "}
-        <span className="text-colorGreen">
-          As {asVendor ? "Seller" : "Customer"}
-        </span>
+        Login
       </div>
       <button
         onClick={handleGoogleLogin}
@@ -224,7 +204,7 @@ const Login = () => {
         <p className="text-base max-[480px]:text-xs text-gray-400 mt-2 flex justify-center">
           Don&apos;t have an account?
           <span
-            className="text-base max-[480px]:text-xs text-black font-semibold ml-2 cursor-pointer"
+            className="text-base max-[480px]:text-xs ml-2 text-colorGreen font-semibold underline cursor-pointer"
             onClick={() =>
               router.push({
                 pathname: "/auth/signup",
@@ -240,4 +220,4 @@ const Login = () => {
   );
 };
 
-export default withoutAuthAndUserType(Login);
+export default authAuthGaurd(Login);

@@ -11,12 +11,9 @@ import { toast } from "react-toastify";
 import { userLogout } from "../../../redux/ducks/userProfile";
 import { changeAppliedProductsFilters } from "../../../redux/ducks/productsFilters";
 import { deleteObjectsInFolder } from "../../../services/wasabi";
+import useUserType from "../../../hooks/useUserType";
 
-const VendorSidebar = ({
-  forHeader,
-  handleMobileSidebarClick,
-  setAccessToken,
-}) => {
+const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -153,23 +150,8 @@ const VendorSidebar = ({
               const folderStructure = `user_${vendorShopDetails?.user_id}`;
               await deleteObjectsInFolder(folderStructure);
 
-              for (let key in localStorage) {
-                if (key !== "selected_city") {
-                  localStorage.removeItem(key);
-                }
-              }
-
-              dispatch(userLogout());
-              dispatch(
-                changeAppliedProductsFilters({
-                  key: "shopId",
-                  value: {
-                    selectedValue: [],
-                  },
-                })
-              );
-              setAccessToken("");
-              router.push("/");
+              localStorage.clear();
+              router.reload();
               toast.success(res?.data?.deleteAccount, {
                 theme: "colored",
               });

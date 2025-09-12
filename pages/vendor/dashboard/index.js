@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import BookIcon from "@mui/icons-material/Book";
@@ -80,4 +80,4 @@ const ShopDashboard = () => {
   );
 };
 
-export default withAuth(ShopDashboard);
+export default vendorPrivateGaurd(ShopDashboard);

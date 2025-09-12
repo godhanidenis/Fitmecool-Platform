@@ -7,7 +7,7 @@ import {
   changeProductPage,
   loadProductsStart,
 } from "../../../redux/ducks/product";
-import { withAuth } from "../../../components/core/PrivateRouteForVendor";
+import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import AddIcon from "@mui/icons-material/Add";
 import VenderProductTable from "../../../components/Layout/VenderProductTable";
 import AddEditProductPage from "../../../components/sections/vendor-section/AddEditProductPage";
@@ -34,14 +34,6 @@ const ShopDetailsPage = () => {
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  useEffect(() => {
-    if (id && vendorShopDetails?.id) {
-      if (id !== vendorShopDetails?.id) {
-        router.push("/vendor/dashboard");
-      }
-    }
-  }, [id, router, vendorShopDetails?.id]);
 
   const { appliedProductsFilters, sortFilters } = useSelector(
     (state) => state.productsFiltersReducer
@@ -157,4 +149,4 @@ const ShopDetailsPage = () => {
   );
 };
 
-export default withAuth(ShopDetailsPage);
+export default vendorPrivateGaurd(ShopDetailsPage);
