@@ -9,22 +9,14 @@ import "suneditor/dist/css/suneditor.min.css";
 import store from "../redux/store";
 import { Provider } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Header from "../components/Layout/Header";
-import Footer from "../components/Layout/Footer";
 import { ToastContainer } from "react-toastify";
-import VendorCommonLayout from "../components/Layout/VendorCommonLayout";
-import { useRouter } from "next/router";
 import { CssBaseline } from "@mui/material/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useEffect, useState } from "react";
-import AuthCommonLayout from "../components/Layout/AuthCommonLayout";
 import { assets } from "../constants";
 
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID; // Replace with your GA Tracking ID
 
-import CustomerCommonLayout from "../components/Layout/CustomerCommonLayout";
 import Script from "next/script";
-import { UserTypeProvider } from "../contexts/usertypecontext";
 import RootLayout from "../components/Layout/RootLayout";
 
 const theme = createTheme({
