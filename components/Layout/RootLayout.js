@@ -7,7 +7,7 @@ import Header from "./Header";
 import VendorCommonLayout from "./VendorCommonLayout";
 import { useDispatch } from "react-redux";
 import { loadUserProfileStart } from "../../redux/ducks/userProfile";
-import { UserTypeProvider } from "../../contexts/userTypeContext2";
+import { UserTypeProvider } from "../../contexts/userTypeContext";
 
 const RootLayout = ({ children }) => {
   const router = useRouter();
