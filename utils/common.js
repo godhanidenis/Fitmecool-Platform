@@ -75,3 +75,28 @@ export const generateFileType = (fileType) => {
     return ".mp4";
   }
 };
+
+export const getPricing = (plan, checked) => {
+  if (!plan) return true;
+  const { price, yearly_discount_percent } = plan;
+
+  if (checked) {
+    // return original monthly price
+    return {
+      monthlyPrice: Math.round(price),
+      yearlyPrice: Math.round(price * 12),
+      saving: 0,
+    };
+  } else {
+    const yearlyOriginal = price * 12;
+    const discount = (yearlyOriginal * yearly_discount_percent) / 100;
+    const yearlyPrice = yearlyOriginal - discount;
+    const monthlyPrice = yearlyPrice / 12;
+
+    return {
+      monthlyPrice: Math.round(monthlyPrice), // discounted monthly price
+      yearlyPrice: Math.round(yearlyPrice), // discounted yearly price
+      saving: Math.round(discount), // total savings
+    };
+  }
+};

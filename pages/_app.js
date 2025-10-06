@@ -76,6 +76,7 @@ function MyApp({ Component, pageProps }) {
           content={typeof window !== "undefined" ? window.location.href : ""}
         />
       </Head>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
         strategy="afterInteractive"

@@ -19,6 +19,18 @@ import { LOAD_SHOP_PRODUCT_START } from "../ducks/shopProduct";
 import { handleGetShopProducts } from "./handlers/shopProducts";
 import { LOAD_IMAGE_VARIANTS_START } from "../ducks/imageVariants";
 import { handleGetImageVariants } from "./handlers/imageVariants";
+import { LOAD_PLANS_START } from "../ducks/plans";
+import { handleGetPlansStart } from "./handlers/plans";
+import { LOAD_SUBSCRIPTION_START } from "../ducks/subscriptions";
+import { handleGetSubscriptions } from "./handlers/subscriptions";
+import {
+  LOAD_PAYMENT_METHODS_START,
+  LOAD_INVOICES_START,
+} from "../ducks/invoices";
+import {
+  handleGetPaymentMethods,
+  handleGetInvoices,
+} from "./handlers/invoices";
 
 function* onLoadUserProfile() {
   yield takeLatest(LOAD_USER_PROFILE_START, handleGetUserProfile);
@@ -63,6 +75,19 @@ function* onLoadImageVariants() {
 function* onLoadVendorShopDetails() {
   yield takeLatest(LOAD_VENDOR_SHOP_DETAILS_START, handleGetVendorShopDetails);
 }
+function* onLoadPlans() {
+  yield takeLatest(LOAD_PLANS_START, handleGetPlansStart);
+}
+
+function* onLoadSubscriptions() {
+  yield takeLatest(LOAD_SUBSCRIPTION_START, handleGetSubscriptions);
+}
+function* onLoadInvoices() {
+  yield takeLatest(LOAD_INVOICES_START, handleGetInvoices);
+}
+function* onLoadPaymentMethods() {
+  yield takeLatest(LOAD_PAYMENT_METHODS_START, handleGetPaymentMethods);
+}
 
 const userProfileSagas = [fork(onLoadUserProfile)];
 const productSagas = [fork(onLoadProducts)];
@@ -74,6 +99,9 @@ const cityLists = [fork(onLoadCityLists)];
 const shopConfigurations = [fork(onLoadShopConfigurations)];
 const imageVariants = [fork(onLoadImageVariants)];
 const vendorShopDetails = [fork(onLoadVendorShopDetails)];
+const plansSaga = [fork(onLoadPlans)];
+const subscriptionsSaga = [fork(onLoadSubscriptions)];
+const invoicesSaga = [fork(onLoadInvoices), fork(onLoadPaymentMethods)];
 
 export default function* watcherSaga() {
   yield all([
@@ -87,5 +115,8 @@ export default function* watcherSaga() {
     ...shopConfigurations,
     ...imageVariants,
     ...vendorShopDetails,
+    ...plansSaga,
+    ...subscriptionsSaga,
+    ...invoicesSaga,
   ]);
 }

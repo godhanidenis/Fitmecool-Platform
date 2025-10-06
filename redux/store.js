@@ -18,6 +18,9 @@ import vendorShopDetailsReducer from "./ducks/vendorShopDetails";
 import watcherSaga from "./sagas/rootSaga";
 import shopConfigurationsReducer from "./ducks/shopConfigurations";
 import imageVariantsReducer from "./ducks/imageVariants";
+import plansReducer from "./ducks/plans";
+import subscriptionsReducer from "./ducks/subscriptions";
+import invoicesReducer from "./ducks/invoices";
 
 const reducer = combineReducers({
   userProfile: userProfileReducer,
@@ -35,6 +38,9 @@ const reducer = combineReducers({
   themeLayout: themeLayoutReducer,
   shopConfigurations: shopConfigurationsReducer,
   imageVariants: imageVariantsReducer,
+  plans: plansReducer,
+  subscriptions: subscriptionsReducer,
+  invoices: invoicesReducer,
 });
 
 const sagaMiddleWares = createSagaMiddleware();

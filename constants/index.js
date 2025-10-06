@@ -2,6 +2,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import StoreIcon from "@mui/icons-material/Store";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import SubscriptionsIcon from "@mui/icons-material/Subscriptions";
+import PaymentIcon from "@mui/icons-material/Payment";
 
 export const colorsList = [
   "AliceBlue",
@@ -238,9 +239,19 @@ export const vendorSidebarTabs = [
     icon: <ProductionQuantityLimitsIcon />,
     path: "/vendor/shop",
   },
+  // {
+  //   label: "Subscription",
+  //   icon: <SubscriptionsIcon />,
+  //   path: `/vendor/shop-subscription`,
+  // },
   {
     label: "Subscription",
     icon: <SubscriptionsIcon />,
-    path: `/vendor/shop-subscription`,
+    path: `/vendor/subscription`,
+  },
+  {
+    label: "Payment & Billing",
+    icon: <PaymentIcon />,
+    path: `/vendor/payment-billing`,
   },
 ];

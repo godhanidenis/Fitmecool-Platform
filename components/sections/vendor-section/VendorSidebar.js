@@ -32,10 +32,16 @@ const VendorSidebar = ({ forHeader, handleMobileSidebarClick }) => {
 
     if (router.pathname === "/vendor/dashboard") {
       setSelectedValue("Dashboard");
-    } else if (router.pathname === "/vendor/shop-subscription") {
+    }
+    // else if (router.pathname === "/vendor/shop-subscription") {
+    //   setSelectedValue("Subscription");
+    // }
+    else if (router.pathname === "/vendor/contact") {
       setSelectedValue("Subscription");
-    } else if (router.pathname === "/vendor/contact") {
+    } else if (router.pathname === "/vendor/subscription") {
       setSelectedValue("Subscription");
+    } else if (router.pathname === "/vendor/payment-billing") {
+      setSelectedValue("Payment & Billing");
     } else if (withoutLastChunk === "/vendor/shopEdit") {
       setSelectedValue("Shop");
     } else if (

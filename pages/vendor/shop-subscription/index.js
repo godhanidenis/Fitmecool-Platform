@@ -68,6 +68,7 @@ const FreePlanCard = () => {
     let threshold = new Date();
     threshold.setDate(threshold.getDate() - FreeTrailDay);
 
+    // remove subscriptionDate from grapgQL
     if (vendorShopDetails?.subscriptionDate) {
       setExpiredDate(false);
     } else {
@@ -114,16 +115,13 @@ const FreePlanCard = () => {
       <div className="text-start">
         <br />
         <span className="text-colorBlack">Free access to:</span>
-        <div className="flex items-center gap-2 mt-2">
-          <CheckCircleIcon color="secondary" />
-          <span className="text-colorBlack">
+        {[
+          <>
             <span className="text-colorGreen font-extrabold">
               {productLimit}
             </span>{" "}
             Products Upload
-          </span>
-        </div>
-        {[
+          </>,
           "Limited Product Analysis",
           "Max 3 updates allowed per product",
           "AI based Auto Product title, description not supported",

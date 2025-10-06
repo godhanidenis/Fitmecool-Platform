@@ -136,7 +136,8 @@ export const getVendorShopDetails = async (payload) => {
           id
           shop_status
           createdAt
-          subscriptionDate
+          subscription_id
+          razorpay_customer_id
           user_id
           shop_name
           shop_time {

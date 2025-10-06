@@ -93,10 +93,10 @@ const VendorCommonLayout = ({ children }) => {
 
   return (
     <div className="flex flex-col md:flex-row font-Nova h-[calc(100vh-64px)] overflow-scroll">
-      <div className="lg:w-[300px] relative sm:bg-white shadow-xl">
+      <div className="lg:w-[300px] relative sm:bg-white shadow-xl lg:h-full overflow-scroll hideScroll">
         <VendorSidebar />
       </div>
-      <div className="w-full lg:w-[73%] xl:w-[83%] sm:mt-6 px-4 py-4 sm:my-5 sm:px-10 sm:py-0">
+      <div className="w-full lg:w-[73%] xl:w-[83%] sm:mt-6 px-4 py-4 sm:my-5 sm:px-10 sm:py-0 overflow-scroll hideScroll">
         {children}
       </div>
     </div>
