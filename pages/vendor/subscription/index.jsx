@@ -186,10 +186,12 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
           shopId: vendorShopDetails.id,
         }).then(
           (res) => {
-            var rzp1 = new window.Razorpay(
-              options(res?.data?.upgradeSubscription?.razorpay_subscription_id)
-            );
-            rzp1.open();
+            // var rzp1 = new window.Razorpay(
+            //   options(res?.data?.upgradeSubscription?.razorpay_subscription_id)
+            // );
+            // rzp1.open();
+            setOpenSuccessModal(true);
+            setPaymentLoading(null);
           },
           (error) => {
             toast.error(error.message, { theme: "colored" });

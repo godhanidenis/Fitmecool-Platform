@@ -205,6 +205,7 @@ const PaymentBilling = () => {
     (state) => state.subscriptions
   );
   const [changePaymentMethod, setChangePaymentMethod] = useState(false);
+  const [repaymentLoader, setRepaymentLoader] = useState(null);
 
   const runningSubscription = useMemo(
     () =>
@@ -213,6 +214,56 @@ const PaymentBilling = () => {
       ),
     [subscriptions]
   );
+
+  const handleRePayment = (data) => {
+    setRepaymentLoader(data?.id);
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
+      subscription_id: runningSubscription?.razorpay_subscription_id,
+      name: "FitMeCool",
+      description: "Re-Payment",
+      image: "/favicon.ico",
+      prefill: {
+        name: data?.raw?.customer_details?.customer_name,
+        email: data?.raw?.customer_details?.customer_email,
+        contact: data?.raw?.customer_details?.customer_contact,
+      },
+      recurring: 1,
+      handler: function (response) {
+        VerifySubscriptionPayment({
+          input: {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            razorpay_subscription_id: response.razorpay_subscription_id,
+            shop_id: vendorShopDetails?.id,
+          },
+        }).then(
+          (res) => {
+            setChangePaymentMethod((prev) => !prev);
+            setRepaymentLoader(null);
+          },
+          (error) => {
+            toast.error(error.message, { theme: "colored" });
+          }
+        );
+      },
+      notes: {
+        note_key_1: "Tea. Earl Grey. Hot",
+        note_key_2: "Make it so.",
+      },
+      theme: {
+        color: "#29977E",
+      },
+      modal: {
+        ondismiss: function () {
+          // when modal is closed manually
+          setRepaymentLoader(null);
+        },
+      },
+    };
+    var rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
 
   console.log("invoices :>> ", invoices, paymentMethods, paymentMethodLoading);
   const columns = [
@@ -266,6 +317,20 @@ const PaymentBilling = () => {
     },
     {
       header: "",
+      field: "action",
+      width: "70px",
+      render: (_, row) => (
+        <IconButton
+          onClick={() => {
+            window.open(row?.raw?.short_url, "_blank");
+          }}
+        >
+          <ArrowCircleDownIcon className="text-blue-600" />
+        </IconButton>
+      ),
+    },
+    {
+      header: "",
       field: "payAction",
       width: "100px",
       render: (_, row) => {
@@ -273,29 +338,21 @@ const PaymentBilling = () => {
           row.status === "failed" &&
           runningSubscription?.razorpay_subscription_id ===
             row?.raw?.subscription_id;
-
+        const isLoading = repaymentLoader === row?.id;
         return (
-          <Button
-            className={`${
-              enable ? "opacity-100" : "opacity-10"
-            } !bg-red-500 !text-white !font-semibold !text-sm !capitalize`}
-            size="small"
-            disabled={!enable}
-          >
-            Pay
-          </Button>
+          enable && (
+            <Button
+              className={`${
+                isLoading && "opacity-50"
+              } !bg-red-500 !text-white !font-semibold !text-sm !capitalize`}
+              size="small"
+              onClick={() => handleRePayment(row)}
+            >
+              {isLoading ? "Paying." : "Pay"}
+            </Button>
+          )
         );
       },
-    },
-    {
-      header: "",
-      field: "action",
-      width: "70px",
-      render: (_, row) => (
-        <IconButton>
-          <ArrowCircleDownIcon className="text-blue-600" />
-        </IconButton>
-      ),
     },
   ];
 
