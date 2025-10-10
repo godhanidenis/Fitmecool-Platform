@@ -103,6 +103,7 @@ const ShopDetail = ({ shopDetails, error }) => {
         shopId: appliedShopProductsFilters.shopId.selectedValue,
         sort: shopSortFilters.sortType.selectedValue,
         search: appliedShopProductsFilters.searchBarData.selectedValue,
+        isActive: true,
       })
     );
   }, [

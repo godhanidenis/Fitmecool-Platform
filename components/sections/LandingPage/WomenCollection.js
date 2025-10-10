@@ -82,6 +82,7 @@ const WomenCollection = () => {
       shopId: [],
       sort: "",
       search: "",
+      isActive: true,
     }).then(
       (res) => {
         setWomenCategoryData(res?.data?.productList?.data);

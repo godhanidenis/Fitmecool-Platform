@@ -81,6 +81,7 @@ const MenCollection = () => {
       shopId: [],
       sort: "",
       search: "",
+      isActive: true,
     }).then(
       (res) => {
         setMenCategoryData(res?.data?.productList?.data);

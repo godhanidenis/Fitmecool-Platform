@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails";
 import { changeAppliedProductsFilters } from "../../redux/ducks/productsFilters";
 import { loadProductsStart } from "../../redux/ducks/product";
-import { loadShopConfigurationsStart } from "../../redux/ducks/shopConfigurations";
 import { loadCategoriesStart } from "../../redux/ducks/categories";
 import { loadImageVariantsStart } from "../../redux/ducks/imageVariants";
 
@@ -15,7 +14,7 @@ const VendorCommonLayout = ({ children }) => {
     (state) => state.productsFiltersReducer
   );
 
-  const { productPageSkip } = useSelector((state) => state.products);
+  const { productPageSkip, isActive } = useSelector((state) => state.products);
 
   const dispatch = useDispatch();
 
@@ -27,7 +26,6 @@ const VendorCommonLayout = ({ children }) => {
 
   useEffect(() => {
     if (userProfile?.userCreatedShopId) {
-      dispatch(loadShopConfigurationsStart());
       dispatch(loadImageVariantsStart());
     }
   }, [dispatch, userProfile?.userCreatedShopId]);
@@ -53,6 +51,7 @@ const VendorCommonLayout = ({ children }) => {
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
         forDashboard: true,
+        isActive: isActive,
       })
     );
   }, [
@@ -60,6 +59,7 @@ const VendorCommonLayout = ({ children }) => {
     appliedProductsFilters,
     sortFilters.sortType.selectedValue,
     productPageSkip,
+    isActive,
   ]);
 
   useEffect(() => {

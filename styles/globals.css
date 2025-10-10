@@ -52,6 +52,28 @@ h6 {
   height: 0px;
 }
 
+/* ===== Scrollbar for .light-scroll class ===== */
+.light-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.light-scroll::-webkit-scrollbar-track {
+  background: #29977d21;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.light-scroll::-webkit-scrollbar-thumb {
+  background: #29977e;
+  border-radius: 10px;
+}
+
+.light-scroll::-webkit-scrollbar-thumb:hover {
+  background: #519c8b;
+  cursor: pointer;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;

@@ -68,7 +68,7 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
     byShop,
   } = useSelector((state) => state.shopsFiltersReducer);
 
-  const { productsCount } = useSelector((state) => state.products);
+  const { productsCount, isActive } = useSelector((state) => state.products);
 
   const { productsCount: shopProductsCount } = useSelector(
     (state) => state.shopProducts
@@ -340,7 +340,10 @@ const UpperFilter = ({ showOnlyShopDetailPage }) => {
         <div className="flex items-center">
           <span className="text-[#979ca0] text-base">
             <span className="text-black font-bold text-[16px]">
-              {byShop ? "Shops" : "Products"}&nbsp;
+              {byShop
+                ? "Shops"
+                : `${isActive ? "Active" : "In Active"} Products`}
+              &nbsp;
             </span>
             (
             {byShop

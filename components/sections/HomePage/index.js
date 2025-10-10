@@ -89,6 +89,7 @@ const HomePage = () => {
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
         city: appliedCityFilter.city.selectedValue,
+        isActive: true,
       })
     );
   }, [
@@ -96,6 +97,7 @@ const HomePage = () => {
     sortFilters.sortType.selectedValue,
     appliedProductsFilters,
     appliedCityFilter.city.selectedValue,
+    productPerPageCount,
     productPageSkip,
   ]);
 

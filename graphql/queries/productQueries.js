@@ -5,22 +5,24 @@ export const getProducts = async (payload) => {
   const result = await client.query({
     query: gql`
       query ProductList(
-        $pageData: paginationInput!
         $search: String
         $filter: productFilterInput
         $sort: String
         $shopId: [String]
         $city: String
         $forDashboard: Boolean
+        $isActive: Boolean
+        $pageData: paginationInput
       ) {
         productList(
-          pageData: $pageData
           search: $search
           filter: $filter
           sort: $sort
           shop_id: $shopId
           city: $city
           forDashboard: $forDashboard
+          is_active: $isActive
+          pageData: $pageData
         ) {
           data {
             id
@@ -71,6 +73,7 @@ export const getProducts = async (payload) => {
             product_price_visible
             product_price
             product_discount
+            is_active
           }
           count
           limit
@@ -86,6 +89,7 @@ export const getProducts = async (payload) => {
       sort: payload.sort,
       city: payload.city,
       forDashboard: payload.forDashboard,
+      isActive: payload.isActive,
     },
     fetchPolicy: "no-cache",
   });
@@ -121,6 +125,7 @@ export const getProductDetails = async (payload) => {
             }
             product_video
             product_color
+            is_active
             categoryInfo {
               category_name
               category_type

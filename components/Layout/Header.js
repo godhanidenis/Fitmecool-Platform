@@ -547,14 +547,21 @@ export const UserProfile = () => {
     switchUserType();
   };
 
+  const availableProduct =
+    (vendorShopDetails?.productLimit ?? 0) -
+    (vendorShopDetails?.balanceProduct ?? 0);
+
   return (
     <div className="flex items-center gap-5">
       {currentUserType === "vendor" && userProfile?.userHaveAnyShop && (
         <span className="font-semibold text-yellow-400 text-[12px] sm:text-[16px]">
           Available Products :{" "}
           <span>
-            {vendorShopDetails.productLimit -
-              vendorShopDetails.balanceProduct || 0}
+            {vendorShopDetails.productLimit === null
+              ? "Unlimited"
+              : availableProduct < 0
+              ? 0
+              : availableProduct}
           </span>
         </span>
       )}

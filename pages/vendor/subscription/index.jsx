@@ -14,6 +14,12 @@ import {
 } from "../../../graphql/mutations/subscription";
 import { toast } from "react-toastify";
 import PaymentSuccessModal from "../../../components/Modal/PaymentSuccessModal";
+import ClearIcon from "@mui/icons-material/Clear";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import CommonPlanConfirmationModal from "../../../components/Modal/CommonPlanConfirmationModal";
+import { getVendorShopDetails } from "../../../graphql/queries/shopQueries";
+import { updateVendorShopDetails } from "../../../redux/ducks/vendorShopDetails";
 
 // 🧠 Enums for plan & button types
 export const PlanType = {
@@ -27,6 +33,52 @@ export const SubscriptionButtonType = {
   Upgrade: "upgrade",
   Cancel: "cancel",
   Create: "create",
+};
+
+const modalContent = {
+  [SubscriptionButtonType?.Upgrade]: {
+    title: "Upgrade Plan",
+    message:
+      "Are you sure you want to upgrade your plan from the current plan?",
+    confirmText: "Upgrade",
+    icon: ArrowUpwardIcon,
+    iconColor: "#29977E",
+  },
+  [SubscriptionButtonType?.Cancel]: {
+    title: "Cancel Plan",
+    message: "Are you sure you want to cancel your current plan?",
+    confirmText: "Cancel Plan",
+    icon: ClearIcon,
+    iconColor: "#EF4444",
+  },
+  [SubscriptionButtonType?.Downgrade]: {
+    title: "Downgrade Plan",
+    message: "Are you sure you want to downgrade your plan?",
+    confirmText: "Downgrade",
+    icon: ArrowDownwardIcon,
+    iconColor: "#3b82f6",
+  },
+};
+
+const successModalContent = {
+  [SubscriptionButtonType?.Create]: {
+    title: "Payment Successful",
+    message: "Your payment has been processed successfully.",
+  },
+  [SubscriptionButtonType?.Cancel]: {
+    title: "Plan Cancelled",
+    message: "Your current plan has been successfully cancelled.",
+    note: "Your current plan will remain active until it expires, after which the free plan will be activated.",
+  },
+  [SubscriptionButtonType?.Downgrade]: {
+    title: "Plan Downgraded",
+    message: "Your plan has been successfully downgraded to the selected plan.",
+  },
+  [SubscriptionButtonType?.Upgrade]: {
+    title: "Plan Upgraded",
+    message: "Your plan has been successfully upgraded to the new plan.",
+    note: "Your current plan will remain active until it expires, after which the new selected plan will be activated.",
+  },
 };
 
 // ✅ Reusable toggle component for interval selection
@@ -63,14 +115,18 @@ const IntervalToggle = ({ isMonthly, onChange, runningSubscription }) => (
 // ✅ Subscription Button - optimized logic and reduced nesting
 const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
   // 🧠 UseMemo to avoid recalculations
+  const dispatch = useDispatch();
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const [paymentLoading, setPaymentLoading] = useState(null);
-  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [openSuccessModalType, setOpenSuccessModalType] = useState(null);
   const { planLoading } = useSelector((state) => state.plans);
   const { subscriptionLoading, subscriptions } = useSelector(
     (state) => state.subscriptions
   );
-  console.log("subscriptionLoading :>> ", subscriptions);
+  const [subscriptionTypeModal, setSubscriptionTypeModal] = useState(null);
+  const [successModalCloseProcess, setSuccessModalCloseProcess] =
+    useState(false);
+
   const {
     runningSubscription,
     upcomingSubscription,
@@ -124,6 +180,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
           contact: vendorShopDetails?.ownerInfo?.owner_contact,
         },
         recurring: 1,
+        redirect: false,
         handler: function (response) {
           VerifySubscriptionPayment({
             input: {
@@ -134,7 +191,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
             },
           }).then(
             (res) => {
-              setOpenSuccessModal(true);
+              setOpenSuccessModalType(SubscriptionButtonType.Create);
               setPaymentLoading(null);
             },
             (error) => {
@@ -186,11 +243,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
           shopId: vendorShopDetails.id,
         }).then(
           (res) => {
-            // var rzp1 = new window.Razorpay(
-            //   options(res?.data?.upgradeSubscription?.razorpay_subscription_id)
-            // );
-            // rzp1.open();
-            setOpenSuccessModal(true);
+            setOpenSuccessModalType(SubscriptionButtonType.Upgrade);
             setPaymentLoading(null);
           },
           (error) => {
@@ -203,7 +256,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
           subscriptionId: runningSubscription?._id,
         }).then(
           (res) => {
-            setOpenSuccessModal(true);
+            setOpenSuccessModalType(SubscriptionButtonType.Cancel);
             setPaymentLoading(null);
           },
           (error) => {
@@ -250,7 +303,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
 
         DowngradeSubscription(payload).then(
           (res) => {
-            setOpenSuccessModal(true);
+            setOpenSuccessModalType(SubscriptionButtonType.Downgrade);
             setPaymentLoading(null);
           },
           (error) => {
@@ -269,6 +322,27 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
       isChangeSubscription,
     ]
   );
+
+  const handleChangePlanSuccessModalClose = async () => {
+    setSuccessModalCloseProcess(true);
+    await getVendorShopDetails({
+      id: vendorShopDetails.id,
+      forDashboard: true,
+    }).then(
+      async (res) => {
+        dispatch(updateVendorShopDetails(res?.data?.shop));
+      },
+      (error) => {
+        console.log(
+          "get error from get shop detail after subscription :>> ",
+          error
+        );
+      }
+    );
+    dispatch(loadSubscriptionStart({ shopId: vendorShopDetails.id }));
+    setOpenSuccessModalType(null);
+    setSuccessModalCloseProcess(false);
+  };
 
   const getButtonDetail = () => {
     // 🧠 Pre-calculate conditions once
@@ -301,7 +375,8 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
         return {
           buttonText: `Downgrade to ${planDetail?.name}`,
           className: "bg-[#29977d21] text-colorGreen",
-          onClick: () => handleSubscription(SubscriptionButtonType.Downgrade),
+          onClick: () =>
+            setSubscriptionTypeModal(SubscriptionButtonType.Downgrade),
         };
       }
       return null;
@@ -320,7 +395,8 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
         return {
           buttonText: "Cancel Subscription",
           className: "bg-[#9729290e] text-red-500",
-          onClick: () => handleSubscription(SubscriptionButtonType.Cancel),
+          onClick: () =>
+            setSubscriptionTypeModal(SubscriptionButtonType.Cancel),
         };
       }
 
@@ -335,7 +411,8 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
         return {
           buttonText: `Downgrade to ${planDetail?.name}`,
           className: "bg-[#29977d21] text-colorGreen",
-          onClick: () => handleSubscription(SubscriptionButtonType.Downgrade),
+          onClick: () =>
+            setSubscriptionTypeModal(SubscriptionButtonType.Downgrade),
         };
       }
 
@@ -363,7 +440,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
       return {
         buttonText: `Upgrade to ${planDetail?.name}`,
         className: "bg-colorGreen text-white",
-        onClick: () => handleSubscription(SubscriptionButtonType.Upgrade),
+        onClick: () => setSubscriptionTypeModal(SubscriptionButtonType.Upgrade),
       };
     }
 
@@ -380,7 +457,8 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
       return {
         buttonText: `Downgrade to ${planDetail?.name}`,
         className: "bg-[#29977d21] text-colorGreen",
-        onClick: () => handleSubscription(SubscriptionButtonType.Downgrade),
+        onClick: () =>
+          setSubscriptionTypeModal(SubscriptionButtonType.Downgrade),
       };
     }
 
@@ -400,7 +478,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
     return {
       buttonText: `Upgrade to ${planDetail?.name}`,
       className: "bg-colorGreen text-white",
-      onClick: () => handleSubscription(SubscriptionButtonType.Upgrade),
+      onClick: () => setSubscriptionTypeModal(SubscriptionButtonType.Upgrade),
     };
   };
 
@@ -442,10 +520,27 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
           ? "Loading..."
           : buttonDetail?.buttonText}
       </button>
-      <PaymentSuccessModal
-        open={openSuccessModal}
-        setOpen={setOpenSuccessModal}
-      />
+      {openSuccessModalType && (
+        <PaymentSuccessModal
+          open={!!openSuccessModalType}
+          onClose={handleChangePlanSuccessModalClose}
+          {...successModalContent[openSuccessModalType]}
+          successModalCloseProcess={successModalCloseProcess}
+        />
+      )}
+      {subscriptionTypeModal && (
+        <CommonPlanConfirmationModal
+          open={!!subscriptionTypeModal}
+          onClose={() => {
+            setSubscriptionTypeModal(null);
+          }}
+          onConfirm={() => {
+            handleSubscription(subscriptionTypeModal);
+            setSubscriptionTypeModal(null);
+          }}
+          {...modalContent[subscriptionTypeModal]}
+        />
+      )}
     </>
   );
 };

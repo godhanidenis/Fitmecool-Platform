@@ -31,25 +31,25 @@ const ConfirmationModal = ({
       aria-describedby="modal-modal-description"
       className="animate__animated animate__slideInDown"
     >
-      <Box sx={style} className="!w-[90%] lg:!w-2/5">
-        <div className="p-5">
-          <div className="flex items-center">
+      <Box sx={style} className="!w-[90%] lg:!w-2/5 xl:!w-2/6">
+        <div className="py-5">
+          <div className="flex items-center justify-center pb-2">
             <p className="flex items-center text-colorBlack text-xl font-semibold">
               Confirmation Modal
             </p>
           </div>
 
-          <div className="p-5 text-colorBlack text-lg font-normal">
+          <div className="py-5 text-colorBlack text-lg font-normal text-center">
             Are you sure you want to delete this {type} ?
           </div>
 
-          {type === "product" && (
+          {/* {type === "product" && (
             <div className="px-5 text-colorBlack text-lg font-normal">
               <b className="text-colorSecondary">Warning : </b>
               Your available products count will not be increased after deleting
               the product.
             </div>
-          )}
+          )} */}
 
           <div className="container mt-5 flex items-center justify-end gap-3">
             <Button

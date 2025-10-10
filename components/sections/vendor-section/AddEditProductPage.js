@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { TbPhotoPlus } from "react-icons/tb";
 import { useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -19,7 +19,6 @@ import { deleteObjectsInFolder, fileUpload } from "../../../services/wasabi";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Image from "next/image";
-import { loadVendorShopDetailsStart } from "../../../redux/ducks/vendorShopDetails";
 import { useRouter } from "next/router";
 import { handleUploadImage } from "../../../services/imageApis";
 import { generateRandomNumberString } from "../../../utils/common";
@@ -32,8 +31,10 @@ const AddEditProductPage = ({
   setAddEditProductShow,
   editableProductData,
   getAllProducts,
+  getUpdatedProductList,
+  getShopDetail,
   setEditableProductData,
-  setAddEditProductLoading,
+  setGetActiveProduct,
 }) => {
   const {
     register,
@@ -50,7 +51,6 @@ const AddEditProductPage = ({
 
   const ProductImgError = productImages?.filter((item) => item !== undefined);
 
-  const dispatch = useDispatch();
   const [productVideo, setProductVideo] = useState("");
   const [uploadProductVideo, setUploadProductVideo] = useState();
   const [deleteProductVideo, setDeleteProductVideo] = useState();
@@ -428,7 +428,8 @@ const AddEditProductPage = ({
             });
             setLoading(false);
             getAllProducts();
-            dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
+            getShopDetail();
+            setGetActiveProduct((prev) => !prev);
             setAddEditProductShow(false);
             return updateProductId;
           },
@@ -483,9 +484,8 @@ const AddEditProductPage = ({
             },
           }).then(
             (res) => {
-              getAllProducts();
+              getUpdatedProductList();
               handleProductListingModalClose();
-              setAddEditProductLoading(true);
             },
             (error) => {
               setLoading(false);
@@ -557,7 +557,7 @@ const AddEditProductPage = ({
             {alertMsg}
             <span
               className="cursor-pointer underline font-bold ml-2"
-              onClick={() => router.push("/vendor/shop-subscription/")}
+              onClick={() => router.push("/vendor/subscription/")}
             >
               Upgrade Your Plan
             </span>

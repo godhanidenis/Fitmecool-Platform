@@ -148,3 +148,16 @@ export const productContactInquiry = async (payload) => {
   });
   return results;
 };
+
+export const convertProductStatus = async (payload) => {
+  const results = await client.mutate({
+    mutation: gql`
+      mutation ChangeProductStatus($ids: [ID!]!, $isActive: Boolean!) {
+        changeProductStatus(ids: $ids, is_active: $isActive)
+      }
+    `,
+    variables: payload,
+    fetchPolicy: "no-cache",
+  });
+  return results;
+};

@@ -2,6 +2,7 @@ export const LOAD_VENDOR_SHOP_DETAILS_START = "LOAD_VENDOR_SHOP_DETAILS_START";
 export const LOAD_VENDOR_SHOP_DETAILS_SUCCESS =
   "LOAD_VENDOR_SHOP_DETAILS_SUCCESS";
 export const LOAD_VENDOR_SHOP_DETAILS_ERROR = "LOAD_VENDOR_SHOP_DETAILS_ERROR";
+export const UPDATE_VENDOR_SHOP_DETAILS = "UPDATE_VENDOR_SHOP_DETAILS";
 
 export const loadVendorShopDetailsStart = (shopId) => ({
   type: LOAD_VENDOR_SHOP_DETAILS_START,
@@ -16,6 +17,10 @@ export const loadVendorShopDetailsSuccess = (shopDetails) => ({
 export const loadVendorShopDetailsError = (error) => ({
   type: LOAD_VENDOR_SHOP_DETAILS_ERROR,
   payload: error,
+});
+export const updateVendorShopDetails = (shopDetails) => ({
+  type: UPDATE_VENDOR_SHOP_DETAILS,
+  payload: shopDetails,
 });
 
 const initialState = {
@@ -44,6 +49,11 @@ const vendorShopDetailsReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case UPDATE_VENDOR_SHOP_DETAILS:
+      return {
+        ...state,
+        vendorShopDetails: action.payload,
       };
     default:
       return state;

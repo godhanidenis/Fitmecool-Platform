@@ -36,81 +36,43 @@ const PaymentCardSkeleton = () => {
   );
 };
 
-const PaymentCard = ({ method, setChangePaymentMethod }) => {
+const PaymentCard = ({ method, getOption }) => {
+  const dispatch = useDispatch();
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const { subscriptions } = useSelector((state) => state.subscriptions);
   const [paymentMethodChangeLoading, setPaymentMethodChangeLoading] =
     useState(null);
-  const runningSubscription = useMemo(
-    () =>
-      subscriptions?.find(
-        (p) => p?.status === PlanType.ACTIVE || p?.status === PlanType.CANCEL
-      ),
-    [subscriptions]
-  );
 
   const isCard = method?.type === "card";
   const isUPI = method?.type === "upi";
-  const options = (order_id) => ({
-    key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
-    order_id: order_id,
-    subscription_id: runningSubscription?.razorpay_subscription_id,
-    name: "FitMeCool",
-    description: "Update Subscription Payment Method",
-    image: "/favicon.ico",
-    subscription_card_change: 1,
-    recurring: 1,
-    handler: function (response) {
-      VerifySubscriptionPayment({
-        input: {
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_signature: response.razorpay_signature,
-          razorpay_subscription_id: response.razorpay_subscription_id,
-          shop_id: vendorShopDetails?.id,
-        },
-      }).then(
-        (res) => {
-          setPaymentMethodChangeLoading(null);
-          setChangePaymentMethod((prev) => !prev);
-        },
-        (error) => {
-          toast.error(error.message, { theme: "colored" });
-        }
-      );
-    },
-    prefill: {
-      name: `${vendorShopDetails?.ownerInfo?.owner_firstName} ${vendorShopDetails?.ownerInfo?.owner_lastName}`,
-      email: vendorShopDetails?.ownerInfo?.owner_email,
-      contact: vendorShopDetails?.ownerInfo?.owner_contact,
-    },
-    notes: {
-      purpose: "payment_method_update",
-    },
-    theme: {
-      color: "#29977E",
-    },
-    modal: {
-      ondismiss: function () {
-        // when modal is closed manually
-        setPaymentMethodChangeLoading(null);
-      },
-    },
-  });
 
   const handleChange = (id) => {
     setPaymentMethodChangeLoading(id);
-    ChangePaymentMethod().then(
-      (res) => {
-        var rzp1 = new window.Razorpay(
-          options(res?.data?.changePaymentMethod?.order?.id)
-        );
-        rzp1.open();
-      },
-      (error) => {
-        toast.error(error.message, { theme: "colored" });
-        setPaymentMethodChangeLoading(null);
-      }
-    );
+    if (subscriptions?.length > 0) {
+      const options = getOption(
+        "Update Subscription Payment Method",
+        setPaymentMethodChangeLoading
+      );
+
+      var rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    } else {
+      ChangePaymentMethod({ id }).then(
+        (res) => {
+          toast.success(res?.data?.changePaymentMethod, { theme: "colored" });
+          dispatch(
+            loadPaymentMethodsStart({
+              customerId: vendorShopDetails.razorpay_customer_id,
+            })
+          );
+          setPaymentMethodChangeLoading(null);
+        },
+        (error) => {
+          toast.error(error.message, { theme: "colored" });
+          setPaymentMethodChangeLoading(null);
+        }
+      );
+    }
   };
 
   return (
@@ -215,57 +177,58 @@ const PaymentBilling = () => {
     [subscriptions]
   );
 
+  const getOption = (description, setLoader) => ({
+    key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
+    subscription_id: runningSubscription?.razorpay_subscription_id,
+    name: "FitMeCool",
+    description: description,
+    image: "/favicon.ico",
+    subscription_card_change: 1,
+    recurring: 1,
+    handler: function (response) {
+      VerifySubscriptionPayment({
+        input: {
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          razorpay_subscription_id: response.razorpay_subscription_id,
+          shop_id: vendorShopDetails?.id,
+        },
+      }).then(
+        (res) => {
+          setChangePaymentMethod((prev) => !prev);
+          setLoader(null);
+        },
+        (error) => {
+          toast.error(error.message, { theme: "colored" });
+        }
+      );
+    },
+    prefill: {
+      name: `${vendorShopDetails?.ownerInfo?.owner_firstName} ${vendorShopDetails?.ownerInfo?.owner_lastName}`,
+      email: vendorShopDetails?.ownerInfo?.owner_email,
+      contact: vendorShopDetails?.ownerInfo?.owner_contact,
+    },
+    notes: {
+      purpose: "payment_method_update",
+    },
+    theme: {
+      color: "#29977E",
+    },
+    modal: {
+      ondismiss: function () {
+        // when modal is closed manually
+        setLoader(null);
+      },
+    },
+  });
+
   const handleRePayment = (data) => {
     setRepaymentLoader(data?.id);
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
-      subscription_id: runningSubscription?.razorpay_subscription_id,
-      name: "FitMeCool",
-      description: "Re-Payment",
-      image: "/favicon.ico",
-      prefill: {
-        name: data?.raw?.customer_details?.customer_name,
-        email: data?.raw?.customer_details?.customer_email,
-        contact: data?.raw?.customer_details?.customer_contact,
-      },
-      recurring: 1,
-      handler: function (response) {
-        VerifySubscriptionPayment({
-          input: {
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            razorpay_subscription_id: response.razorpay_subscription_id,
-            shop_id: vendorShopDetails?.id,
-          },
-        }).then(
-          (res) => {
-            setChangePaymentMethod((prev) => !prev);
-            setRepaymentLoader(null);
-          },
-          (error) => {
-            toast.error(error.message, { theme: "colored" });
-          }
-        );
-      },
-      notes: {
-        note_key_1: "Tea. Earl Grey. Hot",
-        note_key_2: "Make it so.",
-      },
-      theme: {
-        color: "#29977E",
-      },
-      modal: {
-        ondismiss: function () {
-          // when modal is closed manually
-          setRepaymentLoader(null);
-        },
-      },
-    };
+    const options = getOption("Re-Payment", setRepaymentLoader);
     var rzp1 = new window.Razorpay(options);
     rzp1.open();
   };
 
-  console.log("invoices :>> ", invoices, paymentMethods, paymentMethodLoading);
   const columns = [
     {
       header: "Plan Name",
@@ -298,7 +261,7 @@ const PaymentBilling = () => {
             value === "failed" ? "text-red-500" : "text-colorGreen"
           }`}
         >
-          {runningSubscription?.razorpay_subscription_id ===
+          {runningSubscription?.razorpay_subscription_id !==
             row?.raw?.subscription_id && row.status === "failed"
             ? "Past Due"
             : value}
@@ -397,7 +360,7 @@ const PaymentBilling = () => {
                 <PaymentCard
                   key={m?._id + m?.type + (m?.card?.last4 || m?.upi?.vpa)}
                   method={m}
-                  setChangePaymentMethod={setChangePaymentMethod}
+                  getOption={getOption}
                 />
               ))
           ) : (

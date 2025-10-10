@@ -132,15 +132,16 @@ export const VerifySubscriptionPayment = async (payload) => {
   return results;
 };
 
-export const ChangePaymentMethod = async () => {
+export const ChangePaymentMethod = async (payload) => {
   const results = await client.mutate({
     mutation: gql`
-      mutation ChangePaymentMethod {
-        changePaymentMethod {
-          order
-        }
+      mutation ChangePaymentMethod($changePaymentMethodId: ID!) {
+        changePaymentMethod(id: $changePaymentMethodId)
       }
     `,
+    variables: {
+      changePaymentMethodId: payload.id,
+    },
   });
   return results;
 };

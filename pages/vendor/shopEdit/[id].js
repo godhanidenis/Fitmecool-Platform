@@ -395,6 +395,7 @@ const ShopEdit = () => {
         sort: sortFilters.sortType.selectedValue,
         search: appliedProductsFilters.searchBarData.selectedValue,
         forDashboard: true,
+        isActive: true,
       })
     );
   };
