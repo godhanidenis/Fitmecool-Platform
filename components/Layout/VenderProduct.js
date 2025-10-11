@@ -14,6 +14,8 @@ import { loadVendorShopDetailsStart } from "../../redux/ducks/vendorShopDetails"
 import ConfirmationModal from "../Modal/ConfirmationModal";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import CommonConfirmationModal from "../Modal/CommonConfirmationModal";
+import { useRouter } from "next/router";
 
 const VenderProduct = ({
   setAddEditProductShow,
@@ -27,7 +29,7 @@ const VenderProduct = ({
   activeProductLimit,
 }) => {
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const { userProfile } = useSelector((state) => state.userProfile);
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const { productsData, productsCount, productPageSkip, loading, isActive } =
@@ -38,6 +40,7 @@ const VenderProduct = ({
   const [deletableProductFolderName, setDeletableProductFolderName] =
     useState();
   const [deleteLoader, setDeleteLoader] = useState(false);
+  const [warningModalId, setWarningModalId] = useState(null);
 
   const deleteWasabiFolder = async (folderName) => {
     const folderStructure = `user_${userProfile?.id}/shop/${folderName}`;
@@ -55,18 +58,21 @@ const VenderProduct = ({
     (rowId) => {
       if (isActive) {
         if (selectedActiveProductList?.includes(rowId)) {
-          return { bg: "!bg-blue-50", border: "!border-blue-500" };
+          // return { bg: "!bg-blue-50", border: "!border-blue-500" };
+          return { bg: "!bg-[#d5d5d5a8]", border: "!border-[#9b9b9b]" };
         } else {
-          return "";
+          return { bg: "", border: "!border-gray-200" };
         }
       } else {
         if (selectedInActiveProductList?.includes(rowId)) {
           return { bg: "!bg-[#29977d21]", border: "!border-[#29977e]" };
         } else if (noMoreSelection) {
           return {
-            bg: "!bg-[#1616161f] opacity-60",
+            bg: "!bg-[#1616161f]",
             border: "!border-[#9e9fa180]",
           };
+        } else {
+          return { bg: "", border: "!border-gray-200" };
         }
       }
     },
@@ -103,22 +109,48 @@ const VenderProduct = ({
             }
           }
         };
+        const isDisable = () => {
+          if (noMoreSelection && !selectedInActiveProductList?.includes(val)) {
+            return true;
+          } else {
+            return false;
+          }
+        };
+        const handleSelect = () => {
+          if (isDisable()) {
+            setWarningModalId(val);
+          } else {
+            handleChangeIsActive(val);
+          }
+        };
+
         return (
-          <div className="flex justify-center">
-            <button
-              disabled={
-                noMoreSelection && !selectedInActiveProductList?.includes(val)
-              }
-              className={`${
-                isActiveProduct()
-                  ? "bg-colorGreen text-white"
-                  : "bg-colorGrey text-black"
-              } px-4 py-1 flex items-center w-fit`}
-              onClick={() => handleChangeIsActive(val)}
-            >
-              {isActiveProduct() ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </button>
-          </div>
+          <>
+            <div className="flex justify-center">
+              <button
+                // disabled={isDisable()}
+                className={`${
+                  isActiveProduct()
+                    ? "bg-colorGreen text-white"
+                    : "bg-colorGrey text-black"
+                } px-4 py-1 flex items-center w-fit`}
+                onClick={handleSelect}
+              >
+                {isActiveProduct() ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </button>
+            </div>
+            {warningModalId === val && (
+              <CommonConfirmationModal
+                open={!!warningModalId}
+                onClose={() => setWarningModalId(null)}
+                onConfirm={() => router.push("/vendor/subscription/")}
+                confirmText="Upgrade Now"
+                title="Active Product Limit Reached"
+                message="You have reached the limit of active products for your current plan. Please upgrade your subscription to activate more products."
+                iconColor="#f08a0a"
+              />
+            )}
+          </>
         );
       },
     },

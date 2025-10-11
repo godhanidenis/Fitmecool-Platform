@@ -94,9 +94,9 @@ const ProductTable = ({
                         <TableCell
                           key={col.field}
                           align="center"
-                          className={`${
+                          className={`!border-y ${
                             disableRow(row?.id)?.border
-                          } !border-y !border-gray-200 !p-2 text-xs sm:text-sm md:text-base ${
+                          } !p-2 text-xs sm:text-sm md:text-base ${
                             isFirst ? "rounded-l-2xl border-l" : ""
                           } 
                           ${isLast ? "rounded-r-2xl border-r" : ""} 

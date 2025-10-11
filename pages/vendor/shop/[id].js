@@ -34,7 +34,7 @@ const ShopDetailsPage = () => {
   const [selectedInActiveProductList, setSelectedInActiveProductList] =
     useState([]);
   const [getActiveProduct, setGetActiveProduct] = useState(false);
-  const { isActive } = useSelector((state) => state.products);
+  const { productPageSkip, isActive } = useSelector((state) => state.products);
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
 
   const manageSelected = (id, prev) => {
@@ -66,7 +66,9 @@ const ShopDetailsPage = () => {
       isActive: !isActive,
     }).then(
       async (res) => {
-        await getAllProducts(isActive);
+        productPageSkip >= 6
+          ? dispatch(changeProductPage(0))
+          : await getAllProducts(isActive);
         await getActiveProducts();
         setConvertLoading(false);
         isActive
@@ -307,7 +309,6 @@ const ShopDetailsPage = () => {
       setAddEditProductShow={setAddEditProductShow}
       editableProductData={editableProductData}
       setEditableProductData={setEditableProductData}
-      handleChangeIsActive={handleChangeIsActive}
       getAllProducts={getAllProducts}
       getShopDetail={getShopDetail}
       getUpdatedProductList={getUpdatedProductList}

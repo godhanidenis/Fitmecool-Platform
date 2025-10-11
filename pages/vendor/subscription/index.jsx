@@ -1,10 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { getPricing } from "../../../utils/common";
 import { useDispatch, useSelector } from "react-redux";
 import { loadPlansStart } from "../../../redux/ducks/plans";
-import { loadSubscriptionStart } from "../../../redux/ducks/subscriptions";
+import {
+  loadSubscriptionStart,
+  updateSubscription,
+} from "../../../redux/ducks/subscriptions";
 import {
   CancelSubscription,
   CreateSubscription,
@@ -17,9 +20,11 @@ import PaymentSuccessModal from "../../../components/Modal/PaymentSuccessModal";
 import ClearIcon from "@mui/icons-material/Clear";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import CommonPlanConfirmationModal from "../../../components/Modal/CommonPlanConfirmationModal";
 import { getVendorShopDetails } from "../../../graphql/queries/shopQueries";
 import { updateVendorShopDetails } from "../../../redux/ducks/vendorShopDetails";
+import CommonConfirmationModal from "../../../components/Modal/CommonConfirmationModal";
+import { Alert } from "@mui/material";
+import { getSubscriptions } from "../../../graphql/queries/subscriptionsQueries";
 
 // 🧠 Enums for plan & button types
 export const PlanType = {
@@ -126,6 +131,18 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
   const [subscriptionTypeModal, setSubscriptionTypeModal] = useState(null);
   const [successModalCloseProcess, setSuccessModalCloseProcess] =
     useState(false);
+
+  const noChangedPlans = useMemo(() => {
+    if (!subscriptions?.length) return false;
+    const currentActivePlan = subscriptions.find(
+      (p) => p?.status === PlanType.ACTIVE || p?.status === PlanType.CANCEL
+    );
+    return (
+      currentActivePlan &&
+      !currentActivePlan?.start_date &&
+      !currentActivePlan?.end_date
+    );
+  }, [subscriptions]);
 
   const {
     runningSubscription,
@@ -504,13 +521,15 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
   ) : (
     <>
       <button
+        disabled={noChangedPlans}
         className={`${
           paymentLoading?.id === planDetail?.id &&
           isMonthly === paymentLoading?.isMonthly &&
           "opacity-50"
-        } ${
-          buttonDetail?.className
-        } py-2 px-3 mt-4 w-full font-semibold rounded-md border border-transparent`}
+        } ${noChangedPlans && "cursor-not-allowed opacity-70"}
+         ${
+           buttonDetail?.className
+         } py-2 px-3 mt-4 w-full font-semibold rounded-md border border-transparent`}
         onClick={buttonDetail?.onClick}
       >
         {paymentLoading?.id === planDetail?.id &&
@@ -529,7 +548,7 @@ const SubscriptionButton = ({ planDetail, isMonthly, subscriptionPlans }) => {
         />
       )}
       {subscriptionTypeModal && (
-        <CommonPlanConfirmationModal
+        <CommonConfirmationModal
           open={!!subscriptionTypeModal}
           onClose={() => {
             setSubscriptionTypeModal(null);
@@ -623,10 +642,26 @@ const Subscription = () => {
   const dispatch = useDispatch();
   const [isMonthly, setIsMonthly] = useState(true);
   const [subscriptionPlans, setSubscriptionPlans] = useState([]);
+  const [isChangeSubscription, setIsChangeSubscription] = useState(false);
 
   const { plans, planLoading } = useSelector((state) => state.plans);
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const { subscriptions } = useSelector((state) => state.subscriptions);
+
+  const attemptsRef = useRef(0);
+  const timerRef = useRef(null);
+
+  const shouldFetch = useMemo(() => {
+    if (!subscriptions?.length) return false;
+    const currentActivePlan = subscriptions.find(
+      (p) => p?.status === PlanType.ACTIVE || p?.status === PlanType.CANCEL
+    );
+    return (
+      currentActivePlan &&
+      !currentActivePlan?.start_date &&
+      !currentActivePlan?.end_date
+    );
+  }, [subscriptions]);
 
   useEffect(() => {
     dispatch(loadPlansStart());
@@ -660,8 +695,78 @@ const Subscription = () => {
     [subscriptionPlans]
   );
 
+  useEffect(() => {
+    const currentActivePlan = subscriptions?.find(
+      (p) => p?.status === PlanType.ACTIVE || p?.status === PlanType.CANCEL
+    );
+    if (
+      currentActivePlan &&
+      !currentActivePlan?.start_date &&
+      !currentActivePlan?.end_date
+    ) {
+      setIsChangeSubscription(true);
+    } else {
+      setIsChangeSubscription(false);
+    }
+  }, [subscriptions]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getSubscriptionDetails = async () => {
+    await getSubscriptions({ shopId: vendorShopDetails?.id }).then(
+      (res) => {
+        dispatch(updateSubscription(res?.data?.getSubscriptions || []));
+      },
+      (error) => {
+        toast.error(error?.message, { theme: "colored" });
+      }
+    );
+  };
+
+  useEffect(() => {
+    // if no need to fetch, ensure we stop and reset
+    if (!shouldFetch) {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      attemptsRef.current = 0;
+      return;
+    }
+
+    // already running a sequence? do nothing
+    if (attemptsRef.current > 0) return;
+
+    const run = async () => {
+      attemptsRef.current += 1;
+      await getSubscriptionDetails();
+
+      if (attemptsRef.current >= 3) {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
+        return;
+      }
+      timerRef.current = setTimeout(run, 30 * 1000);
+    };
+
+    timerRef.current = setTimeout(run, 30 * 1000);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = null;
+    };
+  }, [shouldFetch, getSubscriptionDetails]);
+
   return (
-    <div className="flex justify-center h-full">
+    <div className="flex justify-center h-full relative">
+      {isChangeSubscription && (
+        <Alert
+          severity={"error"}
+          className="absolute top-5 left-0 w-full !font-semibold"
+        >
+          You can’t make changes until your subscription is fully updated.
+        </Alert>
+      )}
       <div className="flex flex-col gap-5 mt-20">
         <h1 className="text-colorBlack text-center font-semibold text-2xl">
           Choose the right plan for your business

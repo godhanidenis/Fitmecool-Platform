@@ -1,5 +1,5 @@
 "use client";
-import { IconButton, Button, CircularProgress } from "@mui/material";
+import { IconButton, Button, CircularProgress, Alert } from "@mui/material";
 import { vendorPrivateGaurd } from "../../../components/core/VendorAuthGaurd";
 import CustomTable from "../../../components/core/CustomTable";
 import { useEffect, useMemo, useState } from "react";
@@ -18,6 +18,20 @@ import {
   VerifySubscriptionPayment,
 } from "../../../graphql/mutations/subscription";
 import { toast } from "react-toastify";
+import PaymentSuccessModal from "../../../components/Modal/PaymentSuccessModal";
+
+const successModalContent = {
+  change: {
+    title: "Payment Method Updated",
+    message:
+      "Your payment method has been successfully updated for future transactions.",
+  },
+  repayment: {
+    title: "Payment Successful",
+    message: "Your pending payment has been processed successfully.",
+    note: "Your current plan will remain active until it expires, after which the free plan will be activated.",
+  },
+};
 
 const PaymentCardSkeleton = () => {
   return (
@@ -51,7 +65,8 @@ const PaymentCard = ({ method, getOption }) => {
     if (subscriptions?.length > 0) {
       const options = getOption(
         "Update Subscription Payment Method",
-        setPaymentMethodChangeLoading
+        setPaymentMethodChangeLoading,
+        "change"
       );
 
       var rzp1 = new window.Razorpay(options);
@@ -163,11 +178,13 @@ const PaymentBilling = () => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const { invoices, invoiceLoading, paymentMethods, paymentMethodLoading } =
     useSelector((state) => state.invoices);
+  const [openSuccessModalType, setOpenSuccessModalType] = useState(null);
   const { subscriptions, subscriptionLoading } = useSelector(
     (state) => state.subscriptions
   );
   const [changePaymentMethod, setChangePaymentMethod] = useState(false);
   const [repaymentLoader, setRepaymentLoader] = useState(null);
+  const [showPaymentAlert, setShowPaymentAlert] = useState(false);
 
   const runningSubscription = useMemo(
     () =>
@@ -177,7 +194,7 @@ const PaymentBilling = () => {
     [subscriptions]
   );
 
-  const getOption = (description, setLoader) => ({
+  const getOption = (description, setLoader, type) => ({
     key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
     subscription_id: runningSubscription?.razorpay_subscription_id,
     name: "FitMeCool",
@@ -195,6 +212,7 @@ const PaymentBilling = () => {
         },
       }).then(
         (res) => {
+          setOpenSuccessModalType(type);
           setChangePaymentMethod((prev) => !prev);
           setLoader(null);
         },
@@ -224,7 +242,7 @@ const PaymentBilling = () => {
 
   const handleRePayment = (data) => {
     setRepaymentLoader(data?.id);
-    const options = getOption("Re-Payment", setRepaymentLoader);
+    const options = getOption("Re-Payment", setRepaymentLoader, "repayment");
     var rzp1 = new window.Razorpay(options);
     rzp1.open();
   };
@@ -340,47 +358,78 @@ const PaymentBilling = () => {
     }
   }, [dispatch, vendorShopDetails?.id]);
 
+  useEffect(() => {
+    if (!invoices || !runningSubscription) return;
+
+    const hasFailedPayment = invoices.some(
+      (row) =>
+        row.status === "failed" &&
+        row?.raw?.subscription_id ===
+          runningSubscription?.razorpay_subscription_id
+    );
+
+    setShowPaymentAlert(hasFailedPayment);
+  }, [invoices, runningSubscription]);
+
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-colorBlack text-left font-semibold text-2xl">
-          Manage Payment Options
-        </h1>
-        <div className="grid grid-cols-3 xl:grid-cols-5 gap-2">
-          {paymentMethodLoading ? (
-            Array.from({ length: 3 }).map((_, idx) => (
-              <PaymentCardSkeleton key={idx} />
-            ))
-          ) : paymentMethods?.length > 0 ? (
-            [...paymentMethods]
-              .sort((a, b) =>
-                a?.is_primary === b?.is_primary ? 0 : a?.is_primary ? -1 : 1
-              )
-              .map((m) => (
-                <PaymentCard
-                  key={m?._id + m?.type + (m?.card?.last4 || m?.upi?.vpa)}
-                  method={m}
-                  getOption={getOption}
-                />
+    <>
+      {showPaymentAlert && (
+        <Alert severity={"error"} className="mb-4">
+          Your subscription payment{" "}
+          <span className="font-semibold">Failed.</span> Please change your{" "}
+          <span className="font-semibold">Payment method</span> or use the{" "}
+          <span className="font-semibold">Pay</span> button below to complete
+          the payment and continue your plan.
+        </Alert>
+      )}
+      <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-colorBlack text-left font-semibold text-2xl">
+            Manage Payment Options
+          </h1>
+          <div className="grid grid-cols-3 xl:grid-cols-5 gap-2">
+            {paymentMethodLoading ? (
+              Array.from({ length: 3 }).map((_, idx) => (
+                <PaymentCardSkeleton key={idx} />
               ))
-          ) : (
-            <div className="col-span-3 xl:col-span-5 flex justify-center items-center font-semibold text-lg">
-              No cards found
-            </div>
-          )}
+            ) : paymentMethods?.length > 0 ? (
+              [...paymentMethods]
+                .sort((a, b) =>
+                  a?.is_primary === b?.is_primary ? 0 : a?.is_primary ? -1 : 1
+                )
+                .map((m) => (
+                  <PaymentCard
+                    key={m?._id + m?.type + (m?.card?.last4 || m?.upi?.vpa)}
+                    method={m}
+                    getOption={getOption}
+                  />
+                ))
+            ) : (
+              <div className="col-span-3 xl:col-span-5 flex justify-center items-center font-semibold text-lg">
+                No cards found
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col">
+          <h1 className="text-colorBlack text-left font-semibold text-2xl">
+            My Billing
+          </h1>
+          <CustomTable
+            columns={columns}
+            rows={invoices}
+            loading={invoiceLoading}
+          />
         </div>
       </div>
-      <div className="flex flex-col">
-        <h1 className="text-colorBlack text-left font-semibold text-2xl">
-          My Billing
-        </h1>
-        <CustomTable
-          columns={columns}
-          rows={invoices}
-          loading={invoiceLoading}
+      {openSuccessModalType && (
+        <PaymentSuccessModal
+          open={!!openSuccessModalType}
+          onClose={() => setOpenSuccessModalType(null)}
+          {...successModalContent[openSuccessModalType]}
         />
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

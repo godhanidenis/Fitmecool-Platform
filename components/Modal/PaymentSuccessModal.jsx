@@ -23,7 +23,7 @@ const PaymentSuccessModal = ({
   title,
   message,
   note,
-  successModalCloseProcess,
+  successModalCloseProcess = false,
 }) => {
   return (
     <Modal

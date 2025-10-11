@@ -1,6 +1,6 @@
-import { Modal, Box, Typography, Button, Avatar, Zoom } from "@mui/material";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-const CommonPlanConfirmationModal = ({
+import { Modal, Box, Typography, Avatar, Zoom } from "@mui/material";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+const CommonConfirmationModal = ({
   open,
   onClose,
   onConfirm,
@@ -8,7 +8,7 @@ const CommonPlanConfirmationModal = ({
   message,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  icon: Icon = WarningAmberIcon,
+  icon: Icon = PriorityHighIcon,
   iconColor = "primary.main",
 }) => {
   return (
@@ -33,7 +33,16 @@ const CommonPlanConfirmationModal = ({
           }}
           className="w-[90%] md:w-[60%] lg:w-[50%] xl:w-[30%]"
         >
-          <Avatar sx={{ bgcolor: iconColor, width: 70, height: 70 }}>
+          <Avatar
+            sx={{
+              bgcolor: iconColor,
+              width: 70,
+              height: 70,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Icon sx={{ fontSize: 34, color: "white" }} />
           </Avatar>
           <Box className="flex flex-col gap-2">
@@ -82,4 +91,4 @@ const CommonPlanConfirmationModal = ({
   );
 };
 
-export default CommonPlanConfirmationModal;
+export default CommonConfirmationModal;
