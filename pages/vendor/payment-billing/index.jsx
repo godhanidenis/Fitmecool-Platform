@@ -13,12 +13,15 @@ import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import { loadSubscriptionStart } from "../../../redux/ducks/subscriptions";
 import moment from "moment/moment";
 import { PlanType } from "../subscription";
+import AddIcon from "@mui/icons-material/Add";
 import {
   ChangePaymentMethod,
   VerifySubscriptionPayment,
 } from "../../../graphql/mutations/subscription";
 import { toast } from "react-toastify";
 import PaymentSuccessModal from "../../../components/Modal/PaymentSuccessModal";
+import ScrollContainer from "react-indiana-drag-scroll";
+import CommonConfirmationModal from "../../../components/Modal/CommonConfirmationModal";
 
 const successModalContent = {
   change: {
@@ -37,30 +40,39 @@ const PaymentCardSkeleton = () => {
   return (
     <div className="col-span-1 flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
       <div className="flex items-center gap-4 w-full">
-        {/* Icon skeleton */}
-        <div className="h-10 w-10 rounded-xl bg-gray-200 animate-pulse"></div>
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-4 rounded-full bg-gray-200 animate-pulse" />
+          {/* Icon skeleton */}
+          <div className="h-10 w-10 rounded-xl bg-gray-200 animate-pulse" />
+        </div>
 
         {/* Text skeletons */}
         <div className="flex-1 space-y-2">
-          <div className="h-3 w-24 rounded bg-gray-200 animate-pulse"></div>
-          <div className="h-3 w-16 rounded bg-gray-200 animate-pulse"></div>
+          <div className="h-3 w-24 rounded bg-gray-200 animate-pulse" />
+          <div className="h-3 w-16 rounded bg-gray-200 animate-pulse" />
         </div>
       </div>
     </div>
   );
 };
 
-const PaymentCard = ({ method, getOption }) => {
+const PaymentCard = ({
+  method,
+  getOption,
+  selectedPaymentCard,
+  setSelectedPaymentCard,
+  paymentMethodChangeLoading,
+  setPaymentMethodChangeLoading,
+}) => {
   const dispatch = useDispatch();
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const { subscriptions } = useSelector((state) => state.subscriptions);
-  const [paymentMethodChangeLoading, setPaymentMethodChangeLoading] =
-    useState(null);
 
   const isCard = method?.type === "card";
   const isUPI = method?.type === "upi";
 
   const handleChange = (id) => {
+    setSelectedPaymentCard(id);
     setPaymentMethodChangeLoading(id);
     if (subscriptions?.length > 0) {
       const options = getOption(
@@ -75,12 +87,12 @@ const PaymentCard = ({ method, getOption }) => {
       ChangePaymentMethod({ id }).then(
         (res) => {
           toast.success(res?.data?.changePaymentMethod, { theme: "colored" });
+          setPaymentMethodChangeLoading(null);
           dispatch(
             loadPaymentMethodsStart({
               customerId: vendorShopDetails.razorpay_customer_id,
             })
           );
-          setPaymentMethodChangeLoading(null);
         },
         (error) => {
           toast.error(error.message, { theme: "colored" });
@@ -92,36 +104,60 @@ const PaymentCard = ({ method, getOption }) => {
 
   return (
     <div
-      className={`${
-        !method.is_primary && "cursor-pointer"
-      } col-span-1 flex items-center justify-between rounded-2xl border p-4 shadow-sm transition relative ${
-        method.is_primary
+      className={`snap-start col-span-1 flex items-center justify-between rounded-2xl border p-4 shadow-sm transition relative ${
+        selectedPaymentCard === method?._id
           ? "border-blue-500 bg-blue-50"
           : "border-gray-200 bg-white hover:shadow-md"
       } 
     `}
-      onClick={() => !method.is_primary && handleChange(method?._id)}
     >
       {/* Left side: Icon + details */}
       <div className="flex items-center gap-4">
-        <div
-          className={`${
-            method.is_primary ? "bg-blue-100" : "bg-gray-100"
-          } rounded-xl p-3`}
-        >
-          {isCard ? (
-            <CreditCard
-              className={`${
-                method.is_primary ? "text-blue-500" : "text-gray-700"
-              } h-6 w-6`}
-            />
-          ) : (
-            <Smartphone
-              className={`${
-                method.is_primary ? "text-blue-500" : "text-gray-700"
-              } h-6 w-6`}
-            />
-          )}
+        <div className="flex items-center gap-2">
+          <div
+            className={`${
+              !method.is_primary && "cursor-pointer"
+            } p-1 rounded-full border-2 ${
+              selectedPaymentCard === method?._id
+                ? "border-blue-500"
+                : "border-gray-300"
+            }  flex items-center justify-center`}
+            onClick={() =>
+              (!method.is_primary || !paymentMethodChangeLoading) &&
+              handleChange(method?._id)
+            }
+          >
+            <span
+              className={`block w-2.5 h-2.5 ${
+                selectedPaymentCard === method?._id ? "bg-blue-500" : "bg-white"
+              } rounded-full`}
+            ></span>
+          </div>
+          <div
+            className={`${
+              selectedPaymentCard === method?._id
+                ? "bg-blue-100"
+                : "bg-gray-100"
+            } rounded-xl p-3`}
+          >
+            {isCard ? (
+              <CreditCard
+                className={`${
+                  selectedPaymentCard === method?._id
+                    ? "text-blue-500"
+                    : "text-gray-700"
+                } h-6 w-6`}
+              />
+            ) : (
+              <Smartphone
+                className={`${
+                  selectedPaymentCard === method?._id
+                    ? "text-blue-500"
+                    : "text-gray-700"
+                } h-6 w-6`}
+              />
+            )}
+          </div>
         </div>
 
         <div>
@@ -129,14 +165,18 @@ const PaymentCard = ({ method, getOption }) => {
             <>
               <p
                 className={`${
-                  method.is_primary ? "font-semibold" : "font-medium"
+                  selectedPaymentCard === method?._id
+                    ? "font-semibold"
+                    : "font-medium"
                 } text-sm text-gray-900`}
               >
                 {method.card?.network || "Card"} **** {method.card?.last4}
               </p>
               <p
                 className={`${
-                  method.is_primary ? "font-semibold" : "font-medium"
+                  selectedPaymentCard === method?._id
+                    ? "font-semibold"
+                    : "font-medium"
                 } text-xs text-gray-500`}
               >
                 {method?.card?.issuer}
@@ -148,14 +188,18 @@ const PaymentCard = ({ method, getOption }) => {
             <>
               <p
                 className={`${
-                  method.is_primary ? "font-semibold" : "font-medium"
+                  selectedPaymentCard === method?._id
+                    ? "font-semibold"
+                    : "font-medium"
                 } text-sm text-gray-900`}
               >
                 UPI
               </p>
               <p
                 className={`${
-                  method.is_primary ? "font-semibold" : "font-medium"
+                  selectedPaymentCard === method?._id
+                    ? "font-semibold"
+                    : "font-medium"
                 } text-xs text-gray-500`}
               >
                 {method?.upi?.vpa}
@@ -173,6 +217,18 @@ const PaymentCard = ({ method, getOption }) => {
   );
 };
 
+const ScrollSection = ({ children }) => {
+  return (
+    <ScrollContainer
+      className="grid grid-flow-col auto-cols-[minmax(250px,1fr)] sm:auto-cols-[minmax(320px,350px)] gap-4 overflow-x-auto light-scroll pb-2"
+      vertical={false}
+      hideScrollbars={false}
+    >
+      {children}
+    </ScrollContainer>
+  );
+};
+
 const PaymentBilling = () => {
   const dispatch = useDispatch();
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
@@ -185,6 +241,16 @@ const PaymentBilling = () => {
   const [changePaymentMethod, setChangePaymentMethod] = useState(false);
   const [repaymentLoader, setRepaymentLoader] = useState(null);
   const [showPaymentAlert, setShowPaymentAlert] = useState(false);
+  const [selectedPaymentCard, setSelectedPaymentCard] = useState(null);
+  const [paymentMethodChangeLoading, setPaymentMethodChangeLoading] =
+    useState(null);
+  const [addPaymentMethod, setAddPaymentMethod] = useState(false);
+  const [addingNewPaymentMethods, setAddingNewPaymentMethods] = useState(null);
+
+  const primaryPaymentMethod = useMemo(
+    () => paymentMethods?.find((method) => method?.is_primary),
+    [paymentMethods]
+  );
 
   const runningSubscription = useMemo(
     () =>
@@ -236,6 +302,7 @@ const PaymentBilling = () => {
       ondismiss: function () {
         // when modal is closed manually
         setLoader(null);
+        type === "change" && setSelectedPaymentCard(primaryPaymentMethod?._id);
       },
     },
   });
@@ -337,6 +404,45 @@ const PaymentBilling = () => {
     },
   ];
 
+  const sortByPrimaryRange = (list, range = 5) => {
+    // Find index of primary
+    const primaryIndex = list.findIndex((item) => item.is_primary);
+
+    if (primaryIndex === -1) return list; // No primary found
+
+    // Calculate range start and end (keeping inside bounds)
+    const halfRange = Math.floor(range / 2);
+    const start = Math.max(0, primaryIndex - halfRange);
+    const end = Math.min(list.length, primaryIndex + halfRange + 1);
+
+    // Extract focused range and remaining items
+    const focusedItems = list.slice(start, end);
+    const remainingItems = [...list.slice(0, start), ...list.slice(end)];
+
+    // Return sorted list — focused items first
+    return [...focusedItems, ...remainingItems];
+  };
+
+  const sortedPaymentMethods = useMemo(
+    () => sortByPrimaryRange(paymentMethods, 5),
+    [paymentMethods]
+  );
+
+  const handleChangePaymentMethod = () => {
+    if (subscriptions?.length > 0) {
+      setAddingNewPaymentMethods(true);
+      const options = getOption(
+        "Update Subscription Payment Method",
+        setAddingNewPaymentMethods,
+        "change"
+      );
+      var rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    } else {
+      setAddPaymentMethod(true);
+    }
+  };
+
   useEffect(() => {
     if (vendorShopDetails?.razorpay_customer_id) {
       dispatch(
@@ -371,6 +477,14 @@ const PaymentBilling = () => {
     setShowPaymentAlert(hasFailedPayment);
   }, [invoices, runningSubscription]);
 
+  useEffect(() => {
+    if (primaryPaymentMethod) {
+      setSelectedPaymentCard(primaryPaymentMethod?._id);
+    } else {
+      setSelectedPaymentCard(null);
+    }
+  }, [primaryPaymentMethod, paymentMethods]);
+
   return (
     <>
       {showPaymentAlert && (
@@ -383,33 +497,59 @@ const PaymentBilling = () => {
         </Alert>
       )}
       <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-colorBlack text-left font-semibold text-2xl">
-            Manage Payment Options
-          </h1>
-          <div className="grid grid-cols-3 xl:grid-cols-5 gap-2">
-            {paymentMethodLoading ? (
-              Array.from({ length: 3 }).map((_, idx) => (
-                <PaymentCardSkeleton key={idx} />
-              ))
-            ) : paymentMethods?.length > 0 ? (
-              [...paymentMethods]
-                .sort((a, b) =>
-                  a?.is_primary === b?.is_primary ? 0 : a?.is_primary ? -1 : 1
-                )
-                .map((m) => (
-                  <PaymentCard
-                    key={m?._id + m?.type + (m?.card?.last4 || m?.upi?.vpa)}
-                    method={m}
-                    getOption={getOption}
-                  />
-                ))
-            ) : (
-              <div className="col-span-3 xl:col-span-5 flex justify-center items-center font-semibold text-lg">
-                No cards found
-              </div>
-            )}
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 justify-between items-center">
+            <h1 className="text-colorBlack text-left font-semibold text-2xl">
+              Manage Payment Options
+            </h1>
+            <button
+              disabled={addingNewPaymentMethods || paymentMethodLoading}
+              className={`${
+                (addingNewPaymentMethods || paymentMethodLoading) &&
+                "opacity-50"
+              } flex justify-center items-center gap-1 p-2 w-[100px] rounded-lg bg-colorGreen text-white font-semibold`}
+              onClick={handleChangePaymentMethod}
+            >
+              {addingNewPaymentMethods ? (
+                <CircularProgress
+                  style={{
+                    color: "#fff",
+                  }}
+                  size={20}
+                />
+              ) : (
+                <AddIcon sx={{ fontSize: "22px" }} />
+              )}
+              Add
+            </button>
           </div>
+          {/* <div className="flex snap-x snap-mandatory overflow-x-auto gap-2"> */}
+
+          {paymentMethodLoading ? (
+            <ScrollSection>
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <PaymentCardSkeleton key={idx} />
+              ))}
+            </ScrollSection>
+          ) : sortedPaymentMethods?.length > 0 ? (
+            <ScrollSection>
+              {sortedPaymentMethods.map((m) => (
+                <PaymentCard
+                  key={m?._id + m?.type + (m?.card?.last4 || m?.upi?.vpa)}
+                  method={m}
+                  getOption={getOption}
+                  selectedPaymentCard={selectedPaymentCard}
+                  setSelectedPaymentCard={setSelectedPaymentCard}
+                  paymentMethodChangeLoading={paymentMethodChangeLoading}
+                  setPaymentMethodChangeLoading={setPaymentMethodChangeLoading}
+                />
+              ))}
+            </ScrollSection>
+          ) : (
+            <div className="flex justify-center items-center font-semibold text-lg w-full">
+              No cards found
+            </div>
+          )}
         </div>
         <div className="flex flex-col">
           <h1 className="text-colorBlack text-left font-semibold text-2xl">
@@ -427,6 +567,17 @@ const PaymentBilling = () => {
           open={!!openSuccessModalType}
           onClose={() => setOpenSuccessModalType(null)}
           {...successModalContent[openSuccessModalType]}
+        />
+      )}
+      {addPaymentMethod && (
+        <CommonConfirmationModal
+          open={addPaymentMethod}
+          onConfirm={() => setAddPaymentMethod(false)}
+          confirmText="Okay"
+          isCancelable={false}
+          title="Can’t Change Now"
+          message="You are currently on a free plan. You can change your payment method only after upgrading to a paid plan."
+          iconColor="#f08a0a"
         />
       )}
     </>

@@ -313,7 +313,9 @@ const VenderProduct = ({
               getAllProducts();
               getShopDetail();
               setGetActiveProduct((prev) => !prev);
-              handleChangeIsActive(deleteProductId);
+              (selectedInActiveProductList?.includes(deleteProductId) ||
+                selectedActiveProductList?.includes(deleteProductId)) &&
+                handleChangeIsActive(deleteProductId);
               setDeleteProductId(null);
               dispatch(loadVendorShopDetailsStart(vendorShopDetails?.id));
               setDeleteLoader(false);

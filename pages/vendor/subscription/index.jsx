@@ -78,11 +78,11 @@ const successModalContent = {
   [SubscriptionButtonType?.Downgrade]: {
     title: "Plan Downgraded",
     message: "Your plan has been successfully downgraded to the selected plan.",
+    note: "Your current plan will remain active until it expires, after which the new selected plan will be activated.",
   },
   [SubscriptionButtonType?.Upgrade]: {
     title: "Plan Upgraded",
     message: "Your plan has been successfully upgraded to the new plan.",
-    note: "Your current plan will remain active until it expires, after which the new selected plan will be activated.",
   },
 };
 
@@ -648,7 +648,6 @@ const Subscription = () => {
   const { vendorShopDetails } = useSelector((state) => state.vendorShopDetails);
   const { subscriptions } = useSelector((state) => state.subscriptions);
 
-  const attemptsRef = useRef(0);
   const timerRef = useRef(null);
 
   const shouldFetch = useMemo(() => {
@@ -729,23 +728,14 @@ const Subscription = () => {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
-      attemptsRef.current = 0;
       return;
     }
 
-    // already running a sequence? do nothing
-    if (attemptsRef.current > 0) return;
-
     const run = async () => {
-      attemptsRef.current += 1;
       await getSubscriptionDetails();
-
-      if (attemptsRef.current >= 3) {
-        if (timerRef.current) {
-          clearTimeout(timerRef.current);
-          timerRef.current = null;
-        }
-        return;
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
       }
       timerRef.current = setTimeout(run, 30 * 1000);
     };

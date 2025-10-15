@@ -344,7 +344,7 @@ const LandingPage = () => {
           </p>
         </div>
 
-        <div className="w-full h-[350px] lg:h-[400px] place-items-center">
+        <div className="w-full h-[350px] lg:h-[400px] items-center">
           {!loading && shopsData.length > 0 && (
             <div className="flex justify-end">
               <button

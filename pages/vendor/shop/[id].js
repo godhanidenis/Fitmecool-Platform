@@ -16,6 +16,7 @@ import { convertProductStatus } from "../../../graphql/mutations/products";
 import { getVendorShopDetails } from "../../../graphql/queries/shopQueries";
 import { updateVendorShopDetails } from "../../../redux/ducks/vendorShopDetails";
 import VenderProduct from "../../../components/Layout/VenderProduct";
+import store from "../../../redux/store";
 
 const ShopDetailsPage = () => {
   const dispatch = useDispatch();
@@ -126,9 +127,10 @@ const ShopDetailsPage = () => {
   };
 
   const getUpdatedProductList = async () => {
+    const { isActive: activeStatus } = store.getState().products;
     await getProducts({
       ...getProductsPayload,
-      isActive: isActive,
+      isActive: activeStatus,
     }).then(
       async (res) => {
         dispatch(updateProductList(res?.data?.productList));

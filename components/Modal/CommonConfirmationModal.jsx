@@ -10,6 +10,7 @@ const CommonConfirmationModal = ({
   cancelText = "Cancel",
   icon: Icon = PriorityHighIcon,
   iconColor = "primary.main",
+  isCancelable = true,
 }) => {
   return (
     <Modal
@@ -64,16 +65,18 @@ const CommonConfirmationModal = ({
           </Box>
 
           <Box display="flex" justifyContent="flex-end" gap={2} width="100%">
-            <button
-              style={{
-                borderColor: iconColor,
-                color: iconColor,
-              }}
-              className={`border-2 w-[120px] p-1.5 rounded-md font-semibold`}
-              onClick={onClose}
-            >
-              {cancelText}
-            </button>
+            {isCancelable && (
+              <button
+                style={{
+                  borderColor: iconColor,
+                  color: iconColor,
+                }}
+                className={`border-2 w-[120px] p-1.5 rounded-md font-semibold`}
+                onClick={onClose}
+              >
+                {cancelText}
+              </button>
+            )}
             <button
               style={{
                 borderColor: iconColor,

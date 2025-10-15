@@ -34,7 +34,7 @@ const RootLayout = ({ children }) => {
 
   useEffect(() => {
     dispatch(loadUserProfileStart());
-  }, []);
+  }, [dispatch]);
 
   if (!isHydrated) {
     return null;
